@@ -1,0 +1,9 @@
+프로젝트 설정값
+마지막 수업 프로젝트 기준 변경 사항
+
+C++ 14 -> C++ 17 version
+
+-> CDInput: KeyInput, MouseInput 처리(Down, Up, Press)
+-> CManagement::Get_GameObject 함수 추가 (Get_Componet 함수 처럼 GameObject를 가져옴)
+-> 지형 높이맵 삭제 : 게임 내의 지형의 굴곡이 없어서 삭제
+-> 스카이 박스 변경 : 인디게임 레전드 Skybox
