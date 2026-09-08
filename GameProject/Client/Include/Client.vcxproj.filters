@@ -52,6 +52,9 @@
     <Filter Include="02. GameObject\06. Effect">
       <UniqueIdentifier>{26da718b-9159-461e-bec9-2f4654b8be1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Room">
+      <UniqueIdentifier>{b9d90846-4426-48a5-9d9f-65b142898dac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -102,6 +105,9 @@
     <ClInclude Include="..\Header\CEffect.h">
       <Filter>02. GameObject\06. Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CRoom.h">
+      <Filter>02. GameObject\07. Room</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -142,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEffect.cpp">
       <Filter>02. GameObject\06. Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRoom.cpp">
+      <Filter>02. GameObject\07. Room</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
