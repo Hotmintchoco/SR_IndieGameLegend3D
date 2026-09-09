@@ -4,6 +4,10 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
+// Collision 관련
+#include <DirectXMath.h>
+#include <DirectXCollision.h>
+
 #include <vector>
 #include <list>
 #include <map>
@@ -40,5 +44,8 @@
 
 using namespace std;
 using namespace Engine;
+
+// Collision 관련
+using namespace DirectX;
 
 #endif // Engine_Define_h__
