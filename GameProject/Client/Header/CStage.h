@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CScene.h"
+#include "Define.h"
 
 class CStage : public CScene
 {
@@ -22,6 +23,9 @@ private:
 
 public:
 	static CStage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+
+private:
+	TMapData m_MapData;
 
 private:
 	virtual void	Free();

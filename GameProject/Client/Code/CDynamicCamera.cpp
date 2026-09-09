@@ -68,7 +68,7 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 	_matrix		matCamWorld;
 	D3DXMatrixInverse(&matCamWorld, 0, &m_matView);
 
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_D))
+	if (CDInputMgr::GetInstance()->Key_Press(DIK_D))
 	{
 		_vec3 vRight;
 		memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
@@ -79,7 +79,7 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		m_vAt  += vLength;
 	}
 
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_A))
+	if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
 	{
 		_vec3 vRight;
 		memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
@@ -90,7 +90,7 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		m_vAt  -= vLength;
 	}
 
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_W))
+	if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
 	{
 		_vec3 vLook;
 		memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
@@ -101,7 +101,7 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		m_vAt  += vLength;
 	}
 
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_S))
+	if (CDInputMgr::GetInstance()->Key_Press(DIK_S))
 	{
 		_vec3 vLook;
 		memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
