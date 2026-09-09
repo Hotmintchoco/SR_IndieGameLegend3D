@@ -88,6 +88,9 @@
     <Filter Include="09. LightMgr\Light">
       <UniqueIdentifier>{ec0cee9e-12a5-4f5f-8e39-0e832bd907c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. Component\04. Collider">
+      <UniqueIdentifier>{97e90956-2984-435f-845c-7a7048799b8e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -170,6 +173,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLightMgr.cpp">
       <Filter>09. LightMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCollider.cpp">
+      <Filter>05. Component\04. Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -271,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CLightMgr.h">
       <Filter>09. LightMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCollider.h">
+      <Filter>05. Component\04. Collider</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

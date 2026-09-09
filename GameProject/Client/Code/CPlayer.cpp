@@ -39,15 +39,6 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     Key_Input(fTimeDelta);
 
-    CTerrain* pTerrain = dynamic_cast<CTerrain*>
-        (CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Terrain"));
-
-    if (pTerrain)
-    {
-        int a = 10;
-    }
-
-
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
