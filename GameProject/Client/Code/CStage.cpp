@@ -9,6 +9,7 @@
 #include "CSkyBox.h"
 #include "CLightMgr.h"
 #include "CEffect.h"
+#include "CGun.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -111,6 +112,14 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
+		return E_FAIL;
+
+	/* [DEBUG] 총 메쉬 테스트 출력 */
+	pGameObject = CGun::Create(m_pGraphicDev);
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Gun", pGameObject)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag ,pLayer });

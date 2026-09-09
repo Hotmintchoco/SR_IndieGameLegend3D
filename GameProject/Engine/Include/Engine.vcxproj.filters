@@ -88,6 +88,12 @@
     <Filter Include="09. LightMgr\Light">
       <UniqueIdentifier>{ec0cee9e-12a5-4f5f-8e39-0e832bd907c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. Component\00. VIBuffer\05. PlyTex">
+      <UniqueIdentifier>{d9db096a-9ab9-4696-bfb3-9f167e3dcc97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Header\ThirdParty">
+      <UniqueIdentifier>{c2940c01-757e-412c-92cb-b3dd8880e5d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -170,6 +176,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLightMgr.cpp">
       <Filter>09. LightMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlyTex.cpp">
+      <Filter>05. Component\00. VIBuffer\05. PlyTex</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -271,6 +280,12 @@
     </ClInclude>
     <ClInclude Include="..\Header\CLightMgr.h">
       <Filter>09. LightMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\tinyply.h">
+      <Filter>99. Header\ThirdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlyTex.h">
+      <Filter>05. Component\00. VIBuffer\05. PlyTex</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -75,6 +75,19 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
 
 
+    /*  메쉬 사용 안내
+    *   CPlyTex
+            - 버텍스 정보를 담은 CVIBuffer 하위 클래스
+            - 생성 시 외부 파일에서 버텍스 정보를 받아오기 때문에 Create 함수에 파일 경로가 포함되어야 함
+    *   텍스쳐는 수업 내용과 동일
+    */
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GunVertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Gun.ply"))))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GunTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/Gun_Diffuse.png", 1))))
+        return E_FAIL;
+
     lstrcpy(m_szLoading, L"Loading Complete!!!");
 
     m_bFinish = true;
