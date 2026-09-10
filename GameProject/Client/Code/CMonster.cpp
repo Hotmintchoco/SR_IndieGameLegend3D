@@ -3,6 +3,8 @@
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CPlayer.h"
+#include "CRenderer.h"
+#include "CCollider.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -19,6 +21,10 @@ HRESULT CMonster::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
+	m_pTransformCom->Set_Pos(2.f, 1.f, 2.f);
+    m_pColliderCom->Set_Radius(2.f);
+
+    __super::Ready_GameObject();
 
     return S_OK;
 }
@@ -26,6 +32,12 @@ HRESULT CMonster::Ready_GameObject()
 _int CMonster::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
+
+    _vec3   vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    Compute_ViewZ(&vPos);
+
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
     return iExit;
 }
@@ -76,7 +88,14 @@ HRESULT CMonster::Add_Component()
     if (nullptr == pComponent)
         return E_FAIL;
 
-    m_mapComponent[ID_STATIC].insert({ L"Com_Transform", pComponent });
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
+
+	// Collider
+    pComponent = m_pColliderCom = dynamic_cast<CCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });
 
 
     return S_OK;

@@ -6,6 +6,7 @@ namespace Engine
 {
 	class CTriCol;
 	class CTransform;
+	class CCollider;
 }
 
 class CMonster : public CGameObject
@@ -26,6 +27,7 @@ private:
 private:
 	Engine::CTriCol* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
+	Engine::CCollider* m_pColliderCom;
 
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGraphicDev);

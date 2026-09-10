@@ -20,5 +20,8 @@ namespace Engine
 
 	enum MOUSEMOVESTATE {	DIMS_X, DIMS_Y, DIMS_Z, DIMS_END };
 
+	// 충돌 그룹 정의
+	enum COLLISIONID { COLL_PLAYER, COLL_MONSTER, COLL_PBULLET, COLL_MBULLET, COLL_END };
+
 }
 #endif // Engine_Enum_h__

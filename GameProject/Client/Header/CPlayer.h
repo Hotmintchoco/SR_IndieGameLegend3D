@@ -8,6 +8,8 @@ namespace Engine
 	class CTransform;
 	class CTexture;
 	class CCalculator;
+	class CCollider;
+	class CSphereCollider;
 }
 
 class CPlayer : public CGameObject
@@ -33,6 +35,7 @@ private:
 	Engine::CTransform*			m_pTransformCom;
 	Engine::CTexture*			m_pTextureCom;
 	Engine::CCalculator*		m_pCalculatorCom;
+	Engine::CCollider*			m_pColliderCom;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

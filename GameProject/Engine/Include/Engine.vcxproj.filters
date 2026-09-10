@@ -97,6 +97,9 @@
     <Filter Include="05. Component\04. Collider\SphereCollider">
       <UniqueIdentifier>{587226ff-d9ec-478d-a223-d663c694c728}</UniqueIdentifier>
     </Filter>
+    <Filter Include="10. CollisionMgr">
+      <UniqueIdentifier>{f4d867b3-e537-4846-9755-9bf9dc6f82e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -185,6 +188,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSphereCollider.cpp">
       <Filter>05. Component\04. Collider\SphereCollider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCollisionMgr.cpp">
+      <Filter>10. CollisionMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -292,6 +298,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CSphereCollider.h">
       <Filter>05. Component\04. Collider\SphereCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCollisionMgr.h">
+      <Filter>10. CollisionMgr</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

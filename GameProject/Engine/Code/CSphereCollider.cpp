@@ -1,4 +1,6 @@
 #include "CSphereCollider.h"
+#include "CGameObject.h"
+#include "CTransform.h"
 
 CSphereCollider::CSphereCollider() 
 {
@@ -33,6 +35,22 @@ _bool CSphereCollider::Intersect(CCollider* pOther)
 	return false;
 }
 
+_int CSphereCollider::Update_Component(const _float& fTimeDelta)
+{
+	CTransform* pOwnerTransformCom = dynamic_cast<CTransform*>(m_pOwner->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+	
+	_vec3   vOwnerPos;
+	pOwnerTransformCom->Get_Info(INFO_POS, &vOwnerPos);
+	m_tSphere.Center = { vOwnerPos.x, vOwnerPos.y, vOwnerPos.z };
+
+	return 0;
+}
+
+void CSphereCollider::LateUpdate_Component()
+{
+
+}
+
 CCollider* CSphereCollider::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	return new CSphereCollider(pGraphicDev);
@@ -41,4 +59,10 @@ CCollider* CSphereCollider::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 CComponent* CSphereCollider::Clone()
 {
 	return new CSphereCollider(*this);
+}
+
+void CSphereCollider::Set_Radius(const _float& fRadius)
+{
+	m_fRadius = fRadius;
+	m_tSphere.Radius = fRadius;
 }
