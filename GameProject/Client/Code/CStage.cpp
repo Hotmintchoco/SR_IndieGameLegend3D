@@ -102,6 +102,7 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	int iTileSizeX = 13;
 	int iTileSizeZ = 11;
 	_vec2 vMapSize{ 15.f, 13.f };
+	_vec3 vTerrainOffset{ 60.f, 0.f, 60.f };
 
 	for (int j = 0; j < iGridSize; ++j)
 	{
@@ -138,7 +139,7 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 				CTransform* pTransformCom = dynamic_cast<CTransform*>(
 					pLayer->Get_Component(ID_DYNAMIC, wstrTileName, L"Com_Transform"));
 
-				pTransformCom->Set_Pos(vRoomOffset.x + vTileOffset.x, 0.f, vRoomOffset.z + vTileOffset.z);
+				pTransformCom->Set_Pos(vRoomOffset.x + vTileOffset.x + vTerrainOffset.x, 0.f, vRoomOffset.z + vTileOffset.z + vTerrainOffset.z);
 			}
 
 			/* 벽 : 동서남북 순 */
@@ -156,7 +157,7 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 				CTransform* pTransformCom = dynamic_cast<CTransform*>(
 					pLayer->Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
 
-				pTransformCom->Set_Pos(vRoomOffset.x, 0.f, vRoomOffset.z);
+				pTransformCom->Set_Pos(vRoomOffset.x + vTerrainOffset.x, 0.f, vRoomOffset.z + vTerrainOffset.z);
 			}
 		}
 	}
@@ -175,13 +176,13 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	// 오브젝트 추가
 	CGameObject* pGameObject = nullptr;
 
-	//// Terrain
-	//pGameObject = CTerrain::Create(m_pGraphicDev);
-	//if (nullptr == pGameObject)
-	//	return E_FAIL;
+	// Terrain
+	pGameObject = CTerrain::Create(m_pGraphicDev);
+	if (nullptr == pGameObject)
+		return E_FAIL;
 
-	//if (FAILED(pLayer->Add_GameObject(L"Terrain", pGameObject)))
-	//	return E_FAIL;
+	if (FAILED(pLayer->Add_GameObject(L"Terrain", pGameObject)))
+		return E_FAIL;
 
 	//// Player
 	//pGameObject = CPlayer::Create(m_pGraphicDev);
@@ -200,6 +201,8 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	/* 몬스터 소환 */
+	_vec3 vTerrainOffset{ 60.f, 0.f, 60.f };
+
 	for (auto& tMapEntity : m_MapData.vecMonsterInfo)
 	{
 		pGameObject = CMonster::Create(m_pGraphicDev);
@@ -220,7 +223,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(
 			pLayer->Get_Component(ID_DYNAMIC, tMapEntity.wstrEntityName, L"Com_Transform"));
 
-		pTransformCom->Set_Pos(tMapEntity.vPos.x, tMapEntity.vPos.y, tMapEntity.vPos.z);
+		pTransformCom->Set_Pos(tMapEntity.vPos.x + vTerrainOffset.x, tMapEntity.vPos.y, tMapEntity.vPos.z + vTerrainOffset.z);
 	}
 
 	m_mapLayer.insert({ pLayerTag ,pLayer });
