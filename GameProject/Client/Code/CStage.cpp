@@ -5,11 +5,16 @@
 #include "CPlayer.h"
 #include "CMonster.h"
 #include "CTerrain.h"
-#include "CDynamicCamera.h"
+//#include "CDynamicCamera.h"
+#include "CCameraMgr.h"
 #include "CSkyBox.h"
 #include "CLightMgr.h"
 #include "CEffect.h"
 #include "CCollisionMgr.h"
+#include "CFontMgr.h"
+#include "CBullet.h"
+#include "CDInputMgr.h"
+
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -22,6 +27,7 @@ CStage::~CStage()
 
 HRESULT CStage::Ready_Scene()
 {
+
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
 
@@ -34,8 +40,13 @@ HRESULT CStage::Ready_Scene()
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
 		return E_FAIL;
 
-	// Ãæµ¹ ±×·ì ¼³Á¤
+	// ï¿½æµ¹ ï¿½×·ï¿½ ï¿½ï¿½ï¿½ï¿½
 	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_MONSTER);
+	if (FAILED(CCameraMgr::GetInstance()->Ready_Camera(L"Camera_Player_FPV", CAMERA_FPV_PERSPECTIVE, m_pGraphicDev)))
+		return E_FAIL;
+
+	if (FAILED(CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_FPV")))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -43,6 +54,21 @@ HRESULT CStage::Ready_Scene()
 _int CStage::Update_Scene(const _float& fTimeDelta)
 {
 	_int iExit = CScene::Update_Scene(fTimeDelta);
+
+	CCameraMgr::GetInstance()->Update_Camera(fTimeDelta);
+
+	if (CDInputMgr::GetInstance()->Mouse_Down(DIM_LB))
+	{
+		CGameObject* pGameObject = nullptr;
+		_vec3	vPos_Player;
+		_vec3	vLook_Cam;
+		static_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"))->Get_Info(INFO_POS, &vPos_Player);
+		CCameraMgr::GetInstance()->Get_CamLook(&vLook_Cam);
+
+		pGameObject = CBullet::Create(m_pGraphicDev, &vPos_Player, &vLook_Cam);
+
+		m_pLogicLayer->Add_GameObject(L"Bullet", pGameObject);
+	}
 
 	return iExit;
 }
@@ -58,6 +84,48 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 void CStage::Render_Scene()
 {
 
+	_vec2	vPos_DebugUI_PlayerX{ 100.f, 100.f };
+	_vec2	vPos_DebugUI_PlayerY{ 100.f, 120.f };
+	_vec2	vPos_DebugUI_PlayerZ{ 100.f, 140.f };
+	_vec2	vPos_DebugUI_JumpState{ 100.f, 160.f };
+	_vec2	vPos_DebugUI_CameraAngle{ 100.f, 180.f };
+
+
+	_vec3	vPos_Player;
+	static_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"))->Get_Info(INFO_POS, &vPos_Player);
+	
+	wstring wPlayerInfoX = L"PLAYER X : " + to_wstring(vPos_Player.x);
+	wstring wPlayerInfoY = L"PLAYER Y : " + to_wstring(vPos_Player.y);
+	wstring wPlayerInfoZ = L"PLAYER Z : " + to_wstring(vPos_Player.z);
+
+	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wPlayerInfoX.c_str(), &vPos_DebugUI_PlayerX, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wPlayerInfoY.c_str(), &vPos_DebugUI_PlayerY, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wPlayerInfoZ.c_str(), &vPos_DebugUI_PlayerZ, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+
+
+	_int iJumpState = (static_cast<CPlayer*>(Get_GameObject(L"GameLogic_Layer", L"Player")))->Get_JumpState();
+	wstring wsJumpInfo = L"JUMPSTATE : ";
+	switch (iJumpState)
+	{
+	case JUMP_NOT : 
+		wsJumpInfo += L"JUMP_NOT";
+		break;
+	case JUMP_PARABOLIC : 
+		wsJumpInfo += L"JUMP_PARABOLIC";
+		break;
+	case JUMP_FREEFALL : 
+		wsJumpInfo += L"JUMP_FREEFALL";
+		break;
+	}
+
+	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wsJumpInfo.c_str() , &vPos_DebugUI_JumpState, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+
+	_float fAngle;
+	CCameraMgr::GetInstance()->Get_CameraAngle(&fAngle);
+	wstring wAngleInfo = L"Camera Angle : " + to_wstring(fAngle) + L"ï¿½ï¿½";
+
+	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wAngleInfo.c_str(), &vPos_DebugUI_CameraAngle, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+
 }
 
 HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
@@ -66,9 +134,11 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	// ¿ÀºêÁ§Æ® Ãß°¡
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ß°ï¿½
 	CGameObject* pGameObject = nullptr;
 
+
+	/*
 	// DynamicCamera
 	_vec3   vEye{ 0.f, 10.f, -10.f };
 	_vec3   vAt{ 0.f, 0.f, 1.f };
@@ -81,6 +151,9 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 	if (FAILED(pLayer->Add_GameObject(L"DynamicCamera", pGameObject)))
 		return E_FAIL;
+
+	*/
+
 
 	// SkyBox
 	pGameObject = CSkyBox::Create(m_pGraphicDev);
@@ -101,7 +174,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	// ¿ÀºêÁ§Æ® Ãß°¡
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ß°ï¿½
 	CGameObject* pGameObject = nullptr;
 
 	// Terrain
@@ -111,14 +184,37 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	if (FAILED(pLayer->Add_GameObject(L"Terrain", pGameObject)))
 		return E_FAIL;
+	
+	// BackGround
 
-	// Player
 	pGameObject = CPlayer::Create(m_pGraphicDev);
 	if (nullptr == pGameObject)
 		return E_FAIL;
-
+	
 	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 		return E_FAIL;
+	
+	
+	pGameObject = CMonster::Create(m_pGraphicDev);
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	
+	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+		return E_FAIL;
+	
+
+	// Effect
+
+	for (int i = 0; i < 50; ++i)
+	{
+		pGameObject = CEffect::Create(m_pGraphicDev);
+	
+		if (nullptr == pGameObject)
+			return E_FAIL;
+
+		if (FAILED(pLayer->Add_GameObject(L"Effect", pGameObject)))
+			return E_FAIL;
+	}
 
 	// Monster
 	pGameObject = CMonster::Create(m_pGraphicDev);
@@ -130,6 +226,8 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	m_mapLayer.insert({ pLayerTag ,pLayer });
 
+	m_pLogicLayer = pLayer;
+
 	return S_OK;
 }
 
@@ -139,8 +237,11 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	// ¿ÀºêÁ§Æ® Ãß°¡
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ß°ï¿½
 	CGameObject* pGameObject = nullptr;
+
+	
+
 
 	m_mapLayer.insert({ pLayerTag ,pLayer });
 

@@ -11,7 +11,7 @@ CRenderer::~CRenderer()
 	Free();
 }
 
-void CRenderer::Add_RenderGroup(RENDERID eID, CGameObject* pGameObject)
+void CRenderer::Add_RenderGrop(RENDERID eID, CGameObject* pGameObject)
 {
 	if (eID >= RENDER_END || nullptr == pGameObject)
 		return;
