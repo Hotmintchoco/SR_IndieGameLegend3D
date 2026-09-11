@@ -41,7 +41,7 @@ void CTerrain::LateUpdate_GameObject(const _float& fTimeDelta)
 void CTerrain::Render_GameObject()
 {
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-    m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+    //m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 
     m_pTextureCom->Set_Texture(0);
 

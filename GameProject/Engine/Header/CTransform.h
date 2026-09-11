@@ -39,14 +39,20 @@ public:
 		m_matWorld = *pWorld;
 	}
 
+	void		Set_Scale(_float fX, _float fY, _float fZ)
+	{
+		m_vScale = { fX, fY, fZ };
+	}
+
 public:
 	HRESULT			Ready_Transform();
 	virtual _int	Update_Component(const _float& fTimeDelta);
 	virtual void	LateUpdate_Component();
 
 public:
-	void		Chase_Target(const _vec3* pPos, const _float& fSpeed, const _float& fTimeDelta);
-	_matrix* Compute_LookAtTarget(const _vec3* pPos);
+	void		Chase_Target(const _vec3* pPos, const _vec3* pAngle, const _float& fSpeed, const _float& fTimeDelta);
+	void		Chase_Target2(const _vec3* pPos, const _vec3* pAngle, const _float& fSpeed, const _float& fTimeDelta);
+	_matrix* Compute_LookAtTarget(const _vec3* pPos, const _vec3* pLook);
 
 public:
 	_vec3		m_vInfo[INFO_END];
@@ -55,6 +61,8 @@ public:
 	_vec3		m_vAngle;
 
 	_matrix		m_matWorld;
+
+	_float m_fAccumulatedTime;
 
 public:
 	static CTransform* Create(LPDIRECT3DDEVICE9 pGraphicDev);
