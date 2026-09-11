@@ -20,6 +20,7 @@ HRESULT CPlayer::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
+
     return S_OK;
 }
 
@@ -149,7 +150,7 @@ void CPlayer::Set_OnTerrain()
     
    _float  fY = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
 
-   m_pTransformCom->Set_Pos(vPos.x, fY + 1, vPos.z);
+   m_pTransformCom->Set_Pos(vPos.x, fY + 1.f, vPos.z);
 }
 
 _vec3 CPlayer::Picking_OnTerrain()
