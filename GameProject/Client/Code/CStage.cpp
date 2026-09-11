@@ -110,8 +110,8 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 			/* ≈∏¿œ */
 			for (size_t i = 0; i < m_MapData.vecTile.size(); ++i)
 			{
-				int iTileX = (int)i % iTileSizeX;
-				int iTileZ = (int)i / iTileSizeX;
+				int iTileX = i % iTileSizeX;
+				int iTileZ = i / iTileSizeX;
 
 				_vec3 vTileOffset{
 					-(float)(iTileSizeX - 1) / 2.f * 1.f + 1.f * (float)iTileX,
@@ -119,7 +119,7 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 					(float)(iTileSizeZ - 1) / 2.f * 1.f - 1.f * (float)iTileZ
 				};
 
-				pGameObject = CTile::Create(m_pGraphicDev, (int)i, m_MapData.vecTile.at(i));
+				pGameObject = CTile::Create(m_pGraphicDev, i, m_MapData.vecTile.at(i));
 				if (nullptr == pGameObject)
 					return E_FAIL;
 
@@ -143,7 +143,7 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 				wstring wstrDoorName = L"Room_" + to_wstring(iRoomNumber) + L"_Door_" + to_wstring(i);
 
-				if (FAILED(pLayer->Add_GameObject(wstrDoorName, pGameObject)))
+				if (FAILED(pLayer->Add_GameObject(wstrDoorName.c_str(), pGameObject)))
 					return E_FAIL;
 
 				CTransform* pTransformCom = dynamic_cast<CTransform*>(
@@ -199,7 +199,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		if (nullptr == pGameObject)
 			return E_FAIL;
 
-		if (FAILED(pLayer->Add_GameObject(tMapEntity.wstrEntityName, pGameObject)))
+		if (FAILED(pLayer->Add_GameObject(tMapEntity.wstrEntityName.c_str(), pGameObject)))
 			return E_FAIL;
 
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(
