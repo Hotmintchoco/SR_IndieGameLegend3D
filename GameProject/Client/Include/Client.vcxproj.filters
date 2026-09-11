@@ -52,6 +52,9 @@
     <Filter Include="02. GameObject\06. Effect">
       <UniqueIdentifier>{26da718b-9159-461e-bec9-2f4654b8be1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Bullet">
+      <UniqueIdentifier>{1c4cc9b4-003c-4aa7-a11b-0d12f6039fa0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -102,6 +105,9 @@
     <ClInclude Include="..\Header\CEffect.h">
       <Filter>02. GameObject\06. Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBullet.h">
+      <Filter>02. GameObject\07. Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -142,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEffect.cpp">
       <Filter>02. GameObject\06. Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBullet.cpp">
+      <Filter>02. GameObject\07. Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

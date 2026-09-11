@@ -100,6 +100,18 @@
     <Filter Include="10. CollisionMgr">
       <UniqueIdentifier>{f4d867b3-e537-4846-9755-9bf9dc6f82e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="11. CameraMgr">
+      <UniqueIdentifier>{ec13bc33-3624-4625-8a16-a856b8198239}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. CameraMgr\CameraObj">
+      <UniqueIdentifier>{fcac002c-ea90-4167-9f43-4be722d8bd4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. CameraMgr\CameraObj\Camera_FPV_Perspective">
+      <UniqueIdentifier>{425a4893-f8d8-4dba-9f0c-4cff23d41590}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. CameraMgr\CameraObj\Camera_TPV_Perspective">
+      <UniqueIdentifier>{870b0c63-0d06-4560-9658-fff7daeee6d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -192,6 +204,13 @@
     <ClCompile Include="..\Code\CCollisionMgr.cpp">
       <Filter>10. CollisionMgr</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CCameraFPVPerspective.cpp">
+      <Filter>11. CameraMgr\CameraObj\Camera_FPV_Perspective</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCameraObj.cpp">
+      <Filter>11. CameraMgr\CameraObj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCameraMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CGraphicDev.h">
@@ -302,5 +321,12 @@
     <ClInclude Include="..\Header\CCollisionMgr.h">
       <Filter>10. CollisionMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CCameraFPVPerspective.h">
+      <Filter>11. CameraMgr\CameraObj\Camera_FPV_Perspective</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCameraObj.h">
+      <Filter>11. CameraMgr\CameraObj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCameraMgr.h" />
   </ItemGroup>
 </Project>
