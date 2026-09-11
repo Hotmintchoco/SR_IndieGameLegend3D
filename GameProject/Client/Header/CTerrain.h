@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CGameObject.h"
 
@@ -28,7 +28,7 @@ private:
 private:
 	Engine::CTerrainTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
-	Engine::CTexture* m_pTextureCom;
+	//Engine::CTexture* m_pTextureCom;
 
 public:
 	static CTerrain* Create(LPDIRECT3DDEVICE9 pGraphicDev);
