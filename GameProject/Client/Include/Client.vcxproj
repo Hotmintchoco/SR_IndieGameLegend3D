@@ -206,7 +206,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\Resource\Map\DefaultRoom.json" />
+    <None Include="..\Bin\Resource\Map\Room_2_1.json" />
     <None Include="..\Bin\Resource\Map\Room_2_2.json" />
+    <None Include="..\Bin\Resource\Map\Room_4_3.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

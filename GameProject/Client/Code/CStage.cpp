@@ -44,6 +44,19 @@ HRESULT CStage::Ready_Scene()
 	return S_OK;
 }
 
+HRESULT CStage::PostInitialize()
+{
+	for (auto pRoom : m_vecRoom)
+	{
+		if (FAILED(pRoom->PostInitialize()))
+		{
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+
 _int CStage::Update_Scene(const _float& fTimeDelta)
 {
 	_int iExit = CScene::Update_Scene(fTimeDelta);
@@ -105,9 +118,6 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* TODO 김성철 : 물체 생성 시점과 레이어 등록 간극 이야기하기 */
-	m_mapLayer.insert({ pLayerTag ,pLayer });
-
 	// 오브젝트 추가
 	CGameObject* pGameObject = nullptr;
 
@@ -144,7 +154,11 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 		if (FAILED(pLayer->Add_GameObject(L"Gun", pGameObject)))
 			return E_FAIL;
+
+		m_vecRoom.push_back(static_cast<CRoom*>(pGameObject));
 	}
+
+	m_mapLayer.insert({ pLayerTag ,pLayer });
 
 	return S_OK;
 }

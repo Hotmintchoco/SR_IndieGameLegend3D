@@ -75,7 +75,7 @@ HRESULT CFog::Add_Component()
     if (nullptr == pComponent)
         return E_FAIL;
 
-    m_mapComponent[ID_STATIC].insert({ L"Com_Transform", pComponent });
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 
     return S_OK;

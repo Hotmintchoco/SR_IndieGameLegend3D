@@ -29,4 +29,5 @@ struct TRoomData
 	vector<TRoomEntity> vecObjectInfo;
 	vector<TRoomEntity> vecMonsterInfo;
 	vector<bool> vecDoorInfo;
+	vector<int> vecDoorTile;
 };

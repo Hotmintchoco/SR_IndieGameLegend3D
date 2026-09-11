@@ -245,5 +245,11 @@
     <None Include="..\Bin\Resource\Map\Room_2_2.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
+    <None Include="..\Bin\Resource\Map\Room_4_3.json">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Map\Room_2_1.json">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -37,6 +37,11 @@ HRESULT CRoom::Ready_GameObject()
 
     UpdateCenterPosition();
 
+    return S_OK;
+}
+
+HRESULT CRoom::PostInitialize()
+{
 	TRoomData* pData = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iIndex);
 	const int iRoomTotalCount = CRoomLoadingMgr::GetInstance()->GetRoomTotalCount();
 	const int iRoomRowCount = CRoomLoadingMgr::GetInstance()->GetRoomRowCount();
@@ -49,13 +54,6 @@ HRESULT CRoom::Ready_GameObject()
 
 	int iRoomRow = m_iIndex / iRoomColCount;
 	int iRoomCol = m_iIndex % iRoomColCount;
-		
-	_vec3 vRoomOffset{
-		-(float)(iRoomRowCount - 1) / 2.f * vRoomInterval.x + vRoomInterval.x * (float)iRoomRow,
-		0.f,
-		(float)(iRoomColCount - 1) / 2.f * vRoomInterval.z - vRoomInterval.z * (float)iRoomCol
-	};
-
 
 	/* 타일 */
 	for (size_t i = 0; i < pData->vecTile.size(); ++i)
@@ -82,7 +80,7 @@ HRESULT CRoom::Ready_GameObject()
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(
 			pLayer->Get_Component(ID_DYNAMIC, wstrTileName, L"Com_Transform"));
 
-		pTransformCom->Set_Pos(m_vCenterPos.x + vRoomOffset.x + vTileOffset.x, 0.f, m_vCenterPos.z + vRoomOffset.z + vTileOffset.z);
+		pTransformCom->Set_Pos(m_vCenterPos.x + vTileOffset.x, 0.f, m_vCenterPos.z + vTileOffset.z);
 	}
 
 	/* 벽 : 동남서북 순 */
@@ -100,13 +98,19 @@ HRESULT CRoom::Ready_GameObject()
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(
 			pLayer->Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
 
-		pTransformCom->Set_Pos(m_vCenterPos.x + vRoomOffset.x, 0.f, m_vCenterPos.z + vRoomOffset.z);
+		pTransformCom->Set_Pos(m_vCenterPos.x, 0.f, m_vCenterPos.z);
 
 		/* 안개 */
 		CWall* pWall = static_cast<CWall*>(pGameObject);
 		if (pWall->HasDoor())
 		{
 			int iDir = (int)pWall->GetDir();
+
+			_vec3 vDir{ 0.f, 0.f, 1.f };
+			_matrix matRot;
+			D3DXMatrixRotationY(&matRot, D3DXToRadian(90.f) * iDir);
+			D3DXVec3TransformCoord(&vDir, &vDir, &matRot);
+
 			for (int i = 0; i < 5; i++)
 			{
 				pGameObject = CFog::Create(m_pGraphicDev);
@@ -121,16 +125,30 @@ HRESULT CRoom::Ready_GameObject()
 				CTransform* pTransformCom = dynamic_cast<CTransform*>(
 					pLayer->Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
 
-				pTransformCom->Set_Pos(m_vCenterPos.x + vRoomOffset.x, 0.f, m_vCenterPos.z + vRoomOffset.z);
+				pTransformCom->Set_Pos(m_vCenterPos.x, 0.f, m_vCenterPos.z);
 				pTransformCom->Rotation(ROT_Y, 90.f * iDir);
 
-				_vec3 vDir{ 0.f, 0.f, 1.f };
-				_matrix matRot;
-				D3DXMatrixRotationY(&matRot, D3DXToRadian(90.f) * iDir);
-				D3DXVec3TransformCoord(&vDir, &vDir, &matRot);
 				pTransformCom->Move_Pos(&vDir, 5.5f + (iDir % 2) * 1.f + 0.2f * i, 1.f);
 			}
+
+			/* 문 쪽 타일 */
+			pGameObject = CTile::Create(m_pGraphicDev, (int)i, (pData->vecDoorTile[iDir - 1] == 0) ? pData->iDefaultTileIdx : pData->vecDoorTile[iDir - 1]);
+			if (nullptr == pGameObject)
+				return E_FAIL;
+
+			wstring wstrTileName = L"Room_" + to_wstring(m_iIndex) + L"_DoorTile_" + to_wstring(i);
+
+			if (FAILED(pLayer->Add_GameObject(wstrTileName, pGameObject)))
+				return E_FAIL;
+			
+			CTransform* pTransformCom = dynamic_cast<CTransform*>(
+				pLayer->Get_Component(ID_DYNAMIC, wstrTileName, L"Com_Transform"));
+
+			pTransformCom->Set_Pos(m_vCenterPos.x, 0.f, m_vCenterPos.z);
+			pTransformCom->Move_Pos(&vDir, 6.f + (iDir % 2) * 1.f, 1.f);
 		}
+
+
 	}
 
 	/* 몬스터 소환 */
@@ -146,10 +164,10 @@ HRESULT CRoom::Ready_GameObject()
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(
 			pLayer->Get_Component(ID_DYNAMIC, tMapEntity.wstrEntityName, L"Com_Transform"));
 
-		pTransformCom->Set_Pos(m_vCenterPos.x + vRoomOffset.x + tMapEntity.vPos.x, m_vCenterPos.y + vRoomOffset.y + tMapEntity.vPos.y, m_vCenterPos.z + vRoomOffset.z + tMapEntity.vPos.z);
+		pTransformCom->Set_Pos(m_vCenterPos.x + tMapEntity.vPos.x, m_vCenterPos.y + tMapEntity.vPos.y, m_vCenterPos.z + tMapEntity.vPos.z);
 	}
 
-    return S_OK;
+	return S_OK;
 }
 
 void CRoom::UpdateCenterPosition()

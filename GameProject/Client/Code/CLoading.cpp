@@ -216,6 +216,7 @@ HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
         data.at("objectList").get_to(t.vecObjectInfo);
         data.at("monsterList").get_to(t.vecMonsterInfo);
         data.at("door").get_to(t.vecDoorInfo);
+        data.at("doorTile").get_to(t.vecDoorTile);
 
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
@@ -231,7 +232,7 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
 {
     using json = nlohmann::json;
 
-    wstring wstrFilePath = L"../Bin/Resource/Map/Room_2_2.json";
+    wstring wstrFilePath = L"../Bin/Resource/Map/DefaultRoom.json";
     ifstream f(wstrFilePath);
     if (!f.is_open()) {
         MSG_BOX("[CLoading] 맵 Json 데이터 파일 열기 실패");
@@ -249,6 +250,7 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
         data.at("objectList").get_to(t.vecObjectInfo);
         data.at("monsterList").get_to(t.vecMonsterInfo);
         data.at("door").get_to(t.vecDoorInfo);
+        data.at("doorTile").get_to(t.vecDoorTile);
 
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
