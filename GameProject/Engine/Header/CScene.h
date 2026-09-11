@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CBase.h"
 #include "CLayer.h"
@@ -18,6 +18,8 @@ public:
 		const _tchar* pComponentTag);
 
 	CGameObject* Get_GameObject(const _tchar* pLayerTag, const _tchar* pObjTag);
+
+	CLayer* Get_Layer(const _tchar* pLayerTag);
 
 public:
 	virtual			HRESULT		Ready_Scene();
