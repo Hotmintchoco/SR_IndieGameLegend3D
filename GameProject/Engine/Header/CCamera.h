@@ -1,35 +1,28 @@
 #pragma once
 
-#include "CBase.h"
-#include "Engine_Define.h"
+#include "CGameObject.h"
 
 BEGIN(Engine)
 
-class ENGINE_DLL CCamera : public CBase
+class ENGINE_DLL CCamera :  public CGameObject
 {
 protected:
-	explicit CCamera(LPDIRECT3DDEVICE9 pGraphicDev) ;
+	explicit CCamera(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CCamera(const CCamera& rhs);
 	virtual ~CCamera();
 
-
 public:
-	virtual	HRESULT		Ready_Camera() = 0;
-	virtual void		Update_Camera(const _float& fTimeDelta) = 0;
-	virtual void		LateUpdate_Camera(const _float& fTimeDelta) = 0;
-	void				Get_CamLook(_vec3* pLook);
-	void				Get_CameraAngle(_float* pAngle) { memcpy( pAngle, &m_fAngle, sizeof(_float)); }
+	virtual			HRESULT		Ready_GameObject();
+	virtual			_int		Update_GameObject(const _float& fTimeDelta);
+	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 
 protected:
-	LPDIRECT3DDEVICE9	m_pGraphicDev;
-	_matrix				m_matView, m_matProj;
-	_vec3				m_vEye, m_vAt, m_vUp;
-	_float				m_fFov, m_fAspect, m_fNear, m_fFar;
-	_float				m_fAngle;
+	_matrix		m_matView, m_matProj;
+	_vec3		m_vEye, m_vAt, m_vUp;
+	_float		m_fFov, m_fAspect, m_fNear, m_fFar;
 
-public:
-	static CCamera* Create(CAMERAID tagCameraType, LPDIRECT3DDEVICE9 pGraphicDev);
-private:
-	virtual void	Free();
+protected:
+	virtual void Free();
 };
 
 END

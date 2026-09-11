@@ -14,7 +14,7 @@ private:
 	virtual ~CRenderer();
 
 public:
-	void	Add_RenderGrop(RENDERID eID, CGameObject* pGameObject);
+	void	Add_RenderGroup(RENDERID eID, CGameObject* pGameObject);
 	void	Render_GameObject(LPDIRECT3DDEVICE9& pGraphicDev);
 	void	Clear_RenderGroup();
 

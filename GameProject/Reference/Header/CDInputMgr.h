@@ -31,8 +31,8 @@ public:
 	}
 
 public:
-	bool	Key_Press(_byte byKeyID);
-	bool	Key_Down(_byte byKeyID);
+	bool	Key_Press(_byte byKeyID); 
+	bool	Key_Down(_byte byKeyID);  
 	bool	Key_Up(_byte byKeyID);
 
 	bool	Mouse_Press(MOUSEKEYSTATE eMouse);

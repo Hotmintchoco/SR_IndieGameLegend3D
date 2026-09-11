@@ -35,8 +35,6 @@ private:
 	CRITICAL_SECTION	m_Crt;
 	_bool				m_bFinish;
 
-
-
 public:
 	static CLoading* Create(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID eID);
 

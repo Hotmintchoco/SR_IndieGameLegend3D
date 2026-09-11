@@ -35,7 +35,7 @@ _int CEffect::Update_GameObject(const _float& fTimeDelta)
     if (90.f < m_fFrame)
         m_fFrame = 0.f;
 
-    CRenderer::GetInstance()->Add_RenderGrop(RENDER_ALPHA, this);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
     return iExit;
 }

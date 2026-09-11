@@ -27,7 +27,7 @@ _int CSkyBox::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    CRenderer::GetInstance()->Add_RenderGrop(RENDER_PRIORITY, this);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_PRIORITY, this);
 
     return iExit;
 }
@@ -52,7 +52,7 @@ void CSkyBox::Render_GameObject()
    // m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);        // Z 버퍼에 Z 값을 기록, Z 버퍼 정렬을 할지를 물음
     m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);   // Z 버퍼에 Z 값을 저장 할 지 묻는 옵션
 
-    m_pTextureCom->Set_Texture(3);
+    m_pTextureCom->Set_Texture(0);
     m_pBufferCom->Render_Buffer();
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);

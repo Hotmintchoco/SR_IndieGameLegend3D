@@ -3,12 +3,12 @@
 #include "CDInputMgr.h"
 
 CDynamicCamera::CDynamicCamera(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CCameraOld(pGraphicDev) , m_bFix(true), m_bCheck(true)
+	: CCamera(pGraphicDev) , m_bFix(true), m_bCheck(true), m_fSpeed(0.f)
 {
 }
 
 CDynamicCamera::CDynamicCamera(const CDynamicCamera& rhs)
-	: CCameraOld(rhs), m_bFix(rhs.m_bFix), m_bCheck(rhs.m_bCheck)
+	: CCamera(rhs), m_bFix(rhs.m_bFix), m_bCheck(rhs.m_bCheck), m_fSpeed(rhs.m_fSpeed)
 {
 }
 
@@ -33,7 +33,7 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	m_fNear = fNear;
 	m_fFar = fFar;
 
-	if (FAILED(CCameraOld::Ready_GameObject()))
+	if (FAILED(CCamera::Ready_GameObject()))
 		return E_FAIL;
 
 	m_fSpeed = 10.f;
@@ -44,7 +44,7 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 
 _int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 {
-	_int iExit = CCameraOld::Update_GameObject(fTimeDelta);
+	_int iExit = CCamera::Update_GameObject(fTimeDelta);
 
 	return iExit;
 }
@@ -60,7 +60,7 @@ void CDynamicCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 	}
 
 
-	CCameraOld::LateUpdate_GameObject(fTimeDelta);
+	CCamera::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CDynamicCamera::Key_Input(const _float& fTimeDelta)
@@ -95,16 +95,8 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		_vec3 vLook;
 		memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
 
-		_vec3	vLength;
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_LSHIFT))
-		{
-			float fAccel = 3.f;
-			vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed * fAccel;
-		}
-		else
-		{
-			vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed;
-		}
+		_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed;
+
 		m_vEye += vLength;
 		m_vAt  += vLength;
 	}
@@ -114,16 +106,8 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		_vec3 vLook;
 		memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
 
-		_vec3	vLength;
-		if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_LSHIFT))
-		{
-			float fAccel = 3.f;
-			vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed * fAccel;
-		}
-		else
-		{
-			vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed;
-		}
+		_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed;
+
 		m_vEye -= vLength;
 		m_vAt  -= vLength;
 	}
@@ -218,5 +202,5 @@ CDynamicCamera* CDynamicCamera::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec
 
 void CDynamicCamera::Free()
 {
-	CCameraOld::Free();
+	CCamera::Free();
 }
