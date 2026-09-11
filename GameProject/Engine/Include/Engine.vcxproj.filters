@@ -2,72 +2,96 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Code\CCalculator.cpp" />
-    <ClCompile Include="..\Code\CCamera.cpp" />
     <ClCompile Include="..\Code\CCollider.cpp" />
-    <ClCompile Include="..\Code\CCollisionMgr.cpp" />
-    <ClCompile Include="..\Code\CComponent.cpp" />
-    <ClCompile Include="..\Code\CCubeTex.cpp" />
-    <ClCompile Include="..\Code\CDInputMgr.cpp" />
-    <ClCompile Include="..\Code\CFont.cpp" />
-    <ClCompile Include="..\Code\CFontMgr.cpp" />
-    <ClCompile Include="..\Code\CFrame.cpp" />
-    <ClCompile Include="..\Code\CFrameMgr.cpp" />
-    <ClCompile Include="..\Code\CGameObject.cpp" />
-    <ClCompile Include="..\Code\CLayer.cpp" />
-    <ClCompile Include="..\Code\CLight.cpp" />
-    <ClCompile Include="..\Code\CLightMgr.cpp" />
-    <ClCompile Include="..\Code\CManagement.cpp" />
     <ClCompile Include="..\Code\CPlaneTex.cpp" />
     <ClCompile Include="..\Code\CPlyTex.cpp" />
-    <ClCompile Include="..\Code\CProtoMgr.cpp" />
-    <ClCompile Include="..\Code\CRcCol.cpp" />
-    <ClCompile Include="..\Code\CRcTex.cpp" />
-    <ClCompile Include="..\Code\CRenderer.cpp" />
-    <ClCompile Include="..\Code\CScene.cpp" />
     <ClCompile Include="..\Code\CSphereCollider.cpp" />
-    <ClCompile Include="..\Code\CTerrainTex.cpp" />
     <ClCompile Include="..\Code\CTexture.cpp" />
-    <ClCompile Include="..\Code\CTimer.cpp" />
-    <ClCompile Include="..\Code\CTimerMgr.cpp" />
     <ClCompile Include="..\Code\CTransform.cpp" />
-    <ClCompile Include="..\Code\CTriCol.cpp" />
-    <ClCompile Include="..\Code\CVIBuffer.cpp" />
     <ClCompile Include="..\Code\CGraphicDev.cpp">
       <Filter>00. GraphicDev</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTimer.cpp">
+      <Filter>01. TimerMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTimerMgr.cpp">
+      <Filter>01. TimerMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFrame.cpp">
+      <Filter>02. FrameMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFrameMgr.cpp">
+      <Filter>02. FrameMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFont.cpp">
+      <Filter>03. FontMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFontMgr.cpp">
+      <Filter>03. FontMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCamera.cpp">
+      <Filter>04. Management\02. GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGameObject.cpp">
+      <Filter>04. Management\02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CComponent.cpp">
+      <Filter>04. Management\03. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CVIBuffer.cpp">
+      <Filter>05. Component\00. VIBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTriCol.cpp">
+      <Filter>05. Component\00. VIBuffer\00. TriCol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRcCol.cpp">
+      <Filter>05. Component\00. VIBuffer\01. RcCol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRcTex.cpp">
+      <Filter>05. Component\00. VIBuffer\02. RcTex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTerrainTex.cpp">
+      <Filter>05. Component\00. VIBuffer\03. TerrainTex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCubeTex.cpp">
+      <Filter>05. Component\00. VIBuffer\04. CubeTex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CProtoMgr.cpp">
+      <Filter>06. ProtoMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDInputMgr.cpp">
+      <Filter>07. DInput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRenderer.cpp">
+      <Filter>08. Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLight.cpp">
+      <Filter>09.LightMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLightMgr.cpp">
+      <Filter>09.LightMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCollisionMgr.cpp">
+      <Filter>10. CollisionMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CScene.cpp">
+      <Filter>04. Management\00. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLayer.cpp">
+      <Filter>04. Management\01. Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CManagement.cpp">
+      <Filter>04. Management</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CCalculator.h" />
-    <ClInclude Include="..\Header\CCamera.h" />
     <ClInclude Include="..\Header\CCollider.h" />
-    <ClInclude Include="..\Header\CCollisionMgr.h" />
-    <ClInclude Include="..\Header\CComponent.h" />
-    <ClInclude Include="..\Header\CCubeTex.h" />
-    <ClInclude Include="..\Header\CDInputMgr.h" />
-    <ClInclude Include="..\Header\CFont.h" />
-    <ClInclude Include="..\Header\CFontMgr.h" />
-    <ClInclude Include="..\Header\CFrame.h" />
-    <ClInclude Include="..\Header\CFrameMgr.h" />
-    <ClInclude Include="..\Header\CGameObject.h" />
-    <ClInclude Include="..\Header\CLayer.h" />
-    <ClInclude Include="..\Header\CLight.h" />
-    <ClInclude Include="..\Header\CLightMgr.h" />
-    <ClInclude Include="..\Header\CManagement.h" />
     <ClInclude Include="..\Header\CPlaneTex.h" />
     <ClInclude Include="..\Header\CPlyTex.h" />
-    <ClInclude Include="..\Header\CProtoMgr.h" />
-    <ClInclude Include="..\Header\CRcCol.h" />
-    <ClInclude Include="..\Header\CRcTex.h" />
-    <ClInclude Include="..\Header\CRenderer.h" />
-    <ClInclude Include="..\Header\CScene.h" />
     <ClInclude Include="..\Header\CSphereCollider.h" />
-    <ClInclude Include="..\Header\CTerrainTex.h" />
     <ClInclude Include="..\Header\CTexture.h" />
-    <ClInclude Include="..\Header\CTimer.h" />
-    <ClInclude Include="..\Header\CTimerMgr.h" />
     <ClInclude Include="..\Header\CTransform.h" />
-    <ClInclude Include="..\Header\CTriCol.h" />
-    <ClInclude Include="..\Header\CVIBuffer.h" />
     <ClInclude Include="..\Header\Engine_Define.h" />
     <ClInclude Include="..\Header\Engine_Enum.h" />
     <ClInclude Include="..\Header\Engine_Function.h" />
@@ -79,10 +103,145 @@
     <ClInclude Include="..\Header\CGraphicDev.h">
       <Filter>00. GraphicDev</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTimer.h">
+      <Filter>01. TimerMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTimerMgr.h">
+      <Filter>01. TimerMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFrame.h">
+      <Filter>02. FrameMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFrameMgr.h">
+      <Filter>02. FrameMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFont.h">
+      <Filter>03. FontMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFontMgr.h">
+      <Filter>03. FontMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCamera.h">
+      <Filter>04. Management\02. GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGameObject.h">
+      <Filter>04. Management\02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CComponent.h">
+      <Filter>04. Management\03. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CVIBuffer.h">
+      <Filter>05. Component\00. VIBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTriCol.h">
+      <Filter>05. Component\00. VIBuffer\00. TriCol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRcCol.h">
+      <Filter>05. Component\00. VIBuffer\01. RcCol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRcTex.h">
+      <Filter>05. Component\00. VIBuffer\02. RcTex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTerrainTex.h">
+      <Filter>05. Component\00. VIBuffer\03. TerrainTex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCubeTex.h">
+      <Filter>05. Component\00. VIBuffer\04. CubeTex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CProtoMgr.h">
+      <Filter>06. ProtoMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CDInputMgr.h">
+      <Filter>07. DInput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRenderer.h">
+      <Filter>08. Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLight.h">
+      <Filter>09.LightMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLightMgr.h">
+      <Filter>09.LightMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCollisionMgr.h">
+      <Filter>10. CollisionMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CScene.h">
+      <Filter>04. Management\00. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLayer.h">
+      <Filter>04. Management\01. Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CManagement.h">
+      <Filter>04. Management</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00. GraphicDev">
       <UniqueIdentifier>{3124e81b-1b95-4a57-8d10-199983b40252}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. TimerMgr">
+      <UniqueIdentifier>{3df908ec-d727-4267-bbc0-1cdc96393cdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. FrameMgr">
+      <UniqueIdentifier>{92c835ff-d819-430b-ad8a-9fa1949ae735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. FontMgr">
+      <UniqueIdentifier>{8594414a-68ac-4608-b5ab-989175167c36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Management">
+      <UniqueIdentifier>{07cd6b74-5404-4799-a612-3f4f65bf4bd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Component">
+      <UniqueIdentifier>{e1424658-726a-4a2d-bf5d-9b0525efb64f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. ProtoMgr">
+      <UniqueIdentifier>{bc058f97-615a-4b61-8892-3c44f99da0ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Management\00. Scene">
+      <UniqueIdentifier>{4671b963-3927-42bd-93df-bf26af497a61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Management\01. Layer">
+      <UniqueIdentifier>{6ed831c7-1123-443f-b9af-e3b96e1c05a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Management\02. GameObject">
+      <UniqueIdentifier>{75960def-c982-46e4-b33c-c4634fd83774}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Management\02. GameObject\Camera">
+      <UniqueIdentifier>{14bf5acb-7ae5-48bf-9f9b-4eda82874276}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Management\03. Component">
+      <UniqueIdentifier>{7da20df9-15a0-4919-9c84-bc3eefb3db92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Component\00. VIBuffer">
+      <UniqueIdentifier>{5e80e151-e0e8-4d83-9d9e-e6dafe436045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Component\00. VIBuffer\00. TriCol">
+      <UniqueIdentifier>{aa7bd914-1590-49d5-a5d2-25f9a633028f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Component\00. VIBuffer\01. RcCol">
+      <UniqueIdentifier>{185d9591-edd8-4ec9-af4f-a3a7a8c1676e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Component\00. VIBuffer\02. RcTex">
+      <UniqueIdentifier>{b2fce8da-b240-4b11-a66a-a9c0353044c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Component\00. VIBuffer\03. TerrainTex">
+      <UniqueIdentifier>{2f0c6764-83f1-4b7f-9075-4c0e1692a412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Component\00. VIBuffer\04. CubeTex">
+      <UniqueIdentifier>{ed643088-baef-45d0-82a0-1d36141040ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. DInput">
+      <UniqueIdentifier>{c8a9bd5f-7cc1-4d53-87e6-2bcb21d63769}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Renderer">
+      <UniqueIdentifier>{12d936fa-159b-4475-ac0f-3dee9bfbf516}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="09.LightMgr">
+      <UniqueIdentifier>{a6300fb0-0b0c-4fdf-a083-901d9ce25f46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. CollisionMgr">
+      <UniqueIdentifier>{f1bcb045-bc7a-47ea-951b-f1185b2fb572}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
