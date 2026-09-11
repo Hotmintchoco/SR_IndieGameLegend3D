@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CMonster.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -47,7 +47,7 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 
-    // Ãæµ¹ Ã³¸® ¿©ºÎ¸¦ À§ÇØ Ãæµ¹ ¸Å´ÏÀú¿¡ ¸ó½ºÅÍÀÇ ÄÝ¶óÀÌ´õ¸¦ µî·Ï
+    // ì¶©ëŒ ì²˜ë¦¬ ì—¬ë¶€ë¥¼ ìœ„í•´ ì¶©ëŒ ë§¤ë‹ˆì €ì— ëª¬ìŠ¤í„°ì˜ ì½œë¼ì´ë”ë¥¼ ë“±ë¡
 	CCollisionMgr::GetInstance()->Add_Collider(COLL_MONSTER, m_pColliderCom);
 
     CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()

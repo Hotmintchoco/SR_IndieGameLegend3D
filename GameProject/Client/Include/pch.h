@@ -14,7 +14,7 @@
 #include <d3dx9.h>
 
 #include <process.h>
-
+#include <cassert>
 
 extern HWND g_hWnd;
 extern HINSTANCE g_hInst;
