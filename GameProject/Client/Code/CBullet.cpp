@@ -1,46 +1,45 @@
 #include "pch.h"
-#include "CEffect.h"
+#include "CBullet.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
-#include <ctime>
 
-CEffect::CEffect(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_fFrame(0.f)
+CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphicDev)
+    : CGameObject(pGraphicDev), m_vDir(0.f, 0.f, 0.f)
 {
 }
 
 
-CEffect::~CEffect()
+CBullet::~CBullet()
 {
 }
 
-HRESULT CEffect::Ready_GameObject()
+HRESULT CBullet::Ready_GameObject(const _vec3* pPos, const _vec3* pDir)
 {
-   // srand(unsigned(time(NULL)));
-
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    m_pTransformCom->Set_Pos(_float(rand() % 20) , 0.f, _float(rand() % 20));
+    m_pTransformCom->Set_Pos(pPos->x, pPos->y, pPos->z);
+    m_pTransformCom->m_vScale = { 0.2f, 0.2f, 0.2f };
+    D3DXVec3Normalize(&m_vDir, pDir);
 
     return S_OK;
 }
 
-_int CEffect::Update_GameObject(const _float& fTimeDelta)
+_int CBullet::Update_GameObject(const _float& fTimeDelta)
 {
+    _float fSpeed = 50.f;
+
+    m_pTransformCom->Move_Pos(&m_vDir, fSpeed, fTimeDelta);
+
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    m_fFrame += 90.f * fTimeDelta;
-
-    if (90.f < m_fFrame)
-        m_fFrame = 0.f;
-
     CRenderer::GetInstance()->Add_RenderGrop(RENDER_ALPHA, this);
+
 
     return iExit;
 }
 
-void CEffect::LateUpdate_GameObject(const _float& fTimeDelta)
+void CBullet::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     _vec3       vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -63,7 +62,6 @@ void CEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 
     D3DXMatrixInverse(&matBill, 0, &matBill);
 
-    // 주의 사항
     matWorld = matBill * matWorld;
 
     m_pTransformCom->Set_World(&matWorld);
@@ -71,23 +69,24 @@ void CEffect::LateUpdate_GameObject(const _float& fTimeDelta)
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
-void CEffect::Render_GameObject()
+void CBullet::Render_GameObject()
 {
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-    
-    m_pTextureCom->Set_Texture((_uint)m_fFrame);
+
+    m_pTextureCom->Set_Texture(0);
 
     m_pBufferCom->Render_Buffer();
-    
+
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
 }
 
-HRESULT CEffect::Add_Component()
+HRESULT CBullet::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
-    // RcTex
+    // RcCol
     pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
 
     if (nullptr == pComponent)
@@ -96,7 +95,7 @@ HRESULT CEffect::Add_Component()
     m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
 
     // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_EffectTexture"));
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BulletTexture"));
 
     if (nullptr == pComponent)
         return E_FAIL;
@@ -115,21 +114,21 @@ HRESULT CEffect::Add_Component()
 }
 
 
-CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CBullet* CBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3* pPos, const _vec3* pDir)
 {
-    CEffect* pEffect = new CEffect(pGraphicDev);
+    CBullet* pBullet = new CBullet(pGraphicDev);
 
-    if (FAILED(pEffect->Ready_GameObject()))
+    if (FAILED(pBullet->Ready_GameObject(pPos, pDir)))
     {
-        Safe_Release(pEffect);
-        MSG_BOX("CEffect Create Failed");
+        Safe_Release(pBullet);
+        MSG_BOX("CBullet Create Failed");
         return nullptr;
     }
 
-    return pEffect;
+    return pBullet;
 }
 
-void CEffect::Free()
+void CBullet::Free()
 {
     CGameObject::Free();
 }

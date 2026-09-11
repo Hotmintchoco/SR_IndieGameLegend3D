@@ -1,8 +1,8 @@
 #pragma once
 
-#include "CCamera.h"
+#include "CCameraOld.h"
 
-class CDynamicCamera : public CCamera
+class CDynamicCamera : public CCameraOld
 {
 protected:
 	explicit CDynamicCamera(LPDIRECT3DDEVICE9 pGraphicDev);

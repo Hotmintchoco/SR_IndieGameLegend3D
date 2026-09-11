@@ -24,6 +24,9 @@ public:
 	static CStage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
+	CLayer* m_pLogicLayer;
+
+private:
 	virtual void	Free();
 
 };

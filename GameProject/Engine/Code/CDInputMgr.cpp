@@ -48,11 +48,11 @@ HRESULT Engine::CDInputMgr::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 
 	// DInput 컴객체를 생성하는 함수
 	if (FAILED(DirectInput8Create(hInst,
-								DIRECTINPUT_VERSION,
-								IID_IDirectInput8,
-								(void**)&m_pInputSDK,
-								NULL)))
-								return E_FAIL;
+		DIRECTINPUT_VERSION,
+		IID_IDirectInput8,
+		(void**)&m_pInputSDK,
+		NULL)))
+		return E_FAIL;
 
 	// 키보드 객체 생성
 	if (FAILED(m_pInputSDK->CreateDevice(GUID_SysKeyboard, &m_pKeyBoard, nullptr)))

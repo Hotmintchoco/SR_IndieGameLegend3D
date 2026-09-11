@@ -67,9 +67,6 @@
     <Filter Include="05. Component\00. VIBuffer\03. TerrainTex">
       <UniqueIdentifier>{c9dc4e1e-a869-49db-a458-ff5af1a8f284}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. Management\02. GameObject\Camera">
-      <UniqueIdentifier>{dade9416-0f1e-4b1a-9582-e60546221ea0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="07. DInput">
       <UniqueIdentifier>{eb5a0f5c-5e87-44d8-ae51-0b802aba5f35}</UniqueIdentifier>
     </Filter>
@@ -87,6 +84,21 @@
     </Filter>
     <Filter Include="09. LightMgr\Light">
       <UniqueIdentifier>{ec0cee9e-12a5-4f5f-8e39-0e832bd907c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. Pipeline">
+      <UniqueIdentifier>{ef2d6eee-ca03-4d7d-a009-ac81761ee648}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. CameraMgr">
+      <UniqueIdentifier>{d4b46f78-7246-42c7-88d5-28ec7088388c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. CameraMgr\Camera">
+      <UniqueIdentifier>{19eba857-60d9-4713-9fcc-ded26045a659}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. CameraMgr\Camera\Camera_FPV_Perspective">
+      <UniqueIdentifier>{9681c6ac-1435-493a-b11f-3e21d95aded2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. CameraMgr\Camera\Camera_TPV_Perspective">
+      <UniqueIdentifier>{1c07df9f-62e2-46c4-938a-501b15cc3cf6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -150,9 +162,6 @@
     <ClCompile Include="..\Code\CTerrainTex.cpp">
       <Filter>05. Component\00. VIBuffer\03. TerrainTex</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CCamera.cpp">
-      <Filter>04. Management\02. GameObject\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CDInputMgr.cpp">
       <Filter>07. DInput</Filter>
     </ClCompile>
@@ -170,6 +179,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLightMgr.cpp">
       <Filter>09. LightMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPipeline.cpp">
+      <Filter>10. Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCameraMgr.cpp">
+      <Filter>11. CameraMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCamera.cpp">
+      <Filter>11. CameraMgr\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCameraFPVPerspective.cpp">
+      <Filter>11. CameraMgr\Camera\Camera_FPV_Perspective</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -251,9 +272,6 @@
     <ClInclude Include="..\Header\CTerrainTex.h">
       <Filter>05. Component\00. VIBuffer\03. TerrainTex</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CCamera.h">
-      <Filter>04. Management\02. GameObject\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CDInputMgr.h">
       <Filter>07. DInput</Filter>
     </ClInclude>
@@ -271,6 +289,21 @@
     </ClInclude>
     <ClInclude Include="..\Header\CLightMgr.h">
       <Filter>09. LightMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPipeline.h">
+      <Filter>10. Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCameraMgr.h">
+      <Filter>11. CameraMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCamera.h">
+      <Filter>11. CameraMgr\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCameraFPVPerspective.h">
+      <Filter>11. CameraMgr\Camera\Camera_FPV_Perspective</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Client\Include\targetver.h">
+      <Filter>04. Management\01. Layer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

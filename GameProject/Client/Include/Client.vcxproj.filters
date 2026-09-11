@@ -43,21 +43,18 @@
     <Filter Include="02. GameObject\03. Terrain">
       <UniqueIdentifier>{4b423757-2c5b-4e4e-9268-5f613c9c8f2f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\04. DynamicCamera">
-      <UniqueIdentifier>{cdd6e53a-fa5b-4c49-a8c4-f0b652689629}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\05. SkyBox">
       <UniqueIdentifier>{3cee2e7b-a2d0-4be9-9ae5-6f08fc300e79}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\06. Effect">
       <UniqueIdentifier>{26da718b-9159-461e-bec9-2f4654b8be1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\04. Bullet">
+      <UniqueIdentifier>{f4e9c6c3-d364-49f5-87f7-d419902e53b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
@@ -93,14 +90,14 @@
     <ClInclude Include="..\Header\CTerrain.h">
       <Filter>02. GameObject\03. Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CDynamicCamera.h">
-      <Filter>02. GameObject\04. DynamicCamera</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CSkyBox.h">
       <Filter>02. GameObject\05. SkyBox</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CEffect.h">
       <Filter>02. GameObject\06. Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBullet.h">
+      <Filter>02. GameObject\04. Bullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -134,14 +131,14 @@
     <ClCompile Include="..\Code\CTerrain.cpp">
       <Filter>02. GameObject\03. Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CDynamicCamera.cpp">
-      <Filter>02. GameObject\04. DynamicCamera</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CSkyBox.cpp">
       <Filter>02. GameObject\05. SkyBox</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CEffect.cpp">
       <Filter>02. GameObject\06. Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBullet.cpp">
+      <Filter>02. GameObject\04. Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

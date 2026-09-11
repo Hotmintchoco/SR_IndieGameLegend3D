@@ -15,7 +15,7 @@ public:
 		const _tchar* pObjTag,
 		const _tchar* pComponentTag);
 
-	CGameObject*	Get_GameObject(const _tchar* pObjTag);
+	CGameObject* Get_GameObject(const _tchar* pObjTag);
 
 	HRESULT			Add_GameObject(const _tchar* pObjTag, CGameObject* pGameObject);
 

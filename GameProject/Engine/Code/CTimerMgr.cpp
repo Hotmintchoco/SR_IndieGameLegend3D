@@ -54,7 +54,7 @@ CTimer* CTimerMgr::Find_Timer(const _tchar* pTimerTag)
 
 	if (iter == m_mapTimer.end())
 		return nullptr;
-	
+
 	return iter->second;
 }
 

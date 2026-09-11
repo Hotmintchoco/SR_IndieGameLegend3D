@@ -38,6 +38,22 @@ HRESULT		CTerrainTex::Ready_Buffer(const _ulong& dwVtxCntX,
 	if (FAILED(CVIBuffer::Ready_Buffer()))
 		return E_FAIL;
 
+	m_hFile = CreateFile(L"../Bin/Resource/Texture/Terrain/Height.bmp",
+		GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == m_hFile)
+		return E_FAIL;
+
+	_ulong dwByte(0);
+
+	ReadFile(m_hFile, &m_fH, sizeof(BITMAPFILEHEADER), &dwByte, NULL);
+	ReadFile(m_hFile, &m_iH, sizeof(BITMAPINFOHEADER), &dwByte, NULL);
+
+	_ulong* pPixel = new _ulong[m_iH.biWidth * m_iH.biHeight];
+
+	ReadFile(m_hFile, pPixel, sizeof(_ulong) * m_iH.biWidth * m_iH.biHeight, &dwByte, NULL);
+
+
 	VTXTEX* pVertex = NULL;
 	
 	_ulong dwIndex = 0;
@@ -53,7 +69,7 @@ HRESULT		CTerrainTex::Ready_Buffer(const _ulong& dwVtxCntX,
 			dwIndex = i * dwVtxCntX + j;
 
 			pVertex[dwIndex].vPosition = { _float(j * dwVtxItv), 
-										   0.f,
+										   _float(pPixel[dwIndex] & 0x000000ff) / 20.f,
 										   _float(i * dwVtxItv) };
 
 			pVertex[dwIndex].vNormal = { 0.f, 0.f, 0.f };
@@ -65,6 +81,9 @@ HRESULT		CTerrainTex::Ready_Buffer(const _ulong& dwVtxCntX,
 
 		}
 	}
+
+
+	Safe_Delete_Array(pPixel);
 
 	_vec3	vNormal, vDst, vSrc;
 
