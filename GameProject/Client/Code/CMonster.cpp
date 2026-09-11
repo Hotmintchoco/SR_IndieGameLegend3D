@@ -5,6 +5,7 @@
 #include "CPlayer.h"
 #include "CRenderer.h"
 #include "CCollider.h"
+#include "CCollisionMgr.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -21,8 +22,8 @@ HRESULT CMonster::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-	m_pTransformCom->Set_Pos(2.f, 1.f, 2.f);
-    m_pColliderCom->Set_Radius(2.f);
+	m_pTransformCom->Set_Pos(10.f, 1.f, 10.f);
+    m_pColliderCom->Set_Radius(1.f);
 
     __super::Ready_GameObject();
 
@@ -45,6 +46,9 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+    // 충돌 처리 여부를 위해 충돌 매니저에 몬스터의 콜라이더를 등록
+	CCollisionMgr::GetInstance()->Add_Collider(COLL_MONSTER, m_pColliderCom);
 
     CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
         ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));

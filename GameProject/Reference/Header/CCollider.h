@@ -20,6 +20,8 @@ public:
 	virtual void	Set_Radius(const _float& fRadius) {}
 	_float			Get_Radius() { return m_fRadius; }
 
+	_bool	Get_IsPos() { return m_bIsPos; }
+
 	COLLIDER_TYPE	Get_ColliderType() { return m_eColliderType; }
 
 	virtual _bool	Intersect(CCollider* pOther) PURE;
@@ -37,6 +39,7 @@ protected:
 
 protected:
 	_bool			m_bIsTrigger;
+	_bool			m_bIsPos;
 	_float			m_fRadius;
 	COLLIDER_TYPE	m_eColliderType = CT_NONE;
 };

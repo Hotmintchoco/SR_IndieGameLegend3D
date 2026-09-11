@@ -47,6 +47,10 @@ void CCollisionMgr::Update_Collision()
                     if (pColLeft == pColRight)
                         continue;
 
+                    // 생성후 위치가 갱신되지 않은 콜라이더는 패스
+                    if (!pColLeft->Get_IsPos() || !pColRight->Get_IsPos())
+						continue;
+
                     // 실제 교차(충돌) 검사
                     if (pColLeft->Intersect(pColRight))
                     {
@@ -72,4 +76,6 @@ void CCollisionMgr::Free()
 {
     for (_uint i = 0; i < COLL_END; ++i)
 		m_ColList[i].clear();
+
+
 }

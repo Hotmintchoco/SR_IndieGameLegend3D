@@ -34,6 +34,9 @@ HRESULT CStage::Ready_Scene()
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
 		return E_FAIL;
 
+	// 충돌 그룹 설정
+	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_MONSTER);
+
 	return S_OK;
 }
 
@@ -47,6 +50,9 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	CScene::LateUpdate_Scene(fTimeDelta);
+
+	Engine::CCollisionMgr::GetInstance()->Update_Collision();
+	Engine::CCollisionMgr::GetInstance()->Clear_ColliderList();
 }
 
 void CStage::Render_Scene()

@@ -8,6 +8,7 @@
 #include "CStage.h"
 #include "CDInputMgr.h"
 #include "CLightMgr.h"
+#include "CCollisionMgr.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -125,6 +126,7 @@ void CMainApp::Free()
 {
 	Safe_Release(m_pDeviceClass);
 
+	CCollisionMgr::DestroyInstance();
 	CLightMgr::DestroyInstance();
 	CRenderer::DestroyInstance();
 	CDInputMgr::DestroyInstance();
