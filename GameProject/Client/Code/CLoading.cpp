@@ -3,6 +3,8 @@
 #include "CProtoMgr.h"
 #include "Define.h"
 #include "JsonAdapter.h"
+#include "CRoomLoadingMgr.h"
+#include "Utils.h"
 
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoadingID(LOADING_END)
@@ -92,7 +94,19 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Gun_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/Gun_Diffuse.png", 1))))
         return E_FAIL;
 
+    /* 맵 오브젝트 */
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrayFrustum_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/GrayFrustum.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BrownFrustum_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/BrownFrustum.ply"))))
+        return E_FAIL;
 
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrayFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/GrayFrustum_Diffuse.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BrownFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/BrownFrustum_Diffuse.png", 1))))
+        return E_FAIL;
+
+    lstrcpy(m_szLoading, L"Room Data Loading............................");
+    
     /* 맵 출력용 에셋 */
     
     /* 벽 */
@@ -114,30 +128,21 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_NS_Door_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/WallLongDoor.png", 1))))
         return E_FAIL;
 
-    /* 맵 오브젝트 */
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrayFrustum_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/GrayFrustum.ply"))))
-        return E_FAIL;
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BrownFrustum_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/BrownFrustum.ply"))))
-        return E_FAIL;
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider", Engine::CSphereCollider::Create(m_pGraphicDev))))
-		return E_FAIL;
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrayFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/GrayFrustum_Diffuse.png", 1))))
-        return E_FAIL;
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BrownFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/BrownFrustum_Diffuse.png", 1))))
-        return E_FAIL;
-
     /* 타일 */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlaneTex", Engine::CPlaneTex::Create(m_pGraphicDev))))
         return E_FAIL;
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Tile_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture2D/StaticTile/StaticTile_%d.png", 54))))
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Tile_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture2D/StaticTile/StaticTile_%d.png", 57))))
         return E_FAIL;
 
     /* 안개 */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Fog_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture2D/Fog.png", 1))))
         return E_FAIL;
 
+    /* 맵 배치 데이터 */
+    if (FAILED(ParseRoomData()))
+    {
+        return E_FAIL;
+    }
 
     lstrcpy(m_szLoading, L"Loading Complete!!!");
 
@@ -171,27 +176,90 @@ unsigned int CLoading::Thread_Main(void* pArg)
     return iFlag;   // 0 리턴 시, _endthreadex 함수가 자동 호출
 }
 
-void CLoading::ParseMapData(TMapData* pOut)
+HRESULT CLoading::ParseRoomData()
+{
+    for (int i = 0; i < 25; ++i)
+    {
+        if (FAILED(ParseSingleRoom(i)))
+        {
+            return E_FAIL;
+        }
+    }
+    return S_OK;
+}
+
+HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
 {
     using json = nlohmann::json;
 
-    ifstream f("../Bin/Resource/Map/testmap.json");
+    int iRoomRow = iRoomIdx / 5;
+    int iRoomCol = iRoomIdx % 5;
+
+    wstring wstrFilePath = L"../Bin/Resource/Map/Room_" + to_wstring(iRoomRow) + L"_" + to_wstring(iRoomCol) + L".json";
+    ifstream f(wstrFilePath);
     if (!f.is_open()) {
-        MSG_BOX("파일 열기 실패");
-        return;
+        if (FAILED(ParseDefaultRoom(iRoomIdx)))
+        {
+            return E_FAIL;
+        }
+        return S_OK;
     }
 
+    TRoomData t;
     try {
         json data = json::parse(f);
-        data.at("tileList").get_to(pOut->vecTile);
-        data.at("objectList").get_to(pOut->vecObjectInfo);
-        data.at("monsterList").get_to(pOut->vecMonsterInfo);
-        data.at("door").get_to(pOut->vecDoorInfo);
+        string str = data.at("roomName").get<string>();
+        wstring wstr = Utils::Utf8ToWide(str);
+        t.wstrRoomName = wstr;
+        data.at("defaultTile").get_to(t.iDefaultTileIdx);
+        data.at("tileList").get_to(t.vecTile);
+        data.at("objectList").get_to(t.vecObjectInfo);
+        data.at("monsterList").get_to(t.vecMonsterInfo);
+        data.at("door").get_to(t.vecDoorInfo);
+
+        // 매니저 클래스에 데이터 등록
+        CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
     }
     catch (const json::exception& e) {
-        return;
+        return E_FAIL;
     }
+
+    return S_OK;
 }
+
+HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
+{
+    using json = nlohmann::json;
+
+    wstring wstrFilePath = L"../Bin/Resource/Map/Room_2_2.json";
+    ifstream f(wstrFilePath);
+    if (!f.is_open()) {
+        MSG_BOX("[CLoading] 맵 Json 데이터 파일 열기 실패");
+        return E_FAIL;
+    }
+
+    TRoomData t;
+    try {
+        json data = json::parse(f);
+        string str = data.at("roomName").get<string>();
+        wstring wstr = Utils::Utf8ToWide(str);
+        t.wstrRoomName = wstr;
+        data.at("defaultTile").get_to(t.iDefaultTileIdx);
+        data.at("tileList").get_to(t.vecTile);
+        data.at("objectList").get_to(t.vecObjectInfo);
+        data.at("monsterList").get_to(t.vecMonsterInfo);
+        data.at("door").get_to(t.vecDoorInfo);
+
+        // 매니저 클래스에 데이터 등록
+        CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
+    }
+    catch (const json::exception& e) {
+        return E_FAIL;
+    }
+
+    return S_OK;
+}
+
 
 CLoading* CLoading::Create(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID eID)
 {

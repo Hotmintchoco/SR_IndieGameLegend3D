@@ -2,7 +2,6 @@
 #include "CFog.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
-#include <ctime>
 
 CFog::CFog(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -54,8 +53,6 @@ HRESULT CFog::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
-    wstring wstrBufferName, wstrTextureName, wstrDir, wstrDoor;
-
     // Buffer
     pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
 
@@ -78,7 +75,7 @@ HRESULT CFog::Add_Component()
     if (nullptr == pComponent)
         return E_FAIL;
 
-    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
+    m_mapComponent[ID_STATIC].insert({ L"Com_Transform", pComponent });
 
 
     return S_OK;

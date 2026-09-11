@@ -82,6 +82,9 @@
     <Filter Include="02. GameObject\07. Room\Object\Fog">
       <UniqueIdentifier>{1fd52a66-301a-4c39-a75f-7b622cea6a8e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Manager">
+      <UniqueIdentifier>{21b47c84-577f-4f39-b3ac-01f370fb2f24}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="..\Header\CFog.h">
       <Filter>02. GameObject\07. Room\Object\Fog</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CRoomLoadingMgr.h">
+      <Filter>04. Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -215,6 +221,9 @@
     <ClCompile Include="..\Code\CFog.cpp">
       <Filter>02. GameObject\07. Room\Object\Fog</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CRoomLoadingMgr.cpp">
+      <Filter>04. Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -230,7 +239,10 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Bin\Resource\Map\TestMap.json">
+    <None Include="..\Bin\Resource\Map\DefaultRoom.json">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Map\Room_2_2.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
   </ItemGroup>

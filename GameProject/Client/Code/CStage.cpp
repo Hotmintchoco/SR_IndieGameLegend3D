@@ -10,11 +10,9 @@
 #include "CLightMgr.h"
 #include "CEffect.h"
 #include "CGun.h"
-#include "CLoading.h"
 #include "CManagement.h"
-#include "CTile.h"
-#include "CWall.h"
-#include "CFog.h"
+#include "CRoom.h"
+#include "CRoomLoadingMgr.h"
 #include "CCollisionMgr.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -28,8 +26,6 @@ CStage::~CStage()
 
 HRESULT CStage::Ready_Scene()
 {
-	CLoading::ParseMapData(&m_MapData);
-
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
 
@@ -98,99 +94,6 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"SkyBox", pGameObject)))
 		return E_FAIL;
 
-	/* 하드코딩으로 5 x 5 격자 맵 */
-	int iGridSize = 5;
-	int iTileSizeX = 13;
-	int iTileSizeZ = 11;
-	_vec2 vMapSize{ 15.f, 13.f };
-	_vec3 vTerrainOffset{ 60.f, 0.f, 60.f };
-
-	for (int j = 0; j < iGridSize; ++j)
-	{
-		for (int k = 0; k < iGridSize; ++k)
-		{
-			int iRoomNumber = j * iGridSize + k;
-			_vec3 vRoomOffset{
-				-(float)(iGridSize - 1) / 2.f * vMapSize.x + vMapSize.x * (float)k,
-				0.f,
-				(float)(iGridSize - 1) / 2.f * vMapSize.y - vMapSize.y * (float)j
-			};
-
-			/* 타일 */
-			for (size_t i = 0; i < m_MapData.vecTile.size(); ++i)
-			{
-				int iTileX = (int)i % iTileSizeX;
-				int iTileZ = (int)i / iTileSizeX;
-
-				_vec3 vTileOffset{
-					-(float)(iTileSizeX - 1) / 2.f * 1.f + 1.f * (float)iTileX,
-					0.f,
-					(float)(iTileSizeZ - 1) / 2.f * 1.f - 1.f * (float)iTileZ
-				};
-
-				pGameObject = CTile::Create(m_pGraphicDev, (int)i, m_MapData.vecTile.at(i));
-				if (nullptr == pGameObject)
-					return E_FAIL;
-
-				wstring wstrTileName = L"Room_" + to_wstring(iRoomNumber) + L"_Tile_" + to_wstring(i);
-
-				if (FAILED(pLayer->Add_GameObject(wstrTileName, pGameObject)))
-					return E_FAIL;
-
-				CTransform* pTransformCom = dynamic_cast<CTransform*>(
-					pLayer->Get_Component(ID_DYNAMIC, wstrTileName, L"Com_Transform"));
-
-				pTransformCom->Set_Pos(vRoomOffset.x + vTileOffset.x + vTerrainOffset.x, 0.f, vRoomOffset.z + vTileOffset.z + vTerrainOffset.z);
-			}
-
-			/* 벽 : 동서남북 순 */
-			for (size_t i = 0; i < m_MapData.vecDoorInfo.size(); ++i)
-			{
-				pGameObject = CWall::Create(m_pGraphicDev, (EWallDir)(i + 1), m_MapData.vecDoorInfo.at(i));
-				if (nullptr == pGameObject)
-					return E_FAIL;
-
-				wstring wstrDoorName = L"Room_" + to_wstring(iRoomNumber) + L"_Door_" + to_wstring(i);
-
-				if (FAILED(pLayer->Add_GameObject(wstrDoorName, pGameObject)))
-					return E_FAIL;
-
-				CTransform* pTransformCom = dynamic_cast<CTransform*>(
-					pLayer->Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
-
-				pTransformCom->Set_Pos(vRoomOffset.x + vTerrainOffset.x, 0.f, vRoomOffset.z + vTerrainOffset.z);
-			}
-
-			/* 안개 */
-			for (int dir = 0; dir < 4; ++dir)
-			{
-				for (int i = 0; i < 5; i++)
-				{
-					pGameObject = CFog::Create(m_pGraphicDev);
-					if (nullptr == pGameObject)
-						return E_FAIL;
-
-					wstring wstrDoorName = L"Room_" + to_wstring(iRoomNumber) + L"_Dir_" + to_wstring(dir) + L"_Fog_" + to_wstring(i);
-
-					if (FAILED(pLayer->Add_GameObject(wstrDoorName, pGameObject)))
-						return E_FAIL;
-
-					CTransform* pTransformCom = dynamic_cast<CTransform*>(
-						pLayer->Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
-
-					pTransformCom->Set_Pos(vRoomOffset.x + vTerrainOffset.x, 0.f, vRoomOffset.z + vTerrainOffset.z);
-					pTransformCom->Rotation(ROT_Y, 90.f * dir);
-					
-					_vec3 vDir{ 0.f, 0.f, 1.f };
-					_matrix matRot;
-					D3DXMatrixRotationY(&matRot, D3DXToRadian(90.f) * dir);
-					D3DXVec3TransformCoord(&vDir, &vDir, &matRot);
-					pTransformCom->Move_Pos(&vDir, 5.5f + (dir % 2) * 1.f + 0.2f * i, 1.f);
-				}
-			}
-		}
-	}
-
 	m_mapLayer.insert({ pLayerTag ,pLayer });
 
 	return S_OK;
@@ -201,6 +104,9 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
 		return E_FAIL;
+
+	/* TODO 김성철 : 물체 생성 시점과 레이어 등록 간극 이야기하기 */
+	m_mapLayer.insert({ pLayerTag ,pLayer });
 
 	// 오브젝트 추가
 	CGameObject* pGameObject = nullptr;
@@ -229,25 +135,16 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Gun", pGameObject)))
 		return E_FAIL;
 
-	/* 몬스터 소환 */
-	_vec3 vTerrainOffset{ 60.f, 0.f, 60.f };
-
-	for (auto& tMapEntity : m_MapData.vecMonsterInfo)
+	/* 방 출력 */
+	for (int i = 0; i < CRoomLoadingMgr::GetInstance()->GetRoomTotalCount(); ++i)
 	{
-		pGameObject = CMonster::Create(m_pGraphicDev);
+		pGameObject = CRoom::Create(m_pGraphicDev, i);
 		if (nullptr == pGameObject)
 			return E_FAIL;
 
-		if (FAILED(pLayer->Add_GameObject(tMapEntity.wstrEntityName, pGameObject)))
+		if (FAILED(pLayer->Add_GameObject(L"Gun", pGameObject)))
 			return E_FAIL;
-
-		CTransform* pTransformCom = dynamic_cast<CTransform*>(
-			pLayer->Get_Component(ID_DYNAMIC, tMapEntity.wstrEntityName, L"Com_Transform"));
-
-		pTransformCom->Set_Pos(tMapEntity.vPos.x + vTerrainOffset.x, tMapEntity.vPos.y, tMapEntity.vPos.z + vTerrainOffset.z);
 	}
-
-	m_mapLayer.insert({ pLayerTag ,pLayer });
 
 	return S_OK;
 }

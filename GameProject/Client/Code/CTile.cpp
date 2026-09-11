@@ -2,7 +2,6 @@
 #include "CTile.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
-#include <ctime>
 
 CTile::CTile(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)

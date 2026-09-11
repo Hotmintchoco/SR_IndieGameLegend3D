@@ -2,7 +2,6 @@
 #include "CWall.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
-#include <ctime>
 
 CWall::CWall(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)

@@ -1,9 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #include "CBase.h"
 #include "Engine_Define.h"
 
-struct TMapData;
+struct TRoomData;
 
 class CLoading : public CBase
 {
@@ -26,7 +26,11 @@ public:
 
 public:
 	static unsigned int CALLBACK Thread_Main(void* pArg);
-	static void ParseMapData(TMapData* pOut);
+
+private:
+	HRESULT ParseRoomData();
+	HRESULT ParseSingleRoom(int iRoomIdx);
+	HRESULT ParseDefaultRoom(int iRoomIdx);
 
 private:
 	LPDIRECT3DDEVICE9	m_pGraphicDev;
