@@ -14,6 +14,7 @@
 #include "CManagement.h"
 #include "CTile.h"
 #include "CWall.h"
+#include "CFog.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -70,8 +71,8 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	CGameObject* pGameObject = nullptr;
 
 	// DynamicCamera
-	_vec3   vEye{ 0.f, 10.f, -10.f };
-	_vec3   vAt{ 0.f, 0.f, 1.f };
+	_vec3   vEye{ 60.f, 10.f, 50.f };
+	_vec3   vAt{ 60.f, 0.f, 61.f };
 	_vec3   vUp{ 0.f, 1.f, 0.f };
 
 	pGameObject = CDynamicCamera::Create(m_pGraphicDev, 
@@ -151,6 +152,34 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 					pLayer->Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
 
 				pTransformCom->Set_Pos(vRoomOffset.x + vTerrainOffset.x, 0.f, vRoomOffset.z + vTerrainOffset.z);
+			}
+
+			/* 안개 */
+			for (int dir = 0; dir < 4; ++dir)
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					pGameObject = CFog::Create(m_pGraphicDev);
+					if (nullptr == pGameObject)
+						return E_FAIL;
+
+					wstring wstrDoorName = L"Room_" + to_wstring(iRoomNumber) + L"_Dir_" + to_wstring(dir) + L"_Fog_" + to_wstring(i);
+
+					if (FAILED(pLayer->Add_GameObject(wstrDoorName, pGameObject)))
+						return E_FAIL;
+
+					CTransform* pTransformCom = dynamic_cast<CTransform*>(
+						pLayer->Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
+
+					pTransformCom->Set_Pos(vRoomOffset.x + vTerrainOffset.x, 0.f, vRoomOffset.z + vTerrainOffset.z);
+					pTransformCom->Rotation(ROT_Y, 90.f * dir);
+					
+					_vec3 vDir{ 0.f, 0.f, 1.f };
+					_matrix matRot;
+					D3DXMatrixRotationY(&matRot, D3DXToRadian(90.f) * dir);
+					D3DXVec3TransformCoord(&vDir, &vDir, &matRot);
+					pTransformCom->Move_Pos(&vDir, 5.5f + (dir % 2) * 1.f + 0.2f * i, 1.f);
+				}
 			}
 		}
 	}
