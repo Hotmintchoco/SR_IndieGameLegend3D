@@ -79,6 +79,9 @@
     <Filter Include="99. Header\ThirdParty">
       <UniqueIdentifier>{bf0e3959-e252-49e1-9535-e3b23444d2c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Room\Object\Fog">
+      <UniqueIdentifier>{1fd52a66-301a-4c39-a75f-7b622cea6a8e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -153,6 +156,9 @@
     <ClInclude Include="..\Header\JsonAdapter.h">
       <Filter>99. Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CFog.h">
+      <Filter>02. GameObject\07. Room\Object\Fog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -205,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTile.cpp">
       <Filter>02. GameObject\07. Room\Object\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFog.cpp">
+      <Filter>02. GameObject\07. Room\Object\Fog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
