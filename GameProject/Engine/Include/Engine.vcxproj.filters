@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Code\CCalculator.cpp" />
+    <ClCompile Include="..\Code\CCamera.cpp" />
+    <ClCompile Include="..\Code\CCollider.cpp" />
+    <ClCompile Include="..\Code\CCollisionMgr.cpp" />
+    <ClCompile Include="..\Code\CComponent.cpp" />
+    <ClCompile Include="..\Code\CCubeTex.cpp" />
+    <ClCompile Include="..\Code\CDInputMgr.cpp" />
+    <ClCompile Include="..\Code\CFont.cpp" />
+    <ClCompile Include="..\Code\CFontMgr.cpp" />
+    <ClCompile Include="..\Code\CFrame.cpp" />
+    <ClCompile Include="..\Code\CFrameMgr.cpp" />
+    <ClCompile Include="..\Code\CGameObject.cpp" />
+    <ClCompile Include="..\Code\CLayer.cpp" />
+    <ClCompile Include="..\Code\CLight.cpp" />
+    <ClCompile Include="..\Code\CLightMgr.cpp" />
+    <ClCompile Include="..\Code\CManagement.cpp" />
+    <ClCompile Include="..\Code\CPlaneTex.cpp" />
+    <ClCompile Include="..\Code\CPlyTex.cpp" />
+    <ClCompile Include="..\Code\CProtoMgr.cpp" />
+    <ClCompile Include="..\Code\CRcCol.cpp" />
+    <ClCompile Include="..\Code\CRcTex.cpp" />
+    <ClCompile Include="..\Code\CRenderer.cpp" />
+    <ClCompile Include="..\Code\CScene.cpp" />
+    <ClCompile Include="..\Code\CSphereCollider.cpp" />
+    <ClCompile Include="..\Code\CTerrainTex.cpp" />
+    <ClCompile Include="..\Code\CTexture.cpp" />
+    <ClCompile Include="..\Code\CTimer.cpp" />
+    <ClCompile Include="..\Code\CTimerMgr.cpp" />
+    <ClCompile Include="..\Code\CTransform.cpp" />
+    <ClCompile Include="..\Code\CTriCol.cpp" />
+    <ClCompile Include="..\Code\CVIBuffer.cpp" />
+    <ClCompile Include="..\Code\CGraphicDev.cpp">
+      <Filter>00. GraphicDev</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Header\CCalculator.h" />
+    <ClInclude Include="..\Header\CCamera.h" />
+    <ClInclude Include="..\Header\CCollider.h" />
+    <ClInclude Include="..\Header\CCollisionMgr.h" />
+    <ClInclude Include="..\Header\CComponent.h" />
+    <ClInclude Include="..\Header\CCubeTex.h" />
+    <ClInclude Include="..\Header\CDInputMgr.h" />
+    <ClInclude Include="..\Header\CFont.h" />
+    <ClInclude Include="..\Header\CFontMgr.h" />
+    <ClInclude Include="..\Header\CFrame.h" />
+    <ClInclude Include="..\Header\CFrameMgr.h" />
+    <ClInclude Include="..\Header\CGameObject.h" />
+    <ClInclude Include="..\Header\CLayer.h" />
+    <ClInclude Include="..\Header\CLight.h" />
+    <ClInclude Include="..\Header\CLightMgr.h" />
+    <ClInclude Include="..\Header\CManagement.h" />
+    <ClInclude Include="..\Header\CPlaneTex.h" />
+    <ClInclude Include="..\Header\CPlyTex.h" />
+    <ClInclude Include="..\Header\CProtoMgr.h" />
+    <ClInclude Include="..\Header\CRcCol.h" />
+    <ClInclude Include="..\Header\CRcTex.h" />
+    <ClInclude Include="..\Header\CRenderer.h" />
+    <ClInclude Include="..\Header\CScene.h" />
+    <ClInclude Include="..\Header\CSphereCollider.h" />
+    <ClInclude Include="..\Header\CTerrainTex.h" />
+    <ClInclude Include="..\Header\CTexture.h" />
+    <ClInclude Include="..\Header\CTimer.h" />
+    <ClInclude Include="..\Header\CTimerMgr.h" />
+    <ClInclude Include="..\Header\CTransform.h" />
+    <ClInclude Include="..\Header\CTriCol.h" />
+    <ClInclude Include="..\Header\CVIBuffer.h" />
+    <ClInclude Include="..\Header\Engine_Define.h" />
+    <ClInclude Include="..\Header\Engine_Enum.h" />
+    <ClInclude Include="..\Header\Engine_Function.h" />
+    <ClInclude Include="..\Header\Engine_Macro.h" />
+    <ClInclude Include="..\Header\Engine_Struct.h" />
+    <ClInclude Include="..\Header\Engine_Typedef.h" />
+    <ClInclude Include="..\Header\tinyply.h" />
+    <ClInclude Include="..\Header\Utils.h" />
+    <ClInclude Include="..\Header\CGraphicDev.h">
+      <Filter>00. GraphicDev</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="00. GraphicDev">
+      <UniqueIdentifier>{3124e81b-1b95-4a57-8d10-199983b40252}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
