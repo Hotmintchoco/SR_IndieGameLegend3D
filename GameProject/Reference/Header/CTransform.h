@@ -44,11 +44,6 @@ public:
 		m_vScale = { fX, fY, fZ };
 	}
 
-	//_vec3		Get_Angle()
-	//{
-	//	return m_vAngle;
-	//}
-
 public:
 	HRESULT			Ready_Transform();
 	virtual _int	Update_Component(const _float& fTimeDelta);
