@@ -81,7 +81,7 @@ HRESULT CPlayer::Add_Component()
         return E_FAIL;
 
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
-
+    
     // Transform
     pComponent = m_pTransformCom = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
 
