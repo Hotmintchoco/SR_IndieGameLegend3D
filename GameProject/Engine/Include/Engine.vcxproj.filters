@@ -1,13 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\Code\CCalculator.cpp" />
-    <ClCompile Include="..\Code\CCollider.cpp" />
     <ClCompile Include="..\Code\CPlaneTex.cpp" />
     <ClCompile Include="..\Code\CPlyTex.cpp" />
-    <ClCompile Include="..\Code\CSphereCollider.cpp" />
-    <ClCompile Include="..\Code\CTexture.cpp" />
-    <ClCompile Include="..\Code\CTransform.cpp" />
     <ClCompile Include="..\Code\CGraphicDev.cpp">
       <Filter>00. GraphicDev</Filter>
     </ClCompile>
@@ -66,10 +61,10 @@
       <Filter>08. Renderer</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLight.cpp">
-      <Filter>09.LightMgr</Filter>
+      <Filter>09. LightMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLightMgr.cpp">
-      <Filter>09.LightMgr</Filter>
+      <Filter>09. LightMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCollisionMgr.cpp">
       <Filter>10. CollisionMgr</Filter>
@@ -83,23 +78,25 @@
     <ClCompile Include="..\Code\CManagement.cpp">
       <Filter>04. Management</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CTransform.cpp">
+      <Filter>05. Component\01. Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTexture.cpp">
+      <Filter>05. Component\02. Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCalculator.cpp">
+      <Filter>05. Component\03. Calculator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCollider.cpp">
+      <Filter>05. Component\04. Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSphereCollider.cpp">
+      <Filter>05. Component\04. Collider\SphereCollider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Header\CCalculator.h" />
-    <ClInclude Include="..\Header\CCollider.h" />
     <ClInclude Include="..\Header\CPlaneTex.h" />
     <ClInclude Include="..\Header\CPlyTex.h" />
-    <ClInclude Include="..\Header\CSphereCollider.h" />
-    <ClInclude Include="..\Header\CTexture.h" />
-    <ClInclude Include="..\Header\CTransform.h" />
-    <ClInclude Include="..\Header\Engine_Define.h" />
-    <ClInclude Include="..\Header\Engine_Enum.h" />
-    <ClInclude Include="..\Header\Engine_Function.h" />
-    <ClInclude Include="..\Header\Engine_Macro.h" />
-    <ClInclude Include="..\Header\Engine_Struct.h" />
-    <ClInclude Include="..\Header\Engine_Typedef.h" />
-    <ClInclude Include="..\Header\tinyply.h" />
-    <ClInclude Include="..\Header\Utils.h" />
     <ClInclude Include="..\Header\CGraphicDev.h">
       <Filter>00. GraphicDev</Filter>
     </ClInclude>
@@ -158,10 +155,10 @@
       <Filter>08. Renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLight.h">
-      <Filter>09.LightMgr</Filter>
+      <Filter>09. LightMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLightMgr.h">
-      <Filter>09.LightMgr</Filter>
+      <Filter>09. LightMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCollisionMgr.h">
       <Filter>10. CollisionMgr</Filter>
@@ -174,6 +171,45 @@
     </ClInclude>
     <ClInclude Include="..\Header\CManagement.h">
       <Filter>04. Management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTransform.h">
+      <Filter>05. Component\01. Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTexture.h">
+      <Filter>05. Component\02. Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCalculator.h">
+      <Filter>05. Component\03. Calculator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCollider.h">
+      <Filter>05. Component\04. Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSphereCollider.h">
+      <Filter>05. Component\04. Collider\SphereCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Engine_Define.h">
+      <Filter>99. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Engine_Enum.h">
+      <Filter>99. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Engine_Function.h">
+      <Filter>99. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Engine_Macro.h">
+      <Filter>99. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Engine_Struct.h">
+      <Filter>99. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Engine_Typedef.h">
+      <Filter>99. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\tinyply.h">
+      <Filter>99. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Utils.h">
+      <Filter>99. Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -237,11 +273,32 @@
     <Filter Include="08. Renderer">
       <UniqueIdentifier>{12d936fa-159b-4475-ac0f-3dee9bfbf516}</UniqueIdentifier>
     </Filter>
-    <Filter Include="09.LightMgr">
-      <UniqueIdentifier>{a6300fb0-0b0c-4fdf-a083-901d9ce25f46}</UniqueIdentifier>
-    </Filter>
     <Filter Include="10. CollisionMgr">
       <UniqueIdentifier>{f1bcb045-bc7a-47ea-951b-f1185b2fb572}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Component\01. Transform">
+      <UniqueIdentifier>{1c747cc5-5a64-4e60-ae39-018dec46171b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="09. LightMgr">
+      <UniqueIdentifier>{a6300fb0-0b0c-4fdf-a083-901d9ce25f46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Component\02. Texture">
+      <UniqueIdentifier>{6f80f59d-888d-47fe-9d49-261f0da4fc5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Component\03. Calculator">
+      <UniqueIdentifier>{3aee432a-3803-458a-9120-fac8bb649a77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Component\04. Collider">
+      <UniqueIdentifier>{c6617eeb-816e-41ad-8d45-c122f8e3cf81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Component\04. Collider\BoxCollider">
+      <UniqueIdentifier>{e09d1cbb-dc42-4b90-ad83-e27decf10a85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Component\04. Collider\SphereCollider">
+      <UniqueIdentifier>{8e1d8a03-39e8-4524-8507-fb4a9a03c554}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Header">
+      <UniqueIdentifier>{ca7e3729-9728-4292-8d1e-218c41609a53}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
