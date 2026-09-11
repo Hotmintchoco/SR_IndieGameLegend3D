@@ -85,9 +85,6 @@
     <Filter Include="09. LightMgr\Light">
       <UniqueIdentifier>{ec0cee9e-12a5-4f5f-8e39-0e832bd907c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="10. Pipeline">
-      <UniqueIdentifier>{ef2d6eee-ca03-4d7d-a009-ac81761ee648}</UniqueIdentifier>
-    </Filter>
     <Filter Include="11. CameraMgr">
       <UniqueIdentifier>{d4b46f78-7246-42c7-88d5-28ec7088388c}</UniqueIdentifier>
     </Filter>
@@ -179,9 +176,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLightMgr.cpp">
       <Filter>09. LightMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CPipeline.cpp">
-      <Filter>10. Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCameraMgr.cpp">
       <Filter>11. CameraMgr</Filter>
@@ -289,9 +283,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CLightMgr.h">
       <Filter>09. LightMgr</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CPipeline.h">
-      <Filter>10. Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCameraMgr.h">
       <Filter>11. CameraMgr</Filter>
