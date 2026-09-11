@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CStage.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
@@ -66,7 +66,7 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	// ¿ÀºêÁ§Æ® Ãß°¡
+	// ì˜¤ë¸Œì íŠ¸ ì¶”ê°€
 	CGameObject* pGameObject = nullptr;
 
 	// DynamicCamera
@@ -90,7 +90,7 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"SkyBox", pGameObject)))
 		return E_FAIL;
 
-	/* ÇÏµåÄÚµùÀ¸·Î 5 x 5 °İÀÚ ¸Ê */
+	/* í•˜ë“œì½”ë”©ìœ¼ë¡œ 5 x 5 ê²©ì ë§µ */
 	int iGridSize = 5;
 	int iTileSizeX = 13;
 	int iTileSizeZ = 11;
@@ -107,7 +107,7 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 				(float)(iGridSize - 1) / 2.f * vMapSize.y - vMapSize.y * (float)j
 			};
 
-			/* Å¸ÀÏ */
+			/* íƒ€ì¼ */
 			for (size_t i = 0; i < m_MapData.vecTile.size(); ++i)
 			{
 				int iTileX = (int)i % iTileSizeX;
@@ -129,12 +129,12 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 					return E_FAIL;
 
 				CTransform* pTransformCom = dynamic_cast<CTransform*>(
-					pLayer->Get_Component(ID_DYNAMIC, wstrTileName.c_str(), L"Com_Transform"));
+					pLayer->Get_Component(ID_DYNAMIC, wstrTileName, L"Com_Transform"));
 
 				pTransformCom->Set_Pos(vRoomOffset.x + vTileOffset.x, 0.f, vRoomOffset.z + vTileOffset.z);
 			}
 
-			/* º® : µ¿¼­³²ºÏ ¼ø */
+			/* ë²½ : ë™ì„œë‚¨ë¶ ìˆœ */
 			for (size_t i = 0; i < m_MapData.vecDoorInfo.size(); ++i)
 			{
 				pGameObject = CWall::Create(m_pGraphicDev, (EWallDir)(i + 1), m_MapData.vecDoorInfo.at(i));
@@ -147,7 +147,7 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 					return E_FAIL;
 
 				CTransform* pTransformCom = dynamic_cast<CTransform*>(
-					pLayer->Get_Component(ID_DYNAMIC, wstrDoorName.c_str(), L"Com_Transform"));
+					pLayer->Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
 
 				pTransformCom->Set_Pos(vRoomOffset.x, 0.f, vRoomOffset.z);
 			}
@@ -165,7 +165,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	// ¿ÀºêÁ§Æ® Ãß°¡
+	// ì˜¤ë¸Œì íŠ¸ ì¶”ê°€
 	CGameObject* pGameObject = nullptr;
 
 	//// Terrain
@@ -184,7 +184,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	//if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 	//	return E_FAIL;
 
-	/* [DEBUG] ÃÑ ¸Ş½¬ Å×½ºÆ® Ãâ·Â */
+	/* [DEBUG] ì´ ë©”ì‰¬ í…ŒìŠ¤íŠ¸ ì¶œë ¥ */
 	pGameObject = CGun::Create(m_pGraphicDev);
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -192,7 +192,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Gun", pGameObject)))
 		return E_FAIL;
 
-	/* ¸ó½ºÅÍ ¼ÒÈ¯ */
+	/* ëª¬ìŠ¤í„° ì†Œí™˜ */
 	for (auto& tMapEntity : m_MapData.vecMonsterInfo)
 	{
 		pGameObject = CMonster::Create(m_pGraphicDev);
@@ -203,7 +203,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			return E_FAIL;
 
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(
-			pLayer->Get_Component(ID_DYNAMIC, tMapEntity.wstrEntityName.c_str(), L"Com_Transform"));
+			pLayer->Get_Component(ID_DYNAMIC, tMapEntity.wstrEntityName, L"Com_Transform"));
 
 		pTransformCom->Set_Pos(tMapEntity.vPos.x, tMapEntity.vPos.y, tMapEntity.vPos.z);
 	}
@@ -219,7 +219,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	// ¿ÀºêÁ§Æ® Ãß°¡
+	// ì˜¤ë¸Œì íŠ¸ ì¶”ê°€
 	CGameObject* pGameObject = nullptr;
 
 	m_mapLayer.insert({ pLayerTag ,pLayer });
