@@ -52,6 +52,33 @@
     <Filter Include="02. GameObject\06. Effect">
       <UniqueIdentifier>{26da718b-9159-461e-bec9-2f4654b8be1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Room">
+      <UniqueIdentifier>{b9d90846-4426-48a5-9d9f-65b142898dac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Gun">
+      <UniqueIdentifier>{392630cc-bd20-4eb7-9704-747e40434189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\Object">
+      <UniqueIdentifier>{239b6995-951d-478d-971d-b0cbf43a2931}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\Object\Wall">
+      <UniqueIdentifier>{5ff4540b-138f-4f33-bcdd-4c3cba1c583f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\Object\Tile">
+      <UniqueIdentifier>{56d603fc-e121-4bd4-81a0-d0ef08d3943b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Resource">
+      <UniqueIdentifier>{39c1497e-736d-4f33-890a-bf345083759c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Resource\01. Map">
+      <UniqueIdentifier>{e0824a1c-09b7-469b-a0d4-6c5eb5eace80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Header">
+      <UniqueIdentifier>{1010db34-d77a-4a40-b8f4-2c712aa1dbd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Header\ThirdParty">
+      <UniqueIdentifier>{bf0e3959-e252-49e1-9535-e3b23444d2c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -102,6 +129,30 @@
     <ClInclude Include="..\Header\CEffect.h">
       <Filter>02. GameObject\06. Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CRoom.h">
+      <Filter>02. GameObject\07. Room</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGun.h">
+      <Filter>02. GameObject\08. Gun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWall.h">
+      <Filter>02. GameObject\07. Room\Object\Wall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTile.h">
+      <Filter>02. GameObject\07. Room\Object\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Define.h">
+      <Filter>99. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\json.hpp">
+      <Filter>99. Header\ThirdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\json_fwd.hpp">
+      <Filter>99. Header\ThirdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\JsonAdapter.h">
+      <Filter>99. Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -143,6 +194,18 @@
     <ClCompile Include="..\Code\CEffect.cpp">
       <Filter>02. GameObject\06. Effect</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CRoom.cpp">
+      <Filter>02. GameObject\07. Room</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGun.cpp">
+      <Filter>02. GameObject\08. Gun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWall.cpp">
+      <Filter>02. GameObject\07. Room\Object\Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTile.cpp">
+      <Filter>02. GameObject\07. Room\Object\Tile</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -156,5 +219,10 @@
     <Image Include="Client.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\Resource\Map\TestMap.json">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
   </ItemGroup>
 </Project>

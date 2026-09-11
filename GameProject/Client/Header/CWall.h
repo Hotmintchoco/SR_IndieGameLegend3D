@@ -1,19 +1,21 @@
-﻿#pragma once
+#pragma once
 
 #include "CGameObject.h"
+#include "Define.h"
 
 namespace Engine
 {
-	class CTerrainTex;
+	class CPlyTex;
 	class CTransform;
 	class CTexture;
 }
 
-class CTerrain : public CGameObject
+class CWall : public CGameObject
 {
 protected:
-	explicit CTerrain(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CTerrain();
+	explicit CWall(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CWall(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor);
+	virtual ~CWall();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -23,15 +25,17 @@ public:
 
 private:
 	HRESULT			Add_Component();
-	HRESULT			Set_Material();
 
 private:
-	Engine::CTerrainTex* m_pBufferCom;
+	Engine::CPlyTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
-	//Engine::CTexture* m_pTextureCom;
+	Engine::CTexture* m_pTextureCom;
+
+	EWallDir m_eDir = EWallDir::NONE;
+	bool m_bHasDoor = false;
 
 public:
-	static CTerrain* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CWall* Create(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor);
 
 private:
 	virtual void		Free();

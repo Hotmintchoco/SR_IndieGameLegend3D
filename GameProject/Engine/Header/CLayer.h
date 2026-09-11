@@ -11,13 +11,11 @@ private:
 	virtual ~CLayer();
 
 public:
-	CComponent*		Get_Component(COMPONENTID eID, 
-		const _tchar* pObjTag,
-		const _tchar* pComponentTag);
+	CComponent*		Get_Component(COMPONENTID eID, wstring pObjTag,	const _tchar* pComponentTag);
 
-	CGameObject*	Get_GameObject(const _tchar* pObjTag);
+	CGameObject*	Get_GameObject(const wstring& pObjTag);
 
-	HRESULT			Add_GameObject(const _tchar* pObjTag, CGameObject* pGameObject);
+	HRESULT			Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject);
 
 public:
 	HRESULT			Ready_Layer();
@@ -26,7 +24,7 @@ public:
 
 
 private:
-	multimap<const _tchar*, CGameObject*>			m_mapObject;
+	multimap<wstring, CGameObject*>			m_mapObject;
 
 public:
 	static CLayer* Create();

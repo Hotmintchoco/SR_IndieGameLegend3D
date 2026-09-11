@@ -1,7 +1,11 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CMonster.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
+#include "CPlayer.h"
+#include "CRenderer.h"
+#include "CCollider.h"
+#include "CCollisionMgr.h"
 #include "CTimerMgr.h"
 //#include "CDInputMgr.h"
 #include "CTerrain.h"
@@ -20,10 +24,12 @@ HRESULT CMonster::Ready_GameObject()
 {
     if (FAILED(Add_Component()))
         return E_FAIL;
-    m_pTransformCom->Set_Pos(10.f, 1.f, 10.f);
 
     m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
+	m_pTransformCom->Set_Pos(10.f, 1.f, 10.f);
+    m_pColliderCom->Set_Radius(1.f);
 
+    __super::Ready_GameObject();
 
     return S_OK;
 }
@@ -41,6 +47,9 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+    // 충돌 처리 여부를 위해 충돌 매니저에 몬스터의 콜라이더를 등록
+	CCollisionMgr::GetInstance()->Add_Collider(COLL_MONSTER, m_pColliderCom);
 
     _vec3       vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -101,6 +110,13 @@ HRESULT CMonster::Add_Component()
         return E_FAIL;
 
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
+
+	// Collider
+    pComponent = m_pColliderCom = dynamic_cast<CCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });
 
     // Calculator
 

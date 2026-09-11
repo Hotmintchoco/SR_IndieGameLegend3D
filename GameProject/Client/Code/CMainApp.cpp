@@ -8,6 +8,7 @@
 #include "CStage.h"
 #include "CDInputMgr.h"
 #include "CLightMgr.h"
+#include "CCollisionMgr.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -82,9 +83,9 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 		return E_FAIL;
 
 	// 필터링 적용
-
-	(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-	(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+	/* 도트 기반 텍스쳐라 끕니다 */
+	//(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+	//(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
 	return S_OK;
 }
@@ -125,6 +126,7 @@ void CMainApp::Free()
 {
 	Safe_Release(m_pDeviceClass);
 
+	CCollisionMgr::DestroyInstance();
 	CLightMgr::DestroyInstance();
 	CRenderer::DestroyInstance();
 	CDInputMgr::DestroyInstance();

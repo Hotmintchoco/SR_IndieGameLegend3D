@@ -4,6 +4,8 @@
 #include "CManagement.h"
 #include "CDInputMgr.h"
 #include "CTerrain.h"
+#include "CSphereCollider.h"
+#include "CCollisionMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -20,6 +22,11 @@ HRESULT CPlayer::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
+	m_pTransformCom->Set_Pos(0.f, 1.f, 0.f);
+    m_pColliderCom->Set_Radius(1.f);
+
+	__super::Ready_GameObject();
+
     return S_OK;
 }
 
@@ -27,7 +34,9 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    Set_OnTerrain();
+    _vec3   vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    Compute_ViewZ(&vPos);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
@@ -38,15 +47,8 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     Key_Input(fTimeDelta);
 
-    CTerrain* pTerrain = dynamic_cast<CTerrain*>
-        (CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Terrain"));
-
-    if (pTerrain)
-    {
-        int a = 10;
-    }
-
-
+	// 충돌 처리 여부를 위해 충돌 매니저에 플레이어의 콜라이더를 등록
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -68,36 +70,34 @@ HRESULT CPlayer::Add_Component()
 
     // RcCol
     pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
-
     if (nullptr == pComponent)
         return E_FAIL;
-
     m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
 
     // Texture
     pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTexture"));
-
     if (nullptr == pComponent)
         return E_FAIL;
-
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
     
     // Transform
     pComponent = m_pTransformCom = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
-
     if (nullptr == pComponent)
         return E_FAIL;
-
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
     // Calculator
-
     pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Calculator"));
-
     if (nullptr == pComponent)
         return E_FAIL;
-
     m_mapComponent[ID_STATIC].insert({ L"Com_Calculator", pComponent });
+
+    // Collider
+    pComponent = m_pColliderCom = dynamic_cast<CCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+    if (nullptr == pComponent)
+        return E_FAIL;
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });
+
     return S_OK;
 }
 
@@ -125,15 +125,13 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
         m_pTransformCom->Rotation(ROT_Y, -180.f * fTimeDelta);
     }
 
-    if (CDInputMgr::GetInstance()->Mouse_Press(DIM_LB))
-    {
-        _vec3   vPickPos = Picking_OnTerrain();
-
-        _vec3   vDir = vPickPos - m_pTransformCom->m_vInfo[INFO_POS];
-
-        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vDir, &vDir), 10.f, fTimeDelta);
-    }
-   
+	// 마우스 픽킹
+    //if (CDInputMgr::GetInstance()->Mouse_Press(DIM_LB))
+    //{
+    //    _vec3   vPickPos = Picking_OnTerrain();
+    //    _vec3   vDir = vPickPos - m_pTransformCom->m_vInfo[INFO_POS];
+    //    m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vDir, &vDir), 10.f, fTimeDelta);
+    //}
 }
 
 void CPlayer::Set_OnTerrain()

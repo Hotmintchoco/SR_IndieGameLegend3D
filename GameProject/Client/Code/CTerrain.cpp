@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CTerrain.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -44,12 +44,16 @@ void CTerrain::Render_GameObject()
     //m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 
     m_pTextureCom->Set_Texture(0);
-
-    if (FAILED(Set_Material()))
-        return;
-
-    m_pBufferCom->Render_Buffer();
-    m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+    // m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+    // m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+    // 
+    // m_pTextureCom->Set_Texture(0);
+    // 
+    // if (FAILED(Set_Material()))
+    //     return;
+    // 
+    // m_pBufferCom->Render_Buffer();
+    // m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 }
 
@@ -66,12 +70,12 @@ HRESULT CTerrain::Add_Component()
     m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
 
     // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_TerrainTexture2"));
+    //pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_TerrainTexture2"));
 
-    if (nullptr == pComponent)
-        return E_FAIL;
+    //if (nullptr == pComponent)
+    //    return E_FAIL;
 
-    m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+    //m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
     // Transform
     pComponent = m_pTransformCom = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));

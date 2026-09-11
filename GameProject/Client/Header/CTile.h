@@ -1,19 +1,21 @@
-﻿#pragma once
+#pragma once
 
 #include "CGameObject.h"
+#include "Define.h"
 
 namespace Engine
 {
-	class CTerrainTex;
+	class CPlaneTex;
 	class CTransform;
 	class CTexture;
 }
 
-class CTerrain : public CGameObject
+class CTile : public CGameObject
 {
 protected:
-	explicit CTerrain(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CTerrain();
+	explicit CTile(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CTile(LPDIRECT3DDEVICE9 pGraphicDev, int iPositionIdx, int iTextureIdx);
+	virtual ~CTile();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -23,15 +25,17 @@ public:
 
 private:
 	HRESULT			Add_Component();
-	HRESULT			Set_Material();
 
 private:
-	Engine::CTerrainTex* m_pBufferCom;
+	Engine::CPlaneTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
-	//Engine::CTexture* m_pTextureCom;
+	Engine::CTexture* m_pTextureCom;
+
+	int m_iPositionIdx = -1;
+	int m_iTextureIdx = -1;
 
 public:
-	static CTerrain* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CTile* Create(LPDIRECT3DDEVICE9 pGraphicDev, int iPositionIdx, int iTextureIdx);
 
 private:
 	virtual void		Free();

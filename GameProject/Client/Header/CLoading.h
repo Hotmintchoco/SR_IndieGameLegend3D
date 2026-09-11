@@ -3,6 +3,8 @@
 #include "CBase.h"
 #include "Engine_Define.h"
 
+struct TMapData;
+
 class CLoading : public CBase
 {
 public:
@@ -24,6 +26,7 @@ public:
 
 public:
 	static unsigned int CALLBACK Thread_Main(void* pArg);
+	static void ParseMapData(TMapData* pOut);
 
 private:
 	LPDIRECT3DDEVICE9	m_pGraphicDev;
@@ -34,6 +37,7 @@ private:
 
 	CRITICAL_SECTION	m_Crt;
 	_bool				m_bFinish;
+
 
 public:
 	static CLoading* Create(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID eID);
