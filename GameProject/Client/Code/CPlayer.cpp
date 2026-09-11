@@ -200,8 +200,8 @@ void CPlayer::Mouse_Fix()
 
 void CPlayer::Set_OnTerrain(const _float& fTimeDelta)
 {
-    _vec3   vPos;
-    m_pTransformCom->Get_Pos(&vPos);
+    _vec3   vPos = m_pTransformCom->m_vInfo[INFO_POS];
+  
 
     CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>
         (CManagement::GetInstance()->Get_Component(ID_STATIC, L"GameLogic_Layer", L"Terrain", L"Com_Buffer"));
