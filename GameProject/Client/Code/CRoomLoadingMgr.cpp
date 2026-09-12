@@ -205,6 +205,7 @@ HRESULT CRoomLoadingMgr::LoadRoomData(int iIndex)
 		pTransformCom->Set_Pos(vRoomCenterPos.x + tMapEntity.vPos.x, vRoomCenterPos.y + tMapEntity.vPos.y, vRoomCenterPos.z + tMapEntity.vPos.z);
 	}
 
+	return S_OK;
 }
 
 void CRoomLoadingMgr::Free()
