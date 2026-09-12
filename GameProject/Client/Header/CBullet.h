@@ -7,6 +7,8 @@ namespace Engine
 	class CRcTex;
 	class CTexture;
 	class CTransform;
+	class CCollider;
+	class CSphereCollider;
 }
 
 class CBullet : public CGameObject
@@ -28,6 +30,7 @@ private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTexture* m_pTextureCom;
 	Engine::CTransform* m_pTransformCom;
+	Engine::CCollider* m_pColliderCom;
 
 	_vec3				m_vDir;
 
