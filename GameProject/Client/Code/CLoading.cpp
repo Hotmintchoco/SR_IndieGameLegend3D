@@ -80,6 +80,9 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Calculator", Engine::CCalculator::Create(m_pGraphicDev))))
         return E_FAIL;
 
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider", Engine::CSphereCollider::Create(m_pGraphicDev))))
+        return E_FAIL;
+
 
     /*  메쉬 사용 안내
     *   CPlyTex

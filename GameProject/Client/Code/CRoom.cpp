@@ -158,11 +158,13 @@ HRESULT CRoom::PostInitialize()
 		if (nullptr == pGameObject)
 			return E_FAIL;
 
-		if (FAILED(pLayer->Add_GameObject(tMapEntity.wstrEntityName, pGameObject)))
+		wstring wstrMonsterName = L"Room_" + to_wstring(m_iIndex) + L"_" + tMapEntity.wstrEntityName;
+
+		if (FAILED(pLayer->Add_GameObject(wstrMonsterName, pGameObject)))
 			return E_FAIL;
 
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(
-			pLayer->Get_Component(ID_DYNAMIC, tMapEntity.wstrEntityName, L"Com_Transform"));
+			pLayer->Get_Component(ID_DYNAMIC, wstrMonsterName, L"Com_Transform"));
 
 		pTransformCom->Set_Pos(m_vCenterPos.x + tMapEntity.vPos.x, m_vCenterPos.y + tMapEntity.vPos.y, m_vCenterPos.z + tMapEntity.vPos.z);
 	}
