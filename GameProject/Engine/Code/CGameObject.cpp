@@ -1,4 +1,5 @@
 #include "CGameObject.h"
+#include "CComponent.h"
 
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_fViewZ(0.f)
@@ -28,6 +29,14 @@ CComponent* CGameObject::Get_Component(COMPONENTID eID, const _tchar* pComponent
 
 HRESULT CGameObject::Ready_GameObject()
 {
+    for (_uint i = 0; i < ID_END; ++i)
+    {
+        for (auto& pComponent : m_mapComponent[i])
+        {
+            pComponent.second->Set_Owner(this);
+        }
+	}
+
     return S_OK;
 }
 

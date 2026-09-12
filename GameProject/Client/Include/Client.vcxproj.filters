@@ -82,6 +82,24 @@
     <Filter Include="02. GameObject\07. Room\Object\Fog">
       <UniqueIdentifier>{1fd52a66-301a-4c39-a75f-7b622cea6a8e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Manager">
+      <UniqueIdentifier>{21b47c84-577f-4f39-b3ac-01f370fb2f24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Bullet">
+      <UniqueIdentifier>{6bdbc102-7ebf-41d5-b4a6-11d635b0163e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="999. ImGUI">
+      <UniqueIdentifier>{37908928-83ee-4904-af57-cabf7c4fefbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="999. ImGUI\Backend">
+      <UniqueIdentifier>{8cad7cb2-0f74-46b9-a217-8ce57a704aa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="999. ImGUI\Backend\Src">
+      <UniqueIdentifier>{b9913ff5-44b3-44f4-a2bb-e814e736dc82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="999. ImGUI\Backend\Include">
+      <UniqueIdentifier>{eb153cf3-9ee7-46d0-88a8-f1c874d14c5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -159,6 +177,39 @@
     <ClInclude Include="..\Header\CFog.h">
       <Filter>02. GameObject\07. Room\Object\Fog</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CRoomLoadingMgr.h">
+      <Filter>04. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBullet.h">
+      <Filter>02. GameObject\09. Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CImGuiTool.h">
+      <Filter>999. ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\imconfig.h">
+      <Filter>999. ImGUI\Backend\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\imgui.h">
+      <Filter>999. ImGUI\Backend\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\imgui_impl_dx9.h">
+      <Filter>999. ImGUI\Backend\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\imgui_internal.h">
+      <Filter>999. ImGUI\Backend\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\imgui_impl_win32.h">
+      <Filter>999. ImGUI\Backend\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\imstb_rectpack.h">
+      <Filter>999. ImGUI\Backend\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\imstb_textedit.h">
+      <Filter>999. ImGUI\Backend\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\imstb_truetype.h">
+      <Filter>999. ImGUI\Backend\Include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -212,8 +263,38 @@
     <ClCompile Include="..\Code\CTile.cpp">
       <Filter>02. GameObject\07. Room\Object\Tile</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CBullet.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CFog.cpp">
       <Filter>02. GameObject\07. Room\Object\Fog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui.cpp">
+      <Filter>999. ImGUI\Backend\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui_demo.cpp">
+      <Filter>999. ImGUI\Backend\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui_draw.cpp">
+      <Filter>999. ImGUI\Backend\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui_impl_dx9.cpp">
+      <Filter>999. ImGUI\Backend\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui_impl_win32.cpp">
+      <Filter>999. ImGUI\Backend\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui_tables.cpp">
+      <Filter>999. ImGUI\Backend\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui_widgets.cpp">
+      <Filter>999. ImGUI\Backend\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CImGuiTool.cpp">
+      <Filter>999. ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRoomLoadingMgr.cpp">
+      <Filter>04. Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -230,7 +311,19 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Bin\Resource\Map\TestMap.json">
+    <None Include="..\Bin\Resource\Map\DefaultRoom.json">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Map\Room_2_2.json">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Map\Room_4_3.json">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Map\Room_2_1.json">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Map\Room 작성 가이드.md">
       <Filter>03. Resource\01. Map</Filter>
     </None>
   </ItemGroup>

@@ -1,4 +1,4 @@
-#include "CManagement.h"
+﻿#include "CManagement.h"
 
 
 IMPLEMENT_SINGLETON(CManagement)
@@ -27,6 +27,14 @@ CGameObject* CManagement::Get_GameObject(const _tchar* pLayerTag, const _tchar* 
         return nullptr;
 
     return m_pScene->Get_GameObject(pLayerTag, pObjTag);
+}
+
+CLayer* CManagement::Get_Layer(const _tchar* pLayerTag)
+{
+    if (nullptr == m_pScene)
+        return nullptr;
+
+    return m_pScene->Get_Layer(pLayerTag);
 }
 
 HRESULT CManagement::Set_Scene(CScene* pScene)

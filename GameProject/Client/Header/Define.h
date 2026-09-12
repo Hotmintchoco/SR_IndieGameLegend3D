@@ -1,31 +1,33 @@
-#pragma once
+Ôªø#pragma once
 
-/* ∫Æ πÊ«‚ */
+/* Î≤Ω Î∞©Ìñ• */
 enum class EWallDir
 {
 	NONE,
 	EAST,
-	WEST,
 	SOUTH,
+	WEST,
 	NORTH,
 
 	MAX,
 };
 
-/* ∏  ¡§∫∏∏¶ ¥„¿∫ ±∏¡∂√º */
-struct TMapEntity
+/* Îßµ Ï†ïÎ≥¥Î•º Îã¥ÏùÄ Íµ¨Ï°∞Ï≤¥ */
+struct TRoomEntity
 {
 	int    iType = 0;
 	wstring wstrEntityName;
 	_vec3  vPos = _vec3{ 0.f, 0.f, 0.f };
 };
 
-struct TMapData
+struct TRoomData
 {
 	int iVersion = 0;
-	wstring wstrMapName;
+	wstring wstrRoomName;
+	int iDefaultTileIdx;
 	vector<int> vecTile;
-	vector<TMapEntity> vecObjectInfo;
-	vector<TMapEntity> vecMonsterInfo;
+	vector<TRoomEntity> vecObjectInfo;
+	vector<TRoomEntity> vecMonsterInfo;
 	vector<bool> vecDoorInfo;
+	vector<int> vecDoorTile;
 };

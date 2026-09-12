@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CGameObject.h"
 #include "Define.h"
@@ -22,6 +22,9 @@ public:
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
+
+	inline EWallDir GetDir() { return m_eDir; };
+	inline bool HasDoor() { return m_bHasDoor; };
 
 private:
 	HRESULT			Add_Component();

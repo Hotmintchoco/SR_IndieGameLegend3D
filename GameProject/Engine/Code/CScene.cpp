@@ -1,4 +1,4 @@
-#include "CScene.h"
+﻿#include "CScene.h"
 
 CScene::CScene(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev)
@@ -28,6 +28,16 @@ CGameObject* CScene::Get_GameObject(const _tchar* pLayerTag, const _tchar* pObjT
         return nullptr;
 
     return iter->second->Get_GameObject(pObjTag);
+}
+
+CLayer* CScene::Get_Layer(const _tchar* pLayerTag)
+{
+    auto    iter = find_if(m_mapLayer.begin(), m_mapLayer.end(), CTag_Finder(pLayerTag));
+
+    if (iter == m_mapLayer.end())
+        return nullptr;
+
+    return iter->second;
 }
 
 HRESULT CScene::Ready_Scene()

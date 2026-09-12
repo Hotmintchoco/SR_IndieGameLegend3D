@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CMainApp.h"
 #include "CTimerMgr.h"
 #include "CFrameMgr.h"
@@ -8,6 +8,10 @@
 #include "CStage.h"
 #include "CDInputMgr.h"
 #include "CLightMgr.h"
+#include "CCollisionMgr.h"
+#include "CCameraMgr.h"
+#include "CImGuiTool.h"
+#include "CRoomLoadingMgr.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -24,6 +28,9 @@ HRESULT CMainApp::Ready_MainApp()
 		return E_FAIL;
 
 	if (FAILED(Ready_Scene(m_pGraphicDev)))
+		return E_FAIL;
+
+	if (FAILED(CImGuiTool::Ready(g_hWnd, m_pGraphicDev)))
 		return E_FAIL;
 
 	return S_OK;
@@ -47,7 +54,11 @@ void CMainApp::Render_MainApp()
 {
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
 
+	CImGuiTool::BeginFrame();
+
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
+
+	CImGuiTool::EndFrame();
 
 	m_pDeviceClass->Render_End();
 
@@ -66,23 +77,23 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 
 	(*ppGraphicDev) = m_pDeviceClass->Get_GraphicDev();
 
-	// ÆùÆ® Ãß°¡
+	// í°íŠ¸ ì¶”ê°€
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"¹ÙÅÁ", 20, 20, FW_HEAVY)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"ë°”íƒ•", 20, 20, FW_HEAVY)))
 		return E_FAIL;
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Jinji", L"±Ã¼­", 15, 15, FW_THIN)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Jinji", L"ê¶ì„œ", 15, 15, FW_THIN)))
 		return E_FAIL;
 
 	(*ppGraphicDev)->SetRenderState(D3DRS_LIGHTING, FALSE);
 
-	// ¸¶¿ì½º ÃÊ±âÈ­
+	// ë§ˆìš°ìŠ¤ ì´ˆê¸°í™”
 
 	if (FAILED(CDInputMgr::GetInstance()->Ready_InputDev(g_hInst, g_hWnd)))
 		return E_FAIL;
 
-	// ÇÊÅÍ¸µ Àû¿ë
-	/* µµÆ® ±â¹Ý ÅØ½ºÃÄ¶ó ²ü´Ï´Ù */
+	// í•„í„°ë§ ì ìš©
+	/* ë„íŠ¸ ê¸°ë°˜ í…ìŠ¤ì³ë¼ ë•ë‹ˆë‹¤ */
 	//(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	//(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
@@ -125,6 +136,7 @@ void CMainApp::Free()
 {
 	Safe_Release(m_pDeviceClass);
 
+	CCollisionMgr::DestroyInstance();
 	CLightMgr::DestroyInstance();
 	CRenderer::DestroyInstance();
 	CDInputMgr::DestroyInstance();
@@ -132,7 +144,11 @@ void CMainApp::Free()
 	CFontMgr::DestroyInstance();
 	CFrameMgr::DestroyInstance();
 	CTimerMgr::DestroyInstance();
+	CCameraMgr::DestroyInstance();
+	CRoomLoadingMgr::DestroyInstance();
 
 	m_pManagementClass->DestroyInstance();
 	m_pDeviceClass->DestroyInstance();
+
+	CImGuiTool::Release();
 }

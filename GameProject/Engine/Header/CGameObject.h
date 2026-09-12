@@ -28,7 +28,6 @@ protected:
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	_float									m_fViewZ;
 
-
 private:
 	CComponent* Find_Component(COMPONENTID eID, const _tchar* pComponentTag);
 

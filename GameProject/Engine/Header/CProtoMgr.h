@@ -12,6 +12,7 @@
 #include "CTransform.h"
 #include "CTexture.h"
 #include "CCalculator.h"
+#include "CSphereCollider.h"
 
 BEGIN(Engine)
 

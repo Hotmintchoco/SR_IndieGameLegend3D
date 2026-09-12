@@ -8,6 +8,11 @@
 #include "CTimerMgr.h"
 #include "CFrameMgr.h"
 
+#pragma push_macro("new")
+#undef new
+#include "imgui_impl_win32.h"
+#pragma pop_macro("new")
+
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -175,6 +180,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
+/* Win32 ImGui 헤더 설명 참고 */
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 //
 //  함수: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
@@ -187,6 +195,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+        return true;
+
     switch (message)
     {
     case WM_COMMAND:
