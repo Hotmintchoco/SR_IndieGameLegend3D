@@ -144,11 +144,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Header\CAbstractFactory.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
     <ClInclude Include="..\Header\CBullet.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEffect.h" />
     <ClInclude Include="..\Header\CFog.h" />
+    <ClInclude Include="..\Header\CFrustum.h" />
     <ClInclude Include="..\Header\CGun.h" />
     <ClInclude Include="..\Header\CImGuiTool.h" />
     <ClInclude Include="..\Header\CLoading.h" />
@@ -182,11 +184,13 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\CAbstractFactory.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
     <ClCompile Include="..\Code\CBullet.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEffect.cpp" />
     <ClCompile Include="..\Code\CFog.cpp" />
+    <ClCompile Include="..\Code\CFrustum.cpp" />
     <ClCompile Include="..\Code\CGun.cpp" />
     <ClCompile Include="..\Code\CImGuiTool.cpp" />
     <ClCompile Include="..\Code\CLoading.cpp" />
@@ -240,6 +244,7 @@
   <ItemGroup>
     <None Include="..\Bin\Resource\Map\DefaultRoom.json" />
     <None Include="..\Bin\Resource\Map\Room 작성 가이드.md" />
+    <None Include="..\Bin\Resource\Map\Room_0_0.json" />
     <None Include="..\Bin\Resource\Map\Room_2_1.json" />
     <None Include="..\Bin\Resource\Map\Room_2_2.json" />
     <None Include="..\Bin\Resource\Map\Room_4_3.json" />

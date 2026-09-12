@@ -100,6 +100,15 @@
     <Filter Include="999. ImGUI\Backend\Include">
       <UniqueIdentifier>{eb153cf3-9ee7-46d0-88a8-f1c874d14c5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Room\Object\RoomProp">
+      <UniqueIdentifier>{a1208295-fd12-4384-8f71-ee9aeebb7921}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\Object\RoomProp\Frustum">
+      <UniqueIdentifier>{04071318-f447-49a4-96e6-eb109ef95312}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Manager\00. RoomLoading">
+      <UniqueIdentifier>{60fad2e2-2029-49b4-b2bb-df556f9429ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -177,9 +186,6 @@
     <ClInclude Include="..\Header\CFog.h">
       <Filter>02. GameObject\07. Room\Object\Fog</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CRoomLoadingMgr.h">
-      <Filter>04. Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CBullet.h">
       <Filter>02. GameObject\09. Bullet</Filter>
     </ClInclude>
@@ -209,6 +215,15 @@
     </ClInclude>
     <ClInclude Include="..\Header\imstb_truetype.h">
       <Filter>999. ImGUI\Backend\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFrustum.h">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRoomLoadingMgr.h">
+      <Filter>04. Manager\00. RoomLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CAbstractFactory.h">
+      <Filter>04. Manager\00. RoomLoading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -266,9 +281,6 @@
     <ClCompile Include="..\Code\CFog.cpp">
       <Filter>02. GameObject\07. Room\Object\Fog</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CRoomLoadingMgr.cpp">
-      <Filter>04. Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CBullet.cpp">
       <Filter>02. GameObject\09. Bullet</Filter>
     </ClCompile>
@@ -295,6 +307,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\imgui_widgets.cpp">
       <Filter>999. ImGUI\Backend\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFrustum.cpp">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRoomLoadingMgr.cpp">
+      <Filter>04. Manager\00. RoomLoading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CAbstractFactory.cpp">
+      <Filter>04. Manager\00. RoomLoading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -324,6 +345,9 @@
       <Filter>03. Resource\01. Map</Filter>
     </None>
     <None Include="..\Bin\Resource\Map\Room 작성 가이드.md">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Map\Room_0_0.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
   </ItemGroup>

@@ -140,7 +140,7 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
 
     /* 안개 */
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Fog_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture2D/Fog.png", 1))))
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Fog_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture2D/fog.png", 1))))
         return E_FAIL;
 
     /* 맵 배치 데이터 */
@@ -218,8 +218,8 @@ HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
         t.wstrRoomName = wstr;
         data.at("defaultTile").get_to(t.iDefaultTileIdx);
         data.at("tileList").get_to(t.vecTile);
+        data.at("objectTilingList").get_to(t.vecObjectTilingInfo);
         data.at("objectList").get_to(t.vecObjectInfo);
-        data.at("monsterList").get_to(t.vecMonsterInfo);
         data.at("door").get_to(t.vecDoorInfo);
         data.at("doorTile").get_to(t.vecDoorTile);
 
@@ -252,8 +252,8 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
         t.wstrRoomName = wstr;
         data.at("defaultTile").get_to(t.iDefaultTileIdx);
         data.at("tileList").get_to(t.vecTile);
+        data.at("objectTilingList").get_to(t.vecObjectTilingInfo);
         data.at("objectList").get_to(t.vecObjectInfo);
-        data.at("monsterList").get_to(t.vecMonsterInfo);
         data.at("door").get_to(t.vecDoorInfo);
         data.at("doorTile").get_to(t.vecDoorTile);
 
