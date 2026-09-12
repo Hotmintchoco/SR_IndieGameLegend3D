@@ -30,7 +30,6 @@ public:
 	static CStage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
-	TMapData m_MapData;
 	_float			m_fLastShotTime;
 	_float			m_fReloadTime;
 	_int			m_iAmmo;
