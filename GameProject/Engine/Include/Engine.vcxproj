@@ -143,6 +143,7 @@ call Copy.bat</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Header\CBoxCollider.h" />
     <ClInclude Include="..\Header\CCalculator.h" />
     <ClInclude Include="..\Header\CCamera.h" />
     <ClInclude Include="..\Header\CCameraFPVPerspective.h" />
@@ -188,6 +189,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\CBoxCollider.cpp" />
     <ClCompile Include="..\Code\CCalculator.cpp" />
     <ClCompile Include="..\Code\CCamera.cpp" />
     <ClCompile Include="..\Code\CCameraFPVPerspective.cpp" />

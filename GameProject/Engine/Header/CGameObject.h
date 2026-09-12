@@ -21,6 +21,8 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject()PURE;
 
+	virtual			void		OnCollisionEnter(CGameObject* pOther) {}
+
 	void			Compute_ViewZ(const _vec3* pPos);
 
 protected:

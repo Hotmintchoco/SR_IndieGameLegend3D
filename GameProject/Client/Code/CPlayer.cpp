@@ -8,7 +8,7 @@
 #include "CCollisionMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_iJumpState(JUMP_NOT), m_fJumpTime(0.f), m_bFix(true), m_bCheck(true)
+	: CGameObject(pGraphicDev), m_iJumpState(JUMP_NOT), m_fJumpTime(0.f), m_bFix(true), m_bCheck(true), m_bCollision(false)
 {
 }
 
@@ -22,24 +22,27 @@ HRESULT CPlayer::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-	m_pTransformCom->Set_Pos(60.f, 1.f, 60.f);
     m_pColliderCom->Set_Radius(1.f);
 
 	__super::Ready_GameObject();
+
+	m_pTransformCom->Set_Pos(60.f, 1.f, 60.f);
 
     return S_OK;
 }
 
 _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
+    _vec3   vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    Compute_ViewZ(&vPos);
+
+    m_vPrevPos = vPos;
+
     Key_Input(fTimeDelta);
 
     Set_OnTerrain(fTimeDelta);
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
-
-    _vec3   vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    Compute_ViewZ(&vPos);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -48,8 +51,6 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    Key_Input(fTimeDelta);
-
 	// 충돌 처리 여부를 위해 충돌 매니저에 플레이어의 콜라이더를 등록
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
     CGameObject::LateUpdate_GameObject(fTimeDelta);
@@ -65,6 +66,11 @@ void CPlayer::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+}
+
+void CPlayer::OnCollisionEnter(CGameObject* pOther)
+{
+	m_pTransformCom->Set_Pos(m_vPrevPos.x, m_vPrevPos.y, m_vPrevPos.z);
 }
 
 HRESULT CPlayer::Add_Component()
@@ -96,7 +102,7 @@ HRESULT CPlayer::Add_Component()
     m_mapComponent[ID_STATIC].insert({ L"Com_Calculator", pComponent });
 
     // Collider
-    pComponent = m_pColliderCom = dynamic_cast<CCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+    pComponent = m_pColliderCom = dynamic_cast<CCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SphereCollider"));
     if (nullptr == pComponent)
         return E_FAIL;
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });

@@ -53,6 +53,7 @@ HRESULT CStage::Ready_Scene()
 
 	// 충돌 그룹 설정
 	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_WALL);
 
 	return S_OK;
 }

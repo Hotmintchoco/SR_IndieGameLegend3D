@@ -4,6 +4,7 @@
 BEGIN(Engine)
 
 class CSphereCollider;
+class CCubeTex;
 
 class ENGINE_DLL CBoxCollider : public CCollider
 {
@@ -24,12 +25,23 @@ public:
 	void			Set_Extents(const _float& fX, const _float& fY, const _float& fZ);
 	void			Set_Radius(const _float& fRadius) override;
 
+	void			Set_DiffPos(const _vec3& vDiffPos) { m_vDiffPos = vDiffPos; }
+
+	void			Render_DebugCube();
+
 public:
 	BoundingBox		m_tBox;
+
+private:
+	CCubeTex*		m_pDebugCubeTex = nullptr;
+	_vec3 			m_vDiffPos;
 
 public:
 	static CCollider* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	CComponent* Clone() override;
+
+protected:
+	virtual void	Free() override;
 };
 
 END

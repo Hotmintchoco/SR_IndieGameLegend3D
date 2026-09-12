@@ -106,6 +106,9 @@
     <ClCompile Include="..\Code\CCameraObj.cpp">
       <Filter>11. CameraMgr\CameraObj</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CBoxCollider.cpp">
+      <Filter>05. Component\04. Collider\BoxCollider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CGraphicDev.h">
@@ -236,6 +239,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CCameraObj.h">
       <Filter>11. CameraMgr\CameraObj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBoxCollider.h">
+      <Filter>05. Component\04. Collider\BoxCollider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

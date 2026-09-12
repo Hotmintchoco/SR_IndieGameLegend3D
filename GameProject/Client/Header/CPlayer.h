@@ -25,6 +25,8 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+	virtual			void		OnCollisionEnter(CGameObject* pOther) override;
+
 private:
 	HRESULT			Add_Component();
 	void			Key_Input(const _float& fTimeDelta);
@@ -39,12 +41,15 @@ private:
 	Engine::CTexture*			m_pTextureCom;
 	Engine::CCalculator*		m_pCalculatorCom;
 	Engine::CCollider*			m_pColliderCom;
-private:
 
+private:
 	JUMPSTATE	m_iJumpState;
 	_float		m_fJumpTime;
 	_bool		m_bFix;
 	_bool		m_bCheck;
+
+	_bool		m_bCollision;
+	_vec3		m_vPrevPos;
 
 public:
 	JUMPSTATE	Get_JumpState() { return m_iJumpState; }

@@ -1,5 +1,6 @@
 #include "CCollisionMgr.h"
 #include "CCollider.h"
+#include "CGameObject.h"
 
 IMPLEMENT_SINGLETON(CCollisionMgr)
 
@@ -59,6 +60,7 @@ void CCollisionMgr::Update_Collision()
                         CGameObject* pRightObj = pColRight->Get_Owner();
 
                         // TODO: pLeftObj->OnCollisionEnter(pRightObj) µî È£Ãâ
+						pLeftObj->OnCollisionEnter(pRightObj);
                     }
                 }
             }

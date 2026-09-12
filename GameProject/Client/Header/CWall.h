@@ -8,6 +8,8 @@ namespace Engine
 	class CPlyTex;
 	class CTransform;
 	class CTexture;
+	class CCollider;
+	class CBoxCollider;
 }
 
 class CWall : public CGameObject
@@ -30,6 +32,7 @@ private:
 	Engine::CPlyTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
+	Engine::CCollider* m_pColliderCom[4];
 
 	EWallDir m_eDir = EWallDir::NONE;
 	bool m_bHasDoor = false;
