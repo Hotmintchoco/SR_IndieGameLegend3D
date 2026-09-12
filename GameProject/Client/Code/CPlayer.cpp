@@ -22,10 +22,9 @@ HRESULT CPlayer::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    m_pColliderCom->Set_Radius(1.f);
-
 	__super::Ready_GameObject();
 
+    m_pColliderCom->Set_Radius(1.f);
 	m_pTransformCom->Set_Pos(60.f, 1.f, 60.f);
 
     return S_OK;
