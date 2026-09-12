@@ -278,6 +278,9 @@
     <ClCompile Include="..\Code\CTile.cpp">
       <Filter>02. GameObject\07. Room\Object\Tile</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CBullet.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CFog.cpp">
       <Filter>02. GameObject\07. Room\Object\Fog</Filter>
     </ClCompile>

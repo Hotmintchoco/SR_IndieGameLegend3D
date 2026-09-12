@@ -18,6 +18,9 @@
 #include "CBullet.h"
 #include "CDInputMgr.h"
 #include "CCollisionMgr.h"
+#include "CTile.h"
+#include "CWall.h"
+#include "CFog.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev), m_fLastShotTime(0.f), m_fReloadTime(0.f), m_iAmmo(13)
