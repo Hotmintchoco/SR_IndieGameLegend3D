@@ -22,6 +22,7 @@ HRESULT CCameraFPVPerspective::Ready_Camera()
 	m_fAspect = (_float)WINCX / WINCY;
 	m_fNear = 0.1f;
 	m_fFar = 1000.f;
+	m_fAngle = 0.f;
 
 	return S_OK;
 }
