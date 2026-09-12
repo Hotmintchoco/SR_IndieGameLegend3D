@@ -251,5 +251,8 @@
     <None Include="..\Bin\Resource\Map\Room_2_1.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
+    <None Include="..\Bin\Resource\Map\Room 작성 가이드.md">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
   </ItemGroup>
 </Project>

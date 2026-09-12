@@ -206,6 +206,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\Resource\Map\DefaultRoom.json" />
+    <None Include="..\Bin\Resource\Map\Room 작성 가이드.md" />
     <None Include="..\Bin\Resource\Map\Room_2_1.json" />
     <None Include="..\Bin\Resource\Map\Room_2_2.json" />
     <None Include="..\Bin\Resource\Map\Room_4_3.json" />
