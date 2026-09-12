@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CComponent.h"
 
 BEGIN(Engine)
@@ -32,6 +32,10 @@ public:
 	void		Set_Pos(_float fX, _float fY, _float fZ)
 	{
 		m_vInfo[INFO_POS] = { fX, fY, fZ };
+	}
+	inline void Set_Pos(const _vec3& vPos)
+	{
+		m_vInfo[INFO_POS] = vPos;
 	}
 
 	void		Set_World(_matrix* pWorld)

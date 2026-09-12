@@ -11,14 +11,16 @@
 #include "CLightMgr.h"
 #include "CEffect.h"
 #include "CGun.h"
-#include "CLoading.h"
 #include "CManagement.h"
-#include "CTile.h"
-#include "CWall.h"
+#include "CRoom.h"
+#include "CRoomLoadingMgr.h"
 #include "CFontMgr.h"
 #include "CBullet.h"
 #include "CDInputMgr.h"
 #include "CCollisionMgr.h"
+#include "CTile.h"
+#include "CWall.h"
+#include "CFog.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev), m_fLastShotTime(0.f), m_fReloadTime(0.f), m_iAmmo(13)
@@ -31,8 +33,6 @@ CStage::~CStage()
 
 HRESULT CStage::Ready_Scene()
 {
-	CLoading::ParseMapData(&m_MapData);
-
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
 
@@ -55,6 +55,19 @@ HRESULT CStage::Ready_Scene()
 	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_WALL);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PBULLET, Engine::COLL_MONSTER);
+
+	return S_OK;
+}
+
+HRESULT CStage::PostInitialize()
+{
+	for (auto pRoom : m_vecRoom)
+	{
+		if (FAILED(pRoom->PostInitialize()))
+		{
+			return E_FAIL;
+		}
+	}
 
 	return S_OK;
 }
@@ -132,67 +145,28 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 
 void CStage::Render_Scene()
 {
+	/* 이것도 수정 부탁 */
 
-	_vec2	vPos_DebugUI_PlayerX{ 100.f, 20.f };
-	_vec2	vPos_DebugUI_PlayerY{ 100.f, 40.f };
-	_vec2	vPos_DebugUI_PlayerZ{ 100.f, 60.f };
-	_vec2	vPos_DebugUI_JumpState{ 100.f, 80.f };
-	_vec2	vPos_DebugUI_CameraAngle{ 100.f, 100.f };
-	_vec2	vPos_DebugUI_Ammo{ 100.f, 120.f };
-	_vec2	vPos_DebugUI_Reload{ 100.f, 140.f };
+	//_vec2	vPos_DebugUI_Ammo{ 100.f, 120.f };
+	//_vec2	vPos_DebugUI_Reload{ 100.f, 140.f };
 
-	_vec3	vPos_Player;
-	static_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"))->Get_Info(INFO_POS, &vPos_Player);
+	//wstring wAmmoInfo = L"AMMO : " + to_wstring(m_iAmmo) + L" / 13";
+	//CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wAmmoInfo.c_str(), &vPos_DebugUI_Ammo, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 
-	wstring wPlayerInfoX = L"PLAYER X : " + to_wstring(vPos_Player.x);
-	wstring wPlayerInfoY = L"PLAYER Y : " + to_wstring(vPos_Player.y);
-	wstring wPlayerInfoZ = L"PLAYER Z : " + to_wstring(vPos_Player.z);
-
-	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wPlayerInfoX.c_str(), &vPos_DebugUI_PlayerX, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wPlayerInfoY.c_str(), &vPos_DebugUI_PlayerY, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wPlayerInfoZ.c_str(), &vPos_DebugUI_PlayerZ, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-
-
-	_int iJumpState = (static_cast<CPlayer*>(Get_GameObject(L"GameLogic_Layer", L"Player")))->Get_JumpState();
-	wstring wsJumpInfo = L"JUMPSTATE : ";
-	switch (iJumpState)
-	{
-	case JUMP_NOT:
-		wsJumpInfo += L"JUMP_NOT";
-		break;
-	case JUMP_PARABOLIC:
-		wsJumpInfo += L"JUMP_PARABOLIC";
-		break;
-	case JUMP_FREEFALL:
-		wsJumpInfo += L"JUMP_FREEFALL";
-		break;
-	}
-
-	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wsJumpInfo.c_str(), &vPos_DebugUI_JumpState, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-
-	_float fAngle;
-	CCameraMgr::GetInstance()->Get_CameraAngle(&fAngle);
-	wstring wAngleInfo = L"Camera Angle : " + to_wstring(fAngle) + L"°";
-
-	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wAngleInfo.c_str(), &vPos_DebugUI_CameraAngle, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-
-	wstring wAmmoInfo = L"AMMO : " + to_wstring(m_iAmmo) + L" / 13";
-	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wAmmoInfo.c_str(), &vPos_DebugUI_Ammo, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-
-	if (m_iAmmo == 0)
-	{
-		if (m_fReloadTime == 0.f)
-		{
-			if ((int)(m_fLastShotTime * 5) % 2 == 0)
-			{
-				CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", L"OUT OF AMMO. PRESS R TO RELOAD.", &vPos_DebugUI_Reload, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-			}
-		}
-		else
-		{
-			CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", L"Reloading...", &vPos_DebugUI_Reload, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-		}
-	}
+	//if (m_iAmmo == 0)
+	//{
+	//	if (m_fReloadTime == 0.f)
+	//	{
+	//		if ((int)(m_fLastShotTime * 5) % 2 == 0)
+	//		{
+	//			CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", L"OUT OF AMMO. PRESS R TO RELOAD.", &vPos_DebugUI_Reload, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	//		}
+	//	}
+	//	else
+	//	{
+	//		CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", L"Reloading...", &vPos_DebugUI_Reload, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	//	}
+	//}
 }
 
 HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
@@ -206,8 +180,8 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 	/*
 	// DynamicCamera
-	_vec3   vEye{ 0.f, 10.f, -10.f };
-	_vec3   vAt{ 0.f, 0.f, 1.f };
+	_vec3   vEye{ 60.f, 10.f, 50.f };
+	_vec3   vAt{ 60.f, 0.f, 61.f };
 	_vec3   vUp{ 0.f, 1.f, 0.f };
 
 	pGameObject = CDynamicCamera::Create(m_pGraphicDev, 
@@ -228,71 +202,6 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 	if (FAILED(pLayer->Add_GameObject(L"SkyBox", pGameObject)))
 		return E_FAIL;
-
-	/* 하드코딩으로 5 x 5 격자 맵 */
-	int iGridSize = 5;
-	int iTileSizeX = 13;
-	int iTileSizeZ = 11;
-	_vec2 vMapSize{ 15.f, 13.f };
-	_vec3 vTerrainOffset{ 60.f, 0.f, 60.f };
-
-	for (int j = 0; j < iGridSize; ++j)
-	{
-		for (int k = 0; k < iGridSize; ++k)
-		{
-			int iRoomNumber = j * iGridSize + k;
-			_vec3 vRoomOffset{
-				-(float)(iGridSize - 1) / 2.f * vMapSize.x + vMapSize.x * (float)k,
-				0.f,
-				(float)(iGridSize - 1) / 2.f * vMapSize.y - vMapSize.y * (float)j
-			};
-
-			/* 타일 */
-			for (size_t i = 0; i < m_MapData.vecTile.size(); ++i)
-			{
-				int iTileX = (int)i % iTileSizeX;
-				int iTileZ = (int)i / iTileSizeX;
-
-				_vec3 vTileOffset{
-					-(float)(iTileSizeX - 1) / 2.f * 1.f + 1.f * (float)iTileX,
-					0.f,
-					(float)(iTileSizeZ - 1) / 2.f * 1.f - 1.f * (float)iTileZ
-				};
-
-				pGameObject = CTile::Create(m_pGraphicDev, (int)i, m_MapData.vecTile.at(i));
-				if (nullptr == pGameObject)
-					return E_FAIL;
-
-				wstring wstrTileName = L"Room_" + to_wstring(iRoomNumber) + L"_Tile_" + to_wstring(i);
-
-				if (FAILED(pLayer->Add_GameObject(wstrTileName, pGameObject)))
-					return E_FAIL;
-
-				CTransform* pTransformCom = dynamic_cast<CTransform*>(
-					pLayer->Get_Component(ID_DYNAMIC, wstrTileName, L"Com_Transform"));
-
-				pTransformCom->Set_Pos(vRoomOffset.x + vTileOffset.x + vTerrainOffset.x, 0.f, vRoomOffset.z + vTileOffset.z + vTerrainOffset.z);
-			}
-
-			/* 벽 : 동서남북 순 */
-			for (size_t i = 0; i < m_MapData.vecDoorInfo.size(); ++i)
-			{
-				pGameObject = CWall::Create(m_pGraphicDev, (EWallDir)(i + 1), m_MapData.vecDoorInfo.at(i));
-				if (nullptr == pGameObject)
-					return E_FAIL;
-
-				wstring wstrDoorName = L"Room_" + to_wstring(iRoomNumber) + L"_Door_" + to_wstring(i);
-
-				if (FAILED(pLayer->Add_GameObject(wstrDoorName, pGameObject)))
-					return E_FAIL;
-
-				CTransform* pTransformCom = dynamic_cast<CTransform*>(
-					pLayer->Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
-
-				pTransformCom->Set_Pos(vRoomOffset.x + vTerrainOffset.x, 0.f, vRoomOffset.z + vTerrainOffset.z);
-			}
-		}
-	}
 
 	m_mapLayer.insert({ pLayerTag ,pLayer });
 
@@ -332,41 +241,20 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Gun", pGameObject)))
 		return E_FAIL;
 
-	/* 몬스터 소환 */
-	_vec3 vTerrainOffset{ 60.f, 0.f, 60.f };
-
-	for (auto& tMapEntity : m_MapData.vecMonsterInfo)
+	/* 방 출력 */
+	for (int i = 0; i < CRoomLoadingMgr::GetInstance()->GetRoomTotalCount(); ++i)
 	{
-		pGameObject = CMonster::Create(m_pGraphicDev);
+		pGameObject = CRoom::Create(m_pGraphicDev, i);
 		if (nullptr == pGameObject)
 			return E_FAIL;
 
-		if (FAILED(pLayer->Add_GameObject(tMapEntity.wstrEntityName, pGameObject)))
+		wstring wstrRoomName = L"Room_" + to_wstring(i);
+
+		if (FAILED(pLayer->Add_GameObject(wstrRoomName, pGameObject)))
 			return E_FAIL;
 
-		// Monster
-		//pGameObject = CMonster::Create(m_pGraphicDev);
-		//if (nullptr == pGameObject)
-		//	return E_FAIL;
-
-		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-			return E_FAIL;
-
-		CTransform* pTransformCom = dynamic_cast<CTransform*>(
-			pLayer->Get_Component(ID_DYNAMIC, tMapEntity.wstrEntityName, L"Com_Transform"));
-
-		pTransformCom->Set_Pos(tMapEntity.vPos.x + vTerrainOffset.x, tMapEntity.vPos.y, tMapEntity.vPos.z + vTerrainOffset.z);
+		m_vecRoom.push_back(static_cast<CRoom*>(pGameObject));
 	}
-
-	m_mapLayer.insert({ pLayerTag ,pLayer });
-
-	// Monster
-	pGameObject = CMonster::Create(m_pGraphicDev);
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag ,pLayer });
 

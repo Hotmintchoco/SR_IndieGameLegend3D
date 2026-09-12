@@ -1,40 +1,36 @@
 ﻿#pragma once
+
 #include "CGameObject.h"
 
 namespace Engine
 {
+	class CRcTex;
 	class CTransform;
+	class CTexture;
 }
 
-class CRoom : public CGameObject
+class CFog : public CGameObject
 {
 protected:
-	explicit CRoom(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CRoom(LPDIRECT3DDEVICE9 pGraphicDev, int iIndex);
-	virtual ~CRoom();
+	explicit CFog(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CFog();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
-	HRESULT PostInitialize();
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
-
-	inline _vec3 GetCenterPos() { return m_vCenterPos; }
 
 private:
 	HRESULT			Add_Component();
 
 private:
-	void UpdateCenterPosition();
-
+	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
-
-	_vec3 m_vCenterPos = { -99999.f, -99999.f, -99999.f };
-	int m_iIndex = - 1;
+	Engine::CTexture* m_pTextureCom;
 
 public:
-	static CRoom* Create(LPDIRECT3DDEVICE9 pGraphicDev, int iIndex);
+	static CFog* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void		Free();

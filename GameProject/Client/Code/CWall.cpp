@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CWall.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -65,7 +65,7 @@ _int CWall::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_PRIORITY, this);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
     return iExit;
 }
@@ -74,7 +74,7 @@ void CWall::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 
-    // �浹 ó��
+    // 충돌 처리
 	for (int i = 0; i < 4; ++i)
 	    CCollisionMgr::GetInstance()->Add_Collider(COLL_WALL, m_pColliderCom[i]);
 }

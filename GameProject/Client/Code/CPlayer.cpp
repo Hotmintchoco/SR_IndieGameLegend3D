@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CPlayer.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -6,6 +6,8 @@
 #include "CTerrain.h"
 #include "CSphereCollider.h"
 #include "CCollisionMgr.h"
+#include "CImGuiTool.h"
+#include "CCameraMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev), m_iJumpState(JUMP_NOT), m_fJumpTime(0.f), m_bFix(true), m_bCheck(true)
@@ -50,7 +52,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	// Ãæµ¹ Ã³¸® ¿©ºÎ¸¦ À§ÇØ Ãæµ¹ ¸Å´ÏÀú¿¡ ÇÃ·¹ÀÌ¾îÀÇ ÄÝ¶óÀÌ´õ¸¦ µî·Ï
+	// ì¶©ëŒ ì²˜ë¦¬ ì—¬ë¶€ë¥¼ ìœ„í•´ ì¶©ëŒ ë§¤ë‹ˆì €ì— í”Œë ˆì´ì–´ì˜ ì½œë¼ì´ë”ë¥¼ ë“±ë¡
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -65,6 +67,38 @@ void CPlayer::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+#ifdef _DEBUG
+    RenderImGui();
+#endif
+}
+
+void CPlayer::RenderImGui()
+{
+    /* ImGui */
+    ImGui::Begin("Player Debug Information");
+
+    /* ìœ„ì¹˜ */
+    _vec3 vPlayerPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    ImGui::Text("Pos : %.2f, %.2f, %.2f", vPlayerPos.x, vPlayerPos.y, vPlayerPos.z);
+
+    /* ì í”„ ìƒíƒœ */
+    const char* szJumpState = "UNKNOWN";
+    switch (m_iJumpState)
+    {
+    case JUMP_NOT:       szJumpState = "JUMP_NOT";       break;
+    case JUMP_PARABOLIC: szJumpState = "JUMP_PARABOLIC"; break;
+    case JUMP_FREEFALL:  szJumpState = "JUMP_FREEFALL";  break;
+    }
+    ImGui::Text("JUMPSTATE : %s", szJumpState);
+
+    /* ì¹´ë©”ë¼ */
+    _float fAngle;
+    CCameraMgr::GetInstance()->Get_CameraAngle(&fAngle);
+    ImGui::Text("Camera Angle : %.2f", fAngle);
+
+    ImGui::End();
 }
 
 void CPlayer::OnCollisionEnter(CGameObject* pOther)
@@ -225,18 +259,18 @@ void CPlayer::Set_OnTerrain(const _float& fTimeDelta)
 
     _float  fY = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
 
-    if (vPos.y < fY + 1.f) // KEY_INPUT¿¡¼­ÀÇ ÀÌµ¿¿¡ µû¸¥ ³ôÀÌ º¸Á¤
+    if (vPos.y < fY + 1.f) // KEY_INPUTì—ì„œì˜ ì´ë™ì— ë”°ë¥¸ ë†’ì´ ë³´ì •
     {
         vPos.y = fY + 1.f;
         m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
     }
-    else if ((m_iJumpState == JUMP_NOT) && (vPos.y > fY + 1.f)) // °¡ÆÄ¸¥ ³»¸®¸·±æ ¶Ç´Â Àýº®¿¡¼­ ÀÚÀ¯³«ÇÏ
+    else if ((m_iJumpState == JUMP_NOT) && (vPos.y > fY + 1.f)) // ê°€íŒŒë¥¸ ë‚´ë¦¬ë§‰ê¸¸ ë˜ëŠ” ì ˆë²½ì—ì„œ ìžìœ ë‚™í•˜
     {
-        _float fClampDelta = 0.05f; // ÀÛÀº °æ»ç¿¡¼­ ÀÚÀ¯³«ÇÏÇÏ´Â ´ë½Å Áö¸éÅ¬·¥ÇÎ ½ÃÅ³ ¹üÀ§
+        _float fClampDelta = 0.05f; // ìž‘ì€ ê²½ì‚¬ì—ì„œ ìžìœ ë‚™í•˜í•˜ëŠ” ëŒ€ì‹  ì§€ë©´í´ëž¨í•‘ ì‹œí‚¬ ë²”ìœ„
         if (vPos.y - (fY + 1.f) < fClampDelta)
         {
             vPos.y = fY + 1.f;
-            m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z); // Áö¸éÅ¬·¥ÇÎ
+            m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z); // ì§€ë©´í´ëž¨í•‘
         }
         else
         {
@@ -248,9 +282,9 @@ void CPlayer::Set_OnTerrain(const _float& fTimeDelta)
     _float fJumpSpeed = 30.f;
     _float fYDelta;
 
-#pragma region fYDelta °ø½Ä À¯µµ°úÁ¤
+#pragma region fYDelta ê³µì‹ ìœ ë„ê³¼ì •
 
-    // PARABOLIC(Æ÷¹°¼± Á¡ÇÁ »óÅÂÀÇ fYDelta)
+    // PARABOLIC(í¬ë¬¼ì„  ì í”„ ìƒíƒœì˜ fYDelta)
 
     // fYDelta  = fYInitial + fJumpSpeed * (m_fJumpTime + fTimeDelta) - 1/2  * GRAVCONST * (fJumpTime + fTimeDelta)*(fJumpTime + fTimeDelta)
     // - (fYInitial + fJumpSpeed * m_fJumpTime - 1/2 * GRAVCONST * m_fJumpTime * m_fJumpTime )
@@ -261,7 +295,7 @@ void CPlayer::Set_OnTerrain(const _float& fTimeDelta)
     // 
     // = fTimeDelta * (fJumpSpeed - 1/2 * GRAVCONST (2* m_fJumpTime + fTimeDelta));
 
-    // FREEFALL(ÀÚÀ¯³«ÇÏ »óÅÂÀÇ fYDelta)
+    // FREEFALL(ìžìœ ë‚™í•˜ ìƒíƒœì˜ fYDelta)
 
     //fYDelta = -(1 / 2 * GRAVCONST * (m_fJumpTime + fTimeDelta) * (m_fJumpTime + fTimeDelta) - 1 / 2 * GRAVCONST * m_fJumpTime * m_fJumpTime)
     //
@@ -271,13 +305,13 @@ void CPlayer::Set_OnTerrain(const _float& fTimeDelta)
 
 #pragma endregion
 
-    if (m_iJumpState == JUMP_PARABOLIC) // Æ÷¹°¼± Á¡ÇÁÁßÀÏ¶§ 
+    if (m_iJumpState == JUMP_PARABOLIC) // í¬ë¬¼ì„  ì í”„ì¤‘ì¼ë•Œ 
     {
         fYDelta = fTimeDelta * (fJumpSpeed - 0.5f * GRAVCONST * (2 * m_fJumpTime + fTimeDelta));
         vPos.y += fYDelta;
         m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
     }
-    else if (m_iJumpState == JUMP_FREEFALL) // ÀÚÀ¯³«ÇÏ »óÅÂÀÏ¶§
+    else if (m_iJumpState == JUMP_FREEFALL) // ìžìœ ë‚™í•˜ ìƒíƒœì¼ë•Œ
     {
         fYDelta = fTimeDelta * (-0.5f * GRAVCONST * (2 * m_fJumpTime + fTimeDelta));
         vPos.y += fYDelta;
@@ -285,7 +319,7 @@ void CPlayer::Set_OnTerrain(const _float& fTimeDelta)
     }
 
     fY = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
-    if (vPos.y < fY + 1.f) // ¹Ù´Ú¿¡ ÂøÁö
+    if (vPos.y < fY + 1.f) // ë°”ë‹¥ì— ì°©ì§€
     {
         m_pTransformCom->Set_Pos(vPos.x, fY + 1.f, vPos.z);
         m_iJumpState = JUMP_NOT;

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CGameObject.h"
 
@@ -34,6 +34,7 @@ private:
 	void			Mouse_Fix();
 	void			Set_OnTerrain(const _float& fTimeDelta);
 	_vec3			Picking_OnTerrain();
+	void RenderImGui();
 
 private:
 	Engine::CRcTex*				m_pBufferCom;
