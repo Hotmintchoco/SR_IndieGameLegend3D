@@ -1,4 +1,5 @@
 #include "CSphereCollider.h"
+#include "CBoxCollider.h"
 #include "CGameObject.h"
 #include "CTransform.h"
 
@@ -30,6 +31,12 @@ _bool CSphereCollider::Intersect(CCollider* pOther)
 
 		// 내 구(Sphere)와 상대방 구(Sphere)의 충돌 검사
 		return m_tSphere.Intersects(pTargetSphere->m_tSphere);
+	}
+
+	if (pOther->Get_ColliderType() == CT_BOX)
+	{
+		CBoxCollider* pTargetBox = static_cast<CBoxCollider*>(pOther);
+		return m_tSphere.Intersects(pTargetBox->m_tBox);
 	}
 
 	return false;
