@@ -85,6 +85,9 @@
     <Filter Include="04. Manager">
       <UniqueIdentifier>{21b47c84-577f-4f39-b3ac-01f370fb2f24}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. Bullet">
+      <UniqueIdentifier>{6bdbc102-7ebf-41d5-b4a6-11d635b0163e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -165,6 +168,9 @@
     <ClInclude Include="..\Header\CRoomLoadingMgr.h">
       <Filter>04. Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBullet.h">
+      <Filter>02. GameObject\09. Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -223,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CRoomLoadingMgr.cpp">
       <Filter>04. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBullet.cpp">
+      <Filter>02. GameObject\09. Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

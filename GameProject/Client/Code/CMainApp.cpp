@@ -9,6 +9,7 @@
 #include "CDInputMgr.h"
 #include "CLightMgr.h"
 #include "CCollisionMgr.h"
+#include "CCameraMgr.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -134,6 +135,7 @@ void CMainApp::Free()
 	CFontMgr::DestroyInstance();
 	CFrameMgr::DestroyInstance();
 	CTimerMgr::DestroyInstance();
+	CCameraMgr::DestroyInstance();
 
 	m_pManagementClass->DestroyInstance();
 	m_pDeviceClass->DestroyInstance();
