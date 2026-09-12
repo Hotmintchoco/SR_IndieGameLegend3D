@@ -21,18 +21,28 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject()PURE;
 
+	virtual			void		OnCollisionEnter(CGameObject* pOther) {}
+
+public:
+	void Set_Dead(_bool bDead) { m_bDead = bDead; }
+	_bool Is_Dead() const { return m_bDead; }
+
 	void			Compute_ViewZ(const _vec3* pPos);
 
 protected:
 	map<const _tchar*, CComponent*>			m_mapComponent[ID_END];
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	_float									m_fViewZ;
+	_bool									m_bDead;
 
 private:
 	CComponent* Find_Component(COMPONENTID eID, const _tchar* pComponentTag);
 
 protected:
 	virtual		void		Free();
+
+public:
+	
 };
 
 END

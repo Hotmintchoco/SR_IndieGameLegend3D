@@ -17,6 +17,9 @@ public:
 	void	Set_IsTrigger(const bool& bIsTrigger) { m_bIsTrigger = bIsTrigger; }
 	_bool	Get_IsTrigger() { return m_bIsTrigger; }
 
+	void	Set_IsCollided(const bool& bIsCollided) { m_bIsCollided = bIsCollided; }
+	_bool	Get_IsCollided() { return m_bIsCollided; }
+
 	virtual void	Set_Radius(const _float& fRadius) {}
 	_float			Get_Radius() { return m_fRadius; }
 
@@ -40,6 +43,7 @@ protected:
 protected:
 	_bool			m_bIsTrigger;
 	_bool			m_bIsPos;
+	_bool			m_bIsCollided;
 	_float			m_fRadius;
 	COLLIDER_TYPE	m_eColliderType = CT_NONE;
 };

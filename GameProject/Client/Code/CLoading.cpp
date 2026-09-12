@@ -82,7 +82,11 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Calculator", Engine::CCalculator::Create(m_pGraphicDev))))
         return E_FAIL;
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider", Engine::CSphereCollider::Create(m_pGraphicDev))))
+    
+    /* 충돌 처리 */
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SphereCollider", Engine::CSphereCollider::Create(m_pGraphicDev))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BoxCollider", Engine::CBoxCollider::Create(m_pGraphicDev))))
         return E_FAIL;
 
 

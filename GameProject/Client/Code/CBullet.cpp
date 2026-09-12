@@ -2,6 +2,8 @@
 #include "CBullet.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
+#include "CSphereCollider.h"
+#include "CCollisionMgr.h"
 
 CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_vDir(0.f, 0.f, 0.f)
@@ -21,6 +23,10 @@ HRESULT CBullet::Ready_GameObject(const _vec3* pPos, const _vec3* pDir)
     m_pTransformCom->Set_Pos(pPos->x, pPos->y, pPos->z);
     m_pTransformCom->m_vScale = { 0.2f, 0.2f, 0.2f };
     D3DXVec3Normalize(&m_vDir, pDir);
+
+	__super::Ready_GameObject();
+
+    m_pColliderCom->Set_Radius(0.5f);
 
     return S_OK;
 }
@@ -66,6 +72,9 @@ void CBullet::LateUpdate_GameObject(const _float& fTimeDelta)
 
     m_pTransformCom->Set_World(&matWorld);
 
+    // 충돌 매니저에 콜라이더 등록
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_PBULLET, m_pColliderCom);
+    
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -80,6 +89,11 @@ void CBullet::Render_GameObject()
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
+}
+
+void CBullet::OnCollisionEnter(CGameObject* pOther)
+{
+    Set_Dead(true);
 }
 
 HRESULT CBullet::Add_Component()
@@ -109,6 +123,13 @@ HRESULT CBullet::Add_Component()
         return E_FAIL;
 
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
+
+    // Collider
+    pComponent = m_pColliderCom = dynamic_cast<CCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SphereCollider"));
+    if (nullptr == pComponent)
+        return E_FAIL;
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });
+
 
     return S_OK;
 }

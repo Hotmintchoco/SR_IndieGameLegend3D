@@ -112,7 +112,7 @@ HRESULT CMonster::Add_Component()
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	// Collider
-    pComponent = m_pColliderCom = dynamic_cast<CCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+    pComponent = m_pColliderCom = dynamic_cast<CCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SphereCollider"));
     if (nullptr == pComponent)
         return E_FAIL;
 

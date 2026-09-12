@@ -13,6 +13,7 @@
 #include "CTexture.h"
 #include "CCalculator.h"
 #include "CSphereCollider.h"
+#include "CBoxCollider.h"
 
 BEGIN(Engine)
 

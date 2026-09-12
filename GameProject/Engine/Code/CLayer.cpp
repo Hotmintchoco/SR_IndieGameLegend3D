@@ -45,14 +45,24 @@ HRESULT CLayer::Ready_Layer()
 
 _int CLayer::Update_Layer(const _float& fTimeDelta)
 {
-	_int	iResult(0);
+	_int iResult(0);
 
-	for (auto& pObj : m_mapObject)
+	for (auto iter = m_mapObject.begin(); iter != m_mapObject.end(); )
 	{
-		iResult = pObj.second->Update_GameObject(fTimeDelta);
+		CGameObject* pObj = iter->second;
 
+		if (pObj->Is_Dead())
+		{
+			Safe_Release(pObj);
+			iter = m_mapObject.erase(iter);
+			continue;
+		}
+
+		iResult = pObj->Update_GameObject(fTimeDelta);
 		if (iResult & 0x80000000)
 			return iResult;
+
+		++iter;
 	}
 
 	return iResult;
