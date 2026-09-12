@@ -263,9 +263,6 @@
     <ClCompile Include="..\Code\CTile.cpp">
       <Filter>02. GameObject\07. Room\Object\Tile</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CBullet.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CFog.cpp">
       <Filter>02. GameObject\07. Room\Object\Fog</Filter>
     </ClCompile>
@@ -295,6 +292,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CRoomLoadingMgr.cpp">
       <Filter>04. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBullet.cpp">
+      <Filter>02. GameObject\09. Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
