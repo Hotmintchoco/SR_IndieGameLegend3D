@@ -59,9 +59,17 @@ void CCollisionMgr::Update_Collision()
                         CGameObject* pLeftObj = pColLeft->Get_Owner();
                         CGameObject* pRightObj = pColRight->Get_Owner();
 
+                        // 충돌 여부 체크
+						pColLeft->Set_IsCollided(true);
+
                         // TODO: pLeftObj->OnCollisionEnter(pRightObj) 등 호출
 						pLeftObj->OnCollisionEnter(pRightObj);
                     }
+                    else
+                    {
+                        // 충돌이 발생하지 않은 경우, 충돌 상태를 초기화
+                        pColLeft->Set_IsCollided(false);
+					}
                 }
             }
 		}

@@ -8,7 +8,7 @@
 #include "CCollisionMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CGameObject(pGraphicDev), m_iJumpState(JUMP_NOT), m_fJumpTime(0.f), m_bFix(true), m_bCheck(true), m_bCollision(false)
+	: CGameObject(pGraphicDev), m_iJumpState(JUMP_NOT), m_fJumpTime(0.f), m_bFix(true), m_bCheck(true)
 {
 }
 

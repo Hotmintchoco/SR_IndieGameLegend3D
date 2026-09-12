@@ -48,7 +48,6 @@ private:
 	_bool		m_bFix;
 	_bool		m_bCheck;
 
-	_bool		m_bCollision;
 	_vec3		m_vPrevPos;
 
 public:
