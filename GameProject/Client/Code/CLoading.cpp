@@ -143,9 +143,6 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BrownFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/BrownFrustum_Diffuse.png", 1))))
         return E_FAIL;
-    /* 안개 */
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Fog_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture2D/Fog.png", 1))))
-        return E_FAIL;
 
     /* 충돌 처리 */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SphereCollider", Engine::CSphereCollider::Create(m_pGraphicDev))))
@@ -160,9 +157,10 @@ _uint CLoading::Loading_Stage()
     if (FAILED(ParseRoomData()))
     {
         return E_FAIL;
+    }
 
     /* 안개 */
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Fog_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture2D/Fog.png", 1))))
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Fog_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture2D/fog.png", 1))))
         return E_FAIL;
 
 
