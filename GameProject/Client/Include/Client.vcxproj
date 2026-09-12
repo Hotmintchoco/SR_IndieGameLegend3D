@@ -150,6 +150,7 @@
     <ClInclude Include="..\Header\CEffect.h" />
     <ClInclude Include="..\Header\CFog.h" />
     <ClInclude Include="..\Header\CGun.h" />
+    <ClInclude Include="..\Header\CImGuiTool.h" />
     <ClInclude Include="..\Header\CLoading.h" />
     <ClInclude Include="..\Header\CLogo.h" />
     <ClInclude Include="..\Header\CMainApp.h" />
@@ -163,6 +164,14 @@
     <ClInclude Include="..\Header\CTile.h" />
     <ClInclude Include="..\Header\CWall.h" />
     <ClInclude Include="..\Header\Define.h" />
+    <ClInclude Include="..\Header\imconfig.h" />
+    <ClInclude Include="..\Header\imgui.h" />
+    <ClInclude Include="..\Header\imgui_impl_dx9.h" />
+    <ClInclude Include="..\Header\imgui_impl_win32.h" />
+    <ClInclude Include="..\Header\imgui_internal.h" />
+    <ClInclude Include="..\Header\imstb_rectpack.h" />
+    <ClInclude Include="..\Header\imstb_textedit.h" />
+    <ClInclude Include="..\Header\imstb_truetype.h" />
     <ClInclude Include="..\Header\json.hpp" />
     <ClInclude Include="..\Header\JsonAdapter.h" />
     <ClInclude Include="..\Header\json_fwd.hpp" />
@@ -179,6 +188,7 @@
     <ClCompile Include="..\Code\CEffect.cpp" />
     <ClCompile Include="..\Code\CFog.cpp" />
     <ClCompile Include="..\Code\CGun.cpp" />
+    <ClCompile Include="..\Code\CImGuiTool.cpp" />
     <ClCompile Include="..\Code\CLoading.cpp" />
     <ClCompile Include="..\Code\CLogo.cpp" />
     <ClCompile Include="..\Code\CMainApp.cpp" />
@@ -191,6 +201,27 @@
     <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CTile.cpp" />
     <ClCompile Include="..\Code\CWall.cpp" />
+    <ClCompile Include="..\Code\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui_demo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui_impl_dx9.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui_impl_win32.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui_tables.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Code\imgui_widgets.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

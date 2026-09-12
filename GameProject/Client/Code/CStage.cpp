@@ -140,67 +140,28 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 
 void CStage::Render_Scene()
 {
+	/* 이것도 수정 부탁 */
 
-	_vec2	vPos_DebugUI_PlayerX{ 100.f, 20.f };
-	_vec2	vPos_DebugUI_PlayerY{ 100.f, 40.f };
-	_vec2	vPos_DebugUI_PlayerZ{ 100.f, 60.f };
-	_vec2	vPos_DebugUI_JumpState{ 100.f, 80.f };
-	_vec2	vPos_DebugUI_CameraAngle{ 100.f, 100.f };
-	_vec2	vPos_DebugUI_Ammo{ 100.f, 120.f };
-	_vec2	vPos_DebugUI_Reload{ 100.f, 140.f };
+	//_vec2	vPos_DebugUI_Ammo{ 100.f, 120.f };
+	//_vec2	vPos_DebugUI_Reload{ 100.f, 140.f };
 
-	_vec3	vPos_Player;
-	static_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"))->Get_Info(INFO_POS, &vPos_Player);
+	//wstring wAmmoInfo = L"AMMO : " + to_wstring(m_iAmmo) + L" / 13";
+	//CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wAmmoInfo.c_str(), &vPos_DebugUI_Ammo, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 
-	wstring wPlayerInfoX = L"PLAYER X : " + to_wstring(vPos_Player.x);
-	wstring wPlayerInfoY = L"PLAYER Y : " + to_wstring(vPos_Player.y);
-	wstring wPlayerInfoZ = L"PLAYER Z : " + to_wstring(vPos_Player.z);
-
-	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wPlayerInfoX.c_str(), &vPos_DebugUI_PlayerX, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wPlayerInfoY.c_str(), &vPos_DebugUI_PlayerY, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wPlayerInfoZ.c_str(), &vPos_DebugUI_PlayerZ, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-
-
-	_int iJumpState = (static_cast<CPlayer*>(Get_GameObject(L"GameLogic_Layer", L"Player")))->Get_JumpState();
-	wstring wsJumpInfo = L"JUMPSTATE : ";
-	switch (iJumpState)
-	{
-	case JUMP_NOT:
-		wsJumpInfo += L"JUMP_NOT";
-		break;
-	case JUMP_PARABOLIC:
-		wsJumpInfo += L"JUMP_PARABOLIC";
-		break;
-	case JUMP_FREEFALL:
-		wsJumpInfo += L"JUMP_FREEFALL";
-		break;
-	}
-
-	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wsJumpInfo.c_str(), &vPos_DebugUI_JumpState, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-
-	_float fAngle;
-	CCameraMgr::GetInstance()->Get_CameraAngle(&fAngle);
-	wstring wAngleInfo = L"Camera Angle : " + to_wstring(fAngle) + L"°";
-
-	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wAngleInfo.c_str(), &vPos_DebugUI_CameraAngle, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-
-	wstring wAmmoInfo = L"AMMO : " + to_wstring(m_iAmmo) + L" / 13";
-	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wAmmoInfo.c_str(), &vPos_DebugUI_Ammo, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-
-	if (m_iAmmo == 0)
-	{
-		if (m_fReloadTime == 0.f)
-		{
-			if ((int)(m_fLastShotTime * 5) % 2 == 0)
-			{
-				CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", L"OUT OF AMMO. PRESS R TO RELOAD.", &vPos_DebugUI_Reload, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-			}
-		}
-		else
-		{
-			CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", L"Reloading...", &vPos_DebugUI_Reload, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-		}
-	}
+	//if (m_iAmmo == 0)
+	//{
+	//	if (m_fReloadTime == 0.f)
+	//	{
+	//		if ((int)(m_fLastShotTime * 5) % 2 == 0)
+	//		{
+	//			CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", L"OUT OF AMMO. PRESS R TO RELOAD.", &vPos_DebugUI_Reload, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	//		}
+	//	}
+	//	else
+	//	{
+	//		CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", L"Reloading...", &vPos_DebugUI_Reload, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	//	}
+	//}
 }
 
 HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
