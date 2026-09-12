@@ -79,6 +79,9 @@
     <Filter Include="99. Header\ThirdParty">
       <UniqueIdentifier>{bf0e3959-e252-49e1-9535-e3b23444d2c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. Bullet">
+      <UniqueIdentifier>{6bdbc102-7ebf-41d5-b4a6-11d635b0163e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -153,6 +156,9 @@
     <ClInclude Include="..\Header\JsonAdapter.h">
       <Filter>99. Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBullet.h">
+      <Filter>02. GameObject\09. Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -205,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTile.cpp">
       <Filter>02. GameObject\07. Room\Object\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBullet.cpp">
+      <Filter>02. GameObject\09. Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

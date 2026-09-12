@@ -58,9 +58,6 @@
     <ClCompile Include="..\Code\CRenderer.cpp">
       <Filter>08. Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CLight.cpp">
-      <Filter>09. LightMgr</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CLightMgr.cpp">
       <Filter>09. LightMgr</Filter>
     </ClCompile>
@@ -96,6 +93,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPlyTex.cpp">
       <Filter>05. Component\00. VIBuffer\05. PlyTex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLight.cpp">
+      <Filter>09. LightMgr\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCameraMgr.cpp">
+      <Filter>11. CameraMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCameraFPVPerspective.cpp">
+      <Filter>11. CameraMgr\CameraObj\Camera_FPV_Perspective</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCameraObj.cpp">
+      <Filter>11. CameraMgr\CameraObj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -156,9 +165,6 @@
     <ClInclude Include="..\Header\CRenderer.h">
       <Filter>08. Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CLight.h">
-      <Filter>09. LightMgr</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CLightMgr.h">
       <Filter>09. LightMgr</Filter>
     </ClInclude>
@@ -218,6 +224,18 @@
     </ClInclude>
     <ClInclude Include="..\Header\CPlyTex.h">
       <Filter>05. Component\00. VIBuffer\05. PlyTex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLight.h">
+      <Filter>09. LightMgr\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCameraMgr.h">
+      <Filter>11. CameraMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCameraFPVPerspective.h">
+      <Filter>11. CameraMgr\CameraObj\Camera_FPV_Perspective</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCameraObj.h">
+      <Filter>11. CameraMgr\CameraObj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -313,6 +331,21 @@
     </Filter>
     <Filter Include="05. Component\00. VIBuffer\06. PlaneTex">
       <UniqueIdentifier>{f96121c1-5865-444b-92a3-aa574f0bc920}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="09. LightMgr\Light">
+      <UniqueIdentifier>{c480bb77-e74a-44ab-a2fb-585ee51f9dc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. CameraMgr">
+      <UniqueIdentifier>{8369d5b9-9834-4406-93b7-1528a73ecc80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. CameraMgr\CameraObj">
+      <UniqueIdentifier>{b64342d8-e70c-4e17-924c-68cdde29c37d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. CameraMgr\CameraObj\Camera_FPV_Perspective">
+      <UniqueIdentifier>{02857908-3a33-459c-a703-0ce0e3c67a0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. CameraMgr\CameraObj\Camera_TPV_Perspective">
+      <UniqueIdentifier>{92de3bac-9e8d-49da-84ff-a0e99cbd9d54}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
