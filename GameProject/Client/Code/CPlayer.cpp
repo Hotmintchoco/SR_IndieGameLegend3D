@@ -41,7 +41,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     Compute_ViewZ(&vPos);
 
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
     return iExit;
 }
