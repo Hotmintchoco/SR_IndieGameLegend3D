@@ -3,7 +3,7 @@
 #include "CBackGround.h"
 #include "CProtoMgr.h"
 #include "CPlayer.h"
-#include "CMonster.h"
+#include "CSkull.h"
 #include "CTerrain.h"
 #include "CDynamicCamera.h"
 #include "CCameraMgr.h"
@@ -335,19 +335,14 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	for (auto& tMapEntity : m_MapData.vecMonsterInfo)
 	{
-		pGameObject = CMonster::Create(m_pGraphicDev);
+		pGameObject = CSkull::Create(m_pGraphicDev);
 		if (nullptr == pGameObject)
 			return E_FAIL;
 
 		if (FAILED(pLayer->Add_GameObject(tMapEntity.wstrEntityName, pGameObject)))
 			return E_FAIL;
 
-		// Monster
-		//pGameObject = CMonster::Create(m_pGraphicDev);
-		//if (nullptr == pGameObject)
-		//	return E_FAIL;
-
-		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+		if (FAILED(pLayer->Add_GameObject(L"Skull", pGameObject)))
 			return E_FAIL;
 
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(
@@ -359,11 +354,11 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	m_mapLayer.insert({ pLayerTag ,pLayer });
 
 	// Monster
-	pGameObject = CMonster::Create(m_pGraphicDev);
+	pGameObject = CSkull::Create(m_pGraphicDev);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"Skull", pGameObject)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag ,pLayer });

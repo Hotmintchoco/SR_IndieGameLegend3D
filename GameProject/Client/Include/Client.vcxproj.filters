@@ -82,6 +82,9 @@
     <Filter Include="02. GameObject\09. Bullet">
       <UniqueIdentifier>{6bdbc102-7ebf-41d5-b4a6-11d635b0163e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Skull">
+      <UniqueIdentifier>{8c263690-d182-4997-b6e2-5af20f8f6cd2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="..\Header\CBullet.h">
       <Filter>02. GameObject\09. Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CSkull.h">
+      <Filter>02. GameObject\02. Monster\Skull</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -214,6 +220,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBullet.cpp">
       <Filter>02. GameObject\09. Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSkull.cpp">
+      <Filter>02. GameObject\02. Monster\Skull</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
