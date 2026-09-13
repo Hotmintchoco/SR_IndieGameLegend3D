@@ -12,6 +12,7 @@
 #include "CCameraMgr.h"
 #include "CImGuiTool.h"
 #include "CRoomLoadingMgr.h"
+#include "CAbstractFactory.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -146,6 +147,7 @@ void CMainApp::Free()
 	CTimerMgr::DestroyInstance();
 	CCameraMgr::DestroyInstance();
 	CRoomLoadingMgr::DestroyInstance();
+	CAbstractFactory::DestroyInstance();
 
 	m_pManagementClass->DestroyInstance();
 	m_pDeviceClass->DestroyInstance();

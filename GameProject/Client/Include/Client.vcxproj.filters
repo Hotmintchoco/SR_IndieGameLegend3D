@@ -133,6 +133,9 @@
     <Filter Include="02. GameObject\07. Room\Object\RoomProp\Frustum\Explosive">
       <UniqueIdentifier>{979de761-48ca-497d-8be6-c29b96164f27}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\Stage\Layer">
+      <UniqueIdentifier>{864248b1-17e2-4b62-a7b2-574cc5b2efae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -182,9 +185,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CEffect.h">
       <Filter>02. GameObject\06. Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CRoom.h">
-      <Filter>02. GameObject\07. Room</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CGun.h">
       <Filter>02. GameObject\08. Gun</Filter>
@@ -273,6 +273,9 @@
     <ClInclude Include="..\Header\CUnbreakableFrustum.h">
       <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Unbreakable</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CRoomLayer.h">
+      <Filter>01. Scene\Stage\Layer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -313,9 +316,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEffect.cpp">
       <Filter>02. GameObject\06. Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CRoom.cpp">
-      <Filter>02. GameObject\07. Room</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CGun.cpp">
       <Filter>02. GameObject\08. Gun</Filter>
@@ -391,6 +391,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CUnbreakableFrustum.cpp">
       <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Unbreakable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRoomLayer.cpp">
+      <Filter>01. Scene\Stage\Layer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

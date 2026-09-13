@@ -10,9 +10,13 @@ namespace Engine
 
 class CAbstractFactory : public CBase
 {
-public:
-	CAbstractFactory();
+	DECLARE_SINGLETON(CAbstractFactory);
 
+private:
+	explicit CAbstractFactory();
+	virtual ~CAbstractFactory();
+
+public:
 	Engine::CGameObject* Create(EObjectType eType) const;
 
 private:

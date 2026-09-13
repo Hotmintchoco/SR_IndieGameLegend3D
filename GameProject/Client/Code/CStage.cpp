@@ -12,16 +12,13 @@
 #include "CEffect.h"
 #include "CGun.h"
 #include "CManagement.h"
-#include "CRoom.h"
-#include "CRoomLoadingMgr.h"
 #include "CFontMgr.h"
 #include "CBullet.h"
 #include "CDInputMgr.h"
 #include "CCollisionMgr.h"
-#include "CTile.h"
-#include "CWall.h"
-#include "CFog.h"
 #include "CWorm.h"
+#include "CRoomLoadingMgr.h"
+#include "CRoomLayer.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -43,6 +40,16 @@ HRESULT CStage::Ready_Scene()
 	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
 		return E_FAIL;
 
+	int iRoomCnt = CRoomLoadingMgr::GetInstance()->GetRoomTotalCount();
+	for (int i = 0; i < iRoomCnt; ++i)
+	{
+		wstring wstrLayerTag = L"Room_" + to_wstring(i) + L"_Layer";
+		if (FAILED(Ready_Room_Layer(wstrLayerTag, i)))
+			return E_FAIL;
+
+		static_cast<CRoomLayer*>(m_mapLayer.at(wstrLayerTag))->SpawnRoom();
+	}
+
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
 		return E_FAIL;
 
@@ -56,19 +63,6 @@ HRESULT CStage::Ready_Scene()
 	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_WALL);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PBULLET, Engine::COLL_MONSTER);
-
-	return S_OK;
-}
-
-HRESULT CStage::PostInitialize()
-{
-	for (auto pRoom : m_vecRoom)
-	{
-		if (FAILED(pRoom->PostInitialize()))
-		{
-			return E_FAIL;
-		}
-	}
 
 	return S_OK;
 }
@@ -178,34 +172,10 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Gun", pGameObject)))
 		return E_FAIL;
 
-	/* 방 출력 */
-	for (int i = 0; i < CRoomLoadingMgr::GetInstance()->GetRoomTotalCount(); ++i)
-	{
-		pGameObject = CRoom::Create(m_pGraphicDev, i);
-		if (nullptr == pGameObject)
-			return E_FAIL;
-
-		wstring wstrRoomName = L"Room_" + to_wstring(i);
-
-		if (FAILED(pLayer->Add_GameObject(wstrRoomName, pGameObject)))
-			return E_FAIL;
-
-		m_vecRoom.push_back(static_cast<CRoom*>(pGameObject));
-	}
-
+	// Worm
 	m_mapLayer.insert({ pLayerTag ,pLayer });
 
-	// Monster
-	pGameObject = CSkull::Create(m_pGraphicDev);
-	if (nullptr == pGameObject)
-		return E_FAIL;
-	
-	if (FAILED(pLayer->Add_GameObject(L"Skull", pGameObject)))
-		return E_FAIL;
-
-	m_mapLayer.insert({ pLayerTag ,pLayer });
-
-	map<const _tchar*, CLayer*>* a = &m_mapLayer;
+	map<wstring, CLayer*>* a = &m_mapLayer;
 
 	pGameObject = CWorm::Create(m_pGraphicDev, &m_mapLayer);
 	if (nullptr == pGameObject)
@@ -215,6 +185,17 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag ,pLayer });
+
+	return S_OK;
+}
+
+HRESULT CStage::Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx)
+{
+	CLayer* pLayer = CRoomLayer::Create(iRoomIdx);
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	m_mapLayer.insert({ wstrLayerTag, pLayer });
 
 	return S_OK;
 }

@@ -45,7 +45,8 @@ enum class EObjectType
 	UNBREAKABLE_FRUSTUM,
 	EXPLOSIVE_FRUSTUM,
 
-	MONSTER = 11,
+	SKULL = 11,
+	WORM = 11,
 
 	MAX,
 };

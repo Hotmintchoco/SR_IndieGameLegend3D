@@ -6,7 +6,7 @@ BEGIN(Engine)
 
 class ENGINE_DLL CLayer : public CBase
 {
-private:
+protected:
 	explicit CLayer();
 	virtual ~CLayer();
 
@@ -18,12 +18,12 @@ public:
 	HRESULT			Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject);
 
 public:
-	HRESULT			Ready_Layer();
-	_int			Update_Layer(const _float& fTimeDelta);
-	void			LateUpdate_Layer(const _float& fTimeDelta);
+	virtual HRESULT			Ready_Layer();
+	virtual _int			Update_Layer(const _float& fTimeDelta);
+	virtual void			LateUpdate_Layer(const _float& fTimeDelta);
 
 
-private:
+protected:
 	multimap<wstring, CGameObject*>			m_mapObject;
 
 public:
