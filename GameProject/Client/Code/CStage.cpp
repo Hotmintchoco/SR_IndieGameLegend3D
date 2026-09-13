@@ -21,6 +21,7 @@
 #include "CTile.h"
 #include "CWall.h"
 #include "CFog.h"
+#include "CWorm.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -198,7 +199,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	pGameObject = CSkull::Create(m_pGraphicDev);
 	if (nullptr == pGameObject)
 		return E_FAIL;
-
+	
 	if (FAILED(pLayer->Add_GameObject(L"Skull", pGameObject)))
 		return E_FAIL;
 
