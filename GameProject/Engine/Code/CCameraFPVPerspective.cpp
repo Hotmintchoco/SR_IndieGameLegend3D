@@ -28,13 +28,13 @@ HRESULT CCameraFPVPerspective::Ready_Camera()
 }
 
 
-void CCameraFPVPerspective::Update_Camera(const _float& fTimeDelta, const _vec3& vPlayerLook, const _vec3& vPlayerPos, const _vec3& vPlayerRight)
+void CCameraFPVPerspective::Update_Camera(const _float& fTimeDelta, const _vec3& vTargetLook, const _vec3& vTargetPos, const _vec3& vTargetRight)
 {
 	Mouse_Move();
 
-	_vec3   vLook = vPlayerLook;
-	_vec3   vPos = vPlayerPos;
-	_vec3	vRight = vPlayerRight;
+	_vec3   vLook = vTargetLook;
+	_vec3   vPos = vTargetPos;
+	_vec3	vRight = vTargetRight;
 	_matrix matAxis;
 
 	D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(m_fAngle));

@@ -15,7 +15,7 @@ private:
 	virtual ~CCameraMgr();
 
 public:
-	void		Update_Camera(const _float& fTimeDelta, const _vec3& vPlayerLook, const _vec3& vPlayerPos, const _vec3& vPlayerRight);
+	void		Update_Camera(const _float& fTimeDelta, const _vec3& vTargetLook, const _vec3& vTargetPos, const _vec3& vTargetRight);
 	void		LateUpdate_Camera(const _float& fTimeDelta);
 	void		Key_Input();
 
