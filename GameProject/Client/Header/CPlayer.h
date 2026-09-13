@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CGameObject.h"
 
@@ -25,6 +25,8 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+	virtual			void		OnCollisionEnter(CGameObject* pOther) override;
+
 private:
 	HRESULT			Add_Component();
 	void			Key_Input(const _float& fTimeDelta);
@@ -32,6 +34,7 @@ private:
 	void			Mouse_Fix();
 	void			Set_OnTerrain(const _float& fTimeDelta);
 	_vec3			Picking_OnTerrain();
+	void RenderImGui();
 
 private:
 	Engine::CRcTex*				m_pBufferCom;
@@ -39,8 +42,8 @@ private:
 	Engine::CTexture*			m_pTextureCom;
 	Engine::CCalculator*		m_pCalculatorCom;
 	Engine::CCollider*			m_pColliderCom;
-private:
 
+private:
 	JUMPSTATE	m_iJumpState;
 	_float		m_fJumpTime;
 	_bool		m_bFix;

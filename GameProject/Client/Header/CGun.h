@@ -21,8 +21,10 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+
 private:
 	HRESULT			Add_Component();
+	void			RenderImGui();
 
 private:
 	Engine::CPlyTex* m_pBufferCom;
@@ -31,6 +33,11 @@ private:
 
 public:
 	static CGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+
+private:
+	_float			m_fLastShotTime;
+	_float			m_fReloadTime;
+	_int			m_iAmmo;
 
 private:
 	virtual void		Free();

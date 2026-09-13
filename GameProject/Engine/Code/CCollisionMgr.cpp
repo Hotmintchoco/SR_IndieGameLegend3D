@@ -1,5 +1,6 @@
 #include "CCollisionMgr.h"
 #include "CCollider.h"
+#include "CGameObject.h"
 
 IMPLEMENT_SINGLETON(CCollisionMgr)
 
@@ -58,8 +59,19 @@ void CCollisionMgr::Update_Collision()
                         CGameObject* pLeftObj = pColLeft->Get_Owner();
                         CGameObject* pRightObj = pColRight->Get_Owner();
 
+                        // 충돌 여부 체크
+						pColLeft->Set_IsCollided(true);
+						pColRight->Set_IsCollided(true);
+
                         // TODO: pLeftObj->OnCollisionEnter(pRightObj) 등 호출
+						pLeftObj->OnCollisionEnter(pRightObj);
+						pRightObj->OnCollisionEnter(pLeftObj);
                     }
+                    else
+                    {
+                        // 충돌이 발생하지 않은 경우, 충돌 상태를 초기화
+                        pColLeft->Set_IsCollided(false);
+					}
                 }
             }
 		}
@@ -76,6 +88,4 @@ void CCollisionMgr::Free()
 {
     for (_uint i = 0; i < COLL_END; ++i)
 		m_ColList[i].clear();
-
-
 }

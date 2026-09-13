@@ -12,7 +12,7 @@ private:
 
 public:
 	HRESULT			Ready_Camera() override;
-	void			Update_Camera(const _float& fTimeDelta) override;
+	void			Update_Camera(const _float& fTimeDelta, const _vec3& vTargetLook, const _vec3& vTargetPos, const _vec3& vTargetRight) override;
 	void			LateUpdate_Camera(const _float& fTimeDelta) override;
 
 private:
