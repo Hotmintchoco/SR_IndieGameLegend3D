@@ -18,12 +18,14 @@ CSkull::~CSkull()
 
 HRESULT CSkull::Ready_GameObject()
 {
-    CMonster::Ready_GameObject();
     if (FAILED(Add_Component()))
         return E_FAIL;
+    CMonster::Ready_GameObject();
+
     m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
     m_pTransformCom->Set_Pos(55.f, 0.f, 55.f);
     m_pColliderCom->Set_Radius(1.f);
+
     return S_OK;
 }
 
@@ -57,14 +59,14 @@ void CSkull::LateUpdate_GameObject(const _float& fTimeDelta)
 void CSkull::Render_GameObject()
 {
     CMonster::Render_GameObject();
-    //m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-    //m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-    //m_pTextureCom->Set_Texture(0);
-    //m_pBufferCom->Render_Buffer();
+    m_pTextureCom->Set_Texture(0);
+    m_pBufferCom->Render_Buffer();
 
-    //m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 HRESULT CSkull::Add_Component()

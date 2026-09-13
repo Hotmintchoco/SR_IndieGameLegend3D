@@ -19,6 +19,7 @@
 #include "CBullet.h"
 #include "CDInputMgr.h"
 #include "CCollisionMgr.h"
+#include "CWorm.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev), m_fLastShotTime(0.f), m_fReloadTime(0.f), m_iAmmo(13)
@@ -362,6 +363,17 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag ,pLayer });
+	map<const _tchar*, CLayer*>* a = &m_mapLayer;
+
+	pGameObject = CWorm::Create(m_pGraphicDev, &m_mapLayer);
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	//static_cast<CWorm*>(pGameObject)->Set_LayerPointer(&m_mapLayer); //임시
+	if (FAILED(pLayer->Add_GameObject(L"Worm_Boby_0", pGameObject)))
+		return E_FAIL;
+
+	m_mapLayer.insert({ pLayerTag ,pLayer });
+
 
 	return S_OK;
 }

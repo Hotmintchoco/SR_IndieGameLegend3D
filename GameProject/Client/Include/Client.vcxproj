@@ -162,6 +162,9 @@
     <ClInclude Include="..\Header\CTile.h" />
     <ClInclude Include="..\Header\CWall.h" />
     <ClInclude Include="..\Header\CWorm.h" />
+    <ClInclude Include="..\Header\CWorm_Tail.h" />
+    <ClInclude Include="..\Header\CWorm_Boby.h" />
+    <ClInclude Include="..\Header\CWorm_Face.h" />
     <ClInclude Include="..\Header\Define.h" />
     <ClInclude Include="..\Header\json.hpp" />
     <ClInclude Include="..\Header\JsonAdapter.h" />
@@ -191,6 +194,9 @@
     <ClCompile Include="..\Code\CTile.cpp" />
     <ClCompile Include="..\Code\CWall.cpp" />
     <ClCompile Include="..\Code\CWorm.cpp" />
+    <ClCompile Include="..\Code\CWorm_Tail.cpp" />
+    <ClCompile Include="..\Code\CWorm_Boby.cpp" />
+    <ClCompile Include="..\Code\CWorm_Face.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
