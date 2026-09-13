@@ -32,17 +32,10 @@ void CCameraFPVPerspective::Update_Camera(const _float& fTimeDelta, const _vec3&
 {
 	Mouse_Move();
 
-	CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-		->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
 	_vec3   vLook = vPlayerLook;
 	_vec3   vPos = vPlayerPos;
 	_vec3	vRight = vPlayerRight;
 	_matrix matAxis;
-
-	pPlayerTransformCom->Get_Info(INFO_LOOK, &vLook);
-	pPlayerTransformCom->Get_Info(INFO_POS, &vPos);
-	pPlayerTransformCom->Get_Info(INFO_RIGHT, &vRight);
 
 	D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(m_fAngle));
 	D3DXVec3TransformNormal(&vLook, &vLook, &matAxis);

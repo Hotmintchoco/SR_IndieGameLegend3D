@@ -84,8 +84,8 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 	_vec3 vPlayerPos;
 	_vec3 vPlayerRight;
 	pPlayerTrans->Get_Info(INFO_LOOK, &vPlayerLook);
-	pPlayerTrans->Get_Info(INFO_LOOK, &vPlayerPos);
-	pPlayerTrans->Get_Info(INFO_LOOK, &vPlayerRight);
+	pPlayerTrans->Get_Info(INFO_POS, &vPlayerPos);
+	pPlayerTrans->Get_Info(INFO_RIGHT, &vPlayerRight);
 
 	CCameraMgr::GetInstance()->Update_Camera(fTimeDelta, vPlayerLook, vPlayerPos, vPlayerRight);
 
