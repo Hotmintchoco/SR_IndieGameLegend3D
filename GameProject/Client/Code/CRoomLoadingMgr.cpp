@@ -39,9 +39,9 @@ HRESULT CRoomLoadingMgr::LoadRoomData(int iIndex)
 	int iRoomCol = iIndex % m_iRoomColCount;
 
 	_vec3 vRoomOffset{
-		-(float)(m_iRoomRowCount - 1) / 2.f * m_vOuterRoomSize.x + m_vOuterRoomSize.x * (float)iRoomRow,
+		-(float)(m_iRoomColCount - 1) / 2.f * m_vOuterRoomSize.x + m_vOuterRoomSize.x * (float)iRoomCol,
 		0.f,
-		(float)(m_iRoomColCount - 1) / 2.f * m_vOuterRoomSize.z - m_vOuterRoomSize.z * (float)iRoomCol,
+		(float)(m_iRoomRowCount - 1) / 2.f * m_vOuterRoomSize.z - m_vOuterRoomSize.z * (float)iRoomRow,
 	};
 
 	_vec3 vRoomCenterPos = _vec3{ m_vCenterRoomPosition.x + vRoomOffset.x, 0.f, m_vCenterRoomPosition.z + vRoomOffset.z };
