@@ -49,8 +49,6 @@ private:
 	_bool		m_bFix;
 	_bool		m_bCheck;
 
-	_vec3		m_vPrevPos;
-
 public:
 	JUMPSTATE	Get_JumpState() { return m_iJumpState; }
 

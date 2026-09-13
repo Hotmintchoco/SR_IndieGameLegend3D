@@ -26,7 +26,7 @@ HRESULT CPlayer::Ready_GameObject()
 
 	__super::Ready_GameObject();
 
-    m_pColliderCom->Set_Radius(1.f);
+    m_pColliderCom->Set_Radius(0.75f);
 	m_pTransformCom->Set_Pos(60.f, 1.f, 60.f);
 
     return S_OK;
@@ -37,8 +37,6 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
     _vec3   vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     Compute_ViewZ(&vPos);
-
-    m_vPrevPos = vPos;
 
     Key_Input(fTimeDelta);
 
@@ -103,7 +101,7 @@ void CPlayer::RenderImGui()
 
 void CPlayer::OnCollisionEnter(CGameObject* pOther)
 {
-	m_pTransformCom->Set_Pos(m_vPrevPos.x, m_vPrevPos.y, m_vPrevPos.z);
+
 }
 
 HRESULT CPlayer::Add_Component()
