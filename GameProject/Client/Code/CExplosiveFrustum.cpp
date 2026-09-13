@@ -1,0 +1,101 @@
+#include "pch.h"
+#include "CExplosiveFrustum.h"
+#include "CProtoMgr.h"
+#include "CRenderer.h"
+
+CExplosiveFrustum::CExplosiveFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
+    : CFrustum(pGraphicDev)
+{
+}
+
+CExplosiveFrustum::~CExplosiveFrustum()
+{
+}
+
+HRESULT CExplosiveFrustum::Ready_GameObject()
+{
+    if (FAILED(Add_Component()))
+        return E_FAIL;
+
+    // Note : 순서에 주의
+    if (FAILED(CFrustum::Ready_GameObject()))
+        return E_FAIL;
+
+    return S_OK;
+}
+
+_int CExplosiveFrustum::Update_GameObject(const _float& fTimeDelta)
+{
+    _int    iExit = CFrustum::Update_GameObject(fTimeDelta);
+
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+
+    _vec3   vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    Compute_ViewZ(&vPos);
+
+    return iExit;
+}
+
+void CExplosiveFrustum::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+    CFrustum::LateUpdate_GameObject(fTimeDelta);
+}
+
+void CExplosiveFrustum::Render_GameObject()
+{
+    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+
+    m_pTextureCom->Set_Texture(0);
+
+    m_pBufferCom->Render_Buffer();
+
+    m_pColliderCom->Render_DebugCube();
+}
+
+void CExplosiveFrustum::OnCollisionEnter(CGameObject* pOther)
+{
+    m_pTransformCom->Set_Scale(0.5f, 0.5f, 0.5f);
+}
+
+HRESULT CExplosiveFrustum::Add_Component()
+{
+    CComponent* pComponent = nullptr;
+
+    // PlyTex
+    pComponent = m_pBufferCom = dynamic_cast<CPlyTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_ExplosiveFrustum_Vertex"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
+
+    // Texture
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_ExplosiveFrustum_Texture"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+
+    return S_OK;
+}
+
+CExplosiveFrustum* CExplosiveFrustum::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+{
+    CExplosiveFrustum* pFrustum = new CExplosiveFrustum(pGraphicDev);
+
+    if (FAILED(pFrustum->Ready_GameObject()))
+    {
+        Safe_Release(pFrustum);
+        MSG_BOX("CExplosiveFrustum Create Failed");
+        return nullptr;
+    }
+
+    return pFrustum;
+}
+
+void CExplosiveFrustum::Free()
+{
+    CFrustum::Free();
+}

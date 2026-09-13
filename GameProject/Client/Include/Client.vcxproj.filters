@@ -109,6 +109,15 @@
     <Filter Include="04. Manager\00. RoomLoading">
       <UniqueIdentifier>{60fad2e2-2029-49b4-b2bb-df556f9429ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Room\Object\RoomProp\Frustum\Breakable">
+      <UniqueIdentifier>{43bf34c5-36d7-4490-b98f-5f7de8e24ea2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\Object\RoomProp\Frustum\Unbreakable">
+      <UniqueIdentifier>{0e521099-c711-451c-96fe-f7bfb8cbba63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\Object\RoomProp\Frustum\Explosive">
+      <UniqueIdentifier>{979de761-48ca-497d-8be6-c29b96164f27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -225,6 +234,15 @@
     <ClInclude Include="..\Header\CAbstractFactory.h">
       <Filter>04. Manager\00. RoomLoading</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBreakableFrustum.h">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Breakable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CExplosiveFrustum.h">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Explosive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CUnbreakableFrustum.h">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Unbreakable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -320,6 +338,15 @@
     <ClCompile Include="..\Code\CBullet.cpp">
       <Filter>02. GameObject\09. Bullet</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CBreakableFrustum.cpp">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Breakable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CExplosiveFrustum.cpp">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Explosive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUnbreakableFrustum.cpp">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Unbreakable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -341,7 +368,7 @@
     <None Include="..\Bin\Resource\Map\Room_2_2.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
-    <None Include="..\Bin\Resource\Map\Room_4_3.json">
+    <None Include="..\Bin\Resource\Map\Room_1_0.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
     <None Include="..\Bin\Resource\Map\Room_2_1.json">
@@ -350,7 +377,7 @@
     <None Include="..\Bin\Resource\Map\Room 작성 가이드.md">
       <Filter>03. Resource\01. Map</Filter>
     </None>
-    <None Include="..\Bin\Resource\Map\Room_0_0.json">
+    <None Include="..\Bin\Resource\Map\Room_1_1.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
   </ItemGroup>

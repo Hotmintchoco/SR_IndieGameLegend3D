@@ -39,12 +39,13 @@ struct TRoomData
 /* 맵 배치 오브젝트 타입 */
 enum class EObjectType
 {
-	NONE,
+	NONE = 0,
 
-	BREAKABLE_FRUSTUM,
+	BREAKABLE_FRUSTUM = 1,
 	UNBREAKABLE_FRUSTUM,
+	EXPLOSIVE_FRUSTUM,
 
-	MONSTER,
+	MONSTER = 11,
 
 	MAX,
 };
