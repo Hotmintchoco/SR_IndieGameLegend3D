@@ -85,6 +85,9 @@
     <Filter Include="02. GameObject\02. Monster\Skull">
       <UniqueIdentifier>{8c263690-d182-4997-b6e2-5af20f8f6cd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Worm">
+      <UniqueIdentifier>{7eb61ba9-e2df-4be3-9bb4-f06357bffda7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -165,6 +168,9 @@
     <ClInclude Include="..\Header\CSkull.h">
       <Filter>02. GameObject\02. Monster\Skull</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CWorm.h">
+      <Filter>02. GameObject\02. Monster\Worm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -223,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSkull.cpp">
       <Filter>02. GameObject\02. Monster\Skull</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWorm.cpp">
+      <Filter>02. GameObject\02. Monster\Worm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

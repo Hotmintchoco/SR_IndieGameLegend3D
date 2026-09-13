@@ -161,6 +161,7 @@
     <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CTile.h" />
     <ClInclude Include="..\Header\CWall.h" />
+    <ClInclude Include="..\Header\CWorm.h" />
     <ClInclude Include="..\Header\Define.h" />
     <ClInclude Include="..\Header\json.hpp" />
     <ClInclude Include="..\Header\JsonAdapter.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CTile.cpp" />
     <ClCompile Include="..\Code\CWall.cpp" />
+    <ClCompile Include="..\Code\CWorm.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

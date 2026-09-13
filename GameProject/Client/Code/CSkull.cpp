@@ -22,8 +22,8 @@ HRESULT CSkull::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
     m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
+    m_pTransformCom->Set_Pos(55.f, 0.f, 55.f);
     m_pColliderCom->Set_Radius(1.f);
-
     return S_OK;
 }
 
@@ -50,7 +50,7 @@ void CSkull::LateUpdate_GameObject(const _float& fTimeDelta)
     _vec3   vPlayerLook;
     pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
-    m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 3.f, fTimeDelta);
+    //m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 0.5f, fTimeDelta);
 
 }
 
@@ -69,11 +69,10 @@ void CSkull::Render_GameObject()
 
 HRESULT CSkull::Add_Component()
 {
-    CMonster::Add_Component();
     CComponent* pComponent = nullptr;
 
     // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SkullTexture"));
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_skull3Texture"));
 
     if (nullptr == pComponent)
         return E_FAIL;

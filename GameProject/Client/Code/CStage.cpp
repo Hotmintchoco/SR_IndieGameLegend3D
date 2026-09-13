@@ -331,27 +331,27 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	/* 몬스터 소환 */
-	_vec3 vTerrainOffset{ 60.f, 0.f, 60.f };
+	//_vec3 vTerrainOffset{ 60.f, 0.f, 60.f };
 
-	for (auto& tMapEntity : m_MapData.vecMonsterInfo)
-	{
-		pGameObject = CSkull::Create(m_pGraphicDev);
-		if (nullptr == pGameObject)
-			return E_FAIL;
+	//for (auto& tMapEntity : m_MapData.vecMonsterInfo)
+	//{
+	//	pGameObject = CSkull::Create(m_pGraphicDev);
+	//	if (nullptr == pGameObject)
+	//		return E_FAIL;
 
-		if (FAILED(pLayer->Add_GameObject(tMapEntity.wstrEntityName, pGameObject)))
-			return E_FAIL;
+	//	if (FAILED(pLayer->Add_GameObject(tMapEntity.wstrEntityName, pGameObject)))
+	//		return E_FAIL;
 
-		if (FAILED(pLayer->Add_GameObject(L"Skull", pGameObject)))
-			return E_FAIL;
+	//	if (FAILED(pLayer->Add_GameObject(L"Skull", pGameObject)))
+	//		return E_FAIL;
 
-		CTransform* pTransformCom = dynamic_cast<CTransform*>(
-			pLayer->Get_Component(ID_DYNAMIC, tMapEntity.wstrEntityName, L"Com_Transform"));
+	//	CTransform* pTransformCom = dynamic_cast<CTransform*>(
+	//		pLayer->Get_Component(ID_DYNAMIC, tMapEntity.wstrEntityName, L"Com_Transform"));
 
-		pTransformCom->Set_Pos(tMapEntity.vPos.x + vTerrainOffset.x, tMapEntity.vPos.y, tMapEntity.vPos.z + vTerrainOffset.z);
-	}
+	//	pTransformCom->Set_Pos(tMapEntity.vPos.x + vTerrainOffset.x, tMapEntity.vPos.y, tMapEntity.vPos.z + vTerrainOffset.z);
+	//}
 
-	m_mapLayer.insert({ pLayerTag ,pLayer });
+	//m_mapLayer.insert({ pLayerTag ,pLayer });
 
 	// Monster
 	pGameObject = CSkull::Create(m_pGraphicDev);
