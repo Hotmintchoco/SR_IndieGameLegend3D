@@ -3,7 +3,7 @@
 #include "CBackGround.h"
 #include "CProtoMgr.h"
 #include "CPlayer.h"
-#include "CMonster.h"
+#include "CSkull.h"
 #include "CTerrain.h"
 #include "CDynamicCamera.h"
 #include "CCameraMgr.h"
@@ -21,6 +21,7 @@
 #include "CTile.h"
 #include "CWall.h"
 #include "CFog.h"
+#include "CWorm.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -191,6 +192,27 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 		m_vecRoom.push_back(static_cast<CRoom*>(pGameObject));
 	}
+
+	m_mapLayer.insert({ pLayerTag ,pLayer });
+
+	// Monster
+	pGameObject = CSkull::Create(m_pGraphicDev);
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	
+	if (FAILED(pLayer->Add_GameObject(L"Skull", pGameObject)))
+		return E_FAIL;
+
+	m_mapLayer.insert({ pLayerTag ,pLayer });
+
+	map<const _tchar*, CLayer*>* a = &m_mapLayer;
+
+	pGameObject = CWorm::Create(m_pGraphicDev, &m_mapLayer);
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	//static_cast<CWorm*>(pGameObject)->Set_LayerPointer(&m_mapLayer); //임시
+	if (FAILED(pLayer->Add_GameObject(L"Worm_Boby_0", pGameObject)))
+		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag ,pLayer });
 

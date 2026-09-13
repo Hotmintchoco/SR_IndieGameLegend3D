@@ -162,11 +162,16 @@
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
     <ClInclude Include="..\Header\CRoom.h" />
+    <ClInclude Include="..\Header\CSkull.h" />
     <ClInclude Include="..\Header\CSkyBox.h" />
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CTile.h" />
     <ClInclude Include="..\Header\CWall.h" />
+    <ClInclude Include="..\Header\CWorm.h" />
+    <ClInclude Include="..\Header\CWorm_Tail.h" />
+    <ClInclude Include="..\Header\CWorm_Boby.h" />
+    <ClInclude Include="..\Header\CWorm_Face.h" />
     <ClInclude Include="..\Header\Define.h" />
     <ClInclude Include="..\Header\imconfig.h" />
     <ClInclude Include="..\Header\imgui.h" />
@@ -205,6 +210,7 @@
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />
     <ClCompile Include="..\Code\CRoom.cpp" />
+    <ClCompile Include="..\Code\CSkull.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
@@ -231,6 +237,10 @@
     <ClCompile Include="..\Code\imgui_widgets.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Code\CWorm.cpp" />
+    <ClCompile Include="..\Code\CWorm_Tail.cpp" />
+    <ClCompile Include="..\Code\CWorm_Boby.cpp" />
+    <ClCompile Include="..\Code\CWorm_Face.cpp" />
     <ClCompile Include="..\Code\CUnbreakableFrustum.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
