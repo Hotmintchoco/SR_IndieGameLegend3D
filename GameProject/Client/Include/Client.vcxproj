@@ -153,6 +153,7 @@
     <ClInclude Include="..\Header\CExplosiveFrustum.h" />
     <ClInclude Include="..\Header\CFog.h" />
     <ClInclude Include="..\Header\CFrustum.h" />
+    <ClInclude Include="..\Header\CGameStatusMgr.h" />
     <ClInclude Include="..\Header\CGun.h" />
     <ClInclude Include="..\Header\CImGuiTool.h" />
     <ClInclude Include="..\Header\CLoading.h" />
@@ -201,6 +202,7 @@
     <ClCompile Include="..\Code\CExplosiveFrustum.cpp" />
     <ClCompile Include="..\Code\CFog.cpp" />
     <ClCompile Include="..\Code\CFrustum.cpp" />
+    <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
     <ClCompile Include="..\Code\CGun.cpp" />
     <ClCompile Include="..\Code\CImGuiTool.cpp" />
     <ClCompile Include="..\Code\CLoading.cpp" />

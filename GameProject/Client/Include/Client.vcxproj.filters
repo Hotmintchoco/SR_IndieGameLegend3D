@@ -115,14 +115,20 @@
     <Filter Include="999. ImGUI\Backend\Include">
       <UniqueIdentifier>{eb153cf3-9ee7-46d0-88a8-f1c874d14c5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Manager\00. RoomLoading">
+      <UniqueIdentifier>{60fad2e2-2029-49b4-b2bb-df556f9429ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer">
+      <UniqueIdentifier>{864248b1-17e2-4b62-a7b2-574cc5b2efae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Manager\01. GameStatus">
+      <UniqueIdentifier>{575f8b04-0769-4795-9023-f025baa09492}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\07. Room\Object\RoomProp">
       <UniqueIdentifier>{a1208295-fd12-4384-8f71-ee9aeebb7921}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\07. Room\Object\RoomProp\Frustum">
       <UniqueIdentifier>{04071318-f447-49a4-96e6-eb109ef95312}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. Manager\00. RoomLoading">
-      <UniqueIdentifier>{60fad2e2-2029-49b4-b2bb-df556f9429ca}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\07. Room\Object\RoomProp\Frustum\Breakable">
       <UniqueIdentifier>{43bf34c5-36d7-4490-b98f-5f7de8e24ea2}</UniqueIdentifier>
@@ -132,9 +138,6 @@
     </Filter>
     <Filter Include="02. GameObject\07. Room\Object\RoomProp\Frustum\Explosive">
       <UniqueIdentifier>{979de761-48ca-497d-8be6-c29b96164f27}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\Stage\Layer">
-      <UniqueIdentifier>{864248b1-17e2-4b62-a7b2-574cc5b2efae}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -276,6 +279,9 @@
     <ClInclude Include="..\Header\CRoomLayer.h">
       <Filter>01. Scene\Stage\Layer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGameStatusMgr.h">
+      <Filter>04. Manager\01. GameStatus</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -394,6 +400,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CRoomLayer.cpp">
       <Filter>01. Scene\Stage\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGameStatusMgr.cpp">
+      <Filter>04. Manager\01. GameStatus</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
