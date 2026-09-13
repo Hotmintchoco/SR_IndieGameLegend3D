@@ -22,21 +22,22 @@ HRESULT CCameraFPVPerspective::Ready_Camera()
 	m_fAspect = (_float)WINCX / WINCY;
 	m_fNear = 0.1f;
 	m_fFar = 1000.f;
+	m_fAngle = 0.f;
 
 	return S_OK;
 }
 
 
-void CCameraFPVPerspective::Update_Camera(const _float& fTimeDelta)
+void CCameraFPVPerspective::Update_Camera(const _float& fTimeDelta, const _vec3& vPlayerLook, const _vec3& vPlayerPos, const _vec3& vPlayerRight)
 {
 	Mouse_Move();
 
 	CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
 		->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
 
-	_vec3   vLook;
-	_vec3   vPos;
-	_vec3	vRight;
+	_vec3   vLook = vPlayerLook;
+	_vec3   vPos = vPlayerPos;
+	_vec3	vRight = vPlayerRight;
 	_matrix matAxis;
 
 	pPlayerTransformCom->Get_Info(INFO_LOOK, &vLook);

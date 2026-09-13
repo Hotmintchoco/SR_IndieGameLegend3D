@@ -14,7 +14,7 @@ protected:
 
 public:
 	virtual	HRESULT		Ready_Camera() = 0;
-	virtual void		Update_Camera(const _float& fTimeDelta) = 0;
+	virtual void		Update_Camera(const _float& fTimeDelta, const _vec3& vPlayerLook, const _vec3& vPlayerPos, const _vec3& vPlayerRight) = 0;
 	virtual void		LateUpdate_Camera(const _float& fTimeDelta) = 0;
 	void				Get_CamLook(_vec3* pLook);
 	void				Get_CameraAngle(_float* pAngle) { memcpy(pAngle, &m_fAngle, sizeof(_float)); }

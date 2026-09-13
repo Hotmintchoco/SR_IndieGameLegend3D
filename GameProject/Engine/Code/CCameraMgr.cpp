@@ -13,9 +13,9 @@ CCameraMgr::~CCameraMgr()
 	Free();
 }
 
-void CCameraMgr::Update_Camera(const _float& fTimeDelta)
+void CCameraMgr::Update_Camera(const _float& fTimeDelta, const _vec3& vPlayerLook, const _vec3& vPlayerPos, const _vec3& vPlayerRight)
 {
-	m_pCurCamera.second->Update_Camera(fTimeDelta);
+	m_pCurCamera.second->Update_Camera(fTimeDelta, vPlayerLook, vPlayerPos, vPlayerRight);
 }
 
 void CCameraMgr::LateUpdate_Camera(const _float& fTimeDelta)

@@ -23,7 +23,7 @@
 #include "CFog.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CScene(pGraphicDev), m_fLastShotTime(0.f), m_fReloadTime(0.f), m_iAmmo(13)
+	: CScene(pGraphicDev)
 {
 }
 
@@ -76,61 +76,18 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 {
 	_int iExit = CScene::Update_Scene(fTimeDelta);
 
-	CCameraMgr::GetInstance()->Update_Camera(fTimeDelta);
+	//Camera Update
 
-	_int iAmmoMax = 13;
-	_float fShootCoolTime = 0.4f;
-	_float fReloadCoolTime = 1.f;
-	m_fLastShotTime += fTimeDelta;
+	CTransform* pPlayerTrans = static_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
 
-	if (m_fReloadTime > fReloadCoolTime)
-	{
-		m_fReloadTime = 0.f;
-		m_fLastShotTime = fShootCoolTime;
-		m_iAmmo = iAmmoMax;
-	}
-	else if (m_fReloadTime > 0.f)
-	{
-		m_fReloadTime += fTimeDelta;
-	}
+	_vec3 vPlayerLook;
+	_vec3 vPlayerPos;
+	_vec3 vPlayerRight;
+	pPlayerTrans->Get_Info(INFO_LOOK, &vPlayerLook);
+	pPlayerTrans->Get_Info(INFO_LOOK, &vPlayerPos);
+	pPlayerTrans->Get_Info(INFO_LOOK, &vPlayerRight);
 
-	if ((CDInputMgr::GetInstance()->Mouse_Press(DIM_LB)) && (m_fLastShotTime >= fShootCoolTime) && (m_iAmmo > 0) && (m_fReloadTime == 0))
-	{
-		m_fLastShotTime = 0.f;
-		m_iAmmo--;
-
-		CGameObject* pGameObject = nullptr;
-		_vec3	vPos_Player;
-		_vec3	vRight;
-		_vec3	vForword;
-		_vec3	vUp;
-		static_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"))->Get_Info(INFO_POS, &vPos_Player);
-		static_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"))->Get_Info(INFO_RIGHT, &vRight);
-		CCameraMgr::GetInstance()->Get_CamLook(&vForword);
-		D3DXVec3Cross(&vUp, &vForword, &vRight);
-		D3DXVec3Normalize(&vUp, &vUp);
-
-		_vec3	vBullet_From = vPos_Player + (vRight * 0.5f) + (vForword * 0.5f) + (vUp * -0.5f); // 총구위치 이동
-		_vec3	vBullet_To = vPos_Player + (vForword * 10.f); // 크로스헤어 도달점
-
-		_vec3	vBullet_Look = vBullet_To - vBullet_From;
-		D3DXVec3Normalize(&vBullet_Look, &vBullet_Look);
-
-		pGameObject = CBullet::Create(m_pGraphicDev, &vBullet_From, &vBullet_Look);
-
-		auto iter = m_mapLayer.find(L"GameLogic_Layer");
-		if (iter != m_mapLayer.end())
-		{
-			iter->second->Add_GameObject(L"Bullet", pGameObject);
-		}
-	}
-	else if ((m_iAmmo == 0))
-	{
-		if (CDInputMgr::GetInstance()->Key_Down(DIK_R))
-		{
-			m_fReloadTime += fTimeDelta;
-		}
-	}
+	CCameraMgr::GetInstance()->Update_Camera(fTimeDelta, vPlayerLook, vPlayerPos, vPlayerRight);
 
 	return iExit;
 }
@@ -145,28 +102,7 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 
 void CStage::Render_Scene()
 {
-	/* 이것도 수정 부탁 */
 
-	//_vec2	vPos_DebugUI_Ammo{ 100.f, 120.f };
-	//_vec2	vPos_DebugUI_Reload{ 100.f, 140.f };
-
-	//wstring wAmmoInfo = L"AMMO : " + to_wstring(m_iAmmo) + L" / 13";
-	//CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wAmmoInfo.c_str(), &vPos_DebugUI_Ammo, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-
-	//if (m_iAmmo == 0)
-	//{
-	//	if (m_fReloadTime == 0.f)
-	//	{
-	//		if ((int)(m_fLastShotTime * 5) % 2 == 0)
-	//		{
-	//			CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", L"OUT OF AMMO. PRESS R TO RELOAD.", &vPos_DebugUI_Reload, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-	//		}
-	//	}
-	//	else
-	//	{
-	//		CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", L"Reloading...", &vPos_DebugUI_Reload, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-	//	}
-	//}
 }
 
 HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
@@ -233,7 +169,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 		return E_FAIL;
 
-	/* [DEBUG] 총 메쉬 테스트 출력 */
+	// Gun
 	pGameObject = CGun::Create(m_pGraphicDev);
 	if (nullptr == pGameObject)
 		return E_FAIL;
