@@ -31,18 +31,63 @@ HRESULT CWall::Ready_GameObject()
         return E_FAIL;
 
     // -- Collider Initialization -- 
-	// North Wall Collider
-	_float fLength = 2.75f;
-	_float fHeight = 2.f;
-	_float fDepth = 0.5f;
+	
+    // North Wall Collider
+	_float fExtentsX(0.f), fExtentsY(2.f), fExtentsZ(0.f);
+	_float fDiffX(0.f), fDiffY(1.f), fDiffZ(0.f);
+
+    switch (m_eDir) 
+    {
+    case EWallDir::EAST:
+        fExtentsX = 0.5f;
+        fExtentsZ = 3.5f;
+		fDiffX = 7.f;
+        break;
+    case EWallDir::SOUTH:
+        fExtentsX = 3.5f;
+        fExtentsZ = 0.5f;
+        fDiffZ = -6.f;
+        break;
+    case EWallDir::WEST:
+        fExtentsX = 0.5f;
+        fExtentsZ = 3.5f;
+        fDiffX = -7.f;
+        break;
+    case EWallDir::NORTH:
+        fExtentsX = 3.5f;
+		fExtentsZ = 0.5f;
+		fDiffZ = 6.f;
+        break;
+    }
+
+    if (m_bHasDoor)
+    {
+        if (m_eDir == EWallDir::EAST || m_eDir == EWallDir::WEST)
+            fDiffZ = 4.5f;
+        else
+            fDiffX = 4.5f;
+    }
+    else
+    {
+        if (m_eDir == EWallDir::EAST || m_eDir == EWallDir::WEST)
+            fDiffZ = 3.f;
+        else
+            fDiffX = 3.f;
+    }
 
     CBoxCollider* pBoxCollider = static_cast<CBoxCollider*>(m_pColliderCom[0]);
-    pBoxCollider->Set_Extents(fLength, fHeight, fDepth);
-    pBoxCollider->Set_DiffPos({ -4.f, 0.f, 6.f });
+    pBoxCollider->Set_Extents(fExtentsX, fExtentsY, fExtentsZ);
+    pBoxCollider->Set_DiffPos({ fDiffX, fDiffY, fDiffZ });
+
+    if (m_eDir == EWallDir::EAST || m_eDir == EWallDir::WEST)
+        fDiffZ = -fDiffZ;
+    else
+        fDiffX = -fDiffX;
 
     pBoxCollider = static_cast<CBoxCollider*>(m_pColliderCom[1]);
-    pBoxCollider->Set_Extents(fLength, fHeight, fDepth);
-    pBoxCollider->Set_DiffPos({ 4.f, 0.f, 6.f });
+    pBoxCollider->Set_Extents(fExtentsX, fExtentsY, fExtentsZ);
+    pBoxCollider->Set_DiffPos({ fDiffX, fDiffY, fDiffZ });
+
     // -- Collider Initialization -- 
 
     /* Set Initial Position */
