@@ -30,11 +30,6 @@ public:
 	static CStage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
-	_float			m_fLastShotTime;
-	_float			m_fReloadTime;
-	_int			m_iAmmo;
-
-private:
 	virtual void	Free();
 
 };
