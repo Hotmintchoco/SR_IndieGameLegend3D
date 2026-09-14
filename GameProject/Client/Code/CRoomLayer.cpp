@@ -1,8 +1,8 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "CRoomLayer.h"
 #include "CRoomLoadingMgr.h"
 #include "CTransform.h"
-#include "Define.h"
+#include "Client_Struct.h"
 #include "CGraphicDev.h"
 #include "CWall.h"
 #include "CFog.h"
@@ -63,7 +63,7 @@ HRESULT CRoomLayer::SpawnRoom()
 
 	CGameObject* pGameObject = nullptr;
 
-	/* ≈∏¿œ */
+	/* ÌÉÄÏùº */
 	for (size_t i = 0; i < t->vecTile.size(); ++i)
 	{
 		int iTileX = (int)i % (int)vInnerRoomSize.x;
@@ -90,7 +90,7 @@ HRESULT CRoomLayer::SpawnRoom()
 		pTransformCom->Set_Pos(vRoomCenterPos.x + vTileOffset.x, 0.f, vRoomCenterPos.z + vTileOffset.z);
 	}
 
-	/* ∫Æ : µø≥≤º≠∫œ º¯ */
+	/* Î≤Ω : ÎèôÎÇ®ÏÑúÎ∂Å Ïàú */
 	for (size_t i = 0; i < t->vecDoorInfo.size(); ++i)
 	{
 		pGameObject = CWall::Create(pDevice, (EWallDir)(i + 1), t->vecDoorInfo.at(i));
@@ -106,7 +106,7 @@ HRESULT CRoomLayer::SpawnRoom()
 
 		pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
 
-		/* æ»∞≥ */
+		/* ÏïàÍ∞ú */
 		CWall* pWall = static_cast<CWall*>(pGameObject);
 		if (pWall->HasDoor())
 		{
@@ -136,7 +136,7 @@ HRESULT CRoomLayer::SpawnRoom()
 				pTransformCom->Move_Pos(&vDir, 5.5f + (iDir % 2) * 1.f + 0.2f * i, 1.f);
 			}
 
-			/* πÆ ¬  ≈∏¿œ */
+			/* Î¨∏ Ï™Ω ÌÉÄÏùº */
 			pGameObject = CTile::Create(pDevice, (int)i, (t->vecDoorTile[iDir - 1] == 0) ? t->iDefaultTileIdx : t->vecDoorTile[iDir - 1]);
 			if (nullptr == pGameObject)
 				return E_FAIL;
@@ -155,7 +155,7 @@ HRESULT CRoomLayer::SpawnRoom()
 
 	}
 
-	/* ∏  ø¿∫Í¡ß∆Æ */
+	/* Îßµ Ïò§Î∏åÏ†ùÌä∏ */
 	for (size_t i = 0; i < t->vecObjectTilingInfo.size(); ++i)
 	{
 		int iTileX = (int)i % (int)vInnerRoomSize.x;

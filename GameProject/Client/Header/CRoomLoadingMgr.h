@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Engine_Define.h"
-#include "Define.h"
+#include "Client_Struct.h"
 #include <unordered_map>
 
 class CRoomLoadingMgr

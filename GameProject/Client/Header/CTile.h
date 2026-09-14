@@ -1,7 +1,6 @@
-#pragma once
+﻿#pragma once
 
 #include "CGameObject.h"
-#include "Define.h"
 
 namespace Engine
 {

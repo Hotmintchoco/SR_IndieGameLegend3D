@@ -1,11 +1,11 @@
-#ifndef Engine_Enum_h__
+ï»¿#ifndef Engine_Enum_h__
 #define Engine_Enum_h__
 
 namespace Engine
 {
 	enum WINMODE { MODE_FULL, MODE_WIN };
 
-	// Dynamic ÄÄÆ÷³ÍÆ® °æ¿ì ¸Å ÇÁ·¹ÀÓ¸¶´Ù °»½ÅÇØ¾ßÇÏ´Â ÄÄÆ÷³ÍÆ® Áý´Ü
+	// Dynamic ì»´í¬ë„ŒíŠ¸ ê²½ìš° ë§¤ í”„ë ˆìž„ë§ˆë‹¤ ê°±ì‹ í•´ì•¼í•˜ëŠ” ì»´í¬ë„ŒíŠ¸ ì§‘ë‹¨
 	enum COMPONENTID { ID_DYNAMIC, ID_STATIC, ID_END };
 
 	enum INFO {	INFO_RIGHT, INFO_UP, INFO_LOOK, INFO_POS, INFO_END };
@@ -20,11 +20,9 @@ namespace Engine
 
 	enum MOUSEMOVESTATE {	DIMS_X, DIMS_Y, DIMS_Z, DIMS_END };
 
-	enum JUMPSTATE { JUMP_NOT, JUMP_PARABOLIC, JUMP_FREEFALL, JUMP_END };
-
 	enum CAMERAID { CAMERA_FPV_PERSPECTIVE, CAMERA_TPV_PERSPECTIVE, CAMERA_END };
 
-	// Ãæµ¹ ±×·ì Á¤ÀÇ
+	// ì¶©ëŒ ê·¸ë£¹ ì •ì˜
 	enum COLLISIONID { COLL_PLAYER, COLL_MONSTER, COLL_PBULLET, COLL_MBULLET, COLL_WALL, COLL_END };
 
 }
