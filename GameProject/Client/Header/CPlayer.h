@@ -32,7 +32,6 @@ private:
 	void			Key_Input(const _float& fTimeDelta);
 	void			Mouse_Move();
 	void			Mouse_Fix();
-	void			Set_OnTerrain(const _float& fTimeDelta);
 	_vec3			Picking_OnTerrain();
 	void RenderImGui();
 
@@ -44,15 +43,11 @@ private:
 	Engine::CCollider*			m_pColliderCom;
 
 private:
-	JUMPSTATE	m_iJumpState;
-	_float		m_fJumpTime;
+
 	_bool		m_bFix;
 	_bool		m_bCheck;
 
 	_vec3		m_vPrevPos;
-
-public:
-	JUMPSTATE	Get_JumpState() { return m_iJumpState; }
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

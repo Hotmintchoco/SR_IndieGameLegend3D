@@ -10,7 +10,7 @@
 #include "CImGuiTool.h"
 
 CGun::CGun(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_fLastShotTime(0.f), m_fReloadTime(0.f), m_iAmmo(13)
+    : CGameObject(pGraphicDev), m_fLastShotTime(0.f), m_fShootCoolTime(0.4f)
 {
 }
 
@@ -98,26 +98,12 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
     memcpy(&matWorld.m[INFO_POS][0], &vPos_Gun, sizeof(_vec3));
     m_pTransformCom->Set_World(&matWorld);
 
-    _int iAmmoMax = 13;
-    _float fShootCoolTime = 0.4f;
-    _float fReloadCoolTime = 1.f;
+    _float m_fShootCoolTime = 0.4f;
     m_fLastShotTime += fTimeDelta;
 
-    if (m_fReloadTime > fReloadCoolTime)
-    {
-        m_fReloadTime = 0.f;
-        m_fLastShotTime = fShootCoolTime;
-        m_iAmmo = iAmmoMax;
-    }
-    else if (m_fReloadTime > 0.f)
-    {
-        m_fReloadTime += fTimeDelta;
-    }
-
-    if ((CDInputMgr::GetInstance()->Mouse_Press(DIM_LB)) && (m_fLastShotTime >= fShootCoolTime) && (m_iAmmo > 0) && (m_fReloadTime == 0))
+    if ((CDInputMgr::GetInstance()->Mouse_Press(DIM_LB)) && (m_fLastShotTime >= m_fShootCoolTime))
     {
         m_fLastShotTime = 0.f;
-        m_iAmmo--;
 
         _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.0f) + (vUp * 0.3f);
         _vec3	vBullet_To = vPos_Player + (vForword * 10.f); // 크로스헤어 도달점
@@ -128,14 +114,6 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
         pGameObject = CBullet::Create(m_pGraphicDev, &vBullet_From, &vBullet_Look);
         CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"Bullet", pGameObject);
     }
-    else if ((m_iAmmo == 0))
-    {
-        if (CDInputMgr::GetInstance()->Key_Down(DIK_R))
-        {
-            m_fReloadTime += fTimeDelta;
-        }
-    }
-
 }
 
 void CGun::Render_GameObject()
@@ -206,21 +184,9 @@ void CGun::RenderImGui()
     /* ImGui */
     ImGui::Begin("Gun Debug Information");
 
-    ImGui::Text("AMMO :  %.2i / 13", m_iAmmo);
-    if (m_iAmmo == 0)
-    {
-    	if (m_fReloadTime == 0.f)
-    	{
-    		if ((int)(m_fLastShotTime * 5) % 2 == 0)
-    		{
-                ImGui::Text("OUT OF AMMO. PRESS R TO RELOAD.");
-    		}
-    	}
-    	else
-    	{
-            ImGui::Text("Reloading...");
-        }
-    }
+    ImGui::Text("LAST FIRE TIME :  %.2f SECOND AGO", m_fLastShotTime);
+    ImGui::Text("FIRE COOL TIME :  %.2f SECOND / FIRE", m_fShootCoolTime);
+
     ImGui::End();
 }
 

@@ -36,9 +36,7 @@ public:
 
 private:
 	_float			m_fLastShotTime;
-	_float			m_fReloadTime;
-	_int			m_iAmmo;
-
+	_float			m_fShootCoolTime;
 private:
 	virtual void		Free();
 };
