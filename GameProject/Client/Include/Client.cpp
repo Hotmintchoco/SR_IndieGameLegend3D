@@ -38,6 +38,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     // TODO: 여기에 코드를 입력합니다.
+//#ifdef _DEBUG
+//    AllocConsole();
+//    FILE* fp;
+//    freopen_s(&fp, "CONOUT$", "w", stdout);
+//#endif
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -109,6 +114,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         MSG_BOX("MainApp Delete Failed");
         return -1;
     }
+
+//#ifdef _DEBUG
+//    FreeConsole();
+//#endif
 
     return (int) msg.wParam;
 }
