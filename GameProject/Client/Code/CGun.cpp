@@ -10,7 +10,7 @@
 #include "CImGuiTool.h"
 
 CGun::CGun(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_fLastShotTime(0.f), m_fReloadTime(0.f), m_iAmmo(13)
+    : CGameObject(pGraphicDev), m_fLastShotTime(0.f), m_fReloadTime(0.f), m_iAmmo(99999)
 {
 }
 
@@ -146,7 +146,7 @@ void CGun::Render_GameObject()
 
     m_pBufferCom->Render_Buffer();
 #ifdef _DEBUG
-    RenderImGui();
+    // RenderImGui();
 #endif
 }
 

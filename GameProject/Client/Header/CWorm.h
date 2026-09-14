@@ -41,14 +41,22 @@ private:
 	_uint m_iIndex;
 	void Set_Front_Part(CWorm* pFrontPart) { m_pFrontPart = pFrontPart; }
 	CMonster* m_pFrontPart;
-	map<const _tchar*, CLayer*>* m_pmapLayer;
+	/* ±Ëº∫√∂ : ¿”Ω√ ∫Ø∞Ê */
+	//map<const _tchar*, CLayer*>* m_pmapLayer;
+	map<wstring, CLayer*>* m_pmapLayer;
 public:
-	void Set_LayerPointer(map<const _tchar*, CLayer*>* pmapLayer) { m_pmapLayer = pmapLayer; }
+	/* ±Ëº∫√∂ : ¿”Ω√ ∫Ø∞Ê */
+	// void Set_LayerPointer(map<const _tchar*, CLayer*>* pmapLayer) { m_pmapLayer = pmapLayer; }
+	void Set_LayerPointer(map<wstring, CLayer*>* pmapLayer) { m_pmapLayer = pmapLayer; }
 public:
 	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, map<const _tchar*, CLayer*>* pmap);
+	/* ±Ëº∫√∂ : ¿”Ω√ ∫Ø∞Ê */
+	// static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, map<const _tchar*, CLayer*>* pmap);
+	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, map<wstring, CLayer*>* pmap);
 	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex);
-	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex, map<const _tchar*, CLayer*>* pmap);
+	/* ±Ëº∫√∂ : ¿”Ω√ ∫Ø∞Ê */
+	// static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex, map<const _tchar*, CLayer*>* pmap);
+	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex, map<wstring, CLayer*>* pmap);
 
 protected:
 	virtual void		Free();
