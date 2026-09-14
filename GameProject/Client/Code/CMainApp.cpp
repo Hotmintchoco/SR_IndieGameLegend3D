@@ -44,6 +44,8 @@ int CMainApp::Update_MainApp(const _float& fTimeDelta)
 
 	m_pManagementClass->Update_Scene(fTimeDelta);
 
+	CGameStatusMgr::GetInstance()->Update(fTimeDelta);
+
 	return 0;
 }
 
@@ -59,6 +61,8 @@ void CMainApp::Render_MainApp()
 	CImGuiTool::BeginFrame();
 
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
+
+	CGameStatusMgr::GetInstance()->Render();
 
 	CImGuiTool::EndFrame();
 
