@@ -24,6 +24,8 @@ HRESULT CPlayer::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
+    ::ShowCursor(FALSE);
+
 	__super::Ready_GameObject();
 
     m_pColliderCom->Set_Radius(0.75f);
@@ -192,35 +194,25 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
     }
    */
 
-    if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_TAB))
+    if (CDInputMgr::GetInstance()->Key_Down(DIK_TAB))
     {
-        if (m_bCheck)
-            return;
-
-        m_bCheck = true;
+        m_bFix = !m_bFix;
 
         if (m_bFix)
-            m_bFix = false;
-
+        {
+            while (::ShowCursor(FALSE) >= 0) {}
+        }
         else
-            m_bFix = true;
-
-    }
-
-    else
-    {
-        m_bCheck = false;
+        {
+            while (::ShowCursor(TRUE) < 0) {}
+        }
     }
 
     if (false == m_bFix)
         return;
 
-    if (m_bFix)
-    {
-        Mouse_Move();
-        Mouse_Fix();
-    }
-
+    Mouse_Move();
+    Mouse_Fix();
 }
 
 void CPlayer::Mouse_Move()

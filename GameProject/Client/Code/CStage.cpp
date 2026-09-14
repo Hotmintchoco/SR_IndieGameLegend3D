@@ -21,6 +21,7 @@
 #include "CRoomLayer.h"
 #include "CLayerContext.h"
 #include "CPlayerHpUI.h"
+#include "CCrosshair.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -223,7 +224,20 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	/* 현재 씬, 레이어 정보를 전역으로 주입 */
 	CLayerContext ctx(pLayer, this);
 
-	// UI 추가
+	CUI* pUI = nullptr;
+
+	// Crosshair
+	pUI = CCrosshair::Create(m_pGraphicDev);
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	_vec2 vPos{ WINCX >> 1, WINCY >> 1 };
+	pUI->Set_Pos(vPos);
+
+	if (FAILED(pLayer->Add_GameObject(L"Crosshair", pUI)))
+		return E_FAIL;
+
+	// Hp
 	const _int iHpCount = 3;
 	const _float fStartX = 20.f;
 	const _float fStartY = 20.f;
@@ -232,7 +246,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	for (_int i = 0; i < iHpCount; ++i)
 	{
-		CPlayerHpUI* pUI = CPlayerHpUI::Create(m_pGraphicDev);
+		pUI = CPlayerHpUI::Create(m_pGraphicDev);
 		if (nullptr == pUI)
 			return E_FAIL;
 

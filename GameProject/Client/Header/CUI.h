@@ -32,6 +32,7 @@ protected:
 	Engine::CTexture* m_pTextureCom;
 
 	_vec2				m_vPos;
+	_float				m_fFrame;
 
 public:
 	static CUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);

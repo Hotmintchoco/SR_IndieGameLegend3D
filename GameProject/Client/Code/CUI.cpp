@@ -5,7 +5,7 @@
 #include "CRenderer.h"
 
 CUI::CUI(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev)
+	: CGameObject(pGraphicDev), m_fFrame(0.f)
 {
 }
 
@@ -87,7 +87,7 @@ void CUI::Render_GameObject()
     m_pGraphicDev->SetTransform(D3DTS_WORLD, &matWorld);
 
     if (nullptr != m_pTextureCom)
-        m_pTextureCom->Set_Texture(0);
+        m_pTextureCom->Set_Texture((_uint)m_fFrame);
 
     m_pBufferCom->Render_Buffer();
 

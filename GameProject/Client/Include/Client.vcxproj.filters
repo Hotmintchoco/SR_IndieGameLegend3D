@@ -145,6 +145,9 @@
     <Filter Include="02. GameObject\10. UI\PlayerHp">
       <UniqueIdentifier>{5b0584cc-2dcd-4328-af0b-394d82e9f98e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. UI\Crosshair">
+      <UniqueIdentifier>{0c6678e2-e4f3-4034-be90-da65b01d08d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -297,6 +300,9 @@
     <ClInclude Include="..\Header\CUI.h">
       <Filter>02. GameObject\10. UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CCrosshair.h">
+      <Filter>02. GameObject\10. UI\Crosshair</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -427,6 +433,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CUI.cpp">
       <Filter>02. GameObject\10. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCrosshair.cpp">
+      <Filter>02. GameObject\10. UI\Crosshair</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
