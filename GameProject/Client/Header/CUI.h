@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CGameObject.h"
 
 namespace Engine
@@ -7,15 +6,13 @@ namespace Engine
 	class CRcTex;
 	class CTransform;
 	class CTexture;
-	class CCalculator;
-	class CCollider;
 }
 
-class CMonster : public CGameObject
+class CUI : public CGameObject
 {
 protected:
-	explicit CMonster(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CMonster();
+	explicit CUI(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CUI();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -23,19 +20,22 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+public:
+	void			Set_Pos(const _vec2& vPos);
+
 protected:
 	HRESULT			Add_Component();
-	void Set_OnTerrain();
 
 protected:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
-	Engine::CCalculator* m_pCalculatorCom;
-	Engine::CCollider* m_pColliderCom;
+
+	_vec2				m_vPos;
+	_float				m_fFrame;
 
 public:
-	static CMonster* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 protected:
 	virtual void		Free();

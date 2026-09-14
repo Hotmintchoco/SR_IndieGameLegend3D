@@ -1,0 +1,77 @@
+﻿#include "pch.h"
+#include "CFrustum.h"
+#include "CProtoMgr.h"
+#include "CRenderer.h"
+#include "CBoxCollider.h"
+#include "CCollisionMgr.h"
+
+CFrustum::CFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
+    : CGameObject(pGraphicDev)
+{
+}
+
+CFrustum::~CFrustum()
+{
+}
+
+HRESULT CFrustum::Ready_GameObject()
+{
+    if (FAILED(Add_Component()))
+        return E_FAIL;
+
+    /* Note : 순서에 주의 (PostInitalize로 빼는 것도 고려) */
+    if (FAILED(CGameObject::Ready_GameObject()))
+        return E_FAIL;
+
+    return S_OK;
+}
+
+_int CFrustum::Update_GameObject(const _float& fTimeDelta)
+{
+    _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
+
+    CCollisionMgr::GetInstance()->Add_Collider(COLLISIONID::COLL_MONSTER, m_pColliderCom);
+
+    return iExit;
+}
+
+void CFrustum::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+    CGameObject::LateUpdate_GameObject(fTimeDelta);
+}
+
+void CFrustum::Render_GameObject()
+{
+}
+
+HRESULT CFrustum::Add_Component()
+{
+    CComponent* pComponent = nullptr;
+
+    // Transform
+    pComponent = m_pTransformCom = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
+
+    // Collider
+    pComponent = m_pColliderCom = dynamic_cast<CBoxCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BoxCollider"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_BoxCollider", pComponent });
+
+    m_pColliderCom->Set_Extents(_vec3{0.5f, 0.4f, 0.5f});
+    m_pColliderCom->Set_DiffPos(_vec3{0.f, 0.4f, 0.f});
+
+
+    return S_OK;
+}
+
+void CFrustum::Free()
+{
+    CGameObject::Free();
+}

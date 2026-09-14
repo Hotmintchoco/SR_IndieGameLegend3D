@@ -109,6 +109,9 @@
     <ClCompile Include="..\Code\CBoxCollider.cpp">
       <Filter>05. Component\04. Collider\BoxCollider</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CLayerContext.cpp">
+      <Filter>04. Management\01. Layer\LayerContext</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CGraphicDev.h">
@@ -243,6 +246,9 @@
     <ClInclude Include="..\Header\CBoxCollider.h">
       <Filter>05. Component\04. Collider\BoxCollider</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CLayerContext.h">
+      <Filter>04. Management\01. Layer\LayerContext</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00. GraphicDev">
@@ -352,6 +358,9 @@
     </Filter>
     <Filter Include="11. CameraMgr\CameraObj\Camera_TPV_Perspective">
       <UniqueIdentifier>{92de3bac-9e8d-49da-84ff-a0e99cbd9d54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Management\01. Layer\LayerContext">
+      <UniqueIdentifier>{4866132a-0539-4584-ad18-520c05dd6dcc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -26,6 +26,7 @@ public:
 	void			Set_Radius(const _float& fRadius) override;
 
 	void			Set_DiffPos(const _vec3& vDiffPos) { m_vDiffPos = vDiffPos; }
+	_vec3			Get_DiffPos() { return m_vDiffPos; }
 
 	void			Render_DebugCube();
 

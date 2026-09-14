@@ -53,11 +53,27 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
 
     lstrcpy(m_szLoading, L"Texture Loading............................");
+    //skull
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_skull3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/skull/skull3.png", 1))))return E_FAIL;
+    //worm
+    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_body_45Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/body_45.png", 1)))) return E_FAIL;
+    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_body_frontTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/body_front.png", 1)))) return E_FAIL;
+    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_body_sideTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/body_side.png", 1)))) return E_FAIL;
+    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_body_topTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/body_top.png", 1)))) return E_FAIL;
+    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_connectorTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/connector.png", 1)))) return E_FAIL;
+    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_tail_backTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/tail_back.png", 1)))) return E_FAIL;
+    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_tail_sideTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/tail_side.png", 1)))) return E_FAIL;
+    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_tail_topTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/tail_top.png", 1)))) return E_FAIL;
+    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_worm_drill_sideTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/worm_drill_side_%d.png", 4)))) return E_FAIL;
+    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_worm_drill_topTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/worm_drill_top_%d.png", 4)))) return E_FAIL;
+    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_worm_faceTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/worm_face_%d.png", 4)))) return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_worm_drillTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/worm_drill_%d.png", 12)))) return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_worm_bobyTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/worm_body_%d.png", 5)))) return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_worm_tailTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/worm_tail_%d.png", 3)))) return E_FAIL;
+
+
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/Invisible.png", 1))))
-        return E_FAIL;
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/skull3.png", 1))))
         return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainTexture2", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", 2))))
@@ -78,6 +94,14 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BulletTexture_Small", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/sprBullet_0.png", 1))))
         return E_FAIL;
 
+
+    // UI Texture
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_HpUITexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/HPBar.png", 1))))
+		return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CrosshairTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Reticle_%d.png", 4))))
+        return E_FAIL;
+
     lstrcpy(m_szLoading, L"Etc Loading............................");
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
@@ -86,7 +110,11 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Calculator", Engine::CCalculator::Create(m_pGraphicDev))))
         return E_FAIL;
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider", Engine::CSphereCollider::Create(m_pGraphicDev))))
+    
+    /* 충돌 처리 */
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SphereCollider", Engine::CSphereCollider::Create(m_pGraphicDev))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BoxCollider", Engine::CBoxCollider::Create(m_pGraphicDev))))
         return E_FAIL;
 
 
@@ -108,10 +136,16 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BrownFrustum_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/BrownFrustum.ply"))))
         return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ExplosiveFrustum_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/ExplosiveFrustum.ply"))))
+        return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrayFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/GrayFrustum_Diffuse.png", 1))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BrownFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/BrownFrustum_Diffuse.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ExplosiveFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/ExplosiveFrustum_Diffuse.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BombLight_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/bomblight2_%d.png", 2))))
         return E_FAIL;
 
     lstrcpy(m_szLoading, L"Room Data Loading............................");
@@ -143,25 +177,15 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Tile_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture2D/StaticTile/StaticTile_%d.png", 57))))
         return E_FAIL;
 
-    /* 충돌 처리 */
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SphereCollider", Engine::CSphereCollider::Create(m_pGraphicDev))))
+    /* 안개 */
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Fog_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture2D/fog.png", 1))))
         return E_FAIL;
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BoxCollider", Engine::CBoxCollider::Create(m_pGraphicDev))))
-        return E_FAIL;
-   
 
-    /* 타일 */
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlaneTex", Engine::CPlaneTex::Create(m_pGraphicDev))))
     /* 맵 배치 데이터 */
     if (FAILED(ParseRoomData()))
     {
         return E_FAIL;
     }
-
-    /* 안개 */
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Fog_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture2D/fog.png", 1))))
-        return E_FAIL;
-
 
     lstrcpy(m_szLoading, L"Loading Complete!!!");
 
@@ -232,8 +256,8 @@ HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
         t.wstrRoomName = wstr;
         data.at("defaultTile").get_to(t.iDefaultTileIdx);
         data.at("tileList").get_to(t.vecTile);
+        data.at("objectTilingList").get_to(t.vecObjectTilingInfo);
         data.at("objectList").get_to(t.vecObjectInfo);
-        data.at("monsterList").get_to(t.vecMonsterInfo);
         data.at("door").get_to(t.vecDoorInfo);
         data.at("doorTile").get_to(t.vecDoorTile);
 
@@ -266,8 +290,8 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
         t.wstrRoomName = wstr;
         data.at("defaultTile").get_to(t.iDefaultTileIdx);
         data.at("tileList").get_to(t.vecTile);
+        data.at("objectTilingList").get_to(t.vecObjectTilingInfo);
         data.at("objectList").get_to(t.vecObjectInfo);
-        data.at("monsterList").get_to(t.vecMonsterInfo);
         data.at("door").get_to(t.vecDoorInfo);
         data.at("doorTile").get_to(t.vecDoorTile);
 

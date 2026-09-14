@@ -281,7 +281,7 @@ void CGun::Render_GameObject()
 
     m_pBufferCom->Render_Buffer();
 #ifdef _DEBUG
-    RenderImGui();
+    // RenderImGui();
 #endif
 }
 

@@ -50,15 +50,6 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 				MSG_BOX("Stage Create Failed");
 				return -1;
 			}
-			else
-			{
-				/* 이 시점에 매니저 클래스의 씬 변수가 보장됨 */
-				if (FAILED(static_cast<CStage*>(pStage)->PostInitialize()))
-				{
-					MSG_BOX("Stage PostInitialize Failed");
-					return -1;
-				}
-			}
 		}
 	}
 
