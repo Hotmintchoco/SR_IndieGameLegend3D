@@ -32,6 +32,8 @@ public:
 
 private:
 	HRESULT			Add_Component();
+	void InitializeCollider();
+	void OnRoomBegin();
 
 private:
 	Engine::CPlyTex* m_pBufferCom;

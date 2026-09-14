@@ -7,6 +7,7 @@
 #include "CWall.h"
 #include "CFog.h"
 #include "CTile.h"
+#include "CTriggerBox.h"
 #include "CAbstractFactory.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
@@ -106,10 +107,10 @@ HRESULT CRoomLayer::SpawnRoom()
 
 		pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
 
-		/* 안개 */
 		CWall* pWall = static_cast<CWall*>(pGameObject);
 		if (pWall->HasDoor())
 		{
+			/* 안개 */
 			int iDir = (int)pWall->GetDir();
 
 			_vec3 vDir{ 0.f, 0.f, 1.f };
@@ -150,6 +151,21 @@ HRESULT CRoomLayer::SpawnRoom()
 
 			pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
 			pTransformCom->Move_Pos(&vDir, 6.f + (iDir % 2) * 1.f, 1.f);
+
+			/* 시작 트리거 박스 */
+			pGameObject = CTriggerBox::Create(pDevice);
+			if (nullptr == pGameObject)
+				return E_FAIL;
+
+			wstring wstrBoxName = L"Room_" + to_wstring(m_iRoomIndex) + L"_TriggerBox_" + to_wstring(i);
+
+			if (FAILED(Add_GameObject(wstrBoxName, pGameObject)))
+				return E_FAIL;
+
+			pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrBoxName, L"Com_Transform"));
+
+			pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
+			pTransformCom->Move_Pos(&vDir, 4.f + (iDir % 2) * 1.f, 1.f);
 		}
 
 
@@ -211,6 +227,11 @@ HRESULT CRoomLayer::SpawnRoom()
 
 	return S_OK;
 
+}
+
+void CRoomLayer::OnRoomBegin()
+{
+	m_OnRoomBegin.Broadcast();
 }
 
 CRoomLayer* CRoomLayer::Create(int iRoomIndex)

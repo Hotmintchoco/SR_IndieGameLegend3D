@@ -8,6 +8,7 @@
 #include "CCollisionMgr.h"
 #include "CImGuiTool.h"
 #include "CCameraMgr.h"
+#include "CGameStatusMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev), m_iJumpState(JUMP_NOT), m_fJumpTime(0.f), m_bFix(true), m_bCheck(true)
@@ -45,6 +46,10 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
+    /* 성철 : 매니저 객체로 게임 상태를 관리하기 위해 추가. 문제 발생 시 말해줘 */
+    CGameStatusMgr::GetInstance()->UpdatePlayerPosition(vPos);
+    /* ---------------------------------------------------------------- */
+
     return iExit;
 }
 
@@ -67,7 +72,7 @@ void CPlayer::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 #ifdef _DEBUG
-    RenderImGui();
+    // RenderImGui();
 #endif
 }
 

@@ -6,6 +6,8 @@
 #include "CTransform.h"
 #include "CCollisionMgr.h"
 #include "CSphereCollider.h"
+#include "CLayerContext.h"
+#include "CRoomLayer.h"
 #include <algorithm>
 #include <cfloat>
 #include <ctime>
@@ -30,18 +32,39 @@ HRESULT CWall::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    // -- Collider Initialization -- 
-	
-    // North Wall Collider
-	_float fExtentsX(0.f), fExtentsY(2.f), fExtentsZ(0.f);
-	_float fDiffX(0.f), fDiffY(1.f), fDiffZ(0.f);
+    InitializeCollider();
 
-    switch (m_eDir) 
+    CRoomLayer* pLayer = static_cast<CRoomLayer*>(CLayerContext::GetLayer());
+    if (pLayer)
+    {
+        pLayer->m_OnRoomBegin.AddBinding(GetToken(), [this]() { OnRoomBegin(); });
+    }
+
+    /* Set Initial Position */
+    if (m_eDir == EWallDir::WEST || m_eDir == EWallDir::SOUTH)
+    {
+        m_pTransformCom->Rotation(ROT_Y, 180.f);
+    }
+
+	__super::Ready_GameObject();
+
+    return S_OK;
+}
+
+void CWall::InitializeCollider()
+{
+    // -- Collider Initialization -- 
+
+    // North Wall Collider
+    _float fExtentsX(0.f), fExtentsY(2.f), fExtentsZ(0.f);
+    _float fDiffX(0.f), fDiffY(1.f), fDiffZ(0.f);
+
+    switch (m_eDir)
     {
     case EWallDir::EAST:
         fExtentsX = 0.5f;
         fExtentsZ = 3.5f;
-		fDiffX = 7.f;
+        fDiffX = 7.f;
         break;
     case EWallDir::SOUTH:
         fExtentsX = 3.5f;
@@ -55,8 +78,8 @@ HRESULT CWall::Ready_GameObject()
         break;
     case EWallDir::NORTH:
         fExtentsX = 3.5f;
-		fExtentsZ = 0.5f;
-		fDiffZ = 6.f;
+        fExtentsZ = 0.5f;
+        fDiffZ = 6.f;
         break;
     }
 
@@ -89,16 +112,12 @@ HRESULT CWall::Ready_GameObject()
     pBoxCollider->Set_DiffPos({ fDiffX, fDiffY, fDiffZ });
 
     // -- Collider Initialization -- 
+}
 
-    /* Set Initial Position */
-    if (m_eDir == EWallDir::WEST || m_eDir == EWallDir::SOUTH)
-    {
-        m_pTransformCom->Rotation(ROT_Y, 180.f);
-    }
-
-	__super::Ready_GameObject();
-
-    return S_OK;
+void CWall::OnRoomBegin()
+{
+    cout << "이벤트 처리됨" << endl;
+    int a = 0;
 }
 
 _int CWall::Update_GameObject(const _float& fTimeDelta)

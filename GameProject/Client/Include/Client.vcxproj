@@ -157,6 +157,7 @@
     <ClInclude Include="..\Header\CGameStatusMgr.h" />
     <ClInclude Include="..\Header\CGun.h" />
     <ClInclude Include="..\Header\CImGuiTool.h" />
+    <ClInclude Include="..\Header\Client_Enum.h" />
     <ClInclude Include="..\Header\CLoading.h" />
     <ClInclude Include="..\Header\CLogo.h" />
     <ClInclude Include="..\Header\CMainApp.h" />
@@ -169,12 +170,13 @@
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CTile.h" />
+    <ClInclude Include="..\Header\CTriggerBox.h" />
     <ClInclude Include="..\Header\CWall.h" />
     <ClInclude Include="..\Header\CWorm.h" />
     <ClInclude Include="..\Header\CWorm_Tail.h" />
     <ClInclude Include="..\Header\CWorm_Boby.h" />
     <ClInclude Include="..\Header\CWorm_Face.h" />
-    <ClInclude Include="..\Header\Define.h" />
+    <ClInclude Include="..\Header\Client_Struct.h" />
     <ClInclude Include="..\Header\imconfig.h" />
     <ClInclude Include="..\Header\imgui.h" />
     <ClInclude Include="..\Header\imgui_impl_dx9.h" />
@@ -219,6 +221,7 @@
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CTile.cpp" />
+    <ClCompile Include="..\Code\CTriggerBox.cpp" />
     <ClCompile Include="..\Code\CWall.cpp" />
     <ClCompile Include="..\Code\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
