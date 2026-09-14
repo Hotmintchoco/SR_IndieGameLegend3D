@@ -19,6 +19,7 @@
 #include "CWorm.h"
 #include "CRoomLoadingMgr.h"
 #include "CRoomLayer.h"
+#include "CLayerContext.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -46,8 +47,6 @@ HRESULT CStage::Ready_Scene()
 		wstring wstrLayerTag = L"Room_" + to_wstring(i) + L"_Layer";
 		if (FAILED(Ready_Room_Layer(wstrLayerTag, i)))
 			return E_FAIL;
-
-		static_cast<CRoomLayer*>(m_mapLayer.at(wstrLayerTag))->SpawnRoom();
 	}
 
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
@@ -106,6 +105,9 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
+	/* 현재 씬, 레이어 정보를 전역으로 주입 */
+	CLayerContext ctx(pLayer, this);
+
 	// 오브젝트 추가
 	CGameObject* pGameObject = nullptr;
 
@@ -144,6 +146,9 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
 		return E_FAIL;
+
+	/* 현재 씬, 레이어 정보를 전역으로 주입 */
+	CLayerContext ctx(pLayer, this);
 
 	// 오브젝트 추가
 	CGameObject* pGameObject = nullptr;
@@ -195,6 +200,14 @@ HRESULT CStage::Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
+	/* 현재 씬, 레이어 정보를 전역으로 주입 */
+	CLayerContext ctx(pLayer, this);
+
+	if (FAILED(static_cast<CRoomLayer*>(pLayer)->SpawnRoom()))
+	{
+		return E_FAIL;
+	}
+
 	m_mapLayer.insert({ wstrLayerTag, pLayer });
 
 	return S_OK;
@@ -205,6 +218,9 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
 		return E_FAIL;
+
+	/* 현재 씬, 레이어 정보를 전역으로 주입 */
+	CLayerContext ctx(pLayer, this);
 
 	// 오브젝트 추가
 	CGameObject* pGameObject = nullptr;

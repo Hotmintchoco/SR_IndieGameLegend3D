@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CLayer;
+
 class ENGINE_DLL CGameObject : public CBase
 {
 protected:
@@ -23,6 +25,8 @@ public:
 
 	virtual			void		OnCollisionEnter(CGameObject* pOther) {}
 
+	inline void SetOwner(CLayer* pLayer) { m_pOwner = pLayer; }
+
 public:
 	void Set_Dead(_bool bDead) { m_bDead = bDead; }
 	_bool Is_Dead() const { return m_bDead; }
@@ -34,6 +38,9 @@ protected:
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	_float									m_fViewZ;
 	_bool									m_bDead;
+	
+	/* Ready 단계에서 Layer 접근이 불가한 문제를 해결하기 위한 변수로, Ready 단계 이후에는 보장되지 않음 */
+	CLayer* m_pOwner = nullptr;
 
 private:
 	CComponent* Find_Component(COMPONENTID eID, const _tchar* pComponentTag);

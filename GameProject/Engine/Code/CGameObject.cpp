@@ -1,14 +1,17 @@
 #include "CGameObject.h"
 #include "CComponent.h"
+#include "CLayerContext.h"
 
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
-	: m_pGraphicDev(pGraphicDev), m_fViewZ(0.f), m_bDead(false)
+	: m_pGraphicDev(pGraphicDev), m_fViewZ(0.f), m_bDead(false),
+    m_pOwner(CLayerContext::GetLayer())
 {
     m_pGraphicDev->AddRef();
 }
 
 CGameObject::CGameObject(const CGameObject& rhs)
-    : m_pGraphicDev(rhs.m_pGraphicDev), m_fViewZ(rhs.m_fViewZ), m_bDead(rhs.m_bDead)
+    : m_pGraphicDev(rhs.m_pGraphicDev), m_fViewZ(rhs.m_fViewZ), m_bDead(rhs.m_bDead),
+    m_pOwner(rhs.m_pOwner)
 {
     m_pGraphicDev->AddRef();
 }
