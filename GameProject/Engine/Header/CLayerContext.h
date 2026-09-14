@@ -12,7 +12,8 @@ class CScene;
 class ENGINE_DLL CLayerContext
 {
 public:
-	CLayerContext(CLayer* pLayer, CScene* pScene)
+	CLayerContext() = delete;
+	explicit CLayerContext(CLayer* pLayer, CScene* pScene)
 	{ 
 		m_ContextStack.emplace_back(pLayer, pScene);
 	}
