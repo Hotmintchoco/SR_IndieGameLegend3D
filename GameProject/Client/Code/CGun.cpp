@@ -97,7 +97,7 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
     D3DXVec3Cross(&vUp, &vForword, &vRight);
     D3DXVec3Normalize(&vUp, &vUp);
 
-    _vec3	vPos_Gun = vPos_Player + (vRight * 0.3f) + (vForword * 0.5f) + (vUp * -0.7f); // ÃÑMesh ¿ùµåÁÂÇ¥ °è»ê
+    _vec3	vPos_Gun = vPos_Player + (vRight * 0.3f) + (vForword * 0.5f) + (vUp * -0.9f); // ÃÑMesh ¿ùµåÁÂÇ¥ °è»ê
 
 #pragma region ½ºÅ³ »ç¿ë ¹× ÃÑ¾Ë ½ºÀ§Äª
 
@@ -234,10 +234,10 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
             CDInputMgr::GetInstance()->Key_Press(DIK_D))
         {
             _float fAnimationDelta = fmod(m_fRunningTime, 0.8f);
-            _float fAnimationSpeed = 50.0f;
+            _float fAnimationSpeed = 25.0f;
             if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
             {
-                fAnimationSpeed = 100.f;
+                fAnimationSpeed = 50.f;
             }
 
             if (fAnimationDelta > 0.6f)
