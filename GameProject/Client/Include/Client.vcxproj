@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CBackGround.h" />
+    <ClInclude Include="..\Header\CBoss1.h" />
     <ClInclude Include="..\Header\CBullet.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEffect.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="..\Header\CRoom.h" />
     <ClInclude Include="..\Header\CSkull.h" />
     <ClInclude Include="..\Header\CSkyBox.h" />
+    <ClInclude Include="..\Header\CSpeyeder.h" />
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CTile.h" />
@@ -188,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CBackGround.cpp" />
+    <ClCompile Include="..\Code\CBoss1.cpp" />
     <ClCompile Include="..\Code\CBullet.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEffect.cpp" />
@@ -203,6 +206,7 @@
     <ClCompile Include="..\Code\CRoom.cpp" />
     <ClCompile Include="..\Code\CSkull.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
+    <ClCompile Include="..\Code\CSpeyeder.cpp" />
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CTile.cpp" />

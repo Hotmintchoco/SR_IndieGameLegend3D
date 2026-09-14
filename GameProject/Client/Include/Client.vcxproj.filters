@@ -115,6 +115,15 @@
     <Filter Include="999. ImGUI\Backend\Include">
       <UniqueIdentifier>{eb153cf3-9ee7-46d0-88a8-f1c874d14c5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Boss1">
+      <UniqueIdentifier>{b51a1b05-dd5f-4c97-8716-dc4e1a0c0ec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\M1">
+      <UniqueIdentifier>{149954a3-d86b-4975-bad9-6e696a5ecb47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Speyeder">
+      <UniqueIdentifier>{77d9f8f3-79ea-4b54-9520-e416973572a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -240,6 +249,12 @@
     <ClInclude Include="..\Header\imstb_truetype.h">
       <Filter>999. ImGUI\Backend\Include</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBoss1.h">
+      <Filter>02. GameObject\02. Monster\Boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSpeyeder.h">
+      <Filter>02. GameObject\02. Monster\Speyeder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -340,6 +355,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CWorm_Boby.cpp">
       <Filter>02. GameObject\02. Monster\Worm\Worm_Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBoss1.cpp">
+      <Filter>02. GameObject\02. Monster\Boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSpeyeder.cpp">
+      <Filter>02. GameObject\02. Monster\Speyeder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

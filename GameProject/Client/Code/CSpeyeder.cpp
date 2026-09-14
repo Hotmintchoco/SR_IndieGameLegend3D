@@ -1,41 +1,41 @@
 #include "pch.h"
-#include "CSkull.h"
+#include "CSpeyeder.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CTimerMgr.h"
 //#include "CDInputMgr.h"
 #include "CTerrain.h"
 
-CSkull::CSkull(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev)
+CSpeyeder::CSpeyeder(LPDIRECT3DDEVICE9 pGraphicDev)
+    : CMonster(pGraphicDev), m_bLandingState(false)
 {
 }
 
 
-CSkull::~CSkull()
+CSpeyeder::~CSpeyeder()
 {
 }
 
-HRESULT CSkull::Ready_GameObject()
+HRESULT CSpeyeder::Ready_GameObject()
 {
     if (FAILED(Add_Component()))
         return E_FAIL;
     CMonster::Ready_GameObject();
 
-    m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
+    m_pTransformCom->Set_Scale(0.2f, 0.2f, 0.2f);
     m_pColliderCom->Set_Radius(D3DXVec3Length(&m_pTransformCom->m_vScale));
     m_iHp = 3;
     return S_OK;
 }
 
-_int CSkull::Update_GameObject(const _float& fTimeDelta)
+_int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
     Set_OnTerrain();
     return iExit;
 }
 
-void CSkull::LateUpdate_GameObject(const _float& fTimeDelta)
+void CSpeyeder::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 
@@ -51,37 +51,49 @@ void CSkull::LateUpdate_GameObject(const _float& fTimeDelta)
     _vec3   vPlayerLook;
     pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
-    m_pTransformCom->Chase_Target2(&vPlayerPos, &vPlayerLook, 30.f, fTimeDelta);
+    m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 1.f, fTimeDelta);
 
 }
 
-void CSkull::Render_GameObject()
+void CSpeyeder::Render_GameObject()
 {
+
     if (m_bHitState == true) CMonster::Enable_HitRenderState();
+    if (m_iMotion == 40) m_iMotion = 0;
+
     CMonster::Render_GameObject();
-    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-    m_pTextureCom->Set_Texture(0);
+    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+    if (m_bLandingState == false)
+    {
+        m_pTextureCom->Set_Texture(m_iMotion / 10);
+    }
+    else
+    {
+        m_pTextureCom->Set_Texture(4);
+    }
     m_pBufferCom->Render_Buffer();
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+    ++m_iMotion;
     if (m_bHitState == true) CMonster::Disable_HitRenderState();
 }
 
-void CSkull::OnCollisionEnter(CGameObject* pOther)
+void CSpeyeder::OnCollisionEnter(CGameObject* pOther)
 {
     CMonster::OnCollisionEnter(pOther);
     m_iHp -= 1;
 }
 
-HRESULT CSkull::Add_Component()
+HRESULT CSpeyeder::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
     // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_skull3Texture"));
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_speyederTexture"));
 
     if (nullptr == pComponent)
         return E_FAIL;
@@ -92,21 +104,21 @@ HRESULT CSkull::Add_Component()
 }
 
 
-CSkull* CSkull::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CSpeyeder* CSpeyeder::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CSkull* pMonster = new CSkull(pGraphicDev);
+    CSpeyeder* pMonster = new CSpeyeder(pGraphicDev);
 
     if (FAILED(pMonster->Ready_GameObject()))
     {
         Safe_Release(pMonster);
-        MSG_BOX("CSkull Create Failed");
+        MSG_BOX("CSpeyeder Create Failed");
         return nullptr;
     }
 
     return pMonster;
 }
 
-void CSkull::Free()
+void CSpeyeder::Free()
 {
     CMonster::Free();
 }

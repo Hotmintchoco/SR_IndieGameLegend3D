@@ -56,6 +56,7 @@ public:
 public:
 	void		Chase_Target(const _vec3* pPos, const _vec3* pAngle, const _float& fSpeed, const _float& fTimeDelta);
 	void		Chase_Target2(const _vec3* pPos, const _vec3* pAngle, const _float& fSpeed, const _float& fTimeDelta);
+	void LookAt_Player(const _vec3* pPos, const _vec3* pLook);
 	_matrix* Compute_LookAtTarget(const _vec3* pPos, const _vec3* pLook);
 
 public:

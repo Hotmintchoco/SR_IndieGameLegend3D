@@ -10,13 +10,14 @@
 #include "CWorm_Face.h"
 #include "CLayer.h"
 
+
 CWorm::CWorm(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev), m_iMotion(0), m_iIndex(0), m_pFrontPart(nullptr)
+    : CMonster(pGraphicDev), m_iWormIndex(0), m_pFrontPart(nullptr)
 {
 }
 
 CWorm::CWorm(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex)
-    : CMonster(pGraphicDev), m_iMotion(0), m_iIndex(iIndex), m_pFrontPart(nullptr)
+    : CMonster(pGraphicDev), m_iWormIndex(iIndex), m_pFrontPart(nullptr)
 {
 }
 
@@ -33,14 +34,15 @@ HRESULT CWorm::Ready_GameObject()
 
     m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
     m_pTransformCom->Set_Pos(63.f, 0.f, 58.f);
-    m_pColliderCom->Set_Radius(1.f);
-    
-    if (m_iIndex < 9)
+    m_pColliderCom->Set_Radius(D3DXVec3Length(&m_pTransformCom->m_vScale));
+
+    m_iHp = 10;
+    if (m_iWormIndex < 9)
     {
         CGameObject* pGameObject;
         auto iter = m_pmapLayer->find(L"GameLogic_Layer");
 
-        pGameObject = CWorm::Create(m_pGraphicDev, m_iIndex, m_pmapLayer);
+        pGameObject = CWorm::Create(m_pGraphicDev, m_iWormIndex, m_pmapLayer);
 
 
         if (nullptr == pGameObject)
@@ -49,11 +51,11 @@ HRESULT CWorm::Ready_GameObject()
         if (iter != m_pmapLayer->end())
         {
             TCHAR		szFileName[128] = L"";
-            wsprintf(szFileName, L"Worm_Boby_%d", m_iIndex + 1);
+            wsprintf(szFileName, L"Worm_Boby_%d", m_iWormIndex + 1);
             iter->second->Add_GameObject(szFileName, pGameObject);
         }
     }
-    //else if (m_iIndex == 8)
+    //else if (m_iWormIndex == 8)
     //{
 
     //}
@@ -69,8 +71,8 @@ _int CWorm::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
     Set_OnTerrain();
-   // m_pTransformCom->Rotation(ROT_Y, 3.f * m_iIndex * fTimeDelta);
-    if (m_iIndex == 0)
+   // m_pTransformCom->Rotation(ROT_Y, 3.f * m_iWormIndex * fTimeDelta);
+    if (m_iWormIndex == 0)
     {
         _vec3 v(0, 0, 1);
         m_pTransformCom->Move_Pos(&v, 1.f, fTimeDelta);
@@ -78,7 +80,7 @@ _int CWorm::Update_GameObject(const _float& fTimeDelta)
     else
     {
         TCHAR		szFileName[128] = L"";
-        wsprintf(szFileName, L"Worm_Boby_%d", m_iIndex - 1);
+        wsprintf(szFileName, L"Worm_Boby_%d", m_iWormIndex - 1);
 
         CTransform* pFrontWormTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
             ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", szFileName, L"Com_Transform"));
@@ -123,7 +125,7 @@ void CWorm::Render_GameObject()
     //eDir = SIDE;
     //eDir = TOP;
 
-    if (m_iIndex == 0)
+    if (m_iWormIndex == 0)
     {
         if (Angle_To_Worm() < D3DXToRadian(135.f))
         {
@@ -144,7 +146,7 @@ void CWorm::Render_GameObject()
 
         }
     }
-    else if (m_iIndex == 9)
+    else if (m_iWormIndex == 9)
     {
         _float fAngle = Angle_To_Worm();
         if (fAngle <= D3DXToRadian(45.f))
@@ -209,11 +211,11 @@ void CWorm::Render_GameObject()
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-    if (m_iIndex == 0)
+    if (m_iWormIndex == 0)
     {
         m_pTextureCom->Set_Texture(eDir * 4 + m_iMotion / 10);
     }
-    else if (m_iIndex == 9)
+    else if (m_iWormIndex == 9)
     {
         m_pTextureCom->Set_Texture(eDir);
     }
@@ -258,11 +260,11 @@ _float CWorm::Angle_To_Worm()
 HRESULT CWorm::Add_Component()
 {
     CComponent* pComponent = nullptr;
-    if (m_iIndex == 0)
+    if (m_iWormIndex == 0)
     {
         pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_worm_drillTexture"));
     }
-    else if (m_iIndex == 9)
+    else if (m_iWormIndex == 9)
     {
         pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_worm_tailTexture"));
     }
