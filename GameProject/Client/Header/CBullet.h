@@ -35,6 +35,9 @@ private:
 	Engine::CCollider* m_pColliderCom;
 
 	_vec3				m_vDir;
+	BULLETID			m_iBulletID;
+	_int				m_iBulletDmg;
+	_float				m_fBulletLife;
 
 public:
 	static CBullet* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3* pPos, const _vec3* pDir);

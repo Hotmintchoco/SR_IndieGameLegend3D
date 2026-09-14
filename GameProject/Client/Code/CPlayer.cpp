@@ -84,11 +84,13 @@ void CPlayer::RenderImGui()
 
     /* 상하좌우 키 입력 */
 
+    char cKeyStateQ = ' ';
     char cKeyStateW = ' ';
     char cKeyStateA = ' ';
     char cKeyStateS = ' ';
     char cKeyStateD = ' ';
     const char* cKeyStateShift = "     ";
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_Q)) cKeyStateQ = 'Q';
     if (CDInputMgr::GetInstance()->Key_Press(DIK_W)) cKeyStateW = 'W';
     if (CDInputMgr::GetInstance()->Key_Press(DIK_A)) cKeyStateA = 'A';
     if (CDInputMgr::GetInstance()->Key_Press(DIK_S)) cKeyStateS = 'S';
@@ -96,8 +98,8 @@ void CPlayer::RenderImGui()
     if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT)) cKeyStateShift = "SHIFT";
 
     ImGui::Text("KEY INPUT STATE");
-    ImGui::Text("          [%.2c]", cKeyStateW);
-    ImGui::Text("[%s][%.2c][%.2c][%.2c]", cKeyStateShift, cKeyStateA, cKeyStateS, cKeyStateD);
+    ImGui::Text("       [%c][%c]", cKeyStateQ, cKeyStateW);
+    ImGui::Text("[%s][%c][%c][%c]", cKeyStateShift, cKeyStateA, cKeyStateS, cKeyStateD);
 
     /* 카메라 */
     _float fAngle;

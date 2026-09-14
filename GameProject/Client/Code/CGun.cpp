@@ -10,7 +10,7 @@
 #include "CImGuiTool.h"
 
 CGun::CGun(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_fLastShotTime(0.f), m_fShootCoolTime(0.4f)
+    : CGameObject(pGraphicDev), m_fLastShotTime(0.f), m_fShootRate(0.4f), m_fRunningTime(0.f), m_iCurBullet(BULLET_DEFAULT), m_iDmg(10)
 {
 }
 
@@ -90,22 +90,30 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
 
     _vec3	vPos_Gun = vPos_Player + (vRight * 0.3f) + (vForword * 0.5f) + (vUp * -0.7f);
 
-    _matrix matWorld;
-    D3DXMatrixIdentity(&matWorld);
-    memcpy(&matWorld.m[INFO_RIGHT][0], &vRight, sizeof(_vec3));
-    memcpy(&matWorld.m[INFO_UP][0], &vUp, sizeof(_vec3));
-    memcpy(&matWorld.m[INFO_LOOK][0], &vForword, sizeof(_vec3));
-    memcpy(&matWorld.m[INFO_POS][0], &vPos_Gun, sizeof(_vec3));
-    m_pTransformCom->Set_World(&matWorld);
+    if (CDInputMgr::GetInstance()->Key_Down(DIK_Q))
+    {
+        switch (m_iCurBullet)
+        {
+        case BULLET_DEFAULT  : 
+            m_iCurBullet = BULLET_SMALL;
+            m_fShootRate = 0.2f;
+            m_iDmg = 5;
+            break;
+        case BULLET_SMALL : 
+            m_iCurBullet = BULLET_DEFAULT;
+            m_fShootRate = 0.4f;
+            m_iDmg = 10;
+            break;
+        }
+    }
 
-    _float m_fShootCoolTime = 0.4f;
     m_fLastShotTime += fTimeDelta;
 
-    if ((CDInputMgr::GetInstance()->Mouse_Press(DIM_LB)) && (m_fLastShotTime >= m_fShootCoolTime))
+    if ((CDInputMgr::GetInstance()->Mouse_Press(DIM_LB)) && (m_fLastShotTime >= m_fShootRate))
     {
         m_fLastShotTime = 0.f;
 
-        _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.0f) + (vUp * 0.3f);
+        _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.8f) + (vUp * 0.4f);
         _vec3	vBullet_To = vPos_Player + (vForword * 10.f); // 크로스헤어 도달점
 
         _vec3	vBullet_Look = vBullet_To - vBullet_From;
@@ -114,6 +122,97 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
         pGameObject = CBullet::Create(m_pGraphicDev, &vBullet_From, &vBullet_Look);
         CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"Bullet", pGameObject);
     }
+
+    _matrix matWorld;
+    D3DXMatrixIdentity(&matWorld);
+
+    _matrix matAxis;
+
+    if (m_iCurBullet == BULLET_DEFAULT)
+    {
+        if (m_fLastShotTime < 0.05f)
+        {
+            D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(-m_fLastShotTime * 800.f));
+        }
+        else if (m_fLastShotTime < 0.2f)
+        {
+            D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(-60 + m_fLastShotTime * 300.f));
+        }
+        else
+        {
+            D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(0.f));
+        }
+    }
+    else if (m_iCurBullet == BULLET_SMALL)
+    {
+        if (m_fLastShotTime < 0.025f)
+        {
+            D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(-m_fLastShotTime * 800.f));
+        }
+        else if (m_fLastShotTime < 0.1f)
+        {
+            D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(-30 + m_fLastShotTime * 300.f));
+        }
+        else
+        {
+            D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(0.f));
+        }
+    }
+
+    D3DXVec3TransformNormal(&vUp, &vUp, &matAxis);
+    D3DXVec3TransformNormal(&vForword, &vForword, &matAxis);
+
+    _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.8f) + (vUp * 0.4f);
+    _vec3   vRotAxis = vPos_Gun - vBullet_From;
+    _matrix matRotAxis;
+
+    D3DXVec3Normalize(&vRotAxis, &vRotAxis);
+
+    if (m_fLastShotTime > m_fShootRate)
+    {
+        if (CDInputMgr::GetInstance()->Key_Press(DIK_W) ||
+            CDInputMgr::GetInstance()->Key_Press(DIK_A) ||
+            CDInputMgr::GetInstance()->Key_Press(DIK_S) ||
+            CDInputMgr::GetInstance()->Key_Press(DIK_D))
+        {
+            m_fRunningTime += fTimeDelta;
+
+            _float fAnimationDelta = fmod(m_fRunningTime, 0.8f);
+            _float fAnimationSpeed = 50.0f;
+            if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
+            {
+                fAnimationSpeed = 100.f;
+            }
+
+            if (fAnimationDelta > 0.6f)
+            {
+                D3DXMatrixRotationAxis(&matRotAxis, &vRotAxis, D3DXToRadian((0.8f - fAnimationDelta) * fAnimationSpeed));
+            }
+            else if (fAnimationDelta > 0.2f)
+            {
+                D3DXMatrixRotationAxis(&matRotAxis, &vRotAxis, D3DXToRadian((fAnimationDelta - 0.4f) * fAnimationSpeed));
+            }
+            else
+            {
+                D3DXMatrixRotationAxis(&matRotAxis, &vRotAxis, D3DXToRadian(-fAnimationDelta * fAnimationSpeed));
+            }
+            D3DXVec3TransformNormal(&vUp, &vUp, &matRotAxis);
+            D3DXVec3TransformNormal(&vForword, &vForword, &matRotAxis);
+            D3DXVec3TransformNormal(&vRight, &vRight, &matRotAxis);
+        }
+        else
+        {
+            m_fRunningTime = 0.f;
+        }
+    }
+
+    memcpy(&matWorld.m[INFO_RIGHT][0], &vRight, sizeof(_vec3));
+    memcpy(&matWorld.m[INFO_UP][0], &vUp, sizeof(_vec3));
+    memcpy(&matWorld.m[INFO_LOOK][0], &vForword, sizeof(_vec3));
+    memcpy(&matWorld.m[INFO_POS][0], &vPos_Gun, sizeof(_vec3));
+
+    m_pTransformCom->Set_World(&matWorld);
+
 }
 
 void CGun::Render_GameObject()
@@ -185,7 +284,20 @@ void CGun::RenderImGui()
     ImGui::Begin("Gun Debug Information");
 
     ImGui::Text("LAST FIRE TIME :  %.2f SECOND AGO", m_fLastShotTime);
-    ImGui::Text("FIRE COOL TIME :  %.2f SECOND / FIRE", m_fShootCoolTime);
+    const char* cCurBullet = NULL;
+    switch (m_iCurBullet)
+    {
+    case BULLET_DEFAULT:
+        cCurBullet = "BULLET_DEFAULT";
+        break;
+    case BULLET_SMALL:
+        cCurBullet = "BULLET_SMALL";
+        break;
+    }
+    ImGui::Text("CURRENT BULLET : %s", cCurBullet);
+    ImGui::Text("CURRENT BULLET DMG : %i", m_iDmg);
+    ImGui::Text("CURRENT BULLET RATE : %.2f SEC / FIRE", m_fShootRate);
+    ImGui::Text("RUNNING TIME : %.2f SEC", m_fRunningTime);
 
     ImGui::End();
 }

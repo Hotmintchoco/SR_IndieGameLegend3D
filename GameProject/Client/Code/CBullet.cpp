@@ -4,9 +4,11 @@
 #include "CRenderer.h"
 #include "CSphereCollider.h"
 #include "CCollisionMgr.h"
+#include "CManagement.h"
+#include "CGun.h"
 
 CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_vDir(0.f, 0.f, 0.f)
+    : CGameObject(pGraphicDev), m_vDir(0.f, 0.f, 0.f), m_iBulletID(BULLET_DEFAULT), m_iBulletDmg(10), m_fBulletLife(0.f)
 {
 }
 
@@ -17,23 +19,52 @@ CBullet::~CBullet()
 
 HRESULT CBullet::Ready_GameObject(const _vec3* pPos, const _vec3* pDir)
 {
+    m_iBulletID = static_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"))->m_iCurBullet;
+    m_iBulletDmg = static_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"))->m_iDmg;
+
     if (FAILED(Add_Component()))
         return E_FAIL;
 
     m_pTransformCom->Set_Pos(pPos->x, pPos->y, pPos->z);
-    m_pTransformCom->m_vScale = { 0.2f, 0.2f, 0.2f };
+
+    switch (m_iBulletID)
+    {
+    case BULLET_DEFAULT : 
+        m_pTransformCom->m_vScale = { 0.4f, 0.4f, 0.4f };
+        break;
+    case BULLET_SMALL : 
+        m_pTransformCom->m_vScale = { 0.2f, 0.2f, 0.2f };
+        break;
+    }
     D3DXVec3Normalize(&m_vDir, pDir);
 
 	__super::Ready_GameObject();
 
-    m_pColliderCom->Set_Radius(0.5f);
-
+    switch (m_iBulletID)
+    {
+    case BULLET_DEFAULT:
+        m_pColliderCom->Set_Radius(0.4f);
+        break;
+    case BULLET_SMALL:
+        m_pColliderCom->Set_Radius(0.2f);
+        break;
+    }
+    
     return S_OK;
 }
 
 _int CBullet::Update_GameObject(const _float& fTimeDelta)
 {
     _float fSpeed = 50.f;
+
+    m_fBulletLife += fTimeDelta;
+    
+    _float fBulletLife = 1.5f;
+    if (m_fBulletLife >= fBulletLife)
+    {
+        Set_Dead(TRUE);
+        return NULL;
+    }
 
     m_pTransformCom->Move_Pos(&m_vDir, fSpeed, fTimeDelta);
 
@@ -109,7 +140,18 @@ HRESULT CBullet::Add_Component()
     m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
 
     // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BulletTexture"));
+    wstring pTextureKey;
+    switch (m_iBulletID)
+    {
+    case BULLET_DEFAULT:
+        pTextureKey = L"Proto_BulletTexture";
+        break;
+    case BULLET_SMALL:
+        pTextureKey = L"Proto_BulletTexture_Small";
+        break;
+    }
+
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(pTextureKey.c_str()));
 
     if (nullptr == pComponent)
         return E_FAIL;
