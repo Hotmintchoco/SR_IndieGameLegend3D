@@ -115,6 +115,9 @@
     <Filter Include="999. ImGUI\Backend\Include">
       <UniqueIdentifier>{eb153cf3-9ee7-46d0-88a8-f1c874d14c5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. UI">
+      <UniqueIdentifier>{6c73a9c2-f178-434b-b4ff-d2dee63f4158}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -240,6 +243,9 @@
     <ClInclude Include="..\Header\imstb_truetype.h">
       <Filter>999. ImGUI\Backend\Include</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGameUI.h">
+      <Filter>02. GameObject\10. UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -340,6 +346,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CWorm_Boby.cpp">
       <Filter>02. GameObject\02. Monster\Worm\Worm_Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGameUI.cpp">
+      <Filter>02. GameObject\10. UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
