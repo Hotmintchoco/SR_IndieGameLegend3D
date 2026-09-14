@@ -48,6 +48,11 @@ public:
 		m_vScale = { fX, fY, fZ };
 	}
 
+	inline void		Set_Scale(const _vec3& vScale)
+	{
+		m_vScale = vScale;
+	}
+
 public:
 	HRESULT			Ready_Transform();
 	virtual _int	Update_Component(const _float& fTimeDelta);

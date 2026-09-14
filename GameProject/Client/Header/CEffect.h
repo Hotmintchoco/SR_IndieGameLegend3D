@@ -21,20 +21,21 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-private:
+protected:
 	HRESULT			Add_Component();
 
-private:
+protected:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTexture* m_pTextureCom;
 	Engine::CTransform* m_pTransformCom;
-
 	_float				m_fFrame;
-
 public:
 	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-
-private:
+	void Set_Pos(_vec3 vPos);
+	void Set_Pos(_float fX, _float fY, _float fZ);
+	void Set_Scale(_vec3 vPos);
+	void Set_Scale(_float fX, _float fY, _float fZ);
+protected:
 	virtual void		Free();
 };
 

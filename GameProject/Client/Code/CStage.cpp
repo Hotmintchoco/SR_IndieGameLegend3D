@@ -196,7 +196,6 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		m_vecRoom.push_back(static_cast<CRoom*>(pGameObject));
 	}
 
-	m_mapLayer.insert({ pLayerTag ,pLayer });
 
 	// Monster
 	TCHAR		szFileName[128] = L"";
@@ -208,7 +207,6 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	wsprintf(szFileName, L"Skull_%d", CMonster::iMonsterIdx);
 	if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
 		return E_FAIL;
-	m_mapLayer.insert({ pLayerTag ,pLayer });
 
 	pGameObject = CBoss1::Create(m_pGraphicDev);
 	static_cast<CMonster*>(pGameObject)->Set_Pos(65, 0, 55);
@@ -217,7 +215,6 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	wsprintf(szFileName, L"Boss1_%d", CMonster::iMonsterIdx);
 	if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
 		return E_FAIL;
-	m_mapLayer.insert({ pLayerTag ,pLayer });
 
 	pGameObject = CSpeyeder::Create(m_pGraphicDev);
 	static_cast<CMonster*>(pGameObject)->Set_Pos(64, 0, 56);
@@ -226,7 +223,15 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	wsprintf(szFileName, L"Speyeder_%d", CMonster::iMonsterIdx);
 	if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
 		return E_FAIL;
-	m_mapLayer.insert({ pLayerTag ,pLayer });
+
+	pGameObject = CSpeyeder::Create(m_pGraphicDev);
+	static_cast<CMonster*>(pGameObject)->Set_Pos(64, 0, 57);
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	wsprintf(szFileName, L"Speyeder_%d", CMonster::iMonsterIdx);
+	if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+		return E_FAIL;
+
 	//map<const _tchar*, CLayer*>* a = &m_mapLayer;
 
 	//pGameObject = CWorm::Create(m_pGraphicDev, &m_mapLayer);
@@ -240,6 +245,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	//m_mapLayer.insert({ pLayerTag ,pLayer });
 
+	m_mapLayer.insert({ pLayerTag ,pLayer });
 	return S_OK;
 }
 

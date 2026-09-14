@@ -5,6 +5,7 @@
 #include "CTimerMgr.h"
 //#include "CDInputMgr.h"
 #include "CTerrain.h"
+#include "CSmallExplode.h"
 
 CSpeyeder::CSpeyeder(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_bLandingState(false)
@@ -24,7 +25,7 @@ HRESULT CSpeyeder::Ready_GameObject()
 
     m_pTransformCom->Set_Scale(0.2f, 0.2f, 0.2f);
     m_pColliderCom->Set_Radius(D3DXVec3Length(&m_pTransformCom->m_vScale));
-    m_iHp = 3;
+    m_iHp = 2;
     return S_OK;
 }
 
@@ -32,6 +33,19 @@ _int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
     Set_OnTerrain();
+    if (m_iHp <= 0)
+    {
+        CGameObject* pGameObject = nullptr;
+        TCHAR		szFileName[128] = L"";
+        pGameObject = CSmallExplode::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS], m_pTransformCom->m_vScale);
+        if (nullptr == pGameObject)
+            return E_FAIL;
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        wsprintf(szFileName, L"SmallExplode_%d", CMonster::iMonsterIdx);
+        if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+            return E_FAIL;
+
+    }
     return iExit;
 }
 

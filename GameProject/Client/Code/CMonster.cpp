@@ -28,8 +28,8 @@ HRESULT CMonster::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
     m_iHp = 5;
-    __super::Ready_GameObject();
 
+    __super::Ready_GameObject();
     return S_OK;
 }
 

@@ -52,7 +52,7 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev))))
         return E_FAIL;
 
-    lstrcpy(m_szLoading, L"Texture Loading............................");
+    lstrcpy(m_szLoading, L"Monster Texture Loading............................");
     //skull
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_skull3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/skull/skull3.png", 1))))return E_FAIL;
     //worm
@@ -64,7 +64,15 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_boss1_angryTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/boss1/boss%d.png", 2)))) return E_FAIL;
     //Speyeder
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_speyederTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/speyeder/speyeder_%d.png", 7)))) return E_FAIL;
+    //
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_magmamouthTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/magmamouth/magmamouth_%d.png", 7)))) return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_fireballTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/fireball/fireBall_%d.png", 4)))) return E_FAIL;
+    
+    lstrcpy(m_szLoading, L"Effect Texture Loading............................");
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_smallexplodeTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/smallexplode/smallExplode_%d.png", 4)))) return E_FAIL;
 
+
+    lstrcpy(m_szLoading, L"Texture Loading............................");
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/Invisible.png", 1))))
         return E_FAIL;
 
