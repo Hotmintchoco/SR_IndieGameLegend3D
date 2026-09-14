@@ -282,6 +282,9 @@
     <ClInclude Include="..\Header\CGameStatusMgr.h">
       <Filter>04. Manager\01. GameStatus</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CExplosiveFrustumLight.h">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Explosive</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -403,6 +406,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGameStatusMgr.cpp">
       <Filter>04. Manager\01. GameStatus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CExplosiveFrustumLight.cpp">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Explosive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

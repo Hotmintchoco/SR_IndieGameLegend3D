@@ -2,6 +2,8 @@
 #include "CExplosiveFrustum.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
+#include "CExplosiveFrustumLight.h"
+#include "CLayer.h"
 
 CExplosiveFrustum::CExplosiveFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CFrustum(pGraphicDev)
@@ -21,6 +23,8 @@ HRESULT CExplosiveFrustum::Ready_GameObject()
     if (FAILED(CFrustum::Ready_GameObject()))
         return E_FAIL;
 
+    SpawnLight();
+
     return S_OK;
 }
 
@@ -39,6 +43,8 @@ _int CExplosiveFrustum::Update_GameObject(const _float& fTimeDelta)
 
 void CExplosiveFrustum::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+    m_pLight->PropagateTransform(m_pTransformCom->Get_World());
+
     CFrustum::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -79,6 +85,22 @@ HRESULT CExplosiveFrustum::Add_Component()
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
     return S_OK;
+}
+
+void CExplosiveFrustum::SpawnLight()
+{
+    CExplosiveFrustumLight* pLight = CExplosiveFrustumLight::Create(m_pGraphicDev);
+
+    if (!pLight)
+    {
+        assert(0);
+        return;
+    }
+
+    m_pLight = pLight;
+    pLight->AttachTo(this);
+    /* 아마 이름은 중복이 여럿 될 것. 일단 스폰만 확인 */
+    m_pOwner->Add_GameObject(L"Explosive_Frustum_Light", pLight);
 }
 
 CExplosiveFrustum* CExplosiveFrustum::Create(LPDIRECT3DDEVICE9 pGraphicDev)
