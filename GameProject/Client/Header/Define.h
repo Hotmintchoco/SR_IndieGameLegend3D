@@ -1,5 +1,9 @@
 ﻿#pragma once
 
+#include <vector>
+#include <string>
+#include "Engine_Define.h"
+
 /* 벽 방향 */
 enum class EWallDir
 {
@@ -26,8 +30,23 @@ struct TRoomData
 	wstring wstrRoomName;
 	int iDefaultTileIdx;
 	vector<int> vecTile;
+	vector<int> vecObjectTilingInfo;
 	vector<TRoomEntity> vecObjectInfo;
-	vector<TRoomEntity> vecMonsterInfo;
 	vector<bool> vecDoorInfo;
 	vector<int> vecDoorTile;
+};
+
+/* 맵 배치 오브젝트 타입 */
+enum class EObjectType
+{
+	NONE = 0,
+
+	BREAKABLE_FRUSTUM = 1,
+	UNBREAKABLE_FRUSTUM,
+	EXPLOSIVE_FRUSTUM,
+
+	SKULL = 11,
+	WORM = 11,
+
+	MAX,
 };

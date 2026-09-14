@@ -61,9 +61,11 @@ void CCollisionMgr::Update_Collision()
 
                         // 충돌 여부 체크
 						pColLeft->Set_IsCollided(true);
+						pColRight->Set_IsCollided(true);
 
                         // TODO: pLeftObj->OnCollisionEnter(pRightObj) 등 호출
 						pLeftObj->OnCollisionEnter(pRightObj);
+						pRightObj->OnCollisionEnter(pLeftObj);
                     }
                     else
                     {
@@ -86,6 +88,4 @@ void CCollisionMgr::Free()
 {
     for (_uint i = 0; i < COLL_END; ++i)
 		m_ColList[i].clear();
-
-
 }

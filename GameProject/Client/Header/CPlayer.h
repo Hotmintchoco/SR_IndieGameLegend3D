@@ -47,8 +47,6 @@ private:
 	_bool		m_bFix;
 	_bool		m_bCheck;
 
-	_vec3		m_vPrevPos;
-
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

@@ -30,6 +30,10 @@ _int CFog::Update_GameObject(const _float& fTimeDelta)
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
+    _vec3   vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    Compute_ViewZ(&vPos);
+
     return iExit;
 }
 

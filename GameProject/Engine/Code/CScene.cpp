@@ -10,9 +10,9 @@ CScene::~CScene()
 {
 }
 
-CComponent* CScene::Get_Component(COMPONENTID eID, const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag)
+CComponent* CScene::Get_Component(COMPONENTID eID, const wstring& wstrLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag)
 {
-    auto    iter = find_if(m_mapLayer.begin(), m_mapLayer.end(), CTag_Finder(pLayerTag));
+    auto    iter = m_mapLayer.find(wstrLayerTag);
 
     if (iter == m_mapLayer.end())
         return nullptr;
@@ -20,9 +20,9 @@ CComponent* CScene::Get_Component(COMPONENTID eID, const _tchar* pLayerTag, cons
     return iter->second->Get_Component(eID, pObjTag, pComponentTag);
 }
 
-CGameObject* CScene::Get_GameObject(const _tchar* pLayerTag, const _tchar* pObjTag)
+CGameObject* CScene::Get_GameObject(const wstring& wstrLayerTag, const _tchar* pObjTag)
 {
-    auto    iter = find_if(m_mapLayer.begin(), m_mapLayer.end(), CTag_Finder(pLayerTag));
+    auto    iter = m_mapLayer.find(wstrLayerTag);
 
     if (iter == m_mapLayer.end())
         return nullptr;
@@ -30,9 +30,9 @@ CGameObject* CScene::Get_GameObject(const _tchar* pLayerTag, const _tchar* pObjT
     return iter->second->Get_GameObject(pObjTag);
 }
 
-CLayer* CScene::Get_Layer(const _tchar* pLayerTag)
+CLayer* CScene::Get_Layer(const wstring& wstrLayerTag)
 {
-    auto    iter = find_if(m_mapLayer.begin(), m_mapLayer.end(), CTag_Finder(pLayerTag));
+    auto    iter = m_mapLayer.find(wstrLayerTag);
 
     if (iter == m_mapLayer.end())
         return nullptr;

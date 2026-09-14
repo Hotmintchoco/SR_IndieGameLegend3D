@@ -24,9 +24,11 @@ HRESULT CPlayer::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
+    ::ShowCursor(FALSE);
+
 	__super::Ready_GameObject();
 
-    m_pColliderCom->Set_Radius(1.f);
+    m_pColliderCom->Set_Radius(0.75f);
 	m_pTransformCom->Set_Pos(60.f, 1.f, 60.f);
 
     return S_OK;
@@ -37,8 +39,6 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
     _vec3   vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     Compute_ViewZ(&vPos);
-
-    m_vPrevPos = vPos;
 
     Key_Input(fTimeDelta);
 
@@ -111,7 +111,7 @@ void CPlayer::RenderImGui()
 
 void CPlayer::OnCollisionEnter(CGameObject* pOther)
 {
-	m_pTransformCom->Set_Pos(m_vPrevPos.x, m_vPrevPos.y, m_vPrevPos.z);
+
 }
 
 HRESULT CPlayer::Add_Component()
@@ -197,35 +197,25 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
     }
    */
 
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_TAB))
+    if (CDInputMgr::GetInstance()->Key_Down(DIK_TAB))
     {
-        if (m_bCheck)
-            return;
-
-        m_bCheck = true;
+        m_bFix = !m_bFix;
 
         if (m_bFix)
-            m_bFix = false;
-
+        {
+            while (::ShowCursor(FALSE) >= 0) {}
+        }
         else
-            m_bFix = true;
-
-    }
-
-    else
-    {
-        m_bCheck = false;
+        {
+            while (::ShowCursor(TRUE) < 0) {}
+        }
     }
 
     if (false == m_bFix)
         return;
 
-    if (m_bFix)
-    {
-        Mouse_Move();
-        Mouse_Fix();
-    }
-
+    Mouse_Move();
+    Mouse_Fix();
 }
 
 void CPlayer::Mouse_Move()
