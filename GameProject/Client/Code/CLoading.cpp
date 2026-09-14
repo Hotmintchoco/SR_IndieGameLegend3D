@@ -251,7 +251,7 @@ HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
     }
-    catch (const json::exception& e) {
+    catch (const json::exception&) {
         return E_FAIL;
     }
 
@@ -285,7 +285,7 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
     }
-    catch (const json::exception& e) {
+    catch (const json::exception&) {
         return E_FAIL;
     }
 
