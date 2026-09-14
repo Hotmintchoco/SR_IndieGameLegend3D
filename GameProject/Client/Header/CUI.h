@@ -8,17 +8,20 @@ namespace Engine
 	class CTexture;
 }
 
-class CGameUI : public CGameObject
+class CUI : public CGameObject
 {
 protected:
-	explicit CGameUI(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CGameUI();
+	explicit CUI(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CUI();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
+
+public:
+	void			Set_Pos(const _vec2& vPos);
 
 protected:
 	HRESULT			Add_Component();
@@ -28,8 +31,10 @@ protected:
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
 
+	_vec2				m_vPos;
+
 public:
-	static CGameUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 protected:
 	virtual void		Free();

@@ -155,7 +155,7 @@
     <ClInclude Include="..\Header\CFog.h" />
     <ClInclude Include="..\Header\CFrustum.h" />
     <ClInclude Include="..\Header\CGameStatusMgr.h" />
-    <ClInclude Include="..\Header\CGameUI.h" />
+    <ClInclude Include="..\Header\CPlayerHpUI.h" />
     <ClInclude Include="..\Header\CGun.h" />
     <ClInclude Include="..\Header\CImGuiTool.h" />
     <ClInclude Include="..\Header\CLoading.h" />
@@ -170,6 +170,7 @@
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CTile.h" />
+    <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CWall.h" />
     <ClInclude Include="..\Header\CWorm.h" />
     <ClInclude Include="..\Header\CWorm_Tail.h" />
@@ -206,7 +207,7 @@
     <ClCompile Include="..\Code\CFog.cpp" />
     <ClCompile Include="..\Code\CFrustum.cpp" />
     <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
-    <ClCompile Include="..\Code\CGameUI.cpp" />
+    <ClCompile Include="..\Code\CPlayerHpUI.cpp" />
     <ClCompile Include="..\Code\CGun.cpp" />
     <ClCompile Include="..\Code\CImGuiTool.cpp" />
     <ClCompile Include="..\Code\CLoading.cpp" />
@@ -221,6 +222,7 @@
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CTile.cpp" />
+    <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CWall.cpp" />
     <ClCompile Include="..\Code\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

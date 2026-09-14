@@ -142,6 +142,9 @@
     <Filter Include="02. GameObject\10. UI">
       <UniqueIdentifier>{6c73a9c2-f178-434b-b4ff-d2dee63f4158}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. UI\PlayerHp">
+      <UniqueIdentifier>{5b0584cc-2dcd-4328-af0b-394d82e9f98e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -288,7 +291,10 @@
     <ClInclude Include="..\Header\CExplosiveFrustumLight.h">
       <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Explosive</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CGameUI.h">
+    <ClInclude Include="..\Header\CPlayerHpUI.h">
+      <Filter>02. GameObject\10. UI\PlayerHp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CUI.h">
       <Filter>02. GameObject\10. UI</Filter>
     </ClInclude>
   </ItemGroup>
@@ -416,7 +422,10 @@
     <ClCompile Include="..\Code\CExplosiveFrustumLight.cpp">
       <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Explosive</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CGameUI.cpp">
+    <ClCompile Include="..\Code\CPlayerHpUI.cpp">
+      <Filter>02. GameObject\10. UI\PlayerHp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUI.cpp">
       <Filter>02. GameObject\10. UI</Filter>
     </ClCompile>
   </ItemGroup>

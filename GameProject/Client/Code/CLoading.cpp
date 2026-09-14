@@ -90,6 +90,11 @@ _uint CLoading::Loading_Stage()
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BulletTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/bigbullet_0.png", 1))))
         return E_FAIL;
+
+    // UI Texture
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_HpUITexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/HPBar.png", 1))))
+		return E_FAIL;
+
     lstrcpy(m_szLoading, L"Etc Loading............................");
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))

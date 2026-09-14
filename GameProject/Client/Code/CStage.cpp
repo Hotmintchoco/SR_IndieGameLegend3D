@@ -20,6 +20,7 @@
 #include "CRoomLoadingMgr.h"
 #include "CRoomLayer.h"
 #include "CLayerContext.h"
+#include "CPlayerHpUI.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -222,10 +223,28 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	/* 현재 씬, 레이어 정보를 전역으로 주입 */
 	CLayerContext ctx(pLayer, this);
 
-	// 오브젝트 추가
-	CGameObject* pGameObject = nullptr;
+	// UI 추가
+	const _int iHpCount = 3;
+	const _float fStartX = 20.f;
+	const _float fStartY = 20.f;
+	const _float fIconSize = 15.f;  // CPlayerHpUI::Ready_GameObject()의 Set_Scale과 동일
+	const _float fGap = 15.f;
 
-	m_mapLayer.insert({ pLayerTag ,pLayer });
+	for (_int i = 0; i < iHpCount; ++i)
+	{
+		CPlayerHpUI* pUI = CPlayerHpUI::Create(m_pGraphicDev);
+		if (nullptr == pUI)
+			return E_FAIL;
+
+		_vec2 vPos{ fStartX + i * (fIconSize + fGap), fStartY };
+		pUI->Set_Pos(vPos);
+
+		wstring wstrTag = L"PlayerHp_" + to_wstring(i);
+		if (FAILED(pLayer->Add_GameObject(wstrTag.c_str(), pUI)))
+			return E_FAIL;
+	}
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
 }
