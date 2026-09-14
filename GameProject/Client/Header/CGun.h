@@ -42,6 +42,11 @@ private:
 	_float			m_fLastShotTime;
 	_float			m_fShootRate;
 	_float			m_fRunningTime;
+	_float			m_fLastSkillTime;
+	_float			m_fSkillDuration;
+	_float			m_fSkillCoolTime;
+	_bool			m_bSkillActivated;
+
 private:
 	virtual void		Free();
 };

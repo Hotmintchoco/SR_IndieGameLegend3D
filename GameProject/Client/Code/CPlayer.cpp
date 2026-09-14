@@ -86,19 +86,21 @@ void CPlayer::RenderImGui()
 
     char cKeyStateQ = ' ';
     char cKeyStateW = ' ';
+    char cKeyStateE = ' ';
     char cKeyStateA = ' ';
     char cKeyStateS = ' ';
     char cKeyStateD = ' ';
     const char* cKeyStateShift = "     ";
     if (CDInputMgr::GetInstance()->Key_Press(DIK_Q)) cKeyStateQ = 'Q';
     if (CDInputMgr::GetInstance()->Key_Press(DIK_W)) cKeyStateW = 'W';
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_E)) cKeyStateE = 'E';
     if (CDInputMgr::GetInstance()->Key_Press(DIK_A)) cKeyStateA = 'A';
     if (CDInputMgr::GetInstance()->Key_Press(DIK_S)) cKeyStateS = 'S';
     if (CDInputMgr::GetInstance()->Key_Press(DIK_D)) cKeyStateD = 'D';
     if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT)) cKeyStateShift = "SHIFT";
 
     ImGui::Text("KEY INPUT STATE");
-    ImGui::Text("       [%c][%c]", cKeyStateQ, cKeyStateW);
+    ImGui::Text("       [%c][%c][%c]", cKeyStateQ, cKeyStateW, cKeyStateE);
     ImGui::Text("[%s][%c][%c][%c]", cKeyStateShift, cKeyStateA, cKeyStateS, cKeyStateD);
 
     /* 카메라 */

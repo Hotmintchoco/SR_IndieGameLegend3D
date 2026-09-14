@@ -10,7 +10,16 @@
 #include "CImGuiTool.h"
 
 CGun::CGun(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_fLastShotTime(0.f), m_fShootRate(0.4f), m_fRunningTime(0.f), m_iCurBullet(BULLET_DEFAULT), m_iDmg(10)
+    : CGameObject(pGraphicDev),
+    m_fLastShotTime(0.f),
+    m_fShootRate(0.4f),
+    m_fRunningTime(0.f),
+    m_fLastSkillTime(0.f),
+    m_fSkillDuration(5.f),
+    m_fSkillCoolTime(20.f),
+    m_bSkillActivated(false),
+    m_iCurBullet(BULLET_DEFAULT),
+    m_iDmg(10)
 {
 }
 
@@ -88,24 +97,58 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
     D3DXVec3Cross(&vUp, &vForword, &vRight);
     D3DXVec3Normalize(&vUp, &vUp);
 
-    _vec3	vPos_Gun = vPos_Player + (vRight * 0.3f) + (vForword * 0.5f) + (vUp * -0.7f);
+    _vec3	vPos_Gun = vPos_Player + (vRight * 0.3f) + (vForword * 0.5f) + (vUp * -0.7f); // ÃÑMesh ¿ùµåÁÂÇ¥ °è»ê
+
+#pragma region ½ºÅ³ »ç¿ë ¹× ÃÑ¾Ë ½ºÀ§Äª
+
+    m_fLastSkillTime += fTimeDelta;
+
+    if ((m_bSkillActivated == true) && (m_fLastSkillTime >= m_fSkillDuration))
+    {
+        m_fLastSkillTime = 0.f;
+        m_bSkillActivated = false;
+    }
+
+    if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
+    {
+        if ((m_bSkillActivated == false) && (m_fLastSkillTime >= m_fSkillCoolTime))
+        {
+            m_bSkillActivated = true;
+            m_fLastSkillTime = 0.f;
+        }
+    }
 
     if (CDInputMgr::GetInstance()->Key_Down(DIK_Q))
     {
         switch (m_iCurBullet)
         {
-        case BULLET_DEFAULT  : 
+        case BULLET_DEFAULT:
             m_iCurBullet = BULLET_SMALL;
-            m_fShootRate = 0.2f;
-            m_iDmg = 5;
             break;
-        case BULLET_SMALL : 
+        case BULLET_SMALL:
             m_iCurBullet = BULLET_DEFAULT;
-            m_fShootRate = 0.4f;
-            m_iDmg = 10;
             break;
         }
     }
+
+    switch (m_iCurBullet)
+    {
+    case BULLET_DEFAULT:
+        m_fShootRate = 0.4f;
+        m_iDmg = 10;
+        break;
+    case BULLET_SMALL:
+        m_fShootRate = 0.2f;
+        m_iDmg = 5;
+        break;
+    }
+
+    _int iDmgMultiplier = 2;
+    if (m_bSkillActivated == true) m_iDmg *= iDmgMultiplier;
+
+#pragma endregion
+
+#pragma region ÃÑ¾Ë ¹ß»ç
 
     m_fLastShotTime += fTimeDelta;
 
@@ -113,7 +156,7 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
     {
         m_fLastShotTime = 0.f;
 
-        _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.8f) + (vUp * 0.4f);
+        _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.8f) + (vUp * 0.4f); // ÃÑ±¸ À§Ä¡
         _vec3	vBullet_To = vPos_Player + (vForword * 10.f); // Å©·Î½ºÇì¾î µµ´ÞÁ¡
 
         _vec3	vBullet_Look = vBullet_To - vBullet_From;
@@ -123,8 +166,12 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
         CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"Bullet", pGameObject);
     }
 
+#pragma endregion
+
     _matrix matWorld;
     D3DXMatrixIdentity(&matWorld);
+
+#pragma region ÃÑ¾Ë ¹ß»ç ½Ã ¹Ýµ¿
 
     _matrix matAxis;
 
@@ -168,6 +215,17 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
 
     D3DXVec3Normalize(&vRotAxis, &vRotAxis);
 
+#pragma endregion
+
+#pragma region ÀÌµ¿ ½Ã ÁÂ¿ì ÃÑ ¶³¸²
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_W) ||
+        CDInputMgr::GetInstance()->Key_Press(DIK_A) ||
+        CDInputMgr::GetInstance()->Key_Press(DIK_S) ||
+        CDInputMgr::GetInstance()->Key_Press(DIK_D))
+    {
+        m_fRunningTime += fTimeDelta;
+    }
+
     if (m_fLastShotTime > m_fShootRate)
     {
         if (CDInputMgr::GetInstance()->Key_Press(DIK_W) ||
@@ -175,8 +233,6 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
             CDInputMgr::GetInstance()->Key_Press(DIK_S) ||
             CDInputMgr::GetInstance()->Key_Press(DIK_D))
         {
-            m_fRunningTime += fTimeDelta;
-
             _float fAnimationDelta = fmod(m_fRunningTime, 0.8f);
             _float fAnimationSpeed = 50.0f;
             if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
@@ -205,6 +261,8 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
             m_fRunningTime = 0.f;
         }
     }
+
+#pragma endregion
 
     memcpy(&matWorld.m[INFO_RIGHT][0], &vRight, sizeof(_vec3));
     memcpy(&matWorld.m[INFO_UP][0], &vUp, sizeof(_vec3));
@@ -298,7 +356,58 @@ void CGun::RenderImGui()
     ImGui::Text("CURRENT BULLET DMG : %i", m_iDmg);
     ImGui::Text("CURRENT BULLET RATE : %.2f SEC / FIRE", m_fShootRate);
     ImGui::Text("RUNNING TIME : %.2f SEC", m_fRunningTime);
-
+    char cProgress[16];
+    cProgress[0] = '[';
+    if (m_bSkillActivated)
+    {
+        ImGui::Text("STATUS : SKILL ACTIVATED");
+        _int iProgress = 10 - ((_int)(m_fLastSkillTime * 10.f) / m_fSkillDuration);
+        if (iProgress < 0) iProgress = 0;
+        for (int i = 0; (i < iProgress) && (i < 10); i++)
+        {
+            cProgress[i + 1] = '=';
+        }
+        for (int j = iProgress; j < 10; j++)
+        {
+            cProgress[j + 1] = ' ';
+        }
+        cProgress[11] = ']';
+        cProgress[12] = '\0';
+        const char* cProgressTxt = cProgress;
+        ImGui::Text("SKILL GUAGE : %s", cProgressTxt);
+    }
+    else
+    {
+        if (m_fLastSkillTime >= m_fSkillCoolTime)
+        {
+            if((int)((m_fLastSkillTime - m_fSkillCoolTime) * 5.f) % 2 == 1)
+            {
+                ImGui::Text("SKILL READY. PRESS E TO ACTIVATE");
+            }
+            else
+            {
+                ImGui::Text(" ");
+            }
+        }
+        else
+        {
+            ImGui::Text("STATUS : SKILL DEACTIVATED");
+        }
+        _int iProgress = (_int)(m_fLastSkillTime * 10.f) / m_fSkillCoolTime;
+        if (iProgress < 0) iProgress = 0;
+        for (int i = 0; (i < iProgress) && (i < 10); i++)
+        {
+            cProgress[i + 1] = '=';
+        }
+        for (int j = iProgress; j < 10; j++)
+        {
+            cProgress[j + 1] = ' ';
+        }
+        cProgress[11] = ']';
+        cProgress[12] = '\0';
+        const char* cProgressTxt = cProgress;
+        ImGui::Text("SKILL GUAGE : %s", cProgressTxt);
+    }
     ImGui::End();
 }
 
