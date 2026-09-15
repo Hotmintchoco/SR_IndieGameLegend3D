@@ -1,9 +1,8 @@
-#include "CCollisionMgr.h"
 #include "CCollider.h"
 #include "CGameObject.h"
+#include "CCollisionMgr.h"
 
 IMPLEMENT_SINGLETON(CCollisionMgr)
-
 
 CCollisionMgr::CCollisionMgr()
 {
@@ -26,60 +25,112 @@ void CCollisionMgr::Add_Collider(COLLISIONID eGroup, CCollider* pCollider)
 	m_ColList[eGroup].push_back(pCollider);
 }
 
+CCollisionMgr::COLLIDER_TOKEN_PAIR CCollisionMgr::Make_ColliderTokenPair(CCollider* pA, CCollider* pB) const
+{
+    const std::shared_ptr<void> spA = pA->GetToken();
+    const std::shared_ptr<void> spB = pB->GetToken();
+
+    std::owner_less<std::shared_ptr<void>> lessShared;
+    if (lessShared(spA, spB))
+        return { COLLIDER_TOKEN(spA), COLLIDER_TOKEN(spB) };
+
+    return { COLLIDER_TOKEN(spB), COLLIDER_TOKEN(spA) };
+}
+
 void CCollisionMgr::Update_Collision()
 {
-	for (_uint i = 0; i < COLL_END; ++i)
-	{
-		for (_uint j = i; j < COLL_END; ++j)
-		{
-            // 두 그룹이 충돌 검사 대상이 아니라면 패스
+    std::set<COLLIDER_TOKEN_PAIR, CColliderTokenPairLess> setCurCollisionPairs;
+    std::set<CCollider*> setCurColliders;
+    std::map<std::shared_ptr<void>, CCollider*, std::owner_less<std::shared_ptr<void>>> mapLiveColliders;
+
+    for (_uint i = 0; i < COLL_END; ++i)
+    {
+        for (_uint j = i; j < COLL_END; ++j)
+        {
             if (!m_bCheckMatrix[i][j])
                 continue;
 
-            // 검사 대상이라면 두 리스트의 콜라이더들을 1:1로 비교
             auto& LeftList = m_ColList[i];
             auto& RightList = m_ColList[j];
 
             for (auto& pColLeft : LeftList)
             {
+                mapLiveColliders[pColLeft->GetToken()] = pColLeft;
+
                 for (auto& pColRight : RightList)
                 {
-                    // 자기 자신과의 충돌은 제외
+                    mapLiveColliders[pColRight->GetToken()] = pColRight;
+
+					// 동일한 콜라이더를 비교하는 경우는 제외
                     if (pColLeft == pColRight)
                         continue;
 
-                    // 생성후 위치가 갱신되지 않은 콜라이더는 패스
-                    if (!pColLeft->Get_IsPos() || !pColRight->Get_IsPos())
-						continue;
+					// 동일한 그룹 내에서 비교 시, 중복 비교를 방지하기 위해 순서를 고려
+                    if (i == j && pColRight < pColLeft)
+                        continue;
 
-					// 두 콜라이더 중 하나라도 비활성화 상태라면 패스
-					if (!pColLeft->Get_IsActive() || !pColRight->Get_IsActive())
-						continue;
+					// 활성화 여부 확인
+                    if (!pColLeft->Get_IsActive() || !pColRight->Get_IsActive())
+                        continue;
 
-                    // 실제 교차(충돌) 검사
-                    if (pColLeft->Intersect(pColRight))
+					// 충돌 여부 확인
+                    if (!pColLeft->Intersect(pColRight))
+                        continue;
+
+                    const COLLIDER_TOKEN_PAIR tPair = Make_ColliderTokenPair(pColLeft, pColRight);
+
+                    if (!setCurCollisionPairs.insert(tPair).second)
+                        continue;
+
+                    setCurColliders.insert(pColLeft);
+                    setCurColliders.insert(pColRight);
+
+                    if (m_setPrevCollisionPairs.find(tPair) == m_setPrevCollisionPairs.end())
                     {
-                        // 충돌(또는 트리거) 발생 시 로직 처리
-                        CGameObject* pLeftObj = pColLeft->Get_Owner();
-                        CGameObject* pRightObj = pColRight->Get_Owner();
-
-                        // 충돌 여부 체크
-						pColLeft->Set_IsCollided(true);
-						pColRight->Set_IsCollided(true);
-
-                        // TODO: pLeftObj->OnCollisionEnter(pRightObj) 등 호출
-						pLeftObj->OnCollisionEnter(pRightObj);
-						pRightObj->OnCollisionEnter(pLeftObj);
+                        pColLeft->OnCollisionEnter(pColRight);
+                        pColRight->OnCollisionEnter(pColLeft);
                     }
                     else
                     {
-                        // 충돌이 발생하지 않은 경우, 충돌 상태를 초기화
-                        pColLeft->Set_IsCollided(false);
-					}
+                        pColLeft->OnCollisionStay(pColRight);
+                        pColRight->OnCollisionStay(pColLeft);
+                    }
                 }
             }
-		}
-	}
+        }
+    }
+
+    for (const auto& tPrevPair : m_setPrevCollisionPairs)
+    {
+        if (setCurCollisionPairs.find(tPrevPair) != setCurCollisionPairs.end())
+            continue;
+
+        const std::shared_ptr<void> spLeft = tPrevPair.first.lock();
+        const std::shared_ptr<void> spRight = tPrevPair.second.lock();
+
+        if (!spLeft || !spRight)
+            continue; // 이미 파괴된 콜라이더는 접근 금지
+
+        auto itLeft = mapLiveColliders.find(spLeft);
+        auto itRight = mapLiveColliders.find(spRight);
+
+        if (itLeft == mapLiveColliders.end() || itRight == mapLiveColliders.end())
+            continue;
+
+        itLeft->second->OnCollisionExit(itRight->second);
+        itRight->second->OnCollisionExit(itLeft->second);
+    }
+
+    m_setPrevCollisionPairs = std::move(setCurCollisionPairs);
+
+    for (_uint i = 0; i < COLL_END; ++i)
+    {
+        for (auto& pCol : m_ColList[i])
+        {
+            const bool bCollided = (setCurColliders.find(pCol) != setCurColliders.end());
+            pCol->Set_IsCollided(bCollided);
+        }
+    }
 }
 
 void CCollisionMgr::Clear_ColliderList()
@@ -90,6 +141,8 @@ void CCollisionMgr::Clear_ColliderList()
 
 void CCollisionMgr::Free()
 {
-    for (_uint i = 0; i < COLL_END; ++i)
+	for (_uint i = 0; i < COLL_END; ++i)
 		m_ColList[i].clear();
+
+	m_setPrevCollisionPairs.clear();
 }

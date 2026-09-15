@@ -157,6 +157,11 @@ void CWall::Render_GameObject()
 
 void CWall::OnCollisionEnter(CGameObject* pOther)
 {
+    
+}
+
+void CWall::OnCollisionStay(CGameObject* pOther)
+{
     if (nullptr == pOther)
         return;
 

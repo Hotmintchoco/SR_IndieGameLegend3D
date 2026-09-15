@@ -20,6 +20,42 @@ CCollider::~CCollider()
 {
 }
 
+void CCollider::OnCollisionEnter(CCollider* pOther)
+{
+	if (nullptr == m_pOwner || nullptr == pOther)
+		return;
+
+	CGameObject* pOtherOwner = pOther->Get_Owner();
+	if (nullptr == pOtherOwner)
+		return;
+
+	m_pOwner->OnCollisionEnter(pOtherOwner);
+}
+
+void CCollider::OnCollisionStay(CCollider* pOther)
+{
+	if (nullptr == m_pOwner || nullptr == pOther)
+		return;
+
+	CGameObject* pOtherOwner = pOther->Get_Owner();
+	if (nullptr == pOtherOwner)
+		return;
+
+	m_pOwner->OnCollisionStay(pOtherOwner);
+}
+
+void CCollider::OnCollisionExit(CCollider* pOther)
+{
+	if (nullptr == m_pOwner || nullptr == pOther)
+		return;
+
+	CGameObject* pOtherOwner = pOther->Get_Owner();
+	if (nullptr == pOtherOwner)
+		return;
+
+	m_pOwner->OnCollisionExit(pOtherOwner);
+}
+
 void CCollider::Free()
 {
 	CComponent::Free();

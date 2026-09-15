@@ -26,16 +26,17 @@ public:
 	virtual void	Set_Radius(const _float& fRadius) {}
 	_float			Get_Radius() { return m_fRadius; }
 
-	_bool	Get_IsPos() { return m_bIsPos; }
-
 	COLLIDER_TYPE	Get_ColliderType() { return m_eColliderType; }
 
 	virtual _bool	Intersect(CCollider* pOther) PURE;
 
+	virtual void	OnCollisionEnter(CCollider* pOther);
+	virtual void	OnCollisionStay(CCollider* pOther);
+	virtual void	OnCollisionExit(CCollider* pOther);
+
 public:
 	virtual _int	Update_Component(const _float& fTimeDelta) { return 0; };
 	virtual void	LateUpdate_Component() {}
-
 
 public:
 	virtual CComponent* Clone() PURE;
