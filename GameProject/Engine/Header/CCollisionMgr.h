@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CBase.h"
 #include "Engine_Define.h"
 
@@ -13,22 +13,22 @@ private:
     virtual ~CCollisionMgr();
 
 public:
-    // ¼­·Î Ãæµ¹ °Ë»ç¸¦ ÇÏµµ·Ï ¼³Á¤
-    void Check_Group(COLLISIONID eLeft, COLLISIONID eRight);
+    // ì„œë¡œ ì¶©ëŒ ê²€ì‚¬ë¥¼ í•˜ë„ë¡ ì„¤ì •
+    void Check_Group(_int iLeft, _int iRight);
 
-    // ¸Å ÇÁ·¹ÀÓ °´Ã¼µéÀÌ ÀÚ½ÅÀÇ Äİ¶óÀÌ´õ¸¦ ¸Å´ÏÀú¿¡ µî·ÏÇÏ´Â ÇÔ¼ö
-    void Add_Collider(COLLISIONID eGroup, class CCollider* pCollider);
+    // ë§¤ í”„ë ˆì„ ê°ì²´ë“¤ì´ ìì‹ ì˜ ì½œë¼ì´ë”ë¥¼ ë§¤ë‹ˆì €ì— ë“±ë¡í•˜ëŠ” í•¨ìˆ˜
+    void Add_Collider(_int iGroup, class CCollider* pCollider);
 
-    // ¸Å ÇÁ·¹ÀÓ ½ÇÁ¦ Ãæµ¹ °Ë»ç¸¦ ¼öÇàÇÏ´Â ÇÙ½É ÇÔ¼ö
+    // ë§¤ í”„ë ˆì„ ì‹¤ì œ ì¶©ëŒ ê²€ì‚¬ë¥¼ ìˆ˜í–‰í•˜ëŠ” í•µì‹¬ í•¨ìˆ˜
     void Update_Collision();
 
-    // ¸Å ÇÁ·¹ÀÓ ³¡³¯ ¶§ ¸®½ºÆ®¸¦ ºñ¿öÁÜ
+    // ë§¤ í”„ë ˆì„ ëë‚  ë•Œ ë¦¬ìŠ¤íŠ¸ë¥¼ ë¹„ì›Œì¤Œ
     void Clear_ColliderList();
 
 private:
     list<CCollider*>    m_ColList[COLL_END];
 
-    // µÎ ±×·ì °£ÀÇ Ãæµ¹ °Ë»ç ¿©ºÎ¸¦ Ã¼Å©ÇÏ´Â 2Â÷¿ø ¸ÅÆ®¸¯½º
+    // ë‘ ê·¸ë£¹ ê°„ì˜ ì¶©ëŒ ê²€ì‚¬ ì—¬ë¶€ë¥¼ ì²´í¬í•˜ëŠ” 2ì°¨ì› ë§¤íŠ¸ë¦­ìŠ¤
     bool                m_bCheckMatrix[COLL_END][COLL_END];
 
 public:

@@ -1,4 +1,4 @@
-#include "CCollisionMgr.h"
+ï»¿#include "CCollisionMgr.h"
 #include "CCollider.h"
 #include "CGameObject.h"
 
@@ -15,15 +15,15 @@ CCollisionMgr::~CCollisionMgr()
 	Free();
 }
 
-void CCollisionMgr::Check_Group(COLLISIONID eLeft, COLLISIONID eRight)
+void CCollisionMgr::Check_Group(_int iLeft, _int iRight)
 {
-	m_bCheckMatrix[eLeft][eRight] = true;
-	m_bCheckMatrix[eRight][eLeft] = true;
+	m_bCheckMatrix[iLeft][iRight] = true;
+	m_bCheckMatrix[iRight][iLeft] = true;
 }
 
-void CCollisionMgr::Add_Collider(COLLISIONID eGroup, CCollider* pCollider)
+void CCollisionMgr::Add_Collider(_int iGroup, CCollider* pCollider)
 {
-	m_ColList[eGroup].push_back(pCollider);
+	m_ColList[iGroup].push_back(pCollider);
 }
 
 void CCollisionMgr::Update_Collision()
@@ -32,11 +32,11 @@ void CCollisionMgr::Update_Collision()
 	{
 		for (_uint j = i; j < COLL_END; ++j)
 		{
-            // µÎ ±×·ìÀÌ Ãæµ¹ °Ë»ç ´ë»óÀÌ ¾Æ´Ï¶ó¸é ÆÐ½º
+            // ë‘ ê·¸ë£¹ì´ ì¶©ëŒ ê²€ì‚¬ ëŒ€ìƒì´ ì•„ë‹ˆë¼ë©´ íŒ¨ìŠ¤
             if (!m_bCheckMatrix[i][j])
                 continue;
 
-            // °Ë»ç ´ë»óÀÌ¶ó¸é µÎ ¸®½ºÆ®ÀÇ ÄÝ¶óÀÌ´õµéÀ» 1:1·Î ºñ±³
+            // ê²€ì‚¬ ëŒ€ìƒì´ë¼ë©´ ë‘ ë¦¬ìŠ¤íŠ¸ì˜ ì½œë¼ì´ë”ë“¤ì„ 1:1ë¡œ ë¹„êµ
             auto& LeftList = m_ColList[i];
             auto& RightList = m_ColList[j];
 
@@ -44,32 +44,32 @@ void CCollisionMgr::Update_Collision()
             {
                 for (auto& pColRight : RightList)
                 {
-                    // ÀÚ±â ÀÚ½Å°úÀÇ Ãæµ¹Àº Á¦¿Ü
+                    // ìžê¸° ìžì‹ ê³¼ì˜ ì¶©ëŒì€ ì œì™¸
                     if (pColLeft == pColRight)
                         continue;
 
-                    // »ý¼ºÈÄ À§Ä¡°¡ °»½ÅµÇÁö ¾ÊÀº ÄÝ¶óÀÌ´õ´Â ÆÐ½º
+                    // ìƒì„±í›„ ìœ„ì¹˜ê°€ ê°±ì‹ ë˜ì§€ ì•Šì€ ì½œë¼ì´ë”ëŠ” íŒ¨ìŠ¤
                     if (!pColLeft->Get_IsPos() || !pColRight->Get_IsPos())
 						continue;
 
-                    // ½ÇÁ¦ ±³Â÷(Ãæµ¹) °Ë»ç
+                    // ì‹¤ì œ êµì°¨(ì¶©ëŒ) ê²€ì‚¬
                     if (pColLeft->Intersect(pColRight))
                     {
-                        // Ãæµ¹(¶Ç´Â Æ®¸®°Å) ¹ß»ý ½Ã ·ÎÁ÷ Ã³¸®
+                        // ì¶©ëŒ(ë˜ëŠ” íŠ¸ë¦¬ê±°) ë°œìƒ ì‹œ ë¡œì§ ì²˜ë¦¬
                         CGameObject* pLeftObj = pColLeft->Get_Owner();
                         CGameObject* pRightObj = pColRight->Get_Owner();
 
-                        // Ãæµ¹ ¿©ºÎ Ã¼Å©
+                        // ì¶©ëŒ ì—¬ë¶€ ì²´í¬
 						pColLeft->Set_IsCollided(true);
 						pColRight->Set_IsCollided(true);
 
-                        // TODO: pLeftObj->OnCollisionEnter(pRightObj) µî È£Ãâ
+                        // TODO: pLeftObj->OnCollisionEnter(pRightObj) ë“± í˜¸ì¶œ
 						pLeftObj->OnCollisionEnter(pRightObj);
 						pRightObj->OnCollisionEnter(pLeftObj);
                     }
                     else
                     {
-                        // Ãæµ¹ÀÌ ¹ß»ýÇÏÁö ¾ÊÀº °æ¿ì, Ãæµ¹ »óÅÂ¸¦ ÃÊ±âÈ­
+                        // ì¶©ëŒì´ ë°œìƒí•˜ì§€ ì•Šì€ ê²½ìš°, ì¶©ëŒ ìƒíƒœë¥¼ ì´ˆê¸°í™”
                         pColLeft->Set_IsCollided(false);
 					}
                 }

@@ -27,6 +27,8 @@
 #define DIRECTINPUT_VERSION	0x0800
 #include <dinput.h>
 
+#define COLL_END 32
+
 #pragma warning(disable : 4251)
 
 #ifdef _DEBUG
