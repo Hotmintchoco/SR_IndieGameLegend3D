@@ -115,6 +115,39 @@
     <Filter Include="999. ImGUI\Backend\Include">
       <UniqueIdentifier>{eb153cf3-9ee7-46d0-88a8-f1c874d14c5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Manager\00. RoomLoading">
+      <UniqueIdentifier>{60fad2e2-2029-49b4-b2bb-df556f9429ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer">
+      <UniqueIdentifier>{864248b1-17e2-4b62-a7b2-574cc5b2efae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Manager\01. GameStatus">
+      <UniqueIdentifier>{575f8b04-0769-4795-9023-f025baa09492}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\Object\RoomProp">
+      <UniqueIdentifier>{a1208295-fd12-4384-8f71-ee9aeebb7921}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\Object\RoomProp\Frustum">
+      <UniqueIdentifier>{04071318-f447-49a4-96e6-eb109ef95312}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\Object\RoomProp\Frustum\Breakable">
+      <UniqueIdentifier>{43bf34c5-36d7-4490-b98f-5f7de8e24ea2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\Object\RoomProp\Frustum\Unbreakable">
+      <UniqueIdentifier>{0e521099-c711-451c-96fe-f7bfb8cbba63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\Object\RoomProp\Frustum\Explosive">
+      <UniqueIdentifier>{979de761-48ca-497d-8be6-c29b96164f27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. UI">
+      <UniqueIdentifier>{6c73a9c2-f178-434b-b4ff-d2dee63f4158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. UI\PlayerHp">
+      <UniqueIdentifier>{5b0584cc-2dcd-4328-af0b-394d82e9f98e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. UI\Crosshair">
+      <UniqueIdentifier>{0c6678e2-e4f3-4034-be90-da65b01d08d7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\02. Monster\Boss1">
       <UniqueIdentifier>{b51a1b05-dd5f-4c97-8716-dc4e1a0c0ec8}</UniqueIdentifier>
     </Filter>
@@ -177,9 +210,6 @@
     <ClInclude Include="..\Header\CEffect.h">
       <Filter>02. GameObject\06. Effect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CRoom.h">
-      <Filter>02. GameObject\07. Room</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CGun.h">
       <Filter>02. GameObject\08. Gun</Filter>
     </ClInclude>
@@ -203,9 +233,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CFog.h">
       <Filter>02. GameObject\07. Room\Object\Fog</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CRoomLoadingMgr.h">
-      <Filter>04. Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CBullet.h">
       <Filter>02. GameObject\09. Bullet</Filter>
@@ -251,6 +278,42 @@
     </ClInclude>
     <ClInclude Include="..\Header\imstb_truetype.h">
       <Filter>999. ImGUI\Backend\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFrustum.h">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRoomLoadingMgr.h">
+      <Filter>04. Manager\00. RoomLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CAbstractFactory.h">
+      <Filter>04. Manager\00. RoomLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBreakableFrustum.h">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Breakable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CExplosiveFrustum.h">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Explosive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CUnbreakableFrustum.h">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Unbreakable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRoomLayer.h">
+      <Filter>01. Scene\Stage\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGameStatusMgr.h">
+      <Filter>04. Manager\01. GameStatus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CExplosiveFrustumLight.h">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Explosive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayerHpUI.h">
+      <Filter>02. GameObject\10. UI\PlayerHp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CUI.h">
+      <Filter>02. GameObject\10. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCrosshair.h">
+      <Filter>02. GameObject\10. UI\Crosshair</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CBoss1.h">
       <Filter>02. GameObject\02. Monster\Boss1</Filter>
@@ -302,9 +365,6 @@
     <ClCompile Include="..\Code\CEffect.cpp">
       <Filter>02. GameObject\06. Effect</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CRoom.cpp">
-      <Filter>02. GameObject\07. Room</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CGun.cpp">
       <Filter>02. GameObject\08. Gun</Filter>
     </ClCompile>
@@ -316,6 +376,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CFog.cpp">
       <Filter>02. GameObject\07. Room\Object\Fog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBullet.cpp">
+      <Filter>02. GameObject\09. Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CImGuiTool.cpp">
+      <Filter>999. ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\imgui.cpp">
       <Filter>999. ImGUI\Backend\Src</Filter>
@@ -338,11 +404,14 @@
     <ClCompile Include="..\Code\imgui_widgets.cpp">
       <Filter>999. ImGUI\Backend\Src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CImGuiTool.cpp">
-      <Filter>999. ImGUI</Filter>
+    <ClCompile Include="..\Code\CFrustum.cpp">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CRoomLoadingMgr.cpp">
-      <Filter>04. Manager</Filter>
+      <Filter>04. Manager\00. RoomLoading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CAbstractFactory.cpp">
+      <Filter>04. Manager\00. RoomLoading</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBullet.cpp">
       <Filter>02. GameObject\09. Bullet</Filter>
@@ -361,6 +430,33 @@
     </ClCompile>
     <ClCompile Include="..\Code\CWorm_Boby.cpp">
       <Filter>02. GameObject\02. Monster\Worm\Worm_Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBreakableFrustum.cpp">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Breakable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CExplosiveFrustum.cpp">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Explosive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUnbreakableFrustum.cpp">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Unbreakable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRoomLayer.cpp">
+      <Filter>01. Scene\Stage\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGameStatusMgr.cpp">
+      <Filter>04. Manager\01. GameStatus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CExplosiveFrustumLight.cpp">
+      <Filter>02. GameObject\07. Room\Object\RoomProp\Frustum\Explosive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerHpUI.cpp">
+      <Filter>02. GameObject\10. UI\PlayerHp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUI.cpp">
+      <Filter>02. GameObject\10. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCrosshair.cpp">
+      <Filter>02. GameObject\10. UI\Crosshair</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBoss1.cpp">
       <Filter>02. GameObject\02. Monster\Boss1</Filter>
@@ -392,13 +488,16 @@
     <None Include="..\Bin\Resource\Map\Room_2_2.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
-    <None Include="..\Bin\Resource\Map\Room_4_3.json">
+    <None Include="..\Bin\Resource\Map\Room_1_0.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
     <None Include="..\Bin\Resource\Map\Room_2_1.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
     <None Include="..\Bin\Resource\Map\Room 작성 가이드.md">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Map\Room_1_1.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
   </ItemGroup>

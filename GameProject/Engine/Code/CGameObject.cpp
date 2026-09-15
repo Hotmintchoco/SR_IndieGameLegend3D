@@ -1,14 +1,20 @@
 #include "CGameObject.h"
 #include "CComponent.h"
+#include "CLayerContext.h"
+#include "CTransform.h"
+#include "CSphereCollider.h"
+#include "CBoxCollider.h"
 
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
-	: m_pGraphicDev(pGraphicDev), m_fViewZ(0.f), m_bDead(false)
+	: m_pGraphicDev(pGraphicDev), m_fViewZ(0.f), m_bDead(false),
+    m_pOwner(CLayerContext::GetLayer())
 {
     m_pGraphicDev->AddRef();
 }
 
 CGameObject::CGameObject(const CGameObject& rhs)
-    : m_pGraphicDev(rhs.m_pGraphicDev), m_fViewZ(rhs.m_fViewZ), m_bDead(rhs.m_bDead)
+    : m_pGraphicDev(rhs.m_pGraphicDev), m_fViewZ(rhs.m_fViewZ), m_bDead(rhs.m_bDead),
+    m_pOwner(rhs.m_pOwner)
 {
     m_pGraphicDev->AddRef();
 }
@@ -66,6 +72,105 @@ void CGameObject::Compute_ViewZ(const _vec3* pPos)
     _vec3   vDir = vCamPos - *pPos;
     
     m_fViewZ = D3DXVec3Length(&vDir);
+}
+
+void CGameObject::Obstacle_Collision(CGameObject* pOther, CCollider* pObstacleCollider)
+{
+    if (nullptr == pOther || nullptr == pObstacleCollider)
+        return;
+
+    CTransform* pOtherTransformCom = dynamic_cast<CTransform*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+    if (nullptr == pOtherTransformCom)
+        return;
+
+    CCollider* pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
+    if (nullptr == pOtherCollider)
+        pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_STATIC, L"Com_Collider"));
+
+    if (nullptr == pOtherCollider)
+        return;
+
+    CSphereCollider* pOtherSphere = dynamic_cast<CSphereCollider*>(pOtherCollider);
+    if (nullptr == pOtherSphere)
+        return;
+
+    CBoxCollider* pWallBox = dynamic_cast<CBoxCollider*>(pObstacleCollider);
+    if (nullptr == pWallBox)
+        return;
+
+    if (!pWallBox->Intersect(pOtherSphere))
+        return;
+
+    auto Clamp = [](_float v, _float lo, _float hi)->_float
+    {
+        return (v < lo) ? lo : ((v > hi) ? hi : v);
+    };
+
+    const _vec3 vCenter = {
+        pOtherSphere->m_tSphere.Center.x,
+        pOtherSphere->m_tSphere.Center.y,
+        pOtherSphere->m_tSphere.Center.z
+    };
+
+    const _vec3 vBoxCenter = {
+        pWallBox->m_tBox.Center.x,
+        pWallBox->m_tBox.Center.y,
+        pWallBox->m_tBox.Center.z
+    };
+
+    const _vec3 vExt = {
+        pWallBox->m_tBox.Extents.x,
+        pWallBox->m_tBox.Extents.y,
+        pWallBox->m_tBox.Extents.z
+    };
+
+    const _vec3 vMin = { vBoxCenter.x - vExt.x, vBoxCenter.y - vExt.y, vBoxCenter.z - vExt.z };
+    const _vec3 vMax = { vBoxCenter.x + vExt.x, vBoxCenter.y + vExt.y, vBoxCenter.z + vExt.z };
+
+    _vec3 vClosest = {
+        Clamp(vCenter.x, vMin.x, vMax.x),
+        Clamp(vCenter.y, vMin.y, vMax.y),
+        Clamp(vCenter.z, vMin.z, vMax.z)
+    };
+
+    _vec3 vDelta = vCenter - vClosest;
+    _float fDist = D3DXVec3Length(&vDelta);
+    const _float fRadius = pOtherSphere->m_tSphere.Radius;
+    const _float fSkin = 0.001f;
+
+    _vec3 vPush(0.f, 0.f, 0.f);
+
+    if (fDist > FLT_EPSILON)
+    {
+        _vec3 vN;
+        D3DXVec3Normalize(&vN, &vDelta);
+        const _float fPen = (fRadius - fDist) + fSkin;
+        if (fPen > 0.f)
+            vPush = vN * fPen;
+    }
+    else
+    {
+        const _float dxMin = vCenter.x - vMin.x;
+        const _float dxMax = vMax.x - vCenter.x;
+        const _float dzMin = vCenter.z - vMin.z;
+        const _float dzMax = vMax.z - vCenter.z;
+
+        _float fMinPen = dxMin;
+        vPush = { -(fRadius + fSkin), 0.f, 0.f };
+
+        if (dxMax < fMinPen) { fMinPen = dxMax; vPush = { +(fRadius + fSkin), 0.f, 0.f }; }
+        if (dzMin < fMinPen) { fMinPen = dzMin; vPush = { 0.f, 0.f, -(fRadius + fSkin) }; }
+        if (dzMax < fMinPen) { vPush = { 0.f, 0.f, +(fRadius + fSkin) }; }
+    }
+
+    vPush.y = 0.f;
+
+    _vec3 vPos;
+    pOtherTransformCom->Get_Info(INFO_POS, &vPos);
+    vPos += vPush;
+    pOtherTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+
+    pOtherCollider->Update_Component(0.f);
 }
 
 

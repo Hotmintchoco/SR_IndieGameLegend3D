@@ -310,7 +310,22 @@ CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pMonster;
 }
 
-CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, map<const _tchar*, CLayer*>* pmap)
+/* ±Ëº∫√∂ : ¿”Ω√ ∫Ø∞Ê */
+//CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, map<const _tchar*, CLayer*>* pmap)
+//{
+//    CWorm* pMonster = new CWorm(pGraphicDev);
+//    pMonster->m_pmapLayer = pmap;
+//    if (FAILED(pMonster->Ready_GameObject()))
+//    {
+//        Safe_Release(pMonster);
+//        MSG_BOX("CWorm Create Failed");
+//        return nullptr;
+//    }
+//    
+//    return pMonster;
+//}
+
+CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, map<wstring, CLayer*>* pmap)
 {
     CWorm* pMonster = new CWorm(pGraphicDev);
     pMonster->m_pmapLayer = pmap;
@@ -320,10 +335,9 @@ CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, map<const _tchar*, CLayer*>*
         MSG_BOX("CWorm Create Failed");
         return nullptr;
     }
-    
+
     return pMonster;
 }
-
 
 CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex)
 {
@@ -338,7 +352,23 @@ CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex)
     return pMonster;
 }
 
-CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex, map<const _tchar*, CLayer*>* pmap)
+/* ±Ëº∫√∂: ¿”Ω√ ∫Ø∞Ê */
+//CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex, map<const _tchar*, CLayer*>* pmap)
+//{
+//    CWorm* pMonster = new CWorm(pGraphicDev, ++iIndex);
+//    pMonster->m_pmapLayer = pmap;
+//    //pMonster->Set
+//    if (FAILED(pMonster->Ready_GameObject()))
+//    {
+//        Safe_Release(pMonster);
+//        MSG_BOX("CWorm Create Failed");
+//        return nullptr;
+//    }
+//
+//    return pMonster;
+//}
+
+CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex, map<wstring, CLayer*>* pmap)
 {
     CWorm* pMonster = new CWorm(pGraphicDev, ++iIndex);
     pMonster->m_pmapLayer = pmap;

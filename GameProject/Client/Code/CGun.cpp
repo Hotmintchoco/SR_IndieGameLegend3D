@@ -10,7 +10,16 @@
 #include "CImGuiTool.h"
 
 CGun::CGun(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_fLastShotTime(0.f), m_fReloadTime(0.f), m_iAmmo(13)
+    : CGameObject(pGraphicDev),
+    m_fLastShotTime(0.f),
+    m_fShootRate(0.4f),
+    m_fRunningTime(0.f),
+    m_fLastSkillTime(0.f),
+    m_fSkillDuration(5.f),
+    m_fSkillCoolTime(20.f),
+    m_bSkillActivated(false),
+    m_iCurBullet(BULLET_DEFAULT),
+    m_iDmg(10)
 {
 }
 
@@ -88,38 +97,66 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
     D3DXVec3Cross(&vUp, &vForword, &vRight);
     D3DXVec3Normalize(&vUp, &vUp);
 
-    _vec3	vPos_Gun = vPos_Player + (vRight * 0.3f) + (vForword * 0.5f) + (vUp * -0.7f);
+    _vec3	vPos_Gun = vPos_Player + (vRight * 0.3f) + (vForword * 0.5f) + (vUp * -0.9f); // ÃÑMesh ¿ùµåÁÂÇ¥ °è»ê
 
-    _matrix matWorld;
-    D3DXMatrixIdentity(&matWorld);
-    memcpy(&matWorld.m[INFO_RIGHT][0], &vRight, sizeof(_vec3));
-    memcpy(&matWorld.m[INFO_UP][0], &vUp, sizeof(_vec3));
-    memcpy(&matWorld.m[INFO_LOOK][0], &vForword, sizeof(_vec3));
-    memcpy(&matWorld.m[INFO_POS][0], &vPos_Gun, sizeof(_vec3));
-    m_pTransformCom->Set_World(&matWorld);
+#pragma region ½ºÅ³ »ç¿ë ¹× ÃÑ¾Ë ½ºÀ§Äª
 
-    _int iAmmoMax = 13;
-    _float fShootCoolTime = 0.4f;
-    _float fReloadCoolTime = 1.f;
+    m_fLastSkillTime += fTimeDelta;
+
+    if ((m_bSkillActivated == true) && (m_fLastSkillTime >= m_fSkillDuration))
+    {
+        m_fLastSkillTime = 0.f;
+        m_bSkillActivated = false;
+    }
+
+    if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
+    {
+        if ((m_bSkillActivated == false) && (m_fLastSkillTime >= m_fSkillCoolTime))
+        {
+            m_bSkillActivated = true;
+            m_fLastSkillTime = 0.f;
+        }
+    }
+
+    if (CDInputMgr::GetInstance()->Key_Down(DIK_Q))
+    {
+        switch (m_iCurBullet)
+        {
+        case BULLET_DEFAULT:
+            m_iCurBullet = BULLET_SMALL;
+            break;
+        case BULLET_SMALL:
+            m_iCurBullet = BULLET_DEFAULT;
+            break;
+        }
+    }
+
+    switch (m_iCurBullet)
+    {
+    case BULLET_DEFAULT:
+        m_fShootRate = 0.4f;
+        m_iDmg = 10;
+        break;
+    case BULLET_SMALL:
+        m_fShootRate = 0.2f;
+        m_iDmg = 5;
+        break;
+    }
+
+    _int iDmgMultiplier = 2;
+    if (m_bSkillActivated == true) m_iDmg *= iDmgMultiplier;
+
+#pragma endregion
+
+#pragma region ÃÑ¾Ë ¹ß»ç
+
     m_fLastShotTime += fTimeDelta;
 
-    if (m_fReloadTime > fReloadCoolTime)
-    {
-        m_fReloadTime = 0.f;
-        m_fLastShotTime = fShootCoolTime;
-        m_iAmmo = iAmmoMax;
-    }
-    else if (m_fReloadTime > 0.f)
-    {
-        m_fReloadTime += fTimeDelta;
-    }
-
-    if ((CDInputMgr::GetInstance()->Mouse_Press(DIM_LB)) && (m_fLastShotTime >= fShootCoolTime) && (m_iAmmo > 0) && (m_fReloadTime == 0))
+    if ((CDInputMgr::GetInstance()->Mouse_Press(DIM_LB)) && (m_fLastShotTime >= m_fShootRate))
     {
         m_fLastShotTime = 0.f;
-        m_iAmmo--;
 
-        _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.0f) + (vUp * 0.3f);
+        _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.8f) + (vUp * 0.4f); // ÃÑ±¸ À§Ä¡
         _vec3	vBullet_To = vPos_Player + (vForword * 10.f); // Å©·Î½ºÇì¾î µµ´ÞÁ¡
 
         _vec3	vBullet_Look = vBullet_To - vBullet_From;
@@ -128,13 +165,111 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
         pGameObject = CBullet::Create(m_pGraphicDev, &vBullet_From, &vBullet_Look);
         CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"Bullet", pGameObject);
     }
-    else if ((m_iAmmo == 0))
+
+#pragma endregion
+
+    _matrix matWorld;
+    D3DXMatrixIdentity(&matWorld);
+
+#pragma region ÃÑ¾Ë ¹ß»ç ½Ã ¹Ýµ¿
+
+    _matrix matAxis;
+
+    if (m_iCurBullet == BULLET_DEFAULT)
     {
-        if (CDInputMgr::GetInstance()->Key_Down(DIK_R))
+        if (m_fLastShotTime < 0.05f)
         {
-            m_fReloadTime += fTimeDelta;
+            D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(-m_fLastShotTime * 800.f));
+        }
+        else if (m_fLastShotTime < 0.2f)
+        {
+            D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(-60 + m_fLastShotTime * 300.f));
+        }
+        else
+        {
+            D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(0.f));
         }
     }
+    else if (m_iCurBullet == BULLET_SMALL)
+    {
+        if (m_fLastShotTime < 0.025f)
+        {
+            D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(-m_fLastShotTime * 800.f));
+        }
+        else if (m_fLastShotTime < 0.1f)
+        {
+            D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(-30 + m_fLastShotTime * 300.f));
+        }
+        else
+        {
+            D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(0.f));
+        }
+    }
+
+    D3DXVec3TransformNormal(&vUp, &vUp, &matAxis);
+    D3DXVec3TransformNormal(&vForword, &vForword, &matAxis);
+
+    _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.8f) + (vUp * 0.4f);
+    _vec3   vRotAxis = vPos_Gun - vBullet_From;
+    _matrix matRotAxis;
+
+    D3DXVec3Normalize(&vRotAxis, &vRotAxis);
+
+#pragma endregion
+
+#pragma region ÀÌµ¿ ½Ã ÁÂ¿ì ÃÑ ¶³¸²
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_W) ||
+        CDInputMgr::GetInstance()->Key_Press(DIK_A) ||
+        CDInputMgr::GetInstance()->Key_Press(DIK_S) ||
+        CDInputMgr::GetInstance()->Key_Press(DIK_D))
+    {
+        m_fRunningTime += fTimeDelta;
+    }
+
+    if (m_fLastShotTime > m_fShootRate)
+    {
+        if (CDInputMgr::GetInstance()->Key_Press(DIK_W) ||
+            CDInputMgr::GetInstance()->Key_Press(DIK_A) ||
+            CDInputMgr::GetInstance()->Key_Press(DIK_S) ||
+            CDInputMgr::GetInstance()->Key_Press(DIK_D))
+        {
+            _float fAnimationDelta = fmod(m_fRunningTime, 0.8f);
+            _float fAnimationSpeed = 25.0f;
+            if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
+            {
+                fAnimationSpeed = 50.f;
+            }
+
+            if (fAnimationDelta > 0.6f)
+            {
+                D3DXMatrixRotationAxis(&matRotAxis, &vRotAxis, D3DXToRadian((0.8f - fAnimationDelta) * fAnimationSpeed));
+            }
+            else if (fAnimationDelta > 0.2f)
+            {
+                D3DXMatrixRotationAxis(&matRotAxis, &vRotAxis, D3DXToRadian((fAnimationDelta - 0.4f) * fAnimationSpeed));
+            }
+            else
+            {
+                D3DXMatrixRotationAxis(&matRotAxis, &vRotAxis, D3DXToRadian(-fAnimationDelta * fAnimationSpeed));
+            }
+            D3DXVec3TransformNormal(&vUp, &vUp, &matRotAxis);
+            D3DXVec3TransformNormal(&vForword, &vForword, &matRotAxis);
+            D3DXVec3TransformNormal(&vRight, &vRight, &matRotAxis);
+        }
+        else
+        {
+            m_fRunningTime = 0.f;
+        }
+    }
+
+#pragma endregion
+
+    memcpy(&matWorld.m[INFO_RIGHT][0], &vRight, sizeof(_vec3));
+    memcpy(&matWorld.m[INFO_UP][0], &vUp, sizeof(_vec3));
+    memcpy(&matWorld.m[INFO_LOOK][0], &vForword, sizeof(_vec3));
+    memcpy(&matWorld.m[INFO_POS][0], &vPos_Gun, sizeof(_vec3));
+
+    m_pTransformCom->Set_World(&matWorld);
 
 }
 
@@ -146,7 +281,7 @@ void CGun::Render_GameObject()
 
     m_pBufferCom->Render_Buffer();
 #ifdef _DEBUG
-    RenderImGui();
+    // RenderImGui();
 #endif
 }
 
@@ -206,20 +341,72 @@ void CGun::RenderImGui()
     /* ImGui */
     ImGui::Begin("Gun Debug Information");
 
-    ImGui::Text("AMMO :  %.2i / 13", m_iAmmo);
-    if (m_iAmmo == 0)
+    ImGui::Text("LAST FIRE TIME :  %.2f SECOND AGO", m_fLastShotTime);
+    const char* cCurBullet = NULL;
+    switch (m_iCurBullet)
     {
-    	if (m_fReloadTime == 0.f)
-    	{
-    		if ((int)(m_fLastShotTime * 5) % 2 == 0)
-    		{
-                ImGui::Text("OUT OF AMMO. PRESS R TO RELOAD.");
-    		}
-    	}
-    	else
-    	{
-            ImGui::Text("Reloading...");
+    case BULLET_DEFAULT:
+        cCurBullet = "BULLET_DEFAULT";
+        break;
+    case BULLET_SMALL:
+        cCurBullet = "BULLET_SMALL";
+        break;
+    }
+    ImGui::Text("CURRENT BULLET : %s", cCurBullet);
+    ImGui::Text("CURRENT BULLET DMG : %i", m_iDmg);
+    ImGui::Text("CURRENT BULLET RATE : %.2f SEC / FIRE", m_fShootRate);
+    ImGui::Text("RUNNING TIME : %.2f SEC", m_fRunningTime);
+    char cProgress[16];
+    cProgress[0] = '[';
+    if (m_bSkillActivated)
+    {
+        ImGui::Text("STATUS : SKILL ACTIVATED");
+        _int iProgress = 10 - ((_int)(m_fLastSkillTime * 10.f) / m_fSkillDuration);
+        if (iProgress < 0) iProgress = 0;
+        for (int i = 0; (i < iProgress) && (i < 10); i++)
+        {
+            cProgress[i + 1] = '=';
         }
+        for (int j = iProgress; j < 10; j++)
+        {
+            cProgress[j + 1] = ' ';
+        }
+        cProgress[11] = ']';
+        cProgress[12] = '\0';
+        const char* cProgressTxt = cProgress;
+        ImGui::Text("SKILL GUAGE : %s", cProgressTxt);
+    }
+    else
+    {
+        if (m_fLastSkillTime >= m_fSkillCoolTime)
+        {
+            if((int)((m_fLastSkillTime - m_fSkillCoolTime) * 5.f) % 2 == 1)
+            {
+                ImGui::Text("SKILL READY. PRESS E TO ACTIVATE");
+            }
+            else
+            {
+                ImGui::Text(" ");
+            }
+        }
+        else
+        {
+            ImGui::Text("STATUS : SKILL DEACTIVATED");
+        }
+        _int iProgress = (_int)(m_fLastSkillTime * 10.f) / m_fSkillCoolTime;
+        if (iProgress < 0) iProgress = 0;
+        for (int i = 0; (i < iProgress) && (i < 10); i++)
+        {
+            cProgress[i + 1] = '=';
+        }
+        for (int j = iProgress; j < 10; j++)
+        {
+            cProgress[j + 1] = ' ';
+        }
+        cProgress[11] = ']';
+        cProgress[12] = '\0';
+        const char* cProgressTxt = cProgress;
+        ImGui::Text("SKILL GUAGE : %s", cProgressTxt);
     }
     ImGui::End();
 }

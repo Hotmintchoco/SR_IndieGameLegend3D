@@ -11,18 +11,16 @@
 #include "CEffect.h"
 #include "CGun.h"
 #include "CManagement.h"
-#include "CRoom.h"
-#include "CRoomLoadingMgr.h"
 #include "CFontMgr.h"
 #include "CBullet.h"
 #include "CDInputMgr.h"
 #include "CCollisionMgr.h"
-#include "CTile.h"
-#include "CWall.h"
-#include "CFog.h"
-
-#include "CSkull.h"
 #include "CWorm.h"
+#include "CRoomLoadingMgr.h"
+#include "CRoomLayer.h"
+#include "CLayerContext.h"
+#include "CPlayerHpUI.h"
+#include "CCrosshair.h"
 #include "CBoss1.h"
 #include "CSpeyeder.h"
 
@@ -46,6 +44,14 @@ HRESULT CStage::Ready_Scene()
 	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
 		return E_FAIL;
 
+	int iRoomCnt = CRoomLoadingMgr::GetInstance()->GetRoomTotalCount();
+	for (int i = 0; i < iRoomCnt; ++i)
+	{
+		wstring wstrLayerTag = L"Room_" + to_wstring(i) + L"_Layer";
+		if (FAILED(Ready_Room_Layer(wstrLayerTag, i)))
+			return E_FAIL;
+	}
+
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
 		return E_FAIL;
 
@@ -59,19 +65,6 @@ HRESULT CStage::Ready_Scene()
 	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_WALL);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PBULLET, Engine::COLL_MONSTER);
-
-	return S_OK;
-}
-
-HRESULT CStage::PostInitialize()
-{
-	for (auto pRoom : m_vecRoom)
-	{
-		if (FAILED(pRoom->PostInitialize()))
-		{
-			return E_FAIL;
-		}
-	}
 
 	return S_OK;
 }
@@ -115,6 +108,9 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
+	/* 현재 씬, 레이어 정보를 전역으로 주입 */
+	CLayerContext ctx(pLayer, this);
+
 	// 오브젝트 추가
 	CGameObject* pGameObject = nullptr;
 
@@ -154,6 +150,9 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
+	/* 현재 씬, 레이어 정보를 전역으로 주입 */
+	CLayerContext ctx(pLayer, this);
+
 	// 오브젝트 추가
 	CGameObject* pGameObject = nullptr;
 
@@ -181,22 +180,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Gun", pGameObject)))
 		return E_FAIL;
 
-	/* 방 출력 */
-	for (int i = 0; i < CRoomLoadingMgr::GetInstance()->GetRoomTotalCount(); ++i)
-	{
-		pGameObject = CRoom::Create(m_pGraphicDev, i);
-		if (nullptr == pGameObject)
-			return E_FAIL;
-
-		wstring wstrRoomName = L"Room_" + to_wstring(i);
-
-		if (FAILED(pLayer->Add_GameObject(wstrRoomName, pGameObject)))
-			return E_FAIL;
-
-		m_vecRoom.push_back(static_cast<CRoom*>(pGameObject));
-	}
-
-
+	
 	// Monster
 	TCHAR		szFileName[128] = L"";
 
@@ -244,8 +228,30 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	//	return E_FAIL;
 
 	//m_mapLayer.insert({ pLayerTag ,pLayer });
-
 	m_mapLayer.insert({ pLayerTag ,pLayer });
+
+	return S_OK;
+}
+
+HRESULT CStage::Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx)
+{
+	CLayer* pLayer = CRoomLayer::Create(iRoomIdx);
+	if (nullptr == pLayer)
+		return E_FAIL;
+	wsprintf(szFileName, L"Boss1_%d", CMonster::iMonsterIdx);
+	if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+		return E_FAIL;
+
+	/* 현재 씬, 레이어 정보를 전역으로 주입 */
+	CLayerContext ctx(pLayer, this);
+
+	if (FAILED(static_cast<CRoomLayer*>(pLayer)->SpawnRoom()))
+	{
+		return E_FAIL;
+	}
+
+	m_mapLayer.insert({ wstrLayerTag, pLayer });
+
 	return S_OK;
 }
 
@@ -255,10 +261,44 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	// 오브젝트 추가
-	CGameObject* pGameObject = nullptr;
+	/* 현재 씬, 레이어 정보를 전역으로 주입 */
+	CLayerContext ctx(pLayer, this);
 
-	m_mapLayer.insert({ pLayerTag ,pLayer });
+	CUI* pUI = nullptr;
+
+	// Crosshair
+	pUI = CCrosshair::Create(m_pGraphicDev);
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	_vec2 vPos{ WINCX >> 1, WINCY >> 1 };
+	pUI->Set_Pos(vPos);
+
+	if (FAILED(pLayer->Add_GameObject(L"Crosshair", pUI)))
+		return E_FAIL;
+
+	// Hp
+	const _int iHpCount = 3;
+	const _float fStartX = 20.f;
+	const _float fStartY = 20.f;
+	const _float fIconSize = 15.f;  // CPlayerHpUI::Ready_GameObject()의 Set_Scale과 동일
+	const _float fGap = 15.f;
+
+	for (_int i = 0; i < iHpCount; ++i)
+	{
+		pUI = CPlayerHpUI::Create(m_pGraphicDev);
+		if (nullptr == pUI)
+			return E_FAIL;
+
+		_vec2 vPos{ fStartX + i * (fIconSize + fGap), fStartY };
+		pUI->Set_Pos(vPos);
+
+		wstring wstrTag = L"PlayerHp_" + to_wstring(i);
+		if (FAILED(pLayer->Add_GameObject(wstrTag.c_str(), pUI)))
+			return E_FAIL;
+	}
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
 }
