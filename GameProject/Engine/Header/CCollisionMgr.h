@@ -1,8 +1,14 @@
 ﻿#pragma once
 #include "CBase.h"
 #include "Engine_Define.h"
+#include <set>
+#include <utility>
+#include <memory>
+#include <map>
 
 BEGIN(Engine)
+
+class CCollider;
 
 class ENGINE_DLL CCollisionMgr : public CBase
 {
@@ -13,23 +19,34 @@ private:
     virtual ~CCollisionMgr();
 
 public:
-    // 서로 충돌 검사를 하도록 설정
     void Check_Group(_int iLeft, _int iRight);
-
-    // 매 프레임 객체들이 자신의 콜라이더를 매니저에 등록하는 함수
     void Add_Collider(_int iGroup, class CCollider* pCollider);
-
-    // 매 프레임 실제 충돌 검사를 수행하는 핵심 함수
     void Update_Collision();
-
-    // 매 프레임 끝날 때 리스트를 비워줌
     void Clear_ColliderList();
 
 private:
-    list<CCollider*>    m_ColList[COLL_END];
+    using COLLIDER_TOKEN = std::weak_ptr<void>;
+    using COLLIDER_TOKEN_PAIR = std::pair<COLLIDER_TOKEN, COLLIDER_TOKEN>;
 
-    // 두 그룹 간의 충돌 검사 여부를 체크하는 2차원 매트릭스
+    struct CColliderTokenPairLess
+    {
+        bool operator()(const COLLIDER_TOKEN_PAIR& lhs, const COLLIDER_TOKEN_PAIR& rhs) const
+        {
+            std::owner_less<COLLIDER_TOKEN> lessToken;
+            if (lessToken(lhs.first, rhs.first))
+                return true;
+            if (lessToken(rhs.first, lhs.first))
+                return false;
+            return lessToken(lhs.second, rhs.second);
+        }
+    };
+
+    COLLIDER_TOKEN_PAIR Make_ColliderTokenPair(CCollider* pA, CCollider* pB) const;
+
+private:
+    list<CCollider*>    m_ColList[COLL_END];
     bool                m_bCheckMatrix[COLL_END][COLL_END];
+    std::set<COLLIDER_TOKEN_PAIR, CColliderTokenPairLess> m_setPrevCollisionPairs;
 
 public:
     virtual void Free() override;

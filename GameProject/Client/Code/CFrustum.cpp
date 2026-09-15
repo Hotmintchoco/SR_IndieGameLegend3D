@@ -24,6 +24,8 @@ HRESULT CFrustum::Ready_GameObject()
     if (FAILED(CGameObject::Ready_GameObject()))
         return E_FAIL;
 
+	m_pColliderCom->Set_CollisionID(COLL_OBSTACLE);
+
     return S_OK;
 }
 
