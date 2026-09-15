@@ -21,6 +21,7 @@
 #include "CLayerContext.h"
 #include "CPlayerHpUI.h"
 #include "CCrosshair.h"
+#include "CSkull.h"
 #include "CBoss1.h"
 #include "CSpeyeder.h"
 
@@ -237,9 +238,6 @@ HRESULT CStage::Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx)
 {
 	CLayer* pLayer = CRoomLayer::Create(iRoomIdx);
 	if (nullptr == pLayer)
-		return E_FAIL;
-	wsprintf(szFileName, L"Boss1_%d", CMonster::iMonsterIdx);
-	if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
 		return E_FAIL;
 
 	/* 현재 씬, 레이어 정보를 전역으로 주입 */
