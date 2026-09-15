@@ -31,6 +31,12 @@ void CGameStatusMgr::RenderImGui()
 {
     ImGui::Begin("Debug");
 
+    // --- FPS ---
+    if (ImGui::CollapsingHeader("FPS", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        ImGui::Text("FPS : %d", (int)(1.f / m_fDT));
+    }
+
     // --- Debug ---
     if (ImGui::CollapsingHeader("Stage", ImGuiTreeNodeFlags_DefaultOpen))
     {

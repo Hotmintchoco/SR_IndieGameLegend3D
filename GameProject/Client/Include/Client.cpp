@@ -7,6 +7,7 @@
 #include "CMainApp.h"
 #include "CTimerMgr.h"
 #include "CFrameMgr.h"
+#include "CGameStatusMgr.h"
 
 #pragma push_macro("new")
 #undef new
@@ -66,7 +67,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(L"Timer_FPS60")))
         return FALSE;
 
-    if (FAILED(CFrameMgr::GetInstance()->Ready_Frame(L"FPS60", 60.f)))
+    if (FAILED(CFrameMgr::GetInstance()->Ready_Frame(L"FPS60", 999.f)))
         return FALSE;
 
 
@@ -98,6 +99,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             if (CFrameMgr::GetInstance()->IsPermit_Call(L"FPS60", fTimer_Immediate))
             {
                 CTimerMgr::GetInstance()->Set_TimeDelta(L"Timer_FPS60");
+                CGameStatusMgr::GetInstance()->UpdateFPS(CTimerMgr::GetInstance()->Get_TimeDelta(L"Timer_FPS60"));
                 _float  fTimer_FPS60 = CTimerMgr::GetInstance()->Get_TimeDelta(L"Timer_FPS60");
 
                 pMainApp->Update_MainApp(fTimer_FPS60);

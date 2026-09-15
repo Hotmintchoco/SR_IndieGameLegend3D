@@ -31,6 +31,8 @@ public:
 
 	inline void UpdateCameraYaw(float fYaw) { m_fYaw = fYaw; }
 
+	inline void UpdateFPS(float fDT) { m_fDT = fDT; }
+
 private:
 	/* Debug */
 	int m_iCurrentRoomIndex = -1;
@@ -46,6 +48,8 @@ private:
 	int m_iGem = 0;
 	
 	float m_fYaw = 0.f;
+
+	float m_fDT = 0;
 
 private:
 	virtual void Free();
