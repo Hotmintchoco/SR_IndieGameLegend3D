@@ -23,9 +23,8 @@ HRESULT CSkull::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
-    m_pTransformCom->Set_Pos(55.f, 0.f, 55.f);
-    m_pColliderCom->Set_Radius(1.f);
-
+    m_pColliderCom->Set_Radius(D3DXVec3Length(&m_pTransformCom->m_vScale));
+    m_iHp = 3;
     return S_OK;
 }
 
@@ -52,12 +51,13 @@ void CSkull::LateUpdate_GameObject(const _float& fTimeDelta)
     _vec3   vPlayerLook;
     pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
-    //m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 0.5f, fTimeDelta);
+    m_pTransformCom->Chase_Target2(&vPlayerPos, &vPlayerLook, 30.f, fTimeDelta);
 
 }
 
 void CSkull::Render_GameObject()
 {
+    if (m_bHitState == true) CMonster::Enable_HitRenderState();
     CMonster::Render_GameObject();
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
@@ -67,6 +67,13 @@ void CSkull::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+    if (m_bHitState == true) CMonster::Disable_HitRenderState();
+}
+
+void CSkull::OnCollisionEnter(CGameObject* pOther)
+{
+    CMonster::OnCollisionEnter(pOther);
+    m_iHp -= 1;
 }
 
 HRESULT CSkull::Add_Component()

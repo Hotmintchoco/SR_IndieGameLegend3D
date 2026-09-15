@@ -1,20 +1,19 @@
 #pragma once
 
-#include "CMonster.h"
+#include "CEffect.h"
 
 namespace Engine
 {
 	class CRcTex;
-	class CTransform;
 	class CTexture;
-	class CCalculator;
+	class CTransform;
 }
 
-class CSkull : public CMonster
+class CSmallExplode : public CEffect
 {
 protected:
-	explicit CSkull(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CSkull();
+	explicit CSmallExplode(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CSmallExplode();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -22,14 +21,18 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-	virtual			void		OnCollisionEnter(CGameObject* pOther) override;
-
 private:
 	HRESULT			Add_Component();
 
-public:
-	static CSkull* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+private:
+	//_float				m_fFrame;
 
-protected:
+public:
+	static CSmallExplode* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CSmallExplode* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vScale);
+
+
+private:
 	virtual void		Free();
 };
+

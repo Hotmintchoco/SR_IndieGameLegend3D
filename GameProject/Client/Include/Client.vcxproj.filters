@@ -145,6 +145,27 @@
     <Filter Include="04. Manager\02. Debug">
       <UniqueIdentifier>{02ca9211-2d93-4f54-bfb3-1da9b6e7fac6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. UI">
+      <UniqueIdentifier>{6c73a9c2-f178-434b-b4ff-d2dee63f4158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. UI\PlayerHp">
+      <UniqueIdentifier>{5b0584cc-2dcd-4328-af0b-394d82e9f98e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. UI\Crosshair">
+      <UniqueIdentifier>{0c6678e2-e4f3-4034-be90-da65b01d08d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Boss1">
+      <UniqueIdentifier>{b51a1b05-dd5f-4c97-8716-dc4e1a0c0ec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\M1">
+      <UniqueIdentifier>{149954a3-d86b-4975-bad9-6e696a5ecb47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Speyeder">
+      <UniqueIdentifier>{77d9f8f3-79ea-4b54-9520-e416973572a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Effect\SmallExplode">
+      <UniqueIdentifier>{c4da1f1d-8911-4624-9f4b-8a1a699876e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -300,6 +321,24 @@
     <ClInclude Include="..\Header\CDebugMgr.h">
       <Filter>04. Manager\02. Debug</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPlayerHpUI.h">
+      <Filter>02. GameObject\10. UI\PlayerHp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CUI.h">
+      <Filter>02. GameObject\10. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCrosshair.h">
+      <Filter>02. GameObject\10. UI\Crosshair</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBoss1.h">
+      <Filter>02. GameObject\02. Monster\Boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSpeyeder.h">
+      <Filter>02. GameObject\02. Monster\Speyeder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSmallExplode.h">
+      <Filter>02. GameObject\06. Effect\SmallExplode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -430,6 +469,24 @@
     </ClCompile>
     <ClCompile Include="..\Code\CDebugMgr.cpp">
       <Filter>04. Manager\02. Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerHpUI.cpp">
+      <Filter>02. GameObject\10. UI\PlayerHp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUI.cpp">
+      <Filter>02. GameObject\10. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCrosshair.cpp">
+      <Filter>02. GameObject\10. UI\Crosshair</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBoss1.cpp">
+      <Filter>02. GameObject\02. Monster\Boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSpeyeder.cpp">
+      <Filter>02. GameObject\02. Monster\Speyeder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSmallExplode.cpp">
+      <Filter>02. GameObject\06. Effect\SmallExplode</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

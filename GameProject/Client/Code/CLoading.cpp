@@ -51,27 +51,27 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev))))
         return E_FAIL;
 
-    lstrcpy(m_szLoading, L"Texture Loading............................");
+    lstrcpy(m_szLoading, L"Monster Texture Loading............................");
     //skull
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_skull3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/skull/skull3.png", 1))))return E_FAIL;
     //worm
-    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_body_45Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/body_45.png", 1)))) return E_FAIL;
-    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_body_frontTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/body_front.png", 1)))) return E_FAIL;
-    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_body_sideTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/body_side.png", 1)))) return E_FAIL;
-    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_body_topTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/body_top.png", 1)))) return E_FAIL;
-    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_connectorTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/connector.png", 1)))) return E_FAIL;
-    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_tail_backTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/tail_back.png", 1)))) return E_FAIL;
-    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_tail_sideTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/tail_side.png", 1)))) return E_FAIL;
-    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_tail_topTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/tail_top.png", 1)))) return E_FAIL;
-    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_worm_drill_sideTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/worm_drill_side_%d.png", 4)))) return E_FAIL;
-    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_worm_drill_topTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/worm_drill_top_%d.png", 4)))) return E_FAIL;
-    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_worm_faceTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/worm_face_%d.png", 4)))) return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_worm_drillTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/worm_drill_%d.png", 12)))) return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_worm_bobyTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/worm_body_%d.png", 5)))) return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_worm_tailTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/worm/worm_tail_%d.png", 3)))) return E_FAIL;
+    //Boss1
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_boss1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/boss1/boss1_%d.png", 4)))) return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_boss1_angryTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/boss1/boss%d.png", 2)))) return E_FAIL;
+    //Speyeder
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_speyederTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/speyeder/speyeder_%d.png", 7)))) return E_FAIL;
+    //
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_magmamouthTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/magmamouth/magmamouth_%d.png", 7)))) return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_fireballTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/fireball/fireBall_%d.png", 4)))) return E_FAIL;
+    
+    lstrcpy(m_szLoading, L"Effect Texture Loading............................");
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_smallexplodeTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/smallexplode/smallExplode_%d.png", 4)))) return E_FAIL;
 
 
-
+    lstrcpy(m_szLoading, L"Texture Loading............................");
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/Invisible.png", 1))))
         return E_FAIL;
 
@@ -89,6 +89,18 @@ _uint CLoading::Loading_Stage()
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BulletTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/bigbullet_0.png", 1))))
         return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BulletTexture_Small", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/sprBullet_0.png", 1))))
+        return E_FAIL;
+
+
+    // UI Texture
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_HpUITexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/HPBar.png", 1))))
+		return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CrosshairTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Reticle_%d.png", 4))))
+        return E_FAIL;
+
     lstrcpy(m_szLoading, L"Etc Loading............................");
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))

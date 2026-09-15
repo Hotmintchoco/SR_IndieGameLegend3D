@@ -37,8 +37,7 @@ protected:
 	_float Angle_To_Worm();
 private:
 	HRESULT			Add_Component();
-	_uint m_iMotion;
-	_uint m_iIndex;
+	_uint m_iWormIndex;
 	void Set_Front_Part(CWorm* pFrontPart) { m_pFrontPart = pFrontPart; }
 	CMonster* m_pFrontPart;
 	/* ±Ëº∫√∂ : ¿”Ω√ ∫Ø∞Ê */

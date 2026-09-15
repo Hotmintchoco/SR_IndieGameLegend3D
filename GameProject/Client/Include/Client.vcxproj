@@ -147,8 +147,10 @@
     <ClInclude Include="..\Header\CAbstractFactory.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
+    <ClInclude Include="..\Header\CBoss1.h" />
     <ClInclude Include="..\Header\CBullet.h" />
     <ClInclude Include="..\Header\CDebugMgr.h" />
+    <ClInclude Include="..\Header\CCrosshair.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEffect.h" />
     <ClInclude Include="..\Header\CExplosiveFrustum.h" />
@@ -156,6 +158,7 @@
     <ClInclude Include="..\Header\CFog.h" />
     <ClInclude Include="..\Header\CFrustum.h" />
     <ClInclude Include="..\Header\CGameStatusMgr.h" />
+    <ClInclude Include="..\Header\CPlayerHpUI.h" />
     <ClInclude Include="..\Header\CGun.h" />
     <ClInclude Include="..\Header\CImGuiTool.h" />
     <ClInclude Include="..\Header\Client_Enum.h" />
@@ -168,10 +171,13 @@
     <ClInclude Include="..\Header\CPlayer.h" />
     <ClInclude Include="..\Header\CSkull.h" />
     <ClInclude Include="..\Header\CSkyBox.h" />
+    <ClInclude Include="..\Header\CSmallExplode.h" />
+    <ClInclude Include="..\Header\CSpeyeder.h" />
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CTile.h" />
     <ClInclude Include="..\Header\CTriggerBox.h" />
+    <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CWall.h" />
     <ClInclude Include="..\Header\CWorm.h" />
     <ClInclude Include="..\Header\CWorm_Tail.h" />
@@ -200,8 +206,10 @@
     <ClCompile Include="..\Code\CAbstractFactory.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
     <ClCompile Include="..\Code\CBreakableFrustum.cpp" />
+    <ClCompile Include="..\Code\CBoss1.cpp" />
     <ClCompile Include="..\Code\CBullet.cpp" />
     <ClCompile Include="..\Code\CDebugMgr.cpp" />
+    <ClCompile Include="..\Code\CCrosshair.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEffect.cpp" />
     <ClCompile Include="..\Code\CExplosiveFrustum.cpp" />
@@ -209,6 +217,7 @@
     <ClCompile Include="..\Code\CFog.cpp" />
     <ClCompile Include="..\Code\CFrustum.cpp" />
     <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
+    <ClCompile Include="..\Code\CPlayerHpUI.cpp" />
     <ClCompile Include="..\Code\CGun.cpp" />
     <ClCompile Include="..\Code\CImGuiTool.cpp" />
     <ClCompile Include="..\Code\CLoading.cpp" />
@@ -220,10 +229,13 @@
     <ClCompile Include="..\Code\CPlayer.cpp" />
     <ClCompile Include="..\Code\CSkull.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
+    <ClCompile Include="..\Code\CSmallExplode.cpp" />
+    <ClCompile Include="..\Code\CSpeyeder.cpp" />
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CTile.cpp" />
     <ClCompile Include="..\Code\CTriggerBox.cpp" />
+    <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CWall.cpp" />
     <ClCompile Include="..\Code\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

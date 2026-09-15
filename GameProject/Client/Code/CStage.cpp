@@ -3,7 +3,6 @@
 #include "CBackGround.h"
 #include "CProtoMgr.h"
 #include "CPlayer.h"
-#include "CSkull.h"
 #include "CTerrain.h"
 #include "CDynamicCamera.h"
 #include "CCameraMgr.h"
@@ -20,6 +19,11 @@
 #include "CRoomLoadingMgr.h"
 #include "CRoomLayer.h"
 #include "CLayerContext.h"
+#include "CPlayerHpUI.h"
+#include "CCrosshair.h"
+#include "CSkull.h"
+#include "CBoss1.h"
+#include "CSpeyeder.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -177,18 +181,54 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Gun", pGameObject)))
 		return E_FAIL;
 
-	// Worm
-	m_mapLayer.insert({ pLayerTag ,pLayer });
+	
+	// Monster
+	TCHAR		szFileName[128] = L"";
 
-	map<wstring, CLayer*>* a = &m_mapLayer;
-
-	pGameObject = CWorm::Create(m_pGraphicDev, &m_mapLayer);
+	pGameObject = CSkull::Create(m_pGraphicDev);
+	static_cast<CMonster*>(pGameObject)->Set_Pos(55, 0, 55);
 	if (nullptr == pGameObject)
 		return E_FAIL;
-	//static_cast<CWorm*>(pGameObject)->Set_LayerPointer(&m_mapLayer); //임시
-	if (FAILED(pLayer->Add_GameObject(L"Worm_Boby_0", pGameObject)))
+	wsprintf(szFileName, L"Skull_%d", CMonster::iMonsterIdx);
+	if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
 		return E_FAIL;
 
+	pGameObject = CBoss1::Create(m_pGraphicDev);
+	static_cast<CMonster*>(pGameObject)->Set_Pos(65, 0, 55);
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	wsprintf(szFileName, L"Boss1_%d", CMonster::iMonsterIdx);
+	if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CSpeyeder::Create(m_pGraphicDev);
+	static_cast<CMonster*>(pGameObject)->Set_Pos(64, 0, 56);
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	wsprintf(szFileName, L"Speyeder_%d", CMonster::iMonsterIdx);
+	if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CSpeyeder::Create(m_pGraphicDev);
+	static_cast<CMonster*>(pGameObject)->Set_Pos(64, 0, 57);
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	wsprintf(szFileName, L"Speyeder_%d", CMonster::iMonsterIdx);
+	if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+		return E_FAIL;
+
+	//map<const _tchar*, CLayer*>* a = &m_mapLayer;
+
+	//pGameObject = CWorm::Create(m_pGraphicDev, &m_mapLayer);
+	//if (nullptr == pGameObject)
+	//	return E_FAIL;
+
+	//wsprintf(szFileName, L"Wrom_Boby_0_%d", CMonster::iMonsterIdx);
+
+	//if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+	//	return E_FAIL;
+
+	//m_mapLayer.insert({ pLayerTag ,pLayer });
 	m_mapLayer.insert({ pLayerTag ,pLayer });
 
 	return S_OK;
@@ -222,10 +262,41 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	/* 현재 씬, 레이어 정보를 전역으로 주입 */
 	CLayerContext ctx(pLayer, this);
 
-	// 오브젝트 추가
-	CGameObject* pGameObject = nullptr;
+	CUI* pUI = nullptr;
 
-	m_mapLayer.insert({ pLayerTag ,pLayer });
+	// Crosshair
+	pUI = CCrosshair::Create(m_pGraphicDev);
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	_vec2 vPos{ WINCX >> 1, WINCY >> 1 };
+	pUI->Set_Pos(vPos);
+
+	if (FAILED(pLayer->Add_GameObject(L"Crosshair", pUI)))
+		return E_FAIL;
+
+	// Hp
+	const _int iHpCount = 3;
+	const _float fStartX = 20.f;
+	const _float fStartY = 20.f;
+	const _float fIconSize = 15.f;  // CPlayerHpUI::Ready_GameObject()의 Set_Scale과 동일
+	const _float fGap = 15.f;
+
+	for (_int i = 0; i < iHpCount; ++i)
+	{
+		pUI = CPlayerHpUI::Create(m_pGraphicDev);
+		if (nullptr == pUI)
+			return E_FAIL;
+
+		_vec2 vPos{ fStartX + i * (fIconSize + fGap), fStartY };
+		pUI->Set_Pos(vPos);
+
+		wstring wstrTag = L"PlayerHp_" + to_wstring(i);
+		if (FAILED(pLayer->Add_GameObject(wstrTag.c_str(), pUI)))
+			return E_FAIL;
+	}
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
 }

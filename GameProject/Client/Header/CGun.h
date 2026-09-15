@@ -34,10 +34,18 @@ private:
 public:
 	static CGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
+public:
+	BULLETID	m_iCurBullet;
+	_int		m_iDmg;
+
 private:
 	_float			m_fLastShotTime;
-	_float			m_fReloadTime;
-	_int			m_iAmmo;
+	_float			m_fShootRate;
+	_float			m_fRunningTime;
+	_float			m_fLastSkillTime;
+	_float			m_fSkillDuration;
+	_float			m_fSkillCoolTime;
+	_bool			m_bSkillActivated;
 
 private:
 	virtual void		Free();

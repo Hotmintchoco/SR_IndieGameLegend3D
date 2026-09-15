@@ -11,7 +11,7 @@
 #include "CGameStatusMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CGameObject(pGraphicDev), m_iJumpState(JUMP_NOT), m_fJumpTime(0.f), m_bFix(true), m_bCheck(true)
+	: CGameObject(pGraphicDev), m_bFix(true), m_bCheck(true)
 {
 }
 
@@ -24,6 +24,8 @@ HRESULT CPlayer::Ready_GameObject()
 {
     if (FAILED(Add_Component()))
         return E_FAIL;
+
+    ::ShowCursor(FALSE);
 
 	__super::Ready_GameObject();
 
@@ -41,7 +43,6 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
     Key_Input(fTimeDelta);
 
-    Set_OnTerrain(fTimeDelta);
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
@@ -86,15 +87,26 @@ void CPlayer::RenderImGui()
     m_pTransformCom->Get_Info(INFO_POS, &vPlayerPos);
     ImGui::Text("Pos : %.2f, %.2f, %.2f", vPlayerPos.x, vPlayerPos.y, vPlayerPos.z);
 
-    /* 점프 상태 */
-    const char* szJumpState = "UNKNOWN";
-    switch (m_iJumpState)
-    {
-    case JUMP_NOT:       szJumpState = "JUMP_NOT";       break;
-    case JUMP_PARABOLIC: szJumpState = "JUMP_PARABOLIC"; break;
-    case JUMP_FREEFALL:  szJumpState = "JUMP_FREEFALL";  break;
-    }
-    ImGui::Text("JUMPSTATE : %s", szJumpState);
+    /* 상하좌우 키 입력 */
+
+    char cKeyStateQ = ' ';
+    char cKeyStateW = ' ';
+    char cKeyStateE = ' ';
+    char cKeyStateA = ' ';
+    char cKeyStateS = ' ';
+    char cKeyStateD = ' ';
+    const char* cKeyStateShift = "     ";
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_Q)) cKeyStateQ = 'Q';
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_W)) cKeyStateW = 'W';
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_E)) cKeyStateE = 'E';
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_A)) cKeyStateA = 'A';
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_S)) cKeyStateS = 'S';
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_D)) cKeyStateD = 'D';
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT)) cKeyStateShift = "SHIFT";
+
+    ImGui::Text("KEY INPUT STATE");
+    ImGui::Text("       [%c][%c][%c]", cKeyStateQ, cKeyStateW, cKeyStateE);
+    ImGui::Text("[%s][%c][%c][%c]", cKeyStateShift, cKeyStateA, cKeyStateS, cKeyStateD);
 
     /* 카메라 */
     _float fAngle;
@@ -155,36 +167,31 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
     _float fSpeed = 5.f;
 
-    if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_LSHIFT))
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
     {
         fSpeed *= 2;
     }
 
-    if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_W))
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
     {
         m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vLook, &vLook), fSpeed, fTimeDelta);
     }
 
-    if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_S))
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_S))
     {
         m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vLook, &vLook), -fSpeed, fTimeDelta);
     }
 
-    if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_A))
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
     {
         m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vRight, &vRight), -fSpeed, fTimeDelta);
     }
 
-    if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_D))
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_D))
     {
         m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vRight, &vRight), fSpeed, fTimeDelta);
     }
 
-    if ((m_iJumpState == JUMP_NOT) && (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_SPACE)))
-    {
-        m_iJumpState = JUMP_PARABOLIC;
-        m_fJumpTime = 0.f;
-    }
 
     /*
     if (CDInputMgr::GetInstance()->Get_DIMouseState(DIM_LB) & 0x80)
@@ -197,35 +204,25 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
     }
    */
 
-    if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_TAB))
+    if (CDInputMgr::GetInstance()->Key_Down(DIK_TAB))
     {
-        if (m_bCheck)
-            return;
-
-        m_bCheck = true;
+        m_bFix = !m_bFix;
 
         if (m_bFix)
-            m_bFix = false;
-
+        {
+            while (::ShowCursor(FALSE) >= 0) {}
+        }
         else
-            m_bFix = true;
-
-    }
-
-    else
-    {
-        m_bCheck = false;
+        {
+            while (::ShowCursor(TRUE) < 0) {}
+        }
     }
 
     if (false == m_bFix)
         return;
 
-    if (m_bFix)
-    {
-        Mouse_Move();
-        Mouse_Fix();
-    }
-
+    Mouse_Move();
+    Mouse_Fix();
 }
 
 void CPlayer::Mouse_Move()
@@ -248,89 +245,6 @@ void CPlayer::Mouse_Fix()
     SetCursorPos(ptMouseCenter.x, ptMouseCenter.y);
 }
 
-
-void CPlayer::Set_OnTerrain(const _float& fTimeDelta)
-{
-    _vec3   vPos = m_pTransformCom->m_vInfo[INFO_POS];
-
-
-    CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>
-        (CManagement::GetInstance()->Get_Component(ID_STATIC, L"GameLogic_Layer", L"Terrain", L"Com_Buffer"));
-
-    if (nullptr == pTerrainBufferCom)
-        return;
-
-    _float  fY = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
-
-    if (vPos.y < fY + 1.f) // KEY_INPUT에서의 이동에 따른 높이 보정
-    {
-        vPos.y = fY + 1.f;
-        m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
-    }
-    else if ((m_iJumpState == JUMP_NOT) && (vPos.y > fY + 1.f)) // 가파른 내리막길 또는 절벽에서 자유낙하
-    {
-        _float fClampDelta = 0.05f; // 작은 경사에서 자유낙하하는 대신 지면클램핑 시킬 범위
-        if (vPos.y - (fY + 1.f) < fClampDelta)
-        {
-            vPos.y = fY + 1.f;
-            m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z); // 지면클램핑
-        }
-        else
-        {
-            m_iJumpState = JUMP_FREEFALL;
-            m_fJumpTime = 0.f;
-        }
-    }
-
-    _float fJumpSpeed = 30.f;
-    _float fYDelta;
-
-#pragma region fYDelta 공식 유도과정
-
-    // PARABOLIC(포물선 점프 상태의 fYDelta)
-
-    // fYDelta  = fYInitial + fJumpSpeed * (m_fJumpTime + fTimeDelta) - 1/2  * GRAVCONST * (fJumpTime + fTimeDelta)*(fJumpTime + fTimeDelta)
-    // - (fYInitial + fJumpSpeed * m_fJumpTime - 1/2 * GRAVCONST * m_fJumpTime * m_fJumpTime )
-    // 
-    // = fJumpSpeed * fTimeDelta  - 1/2 * GRAVCONST *  ((m_fJumpTime + fTimeDelta)*(m_fJumpTime + fTimeDelta) - m_fJumpTime * m_fJumpTime)
-    // 
-    // = fJumpSpeed * fTimeDelta - 1/2 * GRAVCONST * ( 2 * m_fJumpTime * fTimeDelta + fTimeDelta * fTimeDelta )
-    // 
-    // = fTimeDelta * (fJumpSpeed - 1/2 * GRAVCONST (2* m_fJumpTime + fTimeDelta));
-
-    // FREEFALL(자유낙하 상태의 fYDelta)
-
-    //fYDelta = -(1 / 2 * GRAVCONST * (m_fJumpTime + fTimeDelta) * (m_fJumpTime + fTimeDelta) - 1 / 2 * GRAVCONST * m_fJumpTime * m_fJumpTime)
-    //
-    //= -(1 / 2 * GRAVCONST * (2 * m_fJumpTime * fTimeDelta + fTimeDelta * fTimeDelta)
-    //
-    //= -(1 / 2 * GRAVCONST * fTimeDelta * (2 * m_fJumpTime + fTimeDelta);
-
-#pragma endregion
-
-    if (m_iJumpState == JUMP_PARABOLIC) // 포물선 점프중일때 
-    {
-        fYDelta = fTimeDelta * (fJumpSpeed - 0.5f * GRAVCONST * (2 * m_fJumpTime + fTimeDelta));
-        vPos.y += fYDelta;
-        m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
-    }
-    else if (m_iJumpState == JUMP_FREEFALL) // 자유낙하 상태일때
-    {
-        fYDelta = fTimeDelta * (-0.5f * GRAVCONST * (2 * m_fJumpTime + fTimeDelta));
-        vPos.y += fYDelta;
-        m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
-    }
-
-    fY = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
-    if (vPos.y < fY + 1.f) // 바닥에 착지
-    {
-        m_pTransformCom->Set_Pos(vPos.x, fY + 1.f, vPos.z);
-        m_iJumpState = JUMP_NOT;
-        m_fJumpTime = 0.f;
-    }
-
-    m_fJumpTime += fTimeDelta;
-}
 
 _vec3 CPlayer::Picking_OnTerrain()
 {

@@ -10,11 +10,11 @@ namespace Engine
 	class CCalculator;
 }
 
-class CSkull : public CMonster
+class CSpeyeder : public CMonster
 {
 protected:
-	explicit CSkull(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CSkull();
+	explicit CSpeyeder(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CSpeyeder();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -28,8 +28,10 @@ private:
 	HRESULT			Add_Component();
 
 public:
-	static CSkull* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CSpeyeder* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
+private:
+	_bool m_bLandingState;
 protected:
 	virtual void		Free();
 };
