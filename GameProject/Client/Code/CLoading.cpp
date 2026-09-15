@@ -180,6 +180,10 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Fog_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture2D/fog.png", 1))))
         return E_FAIL;
 
+    /* 문 */
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Door_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/door_%d.png", 5))))
+        return E_FAIL;
+
     /* 맵 배치 데이터 */
     if (FAILED(ParseRoomData()))
     {

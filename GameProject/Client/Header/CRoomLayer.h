@@ -21,6 +21,7 @@ public:
 	inline bool IsOnProgress() { return m_bOnProgress; }
 
 	CEventDelegate<void> m_OnRoomBegin;
+	CEventDelegate<void> m_OnRoomClear;
 	void OnRoomTriggerBlockCollided();
 
 private:

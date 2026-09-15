@@ -10,6 +10,7 @@
 #include "CTriggerBox.h"
 #include "CAbstractFactory.h"
 #include "CGameStatusMgr.h"
+#include "CDoor.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -99,12 +100,12 @@ HRESULT CRoomLayer::SpawnRoom()
 		if (nullptr == pGameObject)
 			return E_FAIL;
 
-		wstring wstrDoorName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Door_" + to_wstring(i);
+		wstring wstrWallName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Wall_" + to_wstring(i);
 
-		if (FAILED(Add_GameObject(wstrDoorName, pGameObject)))
+		if (FAILED(Add_GameObject(wstrWallName, pGameObject)))
 			return E_FAIL;
 
-		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
+		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrWallName, L"Com_Transform"));
 
 		pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
 
@@ -167,6 +168,24 @@ HRESULT CRoomLayer::SpawnRoom()
 
 			pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
 			pTransformCom->Move_Pos(&vDir, 4.f + (iDir % 2) * 1.f, 1.f);
+
+			/* 문 */
+			
+			pGameObject = CDoor::Create(pDevice);
+			if (nullptr == pGameObject)
+				return E_FAIL;
+
+			wstring wstrDoorName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Door_" + to_wstring(i);
+
+			if (FAILED(Add_GameObject(wstrDoorName, pGameObject)))
+				return E_FAIL;
+
+			pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
+
+			pTransformCom->Set_Pos(vRoomCenterPos.x, 0.75f, vRoomCenterPos.z);
+			pTransformCom->Rotation(ROT_Y, 90.f * iDir);
+			pTransformCom->Move_Pos(&vDir, 5.5f + (iDir % 2) * 1.f, 1.f);
+
 		}
 
 

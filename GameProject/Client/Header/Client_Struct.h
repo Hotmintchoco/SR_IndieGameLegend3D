@@ -34,7 +34,8 @@ enum class EObjectType
 	EXPLOSIVE_FRUSTUM,
 
 	SKULL = 11,
-	WORM = 12,
-
+	CBoss1,
+	CSpeyeder,
+	
 	MAX,
 };

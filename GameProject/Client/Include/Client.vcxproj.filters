@@ -178,6 +178,9 @@
     <Filter Include="02. GameObject\11. Item\Energy">
       <UniqueIdentifier>{824b3ae7-9dc3-4b15-91b6-5a46d72d303b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Room\BaseProp\Door">
+      <UniqueIdentifier>{87e9c26a-ad36-4771-a5d9-f643d67f29b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -363,6 +366,9 @@
     <ClInclude Include="..\Header\CGem.h">
       <Filter>02. GameObject\11. Item\Gem</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CDoor.h">
+      <Filter>02. GameObject\07. Room\BaseProp\Door</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -523,6 +529,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGem.cpp">
       <Filter>02. GameObject\11. Item\Gem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDoor.cpp">
+      <Filter>02. GameObject\07. Room\BaseProp\Door</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
