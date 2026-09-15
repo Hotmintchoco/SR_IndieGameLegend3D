@@ -14,6 +14,7 @@
 #include "CRoomLoadingMgr.h"
 #include "CAbstractFactory.h"
 #include "CGameStatusMgr.h"
+#include "CDebugMgr.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -45,6 +46,7 @@ int CMainApp::Update_MainApp(const _float& fTimeDelta)
 	m_pManagementClass->Update_Scene(fTimeDelta);
 
 	CGameStatusMgr::GetInstance()->Update(fTimeDelta);
+	CDebugMgr::GetInstance()->Update(fTimeDelta);
 
 	return 0;
 }
@@ -63,6 +65,7 @@ void CMainApp::Render_MainApp()
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
 
 	CGameStatusMgr::GetInstance()->Render();
+	CDebugMgr::GetInstance()->Render();
 
 	CImGuiTool::EndFrame();
 
@@ -154,6 +157,7 @@ void CMainApp::Free()
 	CRoomLoadingMgr::DestroyInstance();
 	CAbstractFactory::DestroyInstance();
 	CGameStatusMgr::DestroyInstance();
+	CDebugMgr::DestroyInstance();
 
 	m_pManagementClass->DestroyInstance();
 	m_pDeviceClass->DestroyInstance();
