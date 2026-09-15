@@ -28,6 +28,9 @@ public:
 
 	COLLIDER_TYPE	Get_ColliderType() { return m_eColliderType; }
 
+	void			Set_CollisionID(const COLLISIONID& eCollisionID) { m_eCollisionID = eCollisionID; }
+	COLLISIONID		Get_CollisionID() { return m_eCollisionID; }
+
 	virtual _bool	Intersect(CCollider* pOther) PURE;
 
 	virtual void	OnCollisionEnter(CCollider* pOther);
@@ -45,12 +48,13 @@ protected:
 	virtual void		Free();
 
 protected:
-	_bool			m_bIsTrigger;
-	_bool			m_bIsPos;
-	_bool			m_bIsCollided;
-	_bool			m_bIsActive;
+	_bool			m_bIsTrigger;	// 트리거 여부를 나타내는 변수(아직 안씀)
+	_bool			m_bIsCollided;	// 충돌 여부를 나타내는 변수
+	_bool			m_bIsActive;	// 충돌 체크 활성화 여부를 나타내는 변수
 	_float			m_fRadius;
+
 	COLLIDER_TYPE	m_eColliderType = CT_NONE;
+	COLLISIONID		m_eCollisionID = COLL_END;
 };
 
 END

@@ -111,6 +111,11 @@ void CWall::InitializeCollider()
     pBoxCollider->Set_Extents(fExtentsX, fExtentsY, fExtentsZ);
     pBoxCollider->Set_DiffPos({ fDiffX, fDiffY, fDiffZ });
 
+    for (int i = 0; i < 2; ++i)
+    {
+        if (m_pColliderCom[i])
+            m_pColliderCom[i]->Set_CollisionID(COLL_OBSTACLE);
+	}
     // -- Collider Initialization -- 
 }
 
@@ -135,7 +140,7 @@ void CWall::LateUpdate_GameObject(const _float& fTimeDelta)
 
     // 충돌 처리
     for (int i = 0; i < 2; ++i)
-        CCollisionMgr::GetInstance()->Add_Collider(COLL_WALL, m_pColliderCom[i]);
+        CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom[i]);
 }
 
 void CWall::Render_GameObject()

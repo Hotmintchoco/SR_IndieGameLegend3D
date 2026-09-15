@@ -5,7 +5,6 @@ namespace Engine
 {
 	enum WINMODE { MODE_FULL, MODE_WIN };
 
-	// Dynamic ������Ʈ ��� �� �����Ӹ��� �����ؾ��ϴ� ������Ʈ ����
 	enum COMPONENTID { ID_DYNAMIC, ID_STATIC, ID_END };
 
 	enum INFO {	INFO_RIGHT, INFO_UP, INFO_LOOK, INFO_POS, INFO_END };
@@ -26,7 +25,7 @@ namespace Engine
 
 	enum BULLETID { BULLET_DEFAULT, BULLET_SMALL, BULLET_END };
 
-	// �浹 �׷� ����
+	// Collison Group ID
 	enum COLLISIONID { COLL_PLAYER, COLL_MONSTER, COLL_PBULLET, COLL_MBULLET, COLL_WALL, COLL_END };
 
 }
