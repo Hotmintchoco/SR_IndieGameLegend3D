@@ -1,10 +1,12 @@
 #pragma once
+
 #include "CBase.h"
 #include "CComponent.h"
 
 BEGIN(Engine)
 
 class CLayer;
+class CCollider;
 
 class ENGINE_DLL CGameObject : public CBase
 {
@@ -25,13 +27,16 @@ public:
 
 	virtual			void		OnCollisionEnter(CGameObject* pOther) {}
 
-	inline void SetOwner(CLayer* pLayer) { m_pOwner = pLayer; }
+	inline void					SetOwner(CLayer* pLayer) { m_pOwner = pLayer; }
 
 public:
-	void Set_Dead(_bool bDead) { m_bDead = bDead; }
-	_bool Is_Dead() const { return m_bDead; }
+	void			Set_Dead(_bool bDead) { m_bDead = bDead; }
+	_bool			Is_Dead() const { return m_bDead; }
 
 	void			Compute_ViewZ(const _vec3* pPos);
+
+protected:
+	void			Obstacle_Collision(CGameObject* pOther, CCollider* pObstacleCollider);
 
 protected:
 	map<const _tchar*, CComponent*>			m_mapComponent[ID_END];
