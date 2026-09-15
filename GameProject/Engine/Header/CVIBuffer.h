@@ -24,9 +24,16 @@ protected:
 	_ulong		m_dwFVF;			// 정점의 옵션
 
 	LPDIRECT3DINDEXBUFFER9			m_pIB;
-
+	VTXSTRUCTTYPE	m_VtxStructType;
 	_ulong			m_dwIdxSize;
 	D3DFORMAT		m_IdxFmt;
+
+public : 
+
+	LPDIRECT3DVERTEXBUFFER9 Get_VtxBuffer() { return m_pVB; }
+	LPDIRECT3DINDEXBUFFER9  Get_IdxBuffer() { return m_pIB; }
+	D3DFORMAT				Get_Format() { return m_IdxFmt; }
+	VTXSTRUCTTYPE			Get_VtxStructType() { return m_VtxStructType; }
 
 public:
 	virtual void	Free();
