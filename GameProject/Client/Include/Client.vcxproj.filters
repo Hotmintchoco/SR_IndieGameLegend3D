@@ -166,6 +166,18 @@
     <Filter Include="02. GameObject\06. Effect\SmallExplode">
       <UniqueIdentifier>{c4da1f1d-8911-4624-9f4b-8a1a699876e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\11. Item">
+      <UniqueIdentifier>{96a898cd-56e9-4421-810a-23a78c4952ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Item\Gem">
+      <UniqueIdentifier>{c8f48a88-b7cc-45e5-8b43-6dc3dfdceccd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Item\Heart">
+      <UniqueIdentifier>{58eb4470-a523-4ced-90a8-4263ab03256d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Item\Energy">
+      <UniqueIdentifier>{824b3ae7-9dc3-4b15-91b6-5a46d72d303b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -339,6 +351,18 @@
     <ClInclude Include="..\Header\CSmallExplode.h">
       <Filter>02. GameObject\06. Effect\SmallExplode</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CItem.h">
+      <Filter>02. GameObject\11. Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEnergy.h">
+      <Filter>02. GameObject\11. Item\Energy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CHeart.h">
+      <Filter>02. GameObject\11. Item\Heart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGem.h">
+      <Filter>02. GameObject\11. Item\Gem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -487,6 +511,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSmallExplode.cpp">
       <Filter>02. GameObject\06. Effect\SmallExplode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CItem.cpp">
+      <Filter>02. GameObject\11. Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEnergy.cpp">
+      <Filter>02. GameObject\11. Item\Energy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CHeart.cpp">
+      <Filter>02. GameObject\11. Item\Heart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGem.cpp">
+      <Filter>02. GameObject\11. Item\Gem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

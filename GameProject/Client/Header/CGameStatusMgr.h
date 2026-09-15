@@ -38,13 +38,13 @@ public:
 	inline void UpdateFPS(float fDT) { m_fDT = fDT; }
 
 private:
-	/* Room */
+	/* Minimap */
 	int m_iCurrentRoomIndex = 12;
 	bool m_bVisitTable[25] = { false };
 	bool m_bClearTable[25] = { false };
+	_vec3 m_vPlayerPos = _vec3{ 0.f, 0.f, 0.f };
 
 	/* Player */
-	_vec3 m_vPlayerPos = _vec3{ 0.f, 0.f, 0.f };
 	int m_iPlayerHp = 0;
 	int m_iPlayerMaxHp = 0;
 

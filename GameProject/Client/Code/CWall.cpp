@@ -116,8 +116,6 @@ void CWall::InitializeCollider()
 
 void CWall::OnRoomBegin()
 {
-    cout << "이벤트 처리됨" << endl;
-    int a = 0;
 }
 
 _int CWall::Update_GameObject(const _float& fTimeDelta)
