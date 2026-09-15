@@ -52,6 +52,10 @@ void CCollisionMgr::Update_Collision()
                     if (!pColLeft->Get_IsPos() || !pColRight->Get_IsPos())
 						continue;
 
+					// 두 콜라이더 중 하나라도 비활성화 상태라면 패스
+					if (!pColLeft->Get_IsActive() || !pColRight->Get_IsActive())
+						continue;
+
                     // 실제 교차(충돌) 검사
                     if (pColLeft->Intersect(pColRight))
                     {
