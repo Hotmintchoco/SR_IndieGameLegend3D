@@ -9,6 +9,7 @@
 #include "CTile.h"
 #include "CTriggerBox.h"
 #include "CAbstractFactory.h"
+#include "CGameStatusMgr.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -229,9 +230,20 @@ HRESULT CRoomLayer::SpawnRoom()
 
 }
 
-void CRoomLayer::OnRoomBegin()
+void CRoomLayer::OnRoomTriggerBlockCollided()
 {
-	m_OnRoomBegin.Broadcast();
+	CGameStatusMgr::GetInstance()->UpdateCurrentRoomIndex(m_iRoomIndex);
+
+	if (!m_bVisited)
+	{
+		CGameStatusMgr::GetInstance()->UpdateVisitTable(m_iRoomIndex);
+		m_bVisited = true;
+	}
+
+	if (!m_bCleared)
+	{
+		m_OnRoomBegin.Broadcast();
+	}
 }
 
 CRoomLayer* CRoomLayer::Create(int iRoomIndex)

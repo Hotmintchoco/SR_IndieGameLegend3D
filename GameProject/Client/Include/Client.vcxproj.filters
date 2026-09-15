@@ -142,6 +142,9 @@
     <Filter Include="02. GameObject\07. Room\BaseProp\TriggerBox">
       <UniqueIdentifier>{d5b37dad-c154-476b-a769-4c3434dbbd32}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Manager\02. Debug">
+      <UniqueIdentifier>{02ca9211-2d93-4f54-bfb3-1da9b6e7fac6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -294,6 +297,9 @@
     <ClInclude Include="..\Header\CTriggerBox.h">
       <Filter>02. GameObject\07. Room\BaseProp\TriggerBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CDebugMgr.h">
+      <Filter>04. Manager\02. Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -421,6 +427,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTriggerBox.cpp">
       <Filter>02. GameObject\07. Room\BaseProp\TriggerBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDebugMgr.cpp">
+      <Filter>04. Manager\02. Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

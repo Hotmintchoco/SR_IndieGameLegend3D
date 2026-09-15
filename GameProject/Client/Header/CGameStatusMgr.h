@@ -13,12 +13,16 @@ private:
 	virtual ~CGameStatusMgr();
 
 public:
-	void Update(float fTimeDelta);
+	void Update(const float fTimeDelta);
 	void Render();
 
 	void RenderImGui();
 
 	CRoomLayer* GetCurrentRoomLayer();
+
+	inline void UpdateCurrentRoomIndex(int iIndex) { m_iCurrentRoomIndex = iIndex; }
+	inline void UpdateVisitTable(int iIndex) { m_bVisitTable[iIndex] = true; }
+	inline void UpdateClearTable(int iIndex) { m_bClearTable[iIndex] = true; }
 
 	inline void UpdatePlayerPosition(const _vec3& vPos) { m_vPlayerPos = vPos; }
 	inline void UpdatePlayerHp(int iAmount) { m_iPlayerHp += iAmount; }
@@ -34,21 +38,27 @@ public:
 	inline void UpdateFPS(float fDT) { m_fDT = fDT; }
 
 private:
-	/* Debug */
-	int m_iCurrentRoomIndex = -1;
+	/* Room */
+	int m_iCurrentRoomIndex = 12;
+	bool m_bVisitTable[25] = { false };
+	bool m_bClearTable[25] = { false };
 
-	/* UI */
+	/* Player */
 	_vec3 m_vPlayerPos = _vec3{ 0.f, 0.f, 0.f };
 	int m_iPlayerHp = 0;
 	int m_iPlayerMaxHp = 0;
 
+	/* Weapon */
 	float m_fUltGauge = 0.f;
 	float m_fSpecialAtkGauge = 0.f;
 	
+	/* Item */
 	int m_iGem = 0;
 	
+	/* Camera */
 	float m_fYaw = 0.f;
 
+	/* FPS */
 	float m_fDT = 0;
 
 private:

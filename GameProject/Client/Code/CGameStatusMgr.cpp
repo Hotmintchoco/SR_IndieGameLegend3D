@@ -15,7 +15,7 @@ CGameStatusMgr::~CGameStatusMgr()
 {
 }
 
-void CGameStatusMgr::Update(float fTimeDelta)
+void CGameStatusMgr::Update(const float fTimeDelta)
 {
     _vec3 vCameraLook;
     CCameraMgr::GetInstance()->Get_CamLook(&vCameraLook);
@@ -40,7 +40,31 @@ void CGameStatusMgr::RenderImGui()
     // --- Debug ---
     if (ImGui::CollapsingHeader("Stage", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        ImGui::Text("Current Room : %d", m_iCurrentRoomIndex);
+        ImGui::Text("Current Room : %d (%d, %d)", m_iCurrentRoomIndex,
+            m_iCurrentRoomIndex / 5, m_iCurrentRoomIndex % 5);
+
+        ImGui::Separator();
+
+        for (int y = 0; y < 5; ++y)
+        {
+            for (int x = 0; x < 5; ++x)
+            {
+                int idx = y * 5 + x;
+                if (x > 0) ImGui::SameLine();
+
+                const char* mark = "?";
+                ImVec4 col = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
+
+                if (m_bClearTable[idx]) { mark = "O"; col = ImVec4(0.3f, 1.0f, 0.3f, 1.0f); }
+                else if (m_bVisitTable[idx]) { mark = "A"; col = ImVec4(1.0f, 0.9f, 0.3f, 1.0f); }
+
+                // 현재 방 강조
+                if (idx == m_iCurrentRoomIndex)
+                    col = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
+
+                ImGui::TextColored(col, " %s ", mark);
+            }
+        }
     }
 
     // --- Player ---

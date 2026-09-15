@@ -84,7 +84,7 @@ void CTriggerBox::OnCollisionEnter(CGameObject* pOther)
     if (pPlayer)
     {
         /* Box는 Ready 단계에서만 만들어지니까 Owner가 보장됨 */
-        static_cast<CRoomLayer*>(m_pOwner)->OnRoomBegin();
+        static_cast<CRoomLayer*>(m_pOwner)->OnRoomTriggerBlockCollided();
     }
 }
 
