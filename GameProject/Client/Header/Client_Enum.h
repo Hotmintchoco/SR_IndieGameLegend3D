@@ -53,3 +53,25 @@ enum COLLISIONID
 
 	COLL_MAX
 };
+
+/* 맵 배치 오브젝트 타입 */
+enum class EObjectType
+{
+	NONE = 0,
+
+	BREAKABLE_FRUSTUM = 1,
+	UNBREAKABLE_FRUSTUM,
+	EXPLOSIVE_FRUSTUM,
+
+	SKULL = 11,
+	CBoss1,
+	CSpeyeder,
+
+	ITEM_NONE = 31,
+	ITEM_HEART,
+	ITEM_GEM,
+	ITEM_ENERGY,
+	ITEM_MAX,
+
+	MAX,
+};
