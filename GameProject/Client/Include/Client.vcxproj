@@ -163,7 +163,6 @@
     <ClInclude Include="..\Header\CGem.h" />
     <ClInclude Include="..\Header\CHeart.h" />
     <ClInclude Include="..\Header\CItem.h" />
-    <ClInclude Include="..\Header\CPlayerHpUI.h" />
     <ClInclude Include="..\Header\CGun.h" />
     <ClInclude Include="..\Header\CImGuiTool.h" />
     <ClInclude Include="..\Header\Client_Enum.h" />
@@ -227,7 +226,6 @@
     <ClCompile Include="..\Code\CGem.cpp" />
     <ClCompile Include="..\Code\CHeart.cpp" />
     <ClCompile Include="..\Code\CItem.cpp" />
-    <ClCompile Include="..\Code\CPlayerHpUI.cpp" />
     <ClCompile Include="..\Code\CGun.cpp" />
     <ClCompile Include="..\Code\CImGuiTool.cpp" />
     <ClCompile Include="..\Code\CLoading.cpp" />
