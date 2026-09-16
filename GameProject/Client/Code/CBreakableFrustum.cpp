@@ -2,6 +2,9 @@
 #include "CBreakableFrustum.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
+#include "CAbstractFactory.h"
+#include "CRoomLayer.h"
+#include "CGameStatusMgr.h"
 
 CBreakableFrustum::CBreakableFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CFrustum(pGraphicDev)
@@ -51,6 +54,14 @@ void CBreakableFrustum::Render_GameObject()
 
 void CBreakableFrustum::OnCollisionEnter(CGameObject* pOther)
 {
+    CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+
+    CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
+    if (pObject)
+    {
+        pLayer->Add_GameObject(L"Item", pObject);
+    }
+
     Set_Dead(true);
 }
 

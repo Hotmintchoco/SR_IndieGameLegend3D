@@ -37,5 +37,11 @@ enum class EObjectType
 	CBoss1,
 	CSpeyeder,
 	
+	ITEM_NONE = 31,
+	ITEM_HEART,
+	ITEM_GEM,
+	ITEM_ENERGY,
+	ITEM_MAX,
+	
 	MAX,
 };

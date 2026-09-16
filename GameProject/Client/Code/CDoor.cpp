@@ -24,7 +24,7 @@ HRESULT CDoor::Ready_GameObject()
     CRoomLayer* pLayer = static_cast<CRoomLayer*>(CLayerContext::GetLayer());
     if (pLayer)
     {
-        pLayer->m_OnRoomBegin.AddBinding(GetToken(), [this]() { Open(); });
+        pLayer->m_OnRoomBegin.AddBinding(GetToken(), [this]() { if (m_bOnAnimation) return;  if (m_iTextureIdx == 0) Close(); else Open(); });
     }
 
 
