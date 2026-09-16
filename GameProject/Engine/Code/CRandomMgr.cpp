@@ -43,3 +43,7 @@ long long CRandomMgr::GetRandomLonglong(long long llMin, long long llMax)
 	uniform_int_distribution<long long> dist(llMin, llMax);
 	return dist(m_gen);
 }
+
+void CRandomMgr::Free()
+{
+}

@@ -1,10 +1,11 @@
 #pragma once
 
+#include "CBase.h"
 #include "Engine_Define.h"
 
 BEGIN(Engine)
 
-class ENGINE_DLL CRandomMgr
+class ENGINE_DLL CRandomMgr : public CBase
 {
 	DECLARE_SINGLETON(CRandomMgr);
 
@@ -21,6 +22,9 @@ public:
 
 private:
 	mt19937 m_gen;
+
+private:
+	virtual void Free() override;
 };
 
 END
