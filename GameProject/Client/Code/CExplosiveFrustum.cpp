@@ -1,9 +1,14 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CExplosiveFrustum.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CExplosiveFrustumLight.h"
 #include "CLayer.h"
+#include "CGem.h"
+#include "CEnergy.h"
+#include "CHeart.h"
+#include "CGameStatusMgr.h"
+#include "CRoomLayer.h"
 
 CExplosiveFrustum::CExplosiveFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CFrustum(pGraphicDev)
@@ -19,7 +24,7 @@ HRESULT CExplosiveFrustum::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    // Note : ¼ø¼­¿¡ ÁÖÀÇ
+    // Note : ìˆœì„œì— ì£¼ì˜
     if (FAILED(CFrustum::Ready_GameObject()))
         return E_FAIL;
 
@@ -31,7 +36,7 @@ HRESULT CExplosiveFrustum::Ready_GameObject()
 _int CExplosiveFrustum::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CFrustum::Update_GameObject(fTimeDelta);
-
+    
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
     _vec3   vPos;
@@ -61,7 +66,30 @@ void CExplosiveFrustum::Render_GameObject()
 
 void CExplosiveFrustum::OnCollisionEnter(CGameObject* pOther)
 {
-    m_pTransformCom->Set_Scale(0.5f, 0.5f, 0.5f);
+    CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+    
+    CGameObject* pObject = nullptr;
+
+    pObject = CGem::Create(m_pGraphicDev, this);
+    if (pObject)
+    {
+        pLayer->Add_GameObject(L"Item_Gem", pObject);
+    }
+
+    pObject = CEnergy::Create(m_pGraphicDev, this);
+    if (pObject)
+    {
+        pLayer->Add_GameObject(L"Item_Energy", pObject);
+    }
+    
+    pObject = CHeart::Create(m_pGraphicDev, this);
+    if (pObject)
+    {
+        pLayer->Add_GameObject(L"Item_Heart", pObject);
+    }
+    
+    Set_Dead(true);
+    m_pLight->Set_Dead(true);
 }
 
 HRESULT CExplosiveFrustum::Add_Component()
@@ -99,7 +127,7 @@ void CExplosiveFrustum::SpawnLight()
 
     m_pLight = pLight;
     pLight->AttachTo(this);
-    /* ¾Æ¸¶ ÀÌ¸§Àº Áßº¹ÀÌ ¿©·µ µÉ °Í. ÀÏ´Ü ½ºÆù¸¸ È®ÀÎ */
+    /* ì•„ë§ˆ ì´ë¦„ì€ ì¤‘ë³µì´ ì—¬ëŸ¿ ë  ê²ƒ. ì¼ë‹¨ ìŠ¤í°ë§Œ í™•ì¸ */
     m_pOwner->Add_GameObject(L"Explosive_Frustum_Light", pLight);
 }
 

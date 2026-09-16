@@ -1,11 +1,10 @@
-#ifndef Engine_Enum_h__
+Ôªø#ifndef Engine_Enum_h__
 #define Engine_Enum_h__
 
 namespace Engine
 {
 	enum WINMODE { MODE_FULL, MODE_WIN };
 
-	// Dynamic ƒƒ∆˜≥Õ∆Æ ∞ÊøÏ ∏≈ «¡∑π¿”∏∂¥Ÿ ∞ªΩ≈«ÿæﬂ«œ¥¬ ƒƒ∆˜≥Õ∆Æ ¡˝¥‹
 	enum COMPONENTID { ID_DYNAMIC, ID_STATIC, ID_END };
 
 	enum INFO {	INFO_RIGHT, INFO_UP, INFO_LOOK, INFO_POS, INFO_END };
@@ -20,16 +19,8 @@ namespace Engine
 
 	enum MOUSEMOVESTATE {	DIMS_X, DIMS_Y, DIMS_Z, DIMS_END };
 
-	enum JUMPSTATE { JUMP_NOT, JUMP_PARABOLIC, JUMP_FREEFALL, JUMP_END };
-
 	enum CAMERAID { CAMERA_FPV_PERSPECTIVE, CAMERA_TPV_PERSPECTIVE, CAMERA_END };
 
-	enum BULLETID { BULLET_DEFAULT, BULLET_SMALL, BULLET_END };
-	
-	enum VTXSTRUCTTYPE { VTXSTRUCT_DEFAULT, VTXSTRUCT_COL, VTXSTRUCT_TEX, VTXSTRUCT_CUBE, VTXSTRUCT_END }; // Vertex ∏ﬁ∏∏Æ πˆ∆€¿« ±∏¡∂√º ≈∏¿‘
-
-	// √Êµπ ±◊∑Ï ¡§¿«
-	enum COLLISIONID { COLL_PLAYER, COLL_MONSTER, COLL_PBULLET, COLL_MBULLET, COLL_WALL, COLL_END };
-
+	enum VTXSTRUCTTYPE { VTXSTRUCT_DEFAULT, VTXSTRUCT_COL, VTXSTRUCT_TEX, VTXSTRUCT_CUBE, VTXSTRUCT_END }; // Vertex Î©îÎ™®Î¶¨ Î≤ÑÌçºÏùò Íµ¨Ï°∞Ï≤¥ ÌÉÄÏûÖ
 }
 #endif // Engine_Enum_h__

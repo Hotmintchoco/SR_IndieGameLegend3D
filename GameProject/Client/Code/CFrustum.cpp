@@ -4,6 +4,7 @@
 #include "CRenderer.h"
 #include "CBoxCollider.h"
 #include "CCollisionMgr.h"
+#include "Client_Enum.h"
 
 CFrustum::CFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -23,6 +24,8 @@ HRESULT CFrustum::Ready_GameObject()
     if (FAILED(CGameObject::Ready_GameObject()))
         return E_FAIL;
 
+	m_pColliderCom->Set_CollisionID(COLL_OBSTACLE);
+
     return S_OK;
 }
 
@@ -30,7 +33,7 @@ _int CFrustum::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    CCollisionMgr::GetInstance()->Add_Collider(COLLISIONID::COLL_MONSTER, m_pColliderCom);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_MONSTER, m_pColliderCom);
 
     return iExit;
 }

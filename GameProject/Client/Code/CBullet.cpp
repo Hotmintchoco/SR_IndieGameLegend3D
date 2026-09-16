@@ -39,6 +39,7 @@ HRESULT CBullet::Ready_GameObject(const _vec3* pPos, const _vec3* pDir)
     D3DXVec3Normalize(&m_vDir, pDir);
 
 	__super::Ready_GameObject();
+	m_pColliderCom->Set_CollisionID(COLL_PBULLET);
 
     switch (m_iBulletID)
     {

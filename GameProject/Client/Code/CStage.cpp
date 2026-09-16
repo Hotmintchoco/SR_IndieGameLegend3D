@@ -3,7 +3,6 @@
 #include "CBackGround.h"
 #include "CProtoMgr.h"
 #include "CPlayer.h"
-#include "CSkull.h"
 #include "CTerrain.h"
 #include "CDynamicCamera.h"
 #include "CCameraMgr.h"
@@ -22,6 +21,9 @@
 #include "CLayerContext.h"
 #include "CPlayerHpUI.h"
 #include "CCrosshair.h"
+#include "CSkull.h"
+#include "CBoss1.h"
+#include "CSpeyeder.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -61,9 +63,10 @@ HRESULT CStage::Ready_Scene()
 		return E_FAIL;
 
 	// 충돌 그룹 설정
-	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_MONSTER);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_WALL);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PBULLET, Engine::COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_ITEM);
 
 	return S_OK;
 }
@@ -179,18 +182,54 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Gun", pGameObject)))
 		return E_FAIL;
 
-	// Worm
-	m_mapLayer.insert({ pLayerTag ,pLayer });
+	
+	// Monster
+	//TCHAR		szFileName[128] = L"";
 
-	map<wstring, CLayer*>* a = &m_mapLayer;
+	//pGameObject = CSkull::Create(m_pGraphicDev);
+	//static_cast<CMonster*>(pGameObject)->Set_Pos(55, 0, 55);
+	//if (nullptr == pGameObject)
+	//	return E_FAIL;
+	//wsprintf(szFileName, L"Skull_%d", CMonster::iMonsterIdx);
+	//if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+	//	return E_FAIL;
 
-	pGameObject = CWorm::Create(m_pGraphicDev, &m_mapLayer);
-	if (nullptr == pGameObject)
-		return E_FAIL;
-	//static_cast<CWorm*>(pGameObject)->Set_LayerPointer(&m_mapLayer); //임시
-	if (FAILED(pLayer->Add_GameObject(L"Worm_Boby_0", pGameObject)))
-		return E_FAIL;
+	//pGameObject = CBoss1::Create(m_pGraphicDev);
+	//static_cast<CMonster*>(pGameObject)->Set_Pos(65, 0, 55);
+	//if (nullptr == pGameObject)
+	//	return E_FAIL;
+	//wsprintf(szFileName, L"Boss1_%d", CMonster::iMonsterIdx);
+	//if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+	//	return E_FAIL;
 
+	//pGameObject = CSpeyeder::Create(m_pGraphicDev);
+	//static_cast<CMonster*>(pGameObject)->Set_Pos(64, 0, 56);
+	//if (nullptr == pGameObject)
+	//	return E_FAIL;
+	//wsprintf(szFileName, L"Speyeder_%d", CMonster::iMonsterIdx);
+	//if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+	//	return E_FAIL;
+
+	//pGameObject = CSpeyeder::Create(m_pGraphicDev);
+	//static_cast<CMonster*>(pGameObject)->Set_Pos(64, 0, 57);
+	//if (nullptr == pGameObject)
+	//	return E_FAIL;
+	//wsprintf(szFileName, L"Speyeder_%d", CMonster::iMonsterIdx);
+	//if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+	//	return E_FAIL;
+
+	//map<const _tchar*, CLayer*>* a = &m_mapLayer;
+
+	//pGameObject = CWorm::Create(m_pGraphicDev, &m_mapLayer);
+	//if (nullptr == pGameObject)
+	//	return E_FAIL;
+
+	//wsprintf(szFileName, L"Wrom_Boby_0_%d", CMonster::iMonsterIdx);
+
+	//if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+	//	return E_FAIL;
+
+	//m_mapLayer.insert({ pLayerTag ,pLayer });
 	m_mapLayer.insert({ pLayerTag ,pLayer });
 
 	return S_OK;

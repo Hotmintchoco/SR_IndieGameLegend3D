@@ -10,9 +10,12 @@
 //#include "CDInputMgr.h"
 #include "CTerrain.h"
 
+_uint CMonster::iMonsterIdx=0;
+
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev)
+    : CGameObject(pGraphicDev), m_iHp(0), m_iMotion(0), m_fHitEffectDuration(0.1f), m_fHitEffectTime(0.f), m_bHitState(false)
 {
+    ++iMonsterIdx;
 }
 
 
@@ -25,16 +28,32 @@ HRESULT CMonster::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    __super::Ready_GameObject();
+    m_pColliderCom->Set_CollisionID(COLL_MONSTER);
 
+    m_iHp = 5;
+
+    __super::Ready_GameObject();
     return S_OK;
 }
 
 _int CMonster::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
-
+    
+    if (m_fHitEffectTime < m_fHitEffectDuration && m_bHitState == true)
+    {
+        m_fHitEffectTime += fTimeDelta;
+    }
+    else  if (m_fHitEffectTime >= m_fHitEffectDuration)
+    {
+        m_bHitState = false;
+    }
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+
+    if (m_iHp <= 0)
+    {
+        Set_Dead(true);
+    }
 
     return iExit;
 }
@@ -53,6 +72,46 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CMonster::Render_GameObject()
 {
+
+}
+
+void CMonster::OnCollisionEnter(CGameObject* pOther)
+{
+	//CCollider* pCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
+    //
+    //if (pCollider && pCollider->Get_CollisionID() == COLL_PBULLET)
+    //{
+    //    m_fHitEffectTime = 0.f;
+    //    m_bHitState = true;
+	//}
+
+    m_fHitEffectTime = 0.f;
+    m_bHitState = true;
+}
+
+void CMonster::Enable_HitRenderState()
+{
+
+    m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+
+    m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+    m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
+
+    // 빨간색
+    m_pGraphicDev->SetRenderState(
+        D3DRS_TEXTUREFACTOR,
+        D3DCOLOR_ARGB(255, 255, 0, 0)
+    );
+}
+
+void CMonster::Disable_HitRenderState()
+{
+
+    m_pGraphicDev->SetTextureStageState(
+        0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+
+    m_pGraphicDev->SetTextureStageState(
+        0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 
 }
 
@@ -127,4 +186,14 @@ CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 void CMonster::Free()
 {
     CGameObject::Free();
+}
+
+
+void CMonster::Set_Pos(_vec3 vPos)
+{
+    m_pTransformCom->Set_Pos(vPos);
+}
+void		CMonster::Set_Pos(_float fX, _float fY, _float fZ)
+{
+    m_pTransformCom->Set_Pos(fX, fY, fZ);
 }
