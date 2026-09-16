@@ -22,6 +22,7 @@ public:
 
 public:
 	void			Set_Pos(const _vec2& vPos);
+	void			Set_Size(const _vec2& vSize);
 
 protected:
 	HRESULT			Add_Component();
@@ -32,10 +33,14 @@ protected:
 	Engine::CTexture* m_pTextureCom;
 
 	_vec2				m_vPos;
+	_vec2				m_vSize;
 	_float				m_fFrame;
+
+	wstring				m_wstrTextureTag;
 
 public:
 	static CUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CUI* Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& wstrTextureTag);
 
 protected:
 	virtual void		Free();
