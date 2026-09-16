@@ -23,7 +23,7 @@ public:
 	virtual			void		Render_GameObject();
 
 	inline void AttachTo(Engine::CGameObject* pObject) { m_pParentObject = pObject; }
-	void PropagateTransform(_matrix* matParent);
+	void PropagateTransform(CTransform* pTransform);
 
 private:
 	HRESULT			Add_Component();

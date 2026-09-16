@@ -2,6 +2,7 @@
 #include "CExplosiveFrustumLight.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
+#include "CManagement.h"
 
 CExplosiveFrustumLight::CExplosiveFrustumLight(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -58,33 +59,31 @@ void CExplosiveFrustumLight::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 }
 
-void CExplosiveFrustumLight::PropagateTransform(_matrix* matParent)
+void CExplosiveFrustumLight::PropagateTransform(CTransform* pParentTransform)
 {
-    _matrix* m_pMatrix = m_pTransformCom->Get_World();
+    /* ºôº¸µå */
+    _vec3 vPlayerPos, vItemPos;
+    CTransform* pPlayerTransform = static_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+    pPlayerTransform->Get_Info(INFO_POS, &vPlayerPos);
+    pParentTransform->Get_Info(INFO_POS, &vItemPos);
+    _vec3 vDist = vItemPos - vPlayerPos;
+
+    float fYaw = atan2f(vDist.x, vDist.z);
+
+    m_pTransformCom->Set_Rotation_Raw(_vec3{ 0.f, D3DXToDegree(fYaw), 0.f });
+    m_pTransformCom->ForceUpdateWorldMatrix();
+
+    _matrix* pWorld = m_pTransformCom->Get_World();
+    _matrix* pParentWorld;
+    pParentWorld = pParentTransform->Get_World();
 
     _matrix matWorld;
-    D3DXMatrixMultiply(&matWorld, m_pMatrix, matParent);
+    D3DXMatrixMultiply(&matWorld, pWorld, pParentWorld);
     m_pTransformCom->Set_World(&matWorld);
 
     _vec3   vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     Compute_ViewZ(&vPos);
-
-    /* ºôº¸µå */
-    _matrix matBill, matView;
-    D3DXMatrixIdentity(&matBill);
-    matWorld = *m_pTransformCom->Get_World();
-
-    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
-
-    matBill._11 = matView._11;
-    matBill._13 = matView._13;
-    matBill._31 = matView._31;
-    matBill._33 = matView._33;
-
-    D3DXMatrixInverse(&matBill, 0, &matBill);
-    matWorld = matBill * matWorld;
-    m_pTransformCom->Set_World(&matWorld);
 }
 
 HRESULT CExplosiveFrustumLight::Add_Component()
