@@ -44,6 +44,7 @@ protected:
 	map<const _tchar*, CComponent*>			m_mapComponent[ID_END];
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	_float									m_fViewZ;
+	_float 									m_fFrictionForce; // 마찰력 추가 (Speed에 곱해줌)
 	_bool									m_bDead;
 	
 	/* Ready 단계에서 Layer 접근이 불가한 문제를 해결하기 위한 변수로, Ready 단계 이후에는 보장되지 않음 */
