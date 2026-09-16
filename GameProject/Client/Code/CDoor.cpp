@@ -4,6 +4,7 @@
 #include "CRenderer.h"
 #include "CRoomLayer.h"
 #include "CLayerContext.h"
+#include "Client_Struct.h"
 
 CDoor::CDoor(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -24,7 +25,7 @@ HRESULT CDoor::Ready_GameObject()
     CRoomLayer* pLayer = static_cast<CRoomLayer*>(CLayerContext::GetLayer());
     if (pLayer)
     {
-        pLayer->m_OnRoomBegin.AddBinding(GetToken(), [this]() { if (m_bOnAnimation) return;  if (m_iTextureIdx == 0) Close(); else Open(); });
+        pLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) { OnRoomEvent(t); });
     }
 
 
@@ -109,10 +110,24 @@ HRESULT CDoor::Add_Component()
     return S_OK;
 }
 
+void CDoor::OnRoomEvent(const TRoomEventCtx& t)
+{
+    switch (t.eType)
+    {
+    case ERoomEventType::ROOM_BEGIN:
+        Close();
+        break;
+    case ERoomEventType::ROOM_CLEAR:
+        Open();
+        break;
+    default:
+        break;
+    }
+}
+
 void CDoor::Open()
 {
     m_bOnAnimation = true;
-    m_iTextureIdx = m_iFrameCnt - 1;
     m_iPlayDirection = -1;
     m_fSingleFrameAccTime = 0.f;
 }
@@ -120,7 +135,6 @@ void CDoor::Open()
 void CDoor::Close()
 {
     m_bOnAnimation = true;
-    m_iTextureIdx = 1;
     m_iPlayDirection = 1;
     m_fSingleFrameAccTime = 0.f;
 }

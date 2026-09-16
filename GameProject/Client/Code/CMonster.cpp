@@ -9,6 +9,8 @@
 #include "CTimerMgr.h"
 //#include "CDInputMgr.h"
 #include "CTerrain.h"
+#include "CGameStatusMgr.h"
+#include "CRoomLayer.h"
 
 _uint CMonster::iMonsterIdx=0;
 
@@ -32,6 +34,10 @@ HRESULT CMonster::Ready_GameObject()
 
     m_iHp = 5;
 
+    /* 성철 */
+    static_cast<CRoomLayer*>(m_pOwner)->IncreaseEntityCount();
+    /* ---- */
+
     __super::Ready_GameObject();
     return S_OK;
 }
@@ -52,6 +58,9 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 
     if (m_iHp <= 0)
     {
+        /* 성철 */
+        CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->DecreaseEntityCount();
+        /* ---- */
         Set_Dead(true);
     }
 

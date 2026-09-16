@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "Engine_Define.h"
+#include "Client_Enum.h"
 
 /* 맵 정보를 담은 구조체 */
 struct TRoomEntity
@@ -22,4 +23,11 @@ struct TRoomData
 	vector<TRoomEntity> vecObjectInfo;
 	vector<bool> vecDoorInfo;
 	vector<int> vecDoorTile;
+	vector<wstring> vecClearCondition;
+};
+
+struct TRoomEventCtx
+{
+	ERoomEventType eType;
+
 };

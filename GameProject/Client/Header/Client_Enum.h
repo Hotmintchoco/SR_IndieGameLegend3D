@@ -75,3 +75,15 @@ enum class EObjectType
 
 	MAX,
 };
+
+enum class ERoomEventType
+{
+	NONE,
+
+	ROOM_BEGIN,
+	ROOM_CLEAR,
+	
+	PUSH_BUTTON,
+
+	MAX,
+};

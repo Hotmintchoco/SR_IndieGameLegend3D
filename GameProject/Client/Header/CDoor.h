@@ -2,6 +2,8 @@
 
 #include "CGameObject.h"
 
+struct TRoomEventCtx;
+
 namespace Engine
 {
 	class CRcTex;
@@ -21,13 +23,15 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-	void Open();
-	void Close();
 
 private:
 	HRESULT			Add_Component();
 
 private:
+	void OnRoomEvent(const TRoomEventCtx& t);
+	void Open();
+	void Close();
+
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;

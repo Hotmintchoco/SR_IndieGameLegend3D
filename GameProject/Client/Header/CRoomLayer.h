@@ -2,6 +2,8 @@
 
 #include "CLayer.h"
 #include "CEventDelegate.h"
+#include "CClearCondition.h"
+#include "Client_Struct.h"
 
 class CRoomLayer : public CLayer
 {
@@ -20,17 +22,29 @@ public:
 	inline bool HasVisited() { return m_bVisited; }
 	inline bool IsOnProgress() { return m_bOnProgress; }
 
-	CEventDelegate<void> m_OnRoomBegin;
-	CEventDelegate<void> m_OnRoomClear;
+	CEventDelegate<TRoomEventCtx> m_OnRoomEvent;
 	void OnRoomTriggerBlockCollided();
 
+	/* 몬스터 클래스가 사용 */
+	inline void IncreaseEntityCount() { ++m_iEntityCount; }
+	inline void DecreaseEntityCount() { --m_iEntityCount; }
+	inline int GetEntityCount() { return m_iEntityCount; }
+
 private:
+	void CheckClearCondition();
+
 	int m_iRoomIndex = -1;
 	bool m_bCleared = false;
 	bool m_bVisited = false;
 	bool m_bOnProgress = false;
 
+	vector<CClearCondition*> m_vecClearCondition;
+	int m_iEntityCount = 0;
+
 public:
 	static CRoomLayer* Create(int iRoomIndex);
+
+private:
+	virtual void Free() override;
 };
 

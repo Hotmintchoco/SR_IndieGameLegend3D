@@ -181,6 +181,18 @@
     <Filter Include="02. GameObject\07. Room\BaseProp\Door">
       <UniqueIdentifier>{87e9c26a-ad36-4771-a5d9-f643d67f29b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\Stage\Layer\ClearCondition">
+      <UniqueIdentifier>{272cc4a9-b6ae-4a3f-a91d-39ad71c6f66b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\ClearCondition\PushAllButton">
+      <UniqueIdentifier>{023821f0-88fd-4f0c-8d0f-7cf39723ff7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\ClearCondition\ManualClear">
+      <UniqueIdentifier>{1b92e145-d4f5-4809-a1c7-5f92f0c6b7fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\ClearCondition\KillAllEntity">
+      <UniqueIdentifier>{fea9a953-04e9-443e-8954-af81d3b19410}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -369,6 +381,18 @@
     <ClInclude Include="..\Header\CDoor.h">
       <Filter>02. GameObject\07. Room\BaseProp\Door</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CClearCondition.h">
+      <Filter>01. Scene\Stage\Layer\ClearCondition</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKillAllEntityCondition.h">
+      <Filter>01. Scene\Stage\Layer\ClearCondition\KillAllEntity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CManualClearCondition.h">
+      <Filter>01. Scene\Stage\Layer\ClearCondition\ManualClear</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPushAllButtonCondition.h">
+      <Filter>01. Scene\Stage\Layer\ClearCondition\PushAllButton</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -532,6 +556,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CDoor.cpp">
       <Filter>02. GameObject\07. Room\BaseProp\Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CClearCondition.cpp">
+      <Filter>01. Scene\Stage\Layer\ClearCondition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKillAllEntityCondition.cpp">
+      <Filter>01. Scene\Stage\Layer\ClearCondition\KillAllEntity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CManualClearCondition.cpp">
+      <Filter>01. Scene\Stage\Layer\ClearCondition\ManualClear</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPushAllButtonCondition.cpp">
+      <Filter>01. Scene\Stage\Layer\ClearCondition\PushAllButton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
