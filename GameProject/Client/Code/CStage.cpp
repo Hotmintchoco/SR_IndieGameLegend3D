@@ -277,13 +277,13 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	// Hp
-	_int iHpCount = 3;
+	_int iCountMax = 3;
 	_float fStartX = 20.f;
 	_float fStartY = 20.f;
 	_float fIconSize = 17.5f;  // CPlayerHpUI::Ready_GameObject()의 Set_Scale과 동일
 	_float fGap = 22.5f;
 
-	for (_int i = 0; i < iHpCount; ++i)
+	for (_int i = 0; i < iCountMax; ++i)
 	{
 		pUI = CUI::Create(m_pGraphicDev, L"Proto_HpUITexture");
 		if (nullptr == pUI)
@@ -300,14 +300,34 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	// Gem
 	fIconSize = 20.f;
+	fStartX = 675.f;
 	pUI = CUI::Create(m_pGraphicDev, L"Proto_Item_Gem_Texture");
 
-	vPos = { 675.f,  fStartY };
+	vPos = { fStartX,  fStartY };
 	pUI->Set_Pos(vPos);
 	pUI->Set_Size({ fIconSize, fIconSize });
 
 	if (FAILED(pLayer->Add_GameObject(L"Gem", pUI)))
 		return E_FAIL;
+
+	// Gem Cnt
+	fStartX += fGap + 15.f;
+	fGap = 6.f;
+	for (int i = 0; i < iCountMax; ++i)
+	{
+		pUI = CUI::Create(m_pGraphicDev, L"Proto_NumberTexture");
+		if (nullptr == pUI)
+			return E_FAIL;
+
+		vPos = { fStartX + i * (fIconSize + fGap), fStartY };
+		pUI->Set_Pos(vPos);
+		pUI->Set_Size({ fIconSize + 2.5f, fIconSize });
+
+		wstring wstrTag = L"Num_" + to_wstring(i);
+		if (FAILED(pLayer->Add_GameObject(wstrTag.c_str(), pUI)))
+			return E_FAIL;
+	}
+
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 

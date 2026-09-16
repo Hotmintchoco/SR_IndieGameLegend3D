@@ -101,6 +101,9 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CrosshairTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Reticle_%d.png", 4))))
         return E_FAIL;
 
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_NumberTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Num%d.png", 10))))
+        return E_FAIL;
+
     lstrcpy(m_szLoading, L"Etc Loading............................");
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
