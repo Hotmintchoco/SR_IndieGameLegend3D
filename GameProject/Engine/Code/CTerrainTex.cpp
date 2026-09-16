@@ -32,6 +32,7 @@ HRESULT		CTerrainTex::Ready_Buffer(const _ulong& dwVtxCntX,
 
 	m_dwIdxSize = sizeof(INDEX32);
 	m_IdxFmt = D3DFMT_INDEX32;
+	m_VtxStructType = VTXSTRUCT_TEX;
 
 	m_pPos = new _vec3[m_dwVtxCnt];
 
