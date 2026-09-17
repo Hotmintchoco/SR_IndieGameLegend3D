@@ -32,6 +32,7 @@ HRESULT CHeart::Ready_GameObject()
         return E_FAIL;
 
     m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{ -0.2f, 0.1f, 0.f });
+    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{0.f, 0.f, 0.f });
     m_pTransformCom->Set_Scale(0.1f, 0.08f, 1.f);
 
     return S_OK;

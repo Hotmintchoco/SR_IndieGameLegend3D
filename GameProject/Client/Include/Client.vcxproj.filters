@@ -165,6 +165,7 @@
     </Filter>
     <Filter Include="02. GameObject\02. Monster\Magmamouth">
       <UniqueIdentifier>{149954a3-d86b-4975-bad9-6e696a5ecb47}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02. GameObject\11. Item">
       <UniqueIdentifier>{96a898cd-56e9-4421-810a-23a78c4952ed}</UniqueIdentifier>
     </Filter>
@@ -355,6 +356,7 @@
     </ClInclude>
     <ClInclude Include="..\Header\CMagmamouth.h">
       <Filter>02. GameObject\02. Monster\Magmamouth</Filter>
+	</ClInclude>
     <ClInclude Include="..\Header\CItem.h">
       <Filter>02. GameObject\11. Item</Filter>
     </ClInclude>
@@ -521,6 +523,7 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMagmamouth.cpp">
       <Filter>02. GameObject\02. Monster\Magmamouth</Filter>
+	</ClCompile>
     <ClCompile Include="..\Code\CItem.cpp">
       <Filter>02. GameObject\11. Item</Filter>
     </ClCompile>

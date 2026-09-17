@@ -11,7 +11,7 @@
 #include "CManagement.h"
 
 CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev)
+    : CGameObject(pGraphicDev), m_fFrame(0.f)
 {
 }
 

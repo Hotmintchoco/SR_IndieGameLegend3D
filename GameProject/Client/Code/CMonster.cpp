@@ -84,7 +84,10 @@ void CMonster::OnCollisionEnter(CGameObject* pOther)
     //    m_fHitEffectTime = 0.f;
     //    m_bHitState = true;
 	//}
-
+    /////////////////////테스트 가나다라마바사 ㅇ마ㅣㅓ랴ㅐㅜㅐㅣㅜ쿠ㅏㅣㄹㅇ널ㄹ라ㅣㄴ얼
+    int a = 0;
+    /////////////////////테스트 가나다라마바사 ㅇ마ㅣㅓ랴ㅐㅜㅐㅣㅜ쿠ㅏㅣㄹㅇ널ㄹ라ㅣㄴ얼
+    int b = 1;
     m_fHitEffectTime = 0.f;
     m_bHitState = true;
 }

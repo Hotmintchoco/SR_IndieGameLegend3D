@@ -6,6 +6,10 @@
 //#include "CDInputMgr.h"
 #include "CTerrain.h"
 #include "CSmallExplode.h"
+#include "CAbstractFactory.h"
+#include "CHeart.h"
+#include "CGem.h"
+#include "CEnergy.h"
 
 CSpeyeder::CSpeyeder(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_bLandingState(false)
@@ -48,6 +52,15 @@ _int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
   
         if (FAILED(pLayer->Add_GameObject(L"SmallExplode", pGameObject)))
+            return E_FAIL;
+
+        pGameObject = CHeart::Create(m_pGraphicDev, this);
+        //pGameObject = CGem::Create(m_pGraphicDev, this);
+        //pGameObject = CEnergy::Create(m_pGraphicDev, this);
+        if (nullptr == pGameObject)
+            return E_FAIL;
+
+        if (FAILED(pLayer->Add_GameObject(L"Heart", pGameObject)))
             return E_FAIL;
 
     }
