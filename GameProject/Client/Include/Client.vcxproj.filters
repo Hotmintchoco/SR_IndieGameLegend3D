@@ -151,14 +151,14 @@
     <Filter Include="02. GameObject\02. Monster\Boss1">
       <UniqueIdentifier>{b51a1b05-dd5f-4c97-8716-dc4e1a0c0ec8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Monster\M1">
-      <UniqueIdentifier>{149954a3-d86b-4975-bad9-6e696a5ecb47}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Monster\Speyeder">
       <UniqueIdentifier>{77d9f8f3-79ea-4b54-9520-e416973572a7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\06. Effect\SmallExplode">
       <UniqueIdentifier>{c4da1f1d-8911-4624-9f4b-8a1a699876e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Magmamouth">
+      <UniqueIdentifier>{149954a3-d86b-4975-bad9-6e696a5ecb47}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -324,6 +324,9 @@
     <ClInclude Include="..\Header\CSmallExplode.h">
       <Filter>02. GameObject\06. Effect\SmallExplode</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMagmamouth.h">
+      <Filter>02. GameObject\02. Monster\Magmamouth</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -466,6 +469,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSmallExplode.cpp">
       <Filter>02. GameObject\06. Effect\SmallExplode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMagmamouth.cpp">
+      <Filter>02. GameObject\02. Monster\Magmamouth</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

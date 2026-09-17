@@ -1,40 +1,45 @@
 #include "pch.h"
-#include "CSkull.h"
+#include "CMagmamouth.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CTimerMgr.h"
 #include "CTerrain.h"
 
-CSkull::CSkull(LPDIRECT3DDEVICE9 pGraphicDev)
+CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
 {
 }
 
 
-CSkull::~CSkull()
+CMagmamouth::~CMagmamouth()
 {
 }
 
-HRESULT CSkull::Ready_GameObject()
+HRESULT CMagmamouth::Ready_GameObject()
 {
     if (FAILED(Add_Component()))
         return E_FAIL;
     CMonster::Ready_GameObject();
 
-    m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
+    m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
-    m_iHp = 3;
+    //m_pColliderCom->Set_Radius(0.2f);
+    m_iHp = 100;
     return S_OK;
 }
-
-_int CSkull::Update_GameObject(const _float& fTimeDelta)
+    
+_int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
-    Set_OnTerrain();
+    //Set_OnTerrain();
+    m_fFrame += fTimeDelta * 6.f;
+    if (m_fFrame > 4.f)
+        m_fFrame = 0.f;
+
     return iExit;
 }
 
-void CSkull::LateUpdate_GameObject(const _float& fTimeDelta)
+void CMagmamouth::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 
@@ -50,11 +55,12 @@ void CSkull::LateUpdate_GameObject(const _float& fTimeDelta)
     _vec3   vPlayerLook;
     pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
-    m_pTransformCom->Chase_Target2(&vPlayerPos, &vPlayerLook, 30.f, fTimeDelta);
+    //m_pTransformCom->Chase_Target2(&vPlayerPos, &vPlayerLook, 30.f, fTimeDelta);
+    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
 
 }
 
-void CSkull::Render_GameObject()
+void CMagmamouth::Render_GameObject()
 {
     if (m_bHitState == true) CMonster::Enable_HitRenderState();
     CMonster::Render_GameObject();
@@ -69,18 +75,18 @@ void CSkull::Render_GameObject()
     if (m_bHitState == true) CMonster::Disable_HitRenderState();
 }
 
-void CSkull::OnCollisionEnter(CGameObject* pOther)
+void CMagmamouth::OnCollisionEnter(CGameObject* pOther)
 {
     CMonster::OnCollisionEnter(pOther);
     m_iHp -= 1;
 }
 
-HRESULT CSkull::Add_Component()
+HRESULT CMagmamouth::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
     // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_skull3Texture"));
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_magmamouthTexture"));
 
     if (nullptr == pComponent)
         return E_FAIL;
@@ -91,21 +97,21 @@ HRESULT CSkull::Add_Component()
 }
 
 
-CSkull* CSkull::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CMagmamouth* CMagmamouth::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CSkull* pMonster = new CSkull(pGraphicDev);
+    CMagmamouth* pMonster = new CMagmamouth(pGraphicDev);
 
     if (FAILED(pMonster->Ready_GameObject()))
     {
         Safe_Release(pMonster);
-        MSG_BOX("CSkull Create Failed");
+        MSG_BOX("CMagmamouth Create Failed");
         return nullptr;
     }
 
     return pMonster;
 }
 
-void CSkull::Free()
+void CMagmamouth::Free()
 {
     CMonster::Free();
 }

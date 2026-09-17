@@ -13,7 +13,7 @@
 _uint CMonster::iMonsterIdx=0;
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_iHp(0), m_iMotion(0), m_fHitEffectDuration(0.1f), m_fHitEffectTime(0.f), m_bHitState(false)
+    : CGameObject(pGraphicDev), m_iHp(0), m_fFrame(0.f), m_fHitEffectDuration(0.1f), m_fHitEffectTime(0.f), m_bHitState(false)
 {
     ++iMonsterIdx;
 }
