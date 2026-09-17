@@ -12,7 +12,7 @@
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    </Filter>d
     <Filter Include="00. MainApp">
       <UniqueIdentifier>{e8ad129d-c1cf-4dd5-af90-b47d007f0d4d}</UniqueIdentifier>
     </Filter>
