@@ -6,14 +6,14 @@
 #include "CBoxCollider.h"
 
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
-	: m_pGraphicDev(pGraphicDev), m_fViewZ(0.f), m_bDead(false),
+	: m_pGraphicDev(pGraphicDev), m_fViewZ(0.f), m_bDead(false), m_fFrictionForce(1.f),
     m_pOwner(CLayerContext::GetLayer())
 {
     m_pGraphicDev->AddRef();
 }
 
 CGameObject::CGameObject(const CGameObject& rhs)
-    : m_pGraphicDev(rhs.m_pGraphicDev), m_fViewZ(rhs.m_fViewZ), m_bDead(rhs.m_bDead),
+    : m_pGraphicDev(rhs.m_pGraphicDev), m_fViewZ(rhs.m_fViewZ), m_bDead(rhs.m_bDead), m_fFrictionForce(rhs.m_fFrictionForce),
     m_pOwner(rhs.m_pOwner)
 {
     m_pGraphicDev->AddRef();
@@ -50,6 +50,9 @@ _int CGameObject::Update_GameObject(const _float& fTimeDelta)
 {
     for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
         pComponent.second->Update_Component(fTimeDelta);
+
+    // 마찰력 초기화
+    m_fFrictionForce = 1.f;
 
     return 0;
 }

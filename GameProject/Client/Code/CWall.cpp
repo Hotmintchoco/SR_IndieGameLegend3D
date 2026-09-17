@@ -307,8 +307,8 @@ HRESULT CWall::Add_Component()
     // Collider
     static const _tchar* sColliderTags[2] =
     {
-        L"Com_Collider_0",
-        L"Com_Collider_1",
+        L"Com_Collider0",
+        L"Com_Collider1",
     };
 
     for (int i = 0; i < 2; ++i)

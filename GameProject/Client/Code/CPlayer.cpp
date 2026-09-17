@@ -31,6 +31,7 @@ HRESULT CPlayer::Ready_GameObject()
 
     m_pColliderCom->Set_Radius(0.75f);
 	m_pColliderCom->Set_CollisionID(COLL_PLAYER);
+    m_pColliderCom->Set_IsActive(false);
 
 	m_pTransformCom->Set_Pos(60.f, 1.f, 60.f);
 
@@ -42,6 +43,9 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
     _vec3   vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     Compute_ViewZ(&vPos);
+
+    if (!m_pColliderCom->Get_IsActive())
+		m_pColliderCom->Set_IsActive(true);
 
     Key_Input(fTimeDelta);
 
@@ -123,6 +127,22 @@ void CPlayer::OnCollisionEnter(CGameObject* pOther)
 
 }
 
+void CPlayer::OnCollisionStay(CGameObject* pOther)
+{
+    // 장애물과 충돌 시에 마찰력 적용
+    CCollider* pOtherCollider = nullptr;
+        
+	if (nullptr == pOtherCollider)
+        pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
+    if (nullptr == pOtherCollider)
+        pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider0"));
+    if (nullptr == pOtherCollider)
+        pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider1"));
+
+    if (pOtherCollider && pOtherCollider->Get_CollisionID() == COLL_OBSTACLE)
+        m_fFrictionForce = 0.75f; // 마찰력 적용
+}
+
 HRESULT CPlayer::Add_Component()
 {
     CComponent* pComponent = nullptr;
@@ -167,7 +187,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
     m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
     m_pTransformCom->Get_Info(INFO_RIGHT, &vRight);
 
-    _float fSpeed = 5.f;
+    _float fSpeed = 5.f * m_fFrictionForce;
 
     if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
     {

@@ -148,9 +148,6 @@
     <Filter Include="02. GameObject\10. UI">
       <UniqueIdentifier>{6c73a9c2-f178-434b-b4ff-d2dee63f4158}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\10. UI\PlayerHp">
-      <UniqueIdentifier>{5b0584cc-2dcd-4328-af0b-394d82e9f98e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\10. UI\Crosshair">
       <UniqueIdentifier>{0c6678e2-e4f3-4034-be90-da65b01d08d7}</UniqueIdentifier>
     </Filter>
@@ -348,9 +345,6 @@
     <ClInclude Include="..\Header\CDebugMgr.h">
       <Filter>04. Manager\02. Debug</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CPlayerHpUI.h">
-      <Filter>02. GameObject\10. UI\PlayerHp</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CUI.h">
       <Filter>02. GameObject\10. UI</Filter>
     </ClInclude>
@@ -523,9 +517,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CDebugMgr.cpp">
       <Filter>04. Manager\02. Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CPlayerHpUI.cpp">
-      <Filter>02. GameObject\10. UI\PlayerHp</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CUI.cpp">
       <Filter>02. GameObject\10. UI</Filter>
