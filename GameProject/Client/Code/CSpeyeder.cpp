@@ -1,0 +1,138 @@
+#include "pch.h"
+#include "CSpeyeder.h"
+#include "CProtoMgr.h"
+#include "CManagement.h"
+#include "CTimerMgr.h"
+//#include "CDInputMgr.h"
+#include "CTerrain.h"
+#include "CSmallExplode.h"
+
+CSpeyeder::CSpeyeder(LPDIRECT3DDEVICE9 pGraphicDev)
+    : CMonster(pGraphicDev), m_bLandingState(false)
+{
+}
+
+
+CSpeyeder::~CSpeyeder()
+{
+}
+
+HRESULT CSpeyeder::Ready_GameObject()
+{
+    if (FAILED(Add_Component()))
+        return E_FAIL;
+    CMonster::Ready_GameObject();
+
+    m_pTransformCom->Set_Scale(0.2f, 0.2f, 0.2f);
+    m_pColliderCom->Set_Radius(D3DXVec3Length(&m_pTransformCom->m_vScale));
+    m_iHp = 2;
+    return S_OK;
+}
+
+_int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
+{
+    _int    iExit = CMonster::Update_GameObject(fTimeDelta);
+    Set_OnTerrain();
+    if (m_iHp <= 0)
+    {
+        CGameObject* pGameObject = nullptr;
+        TCHAR		szFileName[128] = L"";
+        pGameObject = CSmallExplode::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS], m_pTransformCom->m_vScale);
+        if (nullptr == pGameObject)
+            return E_FAIL;
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        wsprintf(szFileName, L"SmallExplode_%d", CMonster::iMonsterIdx);
+        if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+            return E_FAIL;
+
+    }
+    return iExit;
+}
+
+void CSpeyeder::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+    CMonster::LateUpdate_GameObject(fTimeDelta);
+
+    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+
+    if (nullptr == pPlayerTransformCom)
+        return;
+
+    _vec3   vPlayerPos;
+    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+
+    _vec3   vPlayerLook;
+    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+
+    m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 1.f, fTimeDelta);
+
+}
+
+void CSpeyeder::Render_GameObject()
+{
+
+    if (m_bHitState == true) CMonster::Enable_HitRenderState();
+    if (m_iMotion == 40) m_iMotion = 0;
+
+    CMonster::Render_GameObject();
+
+    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+    if (m_bLandingState == false)
+    {
+        m_pTextureCom->Set_Texture(m_iMotion / 10);
+    }
+    else
+    {
+        m_pTextureCom->Set_Texture(4);
+    }
+    m_pBufferCom->Render_Buffer();
+
+    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+    ++m_iMotion;
+    if (m_bHitState == true) CMonster::Disable_HitRenderState();
+}
+
+void CSpeyeder::OnCollisionEnter(CGameObject* pOther)
+{
+    CMonster::OnCollisionEnter(pOther);
+    m_iHp -= 1;
+}
+
+HRESULT CSpeyeder::Add_Component()
+{
+    CComponent* pComponent = nullptr;
+
+    // Texture
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_speyederTexture"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+
+    return S_OK;
+}
+
+
+CSpeyeder* CSpeyeder::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+{
+    CSpeyeder* pMonster = new CSpeyeder(pGraphicDev);
+
+    if (FAILED(pMonster->Ready_GameObject()))
+    {
+        Safe_Release(pMonster);
+        MSG_BOX("CSpeyeder Create Failed");
+        return nullptr;
+    }
+
+    return pMonster;
+}
+
+void CSpeyeder::Free()
+{
+    CMonster::Free();
+}

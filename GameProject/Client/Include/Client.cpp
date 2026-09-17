@@ -7,6 +7,7 @@
 #include "CMainApp.h"
 #include "CTimerMgr.h"
 #include "CFrameMgr.h"
+#include "CGameStatusMgr.h"
 
 #pragma push_macro("new")
 #undef new
@@ -38,6 +39,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     // TODO: 여기에 코드를 입력합니다.
+//#ifdef _DEBUG
+//    AllocConsole();
+//    FILE* fp;
+//    freopen_s(&fp, "CONOUT$", "w", stdout);
+//#endif
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -61,7 +67,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (FAILED(CTimerMgr::GetInstance()->Ready_Timer(L"Timer_FPS60")))
         return FALSE;
 
-    if (FAILED(CFrameMgr::GetInstance()->Ready_Frame(L"FPS60", 60.f)))
+    if (FAILED(CFrameMgr::GetInstance()->Ready_Frame(L"FPS60", 999.f)))
         return FALSE;
 
 
@@ -93,6 +99,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             if (CFrameMgr::GetInstance()->IsPermit_Call(L"FPS60", fTimer_Immediate))
             {
                 CTimerMgr::GetInstance()->Set_TimeDelta(L"Timer_FPS60");
+                CGameStatusMgr::GetInstance()->UpdateFPS(CTimerMgr::GetInstance()->Get_TimeDelta(L"Timer_FPS60"));
                 _float  fTimer_FPS60 = CTimerMgr::GetInstance()->Get_TimeDelta(L"Timer_FPS60");
 
                 pMainApp->Update_MainApp(fTimer_FPS60);
@@ -109,6 +116,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         MSG_BOX("MainApp Delete Failed");
         return -1;
     }
+
+//#ifdef _DEBUG
+//    FreeConsole();
+//#endif
 
     return (int) msg.wParam;
 }

@@ -31,6 +31,8 @@ HRESULT CPlayer::Ready_GameObject()
 	__super::Ready_GameObject();
 
     m_pColliderCom->Set_Radius(0.75f);
+	m_pColliderCom->Set_CollisionID(COLL_PLAYER);
+
 	m_pTransformCom->Set_Pos(60.f, 1.f, 60.f);
 
     return S_OK;
@@ -47,6 +49,10 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+
+    /* 성철 : 매니저 객체로 게임 상태를 관리하기 위해 추가. 문제 발생 시 말해줘 */
+    CGameStatusMgr::GetInstance()->UpdatePlayerPosition(vPos);
+    /* ---------------------------------------------------------------- */
 
     return iExit;
 }

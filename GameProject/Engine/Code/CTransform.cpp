@@ -121,7 +121,7 @@ void CTransform::Chase_Target2(const _vec3* pPos, const _vec3* pLook, const _flo
 	else
 	{
 		m_fAccumulatedTime = 0.f;
-		m_vInfo[INFO_POS] += *D3DXVec3Normalize(&vDir, &vDir) * fSpeed * 30 * fTimeDelta;
+		m_vInfo[INFO_POS] += *D3DXVec3Normalize(&vDir, &vDir) * fSpeed * fTimeDelta;
 	}
 
 	//m_vInfo[INFO_POS] += *D3DXVec3Normalize(&vDir, &vDir) * fSpeed * fTimeDelta;
@@ -139,6 +139,25 @@ void CTransform::Chase_Target2(const _vec3* pPos, const _vec3* pLook, const _flo
 
 	m_matWorld = matScale * matRot * matTrans;
 }
+
+void CTransform::LookAt_Player(const _vec3* pPos, const _vec3* pLook)
+{
+	_vec3	vDir = *pPos - m_vInfo[INFO_POS];
+
+	_matrix	matScale, matRot, matTrans;
+
+	D3DXMatrixScaling(&matScale, m_vScale.x, m_vScale.y, m_vScale.z);
+
+	D3DXMatrixTranslation(&matTrans,
+		m_vInfo[INFO_POS].x,
+		m_vInfo[INFO_POS].y,
+		m_vInfo[INFO_POS].z);
+
+	matRot = *Compute_LookAtTarget(pPos, pLook);
+
+	m_matWorld = matScale * matRot * matTrans;
+}
+
 
 
 _matrix* CTransform::Compute_LookAtTarget(const _vec3* pPos, const _vec3* pLook)
