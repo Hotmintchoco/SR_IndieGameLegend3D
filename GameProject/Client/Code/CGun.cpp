@@ -506,7 +506,7 @@ void CGun::UpdateUltimateGauge(_float fAmount)
             m_fUltimateGauge += fAmount;
         }
     }
-    CGameStatusMgr::GetInstance()->SetUltimateGauge(m_fUltimateGauge);
+    //CGameStatusMgr::GetInstance()->SetUltimateGauge(m_fUltimateGauge);
 }
 
 void CGun::UpdateSpecialGauge(_float fAmount)
@@ -533,7 +533,7 @@ void CGun::UpdateSpecialGauge(_float fAmount)
             m_fSpecialGauge += fAmount;
         }
     }
-    CGameStatusMgr::GetInstance()->SetSpecialAttackGauge(m_fSpecialGauge);
+    //CGameStatusMgr::GetInstance()->SetSpecialAttackGauge(m_fSpecialGauge);
 }
 
 void CGun::Free()
