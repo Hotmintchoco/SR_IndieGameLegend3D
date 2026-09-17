@@ -38,7 +38,7 @@ protected:
 	Engine::CTexture* m_pTextureCom;
 
 	_vec3 m_vSpawnPos = _vec3{0.f, 0.f, 0.f};
-
+	_float m_fFrame;
 public:
 
 protected:
