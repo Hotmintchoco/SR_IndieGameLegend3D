@@ -31,7 +31,7 @@ HRESULT CEnergy::Ready_GameObject()
     if (FAILED(CItem::Ready_GameObject()))
         return E_FAIL;
 
-    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{ 0.2f, 0.1f, 0.f });
+    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{ 0.f, 0.1f, 0.f });
     m_pTransformCom->Set_Scale(0.16f, 0.16f, 1.f);
 
     return S_OK;
@@ -76,7 +76,7 @@ void CEnergy::Consume()
 {
     // 1. 무기의 궁 게이지, 특수공격 게이지 업데이트
     // 2. 무기는 게임 상태 매니저에게 게이지 값이 변경되었음을 알림
-    CGun* pGun = static_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"));
+    // CGun* pGun = static_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"));
     // pGun->...();
 
     Set_Dead(true);

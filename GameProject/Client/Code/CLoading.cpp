@@ -275,6 +275,13 @@ HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
         data.at("objectList").get_to(t.vecObjectInfo);
         data.at("door").get_to(t.vecDoorInfo);
         data.at("doorTile").get_to(t.vecDoorTile);
+        vector<string> vecClearRaw;
+        data.at("clear").get_to(vecClearRaw);
+        t.vecClearCondition.reserve(vecClearRaw.size());
+        for (const auto& str : vecClearRaw)
+        {
+            t.vecClearCondition.push_back(Utils::Utf8ToWide(str));
+        }
 
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
@@ -308,7 +315,14 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
         data.at("objectTilingList").get_to(t.vecObjectTilingInfo);
         data.at("objectList").get_to(t.vecObjectInfo);
         data.at("door").get_to(t.vecDoorInfo);
-        data.at("doorTile").get_to(t.vecDoorTile);
+        data.at("doorTile").get_to(t.vecDoorTile);       
+        vector<string> vecClearRaw;
+        data.at("clear").get_to(vecClearRaw);
+        t.vecClearCondition.reserve(vecClearRaw.size());
+        for (const auto& str : vecClearRaw)
+        {
+            t.vecClearCondition.push_back(Utils::Utf8ToWide(str));
+        }
 
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);

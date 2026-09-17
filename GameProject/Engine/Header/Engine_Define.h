@@ -18,6 +18,7 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
+#include <random>
 
 #include "Engine_Enum.h"
 #include "Engine_Macro.h"

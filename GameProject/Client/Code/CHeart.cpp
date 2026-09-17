@@ -31,7 +31,7 @@ HRESULT CHeart::Ready_GameObject()
     if (FAILED(CItem::Ready_GameObject()))
         return E_FAIL;
 
-    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{ -0.2f, 0.1f, 0.f });
+    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{ 0.f, 0.1f, 0.f });
     m_pTransformCom->Set_Scale(0.1f, 0.08f, 1.f);
 
     return S_OK;
@@ -76,8 +76,8 @@ void CHeart::Consume()
 {
     // 1. 플레이어의 체력 회복
     // 2. 플레이어는 게임 상태 매니저에게 현재 체력이 변경되었음을 알림
-    CPlayer* pPlayer = static_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
-    // pPlayer->{체력 회복 함수명}(1);
+    // CPlayer* pPlayer = static_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
+    // pPlayer->{체력 회복 함수... }(1);
 
     Set_Dead(true);
 }
