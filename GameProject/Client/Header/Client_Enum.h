@@ -66,6 +66,7 @@ enum class EObjectType
 	Skull = 11,
 	Boss1,
 	Speyeder,
+	Magmamouth,
 	Worm,
 
 	ITEM_NONE = 31,

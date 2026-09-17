@@ -72,7 +72,7 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
         break;
     case SPAWN:
         m_fSpawnTime += fTimeDelta;
-        Spawn_Speyeder();
+        //Spawn_Speyeder();
         break;
     case ATTACK:
         break;
