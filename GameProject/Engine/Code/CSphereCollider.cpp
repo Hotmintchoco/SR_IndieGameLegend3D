@@ -50,9 +50,6 @@ _int CSphereCollider::Update_Component(const _float& fTimeDelta)
 	pOwnerTransformCom->Get_Info(INFO_POS, &vOwnerPos);
 	m_tSphere.Center = { vOwnerPos.x, vOwnerPos.y, vOwnerPos.z };
 
-	if (!m_bIsPos)
-		m_bIsPos = true;
-
 	return 0;
 }
 

@@ -17,6 +17,8 @@ public:
 
 	HRESULT			Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject);
 
+	multimap<wstring, CGameObject*> Get_ObjMap() { return m_mapObject; }
+
 public:
 	virtual HRESULT			Ready_Layer();
 	virtual _int			Update_Layer(const _float& fTimeDelta);

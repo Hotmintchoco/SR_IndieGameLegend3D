@@ -5,6 +5,7 @@ CVIBuffer::CVIBuffer() : m_pVB(nullptr), m_pIB(nullptr)
 , m_dwVtxCnt(0)
 , m_dwTriCnt(0)
 , m_dwIdxSize(0)
+, m_VtxStructType(VTXSTRUCT_DEFAULT)
 {
 }
 
@@ -14,6 +15,7 @@ CVIBuffer::CVIBuffer(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_dwVtxCnt(0)
 	, m_dwTriCnt(0)
 	, m_dwIdxSize(0)
+	, m_VtxStructType(VTXSTRUCT_DEFAULT)
 
 {
 }
@@ -26,7 +28,7 @@ CVIBuffer::CVIBuffer(const CVIBuffer& rhs)
 	, m_dwFVF(rhs.m_dwFVF)
 	, m_dwIdxSize(rhs.m_dwIdxSize)
 	, m_IdxFmt(rhs.m_IdxFmt)
-
+	, m_VtxStructType(rhs.m_VtxStructType)
 {
 	m_pVB->AddRef();
 	m_pIB->AddRef();
