@@ -12,7 +12,7 @@
 #include "CEnergy.h"
 
 CSpeyeder::CSpeyeder(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev), m_bLandingState(true)
+    : CMonster(pGraphicDev), m_bLandingState(false)
 {
 }
 
