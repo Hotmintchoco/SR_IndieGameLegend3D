@@ -81,7 +81,7 @@ void CEnergy::Consume()
 {
     // 1. 무기의 궁 게이지, 특수공격 게이지 업데이트
     // 2. 무기는 게임 상태 매니저에게 게이지 값이 변경되었음을 알림
-    CGun* pGun = static_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"));
+    // CGun* pGun = static_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"));
     // pGun->...();
 
     Set_Dead(true);

@@ -33,7 +33,7 @@ _int CFrustum::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    CCollisionMgr::GetInstance()->Add_Collider(COLL_MONSTER, m_pColliderCom);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom);
 
     return iExit;
 }
@@ -65,7 +65,7 @@ HRESULT CFrustum::Add_Component()
     if (nullptr == pComponent)
         return E_FAIL;
 
-    m_mapComponent[ID_DYNAMIC].insert({ L"Com_BoxCollider", pComponent });
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });
 
     m_pColliderCom->Set_Extents(_vec3{0.5f, 0.4f, 0.5f});
     m_pColliderCom->Set_DiffPos(_vec3{0.f, 0.4f, 0.f});

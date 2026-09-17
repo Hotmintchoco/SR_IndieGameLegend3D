@@ -131,7 +131,6 @@ void CItem::CalculateAlphaZ()
 
 void CItem::BillBoard()
 {
-    /* 빌보드 */
     _vec3 vPlayerPos, vItemPos;
     CTransform* pTransform = static_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
     pTransform->Get_Info(INFO_POS, &vPlayerPos);

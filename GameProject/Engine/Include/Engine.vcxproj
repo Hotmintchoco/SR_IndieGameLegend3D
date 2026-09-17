@@ -169,6 +169,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CPlaneTex.h" />
     <ClInclude Include="..\Header\CPlyTex.h" />
     <ClInclude Include="..\Header\CProtoMgr.h" />
+    <ClInclude Include="..\Header\CRandomMgr.h" />
     <ClInclude Include="..\Header\CRcCol.h" />
     <ClInclude Include="..\Header\CRcTex.h" />
     <ClInclude Include="..\Header\CRenderer.h" />
@@ -217,6 +218,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CPlaneTex.cpp" />
     <ClCompile Include="..\Code\CPlyTex.cpp" />
     <ClCompile Include="..\Code\CProtoMgr.cpp" />
+    <ClCompile Include="..\Code\CRandomMgr.cpp" />
     <ClCompile Include="..\Code\CRcCol.cpp" />
     <ClCompile Include="..\Code\CRcTex.cpp" />
     <ClCompile Include="..\Code\CRenderer.cpp" />

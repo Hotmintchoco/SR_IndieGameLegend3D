@@ -39,61 +39,73 @@ CCollisionMgr::COLLIDER_TOKEN_PAIR CCollisionMgr::Make_ColliderTokenPair(CCollid
 
 void CCollisionMgr::Update_Collision()
 {
+    const _uint IterativeCount = 4;
+
     std::set<COLLIDER_TOKEN_PAIR, CColliderTokenPairLess> setCurCollisionPairs;
     std::set<CCollider*> setCurColliders;
     std::map<std::shared_ptr<void>, CCollider*, std::owner_less<std::shared_ptr<void>>> mapLiveColliders;
 
-    for (_uint i = 0; i < COLL_END; ++i)
+    for (_uint iPass = 0; iPass < IterativeCount; ++iPass)
     {
-        for (_uint j = i; j < COLL_END; ++j)
+        for (_uint i = 0; i < COLL_END; ++i)
         {
-            if (!m_bCheckMatrix[i][j])
-                continue;
-
-            auto& LeftList = m_ColList[i];
-            auto& RightList = m_ColList[j];
-
-            for (auto& pColLeft : LeftList)
+            for (_uint j = i; j < COLL_END; ++j)
             {
-                mapLiveColliders[pColLeft->GetToken()] = pColLeft;
+                if (!m_bCheckMatrix[i][j])
+                    continue;
 
-                for (auto& pColRight : RightList)
+                auto& LeftList = m_ColList[i];
+                auto& RightList = m_ColList[j];
+
+                for (auto& pColLeft : LeftList)
                 {
-                    mapLiveColliders[pColRight->GetToken()] = pColRight;
+                    mapLiveColliders[pColLeft->GetToken()] = pColLeft;
 
-					// ������ �ݶ��̴��� ���ϴ� ���� ����
-                    if (pColLeft == pColRight)
-                        continue;
-
-					// ������ �׷� ������ �� ��, �ߺ� �񱳸� �����ϱ� ���� ������ ���
-                    if (i == j && pColRight < pColLeft)
-                        continue;
-
-					// Ȱ��ȭ ���� Ȯ��
-                    if (!pColLeft->Get_IsActive() || !pColRight->Get_IsActive())
-                        continue;
-
-					// �浹 ���� Ȯ��
-                    if (!pColLeft->Intersect(pColRight))
-                        continue;
-
-                    const COLLIDER_TOKEN_PAIR tPair = Make_ColliderTokenPair(pColLeft, pColRight);
-
-                    if (!setCurCollisionPairs.insert(tPair).second)
-                        continue;
-
-                    setCurColliders.insert(pColLeft);
-                    setCurColliders.insert(pColRight);
-
-                    if (m_setPrevCollisionPairs.find(tPair) == m_setPrevCollisionPairs.end())
+                    for (auto& pColRight : RightList)
                     {
-                        pColLeft->OnCollisionEnter(pColRight);
-                        pColRight->OnCollisionEnter(pColLeft);
-                    }
-                    else
-                    {
-                        pColLeft->OnCollisionStay(pColRight);
-                        pColRight->OnCollisionStay(pColLeft);
+                        mapLiveColliders[pColRight->GetToken()] = pColRight;
+
+                        // 같은 콜라이더끼리 충돌 체크를 하지 않음
+                        if (pColLeft == pColRight)
+                            continue;
+
+                        // 중복 체크 방지
+                        if (i == j && pColRight < pColLeft)
+                            continue;
+
+                        // 비활성화된 콜라이더는 충돌 체크를 하지 않음
+                        if (!pColLeft->Get_IsActive() || !pColRight->Get_IsActive())
+                            continue;
+
+                        // 충돌 체크를 수행하고, 충돌하지 않으면 다음 콜라이더로 넘어감
+                        if (!pColLeft->Intersect(pColRight))
+                            continue;
+
+                        const COLLIDER_TOKEN_PAIR tPair = Make_ColliderTokenPair(pColLeft, pColRight);
+                        const bool bFirstCollisionThisFrame = setCurCollisionPairs.insert(tPair).second;
+
+                        if (bFirstCollisionThisFrame)
+                        {
+                            setCurColliders.insert(pColLeft);
+                            setCurColliders.insert(pColRight);
+
+                            if (m_setPrevCollisionPairs.find(tPair) == m_setPrevCollisionPairs.end())
+                            {
+                                pColLeft->OnCollisionEnter(pColRight);
+                                pColRight->OnCollisionEnter(pColLeft);
+                            }
+                            else
+                            {
+                                pColLeft->OnCollisionStay(pColRight);
+                                pColRight->OnCollisionStay(pColLeft);
+                            }
+                        }
+                        else
+                        {
+                            // 같은 프레임의 추가 solver pass에서 겹침이 계속되면 Stay를 추가 호출
+                            pColLeft->OnCollisionStay(pColRight);
+                            pColRight->OnCollisionStay(pColLeft);
+                        }
                     }
                 }
             }
@@ -109,7 +121,7 @@ void CCollisionMgr::Update_Collision()
         const std::shared_ptr<void> spRight = tPrevPair.second.lock();
 
         if (!spLeft || !spRight)
-            continue; // �̹� �ı��� �ݶ��̴��� ���� ����
+            continue; // 이미 소멸된 콜라이더는 충돌 종료 이벤트를 호출하지 않음
 
         auto itLeft = mapLiveColliders.find(spLeft);
         auto itRight = mapLiveColliders.find(spRight);

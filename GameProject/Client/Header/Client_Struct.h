@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "Engine_Define.h"
+#include "Client_Enum.h"
 
 /* 맵 정보를 담은 구조체 */
 struct TRoomEntity
@@ -22,21 +23,11 @@ struct TRoomData
 	vector<TRoomEntity> vecObjectInfo;
 	vector<bool> vecDoorInfo;
 	vector<int> vecDoorTile;
+	vector<wstring> vecClearCondition;
 };
 
-/* 맵 배치 오브젝트 타입 */
-enum class EObjectType
+struct TRoomEventCtx
 {
-	NONE = 0,
+	ERoomEventType eType;
 
-	BREAKABLE_FRUSTUM = 1,
-	UNBREAKABLE_FRUSTUM,
-	EXPLOSIVE_FRUSTUM,
-
-	Skull = 11,
-	Boss1,
-	Speyeder,
-	Worm,
-
-	MAX,
 };

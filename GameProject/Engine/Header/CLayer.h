@@ -31,7 +31,7 @@ protected:
 public:
 	static CLayer* Create();
 
-private:
+protected:
 	virtual void	Free();
 };
 

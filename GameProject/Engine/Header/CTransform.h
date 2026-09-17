@@ -58,6 +58,8 @@ public:
 		m_vScale = vScale;
 	}
 
+	inline void ForceUpdateWorldMatrix() { Update_Component(0.f); }
+
 public:
 	HRESULT			Ready_Transform();
 	virtual _int	Update_Component(const _float& fTimeDelta);

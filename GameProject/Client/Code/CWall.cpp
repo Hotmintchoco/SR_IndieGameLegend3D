@@ -8,6 +8,7 @@
 #include "CSphereCollider.h"
 #include "CLayerContext.h"
 #include "CRoomLayer.h"
+#include "Client_Struct.h"
 #include <algorithm>
 #include <cfloat>
 #include <ctime>
@@ -37,8 +38,7 @@ HRESULT CWall::Ready_GameObject()
     CRoomLayer* pLayer = static_cast<CRoomLayer*>(CLayerContext::GetLayer());
     if (pLayer)
     {
-        pLayer->m_OnRoomBegin.AddBinding(GetToken(), [this]() { OnRoomBegin(); });
-    }
+        pLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) { OnRoomEvent(t); });    }
 
     /* Set Initial Position */
     if (m_eDir == EWallDir::WEST || m_eDir == EWallDir::SOUTH)
@@ -119,8 +119,84 @@ void CWall::InitializeCollider()
     // -- Collider Initialization -- 
 }
 
-void CWall::OnRoomBegin()
+void CWall::OnRoomEvent(const TRoomEventCtx& t)
 {
+    if (!m_bHasDoor) return;
+
+    switch (t.eType)
+    {
+    case ERoomEventType::ROOM_BEGIN:
+        BlockDoor(true);
+        break;
+    case ERoomEventType::ROOM_CLEAR:
+        BlockDoor(false);
+        break;
+    default:
+        break;
+    }
+}
+
+void CWall::BlockDoor(bool bBlock)
+{
+    // -- Collider Initialization -- 
+
+    // North Wall Collider
+    _float fExtentsX(0.f), fExtentsY(2.f), fExtentsZ(0.f);
+    _float fDiffX(0.f), fDiffY(1.f), fDiffZ(0.f);
+
+    switch (m_eDir)
+    {
+    case EWallDir::EAST:
+        fExtentsX = 0.5f;
+        fExtentsZ = 3.5f;
+        fDiffX = 7.f;
+        break;
+    case EWallDir::SOUTH:
+        fExtentsX = 3.5f;
+        fExtentsZ = 0.5f;
+        fDiffZ = -6.f;
+        break;
+    case EWallDir::WEST:
+        fExtentsX = 0.5f;
+        fExtentsZ = 3.5f;
+        fDiffX = -7.f;
+        break;
+    case EWallDir::NORTH:
+        fExtentsX = 3.5f;
+        fExtentsZ = 0.5f;
+        fDiffZ = 6.f;
+        break;
+    }
+
+    if (!bBlock)
+    {
+        if (m_eDir == EWallDir::EAST || m_eDir == EWallDir::WEST)
+            fDiffZ = 4.5f;
+        else
+            fDiffX = 4.5f;
+    }
+    else
+    {
+        if (m_eDir == EWallDir::EAST || m_eDir == EWallDir::WEST)
+            fDiffZ = 3.f;
+        else
+            fDiffX = 3.f;
+    }
+
+    CBoxCollider* pBoxCollider = static_cast<CBoxCollider*>(m_pColliderCom[0]);
+    pBoxCollider->Set_Extents(fExtentsX, fExtentsY, fExtentsZ);
+    pBoxCollider->Set_DiffPos({ fDiffX, fDiffY, fDiffZ });
+
+    if (m_eDir == EWallDir::EAST || m_eDir == EWallDir::WEST)
+        fDiffZ = -fDiffZ;
+    else
+        fDiffX = -fDiffX;
+
+    pBoxCollider = static_cast<CBoxCollider*>(m_pColliderCom[1]);
+    pBoxCollider->Set_Extents(fExtentsX, fExtentsY, fExtentsZ);
+    pBoxCollider->Set_DiffPos({ fDiffX, fDiffY, fDiffZ });
+
+    // -- Collider Initialization -- 
 }
 
 _int CWall::Update_GameObject(const _float& fTimeDelta)
@@ -231,8 +307,8 @@ HRESULT CWall::Add_Component()
     // Collider
     static const _tchar* sColliderTags[2] =
     {
-        L"Com_Collider_0",
-        L"Com_Collider_1",
+        L"Com_Collider0",
+        L"Com_Collider1",
     };
 
     for (int i = 0; i < 2; ++i)

@@ -8,6 +8,12 @@ namespace Engine
 	class CGameObject;
 }
 
+struct TCreateDesc
+{
+	LPDIRECT3DDEVICE9 pDevice = nullptr;
+	CGameObject* pSpawner = nullptr;
+};
+
 class CAbstractFactory : public CBase
 {
 	DECLARE_SINGLETON(CAbstractFactory);
@@ -19,9 +25,12 @@ private:
 public:
 	Engine::CGameObject* Create(EObjectType eType) const;
 
+	/* Item */
+	Engine::CGameObject* CreateRandomItem(CGameObject* pSpawner) const;
+
 private:
 	virtual void Free();
 
-	unordered_map<EObjectType, Engine::CGameObject*(*)(LPDIRECT3DDEVICE9)> m_mapCreator;
+	unordered_map<EObjectType, Engine::CGameObject*(*)(const TCreateDesc&)> m_mapCreator;
 };
 

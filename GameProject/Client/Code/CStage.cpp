@@ -19,7 +19,6 @@
 #include "CRoomLoadingMgr.h"
 #include "CRoomLayer.h"
 #include "CLayerContext.h"
-#include "CPlayerHpUI.h"
 #include "CCrosshair.h"
 #include "CSkull.h"
 #include "CBoss1.h"
@@ -64,9 +63,11 @@ HRESULT CStage::Ready_Scene()
 		return E_FAIL;
 
 	// 충돌 그룹 설정
-	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_MONSTER);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_WALL);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PBULLET, Engine::COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_ITEM);
 
 	return S_OK;
 }
@@ -282,25 +283,57 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	// Hp
-	const _int iHpCount = 3;
-	const _float fStartX = 20.f;
-	const _float fStartY = 20.f;
-	const _float fIconSize = 15.f;  // CPlayerHpUI::Ready_GameObject()의 Set_Scale과 동일
-	const _float fGap = 15.f;
+	_int iCountMax = 3;
+	_float fStartX = 20.f;
+	_float fStartY = 20.f;
+	_float fIconSize = 17.5f;  // CPlayerHpUI::Ready_GameObject()의 Set_Scale과 동일
+	_float fGap = 22.5f;
 
-	for (_int i = 0; i < iHpCount; ++i)
+	for (_int i = 0; i < iCountMax; ++i)
 	{
-		pUI = CPlayerHpUI::Create(m_pGraphicDev);
+		pUI = CUI::Create(m_pGraphicDev, L"Proto_HpUITexture");
 		if (nullptr == pUI)
 			return E_FAIL;
 
-		_vec2 vPos{ fStartX + i * (fIconSize + fGap), fStartY };
+		vPos = { fStartX + i * (fIconSize + fGap), fStartY };
 		pUI->Set_Pos(vPos);
+		pUI->Set_Size({ fIconSize + 2.5f, fIconSize });
 
 		wstring wstrTag = L"PlayerHp_" + to_wstring(i);
 		if (FAILED(pLayer->Add_GameObject(wstrTag.c_str(), pUI)))
 			return E_FAIL;
 	}
+
+	// Gem
+	fIconSize = 20.f;
+	fStartX = 675.f;
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_Item_Gem_Texture");
+
+	vPos = { fStartX,  fStartY };
+	pUI->Set_Pos(vPos);
+	pUI->Set_Size({ fIconSize, fIconSize });
+
+	if (FAILED(pLayer->Add_GameObject(L"Gem", pUI)))
+		return E_FAIL;
+
+	// Gem Cnt
+	fStartX += fGap + 15.f;
+	fGap = 6.f;
+	for (int i = 0; i < iCountMax; ++i)
+	{
+		pUI = CUI::Create(m_pGraphicDev, L"Proto_NumberTexture");
+		if (nullptr == pUI)
+			return E_FAIL;
+
+		vPos = { fStartX + i * (fIconSize + fGap), fStartY };
+		pUI->Set_Pos(vPos);
+		pUI->Set_Size({ fIconSize + 2.5f, fIconSize });
+
+		wstring wstrTag = L"Num_" + to_wstring(i);
+		if (FAILED(pLayer->Add_GameObject(wstrTag.c_str(), pUI)))
+			return E_FAIL;
+	}
+
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 

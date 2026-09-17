@@ -11,6 +11,7 @@
 #include "CAbstractFactory.h"
 #include "CGameStatusMgr.h"
 #include "CDoor.h"
+#include "CKillAllEntityCondition.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -32,19 +33,49 @@ HRESULT CRoomLayer::Ready_Layer()
 
 _int CRoomLayer::Update_Layer(const _float& fTimeDelta)
 {
+	// if (CGameStatusMgr::GetInstance()->GetCurrentRoomLayer() != this) return S_OK;
+
 	_int iExit = CLayer::Update_Layer(fTimeDelta);
+
+	/* 방문하지 않은 방이 바로 클리어 처리되는 것을 막기 위함 */
+	if (!m_bCleared && m_bVisited)
+	{
+		CheckClearCondition();
+	}
 
 	return S_OK;
 }
 
 void CRoomLayer::LateUpdate_Layer(const _float& fTimeDelta)
 {
+	// if (CGameStatusMgr::GetInstance()->GetCurrentRoomLayer() != this) return;
+
 	CLayer::LateUpdate_Layer(fTimeDelta);
 }
 
 HRESULT CRoomLayer::SpawnRoom()
 {
 	TRoomData* t = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iRoomIndex);
+
+	/* 클리어 조건 */
+	for (auto& wstrClearCondtiion : t->vecClearCondition)
+	{
+		CClearCondition* pCondition = nullptr;
+
+		if (wstrClearCondtiion == L"KillAllEntity")
+		{
+			pCondition = CKillAllEntityCondition::Create(this);
+		}
+
+		if (nullptr == pCondition)
+		{
+			assert(0);
+			continue;
+		}
+
+		m_vecClearCondition.push_back(pCondition);
+	}
+
 	int iRoomColCount = CRoomLoadingMgr::GetInstance()->GetRoomColCount();
 	int iRoomRowCount = CRoomLoadingMgr::GetInstance()->GetRoomRowCount();
 	_vec3 vOuterRoomSize = CRoomLoadingMgr::GetInstance()->GetOuterRoomSize();
@@ -251,6 +282,8 @@ HRESULT CRoomLayer::SpawnRoom()
 
 void CRoomLayer::OnRoomTriggerBlockCollided()
 {
+	if (m_bOnProgress) return;
+
 	CGameStatusMgr::GetInstance()->UpdateCurrentRoomIndex(m_iRoomIndex);
 
 	if (!m_bVisited)
@@ -261,8 +294,25 @@ void CRoomLayer::OnRoomTriggerBlockCollided()
 
 	if (!m_bCleared)
 	{
-		m_OnRoomBegin.Broadcast();
+		TRoomEventCtx t{ ERoomEventType::ROOM_BEGIN };
+		m_OnRoomEvent.Broadcast(t);
+		m_bOnProgress = true;
 	}
+}
+
+void CRoomLayer::CheckClearCondition()
+{
+	for (auto& c : m_vecClearCondition)
+	{
+		if (!c->IsSatisfied()) return;
+	}
+
+	/* 모든 클리어 조건이 만족 */
+	CGameStatusMgr::GetInstance()->UpdateClearTable(m_iRoomIndex);
+	TRoomEventCtx t{ ERoomEventType::ROOM_CLEAR };
+	m_OnRoomEvent.Broadcast(t);
+	m_bOnProgress = false;
+	m_bCleared = true;
 }
 
 CRoomLayer* CRoomLayer::Create(int iRoomIndex)
@@ -277,4 +327,14 @@ CRoomLayer* CRoomLayer::Create(int iRoomIndex)
 	}
 
 	return pLayer;
+}
+
+void CRoomLayer::Free()
+{
+	for (auto& c : m_vecClearCondition)
+	{
+		Safe_Release(c);
+	}
+
+	CLayer::Free();
 }

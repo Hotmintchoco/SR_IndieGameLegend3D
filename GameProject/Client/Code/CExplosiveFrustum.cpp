@@ -4,11 +4,9 @@
 #include "CRenderer.h"
 #include "CExplosiveFrustumLight.h"
 #include "CLayer.h"
-#include "CGem.h"
-#include "CEnergy.h"
-#include "CHeart.h"
 #include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
+#include "CAbstractFactory.h"
 
 CExplosiveFrustum::CExplosiveFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CFrustum(pGraphicDev)
@@ -48,7 +46,7 @@ _int CExplosiveFrustum::Update_GameObject(const _float& fTimeDelta)
 
 void CExplosiveFrustum::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    m_pLight->PropagateTransform(m_pTransformCom->Get_World());
+    m_pLight->PropagateTransform(m_pTransformCom);
 
     CFrustum::LateUpdate_GameObject(fTimeDelta);
 }
@@ -70,22 +68,10 @@ void CExplosiveFrustum::OnCollisionEnter(CGameObject* pOther)
     
     CGameObject* pObject = nullptr;
 
-    pObject = CGem::Create(m_pGraphicDev, this);
+    pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
     if (pObject)
     {
-        pLayer->Add_GameObject(L"Item_Gem", pObject);
-    }
-
-    pObject = CEnergy::Create(m_pGraphicDev, this);
-    if (pObject)
-    {
-        pLayer->Add_GameObject(L"Item_Energy", pObject);
-    }
-    
-    pObject = CHeart::Create(m_pGraphicDev, this);
-    if (pObject)
-    {
-        pLayer->Add_GameObject(L"Item_Heart", pObject);
+        pLayer->Add_GameObject(L"Item", pObject);
     }
     
     Set_Dead(true);

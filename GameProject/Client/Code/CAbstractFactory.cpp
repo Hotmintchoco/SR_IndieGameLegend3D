@@ -1,27 +1,33 @@
 ﻿#include "pch.h"
 #include "CAbstractFactory.h"
 #include "CGraphicDev.h"
+#include "CRandomMgr.h"
 #include "CBreakableFrustum.h"
 #include "CUnbreakableFrustum.h"
 #include "CExplosiveFrustum.h"
 #include "CSkull.h"
 #include "CSpeyeder.h"
 #include "CBoss1.h"
+#include "CHeart.h"
+#include "CEnergy.h"
+#include "CGem.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
 CAbstractFactory::CAbstractFactory()
 {
-    LPDIRECT3DDEVICE9 pDevice = CGraphicDev::GetInstance()->Get_GraphicDev();
-
     m_mapCreator = {
-        {EObjectType::BREAKABLE_FRUSTUM,        [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CBreakableFrustum::Create(pDevice); } },
-        {EObjectType::UNBREAKABLE_FRUSTUM,      [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CUnbreakableFrustum::Create(pDevice); } },
-        {EObjectType::EXPLOSIVE_FRUSTUM,        [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CExplosiveFrustum::Create(pDevice); } },
+        {EObjectType::BREAKABLE_FRUSTUM,        [](const TCreateDesc& t) -> Engine::CGameObject* { return CBreakableFrustum::Create(t.pDevice); } },
+        {EObjectType::UNBREAKABLE_FRUSTUM,      [](const TCreateDesc& t) -> Engine::CGameObject* { return CUnbreakableFrustum::Create(t.pDevice); } },
+        {EObjectType::EXPLOSIVE_FRUSTUM,        [](const TCreateDesc& t) -> Engine::CGameObject* { return CExplosiveFrustum::Create(t.pDevice); } },
         
         {EObjectType::Skull,                    [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CSkull::Create(pDevice); } },
         {EObjectType::Boss1,                   [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CBoss1::Create(pDevice); } },
         {EObjectType::Speyeder,                [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CSpeyeder::Create(pDevice); } },
+
+        {EObjectType::ITEM_HEART,               [](const TCreateDesc& t) -> Engine::CGameObject* { return CHeart::Create(t.pDevice, t.pSpawner); } },
+        {EObjectType::ITEM_ENERGY,              [](const TCreateDesc& t) -> Engine::CGameObject* { return CEnergy::Create(t.pDevice, t.pSpawner); } },
+        {EObjectType::ITEM_GEM,                 [](const TCreateDesc& t) -> Engine::CGameObject* { return CGem::Create(t.pDevice, t.pSpawner); } },
     };
 }
 
@@ -32,10 +38,34 @@ CAbstractFactory::~CAbstractFactory()
 
 Engine::CGameObject* CAbstractFactory::Create(EObjectType eType) const
 {
+    TCreateDesc t
+    {
+        CGraphicDev::GetInstance()->Get_GraphicDev(),
+        nullptr,
+    };
+
+    Engine::CGameObject* pObject = m_mapCreator.at(eType)(t);
+    
+    return pObject;
+}
+
+Engine::CGameObject* CAbstractFactory::CreateRandomItem(CGameObject* pSpawner) const
+{
+    const int iBegin = (int)EObjectType::ITEM_NONE + 1;
+    const int iEnd = (int)EObjectType::ITEM_MAX - 1;
+
+    EObjectType eType = (EObjectType)CRandomMgr::GetInstance()->GetRandomInt(iBegin, iEnd);
+
+    TCreateDesc t
+    {
+        CGraphicDev::GetInstance()->Get_GraphicDev(),
+        pSpawner,
+    };
+
     LPDIRECT3DDEVICE9 pDevice = CGraphicDev::GetInstance()->Get_GraphicDev();
 
-    Engine::CGameObject* pObject = m_mapCreator.at(eType)(pDevice);
-    
+    Engine::CGameObject* pObject = m_mapCreator.at(eType)(t);
+
     return pObject;
 }
 

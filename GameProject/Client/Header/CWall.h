@@ -3,6 +3,8 @@
 #include "CGameObject.h"
 #include "Client_Enum.h"
 
+struct TRoomEventCtx;
+
 namespace Engine
 {
 	class CPlyTex;
@@ -32,11 +34,11 @@ public:
 	inline bool HasDoor() { return m_bHasDoor; };
 
 private:
-	HRESULT			Add_Component();
+	HRESULT Add_Component();
 	void InitializeCollider();
-	void OnRoomBegin();
+	void OnRoomEvent(const TRoomEventCtx& t);
+	void BlockDoor(bool bBlock);
 
-private:
 	Engine::CPlyTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;

@@ -101,6 +101,9 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CrosshairTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Reticle_%d.png", 4))))
         return E_FAIL;
 
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_NumberTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Num%d.png", 10))))
+        return E_FAIL;
+
     lstrcpy(m_szLoading, L"Etc Loading............................");
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
@@ -272,6 +275,13 @@ HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
         data.at("objectList").get_to(t.vecObjectInfo);
         data.at("door").get_to(t.vecDoorInfo);
         data.at("doorTile").get_to(t.vecDoorTile);
+        vector<string> vecClearRaw;
+        data.at("clear").get_to(vecClearRaw);
+        t.vecClearCondition.reserve(vecClearRaw.size());
+        for (const auto& str : vecClearRaw)
+        {
+            t.vecClearCondition.push_back(Utils::Utf8ToWide(str));
+        }
 
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
@@ -305,7 +315,14 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
         data.at("objectTilingList").get_to(t.vecObjectTilingInfo);
         data.at("objectList").get_to(t.vecObjectInfo);
         data.at("door").get_to(t.vecDoorInfo);
-        data.at("doorTile").get_to(t.vecDoorTile);
+        data.at("doorTile").get_to(t.vecDoorTile);       
+        vector<string> vecClearRaw;
+        data.at("clear").get_to(vecClearRaw);
+        t.vecClearCondition.reserve(vecClearRaw.size());
+        for (const auto& str : vecClearRaw)
+        {
+            t.vecClearCondition.push_back(Utils::Utf8ToWide(str));
+        }
 
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);

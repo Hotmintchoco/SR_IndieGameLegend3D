@@ -15,6 +15,7 @@
 #include "CAbstractFactory.h"
 #include "CGameStatusMgr.h"
 #include "CDebugMgr.h"
+#include "CRandomMgr.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -159,6 +160,7 @@ void CMainApp::Free()
 	CAbstractFactory::DestroyInstance();
 	CGameStatusMgr::DestroyInstance();
 	CDebugMgr::DestroyInstance();
+	CRandomMgr::DestroyInstance();
 
 	m_pManagementClass->DestroyInstance();
 	m_pDeviceClass->DestroyInstance();
