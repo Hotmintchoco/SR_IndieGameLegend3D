@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #pragma push_macro("new")
 #undef new
@@ -6,7 +6,7 @@
 #pragma pop_macro("new")
 
 #include "Engine_Define.h"
-#include "Define.h"
+#include "Client_Struct.h"
 #include "Utils.h"
 
 inline void from_json(const nlohmann::json& j, Engine::_vec3& v)

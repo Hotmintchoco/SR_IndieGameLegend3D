@@ -39,6 +39,7 @@ HRESULT CBullet::Ready_GameObject(const _vec3* pPos, const _vec3* pDir)
     D3DXVec3Normalize(&m_vDir, pDir);
 
 	__super::Ready_GameObject();
+	m_pColliderCom->Set_CollisionID(COLL_PBULLET);
 
     switch (m_iBulletID)
     {
@@ -93,8 +94,13 @@ void CBullet::LateUpdate_GameObject(const _float& fTimeDelta)
     m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
 
     matBill._11 = matView._11;
+    matBill._12 = matView._12;
     matBill._13 = matView._13;
+    matBill._21 = matView._21;
+    matBill._22 = matView._22;
+    matBill._23 = matView._23;
     matBill._31 = matView._31;
+    matBill._32 = matView._32;
     matBill._33 = matView._33;
 
     D3DXMatrixInverse(&matBill, 0, &matBill);

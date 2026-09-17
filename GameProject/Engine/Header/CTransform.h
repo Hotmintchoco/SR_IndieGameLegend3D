@@ -21,6 +21,11 @@ public:
 	{
 		*(((_float*)&m_vAngle) + eType) += fAngle;
 	}
+	void		Set_Rotation_Raw(const _vec3& vRadAngle)
+	{
+		m_vAngle = vRadAngle;
+	}
+
 
 	_matrix* Get_World() { return &m_matWorld; }
 

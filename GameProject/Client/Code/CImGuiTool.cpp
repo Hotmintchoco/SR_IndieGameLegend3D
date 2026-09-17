@@ -7,7 +7,19 @@ HRESULT CImGuiTool::Ready(HWND hWnd, LPDIRECT3DDEVICE9 pDevice)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
     ImGui::StyleColorsDark();
+
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        ImGuiStyle& style = ImGui::GetStyle();
+        style.WindowRounding = 0.f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.f;
+    }
 
     if (!ImGui_ImplWin32_Init(hWnd))  return E_FAIL;
     if (!ImGui_ImplDX9_Init(pDevice)) return E_FAIL;
@@ -26,6 +38,13 @@ void CImGuiTool::EndFrame()
 {
     ImGui::Render();
     ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+    }
 }
 
 void CImGuiTool::Release()

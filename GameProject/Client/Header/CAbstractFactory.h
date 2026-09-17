@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "CBase.h"
-#include "Define.h"
+#include "Client_Struct.h"
 
 namespace Engine
 {

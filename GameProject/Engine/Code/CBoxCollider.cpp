@@ -63,9 +63,6 @@ _int CBoxCollider::Update_Component(const _float& fTimeDelta)
 
     m_tBox.Center = { vOwnerPos.x, vOwnerPos.y, vOwnerPos.z };
 
-    if (!m_bIsPos)
-        m_bIsPos = true;
-
     return 0;
 }
 

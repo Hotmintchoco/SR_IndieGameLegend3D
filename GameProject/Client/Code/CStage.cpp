@@ -64,9 +64,10 @@ HRESULT CStage::Ready_Scene()
 		return E_FAIL;
 
 	// 충돌 그룹 설정
-	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_MONSTER);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PLAYER, Engine::COLL_WALL);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(Engine::COLL_PBULLET, Engine::COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_ITEM);
 
 	return S_OK;
 }
