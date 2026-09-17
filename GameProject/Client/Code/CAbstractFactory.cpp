@@ -20,10 +20,6 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::BREAKABLE_FRUSTUM,        [](const TCreateDesc& t) -> Engine::CGameObject* { return CBreakableFrustum::Create(t.pDevice); } },
         {EObjectType::UNBREAKABLE_FRUSTUM,      [](const TCreateDesc& t) -> Engine::CGameObject* { return CUnbreakableFrustum::Create(t.pDevice); } },
         {EObjectType::EXPLOSIVE_FRUSTUM,        [](const TCreateDesc& t) -> Engine::CGameObject* { return CExplosiveFrustum::Create(t.pDevice); } },
-        
-        {EObjectType::Skull,                    [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CSkull::Create(pDevice); } },
-        {EObjectType::Boss1,                   [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CBoss1::Create(pDevice); } },
-        {EObjectType::Speyeder,                [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CSpeyeder::Create(pDevice); } },
 
         {EObjectType::ITEM_HEART,               [](const TCreateDesc& t) -> Engine::CGameObject* { return CHeart::Create(t.pDevice, t.pSpawner); } },
         {EObjectType::ITEM_ENERGY,              [](const TCreateDesc& t) -> Engine::CGameObject* { return CEnergy::Create(t.pDevice, t.pSpawner); } },
