@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "CLoading.h"
 #include "CProtoMgr.h"
+#include "Define.h"
 #include "JsonAdapter.h"
 #include "CRoomLoadingMgr.h"
 #include "Utils.h"
@@ -180,24 +181,11 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Fog_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture2D/fog.png", 1))))
         return E_FAIL;
 
-    /* 문 */
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Door_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/door_%d.png", 5))))
-        return E_FAIL;
-
     /* 맵 배치 데이터 */
     if (FAILED(ParseRoomData()))
     {
         return E_FAIL;
     }
-
-    /* Item Loading */
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Item_Energy_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Energy_%d.png", 8))))
-        return E_FAIL;
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Item_Heart_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/hearts_0.png", 1))))
-        return E_FAIL;
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Item_Gem_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/sprCoin_strip6_%d.png", 6))))
-        return E_FAIL;
-
 
     lstrcpy(m_szLoading, L"Loading Complete!!!");
 
@@ -276,7 +264,7 @@ HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
     }
-    catch (const json::exception&) {
+    catch (const json::exception& e) {
         return E_FAIL;
     }
 
@@ -310,7 +298,7 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
     }
-    catch (const json::exception&) {
+    catch (const json::exception& e) {
         return E_FAIL;
     }
 

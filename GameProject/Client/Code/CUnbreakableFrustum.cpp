@@ -51,15 +51,8 @@ void CUnbreakableFrustum::Render_GameObject()
 
 void CUnbreakableFrustum::OnCollisionEnter(CGameObject* pOther)
 {
-
-}
-
-void CUnbreakableFrustum::OnCollisionStay(CGameObject* pOther)
-{
     Obstacle_Collision(pOther, m_pColliderCom);
 }
-
-
 
 HRESULT CUnbreakableFrustum::Add_Component()
 {

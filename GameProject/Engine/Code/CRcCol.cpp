@@ -66,8 +66,7 @@ HRESULT CRcCol::Ready_Buffer()
 
 	 m_dwIdxSize = sizeof(INDEX16);
 	 m_IdxFmt = D3DFMT_INDEX16;
-	 m_VtxStructType = VTXSTRUCT_COL;
-
+	
 	if (FAILED(CVIBuffer::Ready_Buffer()))
 	 return E_FAIL;
 	

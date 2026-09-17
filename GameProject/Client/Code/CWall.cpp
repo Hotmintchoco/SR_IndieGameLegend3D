@@ -6,8 +6,6 @@
 #include "CTransform.h"
 #include "CCollisionMgr.h"
 #include "CSphereCollider.h"
-#include "CLayerContext.h"
-#include "CRoomLayer.h"
 #include <algorithm>
 #include <cfloat>
 #include <ctime>
@@ -32,39 +30,18 @@ HRESULT CWall::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    InitializeCollider();
-
-    CRoomLayer* pLayer = static_cast<CRoomLayer*>(CLayerContext::GetLayer());
-    if (pLayer)
-    {
-        pLayer->m_OnRoomBegin.AddBinding(GetToken(), [this]() { OnRoomBegin(); });
-    }
-
-    /* Set Initial Position */
-    if (m_eDir == EWallDir::WEST || m_eDir == EWallDir::SOUTH)
-    {
-        m_pTransformCom->Rotation(ROT_Y, 180.f);
-    }
-
-	__super::Ready_GameObject();
-
-    return S_OK;
-}
-
-void CWall::InitializeCollider()
-{
     // -- Collider Initialization -- 
-
+	
     // North Wall Collider
-    _float fExtentsX(0.f), fExtentsY(2.f), fExtentsZ(0.f);
-    _float fDiffX(0.f), fDiffY(1.f), fDiffZ(0.f);
+	_float fExtentsX(0.f), fExtentsY(2.f), fExtentsZ(0.f);
+	_float fDiffX(0.f), fDiffY(1.f), fDiffZ(0.f);
 
-    switch (m_eDir)
+    switch (m_eDir) 
     {
     case EWallDir::EAST:
         fExtentsX = 0.5f;
         fExtentsZ = 3.5f;
-        fDiffX = 7.f;
+		fDiffX = 7.f;
         break;
     case EWallDir::SOUTH:
         fExtentsX = 3.5f;
@@ -78,8 +55,8 @@ void CWall::InitializeCollider()
         break;
     case EWallDir::NORTH:
         fExtentsX = 3.5f;
-        fExtentsZ = 0.5f;
-        fDiffZ = 6.f;
+		fExtentsZ = 0.5f;
+		fDiffZ = 6.f;
         break;
     }
 
@@ -111,16 +88,17 @@ void CWall::InitializeCollider()
     pBoxCollider->Set_Extents(fExtentsX, fExtentsY, fExtentsZ);
     pBoxCollider->Set_DiffPos({ fDiffX, fDiffY, fDiffZ });
 
-    for (int i = 0; i < 2; ++i)
-    {
-        if (m_pColliderCom[i])
-            m_pColliderCom[i]->Set_CollisionID(COLL_OBSTACLE);
-	}
     // -- Collider Initialization -- 
-}
 
-void CWall::OnRoomBegin()
-{
+    /* Set Initial Position */
+    if (m_eDir == EWallDir::WEST || m_eDir == EWallDir::SOUTH)
+    {
+        m_pTransformCom->Rotation(ROT_Y, 180.f);
+    }
+
+	__super::Ready_GameObject();
+
+    return S_OK;
 }
 
 _int CWall::Update_GameObject(const _float& fTimeDelta)
@@ -138,7 +116,7 @@ void CWall::LateUpdate_GameObject(const _float& fTimeDelta)
 
     // 충돌 처리
     for (int i = 0; i < 2; ++i)
-        CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom[i]);
+        CCollisionMgr::GetInstance()->Add_Collider(COLL_WALL, m_pColliderCom[i]);
 }
 
 void CWall::Render_GameObject()
@@ -159,11 +137,6 @@ void CWall::Render_GameObject()
 }
 
 void CWall::OnCollisionEnter(CGameObject* pOther)
-{
-    
-}
-
-void CWall::OnCollisionStay(CGameObject* pOther)
 {
     if (nullptr == pOther)
         return;

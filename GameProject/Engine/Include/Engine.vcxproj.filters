@@ -112,9 +112,6 @@
     <ClCompile Include="..\Code\CLayerContext.cpp">
       <Filter>04. Management\01. Layer\LayerContext</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CEventDelegate.cpp">
-      <Filter>12. Event</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CGraphicDev.h">
@@ -252,9 +249,6 @@
     <ClInclude Include="..\Header\CLayerContext.h">
       <Filter>04. Management\01. Layer\LayerContext</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CEventDelegate.h">
-      <Filter>12. Event</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00. GraphicDev">
@@ -367,9 +361,6 @@
     </Filter>
     <Filter Include="04. Management\01. Layer\LayerContext">
       <UniqueIdentifier>{4866132a-0539-4584-ad18-520c05dd6dcc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="12. Event">
-      <UniqueIdentifier>{38dc5f65-8e24-4695-8b02-bd961b9689b0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

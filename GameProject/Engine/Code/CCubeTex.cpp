@@ -28,7 +28,6 @@ HRESULT CCubeTex::Ready_Buffer()
 
 	m_dwIdxSize = sizeof(INDEX32);
 	m_IdxFmt = D3DFMT_INDEX32;
-	m_VtxStructType = VTXSTRUCT_CUBE;
 
 	if (FAILED(CVIBuffer::Ready_Buffer()))
 		return E_FAIL;

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "CCollider.h"
 
 BEGIN(Engine)
@@ -35,7 +35,7 @@ public:
 
 private:
 	CCubeTex*		m_pDebugCubeTex = nullptr;
-	_vec3 			m_vDiffPos = _vec3{ 0.f, 0.f, 0.f };
+	_vec3 			m_vDiffPos;
 
 public:
 	static CCollider* Create(LPDIRECT3DDEVICE9 pGraphicDev);

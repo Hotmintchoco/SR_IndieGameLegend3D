@@ -1,16 +1,13 @@
-Ôªø#include "pch.h"
+#include "pch.h"
 #include "CRoomLayer.h"
 #include "CRoomLoadingMgr.h"
 #include "CTransform.h"
-#include "Client_Struct.h"
+#include "Define.h"
 #include "CGraphicDev.h"
 #include "CWall.h"
 #include "CFog.h"
 #include "CTile.h"
-#include "CTriggerBox.h"
 #include "CAbstractFactory.h"
-#include "CGameStatusMgr.h"
-#include "CDoor.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -66,7 +63,7 @@ HRESULT CRoomLayer::SpawnRoom()
 
 	CGameObject* pGameObject = nullptr;
 
-	/* ÌÉÄÏùº */
+	/* ≈∏¿œ */
 	for (size_t i = 0; i < t->vecTile.size(); ++i)
 	{
 		int iTileX = (int)i % (int)vInnerRoomSize.x;
@@ -93,26 +90,26 @@ HRESULT CRoomLayer::SpawnRoom()
 		pTransformCom->Set_Pos(vRoomCenterPos.x + vTileOffset.x, 0.f, vRoomCenterPos.z + vTileOffset.z);
 	}
 
-	/* Î≤Ω : ÎèôÎÇ®ÏÑúÎ∂Å Ïàú */
+	/* ∫Æ : µø≥≤º≠∫œ º¯ */
 	for (size_t i = 0; i < t->vecDoorInfo.size(); ++i)
 	{
 		pGameObject = CWall::Create(pDevice, (EWallDir)(i + 1), t->vecDoorInfo.at(i));
 		if (nullptr == pGameObject)
 			return E_FAIL;
 
-		wstring wstrWallName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Wall_" + to_wstring(i);
+		wstring wstrDoorName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Door_" + to_wstring(i);
 
-		if (FAILED(Add_GameObject(wstrWallName, pGameObject)))
+		if (FAILED(Add_GameObject(wstrDoorName, pGameObject)))
 			return E_FAIL;
 
-		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrWallName, L"Com_Transform"));
+		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
 
 		pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
 
+		/* æ»∞≥ */
 		CWall* pWall = static_cast<CWall*>(pGameObject);
 		if (pWall->HasDoor())
 		{
-			/* ÏïàÍ∞ú */
 			int iDir = (int)pWall->GetDir();
 
 			_vec3 vDir{ 0.f, 0.f, 1.f };
@@ -139,7 +136,7 @@ HRESULT CRoomLayer::SpawnRoom()
 				pTransformCom->Move_Pos(&vDir, 5.5f + (iDir % 2) * 1.f + 0.2f * i, 1.f);
 			}
 
-			/* Î¨∏ Ï™Ω ÌÉÄÏùº */
+			/* πÆ ¬  ≈∏¿œ */
 			pGameObject = CTile::Create(pDevice, (int)i, (t->vecDoorTile[iDir - 1] == 0) ? t->iDefaultTileIdx : t->vecDoorTile[iDir - 1]);
 			if (nullptr == pGameObject)
 				return E_FAIL;
@@ -153,45 +150,12 @@ HRESULT CRoomLayer::SpawnRoom()
 
 			pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
 			pTransformCom->Move_Pos(&vDir, 6.f + (iDir % 2) * 1.f, 1.f);
-
-			/* ÏãúÏûë Ìä∏Î¶¨Í±∞ Î∞ïÏä§ */
-			pGameObject = CTriggerBox::Create(pDevice);
-			if (nullptr == pGameObject)
-				return E_FAIL;
-
-			wstring wstrBoxName = L"Room_" + to_wstring(m_iRoomIndex) + L"_TriggerBox_" + to_wstring(i);
-
-			if (FAILED(Add_GameObject(wstrBoxName, pGameObject)))
-				return E_FAIL;
-
-			pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrBoxName, L"Com_Transform"));
-
-			pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
-			pTransformCom->Move_Pos(&vDir, 4.f + (iDir % 2) * 1.f, 1.f);
-
-			/* Î¨∏ */
-			
-			pGameObject = CDoor::Create(pDevice);
-			if (nullptr == pGameObject)
-				return E_FAIL;
-
-			wstring wstrDoorName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Door_" + to_wstring(i);
-
-			if (FAILED(Add_GameObject(wstrDoorName, pGameObject)))
-				return E_FAIL;
-
-			pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
-
-			pTransformCom->Set_Pos(vRoomCenterPos.x, 0.75f, vRoomCenterPos.z);
-			pTransformCom->Rotation(ROT_Y, 90.f * iDir);
-			pTransformCom->Move_Pos(&vDir, 5.5f + (iDir % 2) * 1.f, 1.f);
-
 		}
 
 
 	}
 
-	/* Îßµ Ïò§Î∏åÏ†ùÌä∏ */
+	/* ∏  ø¿∫Í¡ß∆Æ */
 	for (size_t i = 0; i < t->vecObjectTilingInfo.size(); ++i)
 	{
 		int iTileX = (int)i % (int)vInnerRoomSize.x;
@@ -247,22 +211,6 @@ HRESULT CRoomLayer::SpawnRoom()
 
 	return S_OK;
 
-}
-
-void CRoomLayer::OnRoomTriggerBlockCollided()
-{
-	CGameStatusMgr::GetInstance()->UpdateCurrentRoomIndex(m_iRoomIndex);
-
-	if (!m_bVisited)
-	{
-		CGameStatusMgr::GetInstance()->UpdateVisitTable(m_iRoomIndex);
-		m_bVisited = true;
-	}
-
-	if (!m_bCleared)
-	{
-		m_OnRoomBegin.Broadcast();
-	}
 }
 
 CRoomLayer* CRoomLayer::Create(int iRoomIndex)

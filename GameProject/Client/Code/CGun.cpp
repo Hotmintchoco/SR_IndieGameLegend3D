@@ -4,12 +4,10 @@
 #include "CRenderer.h"
 #include <ctime>
 #include "CCameraMgr.h"
-#include "CBullet.h"
+#include "CBUllet.h"
 #include "CManagement.h"
 #include "CDInputMgr.h"
 #include "CImGuiTool.h"
-#include "CGraphicDev.h"
-#include "CRoomLoadingMgr.h"
 
 CGun::CGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev),
@@ -161,64 +159,6 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
         _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.8f) + (vUp * 0.4f); // 총구 위치
         _vec3	vBullet_To = vPos_Player + (vForword * 10.f); // 크로스헤어 도달점
 
-#pragma region RayCast를 이용한 조준좌표 계산
-
-        pair<_vec3, _vec3> pairMouseRay = Get_MouseRay();
-
-        vector<wstring> vMapKey;
-
-        vMapKey.push_back(L"Environment_Layer");
-        vMapKey.push_back(L"GameLogic_Layer");
-        int iRoomCnt = CRoomLoadingMgr::GetInstance()->GetRoomTotalCount();
-        for (int i = 0; i < iRoomCnt; ++i)
-        {
-            wstring wstrLayerTag = L"Room_" + to_wstring(i) + L"_Layer";
-            vMapKey.push_back(wstrLayerTag);
-        }
-
-        multimap<wstring, CGameObject*> mapCurLayer;
-        CLayer* pLayer;
-        
-        for (auto& iter : vMapKey)
-        {
-            pLayer = CManagement::GetInstance()->Get_Layer(iter.c_str());
-            if (pLayer != nullptr)
-            {
-                mapCurLayer = pLayer->Get_ObjMap();
-                for (auto& pair : mapCurLayer)
-                {
-                    if (pair.first != L"Player" &&
-                        pair.first != L"Gun" &&
-                        pair.first != L"Bullet")
-                    {
-                        CVIBuffer* pTextureCom = dynamic_cast<CVIBuffer*>(pair.second->Get_Component(ID_STATIC, L"Com_Buffer"));
-                        if (pTextureCom != nullptr)
-                        {
-                            CTransform* pTransCom = dynamic_cast<CTransform*>(pair.second->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-                            if (pTransCom != nullptr)
-                            {
-                                //pTextureCom->
-
-                                _matrix matWorld = *pTransCom->Get_World();
-
-
-
-
-                                //pTextureCom->
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        
-
-
-
-
-#pragma endregion
-
         _vec3	vBullet_Look = vBullet_To - vBullet_From;
         D3DXVec3Normalize(&vBullet_Look, &vBullet_Look);
 
@@ -341,7 +281,7 @@ void CGun::Render_GameObject()
 
     m_pBufferCom->Render_Buffer();
 #ifdef _DEBUG
-    RenderImGui();
+    // RenderImGui();
 #endif
 }
 
@@ -473,131 +413,27 @@ void CGun::RenderImGui()
 
 
 
-pair<_vec3, _vec3> CGun::Get_MouseRay() // 마우스 월드변환
-{
-    POINT		ptMouse{};
-    _vec3	    vMousePos;
-
-    LPDIRECT3DDEVICE9 pGraphicDev = CGraphicDev::GetInstance()->Get_GraphicDev();
-
-    //GetCursorPos(&ptMouse);
-    //ScreenToClient(g_hWnd, &ptMouse);        현재 조준점 고정중이므로 검사 제외
-    
-    ptMouse.x = WINCX / 2;
-    ptMouse.y = WINCY / 2;
-
-
-    D3DVIEWPORT9	ViewPort;
-    ZeroMemory(&ViewPort, sizeof(D3DVIEWPORT9));
-    pGraphicDev->GetViewport(&ViewPort);
-
-    // 뷰 포트 영역 -> 투영 영역
-    vMousePos.x = ptMouse.x / (ViewPort.Width * 0.5f) - 1.f;
-    vMousePos.y = ptMouse.y / -(ViewPort.Height * 0.5f) + 1.f;
-
-    // 투영 영역 - > 뷰 스페이스 영역
-    D3DXMATRIX	matProj;
-    pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
-    D3DXMatrixInverse(&matProj, 0, &matProj);
-    D3DXVec3TransformCoord(&vMousePos, &vMousePos, &matProj);
-
-    // 뷰 스페이스 -> 월드 영역
-
-    D3DXMATRIX	matView;
-    pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
-    D3DXMatrixInverse(&matView, 0, &matView);
-
-    _vec3	vRayPos{ 0.f, 0.f, 0.f };
-    _vec3	vRayDir = vMousePos - vRayPos;
-
-    D3DXVec3TransformCoord(&vRayPos, &vRayPos, &matView);
-    D3DXVec3TransformNormal(&vRayDir, &vRayDir, &matView);
-
-    pair<_vec3, _vec3> pairMouseRay;
-    pairMouseRay.first = vRayPos;
-    pairMouseRay.second = vRayDir;
-
-    return pairMouseRay;
-}
-
-
-/*
-_vec3 CGun::Picking(_vec3 RayPos, _vec3 RayDir, CGameObject* pGameObject)
-{
-    pGameObject->
-
-
-    _vec3 vRayPos = RayPos;
-    _vec3 vRayDir = RayDir;
-
-    // 월드 영역 -> 로컬 영역
-    _matrix	matWorld = *pTerrainTransform->Get_World();
-    D3DXMatrixInverse(&matWorld, 0, &matWorld);
-
-    D3DXVec3TransformCoord(&vRayPos, &vRayPos, &matWorld);
-    D3DXVec3TransformNormal(&vRayDir, &vRayDir, &matWorld);
-
-    const _vec3* pTerrainVtxPos = pTerrainBufferCom->Get_VtxPos();
-
-    _ulong dwVtxNumber[3]{};
-    _float	fU(0.f), fV(0.f), fDist(0.f);
-
-    for (_ulong i = 0; i < VTXCNTZ - 1; ++i)
-    {
-        for (_ulong j = 0; j < VTXCNTX - 1; ++j)
-        {
-            _ulong		dwIndex = i * VTXCNTX + j;
-
-            // 오른쪽 위
-            dwVtxNumber[0] = dwIndex + VTXCNTX;
-            dwVtxNumber[1] = dwIndex + VTXCNTX + 1;
-            dwVtxNumber[2] = dwIndex + 1;
-
-            if (D3DXIntersectTri(&pTerrainVtxPos[dwVtxNumber[1]],
-                &pTerrainVtxPos[dwVtxNumber[0]],
-                &pTerrainVtxPos[dwVtxNumber[2]],
-                &vRayPos, &vRayDir,
-                &fU, &fV, &fDist))
-            {
-                // V1 + U(V2 - V1) + V(V3 - V1)
-
-                return  _vec3(pTerrainVtxPos[dwVtxNumber[1]].x + fU * (pTerrainVtxPos[dwVtxNumber[0]].x - pTerrainVtxPos[dwVtxNumber[1]].x),
-                    0.f,
-                    pTerrainVtxPos[dwVtxNumber[1]].z + fV * (pTerrainVtxPos[dwVtxNumber[2]].z - pTerrainVtxPos[dwVtxNumber[1]].z));
-            }
-
-
-            // 왼쪽 아래
-            dwVtxNumber[0] = dwIndex + VTXCNTX;
-            dwVtxNumber[1] = dwIndex + 1;
-            dwVtxNumber[2] = dwIndex;
-
-            if (D3DXIntersectTri(&pTerrainVtxPos[dwVtxNumber[2]],
-                &pTerrainVtxPos[dwVtxNumber[1]],
-                &pTerrainVtxPos[dwVtxNumber[0]],
-                &vRayPos, &vRayDir, &fU, &fV, &fDist))
-            {
-                return  _vec3(pTerrainVtxPos[dwVtxNumber[2]].x + fU * (pTerrainVtxPos[dwVtxNumber[1]].x - pTerrainVtxPos[dwVtxNumber[2]].x),
-                    0.f,
-                    pTerrainVtxPos[dwVtxNumber[2]].z + fV * (pTerrainVtxPos[dwVtxNumber[0]].z - pTerrainVtxPos[dwVtxNumber[2]].z));
-            }
-        }
-    }
-    return _vec3(0.f, 0.f, 0.f);
 
 
 
+//_vec2	vPos_DebugUI_Ammo{ 100.f, 120.f };
+//_vec2	vPos_DebugUI_Reload{ 100.f, 140.f };
 
+//wstring wAmmoInfo = L"AMMO : " + to_wstring(m_iAmmo) + L" / 13";
+//CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", wAmmoInfo.c_str(), &vPos_DebugUI_Ammo, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 
-
-
-    int iRoomCnt = CRoomLoadingMgr::GetInstance()->GetRoomTotalCount();
-    for (int i = 0; i < iRoomCnt; ++i)
-    {
-        wstring wstrLayerTag = L"Room_" + to_wstring(i) + L"_Layer";
-        if (FAILED(Ready_Room_Layer(wstrLayerTag, i)))
-            return E_FAIL;
-    }
-}
-*/
+//if (m_iAmmo == 0)
+//{
+//	if (m_fReloadTime == 0.f)
+//	{
+//		if ((int)(m_fLastShotTime * 5) % 2 == 0)
+//		{
+//			CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", L"OUT OF AMMO. PRESS R TO RELOAD.", &vPos_DebugUI_Reload, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+//		}
+//	}
+//	else
+//	{
+//		CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", L"Reloading...", &vPos_DebugUI_Reload, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+//	}
+//}
 

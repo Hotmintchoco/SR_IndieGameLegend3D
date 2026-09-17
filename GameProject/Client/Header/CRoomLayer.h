@@ -1,7 +1,6 @@
-﻿#pragma once
+#pragma once
 
 #include "CLayer.h"
-#include "CEventDelegate.h"
 
 class CRoomLayer : public CLayer
 {
@@ -16,19 +15,9 @@ public:
 
 	HRESULT SpawnRoom();
 
-	inline bool IsCleared() { return m_bCleared; }
-	inline bool HasVisited() { return m_bVisited; }
-	inline bool IsOnProgress() { return m_bOnProgress; }
-
-	CEventDelegate<void> m_OnRoomBegin;
-	CEventDelegate<void> m_OnRoomClear;
-	void OnRoomTriggerBlockCollided();
-
 private:
 	int m_iRoomIndex = -1;
 	bool m_bCleared = false;
-	bool m_bVisited = false;
-	bool m_bOnProgress = false;
 
 public:
 	static CRoomLayer* Create(int iRoomIndex);

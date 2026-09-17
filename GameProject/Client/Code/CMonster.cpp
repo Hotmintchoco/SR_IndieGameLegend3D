@@ -27,9 +27,6 @@ HRESULT CMonster::Ready_GameObject()
 {
     if (FAILED(Add_Component()))
         return E_FAIL;
-
-    m_pColliderCom->Set_CollisionID(COLL_MONSTER);
-
     m_iHp = 5;
 
     __super::Ready_GameObject();
@@ -77,15 +74,7 @@ void CMonster::Render_GameObject()
 
 void CMonster::OnCollisionEnter(CGameObject* pOther)
 {
-	//CCollider* pCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
-    //
-    //if (pCollider && pCollider->Get_CollisionID() == COLL_PBULLET)
-    //{
-    //    m_fHitEffectTime = 0.f;
-    //    m_bHitState = true;
-	//}
-
-    m_fHitEffectTime = 0.f;
+    m_fHitEffectTime= 0.f;
     m_bHitState = true;
 }
 

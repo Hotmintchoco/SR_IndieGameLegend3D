@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CScene.h"
+#include "Define.h"
 
 class CRoom;
 

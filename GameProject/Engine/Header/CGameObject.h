@@ -26,8 +26,6 @@ public:
 	virtual			void		Render_GameObject()PURE;
 
 	virtual			void		OnCollisionEnter(CGameObject* pOther) {}
-	virtual			void		OnCollisionStay(CGameObject* pOther) {}
-	virtual			void		OnCollisionExit(CGameObject* pOther) {}
 
 	inline void					SetOwner(CLayer* pLayer) { m_pOwner = pLayer; }
 

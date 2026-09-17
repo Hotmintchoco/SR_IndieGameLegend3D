@@ -1,10 +1,10 @@
-ï»¿#ifndef Engine_Define_h__
+#ifndef Engine_Define_h__
 #define Engine_Define_h__
 
 #include <d3d9.h>
 #include <d3dx9.h>
 
-// Collision ê´€ë ¨
+// Collision °ü·Ã
 #include <DirectXMath.h>
 #include <DirectXCollision.h>
 
@@ -17,7 +17,6 @@
 #include <unordered_map>
 #include <ctime>
 #include <fstream>
-#include <iostream>
 
 #include "Engine_Enum.h"
 #include "Engine_Macro.h"
@@ -27,8 +26,6 @@
 
 #define DIRECTINPUT_VERSION	0x0800
 #include <dinput.h>
-
-#define COLL_END 32
 
 #pragma warning(disable : 4251)
 
@@ -49,7 +46,7 @@
 using namespace std;
 using namespace Engine;
 
-// Collision ê´€ë ¨
+// Collision °ü·Ã
 using namespace DirectX;
 
 #endif // Engine_Define_h__

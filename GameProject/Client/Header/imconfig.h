@@ -1,4 +1,4 @@
-//-----------------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------------
 // DEAR IMGUI COMPILE-TIME OPTIONS
 // Runtime options (clipboard callbacks, enabling various features, etc.) can generally be set via the ImGuiIO structure.
 // You can use ImGui::SetAllocatorFunctions() before calling ImGui::CreateContext() to rewire memory allocation functions.
@@ -24,8 +24,11 @@
 // Using Dear ImGui via a shared library is not recommended, because of function call overhead and because we don't guarantee backward nor forward ABI compatibility.
 // - Windows DLL users: heaps and globals are not shared across DLL boundaries! You will need to call SetCurrentContext() + SetAllocatorFunctions()
 //   for each static/DLL boundary you are calling from. Read "Context and Memory Allocators" section of imgui.cpp for more details.
-//#define IMGUI_API __declspec(dllexport)                   // MSVC Windows: DLL export
-//#define IMGUI_API __declspec(dllimport)                   // MSVC Windows: DLL import
+//#ifdef ENGINE_EXPORTS
+//    #define IMGUI_API __declspec(dllexport)                   // MSVC Windows: DLL export
+//#else
+//    #define IMGUI_API __declspec(dllimport)                   // MSVC Windows: DLL import
+//#endif
 //#define IMGUI_API __attribute__((visibility("default")))  // GCC/Clang: override visibility when set is hidden
 
 //---- Don't define obsolete functions/enums/behaviors. Consider enabling from time to time after updating to clean your code of obsolete function/names.
@@ -107,12 +110,12 @@
 // This will be inlined as part of ImVec2 and ImVec4 class declarations.
 /*
 #define IM_VEC2_CLASS_EXTRA                                                     \
-        IM_NODEBUGSTEP constexpr inline ImVec2(const MyVec2& f) : x(f.x), y(f.y) {}    \
-        IM_NODEBUGSTEP inline operator MyVec2() const { return MyVec2(x,y); }
+        constexpr ImVec2(const MyVec2& f) : x(f.x), y(f.y) {}                   \
+        operator MyVec2() const { return MyVec2(x,y); }
 
-#define IM_VEC4_CLASS_EXTRA                                                                     \
-        IM_NODEBUGSTEP constexpr inline ImVec4(const MyVec4& f) : x(f.x), y(f.y), z(f.z), w(f.w) {}    \
-        IM_NODEBUGSTEP inline operator MyVec4() const { return MyVec4(x,y,z,w); }
+#define IM_VEC4_CLASS_EXTRA                                                     \
+        constexpr ImVec4(const MyVec4& f) : x(f.x), y(f.y), z(f.z), w(f.w) {}   \
+        operator MyVec4() const { return MyVec4(x,y,z,w); }
 */
 //---- ...Or use Dear ImGui's own basic math operators in every file including imgui.h:
 //#ifndef IMGUI_DEFINE_MATH_OPERATORS

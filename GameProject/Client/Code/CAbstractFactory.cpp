@@ -5,8 +5,7 @@
 #include "CUnbreakableFrustum.h"
 #include "CExplosiveFrustum.h"
 #include "CSkull.h"
-#include "CSpeyeder.h"
-#include "CBoss1.h"
+#include "CWorm.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -18,10 +17,8 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::BREAKABLE_FRUSTUM,        [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CBreakableFrustum::Create(pDevice); } },
         {EObjectType::UNBREAKABLE_FRUSTUM,      [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CUnbreakableFrustum::Create(pDevice); } },
         {EObjectType::EXPLOSIVE_FRUSTUM,        [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CExplosiveFrustum::Create(pDevice); } },
-        
         {EObjectType::SKULL,                    [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CSkull::Create(pDevice); } },
-        {EObjectType::CBoss1,                   [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CBoss1::Create(pDevice); } },
-        {EObjectType::CSpeyeder,                [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CSpeyeder::Create(pDevice); } },
+        {EObjectType::WORM,                     [](LPDIRECT3DDEVICE9 pDevice) -> Engine::CGameObject* { return CWorm::Create(pDevice); } },
     };
 }
 

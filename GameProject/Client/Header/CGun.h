@@ -1,7 +1,6 @@
-﻿#pragma once
+#pragma once
 
 #include "CGameObject.h"
-#include "Client_Enum.h"
 
 namespace Engine
 {
@@ -26,10 +25,6 @@ public:
 private:
 	HRESULT			Add_Component();
 	void			RenderImGui();
-
-	pair<_vec3, _vec3> Get_MouseRay();
-
-	_vec3			Picking(_vec3 RayPos, _vec3 RayDir, CGameObject* pGameObject);
 
 private:
 	Engine::CPlyTex* m_pBufferCom;

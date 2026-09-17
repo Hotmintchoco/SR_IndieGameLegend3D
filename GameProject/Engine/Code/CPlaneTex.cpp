@@ -28,7 +28,6 @@ HRESULT CPlaneTex::Ready_Buffer()
 
 	m_dwIdxSize = sizeof(INDEX16);
 	m_IdxFmt = D3DFMT_INDEX16;
-	m_VtxStructType = VTXSTRUCT_TEX;
 
 	if (FAILED(CVIBuffer::Ready_Buffer()))
 		return E_FAIL;

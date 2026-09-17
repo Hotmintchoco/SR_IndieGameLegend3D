@@ -4,6 +4,18 @@
 #include <string>
 #include "Engine_Define.h"
 
+/* 벽 방향 */
+enum class EWallDir
+{
+	NONE,
+	EAST,
+	SOUTH,
+	WEST,
+	NORTH,
+
+	MAX,
+};
+
 /* 맵 정보를 담은 구조체 */
 struct TRoomEntity
 {
@@ -34,8 +46,7 @@ enum class EObjectType
 	EXPLOSIVE_FRUSTUM,
 
 	SKULL = 11,
-	CBoss1,
-	CSpeyeder,
-	
+	WORM = 11,
+
 	MAX,
 };

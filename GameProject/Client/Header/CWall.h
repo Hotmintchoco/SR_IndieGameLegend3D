@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "CGameObject.h"
-#include "Client_Enum.h"
+#include "Define.h"
 
 namespace Engine
 {
@@ -26,15 +26,12 @@ public:
 	virtual			void		Render_GameObject();
 
 	virtual			void		OnCollisionEnter(CGameObject* pOther) override;
-	virtual			void		OnCollisionStay(CGameObject* pOther) override;
 
 	inline EWallDir GetDir() { return m_eDir; };
 	inline bool HasDoor() { return m_bHasDoor; };
 
 private:
 	HRESULT			Add_Component();
-	void InitializeCollider();
-	void OnRoomBegin();
 
 private:
 	Engine::CPlyTex* m_pBufferCom;
