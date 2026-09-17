@@ -37,6 +37,8 @@ public:
 
 	inline void UpdateFPS(float fDT) { m_fDT = fDT; }
 
+	inline float GetYaw() const { return m_fYaw; }
+
 private:
 	/* Minimap */
 	int m_iCurrentRoomIndex = 12;

@@ -23,6 +23,7 @@
 #include "CSkull.h"
 #include "CBoss1.h"
 #include "CSpeyeder.h"
+#include <CDirectionUI.h>
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -328,6 +329,16 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 			return E_FAIL;
 	}
 
+	// Direction UI
+	pUI = CDirectionUI::Create(m_pGraphicDev);
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	_vec2 vDirUIPos{ WINCX - 120.f, 420.f };
+	pUI->Set_Pos(vDirUIPos);
+
+	if (FAILED(pLayer->Add_GameObject(L"DirectionUI", pUI)))
+		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
