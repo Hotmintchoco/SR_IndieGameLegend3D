@@ -4,6 +4,7 @@
 #include "CRoomLayer.h"
 #include "CImGuiTool.h"
 #include "CCameraMgr.h"
+#include "CDebugMgr.h"
 
 IMPLEMENT_SINGLETON(CGameStatusMgr);
 
@@ -24,7 +25,8 @@ void CGameStatusMgr::Update(const float fTimeDelta)
 
 void CGameStatusMgr::Render()
 {
-    RenderImGui();
+    // RenderImGui();
+    // DebugPanelForRendering();
 }
 
 void CGameStatusMgr::RenderImGui()
@@ -95,6 +97,33 @@ void CGameStatusMgr::RenderImGui()
     // --- Etc ---
     ImGui::Separator();
     ImGui::Text("Gem : %d", m_iGem);
+
+    ImGui::End();
+}
+
+void CGameStatusMgr::DebugPanelForRendering()
+{
+    if (!ImGui::Begin("Render Debug View"))
+    {
+        ImGui::End();
+        return;
+    }
+
+    CDebugMgr* pDebug = CDebugMgr::GetInstance();
+
+    ImGui::SeparatorText("Mesh");
+
+    static const char* szMeshMode[] = { "Solid", "Wireframe", "Hidden" };
+    _int iMeshMode = (_int)pDebug->GetMeshMode();
+
+    if (ImGui::Combo("Render Mode", &iMeshMode, szMeshMode, IM_ARRAYSIZE(szMeshMode)))
+        pDebug->SetMeshMode((MESHRENDERMODE)iMeshMode);
+
+    ImGui::SeparatorText("Collider");
+
+    _bool bCollider = pDebug->GetShowCollider();
+    if (ImGui::Checkbox("Collider", &bCollider))
+        pDebug->SetShowCollider(bCollider);
 
     ImGui::End();
 }

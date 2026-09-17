@@ -17,6 +17,7 @@ public:
 	void Render();
 
 	void RenderImGui();
+	void DebugPanelForRendering();
 
 	CRoomLayer* GetCurrentRoomLayer();
 
@@ -60,6 +61,9 @@ private:
 
 	/* FPS */
 	float m_fDT = 0;
+
+	/* Render Debug */
+
 
 private:
 	virtual void Free();

@@ -51,8 +51,6 @@ void CTriggerBox::LateUpdate_GameObject(const _float& fTimeDelta)
 void CTriggerBox::Render_GameObject()
 {
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-
-    m_pColliderCom->Render_DebugCube();
 }
 
 HRESULT CTriggerBox::Add_Component()

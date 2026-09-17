@@ -64,7 +64,7 @@ void CManagement::LateUpdate_Scene(const _float& fTimeDelta)
 
 void CManagement::Render_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CRenderer::GetInstance()->Render_GameObject(pGraphicDev);
+    CRenderer::GetInstance()->Render(pGraphicDev);
 
     m_pScene->Render_Scene();
 }

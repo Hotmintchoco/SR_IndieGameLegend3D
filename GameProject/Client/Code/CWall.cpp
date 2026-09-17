@@ -223,15 +223,6 @@ void CWall::Render_GameObject()
 
     m_pTextureCom->Set_Texture(0);
     m_pBufferCom->Render_Buffer();
-
-#ifdef _DEBUG
-    for (int i = 0; i < 2; ++i)
-    {
-        CBoxCollider* pBoxCollider = dynamic_cast<CBoxCollider*>(m_pColliderCom[i]);
-        if (nullptr != pBoxCollider)
-            pBoxCollider->Render_DebugCube();
-	}
-#endif
 }
 
 void CWall::OnCollisionEnter(CGameObject* pOther)

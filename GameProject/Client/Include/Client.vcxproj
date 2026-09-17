@@ -150,7 +150,6 @@
     <ClInclude Include="..\Header\CBoss1.h" />
     <ClInclude Include="..\Header\CBullet.h" />
     <ClInclude Include="..\Header\CClearCondition.h" />
-    <ClInclude Include="..\Header\CDebugMgr.h" />
     <ClInclude Include="..\Header\CCrosshair.h" />
     <ClInclude Include="..\Header\CDoor.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
@@ -166,7 +165,6 @@
     <ClInclude Include="..\Header\CItem.h" />
     <ClInclude Include="..\Header\CKillAllEntityCondition.h" />
     <ClInclude Include="..\Header\CManualClearCondition.h" />
-    <ClInclude Include="..\Header\CPlayerHpUI.h" />
     <ClInclude Include="..\Header\CGun.h" />
     <ClInclude Include="..\Header\CImGuiTool.h" />
     <ClInclude Include="..\Header\Client_Enum.h" />
@@ -218,7 +216,6 @@
     <ClCompile Include="..\Code\CBoss1.cpp" />
     <ClCompile Include="..\Code\CBullet.cpp" />
     <ClCompile Include="..\Code\CClearCondition.cpp" />
-    <ClCompile Include="..\Code\CDebugMgr.cpp" />
     <ClCompile Include="..\Code\CCrosshair.cpp" />
     <ClCompile Include="..\Code\CDoor.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
@@ -234,7 +231,6 @@
     <ClCompile Include="..\Code\CItem.cpp" />
     <ClCompile Include="..\Code\CKillAllEntityCondition.cpp" />
     <ClCompile Include="..\Code\CManualClearCondition.cpp" />
-    <ClCompile Include="..\Code\CPlayerHpUI.cpp" />
     <ClCompile Include="..\Code\CGun.cpp" />
     <ClCompile Include="..\Code\CImGuiTool.cpp" />
     <ClCompile Include="..\Code\CLoading.cpp" />

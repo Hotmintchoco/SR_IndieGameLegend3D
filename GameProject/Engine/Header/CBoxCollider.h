@@ -30,6 +30,10 @@ public:
 
 	void			Render_DebugCube();
 
+	/* Interface IRenderable */
+	virtual void Render(LPDIRECT3DDEVICE9& pGraphicDev) override;
+	/* ---------------------- */
+
 public:
 	BoundingBox		m_tBox;
 

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CCollider.h"
 
 BEGIN(Engine)
@@ -17,6 +17,10 @@ public:
 
 	_bool Intersect(CCollider* pOther) override;
 
+	/* Interface IRenderable */
+	virtual void Render(LPDIRECT3DDEVICE9& pGraphicDev) override;
+	/* ---------------------- */
+
 public:
 	BoundingSphere m_tSphere;
 
@@ -24,7 +28,7 @@ public:
 	static CCollider* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	CComponent* Clone() override;
 
-	// CColliderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+	// CColliderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 	void Set_Radius(const _float& fRadius) override;
 };
 
