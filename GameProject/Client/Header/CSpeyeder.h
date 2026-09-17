@@ -30,8 +30,13 @@ private:
 public:
 	static CSpeyeder* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
+public:
+	void Set_LandingLocation(const _vec3& vLocation) { m_vLandingLocation = vLocation; }
+	void Land(const _float& fTimeDelta);
 private:
 	_bool m_bLandingState;
+	_vec3 m_vLandingLocation;
+
 protected:
 	virtual void		Free();
 };

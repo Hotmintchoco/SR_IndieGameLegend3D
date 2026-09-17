@@ -28,7 +28,8 @@ private:
 
 	void CalculateAlphaZ();
 	void BillBoard();
-
+	void Drop(_float fTimeDelta);
+	void Attract_To_Player(const _float& fTimeDelta);
 protected:
 	virtual void Consume();
 
@@ -39,6 +40,23 @@ protected:
 
 	_vec3 m_vSpawnPos = _vec3{0.f, 0.f, 0.f};
 	_float m_fFrame;
+
+	_bool m_bDropFinish;
+	_float m_fDropTime;
+	_float m_fDropDuration;
+
+	_bool m_bAttractStart;
+	_float m_fAttractTime;
+	_float m_fAttractDuration;
+
+	_float m_fLifeTime;
+	_float m_fLifeDuration;
+
+	_bool m_bVisible;
+	_bool m_bBlinkStart;
+	_float m_fBlinkTime;
+	_float m_fBlinkDuration;
+	_float m_fBlinkDuration2;
 public:
 
 protected:

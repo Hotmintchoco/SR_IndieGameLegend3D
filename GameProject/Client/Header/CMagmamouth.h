@@ -30,6 +30,20 @@ private:
 public:
 	static CMagmamouth* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
+private:
+	void Spawn_Speyeder();
+	void Shuffle_SpawnArray();
+private:
+	enum MAGMAMOUTHSTATE { IDLE, SPAWN, ATTACK, MOVE };
+	MAGMAMOUTHSTATE m_eMagmaMouthState;
+
+	_float m_fSpawn_CoolDown;
+	_float m_fSpawnTime;
+	_bool m_bSpawnFinish[4];
+	_uint m_iSpawnOrderArr[4];
+
+	_float m_fStateUpdateTime;
+
 protected:
 	virtual void		Free();
 };

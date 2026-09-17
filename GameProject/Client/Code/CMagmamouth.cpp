@@ -4,10 +4,16 @@
 #include "CManagement.h"
 #include "CTimerMgr.h"
 #include "CTerrain.h"
+#include "CSpeyeder.h"
 
 CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev)
+    : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(6.f), m_eMagmaMouthState(IDLE)
 {
+    ZeroMemory(m_bSpawnFinish, sizeof(m_bSpawnFinish));
+    for (int i = 0; i < 4; ++i)
+    {
+        m_iSpawnOrderArr[i] = i;
+    }
 }
 
 
@@ -24,30 +30,19 @@ HRESULT CMagmamouth::Ready_GameObject()
     m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
     //m_pColliderCom->Set_Radius(0.2f);
-    m_iHp = 100;
+    m_iHp = 6;
     return S_OK;
 }
     
 _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
-    //Set_OnTerrain();
-    m_fFrame += fTimeDelta * 6.f;
-    if (m_fFrame > 4.f)
-        m_fFrame = 0.f;
-
-    return iExit;
-}
-
-void CMagmamouth::LateUpdate_GameObject(const _float& fTimeDelta)
-{
-    CMonster::LateUpdate_GameObject(fTimeDelta);
 
     CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
         ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
 
     if (nullptr == pPlayerTransformCom)
-        return;
+        return 0;
 
     _vec3   vPlayerPos;
     pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
@@ -55,9 +50,49 @@ void CMagmamouth::LateUpdate_GameObject(const _float& fTimeDelta)
     _vec3   vPlayerLook;
     pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
-    //m_pTransformCom->Chase_Target2(&vPlayerPos, &vPlayerLook, 30.f, fTimeDelta);
     m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
 
+    m_fStateUpdateTime += fTimeDelta;
+
+    if (m_fStateUpdateTime > 8.f)
+    {
+        m_fStateUpdateTime = 0.f;
+        //m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 4);
+        m_eMagmaMouthState = SPAWN;
+        if (m_eMagmaMouthState == SPAWN)
+        {
+            Shuffle_SpawnArray();
+            ZeroMemory(m_bSpawnFinish, sizeof(m_bSpawnFinish));
+            m_fSpawnTime = 0.f;
+        }
+    }
+    switch (m_eMagmaMouthState)
+    {
+    case IDLE:
+        break;
+    case SPAWN:
+        m_fSpawnTime += fTimeDelta;
+        Spawn_Speyeder();
+        break;
+    case ATTACK:
+        break;
+    case MOVE:
+        break;
+    }
+    //m_fFrame += fTimeDelta * 6.f;
+    //if (m_fFrame > 4.f)
+    //    m_fFrame = 0.f;
+
+
+
+
+
+    return iExit;
+}
+
+void CMagmamouth::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+    CMonster::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CMagmamouth::Render_GameObject()
@@ -109,6 +144,68 @@ CMagmamouth* CMagmamouth::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     }
 
     return pMonster;
+}
+
+void CMagmamouth::Spawn_Speyeder()
+{
+    _vec3 vPos, vLook;
+    _int iFlag = 0;
+    if (m_fSpawnTime> m_fSpawn_CoolDown && m_bSpawnFinish[0] == false)
+    {
+        m_bSpawnFinish[0] = true;
+        iFlag = 1;
+    }
+    else if (m_fSpawnTime > m_fSpawn_CoolDown * 2 && m_bSpawnFinish[1] == false)
+    {
+        m_bSpawnFinish[1] = true;
+        iFlag = 2;
+    }
+    else if (m_fSpawnTime > m_fSpawn_CoolDown * 3 && m_bSpawnFinish[2] == false)
+    {
+        m_bSpawnFinish[2] = true;
+        iFlag = 3;
+    }
+    else if (m_fSpawnTime > m_fSpawn_CoolDown * 4 && m_bSpawnFinish[3] == false)
+    {
+        m_bSpawnFinish[3] = true;
+        iFlag = 4;
+    }
+
+    if (iFlag != 0)
+    {
+        CGameObject* pGameObject = CSpeyeder::Create(m_pGraphicDev);
+        //_uint x = rand() % 100;
+        //_uint y = rand() % 100;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
+        D3DXVec3Normalize(&vLook, &vLook);
+
+        _matrix matRot;
+        D3DXMatrixRotationY(&matRot, D3DXToRadian(60.f) - D3DXToRadian(40.f) * m_iSpawnOrderArr[iFlag - 1]);
+
+        D3DXVec3TransformNormal(&vLook, &vLook, &matRot);
+        vLook *= 2;
+        vLook.y = -vPos.y + 0.25f;
+
+        static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
+        static_cast<CSpeyeder*>(pGameObject)->Set_LandingLocation(vPos + vLook);
+        if (nullptr == pGameObject)
+            return;
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject)))
+            return;
+    }
+}
+
+void CMagmamouth::Shuffle_SpawnArray()
+{
+	for (int i = 3; i > 0; --i)
+	{
+		int j = rand() % (i + 1);
+		int temp = m_iSpawnOrderArr[i];
+        m_iSpawnOrderArr[i] = m_iSpawnOrderArr[j];
+        m_iSpawnOrderArr[j] = temp;
+	}
 }
 
 void CMagmamouth::Free()

@@ -27,7 +27,7 @@ HRESULT CSpeyeder::Ready_GameObject()
         return E_FAIL;
     CMonster::Ready_GameObject();
 
-    m_pTransformCom->Set_Scale(0.2f, 0.2f, 0.2f);
+    m_pTransformCom->Set_Scale(0.25f, 0.25f, 0.25f);
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
     m_iHp = 2;
     return S_OK;
@@ -36,11 +36,19 @@ HRESULT CSpeyeder::Ready_GameObject()
 _int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
-    Set_OnTerrain();
+    if (m_bLandingState == true)
+    {
+        Set_OnTerrain();
+        m_fFrame += fTimeDelta * 10.f;
+        if (m_fFrame > 4.f)
+            m_fFrame = 0.f;
+    }
+    else
+    {
+        Land(fTimeDelta);
+    }
     
-    m_fFrame += fTimeDelta * 10.f;
-    if (m_fFrame > 4.f)
-        m_fFrame = 0.f;
+
 
     if (m_iHp <= 0)
     {
@@ -54,13 +62,13 @@ _int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
         if (FAILED(pLayer->Add_GameObject(L"SmallExplode", pGameObject)))
             return E_FAIL;
 
-        pGameObject = CHeart::Create(m_pGraphicDev, this);
-        //pGameObject = CGem::Create(m_pGraphicDev, this);
+        //pGameObject = CHeart::Create(m_pGraphicDev, this);
+        pGameObject = CGem::Create(m_pGraphicDev, this);
         //pGameObject = CEnergy::Create(m_pGraphicDev, this);
         if (nullptr == pGameObject)
             return E_FAIL;
 
-        if (FAILED(pLayer->Add_GameObject(L"Heart", pGameObject)))
+        if (FAILED(pLayer->Add_GameObject(L"Gem", pGameObject)))
             return E_FAIL;
 
     }
@@ -71,20 +79,38 @@ void CSpeyeder::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+    if (m_bLandingState == true)
+    {
+        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
 
-    if (nullptr == pPlayerTransformCom)
-        return;
+        if (nullptr == pPlayerTransformCom)
+            return;
 
-    _vec3   vPlayerPos;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+        _vec3   vPlayerPos;
+        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
 
-    _vec3   vPlayerLook;
-    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+        _vec3   vPlayerLook;
+        pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
-    m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 1.f, fTimeDelta);
+        m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 1.f, fTimeDelta);
+    }
+    else
+    {
+        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
 
+        if (nullptr == pPlayerTransformCom)
+            return;
+
+        _vec3   vPlayerPos;
+        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+
+        _vec3   vPlayerLook;
+        pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+
+        m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+    }
 }
 
 void CSpeyeder::Render_GameObject()
@@ -97,7 +123,7 @@ void CSpeyeder::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-    if (m_bLandingState == false)
+    if (m_bLandingState == true)
     {
         m_pTextureCom->Set_Texture((_uint)m_fFrame);
     }
@@ -146,6 +172,21 @@ CSpeyeder* CSpeyeder::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     }
 
     return pMonster;
+}
+
+void CSpeyeder::Land(const _float& fTimeDelta)
+{
+    _vec3 vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vDir = (m_vLandingLocation - vPos) * 2.f;
+    vDir.y -= 0.125f;
+    if (D3DXVec3Length(&vDir)<0.5f)
+    {
+        m_bLandingState = true;
+        return;
+    }
+    m_pTransformCom->Move_Pos(&vDir, 1.f, fTimeDelta);
+    
 }
 
 void CSpeyeder::Free()
