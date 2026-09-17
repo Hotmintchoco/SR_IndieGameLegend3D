@@ -46,9 +46,13 @@ private:
 
 	_bool		m_bFix;
 	_bool		m_bCheck;
+	_int		m_iHP;
+	_int		m_iMaxHP;
 
 public:
-	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static	CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	void	GetItem(ITEMID iItemID);
+	void	UpdateHP(_int iAmount);
 
 private:
 	virtual void		Free();

@@ -29,11 +29,21 @@ protected:
 	D3DFORMAT		m_IdxFmt;
 
 public : 
+	void	Get_VIInfo	(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer,
+						LPDIRECT3DINDEXBUFFER9& pIdxBuffer,
+						VTXSTRUCTTYPE& vtxStructType,
+						D3DFORMAT& idxFmt,
+						_ulong& dwVtxCnt,
+						_ulong& dwTriCnt)
+	{
+		pVtxBuffer = m_pVB;
+		pIdxBuffer = m_pIB;
+		vtxStructType = m_VtxStructType;
+		idxFmt = m_IdxFmt;
+		dwVtxCnt = m_dwVtxCnt;
+		dwTriCnt = m_dwTriCnt;
+	}
 
-	LPDIRECT3DVERTEXBUFFER9 Get_VtxBuffer() { return m_pVB; }
-	LPDIRECT3DINDEXBUFFER9  Get_IdxBuffer() { return m_pIB; }
-	D3DFORMAT				Get_Format() { return m_IdxFmt; }
-	VTXSTRUCTTYPE			Get_VtxStructType() { return m_VtxStructType; }
 
 public:
 	virtual void	Free();
