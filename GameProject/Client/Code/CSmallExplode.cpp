@@ -29,7 +29,7 @@ _int CSmallExplode::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CEffect::Update_GameObject(fTimeDelta);
 
-    m_fFrame += 4.f * fTimeDelta;
+    m_fFrame += 6.f * fTimeDelta;
 
     if (4.f <= m_fFrame)
         Set_Dead(true);
@@ -50,9 +50,8 @@ void CSmallExplode::LateUpdate_GameObject(const _float& fTimeDelta)
         return;
 
     _vec3   vPlayerPos;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-
     _vec3   vPlayerLook;
+    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
     pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
     m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);

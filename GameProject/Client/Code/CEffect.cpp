@@ -5,9 +5,12 @@
 #include "CManagement.h"
 #include <ctime>
 
+_uint CEffect::iEffectIdx = 0;
+
 CEffect::CEffect(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_fFrame(0.f)
 {
+    iEffectIdx++;
 }
 
 

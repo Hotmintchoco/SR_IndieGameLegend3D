@@ -15,7 +15,7 @@
 _uint CMonster::iMonsterIdx=0;
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_iHp(0), m_iMotion(0), m_fHitEffectDuration(0.1f), m_fHitEffectTime(0.f), m_bHitState(false)
+    : CGameObject(pGraphicDev), m_iHp(0), m_fFrame(0.f), m_fHitEffectDuration(0.1f), m_fHitEffectTime(0.f), m_bHitState(false)
 {
     ++iMonsterIdx;
 }
@@ -35,7 +35,7 @@ HRESULT CMonster::Ready_GameObject()
     m_iHp = 5;
 
     /* 성철 */
-    static_cast<CRoomLayer*>(m_pOwner)->IncreaseEntityCount();
+    // static_cast<CRoomLayer*>(m_pOwner)->IncreaseEntityCount();
     /* ---- */
 
     __super::Ready_GameObject();
@@ -59,7 +59,7 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
     if (m_iHp <= 0)
     {
         /* 성철 */
-        CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->DecreaseEntityCount();
+        // CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->DecreaseEntityCount();
         /* ---- */
         Set_Dead(true);
     }

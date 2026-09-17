@@ -63,9 +63,11 @@ enum class EObjectType
 	UNBREAKABLE_FRUSTUM,
 	EXPLOSIVE_FRUSTUM,
 
-	SKULL = 11,
-	CBoss1,
-	CSpeyeder,
+	Skull = 11,
+	Boss1,
+	Speyeder,
+	Magmamouth,
+	Worm,
 
 	ITEM_NONE = 31,
 	ITEM_HEART,

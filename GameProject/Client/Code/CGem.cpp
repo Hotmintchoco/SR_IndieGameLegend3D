@@ -29,8 +29,8 @@ HRESULT CGem::Ready_GameObject()
     if (FAILED(CItem::Ready_GameObject()))
         return E_FAIL;
 
-    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{0.0f, 0.1f, 0.f});
-    m_pTransformCom->Set_Scale(0.08f, 0.08f, 1.f);
+    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{0.f, 0.f, 0.f});
+    m_pTransformCom->Set_Scale(0.12f, 0.12f, 1.f);
 
     return S_OK;
 }
@@ -38,6 +38,10 @@ HRESULT CGem::Ready_GameObject()
 _int CGem::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CItem::Update_GameObject(fTimeDelta);
+
+    m_fFrame += fTimeDelta * 6.f;
+    if (m_fFrame > 6.f)
+        m_fFrame = 0.f;
 
     return iExit;
 }
@@ -49,9 +53,10 @@ void CGem::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CGem::Render_GameObject()
 {
+    if (m_bBlinkStart == true && m_bVisible == false) return;
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-    m_pTextureCom->Set_Texture(0);
+    m_pTextureCom->Set_Texture((_uint)m_fFrame);
     m_pBufferCom->Render_Buffer();
 }
 

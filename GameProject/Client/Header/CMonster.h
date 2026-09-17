@@ -39,7 +39,7 @@ protected:
 	Engine::CCollider* m_pColliderCom;
 
 	_uint m_iHp;
-	_uint m_iMotion;
+	_float m_fFrame;
 	_float m_fHitEffectDuration;
 	_float m_fHitEffectTime;
 	_bool m_bHitState;

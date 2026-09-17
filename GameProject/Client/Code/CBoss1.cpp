@@ -27,7 +27,7 @@ HRESULT CBoss1::Ready_GameObject()
     m_pTransformCom2->Set_Scale(1.f, 1.f, 1.f);
     m_pTransformCom2->Set_Pos(m_pTransformCom->m_vInfo[INFO_POS].x, m_pTransformCom->m_vInfo[INFO_POS].y, m_pTransformCom->m_vInfo[INFO_POS].z);
 
-    m_pColliderCom->Set_Radius(D3DXVec3Length(&m_pTransformCom->m_vScale));
+    m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
 
     m_iHp = 6;
     return S_OK;
@@ -37,6 +37,10 @@ _int CBoss1::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
     Set_OnTerrain();
+    m_fFrame += fTimeDelta * 6.f;
+    if (m_fFrame > 4.f)
+        m_fFrame = 0.f;
+
     return iExit;
 }
 
@@ -66,7 +70,7 @@ void CBoss1::LateUpdate_GameObject(const _float& fTimeDelta)
 
         D3DXMatrixScaling(&matScale, m_pTransformCom2->m_vScale.x, m_pTransformCom2->m_vScale.y, m_pTransformCom2->m_vScale.z);
 
-        if (m_iMotion % 20 < 10)
+        if ((_uint)m_fFrame % 2 == 0)
         {
             D3DXMatrixTranslation(&matTrans,
                 m_pTransformCom->m_vInfo[INFO_POS].x,
@@ -107,25 +111,23 @@ void CBoss1::LateUpdate_GameObject(const _float& fTimeDelta)
 void CBoss1::Render_GameObject()
 {
     if (m_bHitState == true) CMonster::Enable_HitRenderState();
-    if (m_iMotion == 40) m_iMotion = 0;
 
     CMonster::Render_GameObject();
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-    m_pTextureCom->Set_Texture(m_iMotion / 10);
+    m_pTextureCom->Set_Texture((_uint)m_fFrame);
     m_pBufferCom->Render_Buffer();
 
     if (m_iHp < 4)
     {
         m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
-        m_pTextureCom2->Set_Texture(m_iMotion / 20);
+        m_pTextureCom2->Set_Texture((_uint)m_fFrame / 2);
         m_pBufferCom->Render_Buffer();
     }
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
-    ++m_iMotion;
     if (m_bHitState == true) CMonster::Disable_HitRenderState();
 
 }

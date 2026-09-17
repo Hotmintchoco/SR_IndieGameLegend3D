@@ -31,8 +31,8 @@ HRESULT CEnergy::Ready_GameObject()
     if (FAILED(CItem::Ready_GameObject()))
         return E_FAIL;
 
-    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{ 0.f, 0.1f, 0.f });
-    m_pTransformCom->Set_Scale(0.16f, 0.16f, 1.f);
+    m_pTransformCom->Set_Scale(0.20f, 0.20f, 1.f);
+    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{ 0.f, 0.2f, 0.f });
 
     return S_OK;
 }
@@ -40,6 +40,10 @@ HRESULT CEnergy::Ready_GameObject()
 _int CEnergy::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CItem::Update_GameObject(fTimeDelta);
+
+    m_fFrame += fTimeDelta * 6.f;
+    if (m_fFrame > 8.f)
+        m_fFrame = 0.f;
 
     return iExit;
 }
@@ -51,9 +55,10 @@ void CEnergy::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CEnergy::Render_GameObject()
 {
+    if (m_bBlinkStart == true && m_bVisible == false) return;
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-    m_pTextureCom->Set_Texture(0);
+    m_pTextureCom->Set_Texture((_uint)m_fFrame);
     m_pBufferCom->Render_Buffer();
 }
 

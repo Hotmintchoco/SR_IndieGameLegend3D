@@ -23,6 +23,7 @@
 #include "CSkull.h"
 #include "CBoss1.h"
 #include "CSpeyeder.h"
+#include "CMagmamouth.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -184,42 +185,47 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	
 	// Monster
-	//TCHAR		szFileName[128] = L"";
+	pGameObject = CSkull::Create(m_pGraphicDev);
+	static_cast<CMonster*>(pGameObject)->Set_Pos(55, 0, 55);
+	if (nullptr == pGameObject)
+		return E_FAIL;
 
-	//pGameObject = CSkull::Create(m_pGraphicDev);
-	//static_cast<CMonster*>(pGameObject)->Set_Pos(55, 0, 55);
-	//if (nullptr == pGameObject)
-	//	return E_FAIL;
-	//wsprintf(szFileName, L"Skull_%d", CMonster::iMonsterIdx);
-	//if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
-	//	return E_FAIL;
+	if (FAILED(pLayer->Add_GameObject(L"Skull", pGameObject)))
+		return E_FAIL;
 
-	//pGameObject = CBoss1::Create(m_pGraphicDev);
-	//static_cast<CMonster*>(pGameObject)->Set_Pos(65, 0, 55);
-	//if (nullptr == pGameObject)
-	//	return E_FAIL;
-	//wsprintf(szFileName, L"Boss1_%d", CMonster::iMonsterIdx);
-	//if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
-	//	return E_FAIL;
+	pGameObject = CBoss1::Create(m_pGraphicDev);
+	static_cast<CMonster*>(pGameObject)->Set_Pos(65, 0, 55);
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Boss1", pGameObject)))
+		return E_FAIL;
 
 	//pGameObject = CSpeyeder::Create(m_pGraphicDev);
 	//static_cast<CMonster*>(pGameObject)->Set_Pos(64, 0, 56);
 	//if (nullptr == pGameObject)
 	//	return E_FAIL;
-	//wsprintf(szFileName, L"Speyeder_%d", CMonster::iMonsterIdx);
-	//if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+
+	//if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject)))
 	//	return E_FAIL;
 
 	//pGameObject = CSpeyeder::Create(m_pGraphicDev);
 	//static_cast<CMonster*>(pGameObject)->Set_Pos(64, 0, 57);
 	//if (nullptr == pGameObject)
 	//	return E_FAIL;
-	//wsprintf(szFileName, L"Speyeder_%d", CMonster::iMonsterIdx);
-	//if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))
+
+	//if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject)))
 	//	return E_FAIL;
 
-	//map<const _tchar*, CLayer*>* a = &m_mapLayer;
+	pGameObject = CMagmamouth::Create(m_pGraphicDev);
+	static_cast<CMonster*>(pGameObject)->Set_Pos(64, 2.f, 63);
+	if (nullptr == pGameObject)
+		return E_FAIL;
 
+	if (FAILED(pLayer->Add_GameObject(L"Magmamouth", pGameObject)))
+		return E_FAIL;
+
+	//map<const _tchar*, CLayer*>* a = &m_mapLayer;
 	//pGameObject = CWorm::Create(m_pGraphicDev, &m_mapLayer);
 	//if (nullptr == pGameObject)
 	//	return E_FAIL;
