@@ -42,6 +42,7 @@ public:
 	/* Interface IRenderable */
 	virtual void Render(LPDIRECT3DDEVICE9& pGraphicDev) {}
 	virtual _float Get_ViewZ() override;
+	virtual CBase* GetBase() { return static_cast<CBase*>(this); }
 	/* ---------------------- */
 
 public:

@@ -21,7 +21,8 @@ void CRenderer::Add_RenderGroup(RENDERID eID, IRenderable* pRenderable)
 
 	m_RenderGroup[eID].push_back(pRenderable);
 	/* 성철 : 기존 GameObject에서 Component 까지 확장하다 보니 CBase* 기반으로 변경 */
-	dynamic_cast<CBase*>(pRenderable)->AddRef();
+	// dynamic_cast<CBase*>(pRenderable)->AddRef();
+	pRenderable->GetBase()->AddRef();
 }
 
 void CRenderer::Render(LPDIRECT3DDEVICE9& pGraphicDev)
@@ -43,7 +44,8 @@ void CRenderer::Clear_RenderGroup()
 		/* 성철 : 결론적으로 그대로 둬도 되는거였는데, 어쩌다 보니 바꾸게 됨 */
 		for (auto iter = m_RenderGroup[i].begin(); iter != m_RenderGroup[i].end(); ++iter)
 		{
-			CBase* p = dynamic_cast<CBase*>(*iter);
+			//CBase* p = dynamic_cast<CBase*>(*iter);
+			CBase* p = (*iter)->GetBase();
 			Safe_Release<CBase*>(p);
 		}
 		m_RenderGroup[i].clear();

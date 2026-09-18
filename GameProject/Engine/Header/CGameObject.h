@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CBase.h"
 #include "CComponent.h"
@@ -34,6 +34,7 @@ public:
 	/* IRenderable */
 	virtual void Render(LPDIRECT3DDEVICE9& pDevice) { Render_GameObject(); }
 	virtual _float		Get_ViewZ() { return m_fViewZ; }
+	virtual CBase* GetBase() { return static_cast<CBase*>(this); }
 	/* ----------- */
 
 public:
@@ -52,11 +53,11 @@ protected:
 	map<const _tchar*, CComponent*>			m_mapComponent[ID_END];
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	_float									m_fViewZ;
-	_float 									m_fFrictionForce; // ë§ˆì°°ë ¥ ì¶”ê°€ (Speedì— ê³±í•´ì¤Œ)
+	_float 									m_fFrictionForce; // ¸¶Âû·Â Ãß°¡ (Speed¿¡ °öÇØÁÜ)
 	_bool									m_bDead;
 	_bool									m_bIsActive;	// È°¼ºÈ­ ¿©ºÎ¸¦ ³ªÅ¸³»´Â º¯¼ö	
 	
-	/* Ready ë‹¨ê³„ì—ì„œ Layer ì ‘ê·¼ì´ ë¶ˆê°€í•œ ë¬¸ì œë¥¼ í•´ê²°í•˜ê¸° ìœ„í•œ ë³€ìˆ˜ë¡œ, Ready ë‹¨ê³„ ì´í›„ì—ëŠ” ë³´ì¥ë˜ì§€ ì•ŠìŒ */
+	/* Ready ´Ü°è¿¡¼­ Layer Á¢±ÙÀÌ ºÒ°¡ÇÑ ¹®Á¦¸¦ ÇØ°áÇÏ±â À§ÇÑ º¯¼ö·Î, Ready ´Ü°è ÀÌÈÄ¿¡´Â º¸ÀåµÇÁö ¾ÊÀ½ */
 	CLayer* m_pOwner = nullptr;
 
 private:
