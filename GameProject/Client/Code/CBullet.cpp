@@ -30,10 +30,10 @@ HRESULT CBullet::Ready_GameObject(const _vec3* pPos, const _vec3* pDir)
     switch (m_iBulletID)
     {
     case BULLET_DEFAULT : 
-        m_pTransformCom->m_vScale = { 0.4f, 0.4f, 0.4f };
+        m_pTransformCom->m_vScale = { 0.3f, 0.3f, 0.3f };
         break;
     case BULLET_SMALL : 
-        m_pTransformCom->m_vScale = { 0.2f, 0.2f, 0.2f };
+        m_pTransformCom->m_vScale = { 0.15f, 0.15f, 0.15f };
         break;
     }
     D3DXVec3Normalize(&m_vDir, pDir);
@@ -66,8 +66,10 @@ _int CBullet::Update_GameObject(const _float& fTimeDelta)
         Set_Dead(TRUE);
         return NULL;
     }
-
-    m_pTransformCom->Move_Pos(&m_vDir, fSpeed, fTimeDelta);
+    if (m_fBulletLife != fTimeDelta)
+    {
+        m_pTransformCom->Move_Pos(&m_vDir, fSpeed, fTimeDelta);
+    }
 
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
