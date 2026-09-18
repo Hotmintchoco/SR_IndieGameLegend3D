@@ -3,7 +3,6 @@
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CTimerMgr.h"
-//#include "CDInputMgr.h"
 #include "CTerrain.h"
 
 CSkull::CSkull(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -23,7 +22,7 @@ HRESULT CSkull::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
-    m_pColliderCom->Set_Radius(D3DXVec3Length(&m_pTransformCom->m_vScale));
+    m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
     m_iHp = 3;
     return S_OK;
 }

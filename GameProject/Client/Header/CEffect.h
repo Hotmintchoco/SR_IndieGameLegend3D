@@ -35,6 +35,10 @@ public:
 	void Set_Pos(_float fX, _float fY, _float fZ);
 	void Set_Scale(_vec3 vPos);
 	void Set_Scale(_float fX, _float fY, _float fZ);
+
+public:
+	static _uint iEffectIdx;
+
 protected:
 	virtual void		Free();
 };
