@@ -38,6 +38,7 @@ public:
 	inline void UpdateFPS(float fDT) { m_fDT = fDT; }
 
 	inline float GetYaw() const { return m_fYaw; }
+	inline int GetGemCount() const { return m_iGem; }
 
 private:
 	/* Minimap */

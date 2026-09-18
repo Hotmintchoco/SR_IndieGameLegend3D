@@ -23,7 +23,7 @@
 #include "CSkull.h"
 #include "CBoss1.h"
 #include "CSpeyeder.h"
-#include <CDirectionUI.h>
+#include "CDirectionUI.h"
 #include "CMagmamouth.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -330,7 +330,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 		pUI->Set_Pos(vPos);
 		pUI->Set_Size({ fIconSize + 2.5f, fIconSize });
 
-		wstring wstrTag = L"Num_" + to_wstring(i);
+		wstring wstrTag = L"GemNum_" + to_wstring(i);
 		if (FAILED(pLayer->Add_GameObject(wstrTag.c_str(), pUI)))
 			return E_FAIL;
 	}
