@@ -31,7 +31,7 @@ HRESULT CGem::Ready_GameObject()
     if (FAILED(CItem::Ready_GameObject()))
         return E_FAIL;
 
-    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{0.f, 0.f, 0.f});
+    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{0.f, -m_vSpawnPos.y +0.25f, 0.f});
     m_pTransformCom->Set_Scale(0.12f, 0.12f, 1.f);
 
     return S_OK;

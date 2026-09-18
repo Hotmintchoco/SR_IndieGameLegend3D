@@ -38,7 +38,7 @@ protected:
 	Engine::CCalculator* m_pCalculatorCom;
 	Engine::CCollider* m_pColliderCom;
 
-	_uint m_iHp;
+	_int m_iHp;
 	_float m_fFrame;
 	_float m_fHitEffectDuration;
 	_float m_fHitEffectTime;

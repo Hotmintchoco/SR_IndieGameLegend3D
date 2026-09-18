@@ -31,10 +31,12 @@ public:
 	static CMagmamouth* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
-	void Spawn_Speyeder();
-	void Shuffle_SpawnArray();
+	void Spawn_Speyeder(const _float& fTimeDelta);
+	void Shuffle_Array(_uint N);
+
+	void Throw_Fireball(const _float& fTimeDelta);
 private:
-	enum MAGMAMOUTHSTATE { IDLE, SPAWN, ATTACK, MOVE };
+	enum MAGMAMOUTHSTATE { SPAWN, FIREBALL, MOVE, IDLE };
 	MAGMAMOUTHSTATE m_eMagmaMouthState;
 
 	_float m_fSpawn_CoolDown;
@@ -43,6 +45,9 @@ private:
 	_uint m_iSpawnOrderArr[4];
 
 	_float m_fStateUpdateTime;
+	_float m_fStateUpdateDuration;
+	_bool m_bFireballFinish[3];
+
 
 protected:
 	virtual void		Free();

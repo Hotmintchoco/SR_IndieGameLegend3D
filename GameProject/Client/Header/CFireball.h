@@ -10,11 +10,11 @@ namespace Engine
 	class CCalculator;
 }
 
-class CSpeyeder : public CMonster
+class CFireball : public CMonster
 {
 protected:
-	explicit CSpeyeder(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CSpeyeder();
+	explicit CFireball(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CFireball();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -28,17 +28,16 @@ private:
 	HRESULT			Add_Component();
 
 public:
-	static CSpeyeder* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CFireball* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 public:
-	void Set_Velocity(const _vec3& vDirection) { m_vLandingDirection = vDirection; }
-	void Land(const _float& fTimeDelta);
+	void Set_Velocity(const _vec3& vLocation) { m_vVelocity = vLocation; }
+	void Throw(const _float& fTimeDelta);
 private:
-	_bool m_bLandingState;
-	_vec3 m_vLandingDirection;
+	_vec3 m_vVelocity;
 	_float m_fLandingTime;
-	_float m_fVelocityY;
-
+	_float m_fLandingVelocity;
+	_uint m_iLandingCount;
 protected:
 	virtual void		Free();
 };

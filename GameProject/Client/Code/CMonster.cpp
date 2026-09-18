@@ -86,16 +86,17 @@ void CMonster::Render_GameObject()
 
 void CMonster::OnCollisionEnter(CGameObject* pOther)
 {
-	//CCollider* pCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
-    //
-    //if (pCollider && pCollider->Get_CollisionID() == COLL_PBULLET)
-    //{
-    //    m_fHitEffectTime = 0.f;
-    //    m_bHitState = true;
-	//}
+	CCollider* pCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
+    
+    if (pCollider && pCollider->Get_CollisionID() == COLL_PBULLET)
+    {
+        m_fHitEffectTime = 0.f;
+        m_bHitState = true;
+        m_iHp -= 1;
+    }
 
-    m_fHitEffectTime = 0.f;
-    m_bHitState = true;
+    //m_fHitEffectTime = 0.f;
+    //m_bHitState = true;
 }
 
 void CMonster::Enable_HitRenderState()

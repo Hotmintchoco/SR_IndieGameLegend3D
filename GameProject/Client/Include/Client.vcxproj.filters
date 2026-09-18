@@ -159,7 +159,7 @@
     </Filter>
     <Filter Include="02. GameObject\02. Monster\Magmamouth">
       <UniqueIdentifier>{149954a3-d86b-4975-bad9-6e696a5ecb47}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02. GameObject\11. Item">
       <UniqueIdentifier>{96a898cd-56e9-4421-810a-23a78c4952ed}</UniqueIdentifier>
     </Filter>
@@ -189,6 +189,9 @@
     </Filter>
     <Filter Include="02. GameObject\10. UI\Direction">
       <UniqueIdentifier>{caf2411c-6216-4837-a54c-f2cf88be18f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Magmamouth\Fireball">
+      <UniqueIdentifier>{80883398-3d6b-4d52-8f00-a866db1e4a6f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -359,7 +362,7 @@
     </ClInclude>
     <ClInclude Include="..\Header\CMagmamouth.h">
       <Filter>02. GameObject\02. Monster\Magmamouth</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Header\CItem.h">
       <Filter>02. GameObject\11. Item</Filter>
     </ClInclude>
@@ -389,6 +392,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CDirectionUI.h">
       <Filter>02. GameObject\10. UI\Direction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFireball.h">
+      <Filter>02. GameObject\02. Monster\Magmamouth\Fireball</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -535,7 +541,7 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMagmamouth.cpp">
       <Filter>02. GameObject\02. Monster\Magmamouth</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Code\CItem.cpp">
       <Filter>02. GameObject\11. Item</Filter>
     </ClCompile>
@@ -565,6 +571,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CDirectionUI.cpp">
       <Filter>02. GameObject\10. UI\Direction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFireball.cpp">
+      <Filter>02. GameObject\02. Monster\Magmamouth\Fireball</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
