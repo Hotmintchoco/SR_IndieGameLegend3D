@@ -20,9 +20,6 @@ public:
 	void	Set_IsCollided(const bool& bIsCollided) { m_bIsCollided = bIsCollided; }
 	_bool	Get_IsCollided() { return m_bIsCollided; }
 
-	void	Set_IsActive(const bool& bIsActive) { m_bIsActive = bIsActive; }
-	_bool	Get_IsActive() { return m_bIsActive; }
-
 	virtual void	Set_Radius(const _float& fRadius) {}
 	_float			Get_Radius() { return m_fRadius; }
 
@@ -50,7 +47,6 @@ protected:
 protected:
 	_bool			m_bIsTrigger;	// 트리거 여부를 나타내는 변수(아직 안씀)
 	_bool			m_bIsCollided;	// 충돌 여부를 나타내는 변수
-	_bool			m_bIsActive;	// 충돌 체크 활성화 여부를 나타내는 변수
 	_float			m_fRadius;
 
 	COLLIDER_TYPE	m_eColliderType = CT_NONE;
