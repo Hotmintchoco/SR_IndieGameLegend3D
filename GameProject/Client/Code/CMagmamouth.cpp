@@ -5,11 +5,13 @@
 #include "CTimerMgr.h"
 #include "CTerrain.h"
 #include "CSpeyeder.h"
+#include "CFireball.h"
 
 CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(6.f), m_eMagmaMouthState(IDLE)
+    : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(0.f), m_fStateUpdateDuration(2.f), m_eMagmaMouthState(IDLE)
 {
     ZeroMemory(m_bSpawnFinish, sizeof(m_bSpawnFinish));
+    ZeroMemory(m_bFireballFinish, sizeof(m_bFireballFinish));
     for (int i = 0; i < 4; ++i)
     {
         m_iSpawnOrderArr[i] = i;
@@ -54,16 +56,28 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
 
     m_fStateUpdateTime += fTimeDelta;
 
-    if (m_fStateUpdateTime > 8.f)
+    if (m_fStateUpdateTime > m_fStateUpdateDuration)
     {
         m_fStateUpdateTime = 0.f;
-        //m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 4);
-        m_eMagmaMouthState = SPAWN;
+        m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 2);
+        //m_eMagmaMouthState = SPAWN;
+        //m_eMagmaMouthState = FIREBALL;
         if (m_eMagmaMouthState == SPAWN)
         {
-            Shuffle_SpawnArray();
+            Shuffle_Array(4);
             ZeroMemory(m_bSpawnFinish, sizeof(m_bSpawnFinish));
             m_fSpawnTime = 0.f;
+            m_fStateUpdateDuration = 5.f;
+            m_fSpawn_CoolDown = 0.25f;
+        }
+        else if (m_eMagmaMouthState == FIREBALL)
+        {
+            Shuffle_Array(3);
+            ZeroMemory(m_bFireballFinish, sizeof(m_bFireballFinish));
+            m_fSpawnTime = 0.f;
+            m_fStateUpdateDuration = 5.f;
+            m_fSpawn_CoolDown = 0.5f;
+
         }
     }
     switch (m_eMagmaMouthState)
@@ -71,10 +85,10 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
     case IDLE:
         break;
     case SPAWN:
-        m_fSpawnTime += fTimeDelta;
-        Spawn_Speyeder();
+        Spawn_Speyeder(fTimeDelta);
         break;
-    case ATTACK:
+    case FIREBALL:
+        Throw_Fireball(fTimeDelta);
         break;
     case MOVE:
         break;
@@ -113,7 +127,6 @@ void CMagmamouth::Render_GameObject()
 void CMagmamouth::OnCollisionEnter(CGameObject* pOther)
 {
     CMonster::OnCollisionEnter(pOther);
-    m_iHp -= 1;
 }
 
 HRESULT CMagmamouth::Add_Component()
@@ -146,8 +159,9 @@ CMagmamouth* CMagmamouth::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pMonster;
 }
 
-void CMagmamouth::Spawn_Speyeder()
+void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
 {
+    m_fSpawnTime += fTimeDelta;
     _vec3 vPos, vLook;
     _int iFlag = 0;
     if (m_fSpawnTime> m_fSpawn_CoolDown && m_bSpawnFinish[0] == false)
@@ -178,17 +192,19 @@ void CMagmamouth::Spawn_Speyeder()
         //_uint y = rand() % 100;
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
         m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
+        vLook.y = 0.f;
         D3DXVec3Normalize(&vLook, &vLook);
 
         _matrix matRot;
         D3DXMatrixRotationY(&matRot, D3DXToRadian(60.f) - D3DXToRadian(40.f) * m_iSpawnOrderArr[iFlag - 1]);
 
         D3DXVec3TransformNormal(&vLook, &vLook, &matRot);
-        vLook *= 2;
-        vLook.y = -vPos.y + 0.25f;
+
+        vLook *= 2.f;
+        vLook.y = 3.f;
 
         static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
-        static_cast<CSpeyeder*>(pGameObject)->Set_LandingLocation(vPos + vLook);
+        static_cast<CSpeyeder*>(pGameObject)->Set_LandingDirection(vLook);
         if (nullptr == pGameObject)
             return;
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
@@ -197,15 +213,69 @@ void CMagmamouth::Spawn_Speyeder()
     }
 }
 
-void CMagmamouth::Shuffle_SpawnArray()
+void CMagmamouth::Shuffle_Array(_uint N)
 {
-	for (int i = 3; i > 0; --i)
+    for (int i = 0; i < N; ++i)
+    {
+        m_iSpawnOrderArr[i] = i;
+    }
+
+	for (int i = N-1; i > 0; --i)
 	{
 		int j = rand() % (i + 1);
 		int temp = m_iSpawnOrderArr[i];
         m_iSpawnOrderArr[i] = m_iSpawnOrderArr[j];
         m_iSpawnOrderArr[j] = temp;
 	}
+}
+
+void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
+{
+    m_fSpawnTime += fTimeDelta;
+    _vec3 vPos, vLook;
+    _int iFlag = 0;
+    if (m_fSpawnTime > m_fSpawn_CoolDown && m_bFireballFinish[0] == false)
+    {
+        m_bFireballFinish[0] = true;
+        iFlag = 1;
+    }
+    else if (m_fSpawnTime > m_fSpawn_CoolDown * 2 && m_bFireballFinish[1] == false)
+    {
+        m_bFireballFinish[1] = true;
+        iFlag = 2;
+    }
+    else if (m_fSpawnTime > m_fSpawn_CoolDown * 3 && m_bFireballFinish[2] == false)
+    {
+        m_bFireballFinish[2] = true;
+        iFlag = 3;
+    }
+
+    if (iFlag != 0)
+    {
+        CGameObject* pGameObject = CFireball::Create(m_pGraphicDev);
+
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
+        vLook.y = 0.f;
+        D3DXVec3Normalize(&vLook, &vLook);
+
+        _matrix matRot;
+        D3DXMatrixRotationY(&matRot, D3DXToRadian(60.f) - D3DXToRadian(60.f) * m_iSpawnOrderArr[iFlag - 1]);
+
+        D3DXVec3TransformNormal(&vLook, &vLook, &matRot);
+
+        vLook *= 3.f;
+        vLook.y = 4.f;
+
+        static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
+        static_cast<CFireball*>(pGameObject)->Set_LandingDirection(vLook);
+        if (nullptr == pGameObject)
+            return;
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject)))
+            return;
+    }
+
 }
 
 void CMagmamouth::Free()

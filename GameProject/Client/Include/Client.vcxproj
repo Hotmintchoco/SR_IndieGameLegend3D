@@ -159,6 +159,7 @@
     <ClInclude Include="..\Header\CEnergy.h" />
     <ClInclude Include="..\Header\CExplosiveFrustum.h" />
     <ClInclude Include="..\Header\CExplosiveFrustumLight.h" />
+    <ClInclude Include="..\Header\CFireball.h" />
     <ClInclude Include="..\Header\CFog.h" />
     <ClInclude Include="..\Header\CFrustum.h" />
     <ClInclude Include="..\Header\CGameStatusMgr.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="..\Code\CEnergy.cpp" />
     <ClCompile Include="..\Code\CExplosiveFrustum.cpp" />
     <ClCompile Include="..\Code\CExplosiveFrustumLight.cpp" />
+    <ClCompile Include="..\Code\CFireball.cpp" />
     <ClCompile Include="..\Code\CFog.cpp" />
     <ClCompile Include="..\Code\CFrustum.cpp" />
     <ClCompile Include="..\Code\CGameStatusMgr.cpp" />

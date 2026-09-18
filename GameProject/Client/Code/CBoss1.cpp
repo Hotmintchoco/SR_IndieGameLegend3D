@@ -135,12 +135,6 @@ void CBoss1::Render_GameObject()
 void CBoss1::OnCollisionEnter(CGameObject* pOther)
 {
     CMonster::OnCollisionEnter(pOther);
-    m_iHp -= 1;
-
-
-
-
-
 
 }
 

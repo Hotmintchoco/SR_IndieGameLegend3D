@@ -72,7 +72,6 @@ void CSkull::Render_GameObject()
 void CSkull::OnCollisionEnter(CGameObject* pOther)
 {
     CMonster::OnCollisionEnter(pOther);
-    m_iHp -= 1;
 }
 
 HRESULT CSkull::Add_Component()

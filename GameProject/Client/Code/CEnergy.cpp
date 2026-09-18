@@ -32,7 +32,7 @@ HRESULT CEnergy::Ready_GameObject()
         return E_FAIL;
 
     m_pTransformCom->Set_Scale(0.20f, 0.20f, 1.f);
-    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{ 0.f, 0.2f, 0.f });
+    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{ 0.f, -m_vSpawnPos.y + 0.45f, 0.f });
 
     return S_OK;
 }
@@ -61,7 +61,7 @@ void CEnergy::Render_GameObject()
     m_pTextureCom->Set_Texture((_uint)m_fFrame);
     m_pBufferCom->Render_Buffer();
 
-    m_pColliderCom->Render_DebugCube();
+    //m_pColliderCom->Render_DebugCube();
 }
 
 HRESULT CEnergy::Add_Component()

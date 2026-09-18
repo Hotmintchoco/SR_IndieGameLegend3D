@@ -12,7 +12,7 @@
 #include "CEnergy.h"
 
 CSpeyeder::CSpeyeder(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev), m_bLandingState(false)
+    : CMonster(pGraphicDev), m_bLandingState(false), m_fLandingTime(0.f), m_fVelocityY(0.f), m_vLandingDirection{0.f,0.f,0.f}
 {
 }
 
@@ -141,7 +141,6 @@ void CSpeyeder::Render_GameObject()
 void CSpeyeder::OnCollisionEnter(CGameObject* pOther)
 {
     CMonster::OnCollisionEnter(pOther);
-    m_iHp -= 1;
 }
 
 HRESULT CSpeyeder::Add_Component()
@@ -178,14 +177,18 @@ void CSpeyeder::Land(const _float& fTimeDelta)
 {
     _vec3 vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    _vec3 vDir = (m_vLandingLocation - vPos) * 2.f;
-    vDir.y -= 0.125f;
-    if (D3DXVec3Length(&vDir)<0.5f)
+    m_vLandingDirection.y -= 9.8f * fTimeDelta;
+
+    if(m_pTransformCom->m_vInfo[INFO_POS].y < m_pTransformCom->m_vScale.y)
     {
+        _float y = m_pTransformCom->m_vScale.y;
+        _float x = m_pTransformCom->m_vInfo[INFO_POS].x;
+        _float z = m_pTransformCom->m_vInfo[INFO_POS].z;
+        m_pTransformCom->Set_Pos(x, y, z);
         m_bLandingState = true;
         return;
     }
-    m_pTransformCom->Move_Pos(&vDir, 1.f, fTimeDelta);
+    m_pTransformCom->Move_Pos(&m_vLandingDirection, 1.f, fTimeDelta);
     
 }
 
