@@ -31,7 +31,7 @@ public:
 	static CSpeyeder* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 public:
-	void Set_LandingDirection(const _vec3& vLocation) { m_vLandingDirection = vLocation; }
+	void Set_Velocity(const _vec3& vDirection) { m_vLandingDirection = vDirection; }
 	void Land(const _float& fTimeDelta);
 private:
 	_bool m_bLandingState;

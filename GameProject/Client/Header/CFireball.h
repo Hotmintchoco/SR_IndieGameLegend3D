@@ -31,13 +31,13 @@ public:
 	static CFireball* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 public:
-	void Set_LandingDirection(const _vec3& vLocation) { m_vLandingDirection = vLocation; }
-	void Land(const _float& fTimeDelta);
+	void Set_Velocity(const _vec3& vLocation) { m_vVelocity = vLocation; }
+	void Throw(const _float& fTimeDelta);
 private:
-	_bool m_bLandingState;
-	_vec3 m_vLandingDirection;
+	_vec3 m_vVelocity;
 	_float m_fLandingTime;
-
+	_float m_fLandingVelocity;
+	_uint m_iLandingCount;
 protected:
 	virtual void		Free();
 };

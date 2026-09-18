@@ -61,7 +61,7 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
         m_fStateUpdateTime = 0.f;
         m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 2);
         //m_eMagmaMouthState = SPAWN;
-        //m_eMagmaMouthState = FIREBALL;
+        m_eMagmaMouthState = FIREBALL;
         if (m_eMagmaMouthState == SPAWN)
         {
             Shuffle_Array(4);
@@ -162,7 +162,7 @@ CMagmamouth* CMagmamouth::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
 {
     m_fSpawnTime += fTimeDelta;
-    _vec3 vPos, vLook;
+    _vec3 vPos, vVelocity;
     _int iFlag = 0;
     if (m_fSpawnTime> m_fSpawn_CoolDown && m_bSpawnFinish[0] == false)
     {
@@ -188,23 +188,22 @@ void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
     if (iFlag != 0)
     {
         CGameObject* pGameObject = CSpeyeder::Create(m_pGraphicDev);
-        //_uint x = rand() % 100;
-        //_uint y = rand() % 100;
+
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
-        m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
-        vLook.y = 0.f;
-        D3DXVec3Normalize(&vLook, &vLook);
+        m_pTransformCom->Get_Info(INFO_LOOK, &vVelocity);
+        vVelocity.y = 0.f;
+        D3DXVec3Normalize(&vVelocity, &vVelocity);
 
         _matrix matRot;
         D3DXMatrixRotationY(&matRot, D3DXToRadian(60.f) - D3DXToRadian(40.f) * m_iSpawnOrderArr[iFlag - 1]);
 
-        D3DXVec3TransformNormal(&vLook, &vLook, &matRot);
+        D3DXVec3TransformNormal(&vVelocity, &vVelocity, &matRot);
 
-        vLook *= 2.f;
-        vLook.y = 3.f;
+        vVelocity *= 2.f;
+        vVelocity.y = 3.f;
 
         static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
-        static_cast<CSpeyeder*>(pGameObject)->Set_LandingDirection(vLook);
+        static_cast<CSpeyeder*>(pGameObject)->Set_Velocity(vVelocity);
         if (nullptr == pGameObject)
             return;
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
@@ -232,7 +231,7 @@ void CMagmamouth::Shuffle_Array(_uint N)
 void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
 {
     m_fSpawnTime += fTimeDelta;
-    _vec3 vPos, vLook;
+    _vec3 vPos, vVelocity;
     _int iFlag = 0;
     if (m_fSpawnTime > m_fSpawn_CoolDown && m_bFireballFinish[0] == false)
     {
@@ -254,21 +253,29 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
     {
         CGameObject* pGameObject = CFireball::Create(m_pGraphicDev);
 
+        //_uint x = rand() % 100;
+        //_uint y = rand() % 100;
+        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+        if (nullptr == pPlayerTransformCom) return;
+        _vec3   vPlayerPos;
+        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
-        m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
-        vLook.y = 0.f;
-        D3DXVec3Normalize(&vLook, &vLook);
+        vVelocity = vPlayerPos - vPos;
+        //m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
+        vVelocity.y = 0.f;
+        D3DXVec3Normalize(&vVelocity, &vVelocity);
 
         _matrix matRot;
-        D3DXMatrixRotationY(&matRot, D3DXToRadian(60.f) - D3DXToRadian(60.f) * m_iSpawnOrderArr[iFlag - 1]);
+        D3DXMatrixRotationY(&matRot, D3DXToRadian(30.f) - D3DXToRadian(30.f) * m_iSpawnOrderArr[iFlag - 1]);
 
-        D3DXVec3TransformNormal(&vLook, &vLook, &matRot);
+        D3DXVec3TransformNormal(&vVelocity, &vVelocity, &matRot);
 
-        vLook *= 3.f;
-        vLook.y = 4.f;
+        vVelocity *= 3.f;
+        vVelocity.y = 4.f;
 
         static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
-        static_cast<CFireball*>(pGameObject)->Set_LandingDirection(vLook);
+        static_cast<CFireball*>(pGameObject)->Set_Velocity(vVelocity);
         if (nullptr == pGameObject)
             return;
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");

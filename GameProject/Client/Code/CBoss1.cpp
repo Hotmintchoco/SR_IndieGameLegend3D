@@ -29,7 +29,7 @@ HRESULT CBoss1::Ready_GameObject()
 
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
 
-    m_iHp = 6;
+    m_iHp = 3;
     return S_OK;
 }
 
@@ -120,7 +120,7 @@ void CBoss1::Render_GameObject()
     m_pTextureCom->Set_Texture((_uint)m_fFrame);
     m_pBufferCom->Render_Buffer();
 
-    if (m_iHp < 4)
+    if (m_iHp < 3)
     {
         m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
         m_pTextureCom2->Set_Texture((_uint)m_fFrame / 2);

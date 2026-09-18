@@ -11,7 +11,7 @@
 #include "CEnergy.h"
 
 CFireball::CFireball(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev), m_bLandingState(false), m_fLandingTime(0.f)
+    : CMonster(pGraphicDev), m_fLandingTime(0.f), m_iLandingCount(0), m_fLandingVelocity(0.f)
 {
 }
 
@@ -41,13 +41,14 @@ _int CFireball::Update_GameObject(const _float& fTimeDelta)
 		m_fFrame = 0.f;
 
 
-	Land(fTimeDelta);
-    
-    if (m_bLandingState == true)
+	Throw(fTimeDelta);
+
+    if (m_iLandingCount == 5)
     {
         Set_Dead(true);
         //지형파괴로직
     }
+
     return iExit;
 }
 
@@ -120,24 +121,29 @@ CFireball* CFireball::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pMonster;
 }
 
-void CFireball::Land(const _float& fTimeDelta)
+void CFireball::Throw(const _float& fTimeDelta)
 {
     m_fLandingTime += fTimeDelta;
 
-    _vec3 vPos;
+    _vec3 vPos, vVelocity;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    m_vLandingDirection.y -= 9.8f * fTimeDelta;
+    m_fLandingVelocity -= 9.8f * fTimeDelta;
+
+    vVelocity.x = m_vVelocity.x;
+    vVelocity.y = m_vVelocity.y + m_fLandingVelocity;
+    vVelocity.z = m_vVelocity.z;
+
+    m_vVelocity.y -= 9.8f * fTimeDelta;
 
     if (m_pTransformCom->m_vInfo[INFO_POS].y < m_pTransformCom->m_vScale.y)
     {
-        _float y = m_pTransformCom->m_vScale.y;
-        _float x = m_pTransformCom->m_vInfo[INFO_POS].x;
-        _float z = m_pTransformCom->m_vInfo[INFO_POS].z;
-        m_pTransformCom->Set_Pos(x, y, z);
-        m_bLandingState = true;
+        ++m_iLandingCount;
+        m_pTransformCom->m_vInfo[INFO_POS].y = m_pTransformCom->m_vScale.y;
+        m_vVelocity.y = -vVelocity.y / 3.f * 2.f;
+        m_fLandingVelocity = 0.f;
         return;
     }
-    m_pTransformCom->Move_Pos(&m_vLandingDirection, 1.f, fTimeDelta);
+    m_pTransformCom->Move_Pos(&vVelocity, 1.f, fTimeDelta);
 }
 
 void CFireball::Free()
