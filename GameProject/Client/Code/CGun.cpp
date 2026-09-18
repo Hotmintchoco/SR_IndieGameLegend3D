@@ -208,105 +208,132 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
         multimap<wstring, CGameObject*> mapCurLayer;
         CLayer* pLayer;
         
+        //for (auto& iter : vMapKey)
+        //{
+        //    pLayer = CManagement::GetInstance()->Get_Layer(iter.c_str());
+        //    if (pLayer != nullptr)
+        //    {
+        //        mapCurLayer = pLayer->Get_ObjMap();
+        //        for (auto& pair : mapCurLayer)
+        //        {
+        //            if (pair.first != L"Player" &&
+        //                pair.first != L"Gun" &&
+        //                pair.first != L"Bullet")
+        //            {
+        //                CVIBuffer* pTextureCom = dynamic_cast<CVIBuffer*>(pair.second->Get_Component(ID_STATIC, L"Com_Buffer"));
+        //                if (pTextureCom != nullptr)
+        //                {
+        //                    CTransform* pTransCom = dynamic_cast<CTransform*>(pair.second->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+        //                    if (pTransCom != nullptr)
+        //                    {
+        //                        LPDIRECT3DVERTEXBUFFER9 pVB;
+        //                        LPDIRECT3DINDEXBUFFER9  pIB;
+        //                        D3DFORMAT               idxFmt;
+        //                        VTXSTRUCTTYPE			vtxStructType;
+        //                        _ulong                  dwVtxCnt;
+        //                        _ulong                  dwTriCnt;
+        //                        pTextureCom->Get_VIInfo(pVB, pIB, vtxStructType, idxFmt, dwVtxCnt, dwTriCnt);
+        //                        _matrix matWorld = *pTransCom->Get_World();
+        //                        _vec3 vCamPos = vPos_Player - (vForword * 0.5f);
+
+        //                        switch (vtxStructType)
+        //                        {
+        //                        case VTXSTRUCT_COL:
+        //                        {
+        //                            /// &pVertex : 버텍스 버퍼에 저장된 버텍스 중 첫 번째 버텍스
+        //                            VTXCOL* pVertex = NULL;
+        //                            switch (idxFmt)
+        //                            {
+        //                            case D3DFMT_INDEX16:
+        //                            {
+        //                                INDEX16* pIndex = NULL;
+        //                                CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
+        //                                break;
+        //                            }
+        //                            case D3DFMT_INDEX32:
+        //                            {
+        //                                INDEX32* pIndex = NULL;
+        //                                CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
+        //                                break;
+        //                            }
+        //                            }
+        //                            break;
+        //                        }
+        //                        case VTXSTRUCT_TEX:
+        //                        {
+        //                            VTXTEX* pVertex = NULL;
+        //                            switch (idxFmt)
+        //                            {
+        //                            case D3DFMT_INDEX16:
+        //                            {
+        //                                INDEX16* pIndex = NULL;
+        //                                CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
+        //                                break;
+        //                            }
+        //                            case D3DFMT_INDEX32:
+        //                            {
+        //                                INDEX32* pIndex = NULL;
+        //                                CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
+        //                                break;
+        //                            }
+        //                            }
+        //                            break;
+        //                        }
+        //                        case VTXSTRUCT_CUBE:
+        //                        {
+        //                            VTXCUBE* pVertex = NULL;
+        //                            switch (idxFmt)
+        //                            {
+        //                            case D3DFMT_INDEX16:
+        //                            {
+        //                                INDEX16* pIndex = NULL;
+        //                                CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
+        //                                break;
+        //                            }
+        //                            case D3DFMT_INDEX32:
+        //                            {
+        //                                INDEX32* pIndex = NULL;
+        //                                CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
+        //                                break;
+        //                            }
+        //                            }
+        //                            break;
+        //                        }
+        //                        }
+        //                        
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
         for (auto& iter : vMapKey)
         {
             pLayer = CManagement::GetInstance()->Get_Layer(iter.c_str());
-            if (pLayer != nullptr)
-            {
-                mapCurLayer = pLayer->Get_ObjMap();
-                for (auto& pair : mapCurLayer)
-                {
-                    if (pair.first != L"Player" &&
-                        pair.first != L"Gun" &&
-                        pair.first != L"Bullet")
-                    {
-                        CVIBuffer* pTextureCom = dynamic_cast<CVIBuffer*>(pair.second->Get_Component(ID_STATIC, L"Com_Buffer"));
-                        if (pTextureCom != nullptr)
-                        {
-                            CTransform* pTransCom = dynamic_cast<CTransform*>(pair.second->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-                            if (pTransCom != nullptr)
-                            {
-                                LPDIRECT3DVERTEXBUFFER9 pVB;
-                                LPDIRECT3DINDEXBUFFER9  pIB;
-                                D3DFORMAT               idxFmt;
-                                VTXSTRUCTTYPE			vtxStructType;
-                                _ulong                  dwVtxCnt;
-                                _ulong                  dwTriCnt;
-                                pTextureCom->Get_VIInfo(pVB, pIB, vtxStructType, idxFmt, dwVtxCnt, dwTriCnt);
-                                _matrix matWorld = *pTransCom->Get_World();
-                                _vec3 vCamPos = vPos_Player - (vForword * 0.5f);
+            if (!pLayer) continue;
 
-                                switch (vtxStructType)
-                                {
-                                case VTXSTRUCT_COL:
-                                {
-                                    /// &pVertex : 버텍스 버퍼에 저장된 버텍스 중 첫 번째 버텍스
-                                    VTXCOL* pVertex = NULL;
-                                    switch (idxFmt)
-                                    {
-                                    case D3DFMT_INDEX16:
-                                    {
-                                        INDEX16* pIndex = NULL;
-                                        CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
-                                        break;
-                                    }
-                                    case D3DFMT_INDEX32:
-                                    {
-                                        INDEX32* pIndex = NULL;
-                                        CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
-                                        break;
-                                    }
-                                    }
-                                    break;
-                                }
-                                case VTXSTRUCT_TEX:
-                                {
-                                    VTXTEX* pVertex = NULL;
-                                    switch (idxFmt)
-                                    {
-                                    case D3DFMT_INDEX16:
-                                    {
-                                        INDEX16* pIndex = NULL;
-                                        CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
-                                        break;
-                                    }
-                                    case D3DFMT_INDEX32:
-                                    {
-                                        INDEX32* pIndex = NULL;
-                                        CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
-                                        break;
-                                    }
-                                    }
-                                    break;
-                                }
-                                case VTXSTRUCT_CUBE:
-                                {
-                                    VTXCUBE* pVertex = NULL;
-                                    switch (idxFmt)
-                                    {
-                                    case D3DFMT_INDEX16:
-                                    {
-                                        INDEX16* pIndex = NULL;
-                                        CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
-                                        break;
-                                    }
-                                    case D3DFMT_INDEX32:
-                                    {
-                                        INDEX32* pIndex = NULL;
-                                        CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
-                                        break;
-                                    }
-                                    }
-                                    break;
-                                }
-                                }
-                                
-                            }
-                        }
-                    }
-                }
+            mapCurLayer = pLayer->Get_ObjMap();
+            for (auto& pair : mapCurLayer)
+            {
+                bool bInvalidTag = (pair.first == L"Player") || (pair.first == L"Gun") || (pair.first == L"Bullet");
+                if (bInvalidTag) continue;
+
+                CVIBuffer* pTextureCom = dynamic_cast<CVIBuffer*>(pair.second->Get_Component(ID_STATIC, L"Com_Buffer"));
+                if (!pTextureCom) continue;
+
+                CTransform* pTransCom = dynamic_cast<CTransform*>(pair.second->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+                if (!pTransCom) continue;
+
+                TVIBufferInfo t;
+                pTextureCom->Get_VIInfo(&t);
+                _matrix* pMatWorld = pTransCom->Get_World();
+                _vec3 vCamPos = vPos_Player - (vForword * 0.5f);
+
+                CheckVtxIntersect(t, fToDistance, vBullet_To, pMatWorld, vCamPos, vForword);
             }
         }
+
         
 #pragma endregion
 

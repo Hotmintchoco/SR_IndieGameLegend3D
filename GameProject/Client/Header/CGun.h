@@ -2,6 +2,7 @@
 
 #include "CGameObject.h"
 #include "Client_Enum.h"
+#include "CVIBuffer.h"
 
 namespace Engine
 {
@@ -27,8 +28,50 @@ private:
 	HRESULT				Add_Component();
 	void				RenderImGui();
 	pair<_vec3, _vec3>	Get_MouseRay();
-	template <typename T1, typename T2>
-    _bool               CheckVtxIntersect(LPDIRECT3DVERTEXBUFFER9 pVB, LPDIRECT3DINDEXBUFFER9 pIB, T1 pVertex, T2 pIndex, _ulong dwVtxCnt, _ulong dwTriCnt, _float& fToDistance, _vec3& vResult, _matrix matWorld, _vec3 vRayPos, _vec3 vRayDir);
+	// template <typename T1, typename T2>
+    // _bool               CheckVtxIntersect(LPDIRECT3DVERTEXBUFFER9 pVB, LPDIRECT3DINDEXBUFFER9 pIB, T1 pVertex, T2 pIndex, _ulong dwVtxCnt, _ulong dwTriCnt, _float& fToDistance, _vec3& vResult, _matrix matWorld, _vec3 vRayPos, _vec3 vRayDir);
+    _bool CheckVtxIntersect(const TVIBufferInfo& t, _float& fToDistance, _vec3& vResult, const _matrix* matWorld, const _vec3& vRayPos, const _vec3& vRayDir)
+    {
+        _bool bIsHit = false;
+        char* pVertex = nullptr;
+        char* pIndex = nullptr;
+
+        t.pVtxBuffer->Lock(0, 0, (void**)&pVertex, D3DLOCK_READONLY);
+        t.pIdxBuffer->Lock(0, 0, (void**)&pIndex, 0);
+
+        for (_ulong dwCnt = 0; dwCnt < t.dwTriCnt; dwCnt++)
+        {
+            _vec3 vVtxInfo[3];
+            _ulong IdxElemSize = t.dwIdxSize / 3;
+            char* pTri = pIndex + dwCnt * t.dwIdxSize;
+            for (_int i = 0; i < 3; i++)
+            {
+                _ulong VtxIdx = 0;
+                memcpy(&VtxIdx, pTri + i * IdxElemSize, IdxElemSize);
+                /* vPosition이 가장 앞에 있는 요소라 가정 */
+                memcpy(vVtxInfo + i, pVertex + t.dwVtxSize * VtxIdx, sizeof(_vec3));
+                D3DXVec3TransformCoord(&vVtxInfo[i], &vVtxInfo[i], matWorld);
+            }
+            _vec3 vCurHit;
+            _float fU, fV, fCurToDistance;
+            if (D3DXIntersectTri(&vVtxInfo[0], &vVtxInfo[1], &vVtxInfo[2], &vRayPos, &vRayDir, &fU, &fV, &fCurToDistance))
+            {
+                bIsHit = true;
+                if (fabs(fCurToDistance) < fToDistance || fToDistance == 0.f)
+                {
+                    fToDistance = fabs(fCurToDistance);
+                    vResult = vVtxInfo[0] + fU * (vVtxInfo[1] - vVtxInfo[0]) + fV * (vVtxInfo[2] - vVtxInfo[0]);
+                }
+            }
+
+        }
+
+        t.pVtxBuffer->Unlock();
+        t.pIdxBuffer->Unlock();
+
+        return bIsHit;
+    }
+
 
 private:
 	Engine::CPlyTex* m_pBufferCom;
@@ -64,43 +107,43 @@ private:
 
 
 
-template <typename T1, typename T2>
-_bool CGun::CheckVtxIntersect(LPDIRECT3DVERTEXBUFFER9 pVB, LPDIRECT3DINDEXBUFFER9 pIB, T1 pVertex, T2 pIndex, _ulong dwVtxCnt, _ulong dwTriCnt, _float& fToDistance, _vec3& vResult, _matrix matWorld, _vec3 vRayPos, _vec3 vRayDir)
-{
-    _bool bIsHit = false;
-    pVB->Lock(0, 0, (void**)&pVertex, D3DLOCK_READONLY);
-    pIB->Lock(0, 0, (void**)&pIndex, 0);
-
-
-    vector<_vec3> vecVtx;
-
-    for (_ulong dwCnt = 0; dwCnt < dwTriCnt; dwCnt++)
-    {
-        _vec3 vVtxInfo[3] =
-            { pVertex[pIndex[dwCnt]._0].vPosition,
-            pVertex[pIndex[dwCnt]._1].vPosition,
-            pVertex[pIndex[dwCnt]._2].vPosition};
-        
-        for (_int i = 0; i < 3; i++)
-        {
-            D3DXVec3TransformCoord(&vVtxInfo[i], &vVtxInfo[i], &matWorld);
-        }
-        _vec3 vCurHit;
-        _float fU, fV, fCurToDistance;
-        if (D3DXIntersectTri(&vVtxInfo[0], &vVtxInfo[1], &vVtxInfo[2], &vRayPos, &vRayDir, &fU, &fV, &fCurToDistance))
-        {
-            bIsHit = true;
-            if (fabs(fCurToDistance) < fToDistance || fToDistance == 0.f)
-            {
-                fToDistance = fabs(fCurToDistance);
-                vResult = vVtxInfo[0] + fU * (vVtxInfo[1] - vVtxInfo[0]) + fV * (vVtxInfo[2] - vVtxInfo[0]);
-            }
-        }
-
-    }
-
-    pVB->Unlock();
-    pIB->Unlock();
-
-    return bIsHit;
-}
+//template <typename T1, typename T2>
+//_bool CGun::CheckVtxIntersect(LPDIRECT3DVERTEXBUFFER9 pVB, LPDIRECT3DINDEXBUFFER9 pIB, T1 pVertex, T2 pIndex, _ulong dwVtxCnt, _ulong dwTriCnt, _float& fToDistance, _vec3& vResult, _matrix matWorld, _vec3 vRayPos, _vec3 vRayDir)
+//{
+//    _bool bIsHit = false;
+//    pVB->Lock(0, 0, (void**)&pVertex, D3DLOCK_READONLY);
+//    pIB->Lock(0, 0, (void**)&pIndex, 0);
+//
+//
+//    vector<_vec3> vecVtx;
+//
+//    for (_ulong dwCnt = 0; dwCnt < dwTriCnt; dwCnt++)
+//    {
+//        _vec3 vVtxInfo[3] =
+//            { pVertex[pIndex[dwCnt]._0].vPosition,
+//            pVertex[pIndex[dwCnt]._1].vPosition,
+//            pVertex[pIndex[dwCnt]._2].vPosition};
+//        
+//        for (_int i = 0; i < 3; i++)
+//        {
+//            D3DXVec3TransformCoord(&vVtxInfo[i], &vVtxInfo[i], &matWorld);
+//        }
+//        _vec3 vCurHit;
+//        _float fU, fV, fCurToDistance;
+//        if (D3DXIntersectTri(&vVtxInfo[0], &vVtxInfo[1], &vVtxInfo[2], &vRayPos, &vRayDir, &fU, &fV, &fCurToDistance))
+//        {
+//            bIsHit = true;
+//            if (fabs(fCurToDistance) < fToDistance || fToDistance == 0.f)
+//            {
+//                fToDistance = fabs(fCurToDistance);
+//                vResult = vVtxInfo[0] + fU * (vVtxInfo[1] - vVtxInfo[0]) + fV * (vVtxInfo[2] - vVtxInfo[0]);
+//            }
+//        }
+//
+//    }
+//
+//    pVB->Unlock();
+//    pIB->Unlock();
+//
+//    return bIsHit;
+//}
