@@ -53,11 +53,11 @@ _int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
     if (m_iHp <= 0)
     {
         CGameObject* pGameObject = nullptr;
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
 
         pGameObject = CSmallExplode::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS], m_pTransformCom->m_vScale);
         if (nullptr == pGameObject)
             return E_FAIL;
-        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
   
         if (FAILED(pLayer->Add_GameObject(L"SmallExplode", pGameObject)))
             return E_FAIL;
