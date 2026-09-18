@@ -20,6 +20,9 @@ private:
 protected:
 	virtual void Consume() override;
 
+	// Gem Count UI
+	void Update_GemCountUI();
+
 public:
 	static CGem* Create(LPDIRECT3DDEVICE9 pGraphicDev, Engine::CGameObject* pSpawner);
 
