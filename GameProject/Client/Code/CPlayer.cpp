@@ -80,7 +80,7 @@ void CPlayer::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 #ifdef _DEBUG
-    RenderImGui();
+     //RenderImGui();
 #endif
 }
 
