@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CMagmamouth.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -72,7 +72,7 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
         break;
     case SPAWN:
         m_fSpawnTime += fTimeDelta;
-        //Spawn_Speyeder();
+        Spawn_Speyeder();
         break;
     case ATTACK:
         break;
