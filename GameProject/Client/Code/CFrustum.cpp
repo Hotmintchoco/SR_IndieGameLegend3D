@@ -47,6 +47,11 @@ void CFrustum::Render_GameObject()
 {
 }
 
+void CFrustum::OnCollisionStay(CGameObject* pOther)
+{
+	Obstacle_Collision(pOther, m_pColliderCom);
+}
+
 HRESULT CFrustum::Add_Component()
 {
     CComponent* pComponent = nullptr;
@@ -72,6 +77,22 @@ HRESULT CFrustum::Add_Component()
 
 
     return S_OK;
+}
+
+_bool CFrustum::DestroyFrustum(CCollider* pOtherCollider)
+{
+    _int ColliderID = -1;
+
+    if (pOtherCollider)
+        ColliderID = pOtherCollider->Get_CollisionID();
+    else
+        return false;
+
+    if (ColliderID == COLL_PBULLET || ColliderID == COLL_MBULLET)
+    {
+        Set_Dead(true);
+        return true;
+    }
 }
 
 void CFrustum::Free()

@@ -6,6 +6,7 @@
 #include "CCollisionMgr.h"
 #include "CManagement.h"
 #include "CGun.h"
+#include "CCollider.h"
 
 CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_vDir(0.f, 0.f, 0.f), m_iBulletID(BULLET_DEFAULT), m_iBulletDmg(10), m_fBulletLife(0.f)
@@ -130,6 +131,7 @@ void CBullet::Render_GameObject()
 
 void CBullet::OnCollisionEnter(CGameObject* pOther)
 {
+	m_pColliderCom->Set_IsActive(false);
     Set_Dead(true);
 }
 

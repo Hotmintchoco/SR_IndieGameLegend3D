@@ -6,14 +6,14 @@
 #include "CBoxCollider.h"
 
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
-	: m_pGraphicDev(pGraphicDev), m_fViewZ(0.f), m_bDead(false), m_fFrictionForce(1.f),
+	: m_pGraphicDev(pGraphicDev), m_fViewZ(0.f), m_bDead(false), m_fFrictionForce(1.f), m_bIsActive(true),
     m_pOwner(CLayerContext::GetLayer())
 {
     m_pGraphicDev->AddRef();
 }
 
 CGameObject::CGameObject(const CGameObject& rhs)
-    : m_pGraphicDev(rhs.m_pGraphicDev), m_fViewZ(rhs.m_fViewZ), m_bDead(rhs.m_bDead), m_fFrictionForce(rhs.m_fFrictionForce),
+    : m_pGraphicDev(rhs.m_pGraphicDev), m_fViewZ(rhs.m_fViewZ), m_bDead(rhs.m_bDead), m_fFrictionForce(rhs.m_fFrictionForce), m_bIsActive(rhs.m_bIsActive),
     m_pOwner(rhs.m_pOwner)
 {
     m_pGraphicDev->AddRef();

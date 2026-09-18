@@ -20,8 +20,14 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+	// 충돌	이벤트 처리 함수 (기본적으로 Obstacle_Collision 처리)
+	virtual void	OnCollisionStay(CGameObject* pOther) override;
+
 protected:
 	HRESULT			Add_Component();
+
+	// 공격에 파괴되는 함수
+	_bool			DestroyFrustum(CCollider* pOtherCollider);
 
 protected:
 	Engine::CTransform* m_pTransformCom;

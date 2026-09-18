@@ -66,14 +66,16 @@ void CExplosiveFrustum::OnCollisionEnter(CGameObject* pOther)
     
     CGameObject* pObject = nullptr;
 
-    pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
-    if (pObject)
+    _bool bIsDestroyed = DestroyFrustum(dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider")));
+
+    if (bIsDestroyed)
     {
-        pLayer->Add_GameObject(L"Item", pObject);
+        m_pLight->Set_Dead(true);
+        CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
+
+        if (pObject)
+            pLayer->Add_GameObject(L"Item", pObject);
     }
-    
-    Set_Dead(true);
-    m_pLight->Set_Dead(true);
 }
 
 HRESULT CExplosiveFrustum::Add_Component()

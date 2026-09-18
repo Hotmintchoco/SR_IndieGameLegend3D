@@ -19,6 +19,9 @@ public:
 	CGameObject*	Get_Owner() { return m_pOwner; }
 	void			Set_Owner(CGameObject* pOwner) { m_pOwner = pOwner; }
 
+	void			Set_IsActive(const bool& bIsActive) { m_bIsActive = bIsActive; }
+	_bool			Get_IsActive() { return m_bIsActive; }
+
 public:
 	virtual _int Update_Component(const _float& fTimeDelta) { return 0; }
 	virtual void LateUpdate_Component() {}
@@ -26,6 +29,7 @@ public:
 protected:
 	LPDIRECT3DDEVICE9			m_pGraphicDev;
 	_bool						m_bClone;
+	_bool						m_bIsActive;	// 활성화 여부를 나타내는 변수
 
 	CGameObject*				m_pOwner;
 

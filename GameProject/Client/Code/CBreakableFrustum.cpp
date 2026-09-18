@@ -54,13 +54,15 @@ void CBreakableFrustum::OnCollisionEnter(CGameObject* pOther)
 {
     CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
 
-    CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
-    if (pObject)
+	_bool bIsDestroyed = DestroyFrustum(dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider")));
+    
+    if (bIsDestroyed)
     {
-        pLayer->Add_GameObject(L"Item", pObject);
-    }
+        CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
 
-    Set_Dead(true);
+        if (pObject)
+            pLayer->Add_GameObject(L"Item", pObject);
+    }
 }
 
 HRESULT CBreakableFrustum::Add_Component()
