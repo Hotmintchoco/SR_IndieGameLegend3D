@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Engine_Define.h"
 
@@ -29,8 +29,8 @@ public:
 	inline void UpdatePlayerHp(int iAmount) { m_iPlayerHp += iAmount; }
 	inline void UpdatePlayerMaxHp(int iAmount) { m_iPlayerMaxHp += iAmount; }
 
-	inline void UpdateUltimateGauge(float fAmount) { m_fUltGauge += fAmount; }
-	inline void UpdateSpecialAttackGauge(float fAmount) { m_fSpecialAtkGauge += fAmount; }
+	inline void SetUltimateGauge(float fAmount) { m_fUltGauge = fAmount; }
+	inline void SetSpecialAttackGauge(float fAmount) { m_fSpecialAtkGauge = fAmount; }
 
 	inline void UpdateGem(int iAmount) { m_iGem += iAmount; }
 
@@ -49,8 +49,8 @@ private:
 	_vec3 m_vPlayerPos = _vec3{ 0.f, 0.f, 0.f };
 
 	/* Player */
-	int m_iPlayerHp = 0;
-	int m_iPlayerMaxHp = 0;
+	int m_iPlayerHp = 6;
+	int m_iPlayerMaxHp = 12;
 
 	/* Weapon */
 	float m_fUltGauge = 0.f;

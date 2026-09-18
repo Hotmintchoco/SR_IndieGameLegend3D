@@ -75,8 +75,7 @@ void CGameStatusMgr::RenderImGui()
         ImGui::Text("Pos : %.2f, %.2f, %.2f", m_vPlayerPos.x, m_vPlayerPos.y, m_vPlayerPos.z);
 
         // HP
-        char szHp[32];
-        sprintf_s(szHp, "Hp : %d / %d", m_iPlayerHp, m_iPlayerMaxHp);
+        ImGui::Text("Hp : %d / %d", m_iPlayerHp, m_iPlayerMaxHp);
 
         ImGui::Text("Yaw : %.1f deg", XMConvertToDegrees(m_fYaw)); 
     }
