@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -151,6 +151,7 @@
     <ClInclude Include="..\Header\CBullet.h" />
     <ClInclude Include="..\Header\CClearCondition.h" />
     <ClInclude Include="..\Header\CCrosshair.h" />
+    <ClInclude Include="..\Header\CDirectionUI.h" />
     <ClInclude Include="..\Header\CDoor.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEffect.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="..\Header\CFog.h" />
     <ClInclude Include="..\Header\CFrustum.h" />
     <ClInclude Include="..\Header\CGameStatusMgr.h" />
+    <ClInclude Include="..\Header\CMagmamouth.h" />
     <ClInclude Include="..\Header\CGem.h" />
     <ClInclude Include="..\Header\CHeart.h" />
     <ClInclude Include="..\Header\CItem.h" />
@@ -217,6 +219,7 @@
     <ClCompile Include="..\Code\CBullet.cpp" />
     <ClCompile Include="..\Code\CClearCondition.cpp" />
     <ClCompile Include="..\Code\CCrosshair.cpp" />
+    <ClCompile Include="..\Code\CDirectionUI.cpp" />
     <ClCompile Include="..\Code\CDoor.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEffect.cpp" />
@@ -226,6 +229,7 @@
     <ClCompile Include="..\Code\CFog.cpp" />
     <ClCompile Include="..\Code\CFrustum.cpp" />
     <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
+    <ClCompile Include="..\Code\CMagmamouth.cpp" />
     <ClCompile Include="..\Code\CGem.cpp" />
     <ClCompile Include="..\Code\CHeart.cpp" />
     <ClCompile Include="..\Code\CItem.cpp" />

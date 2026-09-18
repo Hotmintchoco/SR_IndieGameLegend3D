@@ -23,6 +23,7 @@ public:
 public:
 	void			Set_Pos(const _vec2& vPos);
 	void			Set_Size(const _vec2& vSize);
+	void            Set_Texture(const _uint& iIndex);
 
 protected:
 	HRESULT			Add_Component();

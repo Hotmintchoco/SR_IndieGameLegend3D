@@ -10,11 +10,11 @@ namespace Engine
 	class CCalculator;
 }
 
-class CSpeyeder : public CMonster
+class CMagmamouth : public CMonster
 {
 protected:
-	explicit CSpeyeder(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CSpeyeder();
+	explicit CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CMagmamouth();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -28,14 +28,21 @@ private:
 	HRESULT			Add_Component();
 
 public:
-	static CSpeyeder* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CMagmamouth* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
-public:
-	void Set_LandingLocation(const _vec3& vLocation) { m_vLandingLocation = vLocation; }
-	void Land(const _float& fTimeDelta);
 private:
-	_bool m_bLandingState;
-	_vec3 m_vLandingLocation;
+	void Spawn_Speyeder();
+	void Shuffle_SpawnArray();
+private:
+	enum MAGMAMOUTHSTATE { IDLE, SPAWN, ATTACK, MOVE };
+	MAGMAMOUTHSTATE m_eMagmaMouthState;
+
+	_float m_fSpawn_CoolDown;
+	_float m_fSpawnTime;
+	_bool m_bSpawnFinish[4];
+	_uint m_iSpawnOrderArr[4];
+
+	_float m_fStateUpdateTime;
 
 protected:
 	virtual void		Free();

@@ -34,7 +34,7 @@ HRESULT CWorm::Ready_GameObject()
 
     m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
     m_pTransformCom->Set_Pos(63.f, 0.f, 58.f);
-    m_pColliderCom->Set_Radius(D3DXVec3Length(&m_pTransformCom->m_vScale));
+    m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
 
     m_iHp = 10;
     if (m_iWormIndex < 9)
@@ -71,6 +71,11 @@ _int CWorm::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
     Set_OnTerrain();
+
+    m_fFrame += fTimeDelta * 4.f;
+    if (m_fFrame > 4.f)
+        m_fFrame = 0.f;
+
    // m_pTransformCom->Rotation(ROT_Y, 3.f * m_iWormIndex * fTimeDelta);
     if (m_iWormIndex == 0)
     {
@@ -120,7 +125,6 @@ void CWorm::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CWorm::Render_GameObject()
 {
-    if (m_iMotion == 40) m_iMotion = 0;
     WORMDIR eDir = FRONT;
     //eDir = SIDE;
     //eDir = TOP;
@@ -213,7 +217,7 @@ void CWorm::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
     if (m_iWormIndex == 0)
     {
-        m_pTextureCom->Set_Texture(eDir * 4 + m_iMotion / 10);
+        m_pTextureCom->Set_Texture(eDir * 4 + (_uint)m_fFrame / 10);
     }
     else if (m_iWormIndex == 9)
     {
@@ -227,7 +231,6 @@ void CWorm::Render_GameObject()
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
-    ++m_iMotion;
 }
 
 _float CWorm::Angle_To_Worm()
@@ -271,21 +274,7 @@ HRESULT CWorm::Add_Component()
     else
     {
         pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_worm_bobyTexture"));
-        //pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_worm_drillTexture"));
     }
-    // Texture
-    
-    //pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_body_45Texture"));
-    //pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_body_frontTexture"));
-    //pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_body_sideTexture"));
-    //pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_body_topTexture"));
-    //pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_connectorTexture"));
-    //pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_tail_backTexture"));
-    //pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_tail_sideTexture"));
-    //pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_tail_topTexture"));
-    //pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_worm_drill_sideTexture"));
-    //pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_worm_drill_topTexture"));
-    //pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_worm_faceTexture"));
 
     if (nullptr == pComponent)
         return E_FAIL;

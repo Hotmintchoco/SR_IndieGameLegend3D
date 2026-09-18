@@ -10,16 +10,21 @@
 #include "CImGuiTool.h"
 #include "CGraphicDev.h"
 #include "CRoomLoadingMgr.h"
+#include "CGameStatusMgr.h"
 
 CGun::CGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev),
     m_fLastShotTime(0.f),
     m_fShootRate(0.4f),
     m_fRunningTime(0.f),
-    m_fLastSkillTime(0.f),
-    m_fSkillDuration(5.f),
-    m_fSkillCoolTime(20.f),
-    m_bSkillActivated(false),
+    m_fUltimateGauge(0.f),
+    m_fSpecialGauge(0.f),
+    m_fUltimateTimer(0.f),
+    m_fUltimateDuration(10.f),
+    m_fSpecialTimer(0.f),
+    m_fSpecialDuration(10.f),
+    m_bUltimateActivated(false),
+    m_bSpecialActivated(false),
     m_iCurBullet(BULLET_DEFAULT),
     m_iDmg(10)
 {
@@ -103,20 +108,41 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
 
 #pragma region 스킬 사용 및 총알 스위칭
 
-    m_fLastSkillTime += fTimeDelta;
-
-    if ((m_bSkillActivated == true) && (m_fLastSkillTime >= m_fSkillDuration))
+    if (m_bUltimateActivated == true)
     {
-        m_fLastSkillTime = 0.f;
-        m_bSkillActivated = false;
+        m_fUltimateTimer += fTimeDelta;
+        if (m_fUltimateTimer > m_fUltimateDuration)
+        {
+            m_fUltimateTimer = 0.f;
+            m_bUltimateActivated = false;
+        }
     }
 
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
+    if (CDInputMgr::GetInstance()->Key_Down(DIK_C))
     {
-        if ((m_bSkillActivated == false) && (m_fLastSkillTime >= m_fSkillCoolTime))
+        if ((m_bUltimateActivated == false) && (m_fUltimateGauge >= 1.f))
         {
-            m_bSkillActivated = true;
-            m_fLastSkillTime = 0.f;
+            m_bUltimateActivated = true;
+            m_fUltimateGauge = 0.f;
+        }
+    }
+
+    if (m_bSpecialActivated == true)
+    {
+        m_fSpecialTimer += fTimeDelta;
+        if (m_fSpecialTimer > m_fSpecialDuration)
+        {
+            m_fSpecialTimer = 0.f;
+            m_bSpecialActivated = false;
+        }
+    }
+
+    if (CDInputMgr::GetInstance()->Key_Down(DIK_F))
+    {
+        if ((m_bSpecialActivated == false) && (m_fSpecialGauge >= 1.f))
+        {
+            m_bSpecialActivated = true;
+            m_fSpecialGauge = 0.f;
         }
     }
 
@@ -146,7 +172,10 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
     }
 
     _int iDmgMultiplier = 2;
-    if (m_bSkillActivated == true) m_iDmg *= iDmgMultiplier;
+    _float fAtkSpeedMultiplier = 2.f;
+    if (m_bUltimateActivated == true) m_iDmg *= iDmgMultiplier;
+    if (m_bSpecialActivated == true) m_fShootRate /= fAtkSpeedMultiplier;
+
 
 #pragma endregion
 
@@ -159,13 +188,13 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
         m_fLastShotTime = 0.f;
 
         _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.8f) + (vUp * 0.4f); // 총구 위치
-        _vec3	vBullet_To = vPos_Player + (vForword * 10.f); // 크로스헤어 도달점
+        _vec3	vBullet_To; // 크로스헤어 도달점
 
 #pragma region RayCast를 이용한 조준좌표 계산
-
+        
         pair<_vec3, _vec3> pairMouseRay = Get_MouseRay();
-
         vector<wstring> vMapKey;
+        _float fToDistance = 0.f;
 
         vMapKey.push_back(L"Environment_Layer");
         vMapKey.push_back(L"GameLogic_Layer");
@@ -197,26 +226,88 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
                             CTransform* pTransCom = dynamic_cast<CTransform*>(pair.second->Get_Component(ID_DYNAMIC, L"Com_Transform"));
                             if (pTransCom != nullptr)
                             {
-                                //pTextureCom->
-
+                                LPDIRECT3DVERTEXBUFFER9 pVB;
+                                LPDIRECT3DINDEXBUFFER9  pIB;
+                                D3DFORMAT               idxFmt;
+                                VTXSTRUCTTYPE			vtxStructType;
+                                _ulong                  dwVtxCnt;
+                                _ulong                  dwTriCnt;
+                                pTextureCom->Get_VIInfo(pVB, pIB, vtxStructType, idxFmt, dwVtxCnt, dwTriCnt);
                                 _matrix matWorld = *pTransCom->Get_World();
+                                _vec3 vCamPos = vPos_Player - (vForword * 0.5f);
 
-
-
-
-                                //pTextureCom->
+                                switch (vtxStructType)
+                                {
+                                case VTXSTRUCT_COL:
+                                {
+                                    /// &pVertex : 버텍스 버퍼에 저장된 버텍스 중 첫 번째 버텍스
+                                    VTXCOL* pVertex = NULL;
+                                    switch (idxFmt)
+                                    {
+                                    case D3DFMT_INDEX16:
+                                    {
+                                        INDEX16* pIndex = NULL;
+                                        CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
+                                        break;
+                                    }
+                                    case D3DFMT_INDEX32:
+                                    {
+                                        INDEX32* pIndex = NULL;
+                                        CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
+                                        break;
+                                    }
+                                    }
+                                    break;
+                                }
+                                case VTXSTRUCT_TEX:
+                                {
+                                    VTXTEX* pVertex = NULL;
+                                    switch (idxFmt)
+                                    {
+                                    case D3DFMT_INDEX16:
+                                    {
+                                        INDEX16* pIndex = NULL;
+                                        CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
+                                        break;
+                                    }
+                                    case D3DFMT_INDEX32:
+                                    {
+                                        INDEX32* pIndex = NULL;
+                                        CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
+                                        break;
+                                    }
+                                    }
+                                    break;
+                                }
+                                case VTXSTRUCT_CUBE:
+                                {
+                                    VTXCUBE* pVertex = NULL;
+                                    switch (idxFmt)
+                                    {
+                                    case D3DFMT_INDEX16:
+                                    {
+                                        INDEX16* pIndex = NULL;
+                                        CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
+                                        break;
+                                    }
+                                    case D3DFMT_INDEX32:
+                                    {
+                                        INDEX32* pIndex = NULL;
+                                        CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
+                                        break;
+                                    }
+                                    }
+                                    break;
+                                }
+                                }
+                                
                             }
                         }
                     }
                 }
             }
         }
-
         
-
-
-
-
 #pragma endregion
 
         _vec3	vBullet_Look = vBullet_To - vBullet_From;
@@ -391,6 +482,60 @@ CGun* CGun::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pGun;
 }
 
+void CGun::UpdateUltimateGauge(_float fAmount)
+{
+    if (fAmount > 0)
+    {
+        if (m_fUltimateGauge + fAmount > 1.f)
+        {
+            m_fUltimateGauge = 1.f;
+        }
+        else
+        {
+            m_fUltimateGauge += fAmount;
+        }
+    }
+    else if (fAmount < 0)
+    {
+        if (m_fUltimateGauge + fAmount <= 0)
+        {
+            m_fUltimateGauge = 0.f;
+        }
+        else
+        {
+            m_fUltimateGauge += fAmount;
+        }
+    }
+    //CGameStatusMgr::GetInstance()->SetUltimateGauge(m_fUltimateGauge);
+}
+
+void CGun::UpdateSpecialGauge(_float fAmount)
+{
+    if (fAmount > 0)
+    {
+        if (m_fSpecialGauge + fAmount > 1.f)
+        {
+            m_fSpecialGauge = 1.f;
+        }
+        else
+        {
+            m_fSpecialGauge += fAmount;
+        }
+    }
+    else if (fAmount < 0)
+    {
+        if (m_fSpecialGauge + fAmount <= 0)
+        {
+            m_fSpecialGauge = 0.f;
+        }
+        else
+        {
+            m_fSpecialGauge += fAmount;
+        }
+    }
+    //CGameStatusMgr::GetInstance()->SetSpecialAttackGauge(m_fSpecialGauge);
+}
+
 void CGun::Free()
 {
     CGameObject::Free();
@@ -416,58 +561,6 @@ void CGun::RenderImGui()
     ImGui::Text("CURRENT BULLET DMG : %i", m_iDmg);
     ImGui::Text("CURRENT BULLET RATE : %.2f SEC / FIRE", m_fShootRate);
     ImGui::Text("RUNNING TIME : %.2f SEC", m_fRunningTime);
-    char cProgress[16];
-    cProgress[0] = '[';
-    if (m_bSkillActivated)
-    {
-        ImGui::Text("STATUS : SKILL ACTIVATED");
-        _int iProgress = 10 - ((_int)(m_fLastSkillTime * 10.f) / m_fSkillDuration);
-        if (iProgress < 0) iProgress = 0;
-        for (int i = 0; (i < iProgress) && (i < 10); i++)
-        {
-            cProgress[i + 1] = '=';
-        }
-        for (int j = iProgress; j < 10; j++)
-        {
-            cProgress[j + 1] = ' ';
-        }
-        cProgress[11] = ']';
-        cProgress[12] = '\0';
-        const char* cProgressTxt = cProgress;
-        ImGui::Text("SKILL GUAGE : %s", cProgressTxt);
-    }
-    else
-    {
-        if (m_fLastSkillTime >= m_fSkillCoolTime)
-        {
-            if((int)((m_fLastSkillTime - m_fSkillCoolTime) * 5.f) % 2 == 1)
-            {
-                ImGui::Text("SKILL READY. PRESS E TO ACTIVATE");
-            }
-            else
-            {
-                ImGui::Text(" ");
-            }
-        }
-        else
-        {
-            ImGui::Text("STATUS : SKILL DEACTIVATED");
-        }
-        _int iProgress = (_int)(m_fLastSkillTime * 10.f) / m_fSkillCoolTime;
-        if (iProgress < 0) iProgress = 0;
-        for (int i = 0; (i < iProgress) && (i < 10); i++)
-        {
-            cProgress[i + 1] = '=';
-        }
-        for (int j = iProgress; j < 10; j++)
-        {
-            cProgress[j + 1] = ' ';
-        }
-        cProgress[11] = ']';
-        cProgress[12] = '\0';
-        const char* cProgressTxt = cProgress;
-        ImGui::Text("SKILL GUAGE : %s", cProgressTxt);
-    }
     ImGui::End();
 }
 
@@ -519,85 +612,3 @@ pair<_vec3, _vec3> CGun::Get_MouseRay() // 마우스 월드변환
 
     return pairMouseRay;
 }
-
-
-/*
-_vec3 CGun::Picking(_vec3 RayPos, _vec3 RayDir, CGameObject* pGameObject)
-{
-    pGameObject->
-
-
-    _vec3 vRayPos = RayPos;
-    _vec3 vRayDir = RayDir;
-
-    // 월드 영역 -> 로컬 영역
-    _matrix	matWorld = *pTerrainTransform->Get_World();
-    D3DXMatrixInverse(&matWorld, 0, &matWorld);
-
-    D3DXVec3TransformCoord(&vRayPos, &vRayPos, &matWorld);
-    D3DXVec3TransformNormal(&vRayDir, &vRayDir, &matWorld);
-
-    const _vec3* pTerrainVtxPos = pTerrainBufferCom->Get_VtxPos();
-
-    _ulong dwVtxNumber[3]{};
-    _float	fU(0.f), fV(0.f), fDist(0.f);
-
-    for (_ulong i = 0; i < VTXCNTZ - 1; ++i)
-    {
-        for (_ulong j = 0; j < VTXCNTX - 1; ++j)
-        {
-            _ulong		dwIndex = i * VTXCNTX + j;
-
-            // 오른쪽 위
-            dwVtxNumber[0] = dwIndex + VTXCNTX;
-            dwVtxNumber[1] = dwIndex + VTXCNTX + 1;
-            dwVtxNumber[2] = dwIndex + 1;
-
-            if (D3DXIntersectTri(&pTerrainVtxPos[dwVtxNumber[1]],
-                &pTerrainVtxPos[dwVtxNumber[0]],
-                &pTerrainVtxPos[dwVtxNumber[2]],
-                &vRayPos, &vRayDir,
-                &fU, &fV, &fDist))
-            {
-                // V1 + U(V2 - V1) + V(V3 - V1)
-
-                return  _vec3(pTerrainVtxPos[dwVtxNumber[1]].x + fU * (pTerrainVtxPos[dwVtxNumber[0]].x - pTerrainVtxPos[dwVtxNumber[1]].x),
-                    0.f,
-                    pTerrainVtxPos[dwVtxNumber[1]].z + fV * (pTerrainVtxPos[dwVtxNumber[2]].z - pTerrainVtxPos[dwVtxNumber[1]].z));
-            }
-
-
-            // 왼쪽 아래
-            dwVtxNumber[0] = dwIndex + VTXCNTX;
-            dwVtxNumber[1] = dwIndex + 1;
-            dwVtxNumber[2] = dwIndex;
-
-            if (D3DXIntersectTri(&pTerrainVtxPos[dwVtxNumber[2]],
-                &pTerrainVtxPos[dwVtxNumber[1]],
-                &pTerrainVtxPos[dwVtxNumber[0]],
-                &vRayPos, &vRayDir, &fU, &fV, &fDist))
-            {
-                return  _vec3(pTerrainVtxPos[dwVtxNumber[2]].x + fU * (pTerrainVtxPos[dwVtxNumber[1]].x - pTerrainVtxPos[dwVtxNumber[2]].x),
-                    0.f,
-                    pTerrainVtxPos[dwVtxNumber[2]].z + fV * (pTerrainVtxPos[dwVtxNumber[0]].z - pTerrainVtxPos[dwVtxNumber[2]].z));
-            }
-        }
-    }
-    return _vec3(0.f, 0.f, 0.f);
-
-
-
-
-
-
-
-    int iRoomCnt = CRoomLoadingMgr::GetInstance()->GetRoomTotalCount();
-    for (int i = 0; i < iRoomCnt; ++i)
-    {
-        wstring wstrLayerTag = L"Room_" + to_wstring(i) + L"_Layer";
-        if (FAILED(Ready_Room_Layer(wstrLayerTag, i)))
-            return E_FAIL;
-    }
-}
-*/
-

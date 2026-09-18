@@ -118,6 +118,11 @@ void CUI::Set_Size(const _vec2& vSize)
         m_pTransformCom->Set_Scale(m_vSize.x, m_vSize.y, 1.f);
 }
 
+void CUI::Set_Texture(const _uint& iIndex)
+{
+    m_fFrame = (_float)iIndex;
+}
+
 HRESULT CUI::Add_Component()
 {
     CComponent* pComponent = nullptr;

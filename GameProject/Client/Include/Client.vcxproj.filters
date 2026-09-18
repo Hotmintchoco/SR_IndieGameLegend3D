@@ -151,15 +151,15 @@
     <Filter Include="02. GameObject\02. Monster\Boss1">
       <UniqueIdentifier>{b51a1b05-dd5f-4c97-8716-dc4e1a0c0ec8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Monster\M1">
-      <UniqueIdentifier>{149954a3-d86b-4975-bad9-6e696a5ecb47}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Monster\Speyeder">
       <UniqueIdentifier>{77d9f8f3-79ea-4b54-9520-e416973572a7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\06. Effect\SmallExplode">
       <UniqueIdentifier>{c4da1f1d-8911-4624-9f4b-8a1a699876e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Magmamouth">
+      <UniqueIdentifier>{149954a3-d86b-4975-bad9-6e696a5ecb47}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02. GameObject\11. Item">
       <UniqueIdentifier>{96a898cd-56e9-4421-810a-23a78c4952ed}</UniqueIdentifier>
     </Filter>
@@ -186,6 +186,9 @@
     </Filter>
     <Filter Include="01. Scene\Stage\Layer\ClearCondition\KillAllEntity">
       <UniqueIdentifier>{fea9a953-04e9-443e-8954-af81d3b19410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. UI\Direction">
+      <UniqueIdentifier>{caf2411c-6216-4837-a54c-f2cf88be18f5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -354,6 +357,9 @@
     <ClInclude Include="..\Header\CSmallExplode.h">
       <Filter>02. GameObject\06. Effect\SmallExplode</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMagmamouth.h">
+      <Filter>02. GameObject\02. Monster\Magmamouth</Filter>
+	</ClInclude>
     <ClInclude Include="..\Header\CItem.h">
       <Filter>02. GameObject\11. Item</Filter>
     </ClInclude>
@@ -380,6 +386,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CPushAllButtonCondition.h">
       <Filter>01. Scene\Stage\Layer\ClearCondition\PushAllButton</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CDirectionUI.h">
+      <Filter>02. GameObject\10. UI\Direction</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -524,6 +533,9 @@
     <ClCompile Include="..\Code\CSmallExplode.cpp">
       <Filter>02. GameObject\06. Effect\SmallExplode</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CMagmamouth.cpp">
+      <Filter>02. GameObject\02. Monster\Magmamouth</Filter>
+	</ClCompile>
     <ClCompile Include="..\Code\CItem.cpp">
       <Filter>02. GameObject\11. Item</Filter>
     </ClCompile>
@@ -550,6 +562,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPushAllButtonCondition.cpp">
       <Filter>01. Scene\Stage\Layer\ClearCondition\PushAllButton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDirectionUI.cpp">
+      <Filter>02. GameObject\10. UI\Direction</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

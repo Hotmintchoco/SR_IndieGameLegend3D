@@ -3,7 +3,9 @@
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CGameStatusMgr.h"
+#include "CManagement.h"
 #include "CTransform.h"
+#include "CUI.h"
 
 CGem::CGem(LPDIRECT3DDEVICE9 pGraphicDev)
     : CItem(pGraphicDev)
@@ -29,8 +31,8 @@ HRESULT CGem::Ready_GameObject()
     if (FAILED(CItem::Ready_GameObject()))
         return E_FAIL;
 
-    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{0.0f, 0.1f, 0.f});
-    m_pTransformCom->Set_Scale(0.08f, 0.08f, 1.f);
+    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{0.f, 0.f, 0.f});
+    m_pTransformCom->Set_Scale(0.12f, 0.12f, 1.f);
 
     return S_OK;
 }
@@ -38,6 +40,10 @@ HRESULT CGem::Ready_GameObject()
 _int CGem::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CItem::Update_GameObject(fTimeDelta);
+
+    m_fFrame += fTimeDelta * 6.f;
+    if (m_fFrame > 6.f)
+        m_fFrame = 0.f;
 
     return iExit;
 }
@@ -49,9 +55,10 @@ void CGem::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CGem::Render_GameObject()
 {
+    if (m_bBlinkStart == true && m_bVisible == false) return;
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-    m_pTextureCom->Set_Texture(0);
+    m_pTextureCom->Set_Texture((_uint)m_fFrame);
     m_pBufferCom->Render_Buffer();
 }
 
@@ -72,7 +79,28 @@ void CGem::Consume()
 {
     CGameStatusMgr::GetInstance()->UpdateGem(1);
 
+    // Update Gem Count UI
+    Update_GemCountUI();
+
     Set_Dead(true);
+}
+
+void CGem::Update_GemCountUI()
+{
+    int iCnt = CGameStatusMgr::GetInstance()->GetGemCount();
+    int iDiv = 100;
+    // 100으로 나누고..
+
+    for (int i = 0; i < 3; ++i)
+    {
+        int iNum = iCnt / iDiv;
+        wstring wstrTag = L"GemNum_" + to_wstring(i);
+
+        CUI* pUI = static_cast<CUI*>(CManagement::GetInstance()->Get_GameObject(L"UI_Layer", wstrTag.c_str()));
+        pUI->Set_Texture(iNum);
+        iCnt = iCnt % iDiv;
+        iDiv /= 10;
+    }
 }
 
 CGem* CGem::Create(LPDIRECT3DDEVICE9 pGraphicDev, Engine::CGameObject* pSpawner)
