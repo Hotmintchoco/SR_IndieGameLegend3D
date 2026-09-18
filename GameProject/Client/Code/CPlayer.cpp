@@ -9,9 +9,10 @@
 #include "CImGuiTool.h"
 #include "CCameraMgr.h"
 #include "CGameStatusMgr.h"
+#include "CGun.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CGameObject(pGraphicDev), m_bFix(true), m_bCheck(true)
+    : CGameObject(pGraphicDev), m_bFix(true), m_bCheck(true), m_iHP(12), m_iMaxHP(12)
 {
 }
 
@@ -79,7 +80,7 @@ void CPlayer::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 #ifdef _DEBUG
-    // RenderImGui();
+    RenderImGui();
 #endif
 }
 
@@ -97,22 +98,27 @@ void CPlayer::RenderImGui()
 
     char cKeyStateQ = ' ';
     char cKeyStateW = ' ';
-    char cKeyStateE = ' ';
     char cKeyStateA = ' ';
     char cKeyStateS = ' ';
     char cKeyStateD = ' ';
+    char cKeyStateF = ' ';
+    char cKeyStateC = ' ';
     const char* cKeyStateShift = "     ";
     if (CDInputMgr::GetInstance()->Key_Press(DIK_Q)) cKeyStateQ = 'Q';
     if (CDInputMgr::GetInstance()->Key_Press(DIK_W)) cKeyStateW = 'W';
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_E)) cKeyStateE = 'E';
     if (CDInputMgr::GetInstance()->Key_Press(DIK_A)) cKeyStateA = 'A';
     if (CDInputMgr::GetInstance()->Key_Press(DIK_S)) cKeyStateS = 'S';
     if (CDInputMgr::GetInstance()->Key_Press(DIK_D)) cKeyStateD = 'D';
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_F)) cKeyStateF = 'F';
     if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT)) cKeyStateShift = "SHIFT";
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_C)) cKeyStateC = 'C';
+
 
     ImGui::Text("KEY INPUT STATE");
-    ImGui::Text("       [%c][%c][%c]", cKeyStateQ, cKeyStateW, cKeyStateE);
-    ImGui::Text("[%s][%c][%c][%c]", cKeyStateShift, cKeyStateA, cKeyStateS, cKeyStateD);
+    ImGui::Text("       [%c][%c]", cKeyStateQ, cKeyStateW);
+    ImGui::Text("       [%c][%c][%c][%c]", cKeyStateA, cKeyStateS, cKeyStateD, cKeyStateF);
+    ImGui::Text("[%s]            [%c]", cKeyStateShift, cKeyStateC);
+
 
     /* 카메라 */
     _float fAngle;
@@ -194,37 +200,31 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
         fSpeed *= 2;
     }
 
+    _bool bIsMove = false;
+    _vec3 vFinalVec = { 0.f, 0.f, 0.f };
+
     if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
     {
-        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vLook, &vLook), fSpeed, fTimeDelta);
+        vFinalVec = vFinalVec + vLook;
     }
 
     if (CDInputMgr::GetInstance()->Key_Press(DIK_S))
     {
-        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vLook, &vLook), -fSpeed, fTimeDelta);
+        vFinalVec = vFinalVec - vLook;
     }
 
     if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
     {
-        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vRight, &vRight), -fSpeed, fTimeDelta);
+        vFinalVec = vFinalVec - vRight;
     }
 
     if (CDInputMgr::GetInstance()->Key_Press(DIK_D))
     {
-        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vRight, &vRight), fSpeed, fTimeDelta);
+        vFinalVec = vFinalVec + vRight;
     }
 
+    if (vFinalVec.x > FLT_EPSILON || vFinalVec.y || FLT_EPSILON && vFinalVec.z || FLT_EPSILON)  m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vFinalVec, &vFinalVec), fSpeed, fTimeDelta);
 
-    /*
-    if (CDInputMgr::GetInstance()->Get_DIMouseState(DIM_LB) & 0x80)
-    {
-        _vec3   vPickPos = Picking_OnTerrain();
-
-        _vec3   vDir = vPickPos - m_pTransformCom->m_vInfo[INFO_POS];
-
-        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vDir, &vDir), 10.f, fTimeDelta);
-    }
-   */
 
     if (CDInputMgr::GetInstance()->Key_Down(DIK_TAB))
     {
@@ -297,6 +297,56 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     }
 
     return pPlayer;
+}
+
+void CPlayer::GetItem(ITEMID iItemID)
+{
+    switch (iItemID)
+    {
+    case ITEM_HEAL : 
+        UpdateHP(1);
+        break;
+    case ITEM_SKILLGAUGE : 
+        CGun* pGun = dynamic_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"));
+        if (pGun != nullptr)
+        {
+            pGun->UpdateUltimateGauge(0.05f);
+            pGun->UpdateSpecialGauge(0.05f);
+        }
+        break;
+    }
+}
+
+void CPlayer::UpdateHP(_int iAmount)
+{
+    if (iAmount > 0)
+    {
+        if (m_iHP + iAmount > m_iMaxHP)
+        {
+            CGameStatusMgr::GetInstance()->UpdatePlayerHp(m_iMaxHP - m_iHP);
+            m_iHP = m_iMaxHP;
+
+        }
+        else
+        {
+            CGameStatusMgr::GetInstance()->UpdatePlayerHp(iAmount);
+            m_iHP += iAmount;
+        }
+    }
+    else if (iAmount < 0)
+    {
+        if (m_iHP + iAmount <= 0)
+        {
+            CGameStatusMgr::GetInstance()->UpdatePlayerHp(-m_iHP);
+            m_iHP = 0;
+            Set_Dead(true);
+        }
+        else
+        {
+            CGameStatusMgr::GetInstance()->UpdatePlayerHp(iAmount);
+            m_iHP += iAmount;
+        }
+    }
 }
 
 void CPlayer::Free()

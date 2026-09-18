@@ -151,6 +151,7 @@
     <ClInclude Include="..\Header\CBullet.h" />
     <ClInclude Include="..\Header\CClearCondition.h" />
     <ClInclude Include="..\Header\CCrosshair.h" />
+    <ClInclude Include="..\Header\CDirectionUI.h" />
     <ClInclude Include="..\Header\CDoor.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEffect.h" />
@@ -218,6 +219,7 @@
     <ClCompile Include="..\Code\CBullet.cpp" />
     <ClCompile Include="..\Code\CClearCondition.cpp" />
     <ClCompile Include="..\Code\CCrosshair.cpp" />
+    <ClCompile Include="..\Code\CDirectionUI.cpp" />
     <ClCompile Include="..\Code\CDoor.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEffect.cpp" />

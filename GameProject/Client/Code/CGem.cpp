@@ -3,7 +3,9 @@
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CGameStatusMgr.h"
+#include "CManagement.h"
 #include "CTransform.h"
+#include "CUI.h"
 
 CGem::CGem(LPDIRECT3DDEVICE9 pGraphicDev)
     : CItem(pGraphicDev)
@@ -77,7 +79,28 @@ void CGem::Consume()
 {
     CGameStatusMgr::GetInstance()->UpdateGem(1);
 
+    // Update Gem Count UI
+    Update_GemCountUI();
+
     Set_Dead(true);
+}
+
+void CGem::Update_GemCountUI()
+{
+    int iCnt = CGameStatusMgr::GetInstance()->GetGemCount();
+    int iDiv = 100;
+    // 100으로 나누고..
+
+    for (int i = 0; i < 3; ++i)
+    {
+        int iNum = iCnt / iDiv;
+        wstring wstrTag = L"GemNum_" + to_wstring(i);
+
+        CUI* pUI = static_cast<CUI*>(CManagement::GetInstance()->Get_GameObject(L"UI_Layer", wstrTag.c_str()));
+        pUI->Set_Texture(iNum);
+        iCnt = iCnt % iDiv;
+        iDiv /= 10;
+    }
 }
 
 CGem* CGem::Create(LPDIRECT3DDEVICE9 pGraphicDev, Engine::CGameObject* pSpawner)

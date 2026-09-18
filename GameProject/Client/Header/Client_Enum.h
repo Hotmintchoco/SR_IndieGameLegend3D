@@ -89,3 +89,5 @@ enum class ERoomEventType
 
 	MAX,
 };
+
+enum ITEMID { ITEM_HEAL, ITEM_SKILLGAUGE, ITEM_END };
