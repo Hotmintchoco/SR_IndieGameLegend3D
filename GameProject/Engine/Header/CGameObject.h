@@ -35,6 +35,9 @@ public:
 	void			Set_Dead(_bool bDead) { m_bDead = bDead; }
 	_bool			Is_Dead() const { return m_bDead; }
 
+	void			Set_IsActive(_bool bIsActive) { m_bIsActive = bIsActive; }
+	_bool			Get_IsActive() const { return m_bIsActive; }
+
 	void			Compute_ViewZ(const _vec3* pPos);
 
 protected:
@@ -46,6 +49,7 @@ protected:
 	_float									m_fViewZ;
 	_float 									m_fFrictionForce; // 마찰력 추가 (Speed에 곱해줌)
 	_bool									m_bDead;
+	_bool									m_bIsActive;	// 활성화 여부를 나타내는 변수	
 	
 	/* Ready 단계에서 Layer 접근이 불가한 문제를 해결하기 위한 변수로, Ready 단계 이후에는 보장되지 않음 */
 	CLayer* m_pOwner = nullptr;
