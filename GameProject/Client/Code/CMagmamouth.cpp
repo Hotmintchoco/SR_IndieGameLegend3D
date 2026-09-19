@@ -31,6 +31,8 @@ HRESULT CMagmamouth::Ready_GameObject()
 
     m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
+    m_pColliderCom->Set_IsActive(false);
+
     //m_pColliderCom->Set_Radius(0.2f);
     m_iHp = 6;
     return S_OK;
@@ -39,6 +41,9 @@ HRESULT CMagmamouth::Ready_GameObject()
 _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
+
+    if (!m_pColliderCom->Get_IsActive())
+        m_pColliderCom->Set_IsActive(true);
 
     CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
         ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));

@@ -93,6 +93,8 @@ _bool CFrustum::DestroyFrustum(CCollider* pOtherCollider)
         Set_Dead(true);
         return true;
     }
+
+    return false;
 }
 
 void CFrustum::Free()
