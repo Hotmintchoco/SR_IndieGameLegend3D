@@ -1,4 +1,4 @@
-ï»¿#include "pch.h"
+#include "pch.h"
 #include "CFrustum.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -20,7 +20,7 @@ HRESULT CFrustum::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    /* Note : ìˆœì„œì— ì£¼ì˜ (PostInitalizeë¡œ ë¹¼ëŠ” ê²ƒë„ ê³ ë ¤) */
+    /* Note : ¼ø¼­¿¡ ÁÖÀÇ (PostInitalize·Î »©´Â °Íµµ °í·Á) */
     if (FAILED(CGameObject::Ready_GameObject()))
         return E_FAIL;
 
@@ -93,6 +93,8 @@ _bool CFrustum::DestroyFrustum(CCollider* pOtherCollider)
         Set_Dead(true);
         return true;
     }
+
+    return false;
 }
 
 void CFrustum::Free()
