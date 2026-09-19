@@ -25,6 +25,8 @@
 #include "CSpeyeder.h"
 #include "CDirectionUI.h"
 #include "CMagmamouth.h"
+#include "CPseudoDark.h"
+#include "CGameStatusMgr.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -184,7 +186,31 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Gun", pGameObject)))
 		return E_FAIL;
 
-	
+	// PseudoDark
+	for (int i = 0; i < 4; ++i)
+	{
+		pGameObject = CPseudoDark::Create(m_pGraphicDev);
+		if (nullptr == pGameObject)
+			return E_FAIL;
+
+		if (FAILED(pLayer->Add_GameObject(L"PseudoDark_" + to_wstring(i), pGameObject)))
+			return E_FAIL;
+
+		CGameStatusMgr::GetInstance()->RegisterPseudoDark(pGameObject);
+		
+		static_cast<CPseudoDark*>(pGameObject)->SetScale(2.5f + (float)i * 0.75f);
+		if (i == 3)
+		{
+			static_cast<CPseudoDark*>(pGameObject)->SetOpacity(100);
+		}
+		else
+		{
+			static_cast<CPseudoDark*>(pGameObject)->SetOpacity(60);
+		}
+
+		pGameObject->Set_IsActive(false);
+	}
+
 	// Monster
 	//pGameObject = CSkull::Create(m_pGraphicDev);
 	//static_cast<CMonster*>(pGameObject)->Set_Pos(55, 0, 55);

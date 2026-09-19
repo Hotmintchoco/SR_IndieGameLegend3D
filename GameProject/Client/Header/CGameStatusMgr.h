@@ -4,6 +4,11 @@
 
 class CRoomLayer;
 
+namespace Engine
+{
+	class CGameObject;
+}
+
 class CGameStatusMgr
 {
 	DECLARE_SINGLETON(CGameStatusMgr);
@@ -41,6 +46,8 @@ public:
 	inline float GetYaw() const { return m_fYaw; }
 	inline int GetGemCount() const { return m_iGem; }
 
+	inline void RegisterPseudoDark(CGameObject* pObject) { m_vecPseudoDark.push_back(pObject); }
+
 private:
 	/* Minimap */
 	int m_iCurrentRoomIndex = 12;
@@ -66,7 +73,8 @@ private:
 	float m_fDT = 0;
 
 	/* Render Debug */
-
+	bool m_bShowDark = false;
+	vector<CGameObject*> m_vecPseudoDark;
 
 private:
 	virtual void Free();
