@@ -34,11 +34,11 @@ public:
 
 private:
 	HRESULT			Add_Component();
+	void UpdateAnimationTile(const Engine::_float& fTimeDelta);
 
-private:
-	Engine::CPlaneTex* m_pBufferCom;
-	Engine::CTransform* m_pTransformCom;
-	Engine::CTexture* m_pTextureCom;
+	Engine::CPlaneTex* m_pBufferCom = nullptr;
+	Engine::CTransform* m_pTransformCom = nullptr;
+	Engine::CTexture* m_pTextureCom = nullptr;
 
 	int m_iPositionIdx = -1;
 	int m_iTextureIdx = -1;

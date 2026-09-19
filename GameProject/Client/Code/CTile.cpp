@@ -48,26 +48,30 @@ _int CTile::Update_GameObject(const _float& fTimeDelta)
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
-    if (m_bContaminated)
-    {
-        m_fAnimSingleFrameAccTime += fTimeDelta;
-        
-        if (m_fAnimSingleFrameAccTime > m_fAnimFrameInterval)
-        {
-            m_fAnimSingleFrameAccTime -= m_fAnimFrameInterval;
-            m_iAnimTextureIndex = (m_iAnimTextureIndex + 1) % m_pAnimTextureCom->GetCount();
-        }
-
-        m_fContaminationLeftTime -= fTimeDelta;
-        if (m_fContaminationLeftTime <= 0.f)
-        {
-            m_bContaminated = false;
-            m_iAnimTextureIndex = 0;
-            m_fAnimSingleFrameAccTime = 0.f;
-        }
-    }
+    UpdateAnimationTile(fTimeDelta);
 
     return iExit;
+}
+
+void CTile::UpdateAnimationTile(const _float& fTimeDelta)
+{
+    if (!m_bContaminated) return;
+    
+    m_fAnimSingleFrameAccTime += fTimeDelta;
+
+    if (m_fAnimSingleFrameAccTime > m_fAnimFrameInterval)
+    {
+        m_fAnimSingleFrameAccTime -= m_fAnimFrameInterval;
+        m_iAnimTextureIndex = (m_iAnimTextureIndex + 1) % m_pAnimTextureCom->GetCount();
+    }
+
+    m_fContaminationLeftTime -= fTimeDelta;
+    if (m_fContaminationLeftTime <= 0.f)
+    {
+        m_bContaminated = false;
+        m_iAnimTextureIndex = 0;
+        m_fAnimSingleFrameAccTime = 0.f;
+    }
 }
 
 void CTile::LateUpdate_GameObject(const _float& fTimeDelta)
