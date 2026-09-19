@@ -29,8 +29,9 @@ void CRenderer::Render(LPDIRECT3DDEVICE9& pGraphicDev)
 {
 	Render_Priority(pGraphicDev);
 	Render_NonAlpha(pGraphicDev);
-	Render_Collider(pGraphicDev);
+	Render_AlphaTest(pGraphicDev);
 	Render_Alpha(pGraphicDev);
+	Render_Collider(pGraphicDev);
 
 	Render_UI(pGraphicDev);
 
@@ -172,15 +173,16 @@ void CRenderer::Render_AlphaTest(LPDIRECT3DDEVICE9& pGraphicDev)
 	}
 	else
 	{
-		pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+		pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
+		pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 		pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-		pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-		pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0xc0);
+		pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+		pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x80);
+
 	}
 
-	for (auto& pObj : m_RenderGroup[RENDER_ALPHA])
+	for (auto& pObj : m_RenderGroup[RENDER_ALPHATEST])
 		pObj->Render(pGraphicDev);
 
 	if (bWire)
@@ -189,8 +191,8 @@ void CRenderer::Render_AlphaTest(LPDIRECT3DDEVICE9& pGraphicDev)
 	}
 	else
 	{
-		pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 		pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+		pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x00);
 	}
 }
 

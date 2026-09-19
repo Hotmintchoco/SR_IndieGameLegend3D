@@ -40,7 +40,7 @@ _int CExplosiveFrustumLight::Update_GameObject(const _float& fTimeDelta)
         m_iTextureIndex = (m_iTextureIndex + 1) % 2;
     }
 
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
 
     return iExit;
 }

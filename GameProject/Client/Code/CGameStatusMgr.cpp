@@ -1,4 +1,4 @@
-ï»¿#include "pch.h"
+#include "pch.h"
 #include "CGameStatusMgr.h"
 #include "CManagement.h"
 #include "CRoomLayer.h"
@@ -25,8 +25,8 @@ void CGameStatusMgr::Update(const float fTimeDelta)
 
 void CGameStatusMgr::Render()
 {
-    // RenderImGui();
-    // DebugPanelForRendering();
+    RenderImGui();
+    DebugPanelForRendering();
 }
 
 void CGameStatusMgr::RenderImGui()
@@ -60,7 +60,7 @@ void CGameStatusMgr::RenderImGui()
                 if (m_bClearTable[idx]) { mark = "O"; col = ImVec4(0.3f, 1.0f, 0.3f, 1.0f); }
                 else if (m_bVisitTable[idx]) { mark = "A"; col = ImVec4(1.0f, 0.9f, 0.3f, 1.0f); }
 
-                // í˜„ìž¬ ë°© ê°•ì¡°
+                // ÇöÀç ¹æ °­Á¶
                 if (idx == m_iCurrentRoomIndex)
                     col = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
 
@@ -123,6 +123,16 @@ void CGameStatusMgr::DebugPanelForRendering()
     _bool bCollider = pDebug->GetShowCollider();
     if (ImGui::Checkbox("Collider", &bCollider))
         pDebug->SetShowCollider(bCollider);
+
+    ImGui::SeparatorText("Light");
+
+    if (ImGui::Checkbox("Dark", &m_bShowDark))
+    {
+        for (auto p: m_vecPseudoDark)
+        {
+            p->Set_IsActive(m_bShowDark);
+        }
+    }
 
     ImGui::End();
 }

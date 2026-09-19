@@ -57,7 +57,7 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
     {
         m_bHitState = false;
     }
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
 
     if (m_iHp <= 0)
     {

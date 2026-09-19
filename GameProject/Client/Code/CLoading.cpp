@@ -141,14 +141,16 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BrownFrustum_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/BrownFrustum.ply"))))
         return E_FAIL;
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ExplosiveFrustum_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/ExplosiveFrustum.ply"))))
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ExplosiveFrustum_Bottom_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/ExplosiveFrustum2_Bottom.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ExplosiveFrustum_Top_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/ExplosiveFrustum2_Top.ply"))))
         return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrayFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/GrayFrustum_Diffuse.png", 1))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BrownFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/BrownFrustum_Diffuse.png", 1))))
         return E_FAIL;
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ExplosiveFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/ExplosiveFrustum_Diffuse.png", 1))))
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ExplosiveFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/ExplosiveFrustum2_Diffuse.png", 1))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BombLight_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/bomblight2_%d.png", 2))))
         return E_FAIL;

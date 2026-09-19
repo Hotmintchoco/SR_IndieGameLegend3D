@@ -193,6 +193,9 @@
     <Filter Include="02. GameObject\02. Monster\Magmamouth\Fireball">
       <UniqueIdentifier>{80883398-3d6b-4d52-8f00-a866db1e4a6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\PseudoBlack">
+      <UniqueIdentifier>{985083af-b441-4e23-9d55-fe18ceb2ef3c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -396,6 +399,12 @@
     <ClInclude Include="..\Header\CFireball.h">
       <Filter>02. GameObject\02. Monster\Magmamouth\Fireball</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPseudoDark.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\PseudoBlack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CExplosiveFrustumGlass.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -574,6 +583,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CFireball.cpp">
       <Filter>02. GameObject\02. Monster\Magmamouth\Fireball</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPseudoDark.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\PseudoBlack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CExplosiveFrustumGlass.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
