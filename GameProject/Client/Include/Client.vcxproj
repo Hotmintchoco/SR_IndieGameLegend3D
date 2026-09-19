@@ -302,9 +302,11 @@
     <None Include="..\Bin\Resource\Map\DefaultRoom.json" />
     <None Include="..\Bin\Resource\Map\Room 작성 가이드.md" />
     <None Include="..\Bin\Resource\Map\Room_1_1.json" />
+    <None Include="..\Bin\Resource\Map\Room_2_0.json" />
     <None Include="..\Bin\Resource\Map\Room_2_1.json" />
     <None Include="..\Bin\Resource\Map\Room_2_2.json" />
     <None Include="..\Bin\Resource\Map\Room_1_0.json" />
+    <None Include="..\Bin\Resource\Map\Room_3_1.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
