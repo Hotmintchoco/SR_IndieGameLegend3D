@@ -1,4 +1,4 @@
-ï»¿#include "pch.h"
+#include "pch.h"
 #include "CMainApp.h"
 #include "CTimerMgr.h"
 #include "CFrameMgr.h"
@@ -86,25 +86,25 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 
 	(*ppGraphicDev) = m_pDeviceClass->Get_GraphicDev();
 
-	// í°íŠ¸ ì¶”ê°€
+	// ÆùÆ® Ãß°¡
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"ë°”íƒ•", 20, 20, FW_HEAVY)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"¹ÙÅÁ", 20, 20, FW_HEAVY)))
 		return E_FAIL;
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Jinji", L"ê¶ì„œ", 15, 15, FW_THIN)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Jinji", L"±Ã¼­", 15, 15, FW_THIN)))
 		return E_FAIL;
 
 	(*ppGraphicDev)->SetRenderState(D3DRS_LIGHTING, FALSE);
 
-	// ë§ˆìš°ìŠ¤ ì´ˆê¸°í™”
+	// ¸¶¿ì½º ÃÊ±âÈ­
 
 	if (FAILED(CDInputMgr::GetInstance()->Ready_InputDev(g_hInst, g_hWnd)))
 		return E_FAIL;
 
-	// í•„í„°ë§ ì ìš©
-	/* ë„íŠ¸ ê¸°ë°˜ í…ìŠ¤ì³ë¼ ë•ë‹ˆë‹¤ */
-	//(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-	//(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+	// ÇÊÅÍ¸µ Àû¿ë
+	m_pGraphicDev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+	m_pGraphicDev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+	m_pGraphicDev->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 
 	return S_OK;
 }
