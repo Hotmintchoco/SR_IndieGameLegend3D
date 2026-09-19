@@ -40,6 +40,9 @@ private:
 	void CheckClearCondition();
 	CTile* GetTileFromIndex2D(const TTileIdx& tIdx);
 
+	/* 오염 타일과 플레이어 */
+	void PlayerTileInteraction();
+
 	int m_iRoomIndex = -1;
 	_vec3 m_vRoomCenterPos = _vec3{ 0.f, 0.f, 0.f };
 

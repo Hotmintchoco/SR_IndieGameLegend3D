@@ -31,6 +31,7 @@ public:
 	inline TTileIdx GetPositionIndex2D() { return m_tPositionIdx2D; }
 	inline void SetResistContamination(bool bFlag) { m_bResistContamination = bFlag; }
 	inline bool GetResistContamination() { return m_bResistContamination; }
+	inline EContaminateType GetContaminationType() { return m_eContaminationType; }
 
 private:
 	HRESULT			Add_Component();
@@ -45,6 +46,7 @@ private:
 	TTileIdx m_tPositionIdx2D = TTileIdx{ -1, -1 };
 
 	/* 오염 타일 관련 */
+	EContaminateType m_eContaminationType = EContaminateType::NONE;
 	bool m_bResistContamination = false;
 	Engine::CTexture* m_pAnimTextureCom = nullptr;
 	bool m_bContaminated = false;

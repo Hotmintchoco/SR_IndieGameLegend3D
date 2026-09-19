@@ -44,12 +44,29 @@ _int CRoomLayer::Update_Layer(const _float& fTimeDelta)
 		CheckClearCondition();
 	}
 
-	///CTransform* pTransform = static_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-	///_vec3 vPos;
-	///pTransform->Get_Info(INFO_POS, &vPos);
-	///RequestTileContamination(vPos, 2, EContaminateType::LAVA, 3.f);
+	PlayerTileInteraction();
 
 	return S_OK;
+}
+
+void CRoomLayer::PlayerTileInteraction()
+{
+	CTransform* pTransform = static_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+	_vec3 vPos;
+	pTransform->Get_Info(INFO_POS, &vPos);
+	
+	CTile* pTile = GetTileFromWorldPosition(vPos);
+	if (!pTile) return;
+	
+	EContaminateType eType = pTile->GetContaminationType();
+	switch (eType)
+	{
+	case EContaminateType::LAVA:
+		/* TODO 플레이어 데미지 */
+		break;
+	default:
+		break;
+	}
 }
 
 void CRoomLayer::LateUpdate_Layer(const _float& fTimeDelta)

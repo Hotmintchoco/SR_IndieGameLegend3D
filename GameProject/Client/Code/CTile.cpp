@@ -69,6 +69,7 @@ void CTile::UpdateAnimationTile(const _float& fTimeDelta)
     if (m_fContaminationLeftTime <= 0.f)
     {
         m_bContaminated = false;
+        m_eContaminationType = EContaminateType::NONE;
         m_iAnimTextureIndex = 0;
         m_fAnimSingleFrameAccTime = 0.f;
     }
@@ -108,6 +109,7 @@ void CTile::Contaminate(EContaminateType eType, float fDuration)
     switch (eType)
     {
     case EContaminateType::LAVA:
+        m_eContaminationType = EContaminateType::LAVA;
         m_pAnimTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_TileLava_Texture"));
         break;
     default:
