@@ -50,6 +50,9 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 				MSG_BOX("Stage Create Failed");
 				return -1;
 			}
+
+			/* Stage 씬에 처음 들어가는 경우 바로 LateUpdate로 이어져 Transform이 업데이트 되지 않는 현상 */
+			pStage->Update_Scene(fTimeDelta);
 		}
 	}
 
