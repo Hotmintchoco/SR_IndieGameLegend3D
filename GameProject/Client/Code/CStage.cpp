@@ -342,10 +342,20 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pUI)
 		return E_FAIL;
 
-	_vec2 vDirUIPos{ WINCX - 120.f, 420.f };
-	pUI->Set_Pos(vDirUIPos);
+	pUI->Set_Pos(WINCX - 90.f, 410.f, 0.1f);
 
 	if (FAILED(pLayer->Add_GameObject(L"DirectionUI", pUI)))
+		return E_FAIL;
+
+	// Hud Minimap
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_HudMapTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(WINCX - 90.f, 480.f, 0.f);
+	pUI->Set_Size({ 76.f, 92.f });
+
+	if (FAILED(pLayer->Add_GameObject(L"MiniMapUI", pUI)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
