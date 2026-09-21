@@ -8,6 +8,7 @@
 #include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
 #include "CAbstractFactory.h"
+#include "CFrustumExplodeEffect.h"
 
 CExplosiveFrustum::CExplosiveFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CFrustum(pGraphicDev)
@@ -72,12 +73,21 @@ void CExplosiveFrustum::OnCollisionEnter(CGameObject* pOther)
 
     if (bIsDestroyed)
     {
+        /* 자식 오브젝트 삭제 처리 */
         m_pLight->Set_Dead(true);
         m_pGlass->Set_Dead(true);
-        CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
 
+        /* 아이템 */
+        CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
         if (pObject)
             pLayer->Add_GameObject(L"Item", pObject);
+
+        /* 폭발 효과 */
+        pObject = CFrustumExplodeEffect::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS] + _vec3{0.f, 0.5f, 0.f}, _vec3{ 0.6f, 0.6f, 0.6f });
+        if (nullptr == pObject)
+            assert(0);
+        if (FAILED(pLayer->Add_GameObject(L"FrustumExplode", pObject)))
+            assert(0);
     }
 }
 

@@ -196,6 +196,9 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\PseudoBlack">
       <UniqueIdentifier>{985083af-b441-4e23-9d55-fe18ceb2ef3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. Effect\FrustumExplodeEffect">
+      <UniqueIdentifier>{19f10014-1d8b-44d0-89bb-5e80d8ad51ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -405,6 +408,9 @@
     <ClInclude Include="..\Header\CExplosiveFrustumGlass.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CFrustumExplodeEffect.h">
+      <Filter>02. GameObject\06. Effect\FrustumExplodeEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -590,6 +596,9 @@
     <ClCompile Include="..\Code\CExplosiveFrustumGlass.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CFrustumExplodeEffect.cpp">
+      <Filter>02. GameObject\06. Effect\FrustumExplodeEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -627,6 +636,9 @@
       <Filter>03. Resource\01. Map</Filter>
     </None>
     <None Include="..\Bin\Resource\Map\Room_3_1.json">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Map\Room_2_3.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
   </ItemGroup>

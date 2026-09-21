@@ -34,7 +34,7 @@ _int CSmallExplode::Update_GameObject(const _float& fTimeDelta)
     if (4.f <= m_fFrame)
         Set_Dead(true);
 
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
 
     return iExit;
 }
