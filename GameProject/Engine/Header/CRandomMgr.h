@@ -22,15 +22,34 @@ public:
 		T Min = (T)(Value * (1.f - fRange));
 		T Max = (T)(Value * (1.f + fRange));
 
-		uniform_int_distribution<T> dist(Min, Max);
-		return dist(m_gen);
+		/* Value가 음수인 경우 */
+		if (Min > Max) swap(Min, Max);
+
+		if constexpr (is_integral_v<T>)
+		{
+			uniform_int_distribution<T> dist(Min, Max);
+			return dist(m_gen);
+		}
+		else
+		{
+			uniform_real_distribution<T> dist(Min, Max);
+			return dist(m_gen);
+		}
 	}
 
 	template<typename T>
 	T GetRandomValue(const T& Min, const T& Max)
 	{
-		uniform_int_distribution<T> dist(Min, Max);
-		return dist(m_gen);
+		if constexpr (is_integral_v<T>)
+		{
+			uniform_int_distribution<T> dist(Min, Max);
+			return dist(m_gen);
+		}
+		else
+		{
+			uniform_real_distribution<T> dist(Min, Max);
+			return dist(m_gen);
+		}
 	}
 
 private:
