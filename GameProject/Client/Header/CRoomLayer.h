@@ -38,11 +38,15 @@ public:
 
 	/* 방 변경에 따른 조명 조정*/
 	void ApplyDarkness();
+	void FlickerLight(const float fDuration);
 
 private:
 	/* 어둠 스위치 */
 	void SetPseudoDark(bool bFlag);
-	bool m_bDark = false;
+	bool m_bDark = false; // 방의 원래 속성
+	bool m_bCurrentDark = false; // Flickering 등으로 인한 현재 방의 불빛 상태
+	float m_fLeftFlickerTime = 0.f;
+	void FlickerHandling(const Engine::_float& fTimeDelta);
 
 	void CheckClearCondition();
 	CTile* GetTileFromIndex2D(const TTileIdx& tIdx);

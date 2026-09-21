@@ -142,7 +142,8 @@ void CExplosiveFrustum::SpawnChildren()
     m_pOwner->Add_GameObject(L"Explode_Range", pArea);
 
     m_pExplodeRange->SetScale(2.f);
-    m_pExplodeRange->SetDelayTime(CRandomMgr::GetInstance()->AddRandomNoise<float>(1.0f, 0.5f));
+    m_pExplodeRange->SetDelayTime(
+        CRandomMgr::GetInstance()->AddRandomNoise<float>(m_fPropagateSpeed, m_fPropagateVariance));
 }
 
 void CExplosiveFrustum::Destroy()
@@ -167,6 +168,12 @@ void CExplosiveFrustum::Destroy()
         assert(0);
     if (FAILED(pLayer->Add_GameObject(L"FrustumExplode", pObject)))
         assert(0);
+
+    /* ¹æ ±ôºýÀÓ */
+    if (CRandomMgr::GetInstance()->Chance(m_fFlickerChance))
+    {
+        static_cast<CRoomLayer*>(m_pOwner)->FlickerLight(m_fFlickerDuration);
+    }
 
     Set_Dead(true);
 }

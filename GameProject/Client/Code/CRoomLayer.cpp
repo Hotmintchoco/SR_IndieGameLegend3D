@@ -44,9 +44,24 @@ _int CRoomLayer::Update_Layer(const _float& fTimeDelta)
 		CheckClearCondition();
 	}
 
+	FlickerHandling(fTimeDelta);
+
 	PlayerTileInteraction();
 
 	return S_OK;
+}
+
+void CRoomLayer::FlickerHandling(const Engine::_float& fTimeDelta)
+{
+	if (m_bDark && !m_bCurrentDark)
+	{
+		m_fLeftFlickerTime -= fTimeDelta;
+		if (m_fLeftFlickerTime <= 0.f)
+		{
+			m_bCurrentDark = true;
+			SetPseudoDark(true);
+		}
+	}
 }
 
 void CRoomLayer::PlayerTileInteraction()
@@ -101,6 +116,7 @@ HRESULT CRoomLayer::SpawnRoom()
 
 	/* 진입 시 어둠 여부 */
 	m_bDark= t->bDark;
+	m_bCurrentDark= t->bDark;
 
 	/* 방 기본 정보 */
 	int iRoomColCount = CRoomLoadingMgr::GetInstance()->GetRoomColCount();
@@ -404,6 +420,15 @@ CTile* CRoomLayer::GetTileFromWorldPosition(const _vec3& vWorldPos)
 void CRoomLayer::ApplyDarkness()
 {
 	SetPseudoDark(m_bDark);
+}
+
+void CRoomLayer::FlickerLight(const float fDuration)
+{
+	if (!m_bDark) return;
+
+	m_bCurrentDark = false;
+	m_fLeftFlickerTime = fDuration;
+	SetPseudoDark(false);
 }
 
 CTile* CRoomLayer::GetTileFromIndex2D(const TTileIdx& tIdx)
