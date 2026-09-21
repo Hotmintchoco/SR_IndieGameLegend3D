@@ -25,8 +25,8 @@ void CGameStatusMgr::Update(const float fTimeDelta)
 
 void CGameStatusMgr::Render()
 {
-    //RenderImGui();
-    //DebugPanelForRendering();
+    RenderImGui();
+    DebugPanelForRendering();
 }
 
 void CGameStatusMgr::RenderImGui()
