@@ -370,7 +370,6 @@ void CRoomLayer::CheckClearCondition()
 
 	/* 모든 클리어 조건이 만족 */
 	CGameStatusMgr::GetInstance()->UpdateClearTable(m_iRoomIndex);
-	if(m_bDark) SetPseudoDark(false);
 	TRoomEventCtx t{ ERoomEventType::ROOM_CLEAR };
 	m_OnRoomEvent.Broadcast(t);
 	m_bOnProgress = false;
