@@ -1,4 +1,4 @@
-#include "CCollider.h"
+﻿#include "CCollider.h"
 #include "CGameObject.h"
 
 CCollider::CCollider()
@@ -54,6 +54,11 @@ void CCollider::OnCollisionExit(CCollider* pOther)
 		return;
 
 	m_pOwner->OnCollisionExit(pOtherOwner);
+}
+
+_float CCollider::Get_ViewZ()
+{
+	return m_pOwner->Get_ViewZ();
 }
 
 void CCollider::Free()

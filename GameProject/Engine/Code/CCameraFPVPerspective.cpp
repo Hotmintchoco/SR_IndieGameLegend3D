@@ -15,7 +15,7 @@ CCameraFPVPerspective::~CCameraFPVPerspective()
 
 HRESULT CCameraFPVPerspective::Ready_Camera()
 {
-	m_vEye = { 0.f, 0.f, -1.f };
+	m_vEye = { 0.f, 0.f, 0.f };
 	m_vAt = { 0.f, 0.f, 0.f };
 	m_vUp = { 0.f, 1.f, 0.f };
 	m_fFov = D3DXToRadian(60.f);
@@ -43,6 +43,9 @@ void CCameraFPVPerspective::Update_Camera(const _float& fTimeDelta, const _vec3&
 	m_vEye = vPos - [&]()->_vec3 {_vec3 vLookDst;  D3DXVec3Normalize(&vLookDst, &vLook); return vLookDst * 0.5f; }();
 	m_vAt = vPos + [&]()->_vec3 {_vec3 vLookDst;  D3DXVec3Normalize(&vLookDst, &vLook); return vLookDst * 5.0f; }();
 
+	//m_vEye = vPos;
+	//m_vAt = vPos + vLook;
+
 	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
 
@@ -63,7 +66,7 @@ void CCameraFPVPerspective::Mouse_Move()
 	{
 		m_fAngle += dwMouseMove / 10.f;
 
-		if (m_fAngle > 80.f) m_fAngle = 80.f;
+		if (m_fAngle > 50.f) m_fAngle = 50.f;
 		if (m_fAngle < -80.f) m_fAngle = -80.f;
 	}
 }

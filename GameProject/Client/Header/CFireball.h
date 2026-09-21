@@ -34,6 +34,10 @@ public:
 	void Set_Velocity(const _vec3& vLocation) { m_vVelocity = vLocation; }
 	void Throw(const _float& fTimeDelta);
 private:
+	/* ¼ºÃ¶ */
+	void CheckDeadCondition();
+	/* --- */
+
 	_vec3 m_vVelocity;
 	_float m_fLandingTime;
 	_float m_fLandingVelocity;

@@ -1,11 +1,11 @@
-Ôªø#pragma once
+#pragma once
 
 #include <vector>
 #include <string>
 #include "Engine_Define.h"
 #include "Client_Enum.h"
 
-/* Îßµ Ï†ïÎ≥¥Î•º Îã¥ÏùÄ Íµ¨Ï°∞Ï≤¥ */
+/* ∏  ¡§∫∏∏¶ ¥„¿∫ ±∏¡∂√º */
 struct TRoomEntity
 {
 	int    iType = 0;
@@ -20,6 +20,7 @@ struct TRoomData
 	int iDefaultTileIdx;
 	vector<int> vecTile;
 	vector<int> vecObjectTilingInfo;
+	vector<int> vecResistContamination;
 	vector<TRoomEntity> vecObjectInfo;
 	vector<bool> vecDoorInfo;
 	vector<int> vecDoorTile;
@@ -30,4 +31,10 @@ struct TRoomEventCtx
 {
 	ERoomEventType eType;
 
+};
+
+struct TTileIdx
+{
+	int iRow;
+	int iCol;
 };

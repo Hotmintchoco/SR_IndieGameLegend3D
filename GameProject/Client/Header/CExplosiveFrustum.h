@@ -10,6 +10,7 @@ namespace Engine
 }
 
 class CExplosiveFrustumLight;
+class CExplosiveFrustumGlass;
 
 class CExplosiveFrustum : public CFrustum
 {
@@ -29,13 +30,14 @@ public:
 private:
 	HRESULT			Add_Component();
 
-	void SpawnLight();
+	void SpawnChildren();
 
 protected:
 	Engine::CPlyTex* m_pBufferCom;
 	Engine::CTexture* m_pTextureCom;
 
 	CExplosiveFrustumLight* m_pLight = nullptr;
+	CExplosiveFrustumGlass* m_pGlass = nullptr;
 
 public:
 	static CExplosiveFrustum* Create(LPDIRECT3DDEVICE9 pGraphicDev);

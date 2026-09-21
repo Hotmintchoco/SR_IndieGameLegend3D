@@ -60,8 +60,6 @@ void CGem::Render_GameObject()
 
     m_pTextureCom->Set_Texture((_uint)m_fFrame);
     m_pBufferCom->Render_Buffer();
-
-    //m_pColliderCom->Render_DebugCube();
 }
 
 HRESULT CGem::Add_Component()

@@ -1,8 +1,9 @@
-ï»¿#include "pch.h"
+#include "pch.h"
 #include "CExplosiveFrustum.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CExplosiveFrustumLight.h"
+#include "CExplosiveFrustumGlass.h"
 #include "CLayer.h"
 #include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
@@ -22,11 +23,11 @@ HRESULT CExplosiveFrustum::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    // Note : ìˆœì„œì— ì£¼ì˜
+    // Note : ¼ø¼­¿¡ ÁÖÀÇ
     if (FAILED(CFrustum::Ready_GameObject()))
         return E_FAIL;
 
-    SpawnLight();
+    SpawnChildren();
 
     return S_OK;
 }
@@ -35,7 +36,7 @@ _int CExplosiveFrustum::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CFrustum::Update_GameObject(fTimeDelta);
     
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
     _vec3   vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -47,6 +48,7 @@ _int CExplosiveFrustum::Update_GameObject(const _float& fTimeDelta)
 void CExplosiveFrustum::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     m_pLight->PropagateTransform(m_pTransformCom);
+    m_pGlass->PropagateTransform(m_pTransformCom);
 
     CFrustum::LateUpdate_GameObject(fTimeDelta);
 }
@@ -58,8 +60,6 @@ void CExplosiveFrustum::Render_GameObject()
     m_pTextureCom->Set_Texture(0);
 
     m_pBufferCom->Render_Buffer();
-
-    m_pColliderCom->Render_DebugCube();
 }
 
 void CExplosiveFrustum::OnCollisionEnter(CGameObject* pOther)
@@ -73,6 +73,7 @@ void CExplosiveFrustum::OnCollisionEnter(CGameObject* pOther)
     if (bIsDestroyed)
     {
         m_pLight->Set_Dead(true);
+        m_pGlass->Set_Dead(true);
         CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
 
         if (pObject)
@@ -85,7 +86,7 @@ HRESULT CExplosiveFrustum::Add_Component()
     CComponent* pComponent = nullptr;
 
     // PlyTex
-    pComponent = m_pBufferCom = dynamic_cast<CPlyTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_ExplosiveFrustum_Vertex"));
+    pComponent = m_pBufferCom = dynamic_cast<CPlyTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_ExplosiveFrustum_Bottom_Vertex"));
 
     if (nullptr == pComponent)
         return E_FAIL;
@@ -103,7 +104,7 @@ HRESULT CExplosiveFrustum::Add_Component()
     return S_OK;
 }
 
-void CExplosiveFrustum::SpawnLight()
+void CExplosiveFrustum::SpawnChildren()
 {
     CExplosiveFrustumLight* pLight = CExplosiveFrustumLight::Create(m_pGraphicDev);
 
@@ -115,8 +116,21 @@ void CExplosiveFrustum::SpawnLight()
 
     m_pLight = pLight;
     pLight->AttachTo(this);
-    /* ì•„ë§ˆ ì´ë¦„ì€ ì¤‘ë³µì´ ì—¬ëŸ¿ ë  ê²ƒ. ì¼ë‹¨ ìŠ¤í°ë§Œ í™•ì¸ */
+    /* ¾Æ¸¶ ÀÌ¸§Àº Áßº¹ÀÌ ¿©·µ µÉ °Í. ÀÏ´Ü ½ºÆù¸¸ È®ÀÎ */
     m_pOwner->Add_GameObject(L"Explosive_Frustum_Light", pLight);
+
+    CExplosiveFrustumGlass* pGlass = CExplosiveFrustumGlass::Create(m_pGraphicDev);
+
+    if (!pGlass)
+    {
+        assert(0);
+        return;
+    }
+
+    m_pGlass = pGlass;
+    pGlass->AttachTo(this);
+    /* ¾Æ¸¶ ÀÌ¸§Àº Áßº¹ÀÌ ¿©·µ µÉ °Í. ÀÏ´Ü ½ºÆù¸¸ È®ÀÎ */
+    m_pOwner->Add_GameObject(L"Explosive_Frustum_Glass", pGlass);
 }
 
 CExplosiveFrustum* CExplosiveFrustum::Create(LPDIRECT3DDEVICE9 pGraphicDev)

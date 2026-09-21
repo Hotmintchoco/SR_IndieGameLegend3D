@@ -1,9 +1,11 @@
-#include "CBoxCollider.h"
+﻿#include "CBoxCollider.h"
 #include "CGameObject.h"
 #include "CTransform.h"
 #include "CSphereCollider.h"
 #include "CProtoMgr.h"
 #include "CCubeTex.h"
+#include "CRenderer.h"
+#include "CDebugMgr.h"
 
 CBoxCollider::CBoxCollider()
 {
@@ -63,6 +65,11 @@ _int CBoxCollider::Update_Component(const _float& fTimeDelta)
 
     m_tBox.Center = { vOwnerPos.x, vOwnerPos.y, vOwnerPos.z };
 
+    if (CDebugMgr::GetInstance()->GetShowCollider())
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_DEBUG_COLLIDER, this);
+    }
+
     return 0;
 }
 
@@ -88,36 +95,24 @@ void CBoxCollider::Set_Radius(const _float& fRadius)
 
 void CBoxCollider::Render_DebugCube()
 {
-#ifdef _DEBUG
     if (nullptr == m_pDebugCubeTex || nullptr == m_pGraphicDev)
         return;
 
-    _matrix matScale, matTrans, matWorld, matOldWorld;
+    _matrix matScale, matTrans, matWorld;
     D3DXMatrixScaling(&matScale, m_tBox.Extents.x, m_tBox.Extents.y, m_tBox.Extents.z);
     D3DXMatrixTranslation(&matTrans, m_tBox.Center.x, m_tBox.Center.y, m_tBox.Center.z);
     matWorld = matScale * matTrans;
 
-    DWORD dwOldFill = D3DFILL_SOLID;
-    DWORD dwOldCull = D3DCULL_CCW;
-    DWORD dwOldLighting = TRUE;
-
-    m_pGraphicDev->GetTransform(D3DTS_WORLD, &matOldWorld);
-    m_pGraphicDev->GetRenderState(D3DRS_FILLMODE, &dwOldFill);
-    m_pGraphicDev->GetRenderState(D3DRS_CULLMODE, &dwOldCull);
-    m_pGraphicDev->GetRenderState(D3DRS_LIGHTING, &dwOldLighting);
-
     m_pGraphicDev->SetTransform(D3DTS_WORLD, &matWorld);
-    m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-    m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+    m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR,
+        m_bIsCollided ? D3DCOLOR_XRGB(255, 0, 0) : D3DCOLOR_XRGB(0, 255, 0));
 
     m_pDebugCubeTex->Render_Buffer();
+}
 
-    m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, dwOldLighting);
-    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, dwOldCull);
-    m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, dwOldFill);
-    m_pGraphicDev->SetTransform(D3DTS_WORLD, &matOldWorld);
-#endif
+void CBoxCollider::Render(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+    Render_DebugCube();
 }
 
 CCollider* CBoxCollider::Create(LPDIRECT3DDEVICE9 pGraphicDev)

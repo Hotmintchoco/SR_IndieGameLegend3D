@@ -2,13 +2,14 @@
 
 #include "CBase.h"
 #include "CComponent.h"
+#include "IRenderable.h"
 
 BEGIN(Engine)
 
 class CLayer;
 class CCollider;
 
-class ENGINE_DLL CGameObject : public CBase
+class ENGINE_DLL CGameObject : public CBase, public IRenderable
 {
 protected:
 	explicit CGameObject(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -17,7 +18,6 @@ protected:
 
 public:
 	CComponent* Get_Component(COMPONENTID eID, const _tchar* pComponentTag);
-	_float		Get_ViewZ() { return m_fViewZ; }
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -30,6 +30,12 @@ public:
 	virtual			void		OnCollisionExit(CGameObject* pOther) {}
 
 	inline void					SetOwner(CLayer* pLayer) { m_pOwner = pLayer; }
+
+	/* IRenderable */
+	virtual void Render(LPDIRECT3DDEVICE9& pDevice) { Render_GameObject(); }
+	virtual _float		Get_ViewZ() { return m_fViewZ; }
+	virtual CBase* GetBase() { return static_cast<CBase*>(this); }
+	/* ----------- */
 
 public:
 	void			Set_Dead(_bool bDead) { m_bDead = bDead; }

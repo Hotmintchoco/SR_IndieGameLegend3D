@@ -17,7 +17,7 @@ public:
 
 	HRESULT			Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject);
 
-	multimap<wstring, CGameObject*> Get_ObjMap() { return m_mapObject; }
+	const multimap<wstring, CGameObject*>& Get_ObjMap() { return m_mapObject; }
 
 public:
 	virtual HRESULT			Ready_Layer();

@@ -1,4 +1,4 @@
-ï»¿#include "pch.h"
+#include "pch.h"
 #include "CStage.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
@@ -25,6 +25,8 @@
 #include "CSpeyeder.h"
 #include "CDirectionUI.h"
 #include "CMagmamouth.h"
+#include "CPseudoDark.h"
+#include "CGameStatusMgr.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -63,7 +65,7 @@ HRESULT CStage::Ready_Scene()
 	if (FAILED(CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_FPV")))
 		return E_FAIL;
 
-	// ì¶©ëŒ ê·¸ë£¹ ì„¤ì •
+	// Ãæµ¹ ±×·ì ¼³Á¤
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_MONSTER);
@@ -114,10 +116,10 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
+	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
 	CLayerContext ctx(pLayer, this);
 
-	// ì˜¤ë¸Œì íŠ¸ ì¶”ê°€
+	// ¿ÀºêÁ§Æ® Ãß°¡
 	CGameObject* pGameObject = nullptr;
 
 	/*
@@ -156,10 +158,10 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
+	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
 	CLayerContext ctx(pLayer, this);
 
-	// ì˜¤ë¸Œì íŠ¸ ì¶”ê°€
+	// ¿ÀºêÁ§Æ® Ãß°¡
 	CGameObject* pGameObject = nullptr;
 
 	// Terrain
@@ -186,7 +188,31 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Gun", pGameObject)))
 		return E_FAIL;
 
-	
+	// PseudoDark
+	for (int i = 0; i < 4; ++i)
+	{
+		pGameObject = CPseudoDark::Create(m_pGraphicDev);
+		if (nullptr == pGameObject)
+			return E_FAIL;
+
+		if (FAILED(pLayer->Add_GameObject(L"PseudoDark_" + to_wstring(i), pGameObject)))
+			return E_FAIL;
+
+		CGameStatusMgr::GetInstance()->RegisterPseudoDark(pGameObject);
+		
+		static_cast<CPseudoDark*>(pGameObject)->SetScale(2.5f + (float)i * 0.75f);
+		if (i == 3)
+		{
+			static_cast<CPseudoDark*>(pGameObject)->SetOpacity(100);
+		}
+		else
+		{
+			static_cast<CPseudoDark*>(pGameObject)->SetOpacity(60);
+		}
+
+		pGameObject->Set_IsActive(false);
+	}
+
 	// Monster
 	//pGameObject = CSkull::Create(m_pGraphicDev);
 	//static_cast<CMonster*>(pGameObject)->Set_Pos(55, 0, 55);
@@ -196,22 +222,22 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	//if (FAILED(pLayer->Add_GameObject(L"Skull", pGameObject)))
 	//	return E_FAIL;
 
-	pGameObject = CBoss1::Create(m_pGraphicDev);
-	static_cast<CMonster*>(pGameObject)->Set_Pos(65, 0, 55);
-	if (nullptr == pGameObject)
-		return E_FAIL;
+	//pGameObject = CBoss1::Create(m_pGraphicDev);
+	//static_cast<CMonster*>(pGameObject)->Set_Pos(65, 0, 55);
+	//if (nullptr == pGameObject)
+	//	return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"Boss1", pGameObject)))
-		return E_FAIL;
+	//if (FAILED(pLayer->Add_GameObject(L"Boss1", pGameObject)))
+	//	return E_FAIL;
 
 
-	pGameObject = CMagmamouth::Create(m_pGraphicDev);
-	static_cast<CMonster*>(pGameObject)->Set_Pos(64, 2.f, 63);
-	if (nullptr == pGameObject)
-		return E_FAIL;
+	//pGameObject = CMagmamouth::Create(m_pGraphicDev);
+	//static_cast<CMonster*>(pGameObject)->Set_Pos(64, 2.f, 63);
+	//if (nullptr == pGameObject)
+	//	return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"Magmamouth", pGameObject)))
-		return E_FAIL;
+	//if (FAILED(pLayer->Add_GameObject(L"Magmamouth", pGameObject)))
+	//	return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag ,pLayer });
 
@@ -224,7 +250,7 @@ HRESULT CStage::Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
+	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
 	CLayerContext ctx(pLayer, this);
 
 	if (FAILED(static_cast<CRoomLayer*>(pLayer)->SpawnRoom()))
@@ -243,7 +269,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
+	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
 	CLayerContext ctx(pLayer, this);
 
 	CUI* pUI = nullptr;
@@ -263,7 +289,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	_int iCountMax = 3;
 	_float fStartX = 20.f;
 	_float fStartY = 20.f;
-	_float fIconSize = 17.5f;  // CPlayerHpUI::Ready_GameObject()ì˜ Set_Scaleê³¼ ë™ì¼
+	_float fIconSize = 17.5f;  // CPlayerHpUI::Ready_GameObject()ÀÇ Set_Scale°ú µ¿ÀÏ
 	_float fGap = 22.5f;
 
 	for (_int i = 0; i < iCountMax; ++i)

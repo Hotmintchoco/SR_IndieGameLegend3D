@@ -33,6 +33,8 @@ HRESULT CLayer::Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject)
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
+	pGameObject->SetOwner(this);
+
 	m_mapObject.insert({ pObjTag, pGameObject });
 
 	return S_OK;

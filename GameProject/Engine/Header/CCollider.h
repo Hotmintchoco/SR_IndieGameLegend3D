@@ -1,9 +1,10 @@
 ﻿#pragma once
 #include "CComponent.h"
+#include "IRenderable.h"
 
 BEGIN(Engine)
 
-class ENGINE_DLL CCollider : public CComponent
+class ENGINE_DLL CCollider : public CComponent, public IRenderable
 {
 protected:
 	enum COLLIDER_TYPE { CT_BOX, CT_SPHERE, CT_NONE };
@@ -37,6 +38,12 @@ public:
 public:
 	virtual _int	Update_Component(const _float& fTimeDelta) { return 0; };
 	virtual void	LateUpdate_Component() {}
+
+	/* Interface IRenderable */
+	virtual void Render(LPDIRECT3DDEVICE9& pGraphicDev) {}
+	virtual _float Get_ViewZ() override;
+	virtual CBase* GetBase() { return static_cast<CBase*>(this); }
+	/* ---------------------- */
 
 public:
 	virtual CComponent* Clone() PURE;

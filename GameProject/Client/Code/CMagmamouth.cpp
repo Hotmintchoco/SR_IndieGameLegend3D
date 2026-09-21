@@ -219,7 +219,7 @@ void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
 
 void CMagmamouth::Shuffle_Array(_uint N)
 {
-    for (int i = 0; i < N; ++i)
+    for (int i = 0; i < (int)N; ++i)
     {
         m_iSpawnOrderArr[i] = i;
     }
