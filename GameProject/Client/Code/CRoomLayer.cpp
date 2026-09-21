@@ -99,6 +99,10 @@ HRESULT CRoomLayer::SpawnRoom()
 		m_vecClearCondition.push_back(pCondition);
 	}
 
+	/* 진입 시 어둠 여부 */
+	m_bDark= t->bDark;
+
+	/* 방 기본 정보 */
 	int iRoomColCount = CRoomLoadingMgr::GetInstance()->GetRoomColCount();
 	int iRoomRowCount = CRoomLoadingMgr::GetInstance()->GetRoomRowCount();
 	_vec3 vOuterRoomSize = CRoomLoadingMgr::GetInstance()->GetOuterRoomSize();
@@ -307,9 +311,7 @@ HRESULT CRoomLayer::SpawnRoom()
 
 void CRoomLayer::OnRoomTriggerBlockCollided()
 {
-	if (m_bOnProgress) return;
-
-	CGameStatusMgr::GetInstance()->UpdateCurrentRoomIndex(m_iRoomIndex);
+	if (m_bOnProgress) return;	
 
 	if (!m_bVisited)
 	{
@@ -349,6 +351,16 @@ void CRoomLayer::RequestTileContamination(const _vec3& vPos, int iRange, EContam
 	}
 }
 
+void CRoomLayer::SetPseudoDark(bool bFlag)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		wstring wstrName = L"PseudoDark_" + to_wstring(i);
+		CGameObject* pDark = CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", wstrName.c_str());
+		pDark->Set_IsActive(bFlag);
+	}
+}
+
 void CRoomLayer::CheckClearCondition()
 {
 	for (auto& c : m_vecClearCondition)
@@ -358,6 +370,7 @@ void CRoomLayer::CheckClearCondition()
 
 	/* 모든 클리어 조건이 만족 */
 	CGameStatusMgr::GetInstance()->UpdateClearTable(m_iRoomIndex);
+	if(m_bDark) SetPseudoDark(false);
 	TRoomEventCtx t{ ERoomEventType::ROOM_CLEAR };
 	m_OnRoomEvent.Broadcast(t);
 	m_bOnProgress = false;
@@ -387,6 +400,11 @@ CTile* CRoomLayer::GetTileFromWorldPosition(const _vec3& vWorldPos)
 	wstring wstrTileName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Tile_" + to_wstring(iIndex);
 
 	return static_cast<CTile*>(Get_GameObject(wstrTileName));
+}
+
+void CRoomLayer::ApplyDarkness()
+{
+	SetPseudoDark(m_bDark);
 }
 
 CTile* CRoomLayer::GetTileFromIndex2D(const TTileIdx& tIdx)

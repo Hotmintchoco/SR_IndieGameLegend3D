@@ -296,6 +296,7 @@ HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
         {
             t.vecClearCondition.push_back(Utils::Utf8ToWide(str));
         }
+        data.at("dark").get_to(t.bDark);
 
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
@@ -338,6 +339,7 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
         {
             t.vecClearCondition.push_back(Utils::Utf8ToWide(str));
         }
+        data.at("dark").get_to(t.bDark);
 
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);

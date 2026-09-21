@@ -36,7 +36,14 @@ public:
 	void RequestTileContamination(const _vec3& vPos, int iRange, EContaminateType eType, float fDuration);
 	CTile* GetTileFromWorldPosition(const _vec3& vWorldPos);
 
+	/* 방 변경에 따른 조명 조정*/
+	void ApplyDarkness();
+
 private:
+	/* 어둠 스위치 */
+	void SetPseudoDark(bool bFlag);
+	bool m_bDark = false;
+
 	void CheckClearCondition();
 	CTile* GetTileFromIndex2D(const TTileIdx& tIdx);
 

@@ -82,6 +82,7 @@ enum class ERoomEventType
 {
 	NONE,
 
+	ROOM_CHANGED,
 	ROOM_BEGIN,
 	ROOM_CLEAR,
 	

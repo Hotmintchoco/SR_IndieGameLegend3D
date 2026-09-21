@@ -5,6 +5,7 @@
 #include "CImGuiTool.h"
 #include "CCameraMgr.h"
 #include "CDebugMgr.h"
+#include "CRoomLoadingMgr.h"
 
 IMPLEMENT_SINGLETON(CGameStatusMgr);
 
@@ -18,6 +19,27 @@ CGameStatusMgr::~CGameStatusMgr()
 
 void CGameStatusMgr::Update(const float fTimeDelta)
 {
+    UpdateCameraInfo();
+
+    UpdateRoomIndex();
+}
+
+void CGameStatusMgr::UpdateRoomIndex()
+{
+    /* Player에서 이미 자신의 위치를 업데이트 하고 있음 */
+    m_iCurrentRoomIndex = GetRoomIndexFromPlayerPosition(m_vPlayerPos);
+    if (m_iPrevRoomIndex != m_iCurrentRoomIndex)
+    {
+        m_iPrevRoomIndex = m_iCurrentRoomIndex;
+        if (GetCurrentRoomLayer())
+        {
+            GetCurrentRoomLayer()->ApplyDarkness();
+        }
+    }
+}
+
+void CGameStatusMgr::UpdateCameraInfo()
+{
     _vec3 vCameraLook;
     CCameraMgr::GetInstance()->Get_CamLook(&vCameraLook);
     m_fYaw = atan2f(vCameraLook.x, vCameraLook.z);
@@ -25,8 +47,8 @@ void CGameStatusMgr::Update(const float fTimeDelta)
 
 void CGameStatusMgr::Render()
 {
-    //RenderImGui();
-    //DebugPanelForRendering();
+    RenderImGui();
+    DebugPanelForRendering();
 }
 
 void CGameStatusMgr::RenderImGui()
@@ -142,6 +164,27 @@ CRoomLayer* CGameStatusMgr::GetCurrentRoomLayer()
     wstring wstrRoomLayerKey = L"Room_" + to_wstring(m_iCurrentRoomIndex) + L"_Layer";
     CRoomLayer* pLayer = static_cast<CRoomLayer*>(CManagement::GetInstance()->Get_Layer(wstrRoomLayerKey.c_str()));
     return pLayer;
+}
+
+int CGameStatusMgr::GetRoomIndexFromPlayerPosition(const _vec3& vPos)
+{
+    const _vec3 vCenter = CRoomLoadingMgr::GetInstance()->GetCenterRoomPosition();
+    const _vec3 vRoomSize = CRoomLoadingMgr::GetInstance()->GetOuterRoomSize();
+    const int iRowCount = CRoomLoadingMgr::GetInstance()->GetRoomRowCount();
+    const int iColCount = CRoomLoadingMgr::GetInstance()->GetRoomColCount();
+
+    const float fLocalX = vPos.x - vCenter.x;
+    const float fLocalZ = vPos.z - vCenter.z;
+
+    const float fHalfGridX = (float)iColCount * vRoomSize.x * 0.5f;
+    const float fHalfGridZ = (float)iRowCount * vRoomSize.z * 0.5f;
+
+    const int iCol = (int)floorf((fLocalX + fHalfGridX) / vRoomSize.x);
+    const int iRow = (int)floorf((fHalfGridZ - fLocalZ) / vRoomSize.z);
+
+    if (0 > iCol || iCol >= iColCount || 0 > iRow || iRow >= iRowCount) return -1;
+
+    return iRow * iColCount + iCol;
 }
 
 void CGameStatusMgr::Free()

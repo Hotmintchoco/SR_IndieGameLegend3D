@@ -49,8 +49,13 @@ public:
 	inline void RegisterPseudoDark(CGameObject* pObject) { m_vecPseudoDark.push_back(pObject); }
 
 private:
+	void UpdateRoomIndex();
+	void UpdateCameraInfo();
+	int GetRoomIndexFromPlayerPosition(const _vec3& vPos);
+
 	/* Minimap */
 	int m_iCurrentRoomIndex = 12;
+	int m_iPrevRoomIndex = 12;
 	bool m_bVisitTable[25] = { false };
 	bool m_bClearTable[25] = { false };
 	_vec3 m_vPlayerPos = _vec3{ 0.f, 0.f, 0.f };
