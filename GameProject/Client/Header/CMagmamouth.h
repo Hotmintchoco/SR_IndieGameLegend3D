@@ -43,7 +43,14 @@ private:
 
 	void Set_MovePosition();
 	void Set_Position();
-	void Find_Point();
+	void Find_BackPoint();
+
+	void Set_Motion();
+	void Set_Motion_OpenMouth(const _float& fTimeDelta);
+	void Set_Motion_CloseMouth(const _float& fTimeDelta);
+	void Set_Motion_CloseOpenMouth(const _float& fTimeDelta);
+
+	void MagmaMouth_Trail();
 private:
 	enum MAGMAMOUTHSTATE { SPAWN, FIREBALL, MOVE, IDLE };
 	MAGMAMOUTHSTATE m_eMagmaMouthState;
@@ -59,16 +66,16 @@ private:
 
 	_vec3 m_vRoomCenterLocation;
 	_vec3 m_MovePosition;
-	//_vec3 m_MovePosition2;
 	_bool m_bMoveFlag;
 	_bool m_bMoveFlag2;
+	_float m_bMoveFlag2;
 
 	_uint m_iMonsterX;
 	_uint m_iMonsterZ;
 	_uint m_iPlayerX;
 	_uint m_iPlayerZ;
 
-
+	_bool m_bCloseMouth;
 
 protected:
 	virtual void		Free();

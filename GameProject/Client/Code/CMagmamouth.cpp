@@ -37,6 +37,7 @@ HRESULT CMagmamouth::Ready_GameObject()
     m_vRoomCenterLocation = { 60.f,0.f,60.f };
 
     m_iHp = 6;
+    m_fFrame = 3.f;
     return S_OK;
 }
     
@@ -44,56 +45,54 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-    if (nullptr == pPlayerTransformCom)
-        return 0;
-
-    _vec3   vPlayerPos;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-
-    _vec3   vPlayerLook;
-    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
-
-    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
-
     m_fStateUpdateTime += fTimeDelta;
-
     if (m_fStateUpdateTime > m_fStateUpdateDuration)
     {
         m_fStateUpdateTime = 0.f;
+        m_bCloseMouth = false;
+
         m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 3);
         //m_eMagmaMouthState = SPAWN;
         //m_eMagmaMouthState = FIREBALL;
-        m_eMagmaMouthState = MOVE;
+        //m_eMagmaMouthState = MOVE;
         if (m_eMagmaMouthState == SPAWN)
         {
             Shuffle_Array(4);
             ZeroMemory(m_bSpawnFinish, sizeof(m_bSpawnFinish));
             m_fSpawnTime = 0.f;
-            m_fStateUpdateDuration = 5.f;
+            m_fStateUpdateDuration = 2.f;
             m_fSpawn_CoolDown = 0.25f;
+
+            //m_fFrame = 3.f;
         }
         else if (m_eMagmaMouthState == FIREBALL)
         {
             Shuffle_Array(3);
             ZeroMemory(m_bFireballFinish, sizeof(m_bFireballFinish));
             m_fSpawnTime = 0.f;
-            m_fStateUpdateDuration = 5.f;
+            m_fStateUpdateDuration = 2.f;
             m_fSpawn_CoolDown = 0.5f;
+            
+            //m_fFrame = 3.f;
         }
         else if (m_eMagmaMouthState == MOVE)
         {
             Set_MovePosition();
-            m_fStateUpdateDuration = 5.f;
+            m_fStateUpdateDuration = 4.f;
             m_bMoveFlag = false;
             m_bMoveFlag2 = false;
+            
+            m_fFrame = 3.f;
+        }
+        else if (m_eMagmaMouthState == IDLE)
+        {
+            m_fFrame = 3.f;
         }
     }
     switch (m_eMagmaMouthState)
     {
     case IDLE:
+        Set_Motion_CloseOpenMouth(fTimeDelta);
         break;
     case SPAWN:
         Spawn_Speyeder(fTimeDelta);
@@ -105,20 +104,30 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
         Move_Magmamouth(fTimeDelta);
         break;
     }
-    //m_fFrame += fTimeDelta * 6.f;
-    //if (m_fFrame > 4.f)
-    //    m_fFrame = 0.f;
 
 
+    //if (1)
+    //{
+    //    Set_Motion_OpenMouth(fTimeDelta);
 
+    //}
+    //if (1)
+    //{
+    //    Set_Motion_CloseMouth(fTimeDelta);
 
+    //}
 
+    //if (m_eMagmaMouthState == MOVE)
+    //{
+    //    Set_Motion_Move();
+    //}
     return iExit;
 }
 
 void CMagmamouth::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
+    Set_Motion();
 }
 
 void CMagmamouth::Render_GameObject()
@@ -129,7 +138,7 @@ void CMagmamouth::Render_GameObject()
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-    m_pTextureCom->Set_Texture(0);
+    m_pTextureCom->Set_Texture((_uint) m_fFrame);
     m_pBufferCom->Render_Buffer();
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
@@ -173,6 +182,12 @@ CMagmamouth* CMagmamouth::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
 {
+    if (m_fFrame < 3.f)
+    {
+        Set_Motion_OpenMouth(fTimeDelta);
+        return;
+    }
+
     m_fSpawnTime += fTimeDelta;
     _vec3 vPos, vVelocity;
     _int iFlag = 0;
@@ -195,23 +210,30 @@ void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
     {
         m_bSpawnFinish[3] = true;
         iFlag = 4;
+        m_eMagmaMouthState = IDLE;
+
     }
 
     if (iFlag != 0)
     {
         CGameObject* pGameObject = CSpeyeder::Create(m_pGraphicDev);
 
+        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+        if (nullptr == pPlayerTransformCom) return;
+        _vec3   vPlayerPos;
+        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
-        m_pTransformCom->Get_Info(INFO_LOOK, &vVelocity);
+        vVelocity = vPlayerPos - vPos;
         vVelocity.y = 0.f;
         D3DXVec3Normalize(&vVelocity, &vVelocity);
 
         _matrix matRot;
-        D3DXMatrixRotationY(&matRot, D3DXToRadian(60.f) - D3DXToRadian(40.f) * m_iSpawnOrderArr[iFlag - 1]);
+        D3DXMatrixRotationY(&matRot, D3DXToRadian(45.f) - D3DXToRadian(30.f) * m_iSpawnOrderArr[iFlag - 1]);
 
         D3DXVec3TransformNormal(&vVelocity, &vVelocity, &matRot);
 
-        vVelocity *= 2.f;
+        vVelocity *= 4.f;
         vVelocity.y = 3.f;
 
         static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
@@ -242,6 +264,12 @@ void CMagmamouth::Shuffle_Array(_uint N)
 
 void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
 {
+    if (m_fFrame < 3.f)
+    {
+        Set_Motion_OpenMouth(fTimeDelta);
+        return;
+    }
+
     m_fSpawnTime += fTimeDelta;
     _vec3 vPos, vVelocity;
     _int iFlag = 0;
@@ -259,6 +287,7 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
     {
         m_bFireballFinish[2] = true;
         iFlag = 3;
+        m_eMagmaMouthState = IDLE;
     }
 
     if (iFlag != 0)
@@ -274,16 +303,15 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
         pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
         vVelocity = vPlayerPos - vPos;
-        //m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
         vVelocity.y = 0.f;
         D3DXVec3Normalize(&vVelocity, &vVelocity);
 
         _matrix matRot;
-        D3DXMatrixRotationY(&matRot, D3DXToRadian(30.f) - D3DXToRadian(30.f) * m_iSpawnOrderArr[iFlag - 1]);
+        D3DXMatrixRotationY(&matRot, D3DXToRadian(10.f) - D3DXToRadian(10.f) * m_iSpawnOrderArr[iFlag - 1]);
 
         D3DXVec3TransformNormal(&vVelocity, &vVelocity, &matRot);
 
-        vVelocity *= 3.f;
+        vVelocity *= 6.f;
         vVelocity.y = 4.f;
 
         static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
@@ -299,6 +327,12 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
 
 void CMagmamouth::Move_Magmamouth(const _float& fTimeDelta)
 {
+    if (m_fFrame < 3.f)
+    {
+        Set_Motion_OpenMouth(fTimeDelta);
+        return;
+    }
+    
     _vec3 vPos, vDir, vDir2;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     vDir = m_MovePosition - vPos;
@@ -310,9 +344,8 @@ void CMagmamouth::Move_Magmamouth(const _float& fTimeDelta)
     {
         m_pTransformCom->Set_Pos(m_MovePosition);
         m_bMoveFlag2 = true;
-        Find_Point();
+        Find_BackPoint();
         vDir = m_MovePosition - vPos;
-        //m_eMagmaMouthState = IDLE;
         return;
     }
     else if (D3DXVec3Length(&vDir) < 3.f && m_bMoveFlag2 == false)
@@ -322,6 +355,7 @@ void CMagmamouth::Move_Magmamouth(const _float& fTimeDelta)
     else if (m_bMoveFlag2 == true && D3DXVec3Length(&vDir) < 0.1f)
     {
         m_eMagmaMouthState = IDLE;
+
         return;
 
     }
@@ -417,7 +451,7 @@ void CMagmamouth::Set_Position()
     
 }
 
-void CMagmamouth::Find_Point()
+void CMagmamouth::Find_BackPoint()
 {
     Set_Position();
     if (m_iMonsterX == 0)
@@ -462,7 +496,7 @@ void CMagmamouth::Find_Point()
         {
             if (m_iPlayerZ == 0)
             {
-                ++m_iMonsterZ;
+                //++m_iMonsterZ;
                 if (m_iPlayerX == 2)
                 {
                     --m_iMonsterX;
@@ -504,7 +538,7 @@ void CMagmamouth::Find_Point()
         {
             if (m_iPlayerZ == 2)
             {
-                --m_iMonsterZ;
+                //--m_iMonsterZ;
                 if (m_iPlayerX == 2)
                 {
                     --m_iMonsterX;
@@ -584,6 +618,118 @@ void CMagmamouth::Find_Point()
 
     m_MovePosition += m_vRoomCenterLocation;
 
+}
+
+void CMagmamouth::Set_Motion()
+{
+    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+
+    if (nullptr == pPlayerTransformCom)
+        return;
+
+    _vec3   vPlayerPos;
+    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+
+    _vec3   vPlayerLook;
+    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+
+    if (m_eMagmaMouthState == MOVE)
+    {
+        _vec3 vMonsterLook, vPlayerLook, vPos;
+
+        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+
+        if (nullptr == pPlayerTransformCom)
+            return;
+
+        pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        vMonsterLook = m_MovePosition - vPos;
+
+        vPlayerLook.y = 0;
+        vMonsterLook.y = 0;
+
+        _vec3 vAxis = { 0.f, 1.f, 0.f };
+        _vec3 vCross;
+
+        float fAngle = acosf(D3DXVec3Dot(D3DXVec3Normalize(&vPlayerLook, &vPlayerLook), D3DXVec3Normalize(&vMonsterLook, &vMonsterLook)));
+
+        if (D3DXToDegree(fAngle) > 135.f)
+        {
+            m_fFrame = 3.f;
+            m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+
+        }
+        else if (D3DXToDegree(fAngle) > 45.f)
+        {
+            _vec3 vecA = m_vRoomCenterLocation - vPos;
+            m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+            if (D3DXVec3Dot(D3DXVec3Cross(&vCross, &vecA, &vMonsterLook), &vAxis) > 0.f)
+                m_fFrame = 6.f;
+            else
+                m_fFrame = 4.f;
+        }
+        else
+        {
+            m_fFrame = 5.f;
+            m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+
+        }
+    }
+    else
+    {
+        m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+    }
+}
+
+void CMagmamouth::Set_Motion_OpenMouth(const _float& fTimeDelta)
+{
+    m_fFrame += fTimeDelta * 6.f;
+    if (m_fFrame > 4.f)
+        m_fFrame = 3.f;
+}
+
+void CMagmamouth::Set_Motion_CloseMouth(const _float& fTimeDelta)
+{
+    m_fFrame -= fTimeDelta * 6.f;
+    if (m_fFrame < 0.f)
+    {
+        m_fFrame = 0.f;
+        m_bCloseMouth = true;
+    }
+}
+void CMagmamouth::Set_Motion_CloseOpenMouth(const _float& fTimeDelta)
+{
+    if (m_bCloseMouth == false)
+    {
+        m_fFrame -= fTimeDelta * 6.f;
+
+        if (m_fFrame < 0.f)
+        {
+            m_fFrame = 0.f;
+            m_bCloseMouth = true;
+        }
+        else if (m_fFrame > 4.f)
+        {
+            m_fFrame = 4.f - 0.5f * 0.5f * 0.5f;
+        }
+
+    }
+    else
+    {
+        m_fFrame += fTimeDelta * 4.f;
+        if (m_fFrame > 4.f)
+        {
+            m_fFrame = 3.f;
+            m_bCloseMouth = false;
+        }
+    }
+}
+
+void CMagmamouth::MagmaMouth_Trail()
+{
 }
 
 void CMagmamouth::Free()
