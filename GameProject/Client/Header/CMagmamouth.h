@@ -68,7 +68,7 @@ private:
 	_vec3 m_MovePosition;
 	_bool m_bMoveFlag;
 	_bool m_bMoveFlag2;
-	_float m_bMoveFlag2;
+	_float m_bTrailDuration;
 
 	_uint m_iMonsterX;
 	_uint m_iMonsterZ;
