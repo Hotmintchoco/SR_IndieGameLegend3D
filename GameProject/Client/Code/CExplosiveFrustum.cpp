@@ -9,6 +9,9 @@
 #include "CRoomLayer.h"
 #include "CAbstractFactory.h"
 #include "CFrustumExplodeEffect.h"
+#include "CCollisionMgr.h"
+#include "CExplodeRange.h"
+#include "CRandomMgr.h"
 
 CExplosiveFrustum::CExplosiveFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CFrustum(pGraphicDev)
@@ -36,7 +39,7 @@ HRESULT CExplosiveFrustum::Ready_GameObject()
 _int CExplosiveFrustum::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CFrustum::Update_GameObject(fTimeDelta);
-    
+
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
     _vec3   vPos;
@@ -50,6 +53,7 @@ void CExplosiveFrustum::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     m_pLight->PropagateTransform(m_pTransformCom);
     m_pGlass->PropagateTransform(m_pTransformCom);
+    m_pExplodeRange->PropagateTransform(m_pTransformCom);
 
     CFrustum::LateUpdate_GameObject(fTimeDelta);
 }
@@ -65,29 +69,11 @@ void CExplosiveFrustum::Render_GameObject()
 
 void CExplosiveFrustum::OnCollisionEnter(CGameObject* pOther)
 {
-    CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-    
-    CGameObject* pObject = nullptr;
-
-    _bool bIsDestroyed = DestroyFrustum(dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider")));
+    _bool bIsDestroyed = CheckDestroyCondition(dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider")));
 
     if (bIsDestroyed)
     {
-        /* 자식 오브젝트 삭제 처리 */
-        m_pLight->Set_Dead(true);
-        m_pGlass->Set_Dead(true);
-
-        /* 아이템 */
-        CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
-        if (pObject)
-            pLayer->Add_GameObject(L"Item", pObject);
-
-        /* 폭발 효과 */
-        pObject = CFrustumExplodeEffect::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS] + _vec3{0.f, 0.5f, 0.f}, _vec3{ 0.6f, 0.6f, 0.6f });
-        if (nullptr == pObject)
-            assert(0);
-        if (FAILED(pLayer->Add_GameObject(L"FrustumExplode", pObject)))
-            assert(0);
+        Destroy();
     }
 }
 
@@ -141,6 +127,48 @@ void CExplosiveFrustum::SpawnChildren()
     pGlass->AttachTo(this);
     /* 아마 이름은 중복이 여럿 될 것. 일단 스폰만 확인 */
     m_pOwner->Add_GameObject(L"Explosive_Frustum_Glass", pGlass);
+
+    CExplodeRange* pArea = CExplodeRange::Create(m_pGraphicDev);
+
+    if (!pArea)
+    {
+        assert(0);
+        return;
+    }
+
+    m_pExplodeRange = pArea;
+    pArea->AttachTo(this);
+    /* 아마 이름은 중복이 여럿 될 것. 일단 스폰만 확인 */
+    m_pOwner->Add_GameObject(L"Explode_Range", pArea);
+
+    m_pExplodeRange->SetScale(2.f);
+    m_pExplodeRange->SetDelayTime(CRandomMgr::GetInstance()->AddRandomNoise<float>(1.0f, 0.5f));
+}
+
+void CExplosiveFrustum::Destroy()
+{
+    CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+
+    /* 자식 오브젝트 삭제 처리 */
+    m_pLight->Set_Dead(true);
+    m_pGlass->Set_Dead(true);
+
+    /* 지연 폭파 카운트 시작 */
+    m_pExplodeRange->OnSwitch();
+
+    /* 아이템 */
+    CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
+    if (pObject)
+        pLayer->Add_GameObject(L"Item", pObject);
+
+    /* 폭발 효과 */
+    pObject = CFrustumExplodeEffect::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS] + _vec3{ 0.f, 0.5f, 0.f }, _vec3{ 0.6f, 0.6f, 0.6f });
+    if (nullptr == pObject)
+        assert(0);
+    if (FAILED(pLayer->Add_GameObject(L"FrustumExplode", pObject)))
+        assert(0);
+
+    Set_Dead(true);
 }
 
 CExplosiveFrustum* CExplosiveFrustum::Create(LPDIRECT3DDEVICE9 pGraphicDev)

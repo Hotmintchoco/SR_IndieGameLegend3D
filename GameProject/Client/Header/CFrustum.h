@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CGameObject.h"
 
@@ -20,14 +20,16 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-	// ì¶©ëŒ	ì´ë²¤íŠ¸ ì²˜ë¦¬ í•¨ìˆ˜ (ê¸°ë³¸ì ìœ¼ë¡œ Obstacle_Collision ì²˜ë¦¬)
+	// Ãæµ¹	ÀÌº¥Æ® Ã³¸® ÇÔ¼ö (±âº»ÀûÀ¸·Î Obstacle_Collision Ã³¸®)
 	virtual void	OnCollisionStay(CGameObject* pOther) override;
 
 protected:
 	HRESULT			Add_Component();
 
-	// ê³µê²©ì— íŒŒê´´ë˜ëŠ” í•¨ìˆ˜
-	_bool			DestroyFrustum(CCollider* pOtherCollider);
+	// °ø°İ¿¡ ÆÄ±«µÇ´Â ÇÔ¼ö
+	_bool			CheckDestroyCondition(CCollider* pOtherCollider);
+
+	virtual void Destroy() {}
 
 protected:
 	Engine::CTransform* m_pTransformCom;

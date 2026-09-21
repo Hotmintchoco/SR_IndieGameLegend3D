@@ -71,6 +71,7 @@ HRESULT CStage::Ready_Scene()
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_ITEM);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODERANGE, COLL_OBSTACLE);
 
 	return S_OK;
 }

@@ -31,6 +31,8 @@ protected:
 	Engine::CPlyTex* m_pBufferCom;
 	Engine::CTexture* m_pTextureCom;
 
+	virtual void Destroy() override;
+
 public:
 	static CBreakableFrustum* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

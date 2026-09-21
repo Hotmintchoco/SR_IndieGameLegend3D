@@ -411,6 +411,9 @@
     <ClInclude Include="..\Header\CFrustumExplodeEffect.h">
       <Filter>02. GameObject\06. Effect\FrustumExplodeEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CExplodeRange.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -598,6 +601,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CFrustumExplodeEffect.cpp">
       <Filter>02. GameObject\06. Effect\FrustumExplodeEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CExplodeRange.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

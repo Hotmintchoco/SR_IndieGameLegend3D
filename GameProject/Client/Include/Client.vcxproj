@@ -156,6 +156,7 @@
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEffect.h" />
     <ClInclude Include="..\Header\CEnergy.h" />
+    <ClInclude Include="..\Header\CExplodeRange.h" />
     <ClInclude Include="..\Header\CExplosiveFrustum.h" />
     <ClInclude Include="..\Header\CExplosiveFrustumGlass.h" />
     <ClInclude Include="..\Header\CExplosiveFrustumLight.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEffect.cpp" />
     <ClCompile Include="..\Code\CEnergy.cpp" />
+    <ClCompile Include="..\Code\CExplodeRange.cpp" />
     <ClCompile Include="..\Code\CExplosiveFrustum.cpp" />
     <ClCompile Include="..\Code\CExplosiveFrustumGlass.cpp" />
     <ClCompile Include="..\Code\CExplosiveFrustumLight.cpp" />

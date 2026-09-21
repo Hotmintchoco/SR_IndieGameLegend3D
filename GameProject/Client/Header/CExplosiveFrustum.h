@@ -11,6 +11,7 @@ namespace Engine
 
 class CExplosiveFrustumLight;
 class CExplosiveFrustumGlass;
+class CExplodeRange;
 
 class CExplosiveFrustum : public CFrustum
 {
@@ -38,6 +39,9 @@ protected:
 
 	CExplosiveFrustumLight* m_pLight = nullptr;
 	CExplosiveFrustumGlass* m_pGlass = nullptr;
+	CExplodeRange* m_pExplodeRange = nullptr;
+
+	virtual void Destroy() override;
 
 public:
 	static CExplosiveFrustum* Create(LPDIRECT3DDEVICE9 pGraphicDev);
