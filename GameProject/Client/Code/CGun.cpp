@@ -197,7 +197,7 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
         _float fToDistance = 0.f;
 
         vMapKey.push_back(L"Environment_Layer");
-        vMapKey.push_back(L"GameLogic_Layer");
+        // vMapKey.push_back(L"GameLogic_Layer");
         int iRoomCnt = CRoomLoadingMgr::GetInstance()->GetRoomTotalCount();
         for (int i = 0; i < iRoomCnt; ++i)
         {
