@@ -8,7 +8,9 @@
 #include "CFireball.h"
 
 CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(0.f), m_fStateUpdateDuration(2.f), m_eMagmaMouthState(IDLE)
+    : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(0.f), m_fStateUpdateDuration(2.f), 
+    m_eMagmaMouthState(IDLE), m_vRoomCenterLocation{ 0.f,0.f,0.f }, m_MovePosition{0.f,0.f,0.f},
+    m_iMonsterX(0), m_iMonsterZ(0), m_iPlayerX(0), m_iPlayerZ(0), m_bMoveFlag(false), m_bMoveFlag2(false)
 {
     ZeroMemory(m_bSpawnFinish, sizeof(m_bSpawnFinish));
     ZeroMemory(m_bFireballFinish, sizeof(m_bFireballFinish));
@@ -31,7 +33,9 @@ HRESULT CMagmamouth::Ready_GameObject()
 
     m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
-    //m_pColliderCom->Set_Radius(0.2f);
+    
+    m_vRoomCenterLocation = { 60.f,0.f,60.f };
+
     m_iHp = 6;
     return S_OK;
 }
@@ -59,9 +63,10 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
     if (m_fStateUpdateTime > m_fStateUpdateDuration)
     {
         m_fStateUpdateTime = 0.f;
-        m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 2);
+        m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 3);
         //m_eMagmaMouthState = SPAWN;
-        m_eMagmaMouthState = FIREBALL;
+        //m_eMagmaMouthState = FIREBALL;
+        m_eMagmaMouthState = MOVE;
         if (m_eMagmaMouthState == SPAWN)
         {
             Shuffle_Array(4);
@@ -77,7 +82,13 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
             m_fSpawnTime = 0.f;
             m_fStateUpdateDuration = 5.f;
             m_fSpawn_CoolDown = 0.5f;
-
+        }
+        else if (m_eMagmaMouthState == MOVE)
+        {
+            Set_MovePosition();
+            m_fStateUpdateDuration = 5.f;
+            m_bMoveFlag = false;
+            m_bMoveFlag2 = false;
         }
     }
     switch (m_eMagmaMouthState)
@@ -91,6 +102,7 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
         Throw_Fireball(fTimeDelta);
         break;
     case MOVE:
+        Move_Magmamouth(fTimeDelta);
         break;
     }
     //m_fFrame += fTimeDelta * 6.f;
@@ -282,6 +294,295 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
         if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject)))
             return;
     }
+
+}
+
+void CMagmamouth::Move_Magmamouth(const _float& fTimeDelta)
+{
+    _vec3 vPos, vDir, vDir2;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    vDir = m_MovePosition - vPos;
+
+    vDir2 = m_MovePosition - vPos;
+    vDir2.y = -0.75f;
+
+    if (D3DXVec3Length(&vDir) < 0.1f && m_bMoveFlag2==false)
+    {
+        m_pTransformCom->Set_Pos(m_MovePosition);
+        m_bMoveFlag2 = true;
+        Find_Point();
+        vDir = m_MovePosition - vPos;
+        //m_eMagmaMouthState = IDLE;
+        return;
+    }
+    else if (D3DXVec3Length(&vDir) < 3.f && m_bMoveFlag2 == false)
+    {
+        m_bMoveFlag = true;
+    }
+    else if (m_bMoveFlag2 == true && D3DXVec3Length(&vDir) < 0.1f)
+    {
+        m_eMagmaMouthState = IDLE;
+        return;
+
+    }
+
+
+    if (m_bMoveFlag2 == false)
+    {
+        if (m_bMoveFlag == true)
+        {
+            D3DXVec3Normalize(&vDir, &vDir);
+            m_pTransformCom->Move_Pos(&vDir, 6.f, fTimeDelta);
+        }
+        else
+        {
+            D3DXVec3Normalize(&vDir2, &vDir2);
+            m_pTransformCom->Move_Pos(&vDir2, 12.f, fTimeDelta);
+        }
+    }
+    else
+    {
+        D3DXVec3Normalize(&vDir, &vDir);
+        m_pTransformCom->Move_Pos(&vDir, 3.f, fTimeDelta);
+    }
+}
+
+void CMagmamouth::Set_MovePosition()
+{
+    Set_Position();
+    if (m_iPlayerX == 1 && m_iPlayerZ == 1)
+    {
+        if (m_iMonsterX == 2)m_iMonsterX = 0;
+        else if (m_iMonsterX == 0)m_iMonsterX = 2;
+        if (m_iMonsterZ == 2)m_iMonsterZ = 0;
+        else if (m_iMonsterZ == 0)m_iMonsterZ = 2;
+    }
+    else
+    {
+        m_iMonsterX = m_iPlayerX;
+        m_iMonsterZ = m_iPlayerZ;
+    }
+
+    m_MovePosition.x = m_iMonsterX * MAPX / 3.f - MAPX / 2.f + MAPX / 6.f;
+    m_MovePosition.y = 2.f;
+    m_MovePosition.z = m_iMonsterZ * MAPZ / 3.f - MAPZ / 2.f + MAPZ / 6.f;
+
+    m_MovePosition += m_vRoomCenterLocation;
+}
+
+void CMagmamouth::Set_Position()
+{
+    _vec3 vMonsterPos, vPlayerPos;
+    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+    if (nullptr == pPlayerTransformCom) return;
+
+    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    m_pTransformCom->Get_Info(INFO_POS, &vMonsterPos);
+
+    vMonsterPos -= m_vRoomCenterLocation;
+    vPlayerPos -= m_vRoomCenterLocation;
+
+	if (vPlayerPos.x < -MAPX / 2.f || vPlayerPos.x > MAPX / 2.f ||
+        vPlayerPos.z < -MAPZ / 2.f || vPlayerPos.z > MAPZ / 2.f)
+		return;
+
+	if (vMonsterPos.x < -MAPX / 2.f + MAPX / 3.f)
+        m_iMonsterX = 0;
+	else if (vMonsterPos.x < -MAPX / 2.f + MAPX / 3.f * 2.f)
+        m_iMonsterX = 1;
+	else
+        m_iMonsterX = 2;
+
+	if (vMonsterPos.z < -MAPZ / 2.f + MAPZ / 3.f)
+        m_iMonsterZ = 0;
+	else if (vMonsterPos.z < -MAPZ / 2.f + MAPZ / 3.f * 2.f)
+        m_iMonsterZ = 1;
+	else
+        m_iMonsterZ = 2;
+
+    if (vPlayerPos.x < -MAPX / 2.f + MAPX / 3.f)
+        m_iPlayerX = 0;
+    else if (vPlayerPos.x < -MAPX / 2.f + MAPX / 3.f * 2.f)
+        m_iPlayerX = 1;
+    else
+        m_iPlayerX = 2;
+
+    if (vPlayerPos.z < -MAPZ / 2.f + MAPZ / 3.f)
+        m_iPlayerZ = 0;
+    else if (vPlayerPos.z < -MAPZ / 2.f + MAPZ / 3.f * 2.f)
+        m_iPlayerZ = 1;
+    else
+        m_iPlayerZ = 2;
+    
+}
+
+void CMagmamouth::Find_Point()
+{
+    Set_Position();
+    if (m_iMonsterX == 0)
+    {
+        if (m_iMonsterZ == 0)
+        {
+            if (m_iPlayerZ == 0)
+            {
+                ++m_iMonsterZ;
+            }
+            else
+            {
+                ++m_iMonsterX;
+            }
+        }
+        else if (m_iMonsterZ == 1)
+        {
+            if (m_iPlayerZ == 0)
+            {
+                ++m_iMonsterZ;
+            }
+            else
+            {
+                --m_iMonsterZ;
+            }
+        }
+        else
+        {
+            if (m_iPlayerZ == 2)
+            {
+                --m_iMonsterZ;
+            }
+            else
+            {
+                ++m_iMonsterX;
+            }
+        }
+    }
+    else if (m_iMonsterX == 1)
+    {
+        if (m_iMonsterZ == 0)
+        {
+            if (m_iPlayerZ == 0)
+            {
+                ++m_iMonsterZ;
+                if (m_iPlayerX == 2)
+                {
+                    --m_iMonsterX;
+                }
+                else
+                {
+                    ++m_iMonsterX;
+                }
+            }
+            else
+            {
+                if (m_iPlayerX == 2)
+                {
+                    --m_iMonsterX;
+                }
+                else
+                {
+                    ++m_iMonsterX;
+                }
+
+            }
+        }
+        else if (m_iMonsterZ == 1)
+        {
+            if (m_iPlayerX == 1 && m_iPlayerZ == 1)
+            {
+                --m_iMonsterX;
+                --m_iMonsterZ;
+            }
+            else
+            {
+                if (m_iPlayerX == 2)m_iMonsterX = 0;
+                else if (m_iPlayerX == 0)m_iMonsterX = 2;
+                if (m_iPlayerZ == 2)m_iMonsterZ = 0;
+                else if (m_iPlayerZ == 0)m_iMonsterZ = 2;
+            }
+        }
+        else
+        {
+            if (m_iPlayerZ == 2)
+            {
+                --m_iMonsterZ;
+                if (m_iPlayerX == 2)
+                {
+                    --m_iMonsterX;
+                }
+                else
+                {
+                    ++m_iMonsterX;
+                }
+            }
+            else
+            {
+                if (m_iPlayerX == 2)
+                {
+                    --m_iMonsterX;
+                }
+                else
+                {
+                    ++m_iMonsterX;
+                }
+
+            }
+        }
+    }
+    else
+    {
+        if (m_iMonsterZ == 0)
+        {
+            if (m_iPlayerZ == 0)
+            {
+                ++m_iMonsterZ;
+            }
+            else
+            {
+                --m_iMonsterX;
+            }
+        }
+        else if (m_iMonsterZ == 1)
+        {
+            if (m_iPlayerZ == 0)
+            {
+                ++m_iMonsterZ;
+            }
+            else
+            {
+                --m_iMonsterZ;
+            }
+        }
+        else
+        {
+            if (m_iPlayerZ == 2)
+            {
+                --m_iMonsterZ;
+            }
+            else
+            {
+                --m_iMonsterX;
+            }
+        }
+    }
+
+    //if (m_iPlayerX == 1 && m_iPlayerZ == 1)
+    //{
+    //    if (m_iMonsterX == 2)m_iMonsterX = 0;
+    //    else if (m_iMonsterX == 0)m_iMonsterX = 2;
+    //    if (m_iMonsterZ == 2)m_iMonsterZ = 0;
+    //    else if (m_iMonsterZ == 0)m_iMonsterZ = 2;
+    //}
+    //else
+    //{
+    //    m_iMonsterX = m_iPlayerX;
+    //    m_iMonsterZ = m_iPlayerZ;
+    //}
+
+    m_MovePosition.x = m_iMonsterX * MAPX / 3.f - MAPX / 2.f + MAPX / 6.f;
+    m_MovePosition.y = 2.f;
+    m_MovePosition.z = m_iMonsterZ * MAPZ / 3.f - MAPZ / 2.f + MAPZ / 6.f;
+
+    m_MovePosition += m_vRoomCenterLocation;
 
 }
 
