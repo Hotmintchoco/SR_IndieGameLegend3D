@@ -36,9 +36,6 @@ void CEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 
-    _vec3       vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    CGameObject::Compute_ViewZ(&vPos);
 }
 
 void CEffect::Render_GameObject()

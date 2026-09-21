@@ -30,7 +30,9 @@ HRESULT CTrail::Ready_GameObject()
     D3DXCOLOR color[4];
     for (int i = 0; i < 4; ++i)
     {
-        color[i] = (1.f, 1.f, 1.f, 0.5f);
+        color[i] = { 1.f, 1.f, 1.f, 1.f };
+        //color[i] = D3DCOLOR_ARGB(128, 255, 255, 255);
+        //color[i] = { 0.f, 1.f, 0.f, 1.f };
     }
     static_cast<CRcColCustom*>(m_pBufferCom)->Set_Buffer(m_vTrailPoint, color);
     return S_OK;
@@ -46,6 +48,7 @@ _int CTrail::Update_GameObject(const _float& fTimeDelta)
         Set_Dead(true);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+    //CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
     return iExit;
 }
@@ -54,6 +57,9 @@ void CTrail::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CEffect::LateUpdate_GameObject(fTimeDelta);
 
+    _vec3       vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    CGameObject::Compute_ViewZ(&vPos);
 
 
 }
@@ -67,7 +73,12 @@ void CTrail::Render_GameObject()
 
     //m_pGraphicDev->SetTexture(0, nullptr);
 
+
+
     m_pBufferCom->Render_Buffer();
+
+
+
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
