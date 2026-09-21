@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CEnergy.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -6,6 +6,7 @@
 #include "CTransform.h"
 #include "CGun.h"
 #include "CManagement.h"
+#include "CPlayer.h"
 
 CEnergy::CEnergy(LPDIRECT3DDEVICE9 pGraphicDev)
     : CItem(pGraphicDev)
@@ -60,8 +61,6 @@ void CEnergy::Render_GameObject()
 
     m_pTextureCom->Set_Texture((_uint)m_fFrame);
     m_pBufferCom->Render_Buffer();
-
-    //m_pColliderCom->Render_DebugCube();
 }
 
 HRESULT CEnergy::Add_Component()
@@ -79,10 +78,8 @@ HRESULT CEnergy::Add_Component()
 
 void CEnergy::Consume()
 {
-    // 1. 무기의 궁 게이지, 특수공격 게이지 업데이트
-    // 2. 무기는 게임 상태 매니저에게 게이지 값이 변경되었음을 알림
-    // CGun* pGun = static_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"));
-    // pGun->...();
+    CPlayer* pPlayer = static_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
+    pPlayer->GetItem(ITEMID::ITEM_SKILLGAUGE);
 
     Set_Dead(true);
 }

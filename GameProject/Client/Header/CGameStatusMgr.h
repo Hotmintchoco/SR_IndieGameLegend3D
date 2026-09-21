@@ -1,8 +1,13 @@
-﻿#pragma once
+#pragma once
 
 #include "Engine_Define.h"
 
 class CRoomLayer;
+
+namespace Engine
+{
+	class CGameObject;
+}
 
 class CGameStatusMgr
 {
@@ -17,6 +22,7 @@ public:
 	void Render();
 
 	void RenderImGui();
+	void DebugPanelForRendering();
 
 	CRoomLayer* GetCurrentRoomLayer();
 
@@ -28,8 +34,8 @@ public:
 	inline void UpdatePlayerHp(int iAmount) { m_iPlayerHp += iAmount; }
 	inline void UpdatePlayerMaxHp(int iAmount) { m_iPlayerMaxHp += iAmount; }
 
-	inline void UpdateUltimateGauge(float fAmount) { m_fUltGauge += fAmount; }
-	inline void UpdateSpecialAttackGauge(float fAmount) { m_fSpecialAtkGauge += fAmount; }
+	inline void SetUltimateGauge(float fAmount) { m_fUltGauge = fAmount; }
+	inline void SetSpecialAttackGauge(float fAmount) { m_fSpecialAtkGauge = fAmount; }
 
 	inline void UpdateGem(int iAmount) { m_iGem += iAmount; }
 
@@ -40,6 +46,8 @@ public:
 	inline float GetYaw() const { return m_fYaw; }
 	inline int GetGemCount() const { return m_iGem; }
 
+	inline void RegisterPseudoDark(CGameObject* pObject) { m_vecPseudoDark.push_back(pObject); }
+
 private:
 	/* Minimap */
 	int m_iCurrentRoomIndex = 12;
@@ -48,8 +56,8 @@ private:
 	_vec3 m_vPlayerPos = _vec3{ 0.f, 0.f, 0.f };
 
 	/* Player */
-	int m_iPlayerHp = 0;
-	int m_iPlayerMaxHp = 0;
+	int m_iPlayerHp = 6;
+	int m_iPlayerMaxHp = 12;
 
 	/* Weapon */
 	float m_fUltGauge = 0.f;
@@ -63,6 +71,10 @@ private:
 
 	/* FPS */
 	float m_fDT = 0;
+
+	/* Render Debug */
+	bool m_bShowDark = false;
+	vector<CGameObject*> m_vecPseudoDark;
 
 private:
 	virtual void Free();

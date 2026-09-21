@@ -121,6 +121,12 @@
     <ClCompile Include="..\Code\CRcColCustom.cpp">
       <Filter>05. Component\00. VIBuffer\01. RcCol</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CDebugMgr.cpp">
+      <Filter>14. Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\IRenderable.cpp">
+      <Filter>08. Renderer\Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CGraphicDev.h">
@@ -267,6 +273,12 @@
     <ClInclude Include="..\Header\CRcColCustom.h">
       <Filter>05. Component\00. VIBuffer\01. RcCol</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CDebugMgr.h">
+      <Filter>14. Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\IRenderable.h">
+      <Filter>08. Renderer\Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00. GraphicDev">
@@ -385,6 +397,12 @@
     </Filter>
     <Filter Include="13. Random">
       <UniqueIdentifier>{7ac33c56-b98d-4ef1-ae44-5805a98ac60f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="14. Debug">
+      <UniqueIdentifier>{a970fb51-0b7b-4b4e-92ea-822f8a1e8778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Renderer\Interface">
+      <UniqueIdentifier>{c0423c80-7b59-4445-a095-ad629dfa4ca7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

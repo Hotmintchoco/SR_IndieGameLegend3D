@@ -1,6 +1,6 @@
-Ôªø#pragma once
+#pragma once
 
-/* Î≤Ω Î∞©Ìñ• */
+/* ∫Æ πÊ«‚ */
 enum class EWallDir
 {
 	NONE,
@@ -54,7 +54,7 @@ enum COLLISIONID
 	COLL_MAX
 };
 
-/* Îßµ Î∞∞Ïπò Ïò§Î∏åÏ†ùÌä∏ ÌÉÄÏûÖ */
+/* ∏  πËƒ° ø¿∫Í¡ß∆Æ ≈∏¿‘ */
 enum class EObjectType
 {
 	NONE = 0,
@@ -91,3 +91,12 @@ enum class ERoomEventType
 };
 
 enum ITEMID { ITEM_HEAL, ITEM_SKILLGAUGE, ITEM_END };
+
+enum class EContaminateType
+{
+	NONE,
+
+	LAVA,
+
+	MAX,
+};

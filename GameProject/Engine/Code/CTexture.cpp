@@ -42,7 +42,19 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eID, const _tchar* pPath, const _uint&
 		switch (eID)
 		{
 		case TEX_NORMAL:
-			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFileName, (LPDIRECT3DTEXTURE9*)&pTexture)))
+			//if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFileName, (LPDIRECT3DTEXTURE9*)&pTexture)))
+			if (FAILED(
+				D3DXCreateTextureFromFileEx(
+					m_pGraphicDev, szFileName,
+					D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2,	  // 원본 크기 유지
+					1,                                            // MipLevels = 1
+					0,
+					D3DFMT_A8R8G8B8,                              // DXT 금지
+					D3DPOOL_MANAGED,
+					D3DX_FILTER_NONE,                             // 리사이즈 필터
+					D3DX_FILTER_NONE,                             // 밉 필터
+					0, nullptr, nullptr, (LPDIRECT3DTEXTURE9*)&(pTexture)
+				)))
 				return E_FAIL;
 
 			break;

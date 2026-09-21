@@ -1,9 +1,11 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CLayer.h"
 #include "CEventDelegate.h"
 #include "CClearCondition.h"
 #include "Client_Struct.h"
+
+class CTile;
 
 class CRoomLayer : public CLayer
 {
@@ -25,15 +27,25 @@ public:
 	CEventDelegate<TRoomEventCtx> m_OnRoomEvent;
 	void OnRoomTriggerBlockCollided();
 
-	/* ëª¬ìŠ¤í„° í´ë˜ìŠ¤ê°€ ì‚¬ìš© */
+	/* ¸ó½ºÅÍ Å¬·¡½º°¡ »ç¿ë */
 	inline void IncreaseEntityCount() { ++m_iEntityCount; }
 	inline void DecreaseEntityCount() { --m_iEntityCount; }
 	inline int GetEntityCount() { return m_iEntityCount; }
 
+	/* Å¸ÀÏÀÌ ¿À¿°µÇ´Â °ø°İ */
+	void RequestTileContamination(const _vec3& vPos, int iRange, EContaminateType eType, float fDuration);
+	CTile* GetTileFromWorldPosition(const _vec3& vWorldPos);
+
 private:
 	void CheckClearCondition();
+	CTile* GetTileFromIndex2D(const TTileIdx& tIdx);
+
+	/* ¿À¿° Å¸ÀÏ°ú ÇÃ·¹ÀÌ¾î */
+	void PlayerTileInteraction();
 
 	int m_iRoomIndex = -1;
+	_vec3 m_vRoomCenterPos = _vec3{ 0.f, 0.f, 0.f };
+
 	bool m_bCleared = false;
 	bool m_bVisited = false;
 	bool m_bOnProgress = false;

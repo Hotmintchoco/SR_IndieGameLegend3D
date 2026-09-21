@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CBreakableFrustum.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -20,7 +20,7 @@ HRESULT CBreakableFrustum::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    // Note : ¼ø¼­¿¡ ÁÖÀÇ
+    // Note : ìˆœì„œì— ì£¼ì˜
     if (FAILED(CFrustum::Ready_GameObject()))
         return E_FAIL;
 
@@ -48,21 +48,21 @@ void CBreakableFrustum::Render_GameObject()
     m_pTextureCom->Set_Texture(0);
 
     m_pBufferCom->Render_Buffer();
-
-    m_pColliderCom->Render_DebugCube();
 }
 
 void CBreakableFrustum::OnCollisionEnter(CGameObject* pOther)
 {
     CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
 
-    CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
-    if (pObject)
+	_bool bIsDestroyed = DestroyFrustum(dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider")));
+    
+    if (bIsDestroyed)
     {
-        pLayer->Add_GameObject(L"Item", pObject);
-    }
+        CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
 
-    Set_Dead(true);
+        if (pObject)
+            pLayer->Add_GameObject(L"Item", pObject);
+    }
 }
 
 HRESULT CBreakableFrustum::Add_Component()

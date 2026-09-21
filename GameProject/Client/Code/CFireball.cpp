@@ -9,6 +9,9 @@
 #include "CHeart.h"
 #include "CGem.h"
 #include "CEnergy.h"
+#include "CGameStatusMgr.h"
+#include "CRoomLayer.h"
+#include "CTile.h"
 
 CFireball::CFireball(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_fLandingTime(0.f), m_iLandingCount(0), m_fLandingVelocity(0.f)
@@ -43,13 +46,39 @@ _int CFireball::Update_GameObject(const _float& fTimeDelta)
 
 	Throw(fTimeDelta);
 
-    if (m_iLandingCount == 5)
-    {
-        Set_Dead(true);
-        //지형파괴로직
-    }
+    /* 성철 : Dead 처리 조건 확인하는 함수 */
+    CheckDeadCondition();
+    /* -------------------------------- */
 
     return iExit;
+}
+
+void CFireball::CheckDeadCondition()
+{
+    /* N번 바닥에 부딪힌 이후 또는 맵 가장자리로 밀려났을 때 Dead 처리 */
+
+    _vec3 vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+    bool bDeadCondition1 = m_iLandingCount == 3;
+    
+    CTile* pTile = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->GetTileFromWorldPosition(vPos);
+    bool bDeadCondition2 = false;
+    if (pTile)
+    {
+        bDeadCondition2 = pTile->GetResistContamination();
+    }
+    else
+    {
+        bDeadCondition2 = true;
+    }
+    
+    if (bDeadCondition1 || bDeadCondition2)
+    {
+        /* 파괴 시에는 큰 범위로 오염 */
+        CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->RequestTileContamination(vPos, 3, EContaminateType::LAVA, 3.f);
+        Set_Dead(true);
+    }
 }
 
 void CFireball::LateUpdate_GameObject(const _float& fTimeDelta)
@@ -141,6 +170,13 @@ void CFireball::Throw(const _float& fTimeDelta)
         m_pTransformCom->m_vInfo[INFO_POS].y = m_pTransformCom->m_vScale.y;
         m_vVelocity.y = -vVelocity.y / 3.f * 2.f;
         m_fLandingVelocity = 0.f;
+
+        /* 성철 : 튕길 때마다 작은 범위의 불 영역 생성 */
+        _vec3 vPos;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->RequestTileContamination(vPos, 1, EContaminateType::LAVA, 3.f);
+        /* -------------------------------------- */
+        
         return;
     }
     m_pTransformCom->Move_Pos(&vVelocity, 1.f, fTimeDelta);

@@ -81,7 +81,7 @@ _int CGun::Update_GameObject(const _float& fTimeDelta)
 
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_PRIORITY, this);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
     return iExit;
 }
@@ -104,7 +104,7 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
     D3DXVec3Cross(&vUp, &vForword, &vRight);
     D3DXVec3Normalize(&vUp, &vUp);
 
-    _vec3	vPos_Gun = vPos_Player + (vRight * 0.3f) + (vForword * 0.5f) + (vUp * -0.9f); // 총Mesh 월드좌표 계산
+    _vec3	vPos_Gun = vPos_Player + (vRight * 0.2f) + (vForword * 0.1f) + (vUp * -0.6f); // 총Mesh 월드좌표 계산
 
 #pragma region 스킬 사용 및 총알 스위칭
 
@@ -162,11 +162,11 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
     switch (m_iCurBullet)
     {
     case BULLET_DEFAULT:
-        m_fShootRate = 0.4f;
+        m_fShootRate = 0.3f;
         m_iDmg = 10;
         break;
     case BULLET_SMALL:
-        m_fShootRate = 0.2f;
+        m_fShootRate = 0.15f;
         m_iDmg = 5;
         break;
     }
@@ -187,7 +187,7 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
     {
         m_fLastShotTime = 0.f;
 
-        _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.8f) + (vUp * 0.4f); // 총구 위치
+        _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.45f) + (vUp * 0.25f); // 총구 위치
         _vec3	vBullet_To; // 크로스헤어 도달점
 
 #pragma region RayCast를 이용한 조준좌표 계산
@@ -321,6 +321,15 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
 
     _matrix matWorld;
     D3DXMatrixIdentity(&matWorld);
+    
+    _matrix matScale;
+
+    D3DXMatrixScaling(&matScale, 0.6f, 0.6f, 0.6f);
+
+    D3DXVec3TransformCoord(&vUp, &vUp, &matScale);
+    D3DXVec3TransformCoord(&vRight, &vRight, &matScale);
+    D3DXVec3TransformCoord(&vForword, &vForword, &matScale);
+
 
 #pragma region 총알 발사 시 반동
 
@@ -357,8 +366,8 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
         }
     }
 
-    D3DXVec3TransformNormal(&vUp, &vUp, &matAxis);
-    D3DXVec3TransformNormal(&vForword, &vForword, &matAxis);
+    D3DXVec3TransformCoord(&vUp, &vUp, &matAxis); //
+    D3DXVec3TransformCoord(&vForword, &vForword, &matAxis); //
 
     _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.8f) + (vUp * 0.4f);
     _vec3   vRotAxis = vPos_Gun - vBullet_From;
@@ -403,9 +412,9 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
             {
                 D3DXMatrixRotationAxis(&matRotAxis, &vRotAxis, D3DXToRadian(-fAnimationDelta * fAnimationSpeed));
             }
-            D3DXVec3TransformNormal(&vUp, &vUp, &matRotAxis);
-            D3DXVec3TransformNormal(&vForword, &vForword, &matRotAxis);
-            D3DXVec3TransformNormal(&vRight, &vRight, &matRotAxis);
+            D3DXVec3TransformCoord(&vUp, &vUp, &matRotAxis); //
+            D3DXVec3TransformCoord(&vForword, &vForword, &matRotAxis); //
+            D3DXVec3TransformCoord(&vRight, &vRight, &matRotAxis); //
         }
         else
         {

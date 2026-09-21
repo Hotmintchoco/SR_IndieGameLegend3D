@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CHeart.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -57,8 +57,6 @@ void CHeart::Render_GameObject()
     
     m_pTextureCom->Set_Texture(0);
     m_pBufferCom->Render_Buffer();
-
-    //m_pColliderCom->Render_DebugCube();
 }
 
 HRESULT CHeart::Add_Component()
@@ -76,10 +74,8 @@ HRESULT CHeart::Add_Component()
 
 void CHeart::Consume()
 {
-    // 1. 플레이어의 체력 회복
-    // 2. 플레이어는 게임 상태 매니저에게 현재 체력이 변경되었음을 알림
-    // CPlayer* pPlayer = static_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
-    // pPlayer->{체력 회복 함수... }(1);
+    CPlayer* pPlayer = static_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
+    pPlayer->GetItem(ITEMID::ITEM_HEAL);
 
     Set_Dead(true);
 }

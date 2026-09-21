@@ -33,6 +33,8 @@ HRESULT CLayer::Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject)
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
+	pGameObject->SetOwner(this);
+
 	m_mapObject.insert({ pObjTag, pGameObject });
 
 	return S_OK;
@@ -58,7 +60,8 @@ _int CLayer::Update_Layer(const _float& fTimeDelta)
 			continue;
 		}
 
-		iResult = pObj->Update_GameObject(fTimeDelta);
+		if (pObj->Get_IsActive())
+			iResult = pObj->Update_GameObject(fTimeDelta);
 		if (iResult & 0x80000000)
 			return iResult;
 
@@ -71,7 +74,10 @@ _int CLayer::Update_Layer(const _float& fTimeDelta)
 void CLayer::LateUpdate_Layer(const _float& fTimeDelta)
 {
 	for (auto& pObj : m_mapObject)
-		pObj.second->LateUpdate_GameObject(fTimeDelta);
+	{
+		if (pObj.second->Get_IsActive())
+			pObj.second->LateUpdate_GameObject(fTimeDelta);
+	}
 }
 
 CLayer* CLayer::Create()

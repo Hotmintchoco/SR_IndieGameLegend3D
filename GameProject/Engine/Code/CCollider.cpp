@@ -1,18 +1,18 @@
-#include "CCollider.h"
+﻿#include "CCollider.h"
 #include "CGameObject.h"
 
 CCollider::CCollider()
-	: m_bIsTrigger(false), m_fRadius(0.f), m_bIsActive(true)
+	: m_bIsTrigger(false), m_fRadius(0.f)
 {
 }
 
 CCollider::CCollider(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CComponent(pGraphicDev), m_bIsTrigger(false), m_fRadius(0.f), m_bIsActive(true)
+	: CComponent(pGraphicDev), m_bIsTrigger(false), m_fRadius(0.f)
 {
 }
 
 CCollider::CCollider(const CCollider& rhs)
-	: CComponent(rhs), m_bIsTrigger(rhs.m_bIsTrigger), m_eColliderType(rhs.m_eColliderType), m_fRadius(rhs.m_fRadius), m_bIsActive(rhs.m_bIsActive)
+	: CComponent(rhs), m_bIsTrigger(rhs.m_bIsTrigger), m_eColliderType(rhs.m_eColliderType), m_fRadius(rhs.m_fRadius)
 {
 }
 
@@ -54,6 +54,11 @@ void CCollider::OnCollisionExit(CCollider* pOther)
 		return;
 
 	m_pOwner->OnCollisionExit(pOtherOwner);
+}
+
+_float CCollider::Get_ViewZ()
+{
+	return m_pOwner->Get_ViewZ();
 }
 
 void CCollider::Free()

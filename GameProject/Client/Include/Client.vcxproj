@@ -150,7 +150,6 @@
     <ClInclude Include="..\Header\CBoss1.h" />
     <ClInclude Include="..\Header\CBullet.h" />
     <ClInclude Include="..\Header\CClearCondition.h" />
-    <ClInclude Include="..\Header\CDebugMgr.h" />
     <ClInclude Include="..\Header\CCrosshair.h" />
     <ClInclude Include="..\Header\CDirectionUI.h" />
     <ClInclude Include="..\Header\CDoor.h" />
@@ -158,6 +157,7 @@
     <ClInclude Include="..\Header\CEffect.h" />
     <ClInclude Include="..\Header\CEnergy.h" />
     <ClInclude Include="..\Header\CExplosiveFrustum.h" />
+    <ClInclude Include="..\Header\CExplosiveFrustumGlass.h" />
     <ClInclude Include="..\Header\CExplosiveFrustumLight.h" />
     <ClInclude Include="..\Header\CFireball.h" />
     <ClInclude Include="..\Header\CFog.h" />
@@ -175,6 +175,7 @@
     <ClInclude Include="..\Header\CLoading.h" />
     <ClInclude Include="..\Header\CLogo.h" />
     <ClInclude Include="..\Header\CMainApp.h" />
+    <ClInclude Include="..\Header\CPseudoDark.h" />
     <ClInclude Include="..\Header\CPushAllButtonCondition.h" />
     <ClInclude Include="..\Header\CRoomLayer.h" />
     <ClInclude Include="..\Header\CRoomLoadingMgr.h" />
@@ -221,7 +222,6 @@
     <ClCompile Include="..\Code\CBoss1.cpp" />
     <ClCompile Include="..\Code\CBullet.cpp" />
     <ClCompile Include="..\Code\CClearCondition.cpp" />
-    <ClCompile Include="..\Code\CDebugMgr.cpp" />
     <ClCompile Include="..\Code\CCrosshair.cpp" />
     <ClCompile Include="..\Code\CDirectionUI.cpp" />
     <ClCompile Include="..\Code\CDoor.cpp" />
@@ -229,6 +229,7 @@
     <ClCompile Include="..\Code\CEffect.cpp" />
     <ClCompile Include="..\Code\CEnergy.cpp" />
     <ClCompile Include="..\Code\CExplosiveFrustum.cpp" />
+    <ClCompile Include="..\Code\CExplosiveFrustumGlass.cpp" />
     <ClCompile Include="..\Code\CExplosiveFrustumLight.cpp" />
     <ClCompile Include="..\Code\CFireball.cpp" />
     <ClCompile Include="..\Code\CFog.cpp" />
@@ -245,6 +246,7 @@
     <ClCompile Include="..\Code\CLoading.cpp" />
     <ClCompile Include="..\Code\CLogo.cpp" />
     <ClCompile Include="..\Code\CMainApp.cpp" />
+    <ClCompile Include="..\Code\CPseudoDark.cpp" />
     <ClCompile Include="..\Code\CPushAllButtonCondition.cpp" />
     <ClCompile Include="..\Code\CRoomLayer.cpp" />
     <ClCompile Include="..\Code\CRoomLoadingMgr.cpp" />
@@ -306,9 +308,11 @@
     <None Include="..\Bin\Resource\Map\DefaultRoom.json" />
     <None Include="..\Bin\Resource\Map\Room 작성 가이드.md" />
     <None Include="..\Bin\Resource\Map\Room_1_1.json" />
+    <None Include="..\Bin\Resource\Map\Room_2_0.json" />
     <None Include="..\Bin\Resource\Map\Room_2_1.json" />
     <None Include="..\Bin\Resource\Map\Room_2_2.json" />
     <None Include="..\Bin\Resource\Map\Room_1_0.json" />
+    <None Include="..\Bin\Resource\Map\Room_3_1.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -42,73 +42,23 @@ void CUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CUI::Render_GameObject()
 {
-    if (nullptr == m_pBufferCom || nullptr == m_pTransformCom)
-        return;
-
-    _matrix matOldWorld, matOldView, matOldProj;
-    m_pGraphicDev->GetTransform(D3DTS_WORLD, &matOldWorld);
-    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matOldView);
-    m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matOldProj);
-
-    DWORD dwOldZEnable = TRUE;
-    DWORD dwOldZWrite = TRUE;
-    DWORD dwOldAlphaBlend = FALSE;
-    DWORD dwOldCull = D3DCULL_CCW;
-
-    m_pGraphicDev->GetRenderState(D3DRS_ZENABLE, &dwOldZEnable);
-    m_pGraphicDev->GetRenderState(D3DRS_ZWRITEENABLE, &dwOldZWrite);
-    m_pGraphicDev->GetRenderState(D3DRS_ALPHABLENDENABLE, &dwOldAlphaBlend);
-    m_pGraphicDev->GetRenderState(D3DRS_CULLMODE, &dwOldCull);
-
-    m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-    m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-    m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-    m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
-    _matrix matView, matProj;
-    D3DXMatrixIdentity(&matView);
-    D3DXMatrixOrthoLH(&matProj, (float)WINCX, (float)WINCY, 0.f, 1.f);
-
-    // m_vInfo[INFO_POS]를 "화면 좌상단 기준 픽셀 좌표"로 사용한다고 가정
-    // (x, y) = UI의 좌상단 위치, scale.x/scale.y = UI 폭/높이
-    _vec3 vPos = m_pTransformCom->m_vInfo[INFO_POS];
-    _vec3 vScale = m_pTransformCom->m_vScale;
-
-    _matrix matScale, matTrans, matWorld;
-    D3DXMatrixScaling(&matScale, vScale.x, vScale.y, 1.f);
-
-    const _float fWorldX = vPos.x - (WINCX * 0.5f) + (vScale.x * 0.5f);
-    const _float fWorldY = (WINCY * 0.5f) - vPos.y - (vScale.y * 0.5f);
-    D3DXMatrixTranslation(&matTrans, fWorldX, fWorldY, 0.f);
-
-    matWorld = matScale * matTrans;
-
-    m_pGraphicDev->SetTransform(D3DTS_VIEW, &matView);
-    m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &matProj);
-    m_pGraphicDev->SetTransform(D3DTS_WORLD, &matWorld);
+    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
     if (nullptr != m_pTextureCom)
         m_pTextureCom->Set_Texture((_uint)m_fFrame);
-
-    m_pBufferCom->Render_Buffer();
-
-    m_pGraphicDev->SetTransform(D3DTS_WORLD, &matOldWorld);
-    m_pGraphicDev->SetTransform(D3DTS_VIEW, &matOldView);
-    m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &matOldProj);
-
-    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, dwOldCull);
-    m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, dwOldAlphaBlend);
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, dwOldZWrite);
-    m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, dwOldZEnable);
+	m_pBufferCom->Render_Buffer();
 }
 
 void CUI::Set_Pos(const _vec2& vPos)
 {
-    m_vPos = vPos;
+    m_vPos = {vPos};
     if (nullptr != m_pTransformCom)
-		m_pTransformCom->Set_Pos(vPos.x, vPos.y, 0.f);
+		m_pTransformCom->Set_Pos(vPos.x - WINCX * 0.5f, -vPos.y + WINCY * 0.5f, 0.f);
+}
+void CUI::Set_Pos(_float fX, _float fY, _float fZ)
+{
+    if (nullptr != m_pTransformCom)
+		m_pTransformCom->Set_Pos(fX - WINCX * 0.5f, -fY + WINCY * 0.5f, fZ);
 }
 
 void CUI::Set_Size(const _vec2& vSize)

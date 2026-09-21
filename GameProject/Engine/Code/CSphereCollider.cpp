@@ -1,4 +1,4 @@
-#include "CSphereCollider.h"
+ï»¿#include "CSphereCollider.h"
 #include "CBoxCollider.h"
 #include "CGameObject.h"
 #include "CTransform.h"
@@ -29,7 +29,7 @@ _bool CSphereCollider::Intersect(CCollider* pOther)
 	{
 		CSphereCollider* pTargetSphere = static_cast<CSphereCollider*>(pOther);
 
-		// ³» ±¸(Sphere)¿Í »ó´ë¹æ ±¸(Sphere)ÀÇ Ãæµ¹ °Ë»ç
+		// ë‚´ êµ¬(Sphere)ì™€ ìƒëŒ€ë°© êµ¬(Sphere)ì˜ ì¶©ëŒ ê²€ì‚¬
 		return m_tSphere.Intersects(pTargetSphere->m_tSphere);
 	}
 
@@ -40,6 +40,11 @@ _bool CSphereCollider::Intersect(CCollider* pOther)
 	}
 
 	return false;
+}
+
+void CSphereCollider::Render(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+	/* ë‚˜ì¤‘ì— êµ¬ ë©”ì‰¬ ê°€ì ¸ì™€ì„œ ê·¸ë¦¬ê¸° */
 }
 
 _int CSphereCollider::Update_Component(const _float& fTimeDelta)

@@ -18,6 +18,8 @@ public:
 
 	void		Set_Texture(const _uint& iIndex = 0);
 
+	inline _int GetCount() { return (_int)m_vecTexture.size(); }
+
 private:
 	vector<IDirect3DBaseTexture9*>		m_vecTexture;
 

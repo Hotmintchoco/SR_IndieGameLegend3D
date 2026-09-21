@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CStage.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
@@ -25,6 +25,8 @@
 #include "CSpeyeder.h"
 #include "CDirectionUI.h"
 #include "CMagmamouth.h"
+#include "CPseudoDark.h"
+#include "CGameStatusMgr.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -63,12 +65,14 @@ HRESULT CStage::Ready_Scene()
 	if (FAILED(CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_FPV")))
 		return E_FAIL;
 
-	// 충돌 그룹 설정
+	// �浹 �׷� ����
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MBULLET, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_ITEM);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MONSTER, COLL_OBSTACLE);
 
 	return S_OK;
 }
@@ -112,10 +116,10 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* 현재 씬, 레이어 정보를 전역으로 주입 */
+	/* ���� ��, ���̾� ������ �������� ���� */
 	CLayerContext ctx(pLayer, this);
 
-	// 오브젝트 추가
+	// ������Ʈ �߰�
 	CGameObject* pGameObject = nullptr;
 
 	/*
@@ -154,10 +158,10 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* 현재 씬, 레이어 정보를 전역으로 주입 */
+	/* ���� ��, ���̾� ������ �������� ���� */
 	CLayerContext ctx(pLayer, this);
 
-	// 오브젝트 추가
+	// ������Ʈ �߰�
 	CGameObject* pGameObject = nullptr;
 
 	// Terrain
@@ -184,7 +188,31 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Gun", pGameObject)))
 		return E_FAIL;
 
-	
+	// PseudoDark
+	for (int i = 0; i < 4; ++i)
+	{
+		pGameObject = CPseudoDark::Create(m_pGraphicDev);
+		if (nullptr == pGameObject)
+			return E_FAIL;
+
+		if (FAILED(pLayer->Add_GameObject(L"PseudoDark_" + to_wstring(i), pGameObject)))
+			return E_FAIL;
+
+		CGameStatusMgr::GetInstance()->RegisterPseudoDark(pGameObject);
+		
+		static_cast<CPseudoDark*>(pGameObject)->SetScale(2.5f + (float)i * 0.75f);
+		if (i == 3)
+		{
+			static_cast<CPseudoDark*>(pGameObject)->SetOpacity(100);
+		}
+		else
+		{
+			static_cast<CPseudoDark*>(pGameObject)->SetOpacity(60);
+		}
+
+		pGameObject->Set_IsActive(false);
+	}
+
 	// Monster
 	// 
 	//pGameObject = CSkull::Create(m_pGraphicDev);
@@ -201,12 +229,13 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	//if (FAILED(pLayer->Add_GameObject(L"Boss1", pGameObject)))
 	//	return E_FAIL;
 
-	pGameObject = CMagmamouth::Create(m_pGraphicDev);
-	static_cast<CMonster*>(pGameObject)->Set_Pos(64, 2.f, 63);
-	if (nullptr == pGameObject)
-		return E_FAIL;
-	if (FAILED(pLayer->Add_GameObject(L"Magmamouth", pGameObject)))
-		return E_FAIL;
+
+	//pGameObject = CMagmamouth::Create(m_pGraphicDev);
+	//static_cast<CMonster*>(pGameObject)->Set_Pos(64, 2.f, 63);
+	//if (nullptr == pGameObject)
+	//	return E_FAIL;
+	//if (FAILED(pLayer->Add_GameObject(L"Magmamouth", pGameObject)))
+	//	return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag ,pLayer });
 
@@ -219,7 +248,7 @@ HRESULT CStage::Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* 현재 씬, 레이어 정보를 전역으로 주입 */
+	/* ���� ��, ���̾� ������ �������� ���� */
 	CLayerContext ctx(pLayer, this);
 
 	if (FAILED(static_cast<CRoomLayer*>(pLayer)->SpawnRoom()))
@@ -238,7 +267,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* 현재 씬, 레이어 정보를 전역으로 주입 */
+	/* ���� ��, ���̾� ������ �������� ���� */
 	CLayerContext ctx(pLayer, this);
 
 	CUI* pUI = nullptr;
@@ -258,7 +287,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	_int iCountMax = 3;
 	_float fStartX = 20.f;
 	_float fStartY = 20.f;
-	_float fIconSize = 17.5f;  // CPlayerHpUI::Ready_GameObject()의 Set_Scale과 동일
+	_float fIconSize = 17.5f;  // CPlayerHpUI::Ready_GameObject()�� Set_Scale�� ����
 	_float fGap = 22.5f;
 
 	for (_int i = 0; i < iCountMax; ++i)
@@ -311,10 +340,53 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pUI)
 		return E_FAIL;
 
-	_vec2 vDirUIPos{ WINCX - 120.f, 420.f };
-	pUI->Set_Pos(vDirUIPos);
+	pUI->Set_Pos(WINCX - 90.f, 410.f, 0.1f);
 
 	if (FAILED(pLayer->Add_GameObject(L"DirectionUI", pUI)))
+		return E_FAIL;
+
+	// Hud Minimap
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_HudMapTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(WINCX - 90.f, 480.f, 0.f);
+	pUI->Set_Size({ 76.f, 92.f });
+
+	if (FAILED(pLayer->Add_GameObject(L"MiniMap", pUI)))
+		return E_FAIL;
+
+	// Hud Attack Info
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_HudAttackInfoTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(182.f, WINCY - 60.f, 0.5f);
+	pUI->Set_Size({ 175.f, 38.5f });
+
+	if (FAILED(pLayer->Add_GameObject(L"AttackInfo", pUI)))
+		return E_FAIL;
+
+	// Hud Attack Info Ammo
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_AmmoTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(222.f, WINCY - 60.f, 0.6f);
+	pUI->Set_Size({ 125.f, 18.f });
+
+	if (FAILED(pLayer->Add_GameObject(L"AmmoInfo", pUI)))
+		return E_FAIL;
+
+	// Hud Attack Info Skill
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_SkillTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(63.f, WINCY - 60.f, 0.4f);
+	pUI->Set_Size({ 28.f, 28.f });
+
+	if (FAILED(pLayer->Add_GameObject(L"SkillInfo", pUI)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag, pLayer });

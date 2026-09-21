@@ -142,9 +142,6 @@
     <Filter Include="02. GameObject\07. Room\BaseProp\TriggerBox">
       <UniqueIdentifier>{d5b37dad-c154-476b-a769-4c3434dbbd32}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. Manager\02. Debug">
-      <UniqueIdentifier>{02ca9211-2d93-4f54-bfb3-1da9b6e7fac6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\10. UI">
       <UniqueIdentifier>{6c73a9c2-f178-434b-b4ff-d2dee63f4158}</UniqueIdentifier>
     </Filter>
@@ -198,6 +195,9 @@
     </Filter>
     <Filter Include="02. GameObject\06. Effect\Trail">
       <UniqueIdentifier>{66a04df7-ebf3-4bd2-8103-73c4dcefb56e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\PseudoBlack">
+      <UniqueIdentifier>{985083af-b441-4e23-9d55-fe18ceb2ef3c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -351,9 +351,6 @@
     <ClInclude Include="..\Header\CTriggerBox.h">
       <Filter>02. GameObject\07. Room\BaseProp\TriggerBox</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CDebugMgr.h">
-      <Filter>04. Manager\02. Debug</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CUI.h">
       <Filter>02. GameObject\10. UI</Filter>
     </ClInclude>
@@ -407,6 +404,12 @@
     </ClInclude>
     <ClInclude Include="..\Header\CTrail.h">
       <Filter>02. GameObject\06. Effect\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPseudoDark.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\PseudoBlack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CExplosiveFrustumGlass.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -536,9 +539,6 @@
     <ClCompile Include="..\Code\CTriggerBox.cpp">
       <Filter>02. GameObject\07. Room\BaseProp\TriggerBox</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CDebugMgr.cpp">
-      <Filter>04. Manager\02. Debug</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CUI.cpp">
       <Filter>02. GameObject\10. UI</Filter>
     </ClCompile>
@@ -593,6 +593,12 @@
     <ClCompile Include="..\Code\CTrail.cpp">
       <Filter>02. GameObject\06. Effect\Trail</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CPseudoDark.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\PseudoBlack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CExplosiveFrustumGlass.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -624,6 +630,12 @@
       <Filter>03. Resource\01. Map</Filter>
     </None>
     <None Include="..\Bin\Resource\Map\Room_1_1.json">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Map\Room_2_0.json">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Map\Room_3_1.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
   </ItemGroup>

@@ -42,6 +42,9 @@ HRESULT CMagmamouth::Ready_GameObject()
 
     m_fTrailDuration = 0.5f * 0.5f * 0.5f;
 
+    m_pColliderCom->Set_IsActive(false);
+
+    //m_pColliderCom->Set_Radius(0.2f);
     m_iHp = 6;
     m_fFrame = 3.f;
     return S_OK;
@@ -50,6 +53,9 @@ HRESULT CMagmamouth::Ready_GameObject()
 _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
+
+    if (!m_pColliderCom->Get_IsActive())
+        m_pColliderCom->Set_IsActive(true);
 
     m_fStateUpdateTime += fTimeDelta;
     if (m_fStateUpdateTime > m_fStateUpdateDuration)
@@ -254,7 +260,7 @@ void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
 
 void CMagmamouth::Shuffle_Array(_uint N)
 {
-    for (int i = 0; i < N; ++i)
+    for (int i = 0; i < (int)N; ++i)
     {
         m_iSpawnOrderArr[i] = i;
     }

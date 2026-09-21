@@ -4,17 +4,16 @@
 
 namespace Engine
 {
-	class CRcTex;
+	class CPlyTex;
 	class CTexture;
 	class CTransform;
-	class CGameObject;
 }
 
-class CExplosiveFrustumLight : public CGameObject
+class CExplosiveFrustumGlass : public CGameObject
 {
 protected:
-	explicit CExplosiveFrustumLight(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CExplosiveFrustumLight();
+	explicit CExplosiveFrustumGlass(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CExplosiveFrustumGlass();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -29,18 +28,14 @@ private:
 	HRESULT			Add_Component();
 
 protected:
-	Engine::CRcTex* m_pBufferCom;
+	Engine::CPlyTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
 
 	Engine::CGameObject* m_pParentObject = nullptr;
 
-	float m_fFrameInterval = 0.15f;
-	float m_fTimeLasted = 0.f;
-	int m_iTextureIndex = 0;
-
 public:
-	static CExplosiveFrustumLight* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CExplosiveFrustumGlass* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void		Free();

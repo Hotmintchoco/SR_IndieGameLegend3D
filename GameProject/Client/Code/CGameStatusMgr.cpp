@@ -1,9 +1,10 @@
-ï»¿#include "pch.h"
+#include "pch.h"
 #include "CGameStatusMgr.h"
 #include "CManagement.h"
 #include "CRoomLayer.h"
 #include "CImGuiTool.h"
 #include "CCameraMgr.h"
+#include "CDebugMgr.h"
 
 IMPLEMENT_SINGLETON(CGameStatusMgr);
 
@@ -25,6 +26,7 @@ void CGameStatusMgr::Update(const float fTimeDelta)
 void CGameStatusMgr::Render()
 {
     RenderImGui();
+    DebugPanelForRendering();
 }
 
 void CGameStatusMgr::RenderImGui()
@@ -58,7 +60,7 @@ void CGameStatusMgr::RenderImGui()
                 if (m_bClearTable[idx]) { mark = "O"; col = ImVec4(0.3f, 1.0f, 0.3f, 1.0f); }
                 else if (m_bVisitTable[idx]) { mark = "A"; col = ImVec4(1.0f, 0.9f, 0.3f, 1.0f); }
 
-                // í˜„ìž¬ ë°© ê°•ì¡°
+                // ÇöÀç ¹æ °­Á¶
                 if (idx == m_iCurrentRoomIndex)
                     col = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
 
@@ -73,8 +75,7 @@ void CGameStatusMgr::RenderImGui()
         ImGui::Text("Pos : %.2f, %.2f, %.2f", m_vPlayerPos.x, m_vPlayerPos.y, m_vPlayerPos.z);
 
         // HP
-        char szHp[32];
-        sprintf_s(szHp, "Hp : %d / %d", m_iPlayerHp, m_iPlayerMaxHp);
+        ImGui::Text("Hp : %d / %d", m_iPlayerHp, m_iPlayerMaxHp);
 
         ImGui::Text("Yaw : %.1f deg", XMConvertToDegrees(m_fYaw)); 
     }
@@ -95,6 +96,43 @@ void CGameStatusMgr::RenderImGui()
     // --- Etc ---
     ImGui::Separator();
     ImGui::Text("Gem : %d", m_iGem);
+
+    ImGui::End();
+}
+
+void CGameStatusMgr::DebugPanelForRendering()
+{
+    if (!ImGui::Begin("Render Debug View"))
+    {
+        ImGui::End();
+        return;
+    }
+
+    CDebugMgr* pDebug = CDebugMgr::GetInstance();
+
+    ImGui::SeparatorText("Mesh");
+
+    static const char* szMeshMode[] = { "Solid", "Wireframe", "Hidden" };
+    _int iMeshMode = (_int)pDebug->GetMeshMode();
+
+    if (ImGui::Combo("Render Mode", &iMeshMode, szMeshMode, IM_ARRAYSIZE(szMeshMode)))
+        pDebug->SetMeshMode((MESHRENDERMODE)iMeshMode);
+
+    ImGui::SeparatorText("Collider");
+
+    _bool bCollider = pDebug->GetShowCollider();
+    if (ImGui::Checkbox("Collider", &bCollider))
+        pDebug->SetShowCollider(bCollider);
+
+    ImGui::SeparatorText("Light");
+
+    if (ImGui::Checkbox("Dark", &m_bShowDark))
+    {
+        for (auto p: m_vecPseudoDark)
+        {
+            p->Set_IsActive(m_bShowDark);
+        }
+    }
 
     ImGui::End();
 }
