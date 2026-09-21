@@ -1,7 +1,9 @@
-ï»¿#pragma once
+#pragma once
 #include "CCollider.h"
 
 BEGIN(Engine)
+
+class CPlyTex;
 
 class ENGINE_DLL CSphereCollider : public CCollider
 {
@@ -28,8 +30,13 @@ public:
 	static CCollider* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	CComponent* Clone() override;
 
-	// CColliderì„(ë¥¼) í†µí•´ ìƒì†ë¨
+	// CColliderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
 	void Set_Radius(const _float& fRadius) override;
+
+private:
+	CPlyTex* m_pDebugSphereTex = nullptr;
+
+	virtual void Free() override;
 };
 
 END
