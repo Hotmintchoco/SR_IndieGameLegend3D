@@ -355,7 +355,40 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	pUI->Set_Pos(WINCX - 90.f, 480.f, 0.f);
 	pUI->Set_Size({ 76.f, 92.f });
 
-	if (FAILED(pLayer->Add_GameObject(L"MiniMapUI", pUI)))
+	if (FAILED(pLayer->Add_GameObject(L"MiniMap", pUI)))
+		return E_FAIL;
+
+	// Hud Attack Info
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_HudAttackInfoTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(182.f, WINCY - 60.f, 0.5f);
+	pUI->Set_Size({ 175.f, 38.5f });
+
+	if (FAILED(pLayer->Add_GameObject(L"AttackInfo", pUI)))
+		return E_FAIL;
+
+	// Hud Attack Info Ammo
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_AmmoTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(222.f, WINCY - 60.f, 0.6f);
+	pUI->Set_Size({ 125.f, 18.f });
+
+	if (FAILED(pLayer->Add_GameObject(L"AmmoInfo", pUI)))
+		return E_FAIL;
+
+	// Hud Attack Info Skill
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_SkillTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(63.f, WINCY - 60.f, 0.4f);
+	pUI->Set_Size({ 28.f, 28.f });
+
+	if (FAILED(pLayer->Add_GameObject(L"SkillInfo", pUI)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
