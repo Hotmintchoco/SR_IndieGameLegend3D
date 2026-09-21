@@ -40,8 +40,11 @@ void CCameraFPVPerspective::Update_Camera(const _float& fTimeDelta, const _vec3&
 	D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(m_fAngle));
 	D3DXVec3TransformNormal(&vLook, &vLook, &matAxis);
 
-	m_vEye = vPos;
-	m_vAt = vPos + vLook;
+	m_vEye = vPos - [&]()->_vec3 {_vec3 vLookDst;  D3DXVec3Normalize(&vLookDst, &vLook); return vLookDst * 5.f; }();
+	m_vAt = vPos + [&]()->_vec3 {_vec3 vLookDst;  D3DXVec3Normalize(&vLookDst, &vLook); return vLookDst * 5.0f; }();
+
+	//m_vEye = vPos;
+	//m_vAt = vPos + vLook;
 
 	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
