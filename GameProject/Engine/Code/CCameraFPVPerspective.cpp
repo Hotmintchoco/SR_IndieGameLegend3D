@@ -63,7 +63,7 @@ void CCameraFPVPerspective::Mouse_Move()
 	{
 		m_fAngle += dwMouseMove / 10.f;
 
-		if (m_fAngle > 80.f) m_fAngle = 80.f;
+		if (m_fAngle > 50.f) m_fAngle = 50.f;
 		if (m_fAngle < -80.f) m_fAngle = -80.f;
 	}
 }
