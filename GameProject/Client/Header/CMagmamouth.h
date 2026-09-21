@@ -50,7 +50,11 @@ private:
 	void Set_Motion_CloseMouth(const _float& fTimeDelta);
 	void Set_Motion_CloseOpenMouth(const _float& fTimeDelta);
 
-	void MagmaMouth_Trail();
+	void MagmaMouth_Trail(const _float& fTimeDelta);
+
+protected:
+	virtual void		Free();
+
 private:
 	enum MAGMAMOUTHSTATE { SPAWN, FIREBALL, MOVE, IDLE };
 	MAGMAMOUTHSTATE m_eMagmaMouthState;
@@ -68,7 +72,12 @@ private:
 	_vec3 m_MovePosition;
 	_bool m_bMoveFlag;
 	_bool m_bMoveFlag2;
-	_float m_bTrailDuration;
+
+	_bool m_bTrailStart;
+	_bool m_bTrailFinish;
+	_float m_fTrailTime;
+	_float m_fTrailDuration;
+	_vec3 m_fTrailPoint[4];
 
 	_uint m_iMonsterX;
 	_uint m_iMonsterZ;
@@ -77,6 +86,4 @@ private:
 
 	_bool m_bCloseMouth;
 
-protected:
-	virtual void		Free();
 };

@@ -187,6 +187,7 @@
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CTile.h" />
+    <ClInclude Include="..\Header\CTrail.h" />
     <ClInclude Include="..\Header\CTriggerBox.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CWall.h" />
@@ -256,6 +257,7 @@
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CTile.cpp" />
+    <ClCompile Include="..\Code\CTrail.cpp" />
     <ClCompile Include="..\Code\CTriggerBox.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CWall.cpp" />

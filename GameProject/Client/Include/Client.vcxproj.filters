@@ -196,6 +196,9 @@
     <Filter Include="02. GameObject\02. Monster\Magmamouth\Fireball">
       <UniqueIdentifier>{80883398-3d6b-4d52-8f00-a866db1e4a6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. Effect\Trail">
+      <UniqueIdentifier>{66a04df7-ebf3-4bd2-8103-73c4dcefb56e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -402,6 +405,9 @@
     <ClInclude Include="..\Header\CFireball.h">
       <Filter>02. GameObject\02. Monster\Magmamouth\Fireball</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTrail.h">
+      <Filter>02. GameObject\06. Effect\Trail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -583,6 +589,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CFireball.cpp">
       <Filter>02. GameObject\02. Monster\Magmamouth\Fireball</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTrail.cpp">
+      <Filter>02. GameObject\06. Effect\Trail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

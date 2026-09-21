@@ -5,8 +5,6 @@
 namespace Engine
 {
 	class CRcTex;
-	class CTexture;
-	class CTransform;
 }
 
 class CSmallExplode : public CEffect
@@ -24,8 +22,8 @@ public:
 private:
 	HRESULT			Add_Component();
 
-private:
-	//_float				m_fFrame;
+protected:
+	Engine::CRcTex* m_pBufferCom;
 
 public:
 	static CSmallExplode* Create(LPDIRECT3DDEVICE9 pGraphicDev);

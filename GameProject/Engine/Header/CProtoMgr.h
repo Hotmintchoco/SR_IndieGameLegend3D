@@ -3,6 +3,7 @@
 #include "CBase.h"
 #include "CTriCol.h"
 #include "CRcCol.h"
+#include "CRcColCustom.h"
 #include "CRcTex.h"
 #include "CTerrainTex.h"
 #include "CCubeTex.h"

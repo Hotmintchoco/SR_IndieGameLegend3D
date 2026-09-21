@@ -60,15 +60,9 @@ void CBoss1::LateUpdate_GameObject(const _float& fTimeDelta)
     _vec3   vPlayerLook;
     pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
-    //m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 0.8f, fTimeDelta);
-    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
-    //m_pTransformCom2->Chase_Target(&vPlayerPos, &vPlayerLook, 0.8f, fTimeDelta);
-    _vec3 vSrc = m_pTransformCom->m_vInfo[INFO_LOOK];
-    _vec3 vSr2222;
-    _matrix a;
-    m_pTransformCom->Get_Info(INFO_LOOK, &vSr2222);
+    m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 0.8f, fTimeDelta);
+    //m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
 
-    _vec3 vSrc2 = pPlayerTransformCom->m_vInfo[INFO_LOOK];
     //Angry버전 Transform->chase업데이트
     if (m_iHp < 4)
     {
