@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CAbstractFactory.h"
 #include "CGraphicDev.h"
 #include "CRandomMgr.h"
@@ -56,7 +56,7 @@ Engine::CGameObject* CAbstractFactory::CreateRandomItem(CGameObject* pSpawner) c
     const int iBegin = (int)EObjectType::ITEM_NONE + 1;
     const int iEnd = (int)EObjectType::ITEM_MAX - 1;
 
-    EObjectType eType = (EObjectType)CRandomMgr::GetInstance()->GetRandomInt(iBegin, iEnd);
+    EObjectType eType = (EObjectType)CRandomMgr::GetInstance()->GetRandomValue<int>(iBegin, iEnd);
 
     TCreateDesc t
     {
