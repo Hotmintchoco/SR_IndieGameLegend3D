@@ -76,6 +76,7 @@ private:
 	_bool m_bTrailStart;
 	_bool m_bTrailFinish;
 	_float m_fTrailTime;
+	_float m_fTrailTime2;
 	_float m_fTrailDuration;
 	_vec3 m_fTrailPoint[4];
 

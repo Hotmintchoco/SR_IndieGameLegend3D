@@ -11,7 +11,13 @@ CTrail::CTrail(LPDIRECT3DDEVICE9 pGraphicDev)
 }
 
 CTrail::CTrail(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4])
-    : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(1.f)
+    : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(0.5f)
+{
+    memcpy(m_vTrailPoint, vTrailPoint, sizeof(m_vTrailPoint));
+}
+
+CTrail::CTrail(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const _float& fLifeTime)
+    : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(fLifeTime)
 {
     memcpy(m_vTrailPoint, vTrailPoint, sizeof(m_vTrailPoint));
 }
@@ -30,7 +36,7 @@ HRESULT CTrail::Ready_GameObject()
     D3DXCOLOR color[4];
     for (int i = 0; i < 4; ++i)
     {
-        color[i] = { 1.f, 1.f, 1.f, 0.5f };
+        color[i] = { 1.f, 1.f, 1.f, 0.1f };
         //color[i] = D3DCOLOR_ARGB(128, 255, 255, 255);
         //color[i] = { 0.f, 1.f, 0.f, 1.f };
     }
@@ -116,6 +122,20 @@ CTrail* CTrail::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 CTrail* CTrail::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4])
 {
     CTrail* pTrail = new CTrail(pGraphicDev, vTrailPoint);
+
+    if (FAILED(pTrail->Ready_GameObject()))
+    {
+        Safe_Release(pTrail);
+        MSG_BOX("CTrail Create Failed");
+        return nullptr;
+    }
+
+    return pTrail;
+}
+
+CTrail* CTrail::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const _float& fLifeTime)
+{
+    CTrail* pTrail = new CTrail(pGraphicDev, vTrailPoint, fLifeTime);
 
     if (FAILED(pTrail->Ready_GameObject()))
     {
