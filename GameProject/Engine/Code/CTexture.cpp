@@ -1,4 +1,4 @@
-#include "CTexture.h"
+ï»¿#include "CTexture.h"
 
 CTexture::CTexture()
 {
@@ -46,13 +46,13 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eID, const _tchar* pPath, const _uint&
 			if (FAILED(
 				D3DXCreateTextureFromFileEx(
 					m_pGraphicDev, szFileName,
-					D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2,	  // ¿øº» Å©±â À¯Áö
+					D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2,	  // ì›ë³¸ í¬ê¸° ìœ ì§€
 					1,                                            // MipLevels = 1
 					0,
-					D3DFMT_A8R8G8B8,                              // DXT ±ÝÁö
+					D3DFMT_A8R8G8B8,                              // DXT ê¸ˆì§€
 					D3DPOOL_MANAGED,
-					D3DX_FILTER_NONE,                             // ¸®»çÀÌÁî ÇÊÅÍ
-					D3DX_FILTER_NONE,                             // ¹Ó ÇÊÅÍ
+					D3DX_FILTER_NONE,                             // ë¦¬ì‚¬ì´ì¦ˆ í•„í„°
+					D3DX_FILTER_NONE,                             // ë°‰ í•„í„°
 					0, nullptr, nullptr, (LPDIRECT3DTEXTURE9*)&(pTexture)
 				)))
 				return E_FAIL;
@@ -88,8 +88,11 @@ CTexture* CTexture::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const _
 
 	if (FAILED(pTexture->Ready_Texture(eID, pPath, iCnt)))
 	{
+		_tchar szMsg[MAX_PATH + 64] = L"";
+		swprintf_s(szMsg, L"Texture Create Failed\n%s", pPath);
+		MessageBox(NULL, szMsg, L"System Message", MB_OK);
+
 		Safe_Release(pTexture);
-		MSG_BOX("Texture Create Failed");
 		return nullptr;
 	}
 
