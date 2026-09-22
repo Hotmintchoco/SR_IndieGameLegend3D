@@ -31,7 +31,7 @@ HRESULT CEffect_YellowBox::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    m_fLifeTime = 10.f;
+    m_fLifeTime = 0.5f;
     float fScale = 0.5f * 0.5f * 0.5f;
     m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
