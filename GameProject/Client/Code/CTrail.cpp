@@ -36,7 +36,7 @@ HRESULT CTrail::Ready_GameObject()
     D3DXCOLOR color[4];
     for (int i = 0; i < 4; ++i)
     {
-        color[i] = { 1.f, 1.f, 1.f, 0.1f };
+        color[i] = { 1.f, 1.f, 1.f, 0.25f };
         //color[i] = D3DCOLOR_ARGB(128, 255, 255, 255);
         //color[i] = { 0.f, 1.f, 0.f, 1.f };
     }

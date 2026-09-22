@@ -65,7 +65,7 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
         m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 3);
         //m_eMagmaMouthState = SPAWN;
         //m_eMagmaMouthState = FIREBALL;
-        m_eMagmaMouthState = MOVE;
+        //m_eMagmaMouthState = MOVE;
         if (m_eMagmaMouthState == SPAWN)
         {
             Shuffle_Array(4);
@@ -745,7 +745,7 @@ void CMagmamouth::MagmaMouth_Trail(const _float& fTimeDelta)
 {
     m_fTrailTime2 += fTimeDelta;
     //if (m_bMoveFlag2 == true)return;
-	if (m_fTrailTime2>1.5f)return;
+	if (m_fTrailTime2>1.5f || m_bMoveFlag2 == true)return;
     _vec3 vPos, vUp, vDown;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     vUp = vPos;
