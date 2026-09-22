@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CSpeyeder.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -35,6 +35,29 @@ HRESULT CSpeyeder::Ready_GameObject()
 
 _int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
 {
+    if (m_iHp <= 0)
+    {
+        m_bDelete = true;
+
+        CGameObject* pGameObject = nullptr;
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+
+        pGameObject = CSmallExplode::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS], m_pTransformCom->m_vScale);
+        if (nullptr == pGameObject)
+            return E_FAIL;
+
+        if (FAILED(pLayer->Add_GameObject(L"SmallExplode", pGameObject)))
+            return E_FAIL;
+
+        //pGameObject = CHeart::Create(m_pGraphicDev, this);
+        pGameObject = CGem::Create(m_pGraphicDev, this);
+        //pGameObject = CEnergy::Create(m_pGraphicDev, this);
+        if (nullptr == pGameObject)
+            return E_FAIL;
+
+        if (FAILED(pLayer->Add_GameObject(L"Gem", pGameObject)))
+            return E_FAIL;
+    }
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
     if (m_bLandingState == true)
     {
@@ -50,28 +73,6 @@ _int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
     
 
 
-    if (m_iHp <= 0)
-    {
-        CGameObject* pGameObject = nullptr;
-        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-
-        pGameObject = CSmallExplode::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS], m_pTransformCom->m_vScale);
-        if (nullptr == pGameObject)
-            return E_FAIL;
-  
-        if (FAILED(pLayer->Add_GameObject(L"SmallExplode", pGameObject)))
-            return E_FAIL;
-
-        //pGameObject = CHeart::Create(m_pGraphicDev, this);
-        pGameObject = CGem::Create(m_pGraphicDev, this);
-        //pGameObject = CEnergy::Create(m_pGraphicDev, this);
-        if (nullptr == pGameObject)
-            return E_FAIL;
-
-        if (FAILED(pLayer->Add_GameObject(L"Gem", pGameObject)))
-            return E_FAIL;
-
-    }
     return iExit;
 }
 

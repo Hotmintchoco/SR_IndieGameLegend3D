@@ -437,7 +437,7 @@ void CPlayer::MonsterCollision(CCollider* pOtherCollider)
         ColliderID = pOtherCollider->Get_CollisionID();
 
 
-    if (ColliderID == COLL_MONSTER || ColliderID == COLL_MBULLET_NORMAL || ColliderID == COLL_MBULLET_SMALL)
+    if (ColliderID == COLL_MONSTER || ColliderID == COLL_MBULLET)
     {
         UpdateHP(-1);
         m_fInvTime = 1.0f;

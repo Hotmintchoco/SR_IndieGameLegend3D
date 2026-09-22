@@ -1,33 +1,33 @@
-#include "pch.h"
-#include "CTrail.h"
+﻿#include "pch.h"
+#include "CTrail_MagmaMouth.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CManagement.h"
 #include <ctime>
 
-CTrail::CTrail(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CEffect(pGraphicDev)
+CTrail_MagmaMouth::CTrail_MagmaMouth(LPDIRECT3DDEVICE9 pGraphicDev)
+    : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(0.5f)
 {
 }
 
-CTrail::CTrail(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4])
+CTrail_MagmaMouth::CTrail_MagmaMouth(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4])
     : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(0.5f)
 {
     memcpy(m_vTrailPoint, vTrailPoint, sizeof(m_vTrailPoint));
 }
 
-CTrail::CTrail(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const _float& fLifeTime)
+CTrail_MagmaMouth::CTrail_MagmaMouth(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const _float& fLifeTime)
     : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(fLifeTime)
 {
     memcpy(m_vTrailPoint, vTrailPoint, sizeof(m_vTrailPoint));
 }
 
 
-CTrail::~CTrail()
+CTrail_MagmaMouth::~CTrail_MagmaMouth()
 {
 }
 
-HRESULT CTrail::Ready_GameObject()
+HRESULT CTrail_MagmaMouth::Ready_GameObject()
 {
     CEffect::Ready_GameObject();
     if (FAILED(Add_Component()))
@@ -37,14 +37,13 @@ HRESULT CTrail::Ready_GameObject()
     for (int i = 0; i < 4; ++i)
     {
         color[i] = { 1.f, 1.f, 1.f, 0.25f };
-        //color[i] = D3DCOLOR_ARGB(128, 255, 255, 255);
-        //color[i] = { 0.f, 1.f, 0.f, 1.f };
     }
+
     static_cast<CRcColCustom*>(m_pBufferCom)->Set_Buffer(m_vTrailPoint, color);
     return S_OK;
 }
 
-_int CTrail::Update_GameObject(const _float& fTimeDelta)
+_int CTrail_MagmaMouth::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CEffect::Update_GameObject(fTimeDelta);
 
@@ -59,7 +58,7 @@ _int CTrail::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CTrail::LateUpdate_GameObject(const _float& fTimeDelta)
+void CTrail_MagmaMouth::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CEffect::LateUpdate_GameObject(fTimeDelta);
 
@@ -70,7 +69,7 @@ void CTrail::LateUpdate_GameObject(const _float& fTimeDelta)
 
 }
 
-void CTrail::Render_GameObject()
+void CTrail_MagmaMouth::Render_GameObject()
 {
     CEffect::Render_GameObject();
 
@@ -89,7 +88,7 @@ void CTrail::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-HRESULT CTrail::Add_Component()
+HRESULT CTrail_MagmaMouth::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
@@ -105,9 +104,9 @@ HRESULT CTrail::Add_Component()
 }
 
 
-CTrail* CTrail::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CTrail_MagmaMouth* CTrail_MagmaMouth::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CTrail* pTrail = new CTrail(pGraphicDev);
+    CTrail_MagmaMouth* pTrail = new CTrail_MagmaMouth(pGraphicDev);
 
     if (FAILED(pTrail->Ready_GameObject()))
     {
@@ -119,9 +118,9 @@ CTrail* CTrail::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pTrail;
 }
 
-CTrail* CTrail::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4])
+CTrail_MagmaMouth* CTrail_MagmaMouth::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4])
 {
-    CTrail* pTrail = new CTrail(pGraphicDev, vTrailPoint);
+    CTrail_MagmaMouth* pTrail = new CTrail_MagmaMouth(pGraphicDev, vTrailPoint);
 
     if (FAILED(pTrail->Ready_GameObject()))
     {
@@ -133,9 +132,9 @@ CTrail* CTrail::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[
     return pTrail;
 }
 
-CTrail* CTrail::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const _float& fLifeTime)
+CTrail_MagmaMouth* CTrail_MagmaMouth::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const _float& fLifeTime)
 {
-    CTrail* pTrail = new CTrail(pGraphicDev, vTrailPoint, fLifeTime);
+    CTrail_MagmaMouth* pTrail = new CTrail_MagmaMouth(pGraphicDev, vTrailPoint, fLifeTime);
 
     if (FAILED(pTrail->Ready_GameObject()))
     {
@@ -153,7 +152,7 @@ CTrail* CTrail::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[
 //}
 
 
-void CTrail::Free()
+void CTrail_MagmaMouth::Free()
 {
     CEffect::Free();
 }

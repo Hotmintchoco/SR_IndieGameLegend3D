@@ -1,10 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #include "CGameObject.h"
 
 namespace Engine
 {
-	class CTexture;
 	class CTransform;
 }
 
@@ -24,8 +23,7 @@ protected:
 	HRESULT			Add_Component();
 
 protected:
-	Engine::CTexture* m_pTextureCom;
-	Engine::CTransform* m_pTransformCom;
+	Engine::CTransform* m_pTransformCom = nullptr;
 	_float				m_fFrame;
 public:
 	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);

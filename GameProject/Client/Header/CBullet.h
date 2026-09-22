@@ -27,6 +27,8 @@ public:
 
 	virtual			void		OnCollisionEnter(CGameObject* pOther) override;
 
+public:
+	_int Get_Damage() { return m_iBulletDmg; }
 private:
 	HRESULT			Add_Component();
 

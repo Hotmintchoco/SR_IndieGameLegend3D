@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CMonster.h"
 
@@ -52,11 +52,14 @@ private:
 
 	void MagmaMouth_Trail(const _float& fTimeDelta);
 
+	void MagmaMouth_Dead(const _float& fTimeDelta);
+	void MagmaMouth_DeadEffect(const _float& fTimeDelta);
+
 protected:
 	virtual void		Free();
 
 private:
-	enum MAGMAMOUTHSTATE { SPAWN, FIREBALL, MOVE, IDLE };
+	enum MAGMAMOUTHSTATE { SPAWN, FIREBALL, MOVE, IDLE, DEAD };
 	MAGMAMOUTHSTATE m_eMagmaMouthState;
 
 	_float m_fSpawn_CoolDown;
@@ -86,5 +89,9 @@ private:
 	_uint m_iPlayerZ;
 
 	_bool m_bCloseMouth;
+
+	_float m_fElapsedDeadTime = 0.f;
+	_float m_fElapsedDeadTime2 = 0.f;
+	_float m_fDeadTime = 5.f;
 
 };

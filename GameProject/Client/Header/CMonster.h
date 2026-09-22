@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CGameObject.h"
 
@@ -10,6 +10,8 @@ namespace Engine
 	class CCalculator;
 	class CCollider;
 }
+
+struct TRoomEventCtx;
 
 class CMonster : public CGameObject
 {
@@ -32,11 +34,11 @@ protected:
 	void Set_OnTerrain();
 
 protected:
-	Engine::CRcTex* m_pBufferCom;
-	Engine::CTransform* m_pTransformCom;
-	Engine::CTexture* m_pTextureCom;
-	Engine::CCalculator* m_pCalculatorCom;
-	Engine::CCollider* m_pColliderCom;
+	Engine::CRcTex* m_pBufferCom = nullptr;
+	Engine::CTransform* m_pTransformCom = nullptr;
+	Engine::CTexture* m_pTextureCom = nullptr;
+	Engine::CCalculator* m_pCalculatorCom = nullptr;
+	Engine::CCollider* m_pColliderCom = nullptr;
 
 	_int m_iHp;
 	_float m_fFrame;
@@ -44,6 +46,12 @@ protected:
 	_float m_fHitEffectTime;
 	_bool m_bHitState;
 
+	_bool m_bDelete = false;
+
+private:
+	/* 성철 */
+	void OnRoomEvent(const TRoomEventCtx& t);
+	/* --- */
 
 public:
 	static _uint iMonsterIdx;
