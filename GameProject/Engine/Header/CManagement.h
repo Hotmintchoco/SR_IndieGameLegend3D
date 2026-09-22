@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include	"CBase.h"
 #include	"CScene.h"
@@ -23,6 +23,8 @@ public:
 	CGameObject* Get_GameObject(const _tchar* pLayerTag, const _tchar* pObjTag);
 
 	CLayer* Get_Layer(const _tchar* pLayerTag);
+
+	inline CScene* GetCurrentScene() { return m_pScene; }
 
 public:
 	HRESULT			Set_Scene(CScene* pScene);

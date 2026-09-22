@@ -1,4 +1,4 @@
-ï»¿#include "pch.h"
+#include "pch.h"
 #include "CStage.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
@@ -65,7 +65,7 @@ HRESULT CStage::Ready_Scene()
 	if (FAILED(CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_FPV")))
 		return E_FAIL;
 
-	// ì¶©ëŒ ê·¸ë£¹ ì„¤ì •
+	// Ãæµ¹ ±×·ì ¼³Á¤
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET_NORMAL, COLL_MONSTER);
@@ -116,16 +116,22 @@ void CStage::Render_Scene()
 
 }
 
+void CStage::OnPlayerDead()
+{
+	CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+	pLayer->ResetState();
+}
+
 HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
 	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
+	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
 	CLayerContext ctx(pLayer, this);
 
-	// ì˜¤ë¸Œì íŠ¸ ì¶”ê°€
+	// ¿ÀºêÁ§Æ® Ãß°¡
 	CGameObject* pGameObject = nullptr;
 
 	/*
@@ -164,10 +170,10 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
+	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
 	CLayerContext ctx(pLayer, this);
 
-	// ì˜¤ë¸Œì íŠ¸ ì¶”ê°€
+	// ¿ÀºêÁ§Æ® Ãß°¡
 	CGameObject* pGameObject = nullptr;
 
 	// Terrain
@@ -254,7 +260,7 @@ HRESULT CStage::Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
+	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
 	CLayerContext ctx(pLayer, this);
 
 	if (FAILED(static_cast<CRoomLayer*>(pLayer)->SpawnRoom()))
@@ -273,7 +279,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
+	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
 	CLayerContext ctx(pLayer, this);
 
 	CUI* pUI = nullptr;

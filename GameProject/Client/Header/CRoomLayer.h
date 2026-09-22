@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include "CLayer.h"
 #include "CEventDelegate.h"
@@ -28,31 +28,34 @@ public:
 	void OnRoomTriggerBlockCollided();
 	void OnButtonInteracted(bool bPressed);
 
-	/* ëª¬ìŠ¤í„° í´ë˜ìŠ¤ê°€ ì‚¬ìš© */
+	/* ¸ó½ºÅÍ Å¬·¡½º°¡ »ç¿ë */
 	inline void IncreaseEntityCount() { ++m_iEntityCount; }
 	inline void DecreaseEntityCount() { --m_iEntityCount; }
 	inline int GetEntityCount() { return m_iEntityCount; }
 
-	/* íƒ€ì¼ì´ ì˜¤ì—¼ë˜ëŠ” ê³µê²© */
+	/* Å¸ÀÏÀÌ ¿À¿°µÇ´Â °ø°İ */
 	void RequestTileContamination(const _vec3& vPos, int iRange, EContaminateType eType, float fDuration);
 	CTile* GetTileFromWorldPosition(const _vec3& vWorldPos);
 
-	/* ë°© ë³€ê²½ì— ë”°ë¥¸ ì¡°ëª… ì¡°ì •*/
+	/* ¹æ º¯°æ¿¡ µû¸¥ Á¶¸í Á¶Á¤*/
 	void ApplyDarkness();
 	void FlickerLight(const float fDuration);
 
+	/* ¹æ ÃÊ±âÈ­ */
+	void ResetState();
+
 private:
-	/* ì–´ë‘  ìŠ¤ìœ„ì¹˜ */
+	/* ¾îµÒ ½ºÀ§Ä¡ */
 	void SetPseudoDark(bool bFlag);
-	bool m_bDark = false; // ë°©ì˜ ì›ë˜ ì†ì„±
-	bool m_bCurrentDark = false; // Flickering ë“±ìœ¼ë¡œ ì¸í•œ í˜„ì¬ ë°©ì˜ ë¶ˆë¹› ìƒíƒœ
+	bool m_bDark = false; // ¹æÀÇ ¿ø·¡ ¼Ó¼º
+	bool m_bCurrentDark = false; // Flickering µîÀ¸·Î ÀÎÇÑ ÇöÀç ¹æÀÇ ºÒºû »óÅÂ
 	float m_fLeftFlickerTime = 0.f;
 	void FlickerHandling(const Engine::_float& fTimeDelta);
 
 	void CheckClearCondition();
 	CTile* GetTileFromIndex2D(const TTileIdx& tIdx);
 
-	/* ì˜¤ì—¼ íƒ€ì¼ê³¼ í”Œë ˆì´ì–´ */
+	/* ¿À¿° Å¸ÀÏ°ú ÇÃ·¹ÀÌ¾î */
 	void PlayerTileInteraction();
 
 	int m_iRoomIndex = -1;

@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CDoor.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -118,6 +118,7 @@ void CDoor::OnRoomEvent(const TRoomEventCtx& t)
         Close();
         break;
     case ERoomEventType::ROOM_CLEAR:
+    case ERoomEventType::RESET_ROOM:
         Open();
         break;
     default:

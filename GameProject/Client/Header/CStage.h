@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CScene.h"
 
@@ -15,6 +15,8 @@ public:
 	virtual			_int		Update_Scene(const _float& fTimeDelta);
 	virtual			void		LateUpdate_Scene(const _float& fTimeDelta);
 	virtual			void		Render_Scene();
+
+	void OnPlayerDead();
 
 private:
 	HRESULT			Ready_Environment_Layer(const _tchar* pLayerTag);
