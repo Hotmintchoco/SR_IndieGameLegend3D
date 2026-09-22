@@ -242,7 +242,7 @@ HRESULT CRoomLayer::SpawnRoom()
 				pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
 				pTransformCom->Rotation(ROT_Y, 90.f * iDir);
 
-				pTransformCom->Move_Pos(&vDir, 5.5f + (iDir % 2) * 1.f + 0.2f * i, 1.f);
+				pTransformCom->Move_Pos(&vDir, 5.7f + (iDir % 2) * 1.f + 0.2f * i, 1.f);
 			}
 
 			/* 문 쪽 타일 */
