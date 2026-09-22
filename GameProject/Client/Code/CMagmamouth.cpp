@@ -12,7 +12,7 @@ CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(0.f), m_fStateUpdateDuration(2.f), 
     m_eMagmaMouthState(IDLE), m_vRoomCenterLocation{ 0.f,0.f,0.f }, m_MovePosition{0.f,0.f,0.f},
     m_iMonsterX(0), m_iMonsterZ(0), m_iPlayerX(0), m_iPlayerZ(0), m_bMoveFlag(false), m_bMoveFlag2(false), m_bCloseMouth(false),
-    m_fTrailTime(0.f), m_fTrailDuration(0.f), m_bTrailStart(false), m_bTrailFinish(false)
+    m_fTrailTime(0.f), m_fTrailTime2(0.f), m_fTrailDuration(0.f), m_bTrailStart(false), m_bTrailFinish(false)
 {
     ZeroMemory(m_bSpawnFinish, sizeof(m_bSpawnFinish));
     ZeroMemory(m_bFireballFinish, sizeof(m_bFireballFinish));
@@ -93,6 +93,7 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
             m_bMoveFlag = false;
             m_bMoveFlag2 = false;
             m_bTrailStart = false;
+            m_fTrailTime2 = 0.f;
             m_fFrame = 3.f;
         }
         else if (m_eMagmaMouthState == IDLE)
@@ -742,7 +743,9 @@ void CMagmamouth::Set_Motion_CloseOpenMouth(const _float& fTimeDelta)
 
 void CMagmamouth::MagmaMouth_Trail(const _float& fTimeDelta)
 {
-
+    m_fTrailTime2 += fTimeDelta;
+    //if (m_bMoveFlag2 == true)return;
+	if (m_fTrailTime2>1.5f || m_bMoveFlag2 == true)return;
     _vec3 vPos, vUp, vDown;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     vUp = vPos;
@@ -786,7 +789,12 @@ void CMagmamouth::MagmaMouth_Trail(const _float& fTimeDelta)
         CGameObject* pGameObject = nullptr;
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
 
-        pGameObject = CTrail::Create(m_pGraphicDev, m_fTrailPoint);
+        //pGameObject = CTrail::Create(m_pGraphicDev, m_fTrailPoint);
+        _float fLifeTime = 0.f;
+        
+        fLifeTime = 0.75f - m_fTrailTime2*0.5f;
+        
+        pGameObject = CTrail::Create(m_pGraphicDev, m_fTrailPoint, fLifeTime);
         if (nullptr == pGameObject)
             return;
 
@@ -798,28 +806,6 @@ void CMagmamouth::MagmaMouth_Trail(const _float& fTimeDelta)
 
         return;
     }
-  //  m_fTrailTime += fTimeDelta;
-  //  if (m_fTrailTime > m_fTrailDuration)
-  //  {
-  //      m_fTrailTime = 0.f;
-  //      m_bTrailStart = false;
-
-  //      m_fTrailPoint[1] = vUp;
-  //      m_fTrailPoint[2] = vDown;
-
-		//CGameObject* pGameObject = nullptr;
-		//CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-
-		//pGameObject = CTrail::Create(m_pGraphicDev, m_fTrailPoint);
-		//if (nullptr == pGameObject)
-		//	return;
-
-		//if (FAILED(pLayer->Add_GameObject(L"MagmaMouthTrail", pGameObject)))
-		//	return;
-
-  //      return;
-  //  }
-
 }
 
 void CMagmamouth::Free()
