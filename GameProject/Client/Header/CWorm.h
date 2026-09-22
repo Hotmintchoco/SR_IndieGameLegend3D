@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CMonster.h"
 
@@ -40,20 +40,20 @@ private:
 	_uint m_iWormIndex;
 	void Set_Front_Part(CWorm* pFrontPart) { m_pFrontPart = pFrontPart; }
 	CMonster* m_pFrontPart;
-	/* ±è¼ºÃ¶ : ÀÓ½Ã º¯°æ */
+	/* ê¹€ì„±ì²  : ìž„ì‹œ ë³€ê²½ */
 	//map<const _tchar*, CLayer*>* m_pmapLayer;
-	map<wstring, CLayer*>* m_pmapLayer;
+	map<wstring, CLayer*>* m_pmapLayer = nullptr;
 public:
-	/* ±è¼ºÃ¶ : ÀÓ½Ã º¯°æ */
+	/* ê¹€ì„±ì²  : ìž„ì‹œ ë³€ê²½ */
 	// void Set_LayerPointer(map<const _tchar*, CLayer*>* pmapLayer) { m_pmapLayer = pmapLayer; }
 	void Set_LayerPointer(map<wstring, CLayer*>* pmapLayer) { m_pmapLayer = pmapLayer; }
 public:
 	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	/* ±è¼ºÃ¶ : ÀÓ½Ã º¯°æ */
+	/* ê¹€ì„±ì²  : ìž„ì‹œ ë³€ê²½ */
 	// static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, map<const _tchar*, CLayer*>* pmap);
 	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, map<wstring, CLayer*>* pmap);
 	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex);
-	/* ±è¼ºÃ¶ : ÀÓ½Ã º¯°æ */
+	/* ê¹€ì„±ì²  : ìž„ì‹œ ë³€ê²½ */
 	// static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex, map<const _tchar*, CLayer*>* pmap);
 	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex, map<wstring, CLayer*>* pmap);
 

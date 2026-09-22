@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CBullet.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -44,10 +44,10 @@ HRESULT CBullet::Ready_GameObject(const _vec3* pPos, const _vec3* pDir)
     switch (m_iBulletID)
     {
     case BULLET_DEFAULT:
-        m_pColliderCom->Set_CollisionID(COLL_PBULLET_NORMAL);
+        m_pColliderCom->Set_CollisionID(COLL_PBULLET);
         break;
     case BULLET_SMALL:
-        m_pColliderCom->Set_CollisionID(COLL_PBULLET_SMALL);
+        m_pColliderCom->Set_CollisionID(COLL_PBULLET);
         break;
     }
 
@@ -144,15 +144,15 @@ void CBullet::LateUpdate_GameObject(const _float& fTimeDelta)
 
     m_pTransformCom->Set_World(&matWorld);
 
-    // Ãæµ¹ ¸Å´ÏÀú¿¡ ÄÝ¶óÀÌ´õ µî·Ï
+    // ì¶©ëŒ ë§¤ë‹ˆì €ì— ì½œë¼ì´ë” ë“±ë¡
 
     switch (m_iBulletID)
     {
     case BULLET_DEFAULT:
-        CCollisionMgr::GetInstance()->Add_Collider(COLL_PBULLET_NORMAL, m_pColliderCom);
+        CCollisionMgr::GetInstance()->Add_Collider(COLL_PBULLET, m_pColliderCom);
         break;
     case BULLET_SMALL:
-        CCollisionMgr::GetInstance()->Add_Collider(COLL_PBULLET_SMALL, m_pColliderCom);
+        CCollisionMgr::GetInstance()->Add_Collider(COLL_PBULLET, m_pColliderCom);
         break;
     }
     

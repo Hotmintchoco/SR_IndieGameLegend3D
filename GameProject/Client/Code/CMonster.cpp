@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CMonster.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -11,6 +11,8 @@
 #include "CTerrain.h"
 #include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
+#include "Client_Struct.h"
+#include "CBullet.h"
 
 _uint CMonster::iMonsterIdx=0;
 
@@ -32,14 +34,15 @@ HRESULT CMonster::Ready_GameObject()
 
     m_pColliderCom->Set_CollisionID(COLL_MONSTER);
 
-    m_iHp = 5;
-
-    /* ¼ºÃ¶ */
+    /* ì„±ì²  */
     if (CRoomLayer* pLayer = dynamic_cast<CRoomLayer*>(m_pOwner))
     {
         pLayer->IncreaseEntityCount();
+        pLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t);});
     }
+    Set_IsActive(false);
     /* ---- */
+    m_pColliderCom->Set_IsActive(false);
 
     __super::Ready_GameObject();
     return S_OK;
@@ -47,6 +50,12 @@ HRESULT CMonster::Ready_GameObject()
 
 _int CMonster::Update_GameObject(const _float& fTimeDelta)
 {
+    if (!Get_IsActive()) return S_OK;
+
+    if (!m_pColliderCom->Get_IsActive())
+    {
+        m_pColliderCom->Set_IsActive(true);
+    }
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
     
     if (m_fHitEffectTime < m_fHitEffectDuration && m_bHitState == true)
@@ -59,9 +68,10 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
     }
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
 
-    if (m_iHp <= 0)
+
+    if (m_bDelete == true)
     {
-        /* ¼ºÃ¶ */
+        /* ì„±ì²  */
         if (CRoomLayer* pLayer = dynamic_cast<CRoomLayer*>(m_pOwner))
         {
             pLayer->DecreaseEntityCount();
@@ -75,9 +85,11 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 
 void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+    if (!Get_IsActive()) return;
+
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 
-    // Ãæµ¹ Ã³¸® ¿©ºÎ¸¦ À§ÇØ Ãæµ¹ ¸Å´ÏÀú¿¡ ¸ó½ºÅÍÀÇ ÄÝ¶óÀÌ´õ¸¦ µî·Ï
+    // ì¶©ëŒ ì²˜ë¦¬ ì—¬ë¶€ë¥¼ ìœ„í•´ ì¶©ëŒ ë§¤ë‹ˆì €ì— ëª¬ìŠ¤í„°ì˜ ì½œë¼ì´ë”ë¥¼ ë“±ë¡
 	CCollisionMgr::GetInstance()->Add_Collider(COLL_MONSTER, m_pColliderCom);
 
     _vec3       vPos;
@@ -94,22 +106,12 @@ void CMonster::OnCollisionEnter(CGameObject* pOther)
 {
 	CCollider* pCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
     
-    if (pCollider && pCollider->Get_CollisionID() == COLL_PBULLET_NORMAL)
+    if (pCollider && pCollider->Get_CollisionID() == COLL_PBULLET)
     {
         m_fHitEffectTime = 0.f;
         m_bHitState = true;
-        m_iHp -= 2;
+        m_iHp -= static_cast<CBullet*>(pOther)->Get_Damage();
     }
-
-    if (pCollider && pCollider->Get_CollisionID() == COLL_PBULLET_SMALL)
-    {
-        m_fHitEffectTime = 0.f;
-        m_bHitState = true;
-        m_iHp -= 1;
-    }
-
-    //m_fHitEffectTime = 0.f;
-    //m_bHitState = true;
 }
 
 void CMonster::Enable_HitRenderState()
@@ -120,7 +122,7 @@ void CMonster::Enable_HitRenderState()
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
 
-    // »¡°£»ö
+    // ë¹¨ê°„ìƒ‰
     m_pGraphicDev->SetRenderState(
         D3DRS_TEXTUREFACTOR,
         D3DCOLOR_ARGB(255, 255, 0, 0)
@@ -211,6 +213,18 @@ void CMonster::Free()
     CGameObject::Free();
 }
 
+
+void CMonster::OnRoomEvent(const TRoomEventCtx& t)
+{
+    switch (t.eType)
+    {
+    case ERoomEventType::ROOM_BEGIN:
+        Set_IsActive(true);
+        break;
+    default:
+        break;
+    }
+}
 
 void CMonster::Set_Pos(_vec3 vPos)
 {

@@ -1,9 +1,8 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CWorm.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CTimerMgr.h"
-//#include "CDInputMgr.h"
 #include "CTerrain.h"
 #include "CWorm_Boby.h"
 #include "CWorm_Tail.h"
@@ -69,6 +68,11 @@ HRESULT CWorm::Ready_GameObject()
 
 _int CWorm::Update_GameObject(const _float& fTimeDelta)
 {
+    if (m_iHp <= 0)
+    {
+        m_bDelete = true;
+    }
+    
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
     Set_OnTerrain();
 
@@ -99,6 +103,8 @@ _int CWorm::Update_GameObject(const _float& fTimeDelta)
             m_pTransformCom->Move_Pos(&vDir, 1.f, fTimeDelta);
         }
     }
+
+
 
     return iExit;
 }
@@ -299,7 +305,7 @@ CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pMonster;
 }
 
-/* ±è¼ºÃ¶ : ÀÓ½Ã º¯°æ */
+/* ê¹€ì„±ì²  : ìž„ì‹œ ë³€ê²½ */
 //CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, map<const _tchar*, CLayer*>* pmap)
 //{
 //    CWorm* pMonster = new CWorm(pGraphicDev);
@@ -341,7 +347,7 @@ CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex)
     return pMonster;
 }
 
-/* ±è¼ºÃ¶: ÀÓ½Ã º¯°æ */
+/* ê¹€ì„±ì² : ìž„ì‹œ ë³€ê²½ */
 //CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex, map<const _tchar*, CLayer*>* pmap)
 //{
 //    CWorm* pMonster = new CWorm(pGraphicDev, ++iIndex);

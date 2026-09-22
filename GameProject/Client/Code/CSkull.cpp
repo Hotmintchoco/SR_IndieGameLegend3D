@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CSkull.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -29,8 +29,16 @@ HRESULT CSkull::Ready_GameObject()
 
 _int CSkull::Update_GameObject(const _float& fTimeDelta)
 {
+    if (m_iHp <= 0)
+    {
+        m_bDelete = true;
+    }
+
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
     Set_OnTerrain();
+
+
+
     return iExit;
 }
 

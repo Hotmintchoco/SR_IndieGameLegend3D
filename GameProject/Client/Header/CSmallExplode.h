@@ -5,6 +5,7 @@
 namespace Engine
 {
 	class CRcTex;
+	class CTexture;
 }
 
 class CSmallExplode : public CEffect
@@ -24,7 +25,7 @@ private:
 
 protected:
 	Engine::CRcTex* m_pBufferCom;
-
+	Engine::CTexture* m_pTextureCom;
 public:
 	static CSmallExplode* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	static CSmallExplode* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vScale);
