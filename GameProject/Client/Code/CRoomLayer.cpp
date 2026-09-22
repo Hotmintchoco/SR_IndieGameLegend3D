@@ -14,8 +14,6 @@
 #include "CKillAllEntityCondition.h"
 #include "CPressAllButtonCondition.h"
 #include "CManagement.h"
-#include "CMonster.h"
-#include "CLayerContext.h"
 #include "CButtonTile.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
