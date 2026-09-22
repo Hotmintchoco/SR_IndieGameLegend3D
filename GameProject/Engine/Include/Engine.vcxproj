@@ -154,6 +154,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CComponent.h" />
     <ClInclude Include="..\Header\CCubeTex.h" />
     <ClInclude Include="..\Header\CDebugMgr.h" />
+    <ClInclude Include="..\Header\CCustomTex.h" />
     <ClInclude Include="..\Header\CDInputMgr.h" />
     <ClInclude Include="..\Header\CEventDelegate.h" />
     <ClInclude Include="..\Header\CFont.h" />
@@ -189,6 +190,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\Engine_Macro.h" />
     <ClInclude Include="..\Header\Engine_Struct.h" />
     <ClInclude Include="..\Header\Engine_Typedef.h" />
+    <ClInclude Include="..\Header\CRcColCustom.h" />
     <ClInclude Include="..\Header\IRenderable.h" />
     <ClInclude Include="..\Header\tinyply.h" />
     <ClInclude Include="..\Header\Utils.h" />
@@ -205,6 +207,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CComponent.cpp" />
     <ClCompile Include="..\Code\CCubeTex.cpp" />
     <ClCompile Include="..\Code\CDebugMgr.cpp" />
+    <ClCompile Include="..\Code\CCustomTex.cpp" />
     <ClCompile Include="..\Code\CDInputMgr.cpp" />
     <ClCompile Include="..\Code\CEventDelegate.cpp" />
     <ClCompile Include="..\Code\CFont.cpp" />
@@ -234,6 +237,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CTransform.cpp" />
     <ClCompile Include="..\Code\CTriCol.cpp" />
     <ClCompile Include="..\Code\CVIBuffer.cpp" />
+    <ClCompile Include="..\Code\CRcColCustom.cpp" />
     <ClCompile Include="..\Code\IRenderable.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

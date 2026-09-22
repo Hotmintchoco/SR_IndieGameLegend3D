@@ -4,7 +4,6 @@
 
 namespace Engine
 {
-	class CRcTex;
 	class CTexture;
 	class CTransform;
 }
@@ -25,7 +24,6 @@ protected:
 	HRESULT			Add_Component();
 
 protected:
-	Engine::CRcTex* m_pBufferCom;
 	Engine::CTexture* m_pTextureCom;
 	Engine::CTransform* m_pTransformCom;
 	_float				m_fFrame;
@@ -37,7 +35,6 @@ public:
 	void Set_Scale(_float fX, _float fY, _float fZ);
 
 public:
-	static _uint iEffectIdx;
 
 protected:
 	virtual void		Free();

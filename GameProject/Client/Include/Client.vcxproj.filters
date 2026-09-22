@@ -187,6 +187,9 @@
     <Filter Include="02. GameObject\02. Monster\Magmamouth\Fireball">
       <UniqueIdentifier>{80883398-3d6b-4d52-8f00-a866db1e4a6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. Effect\Trail">
+      <UniqueIdentifier>{66a04df7-ebf3-4bd2-8103-73c4dcefb56e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\PseudoBlack">
       <UniqueIdentifier>{985083af-b441-4e23-9d55-fe18ceb2ef3c}</UniqueIdentifier>
     </Filter>
@@ -210,6 +213,12 @@
     </Filter>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\GameMachine">
       <UniqueIdentifier>{31be8105-a523-4dda-914e-225628b9d96c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Bullet\BulletTrail">
+      <UniqueIdentifier>{507fc53d-54bb-44af-a564-17e6d18d5a96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Bullet\BulletParticle">
+      <UniqueIdentifier>{d9883dde-8be5-4d6d-84d7-3d4d56bc6919}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -414,6 +423,9 @@
     <ClInclude Include="..\Header\CFireball.h">
       <Filter>02. GameObject\02. Monster\Magmamouth\Fireball</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTrail.h">
+      <Filter>02. GameObject\06. Effect\Trail</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CPseudoDark.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\PseudoBlack</Filter>
     </ClInclude>
@@ -437,6 +449,12 @@
     </ClInclude>
     <ClInclude Include="..\Header\CGameMachine.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\GameMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBulletTrail.h">
+      <Filter>02. GameObject\09. Bullet\BulletTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBulletParticle.h">
+      <Filter>02. GameObject\09. Bullet\BulletParticle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -527,9 +545,6 @@
     <ClCompile Include="..\Code\CAbstractFactory.cpp">
       <Filter>04. Manager\00. RoomLoading</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CBullet.cpp">
-      <Filter>02. GameObject\09. Bullet</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CSkull.cpp">
       <Filter>02. GameObject\02. Monster\Skull</Filter>
     </ClCompile>
@@ -617,6 +632,9 @@
     <ClCompile Include="..\Code\CFireball.cpp">
       <Filter>02. GameObject\02. Monster\Magmamouth\Fireball</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CTrail.cpp">
+      <Filter>02. GameObject\06. Effect\Trail</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CPseudoDark.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\PseudoBlack</Filter>
     </ClCompile>
@@ -640,6 +658,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGameMachine.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\GameMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBulletTrail.cpp">
+      <Filter>02. GameObject\09. Bullet\BulletTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBulletParticle.cpp">
+      <Filter>02. GameObject\09. Bullet\BulletParticle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

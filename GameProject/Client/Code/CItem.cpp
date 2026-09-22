@@ -12,7 +12,7 @@
 
 CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_fFrame(0.f), m_fAttractTime(0.f), m_fAttractDuration(0.25f), m_bAttractStart(false),
-    m_bDropFinish(false), m_fDropTime(0.f), m_fDropDuration(0.25f), m_fLifeTime(0.f), m_fLifeDuration(5.f), 
+    m_bDropFinish(false), m_fDropTime(0.f), m_fDropDuration(0.25f), m_fLifeTime(0.f), m_fLifeDuration(7.f), 
     m_bBlinkStart(false), m_bVisible(true), m_fBlinkTime(0.f), m_fBlinkDuration(0.25f), m_fBlinkDuration2(3.f)
 {
 }

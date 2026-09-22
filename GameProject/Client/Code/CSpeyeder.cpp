@@ -93,7 +93,7 @@ void CSpeyeder::LateUpdate_GameObject(const _float& fTimeDelta)
         _vec3   vPlayerLook;
         pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
-        m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 1.f, fTimeDelta);
+        m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 2.f, fTimeDelta);
     }
     else
     {
@@ -104,7 +104,7 @@ void CSpeyeder::LateUpdate_GameObject(const _float& fTimeDelta)
             return;
 
         _vec3   vPlayerPos;
-        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);   
 
         _vec3   vPlayerLook;
         pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);

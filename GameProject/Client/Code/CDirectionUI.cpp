@@ -24,7 +24,7 @@ HRESULT CDirectionUI::Ready_GameObject()
     CGameObject::Ready_GameObject();
 
     // 나침반 바 형태에 맞게 가로를 길게
-    m_pTransformCom->Set_Scale(60.f, 24.f, 1.f);
+    m_pTransformCom->Set_Scale(76.f, 18.f, 1.f);
 
     return S_OK;
 }

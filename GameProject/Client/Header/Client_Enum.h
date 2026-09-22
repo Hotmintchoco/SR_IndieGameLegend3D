@@ -1,6 +1,6 @@
-#pragma once
+Ôªø#pragma once
 
-/* ∫Æ πÊ«‚ */
+/* Î≤Ω Î∞©Ìñ• */
 enum class EWallDir
 {
 	NONE,
@@ -20,18 +20,18 @@ enum COLLISIONID
 {
 	COLL_PLAYER,	// COLL_ID1,
 	COLL_MONSTER,	// COLL_ID2,
-	COLL_PBULLET,	// COLL_ID3,
-	COLL_MBULLET,	// COLL_ID4,
+	COLL_ID3,	// COLL_ID3,
+	COLL_ID4,	// COLL_ID4,
 	COLL_WALL,		// COLL_ID5,
 	COLL_ITEM,		// COLL_ID6,
 	COLL_OBSTACLE,	// COLL_ID7,
 	COLL_EXPLODERANGE,// COLL_ID8,
 	COLL_BUTTON,	// COLL_ID9,
 	COLL_GAMEMACHINE,// COLL_ID10,
-	COLL_ID11,		// COLL_ID11,
-	COLL_ID12,		// COLL_ID12,
-	COLL_ID13,		// COLL_ID13,
-	COLL_ID14,		// COLL_ID14,
+	COLL_PBULLET_NORMAL,		// COLL_ID11,
+	COLL_PBULLET_SMALL,		// COLL_ID12,
+	COLL_MBULLET_NORMAL,		// COLL_ID13,
+	COLL_MBULLET_SMALL,		// COLL_ID14,
 	COLL_ID15,		// COLL_ID15,
 	COLL_ID16,		// COLL_ID16,
 	COLL_ID17,		// COLL_ID17,
@@ -54,7 +54,7 @@ enum COLLISIONID
 	COLL_MAX
 };
 
-/* ∏  πËƒ° ø¿∫Í¡ß∆Æ ≈∏¿‘ */
+/* Îßµ Î∞∞Ïπò Ïò§Î∏åÏ†ùÌä∏ ÌÉÄÏûÖ */
 enum class EObjectType
 {
 	NONE = 0,

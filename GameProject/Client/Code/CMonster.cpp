@@ -94,7 +94,14 @@ void CMonster::OnCollisionEnter(CGameObject* pOther)
 {
 	CCollider* pCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
     
-    if (pCollider && pCollider->Get_CollisionID() == COLL_PBULLET)
+    if (pCollider && pCollider->Get_CollisionID() == COLL_PBULLET_NORMAL)
+    {
+        m_fHitEffectTime = 0.f;
+        m_bHitState = true;
+        m_iHp -= 2;
+    }
+
+    if (pCollider && pCollider->Get_CollisionID() == COLL_PBULLET_SMALL)
     {
         m_fHitEffectTime = 0.f;
         m_bHitState = true;

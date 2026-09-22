@@ -279,6 +279,27 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
                                     }
                                     break;
                                 }
+
+                                case VTXSTRUCT_TEX_NORMAL_NONE : 
+                                {
+                                    VTXTEX_NORMAL_NONE* pVertex = NULL;
+                                    switch (idxFmt)
+                                    {
+                                    case D3DFMT_INDEX16:
+                                    {
+                                        INDEX16* pIndex = NULL;
+                                        CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
+                                        break;
+                                    }
+                                    case D3DFMT_INDEX32:
+                                    {
+                                        INDEX32* pIndex = NULL;
+                                        CheckVtxIntersect(pVB, pIB, pVertex, pIndex, dwVtxCnt, dwTriCnt, fToDistance, vBullet_To, matWorld, vCamPos, vForword);
+                                        break;
+                                    }
+                                    }
+                                    break;
+                                }
                                 case VTXSTRUCT_CUBE:
                                 {
                                     VTXCUBE* pVertex = NULL;

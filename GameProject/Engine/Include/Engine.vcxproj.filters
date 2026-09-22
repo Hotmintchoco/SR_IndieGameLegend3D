@@ -118,11 +118,17 @@
     <ClCompile Include="..\Code\CRandomMgr.cpp">
       <Filter>13. Random</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CRcColCustom.cpp">
+      <Filter>05. Component\00. VIBuffer\01. RcCol</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CDebugMgr.cpp">
       <Filter>14. Debug</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\IRenderable.cpp">
       <Filter>08. Renderer\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCustomTex.cpp">
+      <Filter>05. Component\00. VIBuffer\07. CustomTex</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -267,11 +273,17 @@
     <ClInclude Include="..\Header\CRandomMgr.h">
       <Filter>13. Random</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CRcColCustom.h">
+      <Filter>05. Component\00. VIBuffer\01. RcCol</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CDebugMgr.h">
       <Filter>14. Debug</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\IRenderable.h">
       <Filter>08. Renderer\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCustomTex.h">
+      <Filter>05. Component\00. VIBuffer\07. CustomTex</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -397,6 +409,9 @@
     </Filter>
     <Filter Include="08. Renderer\Interface">
       <UniqueIdentifier>{c0423c80-7b59-4445-a095-ad629dfa4ca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Component\00. VIBuffer\07. CustomTex">
+      <UniqueIdentifier>{baa4eca3-7e34-4316-9fa3-a6087ec6921e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

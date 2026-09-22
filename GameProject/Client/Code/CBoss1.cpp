@@ -61,7 +61,7 @@ void CBoss1::LateUpdate_GameObject(const _float& fTimeDelta)
     pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
     m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 0.8f, fTimeDelta);
-    //m_pTransformCom2->Chase_Target(&vPlayerPos, &vPlayerLook, 0.8f, fTimeDelta);
+    //m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
 
     //Angry버전 Transform->chase업데이트
     if (m_iHp < 4)

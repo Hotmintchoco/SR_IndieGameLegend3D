@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CStage.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
@@ -65,15 +65,20 @@ HRESULT CStage::Ready_Scene()
 	if (FAILED(CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_FPV")))
 		return E_FAIL;
 
-	// Ãæµ¹ ±×·ì ¼³Á¤
+	// ì¶©ëŒ ê·¸ë£¹ ì„¤ì •
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_OBSTACLE);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_MONSTER);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET_NORMAL, COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET_SMALL, COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET_NORMAL, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET_SMALL, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MBULLET_NORMAL, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MBULLET_SMALL, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_ITEM);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODERANGE, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_BUTTON, COLL_PLAYER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_GAMEMACHINE, COLL_PLAYER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MONSTER, COLL_OBSTACLE);
 
 	return S_OK;
 }
@@ -117,10 +122,10 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
+	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
 	CLayerContext ctx(pLayer, this);
 
-	// ¿ÀºêÁ§Æ® Ãß°¡
+	// ì˜¤ë¸Œì íŠ¸ ì¶”ê°€
 	CGameObject* pGameObject = nullptr;
 
 	/*
@@ -159,10 +164,10 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
+	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
 	CLayerContext ctx(pLayer, this);
 
-	// ¿ÀºêÁ§Æ® Ãß°¡
+	// ì˜¤ë¸Œì íŠ¸ ì¶”ê°€
 	CGameObject* pGameObject = nullptr;
 
 	// Terrain
@@ -215,11 +220,11 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	}
 
 	// Monster
+	// 
 	//pGameObject = CSkull::Create(m_pGraphicDev);
 	//static_cast<CMonster*>(pGameObject)->Set_Pos(55, 0, 55);
 	//if (nullptr == pGameObject)
 	//	return E_FAIL;
-
 	//if (FAILED(pLayer->Add_GameObject(L"Skull", pGameObject)))
 	//	return E_FAIL;
 
@@ -227,7 +232,6 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	//static_cast<CMonster*>(pGameObject)->Set_Pos(65, 0, 55);
 	//if (nullptr == pGameObject)
 	//	return E_FAIL;
-
 	//if (FAILED(pLayer->Add_GameObject(L"Boss1", pGameObject)))
 	//	return E_FAIL;
 
@@ -236,7 +240,6 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	//static_cast<CMonster*>(pGameObject)->Set_Pos(64, 2.f, 63);
 	//if (nullptr == pGameObject)
 	//	return E_FAIL;
-
 	//if (FAILED(pLayer->Add_GameObject(L"Magmamouth", pGameObject)))
 	//	return E_FAIL;
 
@@ -251,7 +254,7 @@ HRESULT CStage::Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
+	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
 	CLayerContext ctx(pLayer, this);
 
 	if (FAILED(static_cast<CRoomLayer*>(pLayer)->SpawnRoom()))
@@ -270,7 +273,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
+	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
 	CLayerContext ctx(pLayer, this);
 
 	CUI* pUI = nullptr;
@@ -288,10 +291,10 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	// Hp
 	_int iCountMax = 3;
-	_float fStartX = 20.f;
-	_float fStartY = 20.f;
-	_float fIconSize = 17.5f;  // CPlayerHpUI::Ready_GameObject()ÀÇ Set_Scale°ú µ¿ÀÏ
-	_float fGap = 22.5f;
+	_float fStartX = 25.f;
+	_float fStartY = 25.f;
+	_float fIconSize = 17.5f;
+	_float fGap = 25.f;
 
 	for (_int i = 0; i < iCountMax; ++i)
 	{
@@ -302,6 +305,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 		vPos = { fStartX + i * (fIconSize + fGap), fStartY };
 		pUI->Set_Pos(vPos);
 		pUI->Set_Size({ fIconSize + 2.5f, fIconSize });
+		pUI->Set_Texture(4);
 
 		wstring wstrTag = L"PlayerHp_" + to_wstring(i);
 		if (FAILED(pLayer->Add_GameObject(wstrTag.c_str(), pUI)))
@@ -343,10 +347,53 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pUI)
 		return E_FAIL;
 
-	_vec2 vDirUIPos{ WINCX - 120.f, 420.f };
-	pUI->Set_Pos(vDirUIPos);
+	pUI->Set_Pos(WINCX - 90.f, 410.f, 0.1f);
 
 	if (FAILED(pLayer->Add_GameObject(L"DirectionUI", pUI)))
+		return E_FAIL;
+
+	// Hud Minimap
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_HudMapTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(WINCX - 90.f, 480.f, 0.f);
+	pUI->Set_Size({ 76.f, 92.f });
+
+	if (FAILED(pLayer->Add_GameObject(L"MiniMap", pUI)))
+		return E_FAIL;
+
+	// Hud Attack Info
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_HudAttackInfoTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(182.f, WINCY - 60.f, 0.5f);
+	pUI->Set_Size({ 175.f, 38.5f });
+
+	if (FAILED(pLayer->Add_GameObject(L"AttackInfo", pUI)))
+		return E_FAIL;
+
+	// Hud Attack Info Ammo
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_AmmoTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(222.f, WINCY - 60.f, 0.6f);
+	pUI->Set_Size({ 125.f, 18.f });
+
+	if (FAILED(pLayer->Add_GameObject(L"AmmoInfo", pUI)))
+		return E_FAIL;
+
+	// Hud Attack Info Skill
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_SkillTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(63.f, WINCY - 60.f, 0.4f);
+	pUI->Set_Size({ 28.f, 28.f });
+
+	if (FAILED(pLayer->Add_GameObject(L"SkillInfo", pUI)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag, pLayer });

@@ -22,6 +22,7 @@ public:
 
 public:
 	void			Set_Pos(const _vec2& vPos);
+	void			Set_Pos(_float fX, _float fY, _float fZ);
 	void			Set_Size(const _vec2& vSize);
 	void            Set_Texture(const _uint& iIndex);
 
@@ -33,7 +34,7 @@ protected:
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
 
-	_vec2				m_vPos;
+	_vec3				m_vPos;
 	_vec2				m_vSize;
 	_float				m_fFrame;
 

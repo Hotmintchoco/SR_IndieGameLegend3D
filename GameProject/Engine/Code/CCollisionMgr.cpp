@@ -22,6 +22,8 @@ void CCollisionMgr::Check_Group(_int iLeft, _int iRight)
 
 void CCollisionMgr::Add_Collider(_int iGroup, CCollider* pCollider)
 {
+    pCollider->Set_CollisionID(iGroup);
+
 	m_ColList[iGroup].push_back(pCollider);
 }
 

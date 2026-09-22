@@ -84,6 +84,15 @@ HRESULT CSmallExplode::Add_Component()
 
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
+    // RcTex
+    pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
+
+
     return S_OK;
 }
 

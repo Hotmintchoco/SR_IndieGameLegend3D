@@ -5,12 +5,9 @@
 #include "CManagement.h"
 #include <ctime>
 
-_uint CEffect::iEffectIdx = 0;
-
 CEffect::CEffect(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_fFrame(0.f)
 {
-    iEffectIdx++;
 }
 
 
@@ -38,6 +35,7 @@ _int CEffect::Update_GameObject(const _float& fTimeDelta)
 void CEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
+
 }
 
 void CEffect::Render_GameObject()
@@ -55,14 +53,6 @@ void CEffect::Render_GameObject()
 HRESULT CEffect::Add_Component()
 {
     CComponent* pComponent = nullptr;
-
-    // RcTex
-    pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
-
-    if (nullptr == pComponent)
-        return E_FAIL;
-
-    m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
 
     // Transform
     pComponent = m_pTransformCom = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));

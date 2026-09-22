@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -149,8 +149,10 @@
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
     <ClInclude Include="..\Header\CBoss1.h" />
     <ClInclude Include="..\Header\CBullet.h" />
+    <ClInclude Include="..\Header\CBulletParticle.h" />
     <ClInclude Include="..\Header\CButtonTile.h" />
     <ClInclude Include="..\Header\CClearCondition.h" />
+    <ClInclude Include="..\Header\CBulletTrail.h" />
     <ClInclude Include="..\Header\CCrosshair.h" />
     <ClInclude Include="..\Header\CDirectionUI.h" />
     <ClInclude Include="..\Header\CDoor.h" />
@@ -194,6 +196,7 @@
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CTile.h" />
+    <ClInclude Include="..\Header\CTrail.h" />
     <ClInclude Include="..\Header\CTriggerBox.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CWall.h" />
@@ -227,7 +230,9 @@
     <ClCompile Include="..\Code\CBoss1.cpp" />
     <ClCompile Include="..\Code\CBullet.cpp" />
     <ClCompile Include="..\Code\CButtonTile.cpp" />
+    <ClCompile Include="..\Code\CBulletParticle.cpp" />
     <ClCompile Include="..\Code\CClearCondition.cpp" />
+    <ClCompile Include="..\Code\CBulletTrail.cpp" />
     <ClCompile Include="..\Code\CCrosshair.cpp" />
     <ClCompile Include="..\Code\CDirectionUI.cpp" />
     <ClCompile Include="..\Code\CDoor.cpp" />
@@ -270,6 +275,7 @@
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CTile.cpp" />
+    <ClCompile Include="..\Code\CTrail.cpp" />
     <ClCompile Include="..\Code\CTriggerBox.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CWall.cpp" />

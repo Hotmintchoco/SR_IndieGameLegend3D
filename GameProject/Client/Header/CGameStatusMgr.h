@@ -32,6 +32,8 @@ public:
 
 	inline void UpdatePlayerPosition(const _vec3& vPos) { m_vPlayerPos = vPos; }
 	inline void UpdatePlayerHp(int iAmount) { m_iPlayerHp += iAmount; }
+	inline void SetPlayerHp(int iHp) { m_iPlayerHp = iHp; }
+	inline int GetPlayerHp() const { return m_iPlayerHp; }
 	inline void UpdatePlayerMaxHp(int iAmount) { m_iPlayerMaxHp += iAmount; }
 
 	inline void SetUltimateGauge(float fAmount) { m_fUltGauge = fAmount; }
@@ -61,7 +63,7 @@ private:
 	_vec3 m_vPlayerPos = _vec3{ 0.f, 0.f, 0.f };
 
 	/* Player */
-	int m_iPlayerHp = 6;
+	int m_iPlayerHp = 12;
 	int m_iPlayerMaxHp = 12;
 
 	/* Weapon */

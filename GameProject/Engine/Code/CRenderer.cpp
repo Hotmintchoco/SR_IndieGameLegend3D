@@ -198,8 +198,25 @@ void CRenderer::Render_AlphaTest(LPDIRECT3DDEVICE9& pGraphicDev)
 
 void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
 {
+	_matrix matOldView, matOldProj, matView, matProj;
+	pGraphicDev->GetTransform(D3DTS_VIEW, &matOldView);
+	pGraphicDev->GetTransform(D3DTS_PROJECTION, &matOldProj);
+
+	D3DXMatrixIdentity(&matView);
+	D3DXMatrixOrthoLH(&matProj, (float)WINCX, (float)WINCY, 0.f, 1.f);
+
+	pGraphicDev->SetTransform(D3DTS_VIEW, &matView);
+	pGraphicDev->SetTransform(D3DTS_PROJECTION, &matProj);
+
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
 	for (auto& pObj : m_RenderGroup[RENDER_UI])
 		pObj->Render(pGraphicDev);
+
+	pGraphicDev->SetTransform(D3DTS_VIEW, &matOldView);
+	pGraphicDev->SetTransform(D3DTS_PROJECTION, &matOldProj);
 }
 
 void CRenderer::Render_Collider(LPDIRECT3DDEVICE9& pGraphicDev)

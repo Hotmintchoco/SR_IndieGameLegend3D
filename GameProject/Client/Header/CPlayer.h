@@ -35,7 +35,11 @@ private:
 	void			Mouse_Move();
 	void			Mouse_Fix();
 	_vec3			Picking_OnTerrain();
-	void RenderImGui();
+
+	void			RenderImGui();
+	void			MonsterCollision(CCollider* pOtherCollider);
+
+	void			Update_HPUI();
 
 private:
 	Engine::CRcTex*				m_pBufferCom;
@@ -50,11 +54,16 @@ private:
 	_bool		m_bCheck;
 	_int		m_iHP;
 	_int		m_iMaxHP;
+	_float		m_fInvTime;
+	_bool		m_bDeathState;
+	_float		m_fRespawnTimer;
 
 public:
 	static	CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	void	GetItem(ITEMID iItemID);
 	void	UpdateHP(_int iAmount);
+	void	Die();
+	void	Respawn();
 
 private:
 	virtual void		Free();
