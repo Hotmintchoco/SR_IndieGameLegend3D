@@ -12,6 +12,7 @@
 #include "CEnergy.h"
 #include "CGem.h"
 #include "CMagmamouth.h"
+#include "CGameMachine.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -21,6 +22,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::BREAKABLE_FRUSTUM,        [](const TCreateDesc& t) -> Engine::CGameObject* { return CBreakableFrustum::Create(t.pDevice); } },
         {EObjectType::UNBREAKABLE_FRUSTUM,      [](const TCreateDesc& t) -> Engine::CGameObject* { return CUnbreakableFrustum::Create(t.pDevice); } },
         {EObjectType::EXPLOSIVE_FRUSTUM,        [](const TCreateDesc& t) -> Engine::CGameObject* { return CExplosiveFrustum::Create(t.pDevice); } },
+        {EObjectType::GAME_MACHINE,             [](const TCreateDesc& t) -> Engine::CGameObject* { return CGameMachine::Create(t.pDevice); } },
 
         {EObjectType::Skull,                    [](const TCreateDesc& t) -> Engine::CGameObject* { return CSkull::Create(t.pDevice); } },
         {EObjectType::Boss1,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CBoss1::Create(t.pDevice); } },

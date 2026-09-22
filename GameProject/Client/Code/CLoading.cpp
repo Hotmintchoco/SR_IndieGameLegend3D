@@ -213,6 +213,12 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Black_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Black/%d.png", 101))))
         return E_FAIL;
 
+    /* 게임기 */
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GameMachine_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/GameMachine.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GameMachine_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/GameMachine_Diffuse.png", 1))))
+        return E_FAIL;
+
     /* 맵 배치 데이터 */
     if (FAILED(ParseRoomData()))
     {

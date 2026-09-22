@@ -166,6 +166,7 @@
     <ClInclude Include="..\Header\CFog.h" />
     <ClInclude Include="..\Header\CFrustum.h" />
     <ClInclude Include="..\Header\CFrustumExplodeEffect.h" />
+    <ClInclude Include="..\Header\CGameMachine.h" />
     <ClInclude Include="..\Header\CGameStatusMgr.h" />
     <ClInclude Include="..\Header\CMagmamouth.h" />
     <ClInclude Include="..\Header\CGem.h" />
@@ -242,6 +243,7 @@
     <ClCompile Include="..\Code\CFog.cpp" />
     <ClCompile Include="..\Code\CFrustum.cpp" />
     <ClCompile Include="..\Code\CFrustumExplodeEffect.cpp" />
+    <ClCompile Include="..\Code\CGameMachine.cpp" />
     <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
     <ClCompile Include="..\Code\CMagmamouth.cpp" />
     <ClCompile Include="..\Code\CGem.cpp" />
