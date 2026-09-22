@@ -196,9 +196,6 @@
     <Filter Include="02. GameObject\06. Effect\FrustumExplodeEffect">
       <UniqueIdentifier>{19f10014-1d8b-44d0-89bb-5e80d8ad51ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. Effect\ExplodeSphere">
-      <UniqueIdentifier>{50d3b930-96f7-46d0-9513-601ce505a7a7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\07. Room\BaseProp\Tile\Button">
       <UniqueIdentifier>{79722eb1-37ea-4cd0-a591-59433a43bf55}</UniqueIdentifier>
     </Filter>
@@ -219,6 +216,9 @@
     </Filter>
     <Filter Include="02. GameObject\09. Bullet\BulletParticle">
       <UniqueIdentifier>{d9883dde-8be5-4d6d-84d7-3d4d56bc6919}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Frustum\Explosive\ExplodeSphere">
+      <UniqueIdentifier>{50d3b930-96f7-46d0-9513-601ce505a7a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -439,7 +439,7 @@
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CExplodeSphere.h">
-      <Filter>02. GameObject\06. Effect\ExplodeSphere</Filter>
+      <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive\ExplodeSphere</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CButtonTile.h">
       <Filter>02. GameObject\07. Room\BaseProp\Tile\Button</Filter>
@@ -648,7 +648,7 @@
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CExplodeSphere.cpp">
-      <Filter>02. GameObject\06. Effect\ExplodeSphere</Filter>
+      <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive\ExplodeSphere</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CButtonTile.cpp">
       <Filter>02. GameObject\07. Room\BaseProp\Tile\Button</Filter>
