@@ -418,6 +418,8 @@ void CPlayer::Respawn()
     CGameObject* pGun = CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun");
     if (nullptr != pGun)
         pGun->Set_IsActive(true);
+
+    Update_HPUI();
 }
 
 void CPlayer::Free()
