@@ -341,6 +341,10 @@ void CPlayer::GetItem(ITEMID iItemID)
 
 void CPlayer::UpdateHP(_int iAmount)
 {
+    /* TODO 성철에게 이야기 */
+    return;
+    /* ------------------ */
+
     if (iAmount > 0)
     {
         if (m_iHP + iAmount > m_iMaxHP)
