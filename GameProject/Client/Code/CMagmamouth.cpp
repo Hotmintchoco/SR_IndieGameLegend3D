@@ -44,7 +44,6 @@ HRESULT CMagmamouth::Ready_GameObject()
 
     m_pColliderCom->Set_IsActive(false);
 
-    //m_pColliderCom->Set_Radius(0.2f);
     m_iHp = 6;
     m_fFrame = 3.f;
     return S_OK;
