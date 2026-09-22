@@ -34,8 +34,6 @@ HRESULT CMonster::Ready_GameObject()
 
     m_pColliderCom->Set_CollisionID(COLL_MONSTER);
 
-    m_iHp = 5;
-
     /* 성철 */
     if (CRoomLayer* pLayer = dynamic_cast<CRoomLayer*>(m_pOwner))
     {
@@ -55,8 +53,9 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
     if (!Get_IsActive()) return S_OK;
 
     if (!m_pColliderCom->Get_IsActive())
+    {
         m_pColliderCom->Set_IsActive(true);
-
+    }
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
     
     if (m_fHitEffectTime < m_fHitEffectDuration && m_bHitState == true)

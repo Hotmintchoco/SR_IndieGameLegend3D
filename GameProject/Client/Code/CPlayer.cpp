@@ -370,7 +370,7 @@ void CPlayer::UpdateHP(_int iAmount)
         }
     }
 
-    // Á¤¹Î : HP°¡ °¨¼ÒÇÏ¸é UI Àû¿ë
+    // ï¿½ï¿½ï¿½ï¿½ : HPï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ UI ï¿½ï¿½ï¿½ï¿½
     Update_HPUI();
 }
 

@@ -8,19 +8,16 @@
 CEffect_YellowBox::CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev)
     : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(0.5f)
 {
-    //ZeroMemory(m_vYellowBox_Point, sizeof(m_vYellowBox_Point));
 }
 
 CEffect_YellowBox::CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vYellowBox_Point)[4])
     : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(0.5f)
 {
-    //memcpy(m_vYellowBox_Point, vYellowBox_Point, sizeof(vYellowBox_Point));
 }
 
 CEffect_YellowBox::CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vYellowBox_Point)[4], const _float& fLifeTime)
     : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(fLifeTime)
 {
-    //memcpy(m_vYellowBox_Point, vYellowBox_Point, sizeof(vYellowBox_Point));
 }
 
 
@@ -64,7 +61,7 @@ _int CEffect_YellowBox::Update_GameObject(const _float& fTimeDelta)
         Set_Dead(true);
     }
 
-    m_pTransformCom->Move_Pos(&m_vDir, 1.f, fTimeDelta);
+    m_pTransformCom->Move_Pos(&m_vVelocity, 1.f, fTimeDelta);
 
     m_pTransformCom->Rotation(ROT_X, D3DXToRadian(10.f));
     m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(10.f));
@@ -155,7 +152,7 @@ CEffect_YellowBox* CEffect_YellowBox::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec
     return pEffect_YellowBox;
 }
 
-CEffect_YellowBox* CEffect_YellowBox::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vDir)
+CEffect_YellowBox* CEffect_YellowBox::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vVelocity)
 {
     CEffect_YellowBox* pEffect_YellowBox = new CEffect_YellowBox(pGraphicDev);
 
@@ -166,7 +163,7 @@ CEffect_YellowBox* CEffect_YellowBox::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec
         return nullptr;
     }
     pEffect_YellowBox->Set_Pos(vPos);
-    pEffect_YellowBox->Set_Dir(vDir);
+    pEffect_YellowBox->Set_Velocity(vVelocity);
 
     return pEffect_YellowBox;
 }

@@ -50,14 +50,14 @@ HRESULT CMagmamouth::Ready_GameObject()
     
 _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
 {
+    _int    iExit = CMonster::Update_GameObject(fTimeDelta);
+
     if (m_iHp <= 0)
     {
         m_eMagmaMouthState = DEAD;
         m_fFrame = 3.f;
         m_pColliderCom->Set_IsActive(false);
     }
-
-    _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
     m_fStateUpdateTime += fTimeDelta;
     if (m_fStateUpdateTime > m_fStateUpdateDuration && m_eMagmaMouthState !=DEAD)
@@ -822,7 +822,7 @@ void CMagmamouth::MagmaMouth_DeadEffect(const _float& fTimeDelta)
     {
         m_fElapsedDeadTime2 = 0.f;
 
-        _vec3 vPos, vDir;
+        _vec3 vPos, vVelocity;
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
         _int iRand1 = 0;
@@ -837,8 +837,8 @@ void CMagmamouth::MagmaMouth_DeadEffect(const _float& fTimeDelta)
             iRand2 = rand() % 128 - 64;
             iRand3 = rand() % 128 - 64;
 
-            vDir = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
-            pGameObject = CEffect_YellowBox::Create(m_pGraphicDev, vPos, vDir);
+            vVelocity = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
+            pGameObject = CEffect_YellowBox::Create(m_pGraphicDev, vPos, vVelocity);
             if (nullptr == pGameObject)
                 return;
             if (FAILED(pLayer->Add_GameObject(L"Effect_YellowBox", pGameObject)))

@@ -30,15 +30,15 @@ protected:
 public:
 	static CEffect_YellowBox* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	static CEffect_YellowBox* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos);
-	static CEffect_YellowBox* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vDir);
+	static CEffect_YellowBox* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vVelocity);
 
-	void Set_Dir(const _vec3& vDir) { m_vDir = vDir; }
+	void Set_Velocity(const _vec3& vVelocity) { m_vVelocity = vVelocity; }
 private:
 	//_vec3 m_vYellowBox_Point[4];
 	_float m_fLifeTime;
 	_float m_fElapsedLifeTime;
 
-	_vec3 m_vDir;
+	_vec3 m_vVelocity;
 
 private:
 	virtual void		Free();
