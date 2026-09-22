@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CFrustumExplodeEffect.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -55,7 +55,7 @@ void CFrustumExplodeEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CFrustumExplodeEffect::BillBoard()
 {
-    /* ºôº¸µå */
+    /* ë¹Œë³´ë“œ */
     _vec3 vPlayerPos, vEffectPos;
     CTransform* pPlayerTransform = static_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
     pPlayerTransform->Get_Info(INFO_POS, &vPlayerPos);
@@ -91,6 +91,15 @@ HRESULT CFrustumExplodeEffect::Add_Component()
         return E_FAIL;
 
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+
+    // RcTex
+    pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
+
 
     return S_OK;
 }

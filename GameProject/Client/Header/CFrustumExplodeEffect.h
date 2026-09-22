@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CEffect.h"
 
@@ -26,6 +26,8 @@ private:
 
 private:
 	void BillBoard();
+
+	Engine::CRcTex* m_pBufferCom = nullptr;
 
 	float m_fFrameInterval = 0.1f;
 	float m_fSingleFrameAccTime = 0.f;
