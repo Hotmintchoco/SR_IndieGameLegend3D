@@ -288,10 +288,10 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	// Hp
 	_int iCountMax = 3;
-	_float fStartX = 20.f;
-	_float fStartY = 20.f;
-	_float fIconSize = 17.5f;  // CPlayerHpUI::Ready_GameObject()�� Set_Scale�� ����
-	_float fGap = 22.5f;
+	_float fStartX = 25.f;
+	_float fStartY = 25.f;
+	_float fIconSize = 17.5f;
+	_float fGap = 25.f;
 
 	for (_int i = 0; i < iCountMax; ++i)
 	{
@@ -302,6 +302,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 		vPos = { fStartX + i * (fIconSize + fGap), fStartY };
 		pUI->Set_Pos(vPos);
 		pUI->Set_Size({ fIconSize + 2.5f, fIconSize });
+		pUI->Set_Texture(4);
 
 		wstring wstrTag = L"PlayerHp_" + to_wstring(i);
 		if (FAILED(pLayer->Add_GameObject(wstrTag.c_str(), pUI)))

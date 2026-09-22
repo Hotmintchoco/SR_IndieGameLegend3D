@@ -11,6 +11,7 @@
 #include "CGameStatusMgr.h"
 #include "CGun.h"
 #include "CRoomLayer.h"
+#include "CUI.h"
 
 namespace
 {
@@ -368,6 +369,9 @@ void CPlayer::UpdateHP(_int iAmount)
             m_iHP += iAmount;
         }
     }
+
+    // 정민 : HP가 감소하면 UI 적용
+    Update_HPUI();
 }
 
 void CPlayer::Die()
@@ -437,4 +441,27 @@ void CPlayer::MonsterCollision(CCollider* pOtherCollider)
         m_fInvTime = 1.0f;
     }
 
+}
+
+void CPlayer::Update_HPUI()
+{
+    const _int iSlotCount = 3;
+    const _int iHpPerSlot = 4;
+
+    for (_int i = 0; i < iSlotCount; ++i)
+    {
+        wstring wstrTag = L"PlayerHp_" + to_wstring(i);
+
+        CUI* pUI = static_cast<CUI*>(CManagement::GetInstance()->Get_GameObject(L"UI_Layer", wstrTag.c_str()));
+        if (nullptr == pUI)
+            continue;
+
+        _int iSlotHP = m_iHP - (i * iHpPerSlot);
+        if (iSlotHP < 0)
+            iSlotHP = 0;
+        else if (iSlotHP > iHpPerSlot)
+            iSlotHP = iHpPerSlot;
+
+        pUI->Set_Texture((_uint)iSlotHP);
+    }
 }

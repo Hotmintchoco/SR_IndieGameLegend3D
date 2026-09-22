@@ -35,9 +35,11 @@ private:
 	void			Mouse_Move();
 	void			Mouse_Fix();
 	_vec3			Picking_OnTerrain();
-	void RenderImGui();
-	void MonsterCollision(CCollider* pOtherCollider);
 
+	void			RenderImGui();
+	void			MonsterCollision(CCollider* pOtherCollider);
+
+	void			Update_HPUI();
 
 private:
 	Engine::CRcTex*				m_pBufferCom;

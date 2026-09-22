@@ -101,7 +101,7 @@ _uint CLoading::Loading_Stage()
 
 
     // UI Texture
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_HpUITexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/HPBar.png", 1))))
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_HpUITexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/hud_Heart%d.png", 5))))
 		return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CrosshairTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Reticle_%d.png", 4))))
