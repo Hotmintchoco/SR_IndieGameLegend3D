@@ -10,9 +10,18 @@
 #include "CCameraMgr.h"
 #include "CGameStatusMgr.h"
 #include "CGun.h"
+#include "CRoomLayer.h"
+
+namespace
+{
+    const _vec3     PLAYER_SPAWN_POS = { 60.f, 1.f, 60.f };
+    const _int      START_ROOM_INDEX = 12;
+    const _float    RESPAWN_DELAY = 1.5f;
+}
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_bFix(true), m_bCheck(true), m_iHP(12), m_iMaxHP(12)
+    : CGameObject(pGraphicDev), m_bFix(true), m_bCheck(true), m_iHP(12), m_iMaxHP(12), m_fInvTime(2.f)
+    , m_bDeathState(false), m_fRespawnTimer(0.f)
 {
 }
 
@@ -33,7 +42,7 @@ HRESULT CPlayer::Ready_GameObject()
     m_pColliderCom->Set_Radius(0.75f);
 	m_pColliderCom->Set_CollisionID(COLL_PLAYER);
 
-	m_pTransformCom->Set_Pos(60.f, 1.f, 60.f);
+	m_pTransformCom->Set_Pos(PLAYER_SPAWN_POS);
 
     return S_OK;
 }
@@ -44,7 +53,19 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     Compute_ViewZ(&vPos);
 
-    Key_Input(fTimeDelta);
+    if (m_bDeathState)
+    {
+        m_fRespawnTimer -= fTimeDelta;
+        if (m_fRespawnTimer <= 0.f)
+            Respawn();
+    }
+    else
+    {
+        Key_Input(fTimeDelta);
+    }
+
+    m_fInvTime -= fTimeDelta;
+    if (m_fInvTime < 0.f) m_fInvTime = 0.f;
 
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -62,6 +83,7 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	// 충돌 처리 여부를 위해 충돌 매니저에 플레이어의 콜라이더를 등록
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
     CGameObject::LateUpdate_GameObject(fTimeDelta);
+
 }
 
 void CPlayer::Render_GameObject()
@@ -126,6 +148,9 @@ void CPlayer::RenderImGui()
 
 void CPlayer::OnCollisionEnter(CGameObject* pOther)
 {
+
+
+    if (m_fInvTime <= 0.f)     MonsterCollision(dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider")));
 
 }
 
@@ -335,7 +360,7 @@ void CPlayer::UpdateHP(_int iAmount)
         {
             CGameStatusMgr::GetInstance()->UpdatePlayerHp(-m_iHP);
             m_iHP = 0;
-            Set_Dead(true);
+            Die();
         }
         else
         {
@@ -345,7 +370,71 @@ void CPlayer::UpdateHP(_int iAmount)
     }
 }
 
+void CPlayer::Die()
+{
+    if (m_bDeathState)
+        return;
+
+    m_iHP = 0;
+    CGameStatusMgr::GetInstance()->SetPlayerHp(0);
+
+    m_bDeathState = true;
+    m_fRespawnTimer = RESPAWN_DELAY;
+
+    if (nullptr != m_pColliderCom)
+        m_pColliderCom->Set_IsActive(false);
+
+    CGameObject* pGun = CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun");
+    if (nullptr != pGun)
+        pGun->Set_IsActive(false);
+}
+
+void CPlayer::Respawn()
+{
+    CRoomLayer* pDeathRoom = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+    if (nullptr != pDeathRoom)
+        pDeathRoom->ResetRoom();
+
+    CGameStatusMgr::GetInstance()->UpdateCurrentRoomIndex(START_ROOM_INDEX);
+
+    m_pTransformCom->Set_Pos(PLAYER_SPAWN_POS);
+    m_pTransformCom->Set_Rotation_Raw(_vec3(0.f, 0.f, 0.f));
+
+    m_iHP = m_iMaxHP;
+    CGameStatusMgr::GetInstance()->SetPlayerHp(m_iMaxHP);
+
+    if (nullptr != m_pColliderCom)
+        m_pColliderCom->Set_IsActive(true);
+
+    m_fInvTime = 2.f;
+    m_fRespawnTimer = 0.f;
+    m_bDeathState = false;
+    m_bFix = true;
+
+    CGameObject* pGun = CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun");
+    if (nullptr != pGun)
+        pGun->Set_IsActive(true);
+}
+
 void CPlayer::Free()
 {
     CGameObject::Free();
+}
+
+
+
+void CPlayer::MonsterCollision(CCollider* pOtherCollider)
+{
+    _int ColliderID = -1;
+
+    if (pOtherCollider)
+        ColliderID = pOtherCollider->Get_CollisionID();
+
+
+    if (ColliderID == COLL_MONSTER || ColliderID == COLL_MBULLET_NORMAL || ColliderID == COLL_MBULLET_SMALL)
+    {
+        UpdateHP(-1);
+        m_fInvTime = 1.0f;
+    }
+
 }

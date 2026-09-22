@@ -149,7 +149,9 @@
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
     <ClInclude Include="..\Header\CBoss1.h" />
     <ClInclude Include="..\Header\CBullet.h" />
+    <ClInclude Include="..\Header\CBulletParticle.h" />
     <ClInclude Include="..\Header\CClearCondition.h" />
+    <ClInclude Include="..\Header\CBulletTrail.h" />
     <ClInclude Include="..\Header\CCrosshair.h" />
     <ClInclude Include="..\Header\CDirectionUI.h" />
     <ClInclude Include="..\Header\CDoor.h" />
@@ -221,7 +223,9 @@
     <ClCompile Include="..\Code\CBreakableFrustum.cpp" />
     <ClCompile Include="..\Code\CBoss1.cpp" />
     <ClCompile Include="..\Code\CBullet.cpp" />
+    <ClCompile Include="..\Code\CBulletParticle.cpp" />
     <ClCompile Include="..\Code\CClearCondition.cpp" />
+    <ClCompile Include="..\Code\CBulletTrail.cpp" />
     <ClCompile Include="..\Code\CCrosshair.cpp" />
     <ClCompile Include="..\Code\CDirectionUI.cpp" />
     <ClCompile Include="..\Code\CDoor.cpp" />

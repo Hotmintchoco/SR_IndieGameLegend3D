@@ -88,7 +88,7 @@ _bool CFrustum::DestroyFrustum(CCollider* pOtherCollider)
     else
         return false;
 
-    if (ColliderID == COLL_PBULLET || ColliderID == COLL_MBULLET)
+    if (ColliderID == COLL_PBULLET_NORMAL || ColliderID == COLL_PBULLET_SMALL || ColliderID == COLL_MBULLET_NORMAL || ColliderID == COLL_MBULLET_SMALL)
     {
         Set_Dead(true);
         return true;

@@ -19,6 +19,7 @@ public:
 	virtual void LateUpdate_Layer(const _float& fTimeDelta) override;
 
 	HRESULT SpawnRoom();
+	HRESULT ResetRoom();
 
 	inline bool IsCleared() { return m_bCleared; }
 	inline bool HasVisited() { return m_bVisited; }
@@ -37,6 +38,7 @@ public:
 	CTile* GetTileFromWorldPosition(const _vec3& vWorldPos);
 
 private:
+	HRESULT SpawnEntities();
 	void CheckClearCondition();
 	CTile* GetTileFromIndex2D(const TTileIdx& tIdx);
 
