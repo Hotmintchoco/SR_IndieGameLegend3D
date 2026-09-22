@@ -30,7 +30,7 @@ HRESULT CTrail::Ready_GameObject()
     D3DXCOLOR color[4];
     for (int i = 0; i < 4; ++i)
     {
-        color[i] = { 1.f, 1.f, 1.f, 1.f };
+        color[i] = { 1.f, 1.f, 1.f, 0.5f };
         //color[i] = D3DCOLOR_ARGB(128, 255, 255, 255);
         //color[i] = { 0.f, 1.f, 0.f, 1.f };
     }
@@ -71,7 +71,7 @@ void CTrail::Render_GameObject()
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-    //m_pGraphicDev->SetTexture(0, nullptr);
+    m_pGraphicDev->SetTexture(0, nullptr);
 
 
 

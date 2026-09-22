@@ -37,7 +37,7 @@ HRESULT CMagmamouth::Ready_GameObject()
     m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
     
-    m_vRoomCenterLocation = { 60.f,0.f,60.f };
+    m_vRoomCenterLocation = { 30.f,0.f,60.f };
 
 
     m_fTrailDuration = 0.5f * 0.5f * 0.5f;
@@ -64,9 +64,9 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
         m_bCloseMouth = false;
 
         m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 3);
-        m_eMagmaMouthState = SPAWN;
+        //m_eMagmaMouthState = SPAWN;
         //m_eMagmaMouthState = FIREBALL;
-        m_eMagmaMouthState = MOVE;
+        //m_eMagmaMouthState = MOVE;
         if (m_eMagmaMouthState == SPAWN)
         {
             Shuffle_Array(4);
