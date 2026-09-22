@@ -11,6 +11,8 @@ namespace Engine
 	class CCollider;
 }
 
+struct TRoomEventCtx;
+
 class CMonster : public CGameObject
 {
 protected:
@@ -44,6 +46,10 @@ protected:
 	_float m_fHitEffectTime;
 	_bool m_bHitState;
 
+private:
+	/* ¼ºÃ¶ */
+	void OnRoomEvent(const TRoomEventCtx& t);
+	/* --- */
 
 public:
 	static _uint iMonsterIdx;
