@@ -26,6 +26,7 @@ public:
 
 private:
 	HRESULT			Add_Component();
+	virtual void Destroy() override;
 
 protected:
 	Engine::CPlyTex* m_pBufferCom;

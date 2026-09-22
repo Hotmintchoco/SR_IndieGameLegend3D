@@ -1,4 +1,4 @@
-ï»¿#include "pch.h"
+#include "pch.h"
 #include "CUnbreakableFrustum.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -17,7 +17,7 @@ HRESULT CUnbreakableFrustum::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    // Note : ìˆœì„œì— ì£¼ì˜
+    // Note : ¼ø¼­¿¡ ÁÖÀÇ
     if (FAILED(CFrustum::Ready_GameObject()))
         return E_FAIL;
 
@@ -73,6 +73,11 @@ HRESULT CUnbreakableFrustum::Add_Component()
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
     return S_OK;
+}
+
+void CUnbreakableFrustum::Destroy()
+{
+    Set_Dead(true);
 }
 
 CUnbreakableFrustum* CUnbreakableFrustum::Create(LPDIRECT3DDEVICE9 pGraphicDev)

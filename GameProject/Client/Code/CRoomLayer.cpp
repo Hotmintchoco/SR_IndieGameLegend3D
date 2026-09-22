@@ -473,6 +473,65 @@ void CRoomLayer::ResetState()
 	m_OnRoomEvent.Broadcast(t);
 
 	m_bOnProgress = false;
+
+	TRoomData* tData = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iRoomIndex);
+	_vec3 vInnerRoomSize = CRoomLoadingMgr::GetInstance()->GetInnerRoomSize();
+
+	for (size_t i = 0; i < tData->vecObjectTilingInfo.size(); ++i)
+	{
+		int iTileX = (int)i % (int)vInnerRoomSize.x;
+		int iTileZ = (int)i / (int)vInnerRoomSize.x;
+
+		_vec3 vTileOffset{
+			-(float)((int)vInnerRoomSize.x - 1) / 2.f * 1.f + 1.f * (float)iTileX,
+			0.f,
+			(float)((int)vInnerRoomSize.z - 1) / 2.f * 1.f - 1.f * (float)iTileZ
+		};
+
+		int iType = tData->vecObjectTilingInfo.at(i);
+
+		if (iType <= (int)EObjectType::NONE || iType >= (int)EObjectType::MAX)
+		{
+			continue;
+		}
+
+		CGameObject* pGameObject = CAbstractFactory::GetInstance()->Create((EObjectType)iType);
+		if (nullptr == pGameObject)
+			return;
+
+		wstring wstrTileName = L"Room_" + to_wstring(m_iRoomIndex) + L"_ObjectTiling_" + to_wstring(i);
+
+		if (FAILED(Add_GameObject(wstrTileName, pGameObject)))
+			return;
+
+		/* Note : 오브젝트 이름이 중복되는 경우에 문제가 생겨, 오브젝트 포인터로 직접 컴포넌트 접근 */
+		CTransform* pTransformCom = dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+
+		pTransformCom->Set_Pos(m_vRoomCenterPos.x + vTileOffset.x, 0.f, m_vRoomCenterPos.z + vTileOffset.z);
+	}
+
+	for (auto& tMapEntity : tData->vecObjectInfo)
+	{
+		if (tMapEntity.iType <= (int)EObjectType::NONE || tMapEntity.iType >= (int)EObjectType::MAX)
+		{
+			continue;
+		}
+
+		CGameObject* pGameObject = CAbstractFactory::GetInstance()->Create((EObjectType)tMapEntity.iType);
+		if (nullptr == pGameObject)
+			return;
+
+		wstring wstrMonsterName = L"Room_" + to_wstring(m_iRoomIndex) + L"_" + tMapEntity.wstrEntityName;
+
+		if (FAILED(Add_GameObject(wstrMonsterName, pGameObject)))
+			return;
+
+		/* Note : 오브젝트 이름이 중복되는 경우에 문제가 생겨, 오브젝트 포인터로 직접 컴포넌트 접근 */
+		CTransform* pTransformCom = dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+
+		pTransformCom->Set_Pos(m_vRoomCenterPos.x + tMapEntity.vPos.x, m_vRoomCenterPos.y + tMapEntity.vPos.y, m_vRoomCenterPos.z + tMapEntity.vPos.z);
+
+	}
 }
 
 CTile* CRoomLayer::GetTileFromIndex2D(const TTileIdx& tIdx)

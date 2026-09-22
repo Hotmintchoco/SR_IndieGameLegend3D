@@ -4,11 +4,15 @@
 #include "CRenderer.h"
 #include "CBoxCollider.h"
 #include "CCollisionMgr.h"
+#include "Client_Struct.h"
 #include "Client_Enum.h"
+#include "CGameStatusMgr.h"
+#include "CRoomLayer.h"
 
 CFrustum::CFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
 {
+    if (!m_pOwner) m_pOwner = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
 }
 
 CFrustum::~CFrustum()
@@ -94,6 +98,18 @@ _bool CFrustum::CheckDestroyCondition(CCollider* pOtherCollider)
     }
 
     return false;
+}
+
+void CFrustum::OnRoomEvent(const TRoomEventCtx& t)
+{
+    switch (t.eType)
+    {
+    case ERoomEventType::RESET_ROOM:
+        Destroy();
+        break;
+    default:
+        break;
+    }
 }
 
 void CFrustum::Free()
