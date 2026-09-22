@@ -13,6 +13,7 @@ class CTrail : public CEffect
 protected:
 	explicit CTrail(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CTrail(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4]);
+	explicit CTrail(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const _float& fLifeTime);
 	virtual ~CTrail();
 
 public:
@@ -30,6 +31,7 @@ private:
 public:
 	static CTrail* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	static CTrail* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4]);
+	static CTrail* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const _float& fLifeTime);
 
 public:
 	//void Set_TrailPoint(const _vec3(&vTrailPoint)[4]);
