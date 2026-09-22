@@ -19,7 +19,6 @@ public:
 	virtual void LateUpdate_Layer(const _float& fTimeDelta) override;
 
 	HRESULT SpawnRoom();
-	HRESULT ResetRoom();
 
 	inline bool IsCleared() { return m_bCleared; }
 	inline bool HasVisited() { return m_bVisited; }

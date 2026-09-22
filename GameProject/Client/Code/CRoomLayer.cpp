@@ -129,8 +129,8 @@ HRESULT CRoomLayer::SpawnRoom()
 	}
 
 	/* 진입 시 어둠 여부 */
-	m_bDark= t->bDark;
-	m_bCurrentDark= t->bDark;
+	m_bDark = t->bDark;
+	m_bCurrentDark = t->bDark;
 
 	/* 방 기본 정보 */
 	int iRoomColCount = CRoomLoadingMgr::GetInstance()->GetRoomColCount();
@@ -276,7 +276,7 @@ HRESULT CRoomLayer::SpawnRoom()
 			pTransformCom->Move_Pos(&vDir, 4.f + (iDir % 2) * 1.f, 1.f);
 
 			/* 문 */
-			
+
 			pGameObject = CDoor::Create(pDevice);
 			if (nullptr == pGameObject)
 				return E_FAIL;
@@ -330,34 +330,6 @@ HRESULT CRoomLayer::SpawnRoom()
 		pTransformCom->Set_Pos(vRoomCenterPos.x + vTileOffset.x, 0.f, vRoomCenterPos.z + vTileOffset.z);
 	}
 
-	if (FAILED(SpawnEntities()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CRoomLayer::SpawnEntities()
-{
-	TRoomData* t = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iRoomIndex);
-
-	for (auto& wstrClearCondtiion : t->vecClearCondition)
-	{
-		CClearCondition* pCondition = nullptr;
-
-		if (wstrClearCondtiion == L"KillAllEntity")
-		{
-			pCondition = CKillAllEntityCondition::Create(this);
-		}
-
-		if (nullptr == pCondition)
-		{
-			assert(0);
-			continue;
-		}
-
-		m_vecClearCondition.push_back(pCondition);
-	}
-
 	for (auto& tMapEntity : t->vecObjectInfo)
 	{
 		if (tMapEntity.iType <= (int)EObjectType::NONE || tMapEntity.iType >= (int)EObjectType::MAX)
@@ -365,7 +337,7 @@ HRESULT CRoomLayer::SpawnEntities()
 			continue;
 		}
 
-		CGameObject* pGameObject = CAbstractFactory::GetInstance()->Create((EObjectType)tMapEntity.iType);
+		pGameObject = CAbstractFactory::GetInstance()->Create((EObjectType)tMapEntity.iType);
 		if (nullptr == pGameObject)
 			return E_FAIL;
 
@@ -376,39 +348,10 @@ HRESULT CRoomLayer::SpawnEntities()
 
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrMonsterName, L"Com_Transform"));
 
-		pTransformCom->Set_Pos(m_vRoomCenterPos.x + tMapEntity.vPos.x, m_vRoomCenterPos.y + tMapEntity.vPos.y, m_vRoomCenterPos.z + tMapEntity.vPos.z);
+		pTransformCom->Set_Pos(vRoomCenterPos.x + tMapEntity.vPos.x, vRoomCenterPos.y + tMapEntity.vPos.y, vRoomCenterPos.z + tMapEntity.vPos.z);
 	}
 
 	return S_OK;
-}
-
-HRESULT CRoomLayer::ResetRoom()
-{
-	for (auto& Pair : m_mapObject)
-	{
-		if (nullptr == dynamic_cast<CMonster*>(Pair.second))
-			continue;
-
-		Pair.second->Set_IsActive(false);
-		Pair.second->Set_Dead(true);
-	}
-
-	m_iEntityCount = 0;
-
-	for (auto& c : m_vecClearCondition)
-		Safe_Release(c);
-
-	m_vecClearCondition.clear();
-
-	TRoomEventCtx tCtx{ ERoomEventType::ROOM_CLEAR };
-	m_OnRoomEvent.Broadcast(tCtx);
-
-	m_bCleared = false;
-	m_bOnProgress = false;
-
-	CLayerContext ctx(this, nullptr);
-
-	return SpawnEntities();
 }
 
 void CRoomLayer::OnRoomTriggerBlockCollided()

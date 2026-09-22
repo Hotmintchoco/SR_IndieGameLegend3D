@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CPlayer.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -72,7 +72,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
-    /* ¼ºÃ¶ : ¸Å´ÏÀú °´Ã¼·Î °ÔÀÓ »óÅÂ¸¦ °ü¸®ÇÏ±â À§ÇØ Ãß°¡. ¹®Á¦ ¹ß»ı ½Ã ¸»ÇØÁà */
+    /* ì„±ì²  : ë§¤ë‹ˆì € ê°ì²´ë¡œ ê²Œì„ ìƒíƒœë¥¼ ê´€ë¦¬í•˜ê¸° ìœ„í•´ ì¶”ê°€. ë¬¸ì œ ë°œìƒ ì‹œ ë§í•´ì¤˜ */
     CGameStatusMgr::GetInstance()->UpdatePlayerPosition(vPos);
     /* ---------------------------------------------------------------- */
 
@@ -81,7 +81,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	// Ãæµ¹ Ã³¸® ¿©ºÎ¸¦ À§ÇØ Ãæµ¹ ¸Å´ÏÀú¿¡ ÇÃ·¹ÀÌ¾îÀÇ Äİ¶óÀÌ´õ¸¦ µî·Ï
+	// ì¶©ëŒ ì²˜ë¦¬ ì—¬ë¶€ë¥¼ ìœ„í•´ ì¶©ëŒ ë§¤ë‹ˆì €ì— í”Œë ˆì´ì–´ì˜ ì½œë¼ì´ë”ë¥¼ ë“±ë¡
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 
@@ -108,12 +108,12 @@ void CPlayer::RenderImGui()
     /* ImGui */
     ImGui::Begin("Player Debug Information");
 
-    /* À§Ä¡ */
+    /* ìœ„ì¹˜ */
     _vec3 vPlayerPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPlayerPos);
     ImGui::Text("Pos : %.2f, %.2f, %.2f", vPlayerPos.x, vPlayerPos.y, vPlayerPos.z);
 
-    /* »óÇÏÁÂ¿ì Å° ÀÔ·Â */
+    /* ìƒí•˜ì¢Œìš° í‚¤ ì…ë ¥ */
 
     char cKeyStateQ = ' ';
     char cKeyStateW = ' ';
@@ -139,7 +139,7 @@ void CPlayer::RenderImGui()
     ImGui::Text("[%s]            [%c]", cKeyStateShift, cKeyStateC);
 
 
-    /* Ä«¸Ş¶ó */
+    /* ì¹´ë©”ë¼ */
     _float fAngle;
     CCameraMgr::GetInstance()->Get_CameraAngle(&fAngle);
     ImGui::Text("Camera Angle : %.2f", fAngle);
@@ -157,7 +157,7 @@ void CPlayer::OnCollisionEnter(CGameObject* pOther)
 
 void CPlayer::OnCollisionStay(CGameObject* pOther)
 {
-    // Àå¾Ö¹°°ú Ãæµ¹ ½Ã¿¡ ¸¶Âû·Â Àû¿ë
+    // ì¥ì• ë¬¼ê³¼ ì¶©ëŒ ì‹œì— ë§ˆì°°ë ¥ ì ìš©
     CCollider* pOtherCollider = nullptr;
         
 	if (nullptr == pOtherCollider)
@@ -168,7 +168,7 @@ void CPlayer::OnCollisionStay(CGameObject* pOther)
         pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider1"));
 
     if (pOtherCollider && pOtherCollider->Get_CollisionID() == COLL_OBSTACLE)
-        m_fFrictionForce = 0.75f; // ¸¶Âû·Â Àû¿ë
+        m_fFrictionForce = 0.75f; // ë§ˆì°°ë ¥ ì ìš©
 }
 
 HRESULT CPlayer::Add_Component()
@@ -370,7 +370,7 @@ void CPlayer::UpdateHP(_int iAmount)
         }
     }
 
-    // Á¤¹Î : HP°¡ °¨¼ÒÇÏ¸é UI Àû¿ë
+    // ì •ë¯¼ : HPê°€ ê°ì†Œí•˜ë©´ UI ì ìš©
     Update_HPUI();
 }
 
@@ -396,8 +396,8 @@ void CPlayer::Die()
 void CPlayer::Respawn()
 {
     CRoomLayer* pDeathRoom = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-    if (nullptr != pDeathRoom)
-        pDeathRoom->ResetRoom();
+    //if (nullptr != pDeathRoom)
+    //    pDeathRoom->ResetRoom();
 
     CGameStatusMgr::GetInstance()->UpdateCurrentRoomIndex(START_ROOM_INDEX);
 
