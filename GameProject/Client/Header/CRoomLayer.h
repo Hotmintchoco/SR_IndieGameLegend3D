@@ -49,7 +49,6 @@ private:
 	float m_fLeftFlickerTime = 0.f;
 	void FlickerHandling(const Engine::_float& fTimeDelta);
 
-	HRESULT SpawnEntities();
 	void CheckClearCondition();
 	CTile* GetTileFromIndex2D(const TTileIdx& tIdx);
 
