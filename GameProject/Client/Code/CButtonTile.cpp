@@ -74,11 +74,15 @@ void CButtonTile::OnCollisionEnter(CGameObject* pOther)
 {
     if (pOther == this) return;
 
+    if (m_iCollisionCount == 0)
+    {
+        if(m_bFixed && m_bPressed) return;
+
+        static_cast<CRoomLayer*>(m_pOwner)->OnButtonInteracted(true);
+        m_bPressed = true;
+    }
+
     ++m_iCollisionCount;
-
-    static_cast<CRoomLayer*>(m_pOwner)->OnButtonInteracted(true);
-
-    m_bPressed = true;
 }
 
 void CButtonTile::OnCollisionExit(CGameObject* pOther)
@@ -86,7 +90,7 @@ void CButtonTile::OnCollisionExit(CGameObject* pOther)
     if (pOther == this) return;
 
     --m_iCollisionCount;
-
+    
     if (m_bFixed) return;
 
     if (m_iCollisionCount == 0)
