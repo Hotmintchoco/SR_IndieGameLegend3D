@@ -68,9 +68,12 @@ HRESULT CStage::Ready_Scene()
 	// 충돌 그룹 설정
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_OBSTACLE);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_MONSTER);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_OBSTACLE);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MBULLET, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET_NORMAL, COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET_SMALL, COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET_NORMAL, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET_SMALL, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MBULLET_NORMAL, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MBULLET_SMALL, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_ITEM);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MONSTER, COLL_OBSTACLE);
 

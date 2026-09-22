@@ -7,9 +7,10 @@
 #include "CManagement.h"
 #include "CGun.h"
 #include "CCollider.h"
+#include "CBulletParticle.h"
 
 CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_vDir(0.f, 0.f, 0.f), m_iBulletID(BULLET_DEFAULT), m_iBulletDmg(10), m_fBulletLife(0.f)
+    : CGameObject(pGraphicDev), m_vDir(0.f, 0.f, 0.f), m_iBulletID(BULLET_DEFAULT), m_iBulletDmg(10), m_fBulletLife(0.f), m_fSpeed(50.f)
 {
 }
 
@@ -40,7 +41,16 @@ HRESULT CBullet::Ready_GameObject(const _vec3* pPos, const _vec3* pDir)
     D3DXVec3Normalize(&m_vDir, pDir);
 
 	__super::Ready_GameObject();
-	m_pColliderCom->Set_CollisionID(COLL_PBULLET);
+    switch (m_iBulletID)
+    {
+    case BULLET_DEFAULT:
+        m_pColliderCom->Set_CollisionID(COLL_PBULLET_NORMAL);
+        break;
+    case BULLET_SMALL:
+        m_pColliderCom->Set_CollisionID(COLL_PBULLET_SMALL);
+        break;
+    }
+
 
     switch (m_iBulletID)
     {
@@ -52,12 +62,15 @@ HRESULT CBullet::Ready_GameObject(const _vec3* pPos, const _vec3* pDir)
         break;
     }
     
+
+    m_pBulletTrail = CBulletTrail::Create(m_pGraphicDev, pPos, &m_vDir, m_fSpeed);
+    CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"BulletTrail", m_pBulletTrail);
+
     return S_OK;
 }
 
 _int CBullet::Update_GameObject(const _float& fTimeDelta)
 {
-    _float fSpeed = 50.f;
 
     m_fBulletLife += fTimeDelta;
     
@@ -65,11 +78,30 @@ _int CBullet::Update_GameObject(const _float& fTimeDelta)
     if (m_fBulletLife >= fBulletLife)
     {
         Set_Dead(TRUE);
+        m_pBulletTrail->Set_Dead(TRUE);
+
+        _vec3 vPos, vRight, vUp, vLook;
+
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        m_pTransformCom->Get_Info(INFO_RIGHT, &vRight);
+        m_pTransformCom->Get_Info(INFO_UP, &vUp);
+        m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
+
+
+        CBulletParticle* pParticle = CBulletParticle::Create(m_pGraphicDev, &vPos, &vRight, 0);
+        CBulletParticle* pParticle1 = CBulletParticle::Create(m_pGraphicDev, &vPos, &vUp, 1);
+        CBulletParticle* pParticle2 = CBulletParticle::Create(m_pGraphicDev, &vPos, &vLook, 2);
+
+        CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"BulletParticle", pParticle);
+        CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"BulletParticle", pParticle1);
+        CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"BulletParticle", pParticle2);
+
+
         return NULL;
     }
     if (m_fBulletLife != fTimeDelta)
     {
-        m_pTransformCom->Move_Pos(&m_vDir, fSpeed, fTimeDelta);
+        m_pTransformCom->Move_Pos(&m_vDir, m_fSpeed, fTimeDelta);
     }
 
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
@@ -113,7 +145,16 @@ void CBullet::LateUpdate_GameObject(const _float& fTimeDelta)
     m_pTransformCom->Set_World(&matWorld);
 
     // 충돌 매니저에 콜라이더 등록
-    CCollisionMgr::GetInstance()->Add_Collider(COLL_PBULLET, m_pColliderCom);
+
+    switch (m_iBulletID)
+    {
+    case BULLET_DEFAULT:
+        CCollisionMgr::GetInstance()->Add_Collider(COLL_PBULLET_NORMAL, m_pColliderCom);
+        break;
+    case BULLET_SMALL:
+        CCollisionMgr::GetInstance()->Add_Collider(COLL_PBULLET_SMALL, m_pColliderCom);
+        break;
+    }
     
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }

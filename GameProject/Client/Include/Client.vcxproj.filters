@@ -196,6 +196,12 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\PseudoBlack">
       <UniqueIdentifier>{985083af-b441-4e23-9d55-fe18ceb2ef3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. Bullet\BulletTrail">
+      <UniqueIdentifier>{507fc53d-54bb-44af-a564-17e6d18d5a96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Bullet\BulletParticle">
+      <UniqueIdentifier>{d9883dde-8be5-4d6d-84d7-3d4d56bc6919}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -405,6 +411,12 @@
     <ClInclude Include="..\Header\CExplosiveFrustumGlass.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBulletTrail.h">
+      <Filter>02. GameObject\09. Bullet\BulletTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBulletParticle.h">
+      <Filter>02. GameObject\09. Bullet\BulletParticle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -493,9 +505,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CAbstractFactory.cpp">
       <Filter>04. Manager\00. RoomLoading</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CBullet.cpp">
-      <Filter>02. GameObject\09. Bullet</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CSkull.cpp">
       <Filter>02. GameObject\02. Monster\Skull</Filter>
@@ -589,6 +598,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CExplosiveFrustumGlass.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBulletTrail.cpp">
+      <Filter>02. GameObject\09. Bullet\BulletTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBulletParticle.cpp">
+      <Filter>02. GameObject\09. Bullet\BulletParticle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
