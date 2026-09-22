@@ -1,4 +1,4 @@
-﻿#include "CBoxCollider.h"
+#include "CBoxCollider.h"
 #include "CGameObject.h"
 #include "CTransform.h"
 #include "CSphereCollider.h"
@@ -55,16 +55,6 @@ _int CBoxCollider::Update_Component(const _float& fTimeDelta)
     if (nullptr == m_pOwner)
         return 0;
 
-    CTransform* pOwnerTransformCom = dynamic_cast<CTransform*>(m_pOwner->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-    if (nullptr == pOwnerTransformCom)
-        return 0;
-
-    _vec3 vOwnerPos;
-    pOwnerTransformCom->Get_Info(INFO_POS, &vOwnerPos);
-	vOwnerPos += m_vDiffPos;
-
-    m_tBox.Center = { vOwnerPos.x, vOwnerPos.y, vOwnerPos.z };
-
     if (CDebugMgr::GetInstance()->GetShowCollider())
     {
         CRenderer::GetInstance()->Add_RenderGroup(RENDER_DEBUG_COLLIDER, this);
@@ -75,6 +65,14 @@ _int CBoxCollider::Update_Component(const _float& fTimeDelta)
 
 void CBoxCollider::LateUpdate_Component()
 {
+    CTransform* pOwnerTransformCom = dynamic_cast<CTransform*>(m_pOwner->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+    if (nullptr == pOwnerTransformCom) return;
+
+    _vec3 vOwnerPos;
+    pOwnerTransformCom->Get_Info(INFO_POS, &vOwnerPos);
+    vOwnerPos += m_vDiffPos;
+
+    m_tBox.Center = { vOwnerPos.x, vOwnerPos.y, vOwnerPos.z };
 }
 
 void CBoxCollider::Set_Extents(const _vec3& vExtents)

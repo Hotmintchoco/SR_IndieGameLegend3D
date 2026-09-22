@@ -69,24 +69,22 @@ void CSphereCollider::Render(LPDIRECT3DDEVICE9& pGraphicDev)
 
 _int CSphereCollider::Update_Component(const _float& fTimeDelta)
 {
-	CTransform* pOwnerTransformCom = dynamic_cast<CTransform*>(m_pOwner->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-	
-	_vec3   vOwnerPos;
-	pOwnerTransformCom->Get_Info(INFO_POS, &vOwnerPos);
-	m_tSphere.Center = { vOwnerPos.x, vOwnerPos.y, vOwnerPos.z };
-
 	if (CDebugMgr::GetInstance()->GetShowCollider())
 	{
 		CRenderer::GetInstance()->Add_RenderGroup(RENDER_DEBUG_COLLIDER, this);
 	}
-
 
 	return 0;
 }
 
 void CSphereCollider::LateUpdate_Component()
 {
+	if (!m_pOwner) return;
+	CTransform* pOwnerTransformCom = dynamic_cast<CTransform*>(m_pOwner->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 
+	_vec3   vOwnerPos;
+	pOwnerTransformCom->Get_Info(INFO_POS, &vOwnerPos);
+	m_tSphere.Center = { vOwnerPos.x, vOwnerPos.y, vOwnerPos.z };
 }
 
 CCollider* CSphereCollider::Create(LPDIRECT3DDEVICE9 pGraphicDev)
