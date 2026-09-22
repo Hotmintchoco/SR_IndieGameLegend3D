@@ -28,6 +28,7 @@ private:
 	void BillBoard();
 
 	Engine::CRcTex* m_pBufferCom = nullptr;
+	Engine::CTexture* m_pTextureCom;
 
 	float m_fFrameInterval = 0.1f;
 	float m_fSingleFrameAccTime = 0.f;
