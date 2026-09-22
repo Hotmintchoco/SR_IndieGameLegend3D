@@ -28,6 +28,7 @@ HRESULT CDoor::Ready_GameObject()
         pLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) { OnRoomEvent(t); });
     }
 
+    Open();
 
     return S_OK;
 }
@@ -51,10 +52,15 @@ _int CDoor::Update_GameObject(const _float& fTimeDelta)
             m_iTextureIdx += 1 * m_iPlayDirection;
         }
 
-        if (m_iTextureIdx <= 0 || m_iTextureIdx >= m_iFrameCnt)
+        if (m_iPlayDirection == -1 && m_iTextureIdx <= 0)
         {
             m_bOnAnimation = false;
-            m_iTextureIdx = (m_iPlayDirection == -1) ? 0 : m_iFrameCnt - 1;
+            m_iTextureIdx = 0;
+        }
+        else if (m_iPlayDirection == 1 && m_iTextureIdx >= m_iFrameCnt)
+        {
+            m_bOnAnimation = false;
+            m_iTextureIdx = m_iFrameCnt - 1;
         }
     }
 
