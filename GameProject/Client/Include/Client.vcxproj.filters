@@ -220,11 +220,11 @@
     <Filter Include="02. GameObject\06. Effect\Effect_YellowBox">
       <UniqueIdentifier>{bc89f83d-5714-4323-8fab-14f2cd737f2f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. Effect\Sphere">
-      <UniqueIdentifier>{baff450c-8090-4bfb-8c04-27f3610217e0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Frustum\Explosive\ExplodeSphere">
       <UniqueIdentifier>{50d3b930-96f7-46d0-9513-601ce505a7a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Effect\Effect_Sphere">
+      <UniqueIdentifier>{baff450c-8090-4bfb-8c04-27f3610217e0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -466,7 +466,7 @@
       <Filter>02. GameObject\06. Effect\Effect_YellowBox</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CEffect_Sphere.h">
-      <Filter>02. GameObject\06. Effect\Sphere</Filter>
+      <Filter>02. GameObject\06. Effect\Effect_Sphere</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -681,7 +681,7 @@
       <Filter>02. GameObject\06. Effect\Effect_YellowBox</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CEffect_Sphere.cpp">
-      <Filter>02. GameObject\06. Effect\Sphere</Filter>
+      <Filter>02. GameObject\06. Effect\Effect_Sphere</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

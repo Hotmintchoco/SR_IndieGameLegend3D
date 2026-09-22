@@ -11,8 +11,9 @@ class CEffect_YellowBox : public CEffect
 {
 protected:
 	explicit CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4]);
-	explicit CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const _float& fLifeTime);
+	//explicit CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vPoint)[4]);
+	//explicit CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vPoint)[4], const _vec3(&vColor)[4]);
+	//explicit CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vPoint)[4], const _float& fLifeTime);
 	virtual ~CEffect_YellowBox();
 
 public:

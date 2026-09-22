@@ -817,6 +817,7 @@ void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
 
 void CMagmamouth::MagmaMouth_DeadEffect(const _float& fTimeDelta)
 {
+    if (m_fElapsedDeadTime > m_fDeadTime - 0.5f) return;
     m_fElapsedDeadTime2 += fTimeDelta;
     if (m_fElapsedDeadTime2 > 0.25f)
     {
@@ -831,7 +832,7 @@ void CMagmamouth::MagmaMouth_DeadEffect(const _float& fTimeDelta)
         CGameObject* pGameObject = nullptr;
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
 
-        for (int i = 0; i < 10; ++i)
+        for (int i = 0; i < 5; ++i)
         {
             iRand1 = rand() % 128 - 64;
             iRand2 = rand() % 128 - 64;

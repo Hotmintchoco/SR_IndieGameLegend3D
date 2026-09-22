@@ -10,15 +10,15 @@ CEffect_YellowBox::CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 }
 
-CEffect_YellowBox::CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vYellowBox_Point)[4])
-    : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(0.5f)
-{
-}
-
-CEffect_YellowBox::CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vYellowBox_Point)[4], const _float& fLifeTime)
-    : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(fLifeTime)
-{
-}
+//CEffect_YellowBox::CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vPoint)[4])
+//    : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(0.5f)
+//{
+//}
+//
+//CEffect_YellowBox::CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vPoint)[4], const _float& fLifeTime)
+//    : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(fLifeTime)
+//{
+//}
 
 
 CEffect_YellowBox::~CEffect_YellowBox()
@@ -31,8 +31,8 @@ HRESULT CEffect_YellowBox::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    m_fLifeTime = 0.5f;
-    float fScale = 0.5f * 0.5f * 0.5f;
+    m_fLifeTime = 1.f;
+    float fScale = 0.5f * 0.5f * 0.5f * 0.75f;
     m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
     _vec3 vec3[4];
@@ -61,11 +61,11 @@ _int CEffect_YellowBox::Update_GameObject(const _float& fTimeDelta)
         Set_Dead(true);
     }
 
-    m_pTransformCom->Move_Pos(&m_vVelocity, 1.f, fTimeDelta);
+    m_pTransformCom->Move_Pos(&m_vVelocity, 1.25f, fTimeDelta);
 
-    m_pTransformCom->Rotation(ROT_X, D3DXToRadian(10.f));
-    m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(10.f));
-    m_pTransformCom->Rotation(ROT_Z, D3DXToRadian(10.f));
+    m_pTransformCom->Rotation(ROT_X, D3DXToRadian(30.f * m_vVelocity.x));
+    m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(30.f * m_vVelocity.y));
+    m_pTransformCom->Rotation(ROT_Z, D3DXToRadian(30.f * m_vVelocity.z));
 
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
@@ -77,18 +77,18 @@ void CEffect_YellowBox::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CEffect::LateUpdate_GameObject(fTimeDelta);
 
-    //CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-    //    ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
 
-    //if (nullptr == pPlayerTransformCom)
-    //    return;
+    if (nullptr == pPlayerTransformCom)
+        return;
 
-    //_vec3   vPlayerPos;
-    //_vec3   vPlayerLook;
-    //pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-    //pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+    _vec3   vPlayerPos;
+    _vec3   vPlayerLook;
+    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
-    //m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
 
 }
 
