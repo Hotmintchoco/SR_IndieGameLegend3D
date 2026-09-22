@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CTrail_MagmaMouth.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -6,7 +6,7 @@
 #include <ctime>
 
 CTrail_MagmaMouth::CTrail_MagmaMouth(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CEffect(pGraphicDev)
+    : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(0.5f)
 {
 }
 
@@ -34,16 +34,6 @@ HRESULT CTrail_MagmaMouth::Ready_GameObject()
         return E_FAIL;
 
     D3DXCOLOR color[4];
-    //_float Alpha = 0.25f;
-    //Alpha = 0.25f - m_fLifeTime / 0.75f * 0.25f;
-    //75->0
-    // fx=25-x/75*25
-    //0->25
-
-    //for (int i = 0; i < 4; ++i)
-    //{
-    //    color[i] = { 1.f, 1.f, 1.f, Alpha };
-    //}
     for (int i = 0; i < 4; ++i)
     {
         color[i] = { 1.f, 1.f, 1.f, 0.25f };

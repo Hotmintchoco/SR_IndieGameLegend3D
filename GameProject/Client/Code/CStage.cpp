@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CStage.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
@@ -68,12 +68,9 @@ HRESULT CStage::Ready_Scene()
 	// �浹 �׷� ����
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_OBSTACLE);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET_NORMAL, COLL_MONSTER);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET_SMALL, COLL_MONSTER);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET_NORMAL, COLL_OBSTACLE);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET_SMALL, COLL_OBSTACLE);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MBULLET_NORMAL, COLL_OBSTACLE);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MBULLET_SMALL, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MBULLET, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_ITEM);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MONSTER, COLL_OBSTACLE);
 

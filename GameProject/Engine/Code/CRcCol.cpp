@@ -1,4 +1,4 @@
-#include "CRcCol.h"
+ï»¿#include "CRcCol.h"
 
 CRcCol::CRcCol()
 {
@@ -20,45 +20,6 @@ CRcCol::~CRcCol()
 
 HRESULT CRcCol::Ready_Buffer()
 {
-#pragma region »ý·«
-//m_dwVtxSize = sizeof(VTXCOL);
-//m_dwVtxCnt = 6;
-//m_dwTriCnt = 2;
-//m_dwFVF = FVF_COL;
-//
-//if (FAILED(CVIBuffer::Ready_Buffer()))
-//	return E_FAIL;
-//
-//VTXCOL* pVertex = NULL;
-//
-//// &pVertex : ¹öÅØ½º ¹öÆÛ¿¡ ÀúÀåµÈ ¹öÅØ½º Áß Ã¹ ¹øÂ° ¹öÅØ½ºÀÇ ÁÖ¼Ò¸¦ ¾ò¾î¿È
-//m_pVB->Lock(0, 0, (void**)&pVertex, 0);
-//
-//// ¿À¸¥ÂÊ À§
-//
-//pVertex[0].vPosition = { -1.f, 1.f, 0.f };
-//pVertex[0].dwColor = D3DXCOLOR(0.f, 1.f, 0.f, 1.f);
-//
-//pVertex[1].vPosition = { 1.f, 1.f, 0.f };
-//pVertex[1].dwColor = D3DXCOLOR(0.f, 1.f, 0.f, 1.f);
-//
-//pVertex[2].vPosition = { 1.f, -1.f, 0.f };
-//pVertex[2].dwColor = D3DXCOLOR(0.f, 1.f, 0.f, 1.f);
-//
-//// ¿ÞÂÊ ¾Æ·¡
-//
-//pVertex[3].vPosition = { -1.f, 1.f, 0.f };
-//pVertex[3].dwColor = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-//
-//pVertex[4].vPosition = { 1.f, -1.f, 0.f };
-//pVertex[4].dwColor = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-//
-//pVertex[5].vPosition = { -1.f, -1.f, 0.f };
-//pVertex[5].dwColor = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-//
-//m_pVB->Unlock();
-#pragma endregion
-
 	 m_dwVtxSize = sizeof(VTXCOL);
 	 m_dwVtxCnt = 4;
 	 m_dwTriCnt = 2;
@@ -73,10 +34,10 @@ HRESULT CRcCol::Ready_Buffer()
 	
 	VTXCOL * pVertex = NULL;
 	
-	/// &pVertex : ¹öÅØ½º ¹öÆÛ¿¡ ÀúÀåµÈ ¹öÅØ½º Áß Ã¹ ¹øÂ° ¹öÅØ½º
+	/// &pVertex : ë²„í…ìŠ¤ ë²„í¼ì— ì €ìž¥ëœ ë²„í…ìŠ¤ ì¤‘ ì²« ë²ˆì§¸ ë²„í…ìŠ¤
 	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
 	
-	/// ¿À¸¥ÂÊ À§
+	/// ì˜¤ë¥¸ìª½ ìœ„
 	
 	pVertex[0].vPosition = { -1.f, 1.f, 0.f };
 	pVertex[0].dwColor = D3DXCOLOR(1.f, 1.f, 0.f, 1.f);
@@ -96,12 +57,12 @@ HRESULT CRcCol::Ready_Buffer()
 
 	m_pIB->Lock(0, 0, (void**)&pIndex, 0);
 
-	// ¿À¸¥ÂÊ À§
+	// ì˜¤ë¥¸ìª½ ìœ„
 	pIndex[0]._0 = 0;
 	pIndex[0]._1 = 1;
 	pIndex[0]._2 = 2;
 
-	// ¿ÞÂÊ ¾Æ·¡
+	// ì™¼ìª½ ì•„ëž˜
 	pIndex[1]._0 = 0;
 	pIndex[1]._1 = 2;
 	pIndex[1]._2 = 3;

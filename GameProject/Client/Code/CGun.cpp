@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CGun.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -26,7 +26,7 @@ CGun::CGun(LPDIRECT3DDEVICE9 pGraphicDev)
     m_bUltimateActivated(false),
     m_bSpecialActivated(false),
     m_iCurBullet(BULLET_DEFAULT),
-    m_iDmg(10)
+    m_iDmg(2)
 {
 }
 
@@ -45,7 +45,7 @@ HRESULT CGun::Ready_GameObject()
 
 _int CGun::Update_GameObject(const _float& fTimeDelta)
 {
-#pragma region ¼öÁ¤
+#pragma region ìˆ˜ì •
     /*
     CGameObject* pGameObject = nullptr;
     _vec3	vPos_Player;
@@ -70,12 +70,12 @@ _int CGun::Update_GameObject(const _float& fTimeDelta)
     */
 
     /*
-    //[DEBUG] Start È®ÀÎ¿ë ¿òÁ÷ÀÓ
+    //[DEBUG] Start í™•ì¸ìš© ì›€ì§ì„
     m_pTransformCom->Rotation(ROT_Y, 30.f * fTimeDelta);
     _vec3 tmp{ 0.f, 1.f, 0.f };
     float t = (float)clock() / CLOCKS_PER_SEC;
     m_pTransformCom->Move_Pos(&tmp, 0.2 * sinf(t), fTimeDelta);
-    // [DEBUG] End È®ÀÎ¿ë ¿òÁ÷ÀÓ
+    // [DEBUG] End í™•ì¸ìš© ì›€ì§ì„
     */
 #pragma endregion
 
@@ -104,9 +104,9 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
     D3DXVec3Cross(&vUp, &vForword, &vRight);
     D3DXVec3Normalize(&vUp, &vUp);
 
-    _vec3	vPos_Gun = vPos_Player + (vRight * 0.2f) + (vForword * 0.1f) + (vUp * -0.6f); // ÃÑMesh ¿ùµåÁÂÇ¥ °è»ê
+    _vec3	vPos_Gun = vPos_Player + (vRight * 0.2f) + (vForword * 0.1f) + (vUp * -0.6f); // ì´Mesh ì›”ë“œì¢Œí‘œ ê³„ì‚°
 
-#pragma region ½ºÅ³ »ç¿ë ¹× ÃÑ¾Ë ½ºÀ§Äª
+#pragma region ìŠ¤í‚¬ ì‚¬ìš© ë° ì´ì•Œ ìŠ¤ìœ„ì¹­
 
     if (m_bUltimateActivated == true)
     {
@@ -163,11 +163,11 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
     {
     case BULLET_DEFAULT:
         m_fShootRate = 0.3f;
-        m_iDmg = 10;
+        m_iDmg = 2;
         break;
     case BULLET_SMALL:
         m_fShootRate = 0.15f;
-        m_iDmg = 5;
+        m_iDmg = 1;
         break;
     }
 
@@ -179,7 +179,7 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
 
 #pragma endregion
 
-#pragma region ÃÑ¾Ë ¹ß»ç
+#pragma region ì´ì•Œ ë°œì‚¬
 
     m_fLastShotTime += fTimeDelta;
 
@@ -187,10 +187,10 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
     {
         m_fLastShotTime = 0.f;
 
-        _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.45f) + (vUp * 0.25f); // ÃÑ±¸ À§Ä¡
-        _vec3	vBullet_To; // Å©·Î½ºÇì¾î µµ´ŞÁ¡
+        _vec3	vBullet_From = vPos_Gun + (vRight * 0.0f) + (vForword * 0.45f) + (vUp * 0.25f); // ì´êµ¬ ìœ„ì¹˜
+        _vec3	vBullet_To; // í¬ë¡œìŠ¤í—¤ì–´ ë„ë‹¬ì 
 
-#pragma region RayCast¸¦ ÀÌ¿ëÇÑ Á¶ÁØÁÂÇ¥ °è»ê
+#pragma region RayCastë¥¼ ì´ìš©í•œ ì¡°ì¤€ì¢Œí‘œ ê³„ì‚°
         
         pair<_vec3, _vec3> pairMouseRay = Get_MouseRay();
         vector<wstring> vMapKey;
@@ -240,7 +240,7 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
                                 {
                                 case VTXSTRUCT_COL:
                                 {
-                                    /// &pVertex : ¹öÅØ½º ¹öÆÛ¿¡ ÀúÀåµÈ ¹öÅØ½º Áß Ã¹ ¹øÂ° ¹öÅØ½º
+                                    /// &pVertex : ë²„í…ìŠ¤ ë²„í¼ì— ì €ì¥ëœ ë²„í…ìŠ¤ ì¤‘ ì²« ë²ˆì§¸ ë²„í…ìŠ¤
                                     VTXCOL* pVertex = NULL;
                                     switch (idxFmt)
                                     {
@@ -352,7 +352,7 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
     D3DXVec3TransformCoord(&vForword, &vForword, &matScale);
 
 
-#pragma region ÃÑ¾Ë ¹ß»ç ½Ã ¹İµ¿
+#pragma region ì´ì•Œ ë°œì‚¬ ì‹œ ë°˜ë™
 
     _matrix matAxis;
 
@@ -398,7 +398,7 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
 
 #pragma endregion
 
-#pragma region ÀÌµ¿ ½Ã ÁÂ¿ì ÃÑ ¶³¸²
+#pragma region ì´ë™ ì‹œ ì¢Œìš° ì´ ë–¨ë¦¼
     if (CDInputMgr::GetInstance()->Key_Press(DIK_W) ||
         CDInputMgr::GetInstance()->Key_Press(DIK_A) ||
         CDInputMgr::GetInstance()->Key_Press(DIK_S) ||
@@ -596,7 +596,7 @@ void CGun::RenderImGui()
 
 
 
-pair<_vec3, _vec3> CGun::Get_MouseRay() // ¸¶¿ì½º ¿ùµåº¯È¯
+pair<_vec3, _vec3> CGun::Get_MouseRay() // ë§ˆìš°ìŠ¤ ì›”ë“œë³€í™˜
 {
     POINT		ptMouse{};
     _vec3	    vMousePos;
@@ -604,7 +604,7 @@ pair<_vec3, _vec3> CGun::Get_MouseRay() // ¸¶¿ì½º ¿ùµåº¯È¯
     LPDIRECT3DDEVICE9 pGraphicDev = CGraphicDev::GetInstance()->Get_GraphicDev();
 
     //GetCursorPos(&ptMouse);
-    //ScreenToClient(g_hWnd, &ptMouse);        ÇöÀç Á¶ÁØÁ¡ °íÁ¤ÁßÀÌ¹Ç·Î °Ë»ç Á¦¿Ü
+    //ScreenToClient(g_hWnd, &ptMouse);        í˜„ì¬ ì¡°ì¤€ì  ê³ ì •ì¤‘ì´ë¯€ë¡œ ê²€ì‚¬ ì œì™¸
     
     ptMouse.x = WINCX / 2;
     ptMouse.y = WINCY / 2;
@@ -614,17 +614,17 @@ pair<_vec3, _vec3> CGun::Get_MouseRay() // ¸¶¿ì½º ¿ùµåº¯È¯
     ZeroMemory(&ViewPort, sizeof(D3DVIEWPORT9));
     pGraphicDev->GetViewport(&ViewPort);
 
-    // ºä Æ÷Æ® ¿µ¿ª -> Åõ¿µ ¿µ¿ª
+    // ë·° í¬íŠ¸ ì˜ì—­ -> íˆ¬ì˜ ì˜ì—­
     vMousePos.x = ptMouse.x / (ViewPort.Width * 0.5f) - 1.f;
     vMousePos.y = ptMouse.y / -(ViewPort.Height * 0.5f) + 1.f;
 
-    // Åõ¿µ ¿µ¿ª - > ºä ½ºÆäÀÌ½º ¿µ¿ª
+    // íˆ¬ì˜ ì˜ì—­ - > ë·° ìŠ¤í˜ì´ìŠ¤ ì˜ì—­
     D3DXMATRIX	matProj;
     pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
     D3DXMatrixInverse(&matProj, 0, &matProj);
     D3DXVec3TransformCoord(&vMousePos, &vMousePos, &matProj);
 
-    // ºä ½ºÆäÀÌ½º -> ¿ùµå ¿µ¿ª
+    // ë·° ìŠ¤í˜ì´ìŠ¤ -> ì›”ë“œ ì˜ì—­
 
     D3DXMATRIX	matView;
     pGraphicDev->GetTransform(D3DTS_VIEW, &matView);

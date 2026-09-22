@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CEffect.h"
 
@@ -25,19 +25,18 @@ private:
 	HRESULT			Add_Component();
 
 private:
-	Engine::CRcColCustom* m_pBufferCom;
+	Engine::CRcColCustom* m_pBufferCom = nullptr;
 
 public:
 	static CTrail_MagmaMouth* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	static CTrail_MagmaMouth* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4]);
 	static CTrail_MagmaMouth* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const _float& fLifeTime);
 
-public:
-	//void Set_TrailPoint(const _vec3(&vTrailPoint)[4]);
 private:
 	_vec3 m_vTrailPoint[4];
 	_float m_fLifeTime;
 	_float m_fElapsedLifeTime;
+
 private:
 	virtual void		Free();
 };

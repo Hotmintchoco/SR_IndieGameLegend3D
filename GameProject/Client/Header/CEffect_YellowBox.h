@@ -1,16 +1,18 @@
-#pragma once
+﻿#pragma once
 
 #include "CEffect.h"
 
 namespace Engine
 {
-	class CRcTex;
+	class CRcColCustom;
 }
 
 class CEffect_YellowBox : public CEffect
 {
 protected:
 	explicit CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4]);
+	explicit CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const _float& fLifeTime);
 	virtual ~CEffect_YellowBox();
 
 public:
@@ -23,12 +25,20 @@ private:
 	HRESULT			Add_Component();
 
 protected:
-	Engine::CRcTex* m_pBufferCom;
+	Engine::CRcColCustom* m_pBufferCom = nullptr;
 
 public:
 	static CEffect_YellowBox* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	static CEffect_YellowBox* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vScale);
+	static CEffect_YellowBox* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos);
+	static CEffect_YellowBox* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vDir);
 
+	void Set_Dir(const _vec3& vDir) { m_vDir = vDir; }
+private:
+	//_vec3 m_vYellowBox_Point[4];
+	_float m_fLifeTime;
+	_float m_fElapsedLifeTime;
+
+	_vec3 m_vDir;
 
 private:
 	virtual void		Free();

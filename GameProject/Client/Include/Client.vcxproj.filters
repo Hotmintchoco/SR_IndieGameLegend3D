@@ -208,6 +208,9 @@
     <Filter Include="02. GameObject\06. Effect\Effect_YellowBox">
       <UniqueIdentifier>{bc89f83d-5714-4323-8fab-14f2cd737f2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. Effect\Sphere">
+      <UniqueIdentifier>{baff450c-8090-4bfb-8c04-27f3610217e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -429,6 +432,9 @@
     <ClInclude Include="..\Header\CEffect_YellowBox.h">
       <Filter>02. GameObject\06. Effect\Effect_YellowBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CEffect_Sphere.h">
+      <Filter>02. GameObject\06. Effect\Sphere</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -622,6 +628,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEffect_YellowBox.cpp">
       <Filter>02. GameObject\06. Effect\Effect_YellowBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEffect_Sphere.cpp">
+      <Filter>02. GameObject\06. Effect\Sphere</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

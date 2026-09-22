@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CFireball.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -30,7 +30,7 @@ HRESULT CFireball::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(0.25f, 0.25f, 0.25f);
-    m_pColliderCom->Set_Radius(0.f);
+    m_pColliderCom->Set_Radius(0.25f);
     m_iHp = 100;
     return S_OK;
 }
@@ -46,7 +46,7 @@ _int CFireball::Update_GameObject(const _float& fTimeDelta)
 
 	Throw(fTimeDelta);
 
-    /* ¼ºÃ¶ : Dead Ã³¸® Á¶°Ç È®ÀÎÇÏ´Â ÇÔ¼ö */
+    /* ì„±ì²  : Dead ì²˜ë¦¬ ì¡°ê±´ í™•ì¸í•˜ëŠ” í•¨ìˆ˜ */
     CheckDeadCondition();
     /* -------------------------------- */
 
@@ -55,7 +55,7 @@ _int CFireball::Update_GameObject(const _float& fTimeDelta)
 
 void CFireball::CheckDeadCondition()
 {
-    /* N¹ø ¹Ù´Ú¿¡ ºÎµúÈù ÀÌÈÄ ¶Ç´Â ¸Ê °¡ÀåÀÚ¸®·Î ¹Ð·Á³µÀ» ¶§ Dead Ã³¸® */
+    /* Në²ˆ ë°”ë‹¥ì— ë¶€ë”ªížŒ ì´í›„ ë˜ëŠ” ë§µ ê°€ìž¥ìžë¦¬ë¡œ ë°€ë ¤ë‚¬ì„ ë•Œ Dead ì²˜ë¦¬ */
 
     _vec3 vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -75,9 +75,11 @@ void CFireball::CheckDeadCondition()
     
     if (bDeadCondition1 || bDeadCondition2)
     {
-        /* ÆÄ±« ½Ã¿¡´Â Å« ¹üÀ§·Î ¿À¿° */
+        /* íŒŒê´´ ì‹œì—ëŠ” í° ë²”ìœ„ë¡œ ì˜¤ì—¼ */
         CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->RequestTileContamination(vPos, 3, EContaminateType::LAVA, 3.f);
-        Set_Dead(true);
+        m_bDelete = true;
+        
+
     }
 }
 
@@ -171,7 +173,7 @@ void CFireball::Throw(const _float& fTimeDelta)
         m_vVelocity.y = -vVelocity.y / 3.f * 2.f;
         m_fLandingVelocity = 0.f;
 
-        /* ¼ºÃ¶ : Æ¨±æ ¶§¸¶´Ù ÀÛÀº ¹üÀ§ÀÇ ºÒ ¿µ¿ª »ý¼º */
+        /* ì„±ì²  : íŠ•ê¸¸ ë•Œë§ˆë‹¤ ìž‘ì€ ë²”ìœ„ì˜ ë¶ˆ ì˜ì—­ ìƒì„± */
         _vec3 vPos;
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
         CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->RequestTileContamination(vPos, 1, EContaminateType::LAVA, 3.f);

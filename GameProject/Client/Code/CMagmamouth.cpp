@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CMagmamouth.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -7,16 +7,17 @@
 #include "CSpeyeder.h"
 #include "CFireball.h"
 #include "CTrail_MagmaMouth.h"
+#include "CEffect_YellowBox.h"
 
 CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(0.f), m_fStateUpdateDuration(2.f), 
     m_eMagmaMouthState(IDLE), m_vRoomCenterLocation{ 0.f,0.f,0.f }, m_MovePosition{0.f,0.f,0.f},
     m_iMonsterX(0), m_iMonsterZ(0), m_iPlayerX(0), m_iPlayerZ(0), m_bMoveFlag(false), m_bMoveFlag2(false), m_bCloseMouth(false),
-    m_fTrailTime(0.f), m_fTrailTime2(0.f), m_fTrailDuration(0.f), m_bTrailStart(false), m_bTrailFinish(false)
+    m_fTrailTime(0.f), m_fTrailTime2(0.f), m_fTrailDuration(0.f), m_bTrailStart(false), m_bTrailFinish(false), m_fSpawnTime(0.f)
 {
     ZeroMemory(m_bSpawnFinish, sizeof(m_bSpawnFinish));
     ZeroMemory(m_bFireballFinish, sizeof(m_bFireballFinish));
-    //ZeroMemory(m_fTrailPoint, sizeof(m_fTrailPoint));
+
     for (int i = 0; i < 4; ++i)
     {
         m_iSpawnOrderArr[i] = i;
@@ -42,8 +43,6 @@ HRESULT CMagmamouth::Ready_GameObject()
 
     m_fTrailDuration = 0.5f * 0.5f * 0.5f;
 
-    m_pColliderCom->Set_IsActive(false);
-
     m_iHp = 6;
     m_fFrame = 3.f;
     return S_OK;
@@ -51,13 +50,17 @@ HRESULT CMagmamouth::Ready_GameObject()
     
 _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
 {
+    if (m_iHp <= 0)
+    {
+        m_eMagmaMouthState = DEAD;
+        m_fFrame = 3.f;
+        m_pColliderCom->Set_IsActive(false);
+    }
+
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
-    if (!m_pColliderCom->Get_IsActive())
-        m_pColliderCom->Set_IsActive(true);
-
     m_fStateUpdateTime += fTimeDelta;
-    if (m_fStateUpdateTime > m_fStateUpdateDuration)
+    if (m_fStateUpdateTime > m_fStateUpdateDuration && m_eMagmaMouthState !=DEAD)
     {
         m_fStateUpdateTime = 0.f;
         m_bCloseMouth = false;
@@ -116,24 +119,11 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
         Move_Magmamouth(fTimeDelta);
         MagmaMouth_Trail(fTimeDelta);
         break;
+    case DEAD:
+        MagmaMouth_Dead(fTimeDelta);
+        break;
     }
 
-
-    //if (1)
-    //{
-    //    Set_Motion_OpenMouth(fTimeDelta);
-
-    //}
-    //if (1)
-    //{
-    //    Set_Motion_CloseMouth(fTimeDelta);
-
-    //}
-
-    //if (m_eMagmaMouthState == MOVE)
-    //{
-    //    Set_Motion_Move();
-    //}
     return iExit;
 }
 
@@ -229,7 +219,7 @@ void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
     if (iFlag != 0)
     {
         CGameObject* pGameObject = CSpeyeder::Create(m_pGraphicDev);
-
+        pGameObject->Set_IsActive(true);
         CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
             ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
         if (nullptr == pPlayerTransformCom) return;
@@ -305,6 +295,7 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
     if (iFlag != 0)
     {
         CGameObject* pGameObject = CFireball::Create(m_pGraphicDev);
+        pGameObject->Set_IsActive(true);
 
         //_uint x = rand() % 100;
         //_uint y = rand() % 100;
@@ -807,6 +798,54 @@ void CMagmamouth::MagmaMouth_Trail(const _float& fTimeDelta)
 
         return;
     }
+}
+
+void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
+{
+    MagmaMouth_DeadEffect(fTimeDelta);
+
+    m_fElapsedDeadTime += fTimeDelta;
+
+    if (m_fElapsedDeadTime > m_fDeadTime)
+    {
+        m_bDelete = true;
+    }
+
+
+
+}
+
+void CMagmamouth::MagmaMouth_DeadEffect(const _float& fTimeDelta)
+{
+    m_fElapsedDeadTime2 += fTimeDelta;
+    if (m_fElapsedDeadTime2 > 0.25f)
+    {
+        m_fElapsedDeadTime2 = 0.f;
+
+        _vec3 vPos, vDir;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+        _int iRand1 = 0;
+        _int iRand2 = 0;
+        _int iRand3 = 0;
+        CGameObject* pGameObject = nullptr;
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+
+        for (int i = 0; i < 10; ++i)
+        {
+            iRand1 = rand() % 128 - 64;
+            iRand2 = rand() % 128 - 64;
+            iRand3 = rand() % 128 - 64;
+
+            vDir = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
+            pGameObject = CEffect_YellowBox::Create(m_pGraphicDev, vPos, vDir);
+            if (nullptr == pGameObject)
+                return;
+            if (FAILED(pLayer->Add_GameObject(L"Effect_YellowBox", pGameObject)))
+                return;
+        }
+    }
+
 }
 
 void CMagmamouth::Free()
