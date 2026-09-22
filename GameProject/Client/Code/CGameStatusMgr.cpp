@@ -110,9 +110,6 @@ void CGameStatusMgr::RenderImGui()
 
         ImGui::ProgressBar(m_fSpecialAtkGauge, ImVec2(-FLT_MIN, 0.f));
         ImGui::SameLine(); ImGui::Text("Special");
-
-        ImGui::SliderFloat("Ult##edit", &m_fUltGauge, 0.f, 1.f);
-        ImGui::SliderFloat("Special##edit", &m_fSpecialAtkGauge, 0.f, 1.f);
     }
 
     // --- Etc ---
