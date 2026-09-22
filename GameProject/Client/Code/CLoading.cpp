@@ -192,6 +192,14 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileLava_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Tile/AnimationTile/FloorLava_%d.png", 4))))
         return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Button_Up_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/ButtonUp.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Button_Down_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/ButtonDown.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Button_Up_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/ButtonUp_Diffuse.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Button_Down_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/ButtonDown_Diffuse.png", 1))))
+        return E_FAIL;
 
     /* ¾È°³ */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Fog_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/fog.png", 1))))

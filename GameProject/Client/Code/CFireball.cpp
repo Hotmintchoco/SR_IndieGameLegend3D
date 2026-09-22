@@ -11,7 +11,7 @@
 #include "CEnergy.h"
 #include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
-#include "CTile.h"
+#include "CSpriteTile.h"
 
 CFireball::CFireball(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_fLandingTime(0.f), m_iLandingCount(0), m_fLandingVelocity(0.f)
@@ -64,9 +64,9 @@ void CFireball::CheckDeadCondition()
     
     CTile* pTile = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->GetTileFromWorldPosition(vPos);
     bool bDeadCondition2 = false;
-    if (pTile)
+    if (pTile && pTile->GetType() == ETileType::SPRITE)
     {
-        bDeadCondition2 = pTile->GetResistContamination();
+        bDeadCondition2 = static_cast<CSpriteTile*>(pTile)->GetResistContamination();
     }
     else
     {

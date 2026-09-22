@@ -149,6 +149,7 @@
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
     <ClInclude Include="..\Header\CBoss1.h" />
     <ClInclude Include="..\Header\CBullet.h" />
+    <ClInclude Include="..\Header\CButtonTile.h" />
     <ClInclude Include="..\Header\CClearCondition.h" />
     <ClInclude Include="..\Header\CCrosshair.h" />
     <ClInclude Include="..\Header\CDirectionUI.h" />
@@ -179,7 +180,7 @@
     <ClInclude Include="..\Header\CLogo.h" />
     <ClInclude Include="..\Header\CMainApp.h" />
     <ClInclude Include="..\Header\CPseudoDark.h" />
-    <ClInclude Include="..\Header\CPushAllButtonCondition.h" />
+    <ClInclude Include="..\Header\CPressAllButtonCondition.h" />
     <ClInclude Include="..\Header\CRoomLayer.h" />
     <ClInclude Include="..\Header\CRoomLoadingMgr.h" />
     <ClInclude Include="..\Header\CMonster.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="..\Header\CSkyBox.h" />
     <ClInclude Include="..\Header\CSmallExplode.h" />
     <ClInclude Include="..\Header\CSpeyeder.h" />
+    <ClInclude Include="..\Header\CSpriteTile.h" />
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CTile.h" />
@@ -223,6 +225,7 @@
     <ClCompile Include="..\Code\CBreakableFrustum.cpp" />
     <ClCompile Include="..\Code\CBoss1.cpp" />
     <ClCompile Include="..\Code\CBullet.cpp" />
+    <ClCompile Include="..\Code\CButtonTile.cpp" />
     <ClCompile Include="..\Code\CClearCondition.cpp" />
     <ClCompile Include="..\Code\CCrosshair.cpp" />
     <ClCompile Include="..\Code\CDirectionUI.cpp" />
@@ -252,7 +255,7 @@
     <ClCompile Include="..\Code\CLogo.cpp" />
     <ClCompile Include="..\Code\CMainApp.cpp" />
     <ClCompile Include="..\Code\CPseudoDark.cpp" />
-    <ClCompile Include="..\Code\CPushAllButtonCondition.cpp" />
+    <ClCompile Include="..\Code\CPressAllButtonCondition.cpp" />
     <ClCompile Include="..\Code\CRoomLayer.cpp" />
     <ClCompile Include="..\Code\CRoomLoadingMgr.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
@@ -261,6 +264,7 @@
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CSmallExplode.cpp" />
     <ClCompile Include="..\Code\CSpeyeder.cpp" />
+    <ClCompile Include="..\Code\CSpriteTile.cpp" />
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CTile.cpp" />

@@ -26,6 +26,7 @@ public:
 
 	CEventDelegate<TRoomEventCtx> m_OnRoomEvent;
 	void OnRoomTriggerBlockCollided();
+	void OnButtonInteracted(bool bPressed);
 
 	/* 몬스터 클래스가 사용 */
 	inline void IncreaseEntityCount() { ++m_iEntityCount; }

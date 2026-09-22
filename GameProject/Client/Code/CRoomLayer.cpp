@@ -6,13 +6,15 @@
 #include "CGraphicDev.h"
 #include "CWall.h"
 #include "CFog.h"
-#include "CTile.h"
+#include "CSpriteTile.h"
 #include "CTriggerBox.h"
 #include "CAbstractFactory.h"
 #include "CGameStatusMgr.h"
 #include "CDoor.h"
 #include "CKillAllEntityCondition.h"
+#include "CPressAllButtonCondition.h"
 #include "CManagement.h"
+#include "CButtonTile.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -72,8 +74,9 @@ void CRoomLayer::PlayerTileInteraction()
 	
 	CTile* pTile = GetTileFromWorldPosition(vPos);
 	if (!pTile) return;
+	if (pTile->GetType() != ETileType::SPRITE) return;
 	
-	EContaminateType eType = pTile->GetContaminationType();
+	EContaminateType eType = static_cast<CSpriteTile*>(pTile)->GetContaminationType();
 	switch (eType)
 	{
 	case EContaminateType::LAVA:
@@ -100,10 +103,19 @@ HRESULT CRoomLayer::SpawnRoom()
 	{
 		CClearCondition* pCondition = nullptr;
 
-		if (wstrClearCondtiion == L"KillAllEntity")
+		if (wstrClearCondtiion == L"KillAllEntities")
 		{
 			pCondition = CKillAllEntityCondition::Create(this);
 		}
+		else if (wstrClearCondtiion == L"PressAllButtons")
+		{
+			pCondition = CPressAllButtonCondition::Create(this);
+		}
+		else
+		{
+			assert(0);
+		}
+
 
 		if (nullptr == pCondition)
 		{
@@ -153,11 +165,27 @@ HRESULT CRoomLayer::SpawnRoom()
 			(float)((int)vInnerRoomSize.z - 1) / 2.f * 1.f - 1.f * (float)iTileZ
 		};
 
-		int iTileTextureIdx = (t->vecTile.at(i) == 0) ? t->iDefaultTileIdx : t->vecTile.at(i);
-		bool bResistContamination = t->vecResistContamination.at(i) == 1;
-		pGameObject = CTile::Create(pDevice, (int)i, iTileTextureIdx, bResistContamination);
-		if (nullptr == pGameObject)
-			return E_FAIL;
+		int iTileIdx = (t->vecTile.at(i) == 0) ? t->iDefaultTileIdx : t->vecTile.at(i);
+		if (iTileIdx >= 0 && iTileIdx <= 56)
+		{
+			/* 일반 타일*/
+			bool bResistContamination = t->vecResistContamination.at(i) == 1;
+			pGameObject = CSpriteTile::Create(pDevice, (int)i, iTileIdx, bResistContamination);
+			if (nullptr == pGameObject)
+				return E_FAIL;
+		}
+		else if (iTileIdx == 70 || iTileIdx == 71)
+		{
+			/* 버튼 : 70 고정 버튼, 71 비고정 버튼 */
+			bool bFixed = (iTileIdx == 70);
+			pGameObject = CButtonTile::Create(pDevice, (int)i, bFixed);
+			if (nullptr == pGameObject)
+				return E_FAIL;
+		}
+		else
+		{
+			assert(0);
+		}
 
 		wstring wstrTileName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Tile_" + to_wstring(i);
 
@@ -216,7 +244,7 @@ HRESULT CRoomLayer::SpawnRoom()
 			}
 
 			/* 문 쪽 타일 */
-			pGameObject = CTile::Create(pDevice, (int)i, (t->vecDoorTile[iDir - 1] == 0) ? t->iDefaultTileIdx : t->vecDoorTile[iDir - 1]);
+			pGameObject = CSpriteTile::Create(pDevice, (int)i, (t->vecDoorTile[iDir - 1] == 0) ? t->iDefaultTileIdx : t->vecDoorTile[iDir - 1]);
 			if (nullptr == pGameObject)
 				return E_FAIL;
 
@@ -343,6 +371,12 @@ void CRoomLayer::OnRoomTriggerBlockCollided()
 	}
 }
 
+void CRoomLayer::OnButtonInteracted(bool bPressed)
+{
+	TRoomEventCtx t{ERoomEventType::BUTTON, bPressed};
+	m_OnRoomEvent.Broadcast(t);
+}
+
 void CRoomLayer::RequestTileContamination(const _vec3& vPos, int iRange, EContaminateType eType, float fDuration)
 {
 	if (iRange <= 0) return;
@@ -360,9 +394,10 @@ void CRoomLayer::RequestTileContamination(const _vec3& vPos, int iRange, EContam
 		for (int dx = -iRemain; dx <= iRemain; ++dx)
 		{
 			CTile* pTile = GetTileFromIndex2D(TTileIdx{ tCenterIdx.iRow + dz, tCenterIdx.iCol + dx });
-			if (nullptr == pTile) continue;
+			if (!pTile) continue;
+			if (pTile->GetType() != ETileType::SPRITE) continue;
 
-			pTile->Contaminate(eType, fDuration);
+			static_cast<CSpriteTile*>(pTile)->Contaminate(eType, fDuration);
 		}
 	}
 }

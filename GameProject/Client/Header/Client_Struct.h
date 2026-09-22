@@ -32,7 +32,7 @@ struct TRoomData
 struct TRoomEventCtx
 {
 	ERoomEventType eType;
-	variant<int> varArgs;
+	variant<int, bool> varArgs;
 };
 
 struct TTileIdx

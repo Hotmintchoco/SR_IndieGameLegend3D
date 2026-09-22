@@ -9,17 +9,8 @@ CTile::CTile(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 }
 
-CTile::CTile(LPDIRECT3DDEVICE9 pGraphicDev, int iPositionIdx, int iTextureIdx)
-    : CGameObject(pGraphicDev), m_iPositionIdx(iPositionIdx), m_iTextureIdx(iTextureIdx)
-{
-    _vec3 vSize = CRoomLoadingMgr::GetInstance()->GetInnerRoomSize();
-    const int iSizeX = (int)vSize.x;
-
-    m_tPositionIdx2D = TTileIdx{ m_iPositionIdx / iSizeX, m_iPositionIdx % iSizeX };
-}
-
-CTile::CTile(LPDIRECT3DDEVICE9 pGraphicDev, int iPositionIdx, int iTextureIdx, bool bResistContamination)
-    : CGameObject(pGraphicDev), m_iPositionIdx(iPositionIdx), m_iTextureIdx(iTextureIdx), m_bResistContamination(bResistContamination)
+CTile::CTile(LPDIRECT3DDEVICE9 pGraphicDev, int iPositionIdx)
+    : CGameObject(pGraphicDev), m_iPositionIdx(iPositionIdx)
 {
     _vec3 vSize = CRoomLoadingMgr::GetInstance()->GetInnerRoomSize();
     const int iSizeX = (int)vSize.x;
@@ -48,31 +39,7 @@ _int CTile::Update_GameObject(const _float& fTimeDelta)
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
-    UpdateAnimationTile(fTimeDelta);
-
     return iExit;
-}
-
-void CTile::UpdateAnimationTile(const _float& fTimeDelta)
-{
-    if (!m_bContaminated) return;
-    
-    m_fAnimSingleFrameAccTime += fTimeDelta;
-
-    if (m_fAnimSingleFrameAccTime > m_fAnimFrameInterval)
-    {
-        m_fAnimSingleFrameAccTime -= m_fAnimFrameInterval;
-        m_iAnimTextureIndex = (m_iAnimTextureIndex + 1) % m_pAnimTextureCom->GetCount();
-    }
-
-    m_fContaminationLeftTime -= fTimeDelta;
-    if (m_fContaminationLeftTime <= 0.f)
-    {
-        m_bContaminated = false;
-        m_eContaminationType = EContaminateType::NONE;
-        m_iAnimTextureIndex = 0;
-        m_fAnimSingleFrameAccTime = 0.f;
-    }
 }
 
 void CTile::LateUpdate_GameObject(const _float& fTimeDelta)
@@ -82,65 +49,11 @@ void CTile::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CTile::Render_GameObject()
 {
-    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-
-    if (m_bContaminated)
-    {
-        m_pAnimTextureCom->Set_Texture(m_iAnimTextureIndex);
-    }
-    else
-    {
-        m_pTextureCom->Set_Texture(m_iTextureIdx);
-    }
-
-    m_pBufferCom->Render_Buffer();
-}
-
-void CTile::Contaminate(EContaminateType eType, float fDuration)
-{
-    if (m_bResistContamination) return;
-
-    if (m_pAnimTextureCom)
-    {
-        m_mapComponent[ID_STATIC].erase(L"Com_AnimTexture");
-        Safe_Release(m_pAnimTextureCom);        
-    }
-
-    switch (eType)
-    {
-    case EContaminateType::LAVA:
-        m_eContaminationType = EContaminateType::LAVA;
-        m_pAnimTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_TileLava_Texture"));
-        break;
-    default:
-        break;
-    }
-
-    m_mapComponent[ID_STATIC].insert({ L"Com_AnimTexture", m_pAnimTextureCom });
-
-    m_bContaminated = true;
-    m_fContaminationLeftTime = max(m_fContaminationLeftTime, fDuration);
 }
 
 HRESULT CTile::Add_Component()
 {
     CComponent* pComponent = nullptr;
-
-    // TerrainTex
-    pComponent = m_pBufferCom = dynamic_cast<CPlaneTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlaneTex"));
-
-    if (nullptr == pComponent)
-        return E_FAIL;
-
-    m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
-
-    // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Tile_Texture"));
-
-    if (nullptr == pComponent)
-        return E_FAIL;
-
-    m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
     // Transform
     pComponent = m_pTransformCom = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
@@ -152,34 +65,6 @@ HRESULT CTile::Add_Component()
 
 
     return S_OK;
-}
-
-CTile* CTile::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iPositionIdx, int iTextureIdx)
-{
-    CTile* pTile = new CTile(pGraphicDev, iPositionIdx, iTextureIdx);
-
-    if (FAILED(pTile->Ready_GameObject()))
-    {
-        Safe_Release(pTile);
-        MSG_BOX("CTile Create Failed");
-        return nullptr;
-    }
-
-    return pTile;
-}
-
-CTile* CTile::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iPositionIdx, int iTextureIdx, bool bResistContamination)
-{
-    CTile* pTile = new CTile(pGraphicDev, iPositionIdx, iTextureIdx, bResistContamination);
-
-    if (FAILED(pTile->Ready_GameObject()))
-    {
-        Safe_Release(pTile);
-        MSG_BOX("CTile Create Failed");
-        return nullptr;
-    }
-
-    return pTile;
 }
 
 void CTile::Free()

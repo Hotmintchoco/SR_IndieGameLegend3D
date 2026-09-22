@@ -26,7 +26,7 @@ enum COLLISIONID
 	COLL_ITEM,		// COLL_ID6,
 	COLL_OBSTACLE,	// COLL_ID7,
 	COLL_EXPLODERANGE,// COLL_ID8,
-	COLL_ID9,		// COLL_ID9,
+	COLL_BUTTON,	// COLL_ID9,
 	COLL_ID10,		// COLL_ID10,
 	COLL_ID11,		// COLL_ID11,
 	COLL_ID12,		// COLL_ID12,
@@ -86,7 +86,7 @@ enum class ERoomEventType
 	ROOM_BEGIN,
 	ROOM_CLEAR,
 	
-	PUSH_BUTTON,
+	BUTTON,
 
 	MAX,
 };
@@ -98,6 +98,16 @@ enum class EContaminateType
 	NONE,
 
 	LAVA,
+
+	MAX,
+};
+
+enum class ETileType
+{
+	NONE,
+
+	SPRITE,
+	BUTTON,
 
 	MAX,
 };
