@@ -370,7 +370,7 @@ void CPlayer::UpdateHP(_int iAmount)
         }
     }
 
-    // ���� : HP�� �����ϸ� UI ����
+    // 정민 : HP가 감소하면 UI 적용
     Update_HPUI();
 }
 
@@ -396,8 +396,8 @@ void CPlayer::Die()
 void CPlayer::Respawn()
 {
     CRoomLayer* pDeathRoom = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-    if (nullptr != pDeathRoom)
-        pDeathRoom->ResetRoom();
+    //if (nullptr != pDeathRoom)
+    //    pDeathRoom->ResetRoom();
 
     CGameStatusMgr::GetInstance()->UpdateCurrentRoomIndex(START_ROOM_INDEX);
 

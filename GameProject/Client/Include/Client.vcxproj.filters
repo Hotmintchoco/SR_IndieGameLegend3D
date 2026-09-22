@@ -178,14 +178,8 @@
     <Filter Include="01. Scene\Stage\Layer\ClearCondition">
       <UniqueIdentifier>{272cc4a9-b6ae-4a3f-a91d-39ad71c6f66b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\Stage\Layer\ClearCondition\PushAllButton">
-      <UniqueIdentifier>{023821f0-88fd-4f0c-8d0f-7cf39723ff7c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\Stage\Layer\ClearCondition\ManualClear">
       <UniqueIdentifier>{1b92e145-d4f5-4809-a1c7-5f92f0c6b7fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\Stage\Layer\ClearCondition\KillAllEntity">
-      <UniqueIdentifier>{fea9a953-04e9-443e-8954-af81d3b19410}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\10. UI\Direction">
       <UniqueIdentifier>{caf2411c-6216-4837-a54c-f2cf88be18f5}</UniqueIdentifier>
@@ -195,6 +189,24 @@
     </Filter>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\PseudoBlack">
       <UniqueIdentifier>{985083af-b441-4e23-9d55-fe18ceb2ef3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Effect\FrustumExplodeEffect">
+      <UniqueIdentifier>{19f10014-1d8b-44d0-89bb-5e80d8ad51ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\BaseProp\Tile\Button">
+      <UniqueIdentifier>{79722eb1-37ea-4cd0-a591-59433a43bf55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\BaseProp\Tile\Sprite">
+      <UniqueIdentifier>{16f90915-abc1-4a5a-8fd5-4f9834e987df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\ClearCondition\PressAllButtons">
+      <UniqueIdentifier>{023821f0-88fd-4f0c-8d0f-7cf39723ff7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\ClearCondition\KillAllEntities">
+      <UniqueIdentifier>{fea9a953-04e9-443e-8954-af81d3b19410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\GameMachine">
+      <UniqueIdentifier>{31be8105-a523-4dda-914e-225628b9d96c}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\09. Bullet\BulletTrail">
       <UniqueIdentifier>{507fc53d-54bb-44af-a564-17e6d18d5a96}</UniqueIdentifier>
@@ -210,6 +222,9 @@
     </Filter>
     <Filter Include="02. GameObject\06. Effect\Sphere">
       <UniqueIdentifier>{baff450c-8090-4bfb-8c04-27f3610217e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Frustum\Explosive\ExplodeSphere">
+      <UniqueIdentifier>{50d3b930-96f7-46d0-9513-601ce505a7a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -400,13 +415,13 @@
       <Filter>01. Scene\Stage\Layer\ClearCondition</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CKillAllEntityCondition.h">
-      <Filter>01. Scene\Stage\Layer\ClearCondition\KillAllEntity</Filter>
+      <Filter>01. Scene\Stage\Layer\ClearCondition\KillAllEntities</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CManualClearCondition.h">
       <Filter>01. Scene\Stage\Layer\ClearCondition\ManualClear</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CPushAllButtonCondition.h">
-      <Filter>01. Scene\Stage\Layer\ClearCondition\PushAllButton</Filter>
+    <ClInclude Include="..\Header\CPressAllButtonCondition.h">
+      <Filter>01. Scene\Stage\Layer\ClearCondition\PressAllButtons</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CDirectionUI.h">
       <Filter>02. GameObject\10. UI\Direction</Filter>
@@ -422,6 +437,24 @@
     </ClInclude>
     <ClInclude Include="..\Header\CExplosiveFrustumGlass.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFrustumExplodeEffect.h">
+      <Filter>02. GameObject\06. Effect\FrustumExplodeEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CExplodeRange.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CExplodeSphere.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive\ExplodeSphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CButtonTile.h">
+      <Filter>02. GameObject\07. Room\BaseProp\Tile\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSpriteTile.h">
+      <Filter>02. GameObject\07. Room\BaseProp\Tile\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGameMachine.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\GameMachine</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CBulletTrail.h">
       <Filter>02. GameObject\09. Bullet\BulletTrail</Filter>
@@ -597,13 +630,13 @@
       <Filter>01. Scene\Stage\Layer\ClearCondition</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CKillAllEntityCondition.cpp">
-      <Filter>01. Scene\Stage\Layer\ClearCondition\KillAllEntity</Filter>
+      <Filter>01. Scene\Stage\Layer\ClearCondition\KillAllEntities</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CManualClearCondition.cpp">
       <Filter>01. Scene\Stage\Layer\ClearCondition\ManualClear</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CPushAllButtonCondition.cpp">
-      <Filter>01. Scene\Stage\Layer\ClearCondition\PushAllButton</Filter>
+    <ClCompile Include="..\Code\CPressAllButtonCondition.cpp">
+      <Filter>01. Scene\Stage\Layer\ClearCondition\PressAllButtons</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CDirectionUI.cpp">
       <Filter>02. GameObject\10. UI\Direction</Filter>
@@ -619,6 +652,24 @@
     </ClCompile>
     <ClCompile Include="..\Code\CExplosiveFrustumGlass.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFrustumExplodeEffect.cpp">
+      <Filter>02. GameObject\06. Effect\FrustumExplodeEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CExplodeRange.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CExplodeSphere.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive\ExplodeSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CButtonTile.cpp">
+      <Filter>02. GameObject\07. Room\BaseProp\Tile\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSpriteTile.cpp">
+      <Filter>02. GameObject\07. Room\BaseProp\Tile\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGameMachine.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\GameMachine</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBulletTrail.cpp">
       <Filter>02. GameObject\09. Bullet\BulletTrail</Filter>
@@ -669,6 +720,9 @@
       <Filter>03. Resource\01. Map</Filter>
     </None>
     <None Include="..\Bin\Resource\Map\Room_3_1.json">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Map\Room_2_3.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
   </ItemGroup>

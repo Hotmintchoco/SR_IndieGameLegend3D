@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <variant>
 #include "Engine_Define.h"
 #include "Client_Enum.h"
 
@@ -25,12 +26,13 @@ struct TRoomData
 	vector<bool> vecDoorInfo;
 	vector<int> vecDoorTile;
 	vector<wstring> vecClearCondition;
+	bool bDark;
 };
 
 struct TRoomEventCtx
 {
 	ERoomEventType eType;
-
+	variant<int, bool> varArgs;
 };
 
 struct TTileIdx

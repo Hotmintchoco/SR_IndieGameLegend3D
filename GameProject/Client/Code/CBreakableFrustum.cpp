@@ -1,4 +1,4 @@
-ï»¿#include "pch.h"
+#include "pch.h"
 #include "CBreakableFrustum.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -20,7 +20,7 @@ HRESULT CBreakableFrustum::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    // Note : ìˆœì„œì— ì£¼ì˜
+    // Note : ¼ø¼­¿¡ ÁÖÀÇ
     if (FAILED(CFrustum::Ready_GameObject()))
         return E_FAIL;
 
@@ -52,16 +52,11 @@ void CBreakableFrustum::Render_GameObject()
 
 void CBreakableFrustum::OnCollisionEnter(CGameObject* pOther)
 {
-    CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+    _bool bOnDestroyCondition = CheckDestroyCondition(dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider")));
 
-	_bool bIsDestroyed = DestroyFrustum(dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider")));
-    
-    if (bIsDestroyed)
+    if (bOnDestroyCondition)
     {
-        CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
-
-        if (pObject)
-            pLayer->Add_GameObject(L"Item", pObject);
+        Destroy();
     }
 }
 
@@ -86,6 +81,18 @@ HRESULT CBreakableFrustum::Add_Component()
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
     return S_OK;
+}
+
+void CBreakableFrustum::Destroy()
+{
+    CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+
+    CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
+
+    if (pObject)
+        pLayer->Add_GameObject(L"Item", pObject);
+
+    Set_Dead(true);
 }
 
 CBreakableFrustum* CBreakableFrustum::Create(LPDIRECT3DDEVICE9 pGraphicDev)

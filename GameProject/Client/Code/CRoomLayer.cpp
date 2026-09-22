@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "CRoomLayer.h"
 #include "CRoomLoadingMgr.h"
 #include "CTransform.h"
@@ -6,15 +6,17 @@
 #include "CGraphicDev.h"
 #include "CWall.h"
 #include "CFog.h"
-#include "CTile.h"
+#include "CSpriteTile.h"
 #include "CTriggerBox.h"
 #include "CAbstractFactory.h"
 #include "CGameStatusMgr.h"
 #include "CDoor.h"
 #include "CKillAllEntityCondition.h"
+#include "CPressAllButtonCondition.h"
 #include "CManagement.h"
 #include "CMonster.h"
 #include "CLayerContext.h"
+#include "CButtonTile.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -40,15 +42,30 @@ _int CRoomLayer::Update_Layer(const _float& fTimeDelta)
 
 	_int iExit = CLayer::Update_Layer(fTimeDelta);
 
-	/* πÊπÆ«œ¡ˆ æ ¿∫ πÊ¿Ã πŸ∑Œ ≈¨∏ÆæÓ √≥∏Æµ«¥¬ ∞Õ¿ª ∏∑±‚ ¿ß«‘ */
+	/* Î∞©Î¨∏ÌïòÏßÄ ÏïäÏùÄ Î∞©Ïù¥ Î∞îÎ°ú ÌÅ¥Î¶¨Ïñ¥ Ï≤òÎ¶¨ÎêòÎäî Í≤ÉÏùÑ ÎßâÍ∏∞ ÏúÑÌï® */
 	if (!m_bCleared && m_bVisited)
 	{
 		CheckClearCondition();
 	}
 
+	FlickerHandling(fTimeDelta);
+
 	PlayerTileInteraction();
 
 	return S_OK;
+}
+
+void CRoomLayer::FlickerHandling(const Engine::_float& fTimeDelta)
+{
+	if (m_bDark && !m_bCurrentDark)
+	{
+		m_fLeftFlickerTime -= fTimeDelta;
+		if (m_fLeftFlickerTime <= 0.f)
+		{
+			m_bCurrentDark = true;
+			SetPseudoDark(true);
+		}
+	}
 }
 
 void CRoomLayer::PlayerTileInteraction()
@@ -59,12 +76,13 @@ void CRoomLayer::PlayerTileInteraction()
 	
 	CTile* pTile = GetTileFromWorldPosition(vPos);
 	if (!pTile) return;
+	if (pTile->GetType() != ETileType::SPRITE) return;
 	
-	EContaminateType eType = pTile->GetContaminationType();
+	EContaminateType eType = static_cast<CSpriteTile*>(pTile)->GetContaminationType();
 	switch (eType)
 	{
 	case EContaminateType::LAVA:
-		/* TODO «√∑π¿ÃæÓ µ•πÃ¡ˆ */
+		/* TODO ÌîåÎ†àÏù¥Ïñ¥ Îç∞ÎØ∏ÏßÄ */
 		break;
 	default:
 		break;
@@ -82,6 +100,39 @@ HRESULT CRoomLayer::SpawnRoom()
 {
 	TRoomData* t = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iRoomIndex);
 
+	/* ÌÅ¥Î¶¨Ïñ¥ Ï°∞Í±¥ */
+	for (auto& wstrClearCondtiion : t->vecClearCondition)
+	{
+		CClearCondition* pCondition = nullptr;
+
+		if (wstrClearCondtiion == L"KillAllEntities")
+		{
+			pCondition = CKillAllEntityCondition::Create(this);
+		}
+		else if (wstrClearCondtiion == L"PressAllButtons")
+		{
+			pCondition = CPressAllButtonCondition::Create(this);
+		}
+		else
+		{
+			assert(0);
+		}
+
+
+		if (nullptr == pCondition)
+		{
+			assert(0);
+			continue;
+		}
+
+		m_vecClearCondition.push_back(pCondition);
+	}
+
+	/* ÏßÑÏûÖ Ïãú Ïñ¥Îë† Ïó¨Î∂Ä */
+	m_bDark = t->bDark;
+	m_bCurrentDark = t->bDark;
+
+	/* Î∞© Í∏∞Î≥∏ Ï†ïÎ≥¥ */
 	int iRoomColCount = CRoomLoadingMgr::GetInstance()->GetRoomColCount();
 	int iRoomRowCount = CRoomLoadingMgr::GetInstance()->GetRoomRowCount();
 	_vec3 vOuterRoomSize = CRoomLoadingMgr::GetInstance()->GetOuterRoomSize();
@@ -104,7 +155,7 @@ HRESULT CRoomLayer::SpawnRoom()
 
 	CGameObject* pGameObject = nullptr;
 
-	/* ≈∏¿œ */
+	/* ÌÉÄÏùº */
 	for (size_t i = 0; i < t->vecTile.size(); ++i)
 	{
 		int iTileX = (int)i % (int)vInnerRoomSize.x;
@@ -116,11 +167,27 @@ HRESULT CRoomLayer::SpawnRoom()
 			(float)((int)vInnerRoomSize.z - 1) / 2.f * 1.f - 1.f * (float)iTileZ
 		};
 
-		int iTileTextureIdx = (t->vecTile.at(i) == 0) ? t->iDefaultTileIdx : t->vecTile.at(i);
-		bool bResistContamination = t->vecResistContamination.at(i) == 1;
-		pGameObject = CTile::Create(pDevice, (int)i, iTileTextureIdx, bResistContamination);
-		if (nullptr == pGameObject)
-			return E_FAIL;
+		int iTileIdx = (t->vecTile.at(i) == 0) ? t->iDefaultTileIdx : t->vecTile.at(i);
+		if (iTileIdx >= 0 && iTileIdx <= 56)
+		{
+			/* ÏùºÎ∞ò ÌÉÄÏùº*/
+			bool bResistContamination = t->vecResistContamination.at(i) == 1;
+			pGameObject = CSpriteTile::Create(pDevice, (int)i, iTileIdx, bResistContamination);
+			if (nullptr == pGameObject)
+				return E_FAIL;
+		}
+		else if (iTileIdx == 70 || iTileIdx == 71)
+		{
+			/* Î≤ÑÌäº : 70 Í≥†Ï†ï Î≤ÑÌäº, 71 ÎπÑÍ≥†Ï†ï Î≤ÑÌäº */
+			bool bFixed = (iTileIdx == 70);
+			pGameObject = CButtonTile::Create(pDevice, (int)i, bFixed);
+			if (nullptr == pGameObject)
+				return E_FAIL;
+		}
+		else
+		{
+			assert(0);
+		}
 
 		wstring wstrTileName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Tile_" + to_wstring(i);
 
@@ -132,7 +199,7 @@ HRESULT CRoomLayer::SpawnRoom()
 		pTransformCom->Set_Pos(vRoomCenterPos.x + vTileOffset.x, 0.f, vRoomCenterPos.z + vTileOffset.z);
 	}
 
-	/* ∫Æ : µø≥≤º≠∫œ º¯ */
+	/* Î≤Ω : ÎèôÎÇ®ÏÑúÎ∂Å Ïàú */
 	for (size_t i = 0; i < t->vecDoorInfo.size(); ++i)
 	{
 		pGameObject = CWall::Create(pDevice, (EWallDir)(i + 1), t->vecDoorInfo.at(i));
@@ -151,7 +218,7 @@ HRESULT CRoomLayer::SpawnRoom()
 		CWall* pWall = static_cast<CWall*>(pGameObject);
 		if (pWall->HasDoor())
 		{
-			/* æ»∞≥ */
+			/* ÏïàÍ∞ú */
 			int iDir = (int)pWall->GetDir();
 
 			_vec3 vDir{ 0.f, 0.f, 1.f };
@@ -178,8 +245,8 @@ HRESULT CRoomLayer::SpawnRoom()
 				pTransformCom->Move_Pos(&vDir, 5.5f + (iDir % 2) * 1.f + 0.2f * i, 1.f);
 			}
 
-			/* πÆ ¬  ≈∏¿œ */
-			pGameObject = CTile::Create(pDevice, (int)i, (t->vecDoorTile[iDir - 1] == 0) ? t->iDefaultTileIdx : t->vecDoorTile[iDir - 1]);
+			/* Î¨∏ Ï™Ω ÌÉÄÏùº */
+			pGameObject = CSpriteTile::Create(pDevice, (int)i, (t->vecDoorTile[iDir - 1] == 0) ? t->iDefaultTileIdx : t->vecDoorTile[iDir - 1]);
 			if (nullptr == pGameObject)
 				return E_FAIL;
 
@@ -193,7 +260,7 @@ HRESULT CRoomLayer::SpawnRoom()
 			pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
 			pTransformCom->Move_Pos(&vDir, 6.f + (iDir % 2) * 1.f, 1.f);
 
-			/* Ω√¿€ ∆Æ∏Æ∞≈ π⁄Ω∫ */
+			/* ÏãúÏûë Ìä∏Î¶¨Í±∞ Î∞ïÏä§ */
 			pGameObject = CTriggerBox::Create(pDevice);
 			if (nullptr == pGameObject)
 				return E_FAIL;
@@ -208,8 +275,8 @@ HRESULT CRoomLayer::SpawnRoom()
 			pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
 			pTransformCom->Move_Pos(&vDir, 4.f + (iDir % 2) * 1.f, 1.f);
 
-			/* πÆ */
-			
+			/* Î¨∏ */
+
 			pGameObject = CDoor::Create(pDevice);
 			if (nullptr == pGameObject)
 				return E_FAIL;
@@ -230,7 +297,7 @@ HRESULT CRoomLayer::SpawnRoom()
 
 	}
 
-	/* ∏  ø¿∫Í¡ß∆Æ */
+	/* Îßµ Ïò§Î∏åÏ†ùÌä∏ */
 	for (size_t i = 0; i < t->vecObjectTilingInfo.size(); ++i)
 	{
 		int iTileX = (int)i % (int)vInnerRoomSize.x;
@@ -263,34 +330,6 @@ HRESULT CRoomLayer::SpawnRoom()
 		pTransformCom->Set_Pos(vRoomCenterPos.x + vTileOffset.x, 0.f, vRoomCenterPos.z + vTileOffset.z);
 	}
 
-	if (FAILED(SpawnEntities()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CRoomLayer::SpawnEntities()
-{
-	TRoomData* t = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iRoomIndex);
-
-	for (auto& wstrClearCondtiion : t->vecClearCondition)
-	{
-		CClearCondition* pCondition = nullptr;
-
-		if (wstrClearCondtiion == L"KillAllEntity")
-		{
-			pCondition = CKillAllEntityCondition::Create(this);
-		}
-
-		if (nullptr == pCondition)
-		{
-			assert(0);
-			continue;
-		}
-
-		m_vecClearCondition.push_back(pCondition);
-	}
-
 	for (auto& tMapEntity : t->vecObjectInfo)
 	{
 		if (tMapEntity.iType <= (int)EObjectType::NONE || tMapEntity.iType >= (int)EObjectType::MAX)
@@ -298,7 +337,7 @@ HRESULT CRoomLayer::SpawnEntities()
 			continue;
 		}
 
-		CGameObject* pGameObject = CAbstractFactory::GetInstance()->Create((EObjectType)tMapEntity.iType);
+		pGameObject = CAbstractFactory::GetInstance()->Create((EObjectType)tMapEntity.iType);
 		if (nullptr == pGameObject)
 			return E_FAIL;
 
@@ -309,46 +348,15 @@ HRESULT CRoomLayer::SpawnEntities()
 
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrMonsterName, L"Com_Transform"));
 
-		pTransformCom->Set_Pos(m_vRoomCenterPos.x + tMapEntity.vPos.x, m_vRoomCenterPos.y + tMapEntity.vPos.y, m_vRoomCenterPos.z + tMapEntity.vPos.z);
+		pTransformCom->Set_Pos(vRoomCenterPos.x + tMapEntity.vPos.x, vRoomCenterPos.y + tMapEntity.vPos.y, vRoomCenterPos.z + tMapEntity.vPos.z);
 	}
 
 	return S_OK;
 }
 
-HRESULT CRoomLayer::ResetRoom()
-{
-	for (auto& Pair : m_mapObject)
-	{
-		if (nullptr == dynamic_cast<CMonster*>(Pair.second))
-			continue;
-
-		Pair.second->Set_IsActive(false);
-		Pair.second->Set_Dead(true);
-	}
-
-	m_iEntityCount = 0;
-
-	for (auto& c : m_vecClearCondition)
-		Safe_Release(c);
-
-	m_vecClearCondition.clear();
-
-	TRoomEventCtx tCtx{ ERoomEventType::ROOM_CLEAR };
-	m_OnRoomEvent.Broadcast(tCtx);
-
-	m_bCleared = false;
-	m_bOnProgress = false;
-
-	CLayerContext ctx(this, nullptr);
-
-	return SpawnEntities();
-}
-
 void CRoomLayer::OnRoomTriggerBlockCollided()
 {
-	if (m_bOnProgress) return;
-
-	CGameStatusMgr::GetInstance()->UpdateCurrentRoomIndex(m_iRoomIndex);
+	if (m_bOnProgress) return;	
 
 	if (!m_bVisited)
 	{
@@ -362,6 +370,12 @@ void CRoomLayer::OnRoomTriggerBlockCollided()
 		m_OnRoomEvent.Broadcast(t);
 		m_bOnProgress = true;
 	}
+}
+
+void CRoomLayer::OnButtonInteracted(bool bPressed)
+{
+	TRoomEventCtx t{ERoomEventType::BUTTON, bPressed};
+	m_OnRoomEvent.Broadcast(t);
 }
 
 void CRoomLayer::RequestTileContamination(const _vec3& vPos, int iRange, EContaminateType eType, float fDuration)
@@ -381,10 +395,21 @@ void CRoomLayer::RequestTileContamination(const _vec3& vPos, int iRange, EContam
 		for (int dx = -iRemain; dx <= iRemain; ++dx)
 		{
 			CTile* pTile = GetTileFromIndex2D(TTileIdx{ tCenterIdx.iRow + dz, tCenterIdx.iCol + dx });
-			if (nullptr == pTile) continue;
+			if (!pTile) continue;
+			if (pTile->GetType() != ETileType::SPRITE) continue;
 
-			pTile->Contaminate(eType, fDuration);
+			static_cast<CSpriteTile*>(pTile)->Contaminate(eType, fDuration);
 		}
+	}
+}
+
+void CRoomLayer::SetPseudoDark(bool bFlag)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		wstring wstrName = L"PseudoDark_" + to_wstring(i);
+		CGameObject* pDark = CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", wstrName.c_str());
+		pDark->Set_IsActive(bFlag);
 	}
 }
 
@@ -395,7 +420,7 @@ void CRoomLayer::CheckClearCondition()
 		if (!c->IsSatisfied()) return;
 	}
 
-	/* ∏µÁ ≈¨∏ÆæÓ ¡∂∞«¿Ã ∏∏¡∑ */
+	/* Î™®Îì† ÌÅ¥Î¶¨Ïñ¥ Ï°∞Í±¥Ïù¥ ÎßåÏ°± */
 	CGameStatusMgr::GetInstance()->UpdateClearTable(m_iRoomIndex);
 	TRoomEventCtx t{ ERoomEventType::ROOM_CLEAR };
 	m_OnRoomEvent.Broadcast(t);
@@ -426,6 +451,20 @@ CTile* CRoomLayer::GetTileFromWorldPosition(const _vec3& vWorldPos)
 	wstring wstrTileName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Tile_" + to_wstring(iIndex);
 
 	return static_cast<CTile*>(Get_GameObject(wstrTileName));
+}
+
+void CRoomLayer::ApplyDarkness()
+{
+	SetPseudoDark(m_bDark);
+}
+
+void CRoomLayer::FlickerLight(const float fDuration)
+{
+	if (!m_bDark) return;
+
+	m_bCurrentDark = false;
+	m_fLeftFlickerTime = fDuration;
+	SetPseudoDark(false);
 }
 
 CTile* CRoomLayer::GetTileFromIndex2D(const TTileIdx& tIdx)

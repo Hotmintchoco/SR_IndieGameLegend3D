@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CAbstractFactory.h"
 #include "CGraphicDev.h"
 #include "CRandomMgr.h"
@@ -12,6 +12,7 @@
 #include "CEnergy.h"
 #include "CGem.h"
 #include "CMagmamouth.h"
+#include "CGameMachine.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -21,6 +22,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::BREAKABLE_FRUSTUM,        [](const TCreateDesc& t) -> Engine::CGameObject* { return CBreakableFrustum::Create(t.pDevice); } },
         {EObjectType::UNBREAKABLE_FRUSTUM,      [](const TCreateDesc& t) -> Engine::CGameObject* { return CUnbreakableFrustum::Create(t.pDevice); } },
         {EObjectType::EXPLOSIVE_FRUSTUM,        [](const TCreateDesc& t) -> Engine::CGameObject* { return CExplosiveFrustum::Create(t.pDevice); } },
+        {EObjectType::GAME_MACHINE,             [](const TCreateDesc& t) -> Engine::CGameObject* { return CGameMachine::Create(t.pDevice); } },
 
         {EObjectType::Skull,                    [](const TCreateDesc& t) -> Engine::CGameObject* { return CSkull::Create(t.pDevice); } },
         {EObjectType::Boss1,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CBoss1::Create(t.pDevice); } },
@@ -56,7 +58,7 @@ Engine::CGameObject* CAbstractFactory::CreateRandomItem(CGameObject* pSpawner) c
     const int iBegin = (int)EObjectType::ITEM_NONE + 1;
     const int iEnd = (int)EObjectType::ITEM_MAX - 1;
 
-    EObjectType eType = (EObjectType)CRandomMgr::GetInstance()->GetRandomInt(iBegin, iEnd);
+    EObjectType eType = (EObjectType)CRandomMgr::GetInstance()->GetRandomValue<int>(iBegin, iEnd);
 
     TCreateDesc t
     {

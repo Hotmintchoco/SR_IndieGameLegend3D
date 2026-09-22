@@ -62,6 +62,7 @@ enum class EObjectType
 	BREAKABLE_FRUSTUM = 1,
 	UNBREAKABLE_FRUSTUM,
 	EXPLOSIVE_FRUSTUM,
+	GAME_MACHINE,
 
 	Skull = 11,
 	Boss1,
@@ -82,10 +83,11 @@ enum class ERoomEventType
 {
 	NONE,
 
+	ROOM_CHANGED,
 	ROOM_BEGIN,
 	ROOM_CLEAR,
 	
-	PUSH_BUTTON,
+	BUTTON,
 
 	MAX,
 };
@@ -97,6 +99,16 @@ enum class EContaminateType
 	NONE,
 
 	LAVA,
+
+	MAX,
+};
+
+enum class ETileType
+{
+	NONE,
+
+	SPRITE,
+	BUTTON,
 
 	MAX,
 };

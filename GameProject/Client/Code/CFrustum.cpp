@@ -79,7 +79,7 @@ HRESULT CFrustum::Add_Component()
     return S_OK;
 }
 
-_bool CFrustum::DestroyFrustum(CCollider* pOtherCollider)
+_bool CFrustum::CheckDestroyCondition(CCollider* pOtherCollider)
 {
     _int ColliderID = -1;
 
@@ -90,7 +90,6 @@ _bool CFrustum::DestroyFrustum(CCollider* pOtherCollider)
 
     if (ColliderID == COLL_PBULLET || ColliderID == COLL_MBULLET)
     {
-        Set_Dead(true);
         return true;
     }
 

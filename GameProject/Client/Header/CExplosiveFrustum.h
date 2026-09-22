@@ -11,6 +11,7 @@ namespace Engine
 
 class CExplosiveFrustumLight;
 class CExplosiveFrustumGlass;
+class CExplodeRange;
 
 class CExplosiveFrustum : public CFrustum
 {
@@ -32,12 +33,21 @@ private:
 
 	void SpawnChildren();
 
-protected:
+private:
 	Engine::CPlyTex* m_pBufferCom;
 	Engine::CTexture* m_pTextureCom;
 
 	CExplosiveFrustumLight* m_pLight = nullptr;
 	CExplosiveFrustumGlass* m_pGlass = nullptr;
+	CExplodeRange* m_pExplodeRange = nullptr;
+
+	virtual void Destroy() override;
+
+	/* 气颇 包访 技何蔼 */
+	float m_fPropagateSpeed = 0.15f;
+	float m_fPropagateVariance = 0.7f;
+	float m_fFlickerChance = 0.7f;
+	float m_fFlickerDuration = 0.015f;
 
 public:
 	static CExplosiveFrustum* Create(LPDIRECT3DDEVICE9 pGraphicDev);

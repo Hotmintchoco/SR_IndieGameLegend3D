@@ -17,33 +17,6 @@ bool CRandomMgr::Chance(float fProb)
 	return fRes <= fProb;
 }
 
-long long CRandomMgr::AddRandomNoise(long long llValue, float fRange)
-{
-	long long llMin = (long long)(llValue * (1.f - fRange));
-	long long llMax = (long long)(llValue * (1.f + fRange));
-
-	uniform_int_distribution<long long> dist(llMin, llMax);
-	return dist(m_gen);
-}
-
-float CRandomMgr::GetRandomFloat(float fMin, float fMax)
-{
-	uniform_real_distribution<float> dist(fMin, fMax);
-	return dist(m_gen);
-}
-
-int CRandomMgr::GetRandomInt(int iMin, int iMax)
-{
-	uniform_int_distribution<int> dist(iMin, iMax);
-	return dist(m_gen);
-}
-
-long long CRandomMgr::GetRandomLonglong(long long llMin, long long llMax)
-{
-	uniform_int_distribution<long long> dist(llMin, llMax);
-	return dist(m_gen);
-}
-
 void CRandomMgr::Free()
 {
 }

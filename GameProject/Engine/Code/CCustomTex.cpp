@@ -1,4 +1,4 @@
-#include "CCustomTex.h"
+ï»¿#include "CCustomTex.h"
 
 CCustomTex::CCustomTex()
 {
@@ -21,8 +21,8 @@ CCustomTex::~CCustomTex()
 HRESULT CCustomTex::Ready_Buffer(vector<VTXTEX>& vecVtx, vector<INDEX16>& vecIdx)
 {
 	m_dwVtxSize = sizeof(VTXTEX);
-	m_dwVtxCnt = vecVtx.size();
-	m_dwTriCnt = vecIdx.size();
+	m_dwVtxCnt = (int)vecVtx.size();
+	m_dwTriCnt = (int)vecIdx.size();
 	m_dwFVF = FVF_TEX;
 
 	m_dwIdxSize = sizeof(INDEX16);
@@ -63,8 +63,8 @@ HRESULT CCustomTex::Ready_Buffer(vector<VTXTEX>& vecVtx, vector<INDEX16>& vecIdx
 HRESULT CCustomTex::Ready_Buffer(vector<VTXTEX_NORMAL_NONE>& vecVtx, vector<INDEX16>& vecIdx)
 {
 	m_dwVtxSize = sizeof(VTXTEX_NORMAL_NONE);
-	m_dwVtxCnt = vecVtx.size();
-	m_dwTriCnt = vecIdx.size();
+	m_dwVtxCnt = (int)vecVtx.size();
+	m_dwTriCnt = (int)vecIdx.size();
 	m_dwFVF = FVF_TEX_NORMAL_NONE;
 
 	m_dwIdxSize = sizeof(INDEX16);
@@ -147,9 +147,9 @@ void CCustomTex::Free()
 
 
 
-// ÇÃ·¹ÀÌ¾î µ¥¹ÌÁö ÀÔÀ»¼öÀÖµµ·Ï
-// ÇÃ·¹ÀÌ¾î ÇÇ°İ¹«½Ã
-// ÇÃ·¹ÀÌ¾î »ç¸Á ¹× ºÎÈ°
-// ÇÃ·¹ÀÌ¾î ¸ó½ºÅÍ Ãæµ¹ ½Ã µ¥¹ÌÁö
-// ÃÑ¾Ë 2°³ ´Ùenum
-// »¡°³Áö´Â°Å
+// í”Œë ˆì´ì–´ ë°ë¯¸ì§€ ì…ì„ìˆ˜ìˆë„ë¡
+// í”Œë ˆì´ì–´ í”¼ê²©ë¬´ì‹œ
+// í”Œë ˆì´ì–´ ì‚¬ë§ ë° ë¶€í™œ
+// í”Œë ˆì´ì–´ ëª¬ìŠ¤í„° ì¶©ëŒ ì‹œ ë°ë¯¸ì§€
+// ì´ì•Œ 2ê°œ ë‹¤enum
+// ë¹¨ê°œì§€ëŠ”ê±°

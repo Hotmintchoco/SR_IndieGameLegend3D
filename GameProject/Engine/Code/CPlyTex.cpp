@@ -1,11 +1,11 @@
-#include "CPlyTex.h"
+ï»¿#include "CPlyTex.h"
 
 #define TINYPLY_IMPLEMENTATION
 #include "tinyply.h"
 
 namespace
 {
-	// Blender´Â Á¤Á¡ ¼ö¿¡ µû¶ó ÀÎµ¦½º Å¸ÀÔÀ» uchar / ushort / uint Áß¿¡ °í¸¥´Ù.
+	// BlenderëŠ” ì •ì  ìˆ˜ì— ë”°ë¼ ì¸ë±ìŠ¤ íƒ€ì…ì„ uchar / ushort / uint ì¤‘ì— ê³ ë¥¸ë‹¤.
 	WORD Get_Index(const unsigned char* pRaw, tinyply::Type eType, size_t iIndex)
 	{
 		switch (eType)
@@ -40,7 +40,7 @@ CPlyTex::~CPlyTex()
 
 HRESULT CPlyTex::Ready_Buffer()
 {
-	MSG_BOX("[CPlyTex] Àß¸øµÈ ÇÔ¼ö »ç¿ë");
+	MSG_BOX("[CPlyTex] ì˜ëª»ëœ í•¨ìˆ˜ ì‚¬ìš©");
 	return E_FAIL;
 }
 
@@ -102,8 +102,11 @@ CPlyTex* CPlyTex::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* szFilePath
 
 	if (FAILED(pPlyTex->Ready_Buffer(szFilePath)))
 	{
+		_tchar szMsg[MAX_PATH + 64] = L"";
+		swprintf_s(szMsg, L"PlyTex Create Failed\n%s", szFilePath);
+		MessageBox(NULL, szMsg, L"System Message", MB_OK);
+
 		Safe_Release(pPlyTex);
-		MSG_BOX("[CPlyTex] PlyTex Create Failed");
 		return nullptr;
 	}
 
@@ -165,13 +168,13 @@ HRESULT CPlyTex::Parse_Ply(const _tchar* szFilePath)
 
 	if (iVtxCnt > 65535)
 	{
-		OutputDebugStringA("[CPlyTex] Á¤Á¡ÀÌ 65535°³¸¦ ÃÊ°úÇÔ. INDEX32°¡ ÇÊ¿ä.\n");
+		OutputDebugStringA("[CPlyTex] ì •ì ì´ 65535ê°œë¥¼ ì´ˆê³¼í•¨. INDEX32ê°€ í•„ìš”.\n");
 		return E_FAIL;
 	}
 
 	if (tinyply::Type::FLOAT32 != pPos->t)
 	{
-		OutputDebugStringA("[CPlyTex] Á¤Á¡ ÁÂÇ¥°¡ float32°¡ ¾Æ´Ô.\n");
+		OutputDebugStringA("[CPlyTex] ì •ì  ì¢Œí‘œê°€ float32ê°€ ì•„ë‹˜.\n");
 		return E_FAIL;
 	}
 
@@ -183,15 +186,15 @@ HRESULT CPlyTex::Parse_Ply(const _tchar* szFilePath)
 	case tinyply::Type::INT32:
 		break;
 	default:
-		OutputDebugStringA("[CPlyTex] Áö¿øÇÏÁö ¾Ê´Â ÀÎµ¦½º Å¸ÀÔ.\n");
+		OutputDebugStringA("[CPlyTex] ì§€ì›í•˜ì§€ ì•ŠëŠ” ì¸ë±ìŠ¤ íƒ€ì….\n");
 		return E_FAIL;
 	}
 
 	const size_t iIdxStride = tinyply::PropertyTable[pFace->t].stride;
 	if (pFace->buffer.size_bytes() != pFace->count * 3 * iIdxStride)
 	{
-		OutputDebugStringA("[CPlyTex] »ï°¢ÇüÀÌ ¾Æ´Ñ ¸éÀÌ Æ÷ÇÔµÊ. "
-			"Blender Export ½Ã Triangulated Mesh ¿É¼ÇÀ» ÄÓ °Í.\n");
+		OutputDebugStringA("[CPlyTex] ì‚¼ê°í˜•ì´ ì•„ë‹Œ ë©´ì´ í¬í•¨ë¨. "
+			"Blender Export ì‹œ Triangulated Mesh ì˜µì…˜ì„ ì¼¤ ê²ƒ.\n");
 		return E_FAIL;
 	}
 

@@ -15,10 +15,42 @@ private:
 
 public:
 	bool Chance(float fProb);
-	long long AddRandomNoise(long long llValue, float fRange);
-	float GetRandomFloat(float fMin, float fMax);
-	int GetRandomInt(int iMin, int iMax);
-	long long GetRandomLonglong(long long iMin, long long iMax);
+
+	template<typename T>
+	T AddRandomNoise(const T& Value, const float fRange)
+	{
+		T Min = (T)(Value * (1.f - fRange));
+		T Max = (T)(Value * (1.f + fRange));
+
+		/* Value가 음수인 경우 */
+		if (Min > Max) swap(Min, Max);
+
+		if constexpr (is_integral_v<T>)
+		{
+			uniform_int_distribution<T> dist(Min, Max);
+			return dist(m_gen);
+		}
+		else
+		{
+			uniform_real_distribution<T> dist(Min, Max);
+			return dist(m_gen);
+		}
+	}
+
+	template<typename T>
+	T GetRandomValue(const T& Min, const T& Max)
+	{
+		if constexpr (is_integral_v<T>)
+		{
+			uniform_int_distribution<T> dist(Min, Max);
+			return dist(m_gen);
+		}
+		else
+		{
+			uniform_real_distribution<T> dist(Min, Max);
+			return dist(m_gen);
+		}
+	}
 
 private:
 	mt19937 m_gen;
