@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CBoss1.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -35,6 +35,11 @@ HRESULT CBoss1::Ready_GameObject()
 
 _int CBoss1::Update_GameObject(const _float& fTimeDelta)
 {
+    if (m_iHp <= 0)
+    {
+        m_bDelete = true;
+    }
+
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
     Set_OnTerrain();
     m_fFrame += fTimeDelta * 6.f;
@@ -63,7 +68,7 @@ void CBoss1::LateUpdate_GameObject(const _float& fTimeDelta)
     m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 0.8f, fTimeDelta);
     //m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
 
-    //Angry¹öÀü Transform->chase¾÷µ¥ÀÌÆ®
+    //Angryë²„ì „ Transform->chaseì—…ë°ì´íŠ¸
     if (m_iHp < 4)
     {
         _matrix	matWorld, matScale, matRot, matTrans;
@@ -85,8 +90,8 @@ void CBoss1::LateUpdate_GameObject(const _float& fTimeDelta)
                 m_pTransformCom->m_vInfo[INFO_POS].z);
         }
         _vec3 vSrc = m_pTransformCom->m_vInfo[INFO_LOOK];
-        _vec3 vDst = -pPlayerTransformCom->m_vInfo[INFO_LOOK]; //ÇÃ·¹ÀÌ¾î¶û ÆòÇàÇÏ°Ô Á¤·Ä
-        //_vec3 vDst = pPlayerTransformCom->m_vInfo[INFO_POS] - m_pTransformCom->m_vInfo[INFO_POS]; //ÇÃ·¹ÀÌ¾î ½Ã¼± ±âÁØ Á¤·Ä
+        _vec3 vDst = -pPlayerTransformCom->m_vInfo[INFO_LOOK]; //í”Œë ˆì´ì–´ë‘ í‰í–‰í•˜ê²Œ ì •ë ¬
+        //_vec3 vDst = pPlayerTransformCom->m_vInfo[INFO_POS] - m_pTransformCom->m_vInfo[INFO_POS]; //í”Œë ˆì´ì–´ ì‹œì„  ê¸°ì¤€ ì •ë ¬
 
         _vec3 vAxis = { 0.f, 1.f, 0.f };
         _vec3 vCross;
