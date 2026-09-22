@@ -6,7 +6,7 @@
 #include "CTerrain.h"
 #include "CSpeyeder.h"
 #include "CFireball.h"
-#include "CTrail.h"
+#include "CTrail_MagmaMouth.h"
 
 CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(0.f), m_fStateUpdateDuration(2.f), 
@@ -789,12 +789,13 @@ void CMagmamouth::MagmaMouth_Trail(const _float& fTimeDelta)
         CGameObject* pGameObject = nullptr;
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
 
-        //pGameObject = CTrail::Create(m_pGraphicDev, m_fTrailPoint);
         _float fLifeTime = 0.f;
         
         fLifeTime = 0.75f - m_fTrailTime2*0.5f;
+        if (fLifeTime < 0.f) fLifeTime = 0.f;
         
-        pGameObject = CTrail::Create(m_pGraphicDev, m_fTrailPoint, fLifeTime);
+        pGameObject = CTrail_MagmaMouth::Create(m_pGraphicDev, m_fTrailPoint, fLifeTime);
+
         if (nullptr == pGameObject)
             return;
 

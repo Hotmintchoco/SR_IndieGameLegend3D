@@ -5,14 +5,13 @@
 namespace Engine
 {
 	class CRcTex;
-	class CTexture;
 }
 
-class CSmallExplode : public CEffect
+class CEffect_YellowBox : public CEffect
 {
 protected:
-	explicit CSmallExplode(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CSmallExplode();
+	explicit CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CEffect_YellowBox();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -25,10 +24,10 @@ private:
 
 protected:
 	Engine::CRcTex* m_pBufferCom;
-	Engine::CTexture* m_pTextureCom;
+
 public:
-	static CSmallExplode* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	static CSmallExplode* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vScale);
+	static CEffect_YellowBox* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CEffect_YellowBox* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vScale);
 
 
 private:
