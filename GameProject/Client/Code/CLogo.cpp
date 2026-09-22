@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "CLogo.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
@@ -51,7 +51,7 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 				return -1;
 			}
 
-			/* Stage æ¿ø° √≥¿Ω µÈæÓ∞°¥¬ ∞ÊøÏ πŸ∑Œ LateUpdate∑Œ ¿ÃæÓ¡Æ Transform¿Ã æ˜µ•¿Ã∆Æ µ«¡ˆ æ ¥¬ «ˆªÛ */
+			/* Stage Ïî¨Ïóê Ï≤òÏùå Îì§Ïñ¥Í∞ÄÎäî Í≤ΩÏö∞ Î∞îÎ°ú LateUpdateÎ°ú Ïù¥Ïñ¥Ï†∏ TransformÏù¥ ÏóÖÎç∞Ïù¥Ìä∏ ÎêòÏßÄ ÏïäÎäî ÌòÑÏÉÅ */
 			pStage->Update_Scene(fTimeDelta);
 		}
 	}
@@ -77,7 +77,7 @@ HRESULT CLogo::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	// ø¿∫Í¡ß∆Æ √ﬂ∞°
+	// Ïò§Î∏åÏ†ùÌä∏ Ï∂îÍ∞Ä
 	CGameObject* pGameObject = nullptr;
 
 	// BackGround
