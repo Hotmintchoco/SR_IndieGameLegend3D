@@ -11,6 +11,7 @@
 #include "CTerrain.h"
 #include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
+#include "Client_Struct.h"
 
 _uint CMonster::iMonsterIdx=0;
 
@@ -38,7 +39,9 @@ HRESULT CMonster::Ready_GameObject()
     if (CRoomLayer* pLayer = dynamic_cast<CRoomLayer*>(m_pOwner))
     {
         pLayer->IncreaseEntityCount();
+        pLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t);});
     }
+    Set_IsActive(false);
     /* ---- */
 
     __super::Ready_GameObject();
@@ -47,6 +50,8 @@ HRESULT CMonster::Ready_GameObject()
 
 _int CMonster::Update_GameObject(const _float& fTimeDelta)
 {
+    if (!Get_IsActive()) return S_OK;
+
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
     
     if (m_fHitEffectTime < m_fHitEffectDuration && m_bHitState == true)
@@ -75,6 +80,8 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 
 void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+    if (!Get_IsActive()) return;
+
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 
     // 충돌 처리 여부를 위해 충돌 매니저에 몬스터의 콜라이더를 등록
@@ -211,6 +218,18 @@ void CMonster::Free()
     CGameObject::Free();
 }
 
+
+void CMonster::OnRoomEvent(const TRoomEventCtx& t)
+{
+    switch (t.eType)
+    {
+    case ERoomEventType::ROOM_BEGIN:
+        Set_IsActive(true);
+        break;
+    default:
+        break;
+    }
+}
 
 void CMonster::Set_Pos(_vec3 vPos)
 {
