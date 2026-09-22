@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CItem.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -37,11 +37,9 @@ _int CItem::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
 
     CCollisionMgr::GetInstance()->Add_Collider(COLL_ITEM, m_pColliderCom);
-
-    CalculateAlphaZ();
 
     Drop(fTimeDelta);
     m_fLifeTime += fTimeDelta;
@@ -120,13 +118,6 @@ void CItem::OnCollisionEnter(CGameObject* pOther)
         //Consume();
         m_bAttractStart = true;
     }
-}
-
-void CItem::CalculateAlphaZ()
-{
-    _vec3   vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    Compute_ViewZ(&vPos);
 }
 
 void CItem::BillBoard()
