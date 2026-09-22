@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CStage.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
@@ -65,7 +65,7 @@ HRESULT CStage::Ready_Scene()
 	if (FAILED(CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_FPV")))
 		return E_FAIL;
 
-	// �浹 �׷� ����
+	// 충돌 그룹 설정
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET_NORMAL, COLL_MONSTER);
@@ -119,10 +119,10 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* ���� ��, ���̾� ������ �������� ���� */
+	/* 현재 씬, 레이어 정보를 전역으로 주입 */
 	CLayerContext ctx(pLayer, this);
 
-	// ������Ʈ �߰�
+	// 오브젝트 추가
 	CGameObject* pGameObject = nullptr;
 
 	/*
@@ -161,10 +161,10 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* ���� ��, ���̾� ������ �������� ���� */
+	/* 현재 씬, 레이어 정보를 전역으로 주입 */
 	CLayerContext ctx(pLayer, this);
 
-	// ������Ʈ �߰�
+	// 오브젝트 추가
 	CGameObject* pGameObject = nullptr;
 
 	// Terrain
@@ -251,7 +251,7 @@ HRESULT CStage::Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* ���� ��, ���̾� ������ �������� ���� */
+	/* 현재 씬, 레이어 정보를 전역으로 주입 */
 	CLayerContext ctx(pLayer, this);
 
 	if (FAILED(static_cast<CRoomLayer*>(pLayer)->SpawnRoom()))
@@ -270,7 +270,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* ���� ��, ���̾� ������ �������� ���� */
+	/* 현재 씬, 레이어 정보를 전역으로 주입 */
 	CLayerContext ctx(pLayer, this);
 
 	CUI* pUI = nullptr;
