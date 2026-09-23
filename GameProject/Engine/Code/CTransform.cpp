@@ -68,6 +68,63 @@ void CTransform::UpdateWorldMatrix()
 	}
 }
 
+void CTransform::WorldMatrixDecompose()
+{
+	/* 실패할 수 있는 경우
+	* 스케일이 0인 축 존재
+	* 스케일이 음수
+	*/
+
+	// 1. 위치 & 축 벡터 (행 벡터 기준: 각 행이 Right / Up / Look / Pos)
+	for (_uint i = 0; i < INFO_END; ++i)
+		memcpy(&m_vInfo[i], &m_matWorld.m[i][0], sizeof(_vec3));
+
+	// 2. 스케일 = 각 축의 길이
+	m_vScale.x = D3DXVec3Length(&m_vInfo[INFO_RIGHT]);
+	m_vScale.y = D3DXVec3Length(&m_vInfo[INFO_UP]);
+	m_vScale.z = D3DXVec3Length(&m_vInfo[INFO_LOOK]);
+
+	const _float fEpsilon = 1e-6f;
+	if (m_vScale.x < fEpsilon || m_vScale.y < fEpsilon || m_vScale.z < fEpsilon)
+		return; // 스케일 0인 축이 있으면 회전을 구할 수 없음
+
+	// 음수 스케일(반전) 처리: 좌표계가 뒤집혔으면 x 스케일에 부호를 줌
+	_vec3 vCross;
+	D3DXVec3Cross(&vCross, &m_vInfo[INFO_RIGHT], &m_vInfo[INFO_UP]);
+	if (D3DXVec3Dot(&vCross, &m_vInfo[INFO_LOOK]) < 0.f)
+		m_vScale.x = -m_vScale.x;
+
+	// 3. 순수 회전 축 (스케일 제거)
+	_vec3 vRight = m_vInfo[INFO_RIGHT] / m_vScale.x;
+	_vec3 vUp = m_vInfo[INFO_UP] / m_vScale.y;
+	_vec3 vLook = m_vInfo[INFO_LOOK] / m_vScale.z;
+
+	// 4. 오일러 각 추출 (R = Rx * Ry * Rz, UpdateWorldMatrix와 같은 순서)
+	//    R._13 = -sin(y)
+	//    R._23 = sin(x)cos(y), R._33 = cos(x)cos(y)
+	//    R._12 = cos(y)sin(z), R._11 = cos(y)cos(z)
+	_float fSinY = -vRight.z;
+	fSinY = max(-1.f, min(1.f, fSinY)); // asinf 범위 보호
+
+	_float fX, fY, fZ;
+	fY = asinf(fSinY);
+
+	if (fabsf(fSinY) < 0.9999f)
+	{
+		fX = atan2f(vUp.z, vLook.z);
+		fZ = atan2f(vRight.y, vRight.x);
+	}
+	else
+	{
+		// 짐벌락 (y = ±90도): x와 z가 겹치므로 z를 0으로 고정
+		fX = atan2f(-vLook.y, vUp.y);
+		fZ = 0.f;
+	}
+
+	// UpdateWorldMatrix가 D3DXToRadian을 쓰므로 도(degree) 단위로 저장
+	m_vAngle = _vec3(D3DXToDegree(fX), D3DXToDegree(fY), D3DXToDegree(fZ));
+}
+
 HRESULT CTransform::Ready_Transform()
 {
 	D3DXMatrixIdentity(&m_matWorld);

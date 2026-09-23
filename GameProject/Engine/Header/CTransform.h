@@ -67,6 +67,9 @@ public:
 
 	void UpdateWorldMatrix();
 
+	/* 부모 오브젝트 없는 오브젝트에 대해서, Set World 이후에 영구적으로 transform을 저장하고 싶을 때 사용하시오 */
+	void WorldMatrixDecompose();
+
 public:
 	HRESULT			Ready_Transform();
 	virtual _int	Update_Component(const _float& fTimeDelta);
