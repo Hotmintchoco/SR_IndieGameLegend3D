@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CMonster.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -20,7 +20,7 @@ CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_iHp(0), m_fFrame(0.f), m_fHitEffectDuration(0.1f), m_fHitEffectTime(0.f), m_bHitState(false)
 {
     ++iMonsterIdx;
-    /* ¼ºÃ¶ */
+    /* ì„±ì²  */
     if (!m_pOwner) m_pOwner = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
     /* --- */
 }
@@ -37,7 +37,7 @@ HRESULT CMonster::Ready_GameObject()
 
     m_pColliderCom->Set_CollisionID(COLL_MONSTER);
 
-    /* ¼ºÃ¶ */
+    /* ì„±ì²  */
     static_cast<CRoomLayer*>(m_pOwner)->IncreaseEntityCount();
     static_cast<CRoomLayer*>(m_pOwner)->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t); });
     
@@ -72,7 +72,7 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 
     if (m_bDelete == true)
     {
-        /* ¼ºÃ¶ */
+        /* ì„±ì²  */
         if (CRoomLayer* pLayer = dynamic_cast<CRoomLayer*>(m_pOwner))
         {
             pLayer->DecreaseEntityCount();
@@ -90,7 +90,7 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 
-    // Ãæµ¹ Ã³¸® ¿©ºÎ¸¦ À§ÇØ Ãæµ¹ ¸Å´ÏÀú¿¡ ¸ó½ºÅÍÀÇ ÄÝ¶óÀÌ´õ¸¦ µî·Ï
+    // ì¶©ëŒ ì²˜ë¦¬ ì—¬ë¶€ë¥¼ ìœ„í•´ ì¶©ëŒ ë§¤ë‹ˆì €ì— ëª¬ìŠ¤í„°ì˜ ì½œë¼ì´ë”ë¥¼ ë“±ë¡
 	CCollisionMgr::GetInstance()->Add_Collider(COLL_MONSTER, m_pColliderCom);
 
     _vec3       vPos;
@@ -123,7 +123,7 @@ void CMonster::Enable_HitRenderState()
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
 
-    // »¡°£»ö
+    // ë¹¨ê°„ìƒ‰
     m_pGraphicDev->SetRenderState(
         D3DRS_TEXTUREFACTOR,
         D3DCOLOR_ARGB(255, 255, 0, 0)
