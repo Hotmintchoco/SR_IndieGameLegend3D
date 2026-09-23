@@ -36,7 +36,7 @@ HRESULT CRoomLayer::Ready_Layer()
 
 _int CRoomLayer::Update_Layer(const _float& fTimeDelta)
 {
-	// if (CGameStatusMgr::GetInstance()->GetCurrentRoomLayer() != this) return S_OK;
+	if (!IsValidUpdateTarget()) return S_OK;
 
 	_int iExit = CLayer::Update_Layer(fTimeDelta);
 
@@ -87,9 +87,31 @@ void CRoomLayer::PlayerTileInteraction()
 	}
 }
 
+bool CRoomLayer::IsValidUpdateTarget()
+{
+	if (CGameStatusMgr::GetInstance()->GetCurrentRoomLayer() == this) return true;
+
+	const pair<int, int> CurrentRoomIndex = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->GetIndex2D();
+	const auto [iCurRow, iCurCol] = CurrentRoomIndex;
+	
+	const pair<int, int> RoomIndex = GetIndex2D();
+	const auto [iTargetRow, iTargetCol] = RoomIndex;
+
+	static const vector<pair<int, int>> Dir = { { 0, -1 }, {1, 0}, {0, 1}, {-1, 0} };
+	for (const auto& [dr, dc] : Dir)
+	{
+		if ((iCurRow + dr == iTargetRow) && (iCurCol + dc == iTargetCol))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void CRoomLayer::LateUpdate_Layer(const _float& fTimeDelta)
 {
-	// if (CGameStatusMgr::GetInstance()->GetCurrentRoomLayer() != this) return;
+	if (!IsValidUpdateTarget()) return;
 
 	CLayer::LateUpdate_Layer(fTimeDelta);
 }
@@ -350,6 +372,17 @@ HRESULT CRoomLayer::SpawnRoom()
 	}
 
 	return S_OK;
+}
+
+pair<int, int> CRoomLayer::GetIndex2D()
+{
+	int iRoomCountRow = CRoomLoadingMgr::GetInstance()->GetRoomRowCount();
+	int iRoomCountCol = CRoomLoadingMgr::GetInstance()->GetRoomColCount();
+
+		int iRow = m_iRoomIndex / iRoomCountCol;
+	int iCol = m_iRoomIndex % iRoomCountCol;
+
+	return pair<int, int>{iRow, iCol};
 }
 
 void CRoomLayer::OnRoomTriggerBlockCollided()

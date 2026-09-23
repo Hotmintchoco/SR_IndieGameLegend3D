@@ -20,6 +20,8 @@ public:
 
 	HRESULT SpawnRoom();
 
+	inline int GetIndexFlat() { return m_iRoomIndex; }
+	pair<int, int> GetIndex2D();
 	inline bool IsCleared() { return m_bCleared; }
 	inline bool HasVisited() { return m_bVisited; }
 	inline bool IsOnProgress() { return m_bOnProgress; }
@@ -57,6 +59,9 @@ private:
 
 	/* 오염 타일과 플레이어 */
 	void PlayerTileInteraction();
+
+	/* 인접한 방일때만 업데이트 */
+	bool IsValidUpdateTarget();
 
 	int m_iRoomIndex = -1;
 	_vec3 m_vRoomCenterPos = _vec3{ 0.f, 0.f, 0.f };
