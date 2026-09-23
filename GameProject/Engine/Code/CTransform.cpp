@@ -30,17 +30,7 @@ CTransform::~CTransform()
 	
 }
 
-HRESULT CTransform::Ready_Transform()
-{
-	D3DXMatrixIdentity(&m_matWorld);
-
-	for (_uint i = 0; i < INFO_END; ++i)
-		memcpy(&m_vInfo[i], &m_matWorld.m[i][0], sizeof(_vec3));
-
-	return S_OK;
-}
-
-_int CTransform::Update_Component(const _float& fTimeDelta)
+void CTransform::UpdateWorldMatrix()
 {
 	D3DXMatrixIdentity(&m_matWorld);
 
@@ -57,7 +47,6 @@ _int CTransform::Update_Component(const _float& fTimeDelta)
 	}
 
 	// È¸Àü
-
 	_matrix		matRot[ROT_END];
 
 	D3DXMatrixRotationX(&matRot[ROT_X], D3DXToRadian(m_vAngle.x));
@@ -77,7 +66,21 @@ _int CTransform::Update_Component(const _float& fTimeDelta)
 	{
 		memcpy(&m_matWorld.m[i][0], &m_vInfo[i], sizeof(_vec3));
 	}
+}
 
+HRESULT CTransform::Ready_Transform()
+{
+	D3DXMatrixIdentity(&m_matWorld);
+
+	for (_uint i = 0; i < INFO_END; ++i)
+		memcpy(&m_vInfo[i], &m_matWorld.m[i][0], sizeof(_vec3));
+
+	return S_OK;
+}
+
+_int CTransform::Update_Component(const _float& fTimeDelta)
+{
+	UpdateWorldMatrix();
 
 	return 0;
 }

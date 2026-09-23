@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "CComponent.h"
 
 BEGIN(Engine)
@@ -15,15 +15,18 @@ public:
 	void		Move_Pos(const _vec3* pDir, const _float& fSpeed, const _float& fTimeDelta)
 	{
 		m_vInfo[INFO_POS] += *pDir * fSpeed * fTimeDelta;
+		UpdateWorldMatrix();
 	}
 
 	void		Rotation(ROTATION eType, const _float& fAngle)
 	{
 		*(((_float*)&m_vAngle) + eType) += fAngle;
+		UpdateWorldMatrix();
 	}
 	void		Set_Rotation_Raw(const _vec3& vRadAngle)
 	{
 		m_vAngle = vRadAngle;
+		UpdateWorldMatrix();
 	}
 
 
@@ -37,10 +40,12 @@ public:
 	void		Set_Pos(_float fX, _float fY, _float fZ)
 	{
 		m_vInfo[INFO_POS] = { fX, fY, fZ };
+		UpdateWorldMatrix();
 	}
 	inline void Set_Pos(const _vec3& vPos)
 	{
 		m_vInfo[INFO_POS] = vPos;
+		UpdateWorldMatrix();
 	}
 
 	void		Set_World(_matrix* pWorld)
@@ -51,14 +56,16 @@ public:
 	void		Set_Scale(_float fX, _float fY, _float fZ)
 	{
 		m_vScale = { fX, fY, fZ };
+		UpdateWorldMatrix();
 	}
 
 	inline void		Set_Scale(const _vec3& vScale)
 	{
 		m_vScale = vScale;
+		UpdateWorldMatrix();
 	}
 
-	inline void ForceUpdateWorldMatrix() { Update_Component(0.f); }
+	void UpdateWorldMatrix();
 
 public:
 	HRESULT			Ready_Transform();
