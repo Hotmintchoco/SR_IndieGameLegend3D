@@ -226,6 +226,9 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Frustum\Explosive\ExplodeSphere">
       <UniqueIdentifier>{50d3b930-96f7-46d0-9513-601ce505a7a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="100. Util">
+      <UniqueIdentifier>{237be30c-3143-4c28-a3d6-1be2ba2b0ac6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -468,6 +471,9 @@
     <ClInclude Include="..\Header\CEffect_Sphere.h">
       <Filter>02. GameObject\06. Effect\Sphere</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CDebugPrint.h">
+      <Filter>100. Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -682,6 +688,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEffect_Sphere.cpp">
       <Filter>02. GameObject\06. Effect\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDebugPrint.cpp">
+      <Filter>100. Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
