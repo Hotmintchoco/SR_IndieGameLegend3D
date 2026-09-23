@@ -207,7 +207,7 @@ void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
         static_cast<CSpeyeder*>(pGameObject)->Set_Velocity(vVelocity);
 
         CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-        pLayer->Add_GameObject(L"Speyeder", pGameObject);
+        if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject))) return;
     }
 }
 
@@ -283,7 +283,7 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
         static_cast<CFireball*>(pGameObject)->Set_Velocity(vVelocity);
 
         CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-        pLayer->Add_GameObject(L"Fireball", pGameObject);
+        if (FAILED(pLayer->Add_GameObject(L"Fireball", pGameObject))) return;
     }
 
 }

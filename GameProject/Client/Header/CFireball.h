@@ -42,6 +42,7 @@ private:
 	_float m_fLandingTime;
 	_float m_fLandingVelocity;
 	_uint m_iLandingCount;
+
 protected:
 	virtual void		Free();
 };
