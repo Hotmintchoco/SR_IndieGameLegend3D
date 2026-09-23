@@ -13,13 +13,8 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-	void			Set_WindowSize(const _vec2& vSize)  { m_vWindowSize = vSize; }
-
 protected:
 	HRESULT			Add_Component();
-
-private:
-	_vec2			m_vWindowSize;
 
 public:
 	static CMinimapUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -367,13 +367,12 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"HudMiniMap", pUI)))
 		return E_FAIL;
 
-	pUI = CUI::Create(m_pGraphicDev, L"Proto_MinimapUITexture");
+	pUI = CMinimapUI::Create(m_pGraphicDev);
 	if (nullptr == pUI)
 		return E_FAIL;
 
 	pUI->Set_Pos(WINCX - 408.f, 480.f, 0.f);
 	pUI->Set_Size({ 24.f, 24.f });
-	pUI->Set_Texture(1);
 
 	if (FAILED(pLayer->Add_GameObject(L"MiniMap", pUI)))
 		return E_FAIL;

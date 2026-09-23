@@ -9,7 +9,6 @@
 
 CMinimapUI::CMinimapUI(LPDIRECT3DDEVICE9 pGraphicDev)
     : CUI(pGraphicDev)
-    , m_vWindowSize(0.f, 0.f)
 {
 }
 
@@ -50,67 +49,19 @@ void CMinimapUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CMinimapUI::Render_GameObject()
 {
-    DWORD dwZEnable = TRUE;
-    DWORD dwZWrite = TRUE;
-    DWORD dwScissor = FALSE;
-    RECT rcOld = {};
+    RECT rcClip;
+	rcClip.left = m_vPos.x - m_vSize.x * 0.5f;
+	rcClip.top = m_vPos.y - m_vSize.y * 0.5f;
+	rcClip.right = m_vPos.x + m_vSize.x * 0.5f;
+	rcClip.bottom = m_vPos.y + m_vSize.y * 0.5f;
 
-    m_pGraphicDev->GetRenderState(D3DRS_ZENABLE, &dwZEnable);
-    m_pGraphicDev->GetRenderState(D3DRS_ZWRITEENABLE, &dwZWrite);
-    m_pGraphicDev->GetRenderState(D3DRS_SCISSORTESTENABLE, &dwScissor);
-    m_pGraphicDev->GetScissorRect(&rcOld);
-
-    m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-
-    const float fHalfW = m_vWindowSize.x * 0.5f;
-    const float fHalfH = m_vWindowSize.y * 0.5f;
-    RECT rcWindow = {
-        (LONG)(m_vPos.x - fHalfW),
-        (LONG)(m_vPos.y - fHalfH),
-        (LONG)(m_vPos.x + fHalfW),
-        (LONG)(m_vPos.y + fHalfH)
-    };
-    m_pGraphicDev->SetScissorRect(&rcWindow);
+	// RECT 영역만큼 그려준다. 범위 밖으로 가면 짤림(Scissor Test)
+    m_pGraphicDev->SetScissorRect(&rcClip);
     m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
 
-    CRoomLoadingMgr* pRoomMgr = CRoomLoadingMgr::GetInstance();
-    CGameStatusMgr* pStatus = CGameStatusMgr::GetInstance();
-
-    const int iColCount = pRoomMgr->GetRoomColCount();
-    const int iPlayer = pStatus->GetCurrentRoomIndex();
-    const int iPlayerCol = iPlayer % iColCount;
-    const int iPlayerRow = iPlayer / iColCount;
-    const float fCell = 8.f;
-
-    for (int i = 0; i < pRoomMgr->GetRoomTotalCount(); ++i)
-    {
-        if (!pStatus->IsVisited(i))
-            continue;
-
-        TRoomData* pRoom = pRoomMgr->GetRoomData(i);
-        const _uint iFrame =
-            (pRoom->vecDoorInfo[0] ? 1u : 0u) |
-            (pRoom->vecDoorInfo[1] ? 2u : 0u) |
-            (pRoom->vecDoorInfo[2] ? 4u : 0u) |
-            (pRoom->vecDoorInfo[3] ? 8u : 0u);
-
-        const int iCol = i % iColCount;
-        const int iRow = i / iColCount;
-
-        Set_Size({ fCell, fCell });
-        Set_Pos(
-            m_vPos.x + (iCol - iPlayerCol) * fCell,
-            m_vPos.y + (iRow - iPlayerRow) * fCell,
-            0.f);
-        Set_Texture(iFrame);
-        CUI::Render_GameObject();
-    }
-
-    m_pGraphicDev->SetScissorRect(&rcOld);
-    m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, dwScissor);
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, dwZWrite);
-    m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, dwZEnable);
+    // 플레이어 맵 인덱스
+	_int iPlayerRoomIndex = CGameStatusMgr::GetInstance()->GetCurrentRoomIndex();
+    
 }
 
 HRESULT CMinimapUI::Add_Component()
