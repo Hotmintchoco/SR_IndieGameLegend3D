@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "CDirectionUI.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -23,7 +23,7 @@ HRESULT CDirectionUI::Ready_GameObject()
 
     CGameObject::Ready_GameObject();
 
-    // ≥™ƒßπ› πŸ «¸≈¬ø° ∏¬∞‘ ∞°∑Œ∏¶ ±Ê∞‘
+    // ÎÇòÏπ®Î∞ò Î∞î ÌòïÌÉúÏóê ÎßûÍ≤å Í∞ÄÎ°úÎ•º Í∏∏Í≤å
     m_pTransformCom->Set_Scale(76.f, 18.f, 1.f);
 
     return S_OK;
@@ -56,7 +56,7 @@ void CDirectionUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CDirectionUI::Render_GameObject()
 {
-    // ¿Ã¿¸¿« ≈ÿΩ∫√≥ ¡¬«• ∫Ø»Ø ªÛ≈¬∏¶ ¿˙¿Â
+    // Ïù¥Ï†ÑÏùò ÌÖçÏä§Ï≤ò Ï¢åÌëú Î≥ÄÌôò ÏÉÅÌÉúÎ•º Ï†ÄÏû•
     _matrix matOldTex;
     DWORD dwOldTTFF = D3DTTFF_DISABLE;
     DWORD dwOldAddressU = D3DTADDRESS_CLAMP;
@@ -65,7 +65,7 @@ void CDirectionUI::Render_GameObject()
     m_pGraphicDev->GetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, &dwOldTTFF);
     m_pGraphicDev->GetSamplerState(0, D3DSAMP_ADDRESSU, &dwOldAddressU);
 
-    const _float fVisibleURange = 0.35f; // ≈©±‚ ¡∂¿˝
+    const _float fVisibleURange = 0.35f; // ÌÅ¨Í∏∞ Ï°∞Ï†à
 
     _float fCenteredOffset = m_fCompassUOffset - (fVisibleURange * 0.5f);
     while (fCenteredOffset < 0.f) fCenteredOffset += 1.f;
@@ -73,17 +73,17 @@ void CDirectionUI::Render_GameObject()
 
     _matrix matTex;
     D3DXMatrixIdentity(&matTex);
-    matTex._11 = fVisibleURange;   // U Ω∫ƒ…¿œ √‡º“(¿ﬂ∂Û≥ª±‚)
-    matTex._31 = fCenteredOffset;  // «ˆ¿Á πÊ«‚ ±‚¡ÿ¿∏∑Œ ¿©µµøÏ ¿Ãµø
+    matTex._11 = fVisibleURange;   // U Ïä§ÏºÄÏùº Ï∂ïÏÜå(ÏûòÎùºÎÇ¥Í∏∞)
+    matTex._31 = fCenteredOffset;  // ÌòÑÏû¨ Î∞©Ìñ• Í∏∞Ï§ÄÏúºÎ°ú ÏúàÎèÑÏö∞ Ïù¥Îèô
 
-    // ≈ÿΩ∫√≥ UV ∫Ø»Ø¿ª ¿˚øÎ
+    // ÌÖçÏä§Ï≤ò UV Î≥ÄÌôòÏùÑ Ï†ÅÏö©
     m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &matTex);
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
     m_pGraphicDev->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
 
     CUI::Render_GameObject();
 
-    // ¿Ã¿¸¿« ≈ÿΩ∫√≥ ¡¬«• ∫Ø»Ø ªÛ≈¬∏¶ ∫πø¯
+    // Ïù¥Ï†ÑÏùò ÌÖçÏä§Ï≤ò Ï¢åÌëú Î≥ÄÌôò ÏÉÅÌÉúÎ•º Î≥µÏõê
     m_pGraphicDev->SetSamplerState(0, D3DSAMP_ADDRESSU, dwOldAddressU);
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, dwOldTTFF);
     m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &matOldTex);

@@ -229,6 +229,9 @@
     <Filter Include="100. Util">
       <UniqueIdentifier>{237be30c-3143-4c28-a3d6-1be2ba2b0ac6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. UI\Minimap">
+      <UniqueIdentifier>{2607f307-e85e-4c6a-aaf2-41e82286d73c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -474,6 +477,9 @@
     <ClInclude Include="..\Header\CDebugPrint.h">
       <Filter>100. Util</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMinimapUI.h">
+      <Filter>02. GameObject\10. UI\Minimap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -691,6 +697,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CDebugPrint.cpp">
       <Filter>100. Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMinimapUI.cpp">
+      <Filter>02. GameObject\10. UI\Minimap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

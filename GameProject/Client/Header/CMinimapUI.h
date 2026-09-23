@@ -1,11 +1,11 @@
 ﻿#pragma once
 #include "CUI.h"
 
-class CDirectionUI : public CUI
+class CMinimapUI : public CUI
 {
 protected:
-	explicit CDirectionUI(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CDirectionUI();
+	explicit CMinimapUI(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CMinimapUI();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -13,14 +13,16 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+	void			Set_WindowSize(const _vec2& vSize)  { m_vWindowSize = vSize; }
+
 protected:
 	HRESULT			Add_Component();
 
 private:
-	_float			m_fCompassUOffset;
+	_vec2			m_vWindowSize;
 
 public:
-	static CDirectionUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CMinimapUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 protected:
 	virtual void		Free();

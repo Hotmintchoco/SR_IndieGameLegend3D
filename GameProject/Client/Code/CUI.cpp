@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CUI.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -51,14 +51,15 @@ void CUI::Render_GameObject()
 
 void CUI::Set_Pos(const _vec2& vPos)
 {
-    m_vPos = {vPos.x, vPos.y, 0.f}; /* ¼ºÃ¶ : Çüº¯È¯ °æ°í ¶°¼­ ÀÓÀÇ·Î º¯°æ */
+    m_vPos = {vPos.x, vPos.y, 0.f}; /* ì„±ì²  : í˜•ë³€í™˜ ê²½ê³  ë– ì„œ ì„ì˜ë¡œ ë³€ê²½ */
     if (nullptr != m_pTransformCom)
 		m_pTransformCom->Set_Pos(vPos.x - WINCX * 0.5f, -vPos.y + WINCY * 0.5f, 0.f);
 }
 void CUI::Set_Pos(_float fX, _float fY, _float fZ)
 {
+    m_vPos = { fX, fY, fZ };
     if (nullptr != m_pTransformCom)
-		m_pTransformCom->Set_Pos(fX - WINCX * 0.5f, -fY + WINCY * 0.5f, fZ);
+        m_pTransformCom->Set_Pos(fX - WINCX * 0.5f, -fY + WINCY * 0.5f, fZ);
 }
 
 void CUI::Set_Size(const _vec2& vSize)
@@ -89,7 +90,7 @@ HRESULT CUI::Add_Component()
         return E_FAIL;
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
-    // Texture (ÅÂ±×°¡ ÀÖÀ» ¶§¸¸ »ı¼º)
+    // Texture (íƒœê·¸ê°€ ìˆì„ ë•Œë§Œ ìƒì„±)
     if (false == m_wstrTextureTag.empty())
     {
         pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(m_wstrTextureTag.c_str()));

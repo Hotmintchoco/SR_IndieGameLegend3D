@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CLoading.h"
 #include "CProtoMgr.h"
 #include "JsonAdapter.h"
@@ -22,13 +22,13 @@ HRESULT CLoading::Ready_Loading(LOADINGID eID)
 
     m_eLoadingID = eID;
 
-    // ¾²·¹µå »ý¼º
-    m_hThread = (HANDLE)_beginthreadex(NULL, // º¸¾È ¼Ó¼º(ÇÚµéÀÇ »ó¼Ó ¿©ºÎ, NULLÀÎ °æ¿ì »ó¼Ó¿¡¼­ Á¦¿Ü)
-                                        0,   // µðÆúÆ® ½ºÅÃ »çÀÌÁî(1 ¹ÙÀÌÆ®)
-                                        Thread_Main, // ±¸µ¿ÇÒ ¾²·¹µå ÇÔ¼ö
-                                        this,       // ¾²·¹µå ÇÔ¼ö·Î Àü´ÞÇÒ µ¥ÀÌÅÍ ÁÖ¼Ò
-                                        0,          // ¾²·¹µå »ý¼º ¹× ½ÇÇàÀ» Á¶Á¤ÇÏ±â À§ÇÑ ¿É¼Ç
-                                        NULL);      // ¾²·¹µå ID
+    // ì“°ë ˆë“œ ìƒì„±
+    m_hThread = (HANDLE)_beginthreadex(NULL, // ë³´ì•ˆ ì†ì„±(í•¸ë“¤ì˜ ìƒì† ì—¬ë¶€, NULLì¸ ê²½ìš° ìƒì†ì—ì„œ ì œì™¸)
+                                        0,   // ë””í´íŠ¸ ìŠ¤íƒ ì‚¬ì´ì¦ˆ(1 ë°”ì´íŠ¸)
+                                        Thread_Main, // êµ¬ë™í•  ì“°ë ˆë“œ í•¨ìˆ˜
+                                        this,       // ì“°ë ˆë“œ í•¨ìˆ˜ë¡œ ì „ë‹¬í•  ë°ì´í„° ì£¼ì†Œ
+                                        0,          // ì“°ë ˆë“œ ìƒì„± ë° ì‹¤í–‰ì„ ì¡°ì •í•˜ê¸° ìœ„í•œ ì˜µì…˜
+                                        NULL);      // ì“°ë ˆë“œ ID
 
 
 
@@ -128,6 +128,9 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SkillTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Skill%d.png", 9))))
         return E_FAIL;
 
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MinimapUITexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/mapShape%d.png", 16))))
+        return E_FAIL;
+
     lstrcpy(m_szLoading, L"Etc Loading............................");
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
@@ -137,19 +140,19 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
 
     
-    /* Ãæµ¹ Ã³¸® */
+    /* ì¶©ëŒ ì²˜ë¦¬ */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SphereCollider", Engine::CSphereCollider::Create(m_pGraphicDev))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BoxCollider", Engine::CBoxCollider::Create(m_pGraphicDev))))
         return E_FAIL;
 
 
-    /*  ¸Þ½¬ »ç¿ë ¾È³»
+    /*  ë©”ì‰¬ ì‚¬ìš© ì•ˆë‚´
     *   CPlyTex
-            - ¹öÅØ½º Á¤º¸¸¦ ´ãÀº CVIBuffer ÇÏÀ§ Å¬·¡½º
-            - »ý¼º ½Ã ¿ÜºÎ ÆÄÀÏ¿¡¼­ ¹öÅØ½º Á¤º¸¸¦ ¹Þ¾Æ¿À±â ¶§¹®¿¡ Create ÇÔ¼ö¿¡ ÆÄÀÏ °æ·Î°¡ Æ÷ÇÔµÇ¾î¾ß ÇÔ
-    *   ÅØ½ºÃÄ´Â ¼ö¾÷ ³»¿ë°ú µ¿ÀÏ
-    *   ¿¹½Ã´Â ÃÑ
+            - ë²„í…ìŠ¤ ì •ë³´ë¥¼ ë‹´ì€ CVIBuffer í•˜ìœ„ í´ëž˜ìŠ¤
+            - ìƒì„± ì‹œ ì™¸ë¶€ íŒŒì¼ì—ì„œ ë²„í…ìŠ¤ ì •ë³´ë¥¼ ë°›ì•„ì˜¤ê¸° ë•Œë¬¸ì— Create í•¨ìˆ˜ì— íŒŒì¼ ê²½ë¡œê°€ í¬í•¨ë˜ì–´ì•¼ í•¨
+    *   í…ìŠ¤ì³ëŠ” ìˆ˜ì—… ë‚´ìš©ê³¼ ë™ì¼
+    *   ì˜ˆì‹œëŠ” ì´
     */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Gun_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Gun.ply"))))
         return E_FAIL;
@@ -157,7 +160,7 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Gun_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/Gun_Diffuse.png", 1))))
         return E_FAIL;
 
-    /* ¸Ê ¿ÀºêÁ§Æ® */
+    /* ë§µ ì˜¤ë¸Œì íŠ¸ */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrayFrustum_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/GrayFrustum.ply"))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BrownFrustum_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/BrownFrustum.ply"))))
@@ -182,9 +185,9 @@ _uint CLoading::Loading_Stage()
 
     lstrcpy(m_szLoading, L"Room Data Loading............................");
     
-    /* ¸Ê Ãâ·Â¿ë ¿¡¼Â */
+    /* ë§µ ì¶œë ¥ìš© ì—ì…‹ */
     
-    /* º® */
+    /* ë²½ */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_EW_NoDoor_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Wall_EW_NoDoor.ply"))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_NS_NoDoor_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Wall_NS_NoDoor.ply"))))
@@ -203,7 +206,7 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_NS_Door_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/WallLongDoor.png", 1))))
         return E_FAIL;
 
-    /* Å¸ÀÏ */
+    /* íƒ€ì¼ */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlaneTex", Engine::CPlaneTex::Create(m_pGraphicDev))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Tile_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Tile/StaticTile/StaticTile_%d.png", 57))))
@@ -219,25 +222,25 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Button_Down_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/ButtonDown_Diffuse.png", 1))))
         return E_FAIL;
 
-    /* ¾È°³ */
+    /* ì•ˆê°œ */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Fog_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/fog.png", 1))))
         return E_FAIL;
 
-    /* ¹® */
+    /* ë¬¸ */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Door_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/door_%d.png", 5))))
         return E_FAIL;
 
-    /* °¡Â¥ ¾îµÒ */
+    /* ê°€ì§œ ì–´ë‘  */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Black_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Black/%d.png", 101))))
         return E_FAIL;
 
-    /* °ÔÀÓ±â */
+    /* ê²Œìž„ê¸° */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GameMachine_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/GameMachine.ply"))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GameMachine_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/GameMachine_Diffuse.png", 1))))
         return E_FAIL;
 
-    /* ¸Ê ¹èÄ¡ µ¥ÀÌÅÍ */
+    /* ë§µ ë°°ì¹˜ ë°ì´í„° */
     if (FAILED(ParseRoomData()))
     {
         return E_FAIL;
@@ -281,7 +284,7 @@ unsigned int CLoading::Thread_Main(void* pArg)
 
     // _endthreadex(0);
 
-    return iFlag;   // 0 ¸®ÅÏ ½Ã, _endthreadex ÇÔ¼ö°¡ ÀÚµ¿ È£Ãâ
+    return iFlag;   // 0 ë¦¬í„´ ì‹œ, _endthreadex í•¨ìˆ˜ê°€ ìžë™ í˜¸ì¶œ
 }
 
 HRESULT CLoading::ParseRoomData()
@@ -335,7 +338,7 @@ HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
         }
         data.at("dark").get_to(t.bDark);
 
-        // ¸Å´ÏÀú Å¬·¡½º¿¡ µ¥ÀÌÅÍ µî·Ï
+        // ë§¤ë‹ˆì € í´ëž˜ìŠ¤ì— ë°ì´í„° ë“±ë¡
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
     }
     catch (const json::exception&) {
@@ -352,7 +355,7 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
     wstring wstrFilePath = L"../Bin/Resource/Map/DefaultRoom.json";
     ifstream f(wstrFilePath);
     if (!f.is_open()) {
-        MSG_BOX("[CLoading] ¸Ê Json µ¥ÀÌÅÍ ÆÄÀÏ ¿­±â ½ÇÆÐ");
+        MSG_BOX("[CLoading] ë§µ Json ë°ì´í„° íŒŒì¼ ì—´ê¸° ì‹¤íŒ¨");
         return E_FAIL;
     }
 
@@ -378,7 +381,7 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
         }
         data.at("dark").get_to(t.bDark);
 
-        // ¸Å´ÏÀú Å¬·¡½º¿¡ µ¥ÀÌÅÍ µî·Ï
+        // ë§¤ë‹ˆì € í´ëž˜ìŠ¤ì— ë°ì´í„° ë“±ë¡
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
     }
     catch (const json::exception&) {

@@ -1,4 +1,4 @@
-#include "CRenderer.h"
+ï»¿#include "CRenderer.h"
 #include "CDebugMgr.h"
 #include "IRenderable.h"
 #include "CGameObject.h"
@@ -20,7 +20,7 @@ void CRenderer::Add_RenderGroup(RENDERID eID, IRenderable* pRenderable)
 		return;
 
 	m_RenderGroup[eID].push_back(pRenderable);
-	/* ¼ºÃ¶ : ±âÁ¸ GameObject¿¡¼­ Component ±îÁö È®ÀåÇÏ´Ù º¸´Ï CBase* ±â¹İÀ¸·Î º¯°æ */
+	/* ì„±ì²  : ê¸°ì¡´ GameObjectì—ì„œ Component ê¹Œì§€ í™•ì¥í•˜ë‹¤ ë³´ë‹ˆ CBase* ê¸°ë°˜ìœ¼ë¡œ ë³€ê²½ */
 	// dynamic_cast<CBase*>(pRenderable)->AddRef();
 	pRenderable->GetBase()->AddRef();
 }
@@ -42,7 +42,7 @@ void CRenderer::Clear_RenderGroup()
 {
 	for (size_t i = 0; i < RENDER_END; ++i)
 	{
-		/* ¼ºÃ¶ : °á·ĞÀûÀ¸·Î ±×´ë·Î µÖµµ µÇ´Â°Å¿´´Âµ¥, ¾îÂ¼´Ù º¸´Ï ¹Ù²Ù°Ô µÊ */
+		/* ì„±ì²  : ê²°ë¡ ì ìœ¼ë¡œ ê·¸ëŒ€ë¡œ ë‘¬ë„ ë˜ëŠ”ê±°ì˜€ëŠ”ë°, ì–´ì©Œë‹¤ ë³´ë‹ˆ ë°”ê¾¸ê²Œ ë¨ */
 		for (auto iter = m_RenderGroup[i].begin(); iter != m_RenderGroup[i].end(); ++iter)
 		{
 			//CBase* p = dynamic_cast<CBase*>(*iter);
@@ -63,13 +63,13 @@ void CRenderer::Begin_WireFrame(LPDIRECT3DDEVICE9& pGraphicDev, PIPELINESTATE& t
 	pGraphicDev->GetTextureStageState(0, D3DTSS_COLORARG1, &tOld.dwColorArg1);
 	pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAOP, &tOld.dwAlphaOp);
 	pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAARG1, &tOld.dwAlphaArg1);
-	pGraphicDev->GetTexture(0, &tOld.pTexture);   // AddRef µÇ¹Ç·Î End¿¡¼­ Release
+	pGraphicDev->GetTexture(0, &tOld.pTexture);   // AddRef ë˜ë¯€ë¡œ Endì—ì„œ Release
 
 	pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 
-	/* ÅØ½ºÃÄ¸¦ ÂüÁ¶ÇÏÁö ¾Êµµ·Ï ÄÃ·¯/¾ËÆÄ °æ·Î¸¦ ¸ğµÎ TFACTOR·Î °íÁ¤ */
+	/* í…ìŠ¤ì³ë¥¼ ì°¸ì¡°í•˜ì§€ ì•Šë„ë¡ ì»¬ëŸ¬/ì•ŒíŒŒ ê²½ë¡œë¥¼ ëª¨ë‘ TFACTORë¡œ ê³ ì • */
 	pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, dwColor);
 	pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 	pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);

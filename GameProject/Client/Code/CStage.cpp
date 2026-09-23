@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CStage.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
@@ -27,6 +27,7 @@
 #include "CMagmamouth.h"
 #include "CPseudoDark.h"
 #include "CGameStatusMgr.h"
+#include "CMinimapUI.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -65,7 +66,7 @@ HRESULT CStage::Ready_Scene()
 	if (FAILED(CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_FPV")))
 		return E_FAIL;
 
-	// Ãæµ¹ ±×·ì ¼³Á¤
+	// ì¶©ëŒ ê·¸ë£¹ ì„¤ì •
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PBULLET, COLL_MONSTER);
@@ -125,10 +126,10 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
+	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
 	CLayerContext ctx(pLayer, this);
 
-	// ¿ÀºêÁ§Æ® Ãß°¡
+	// ì˜¤ë¸Œì íŠ¸ ì¶”ê°€
 	CGameObject* pGameObject = nullptr;
 
 	/*
@@ -167,10 +168,10 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
+	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
 	CLayerContext ctx(pLayer, this);
 
-	// ¿ÀºêÁ§Æ® Ãß°¡
+	// ì˜¤ë¸Œì íŠ¸ ì¶”ê°€
 	CGameObject* pGameObject = nullptr;
 
 	// Terrain
@@ -257,7 +258,7 @@ HRESULT CStage::Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
+	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
 	CLayerContext ctx(pLayer, this);
 
 	if (FAILED(static_cast<CRoomLayer*>(pLayer)->SpawnRoom()))
@@ -276,7 +277,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	/* ÇöÀç ¾À, ·¹ÀÌ¾î Á¤º¸¸¦ Àü¿ªÀ¸·Î ÁÖÀÔ */
+	/* í˜„ì¬ ì”¬, ë ˆì´ì–´ ì •ë³´ë¥¼ ì „ì—­ìœ¼ë¡œ ì£¼ì… */
 	CLayerContext ctx(pLayer, this);
 
 	CUI* pUI = nullptr;
@@ -362,6 +363,17 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	pUI->Set_Pos(WINCX - 90.f, 480.f, 0.f);
 	pUI->Set_Size({ 76.f, 92.f });
+
+	if (FAILED(pLayer->Add_GameObject(L"HudMiniMap", pUI)))
+		return E_FAIL;
+
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_MinimapUITexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(WINCX - 408.f, 480.f, 0.f);
+	pUI->Set_Size({ 24.f, 24.f });
+	pUI->Set_Texture(1);
 
 	if (FAILED(pLayer->Add_GameObject(L"MiniMap", pUI)))
 		return E_FAIL;
