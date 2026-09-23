@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CMonster.h"
 
@@ -29,12 +29,13 @@ private:
 
 public:
 	static CFireball* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CFireball* Create(LPDIRECT3DDEVICE9 pGraphicDev, _bool bSammon);
 
 public:
 	void Set_Velocity(const _vec3& vLocation) { m_vVelocity = vLocation; }
 	void Throw(const _float& fTimeDelta);
 private:
-	/* ��ö */
+	/* 성철 */
 	void CheckDeadCondition();
 	/* --- */
 

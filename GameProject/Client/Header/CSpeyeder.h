@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CMonster.h"
 
@@ -29,6 +29,7 @@ private:
 
 public:
 	static CSpeyeder* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CSpeyeder* Create(LPDIRECT3DDEVICE9 pGraphicDev, _bool bSammom);
 
 public:
 	void Set_Velocity(const _vec3& vDirection) { m_vLandingDirection = vDirection; }

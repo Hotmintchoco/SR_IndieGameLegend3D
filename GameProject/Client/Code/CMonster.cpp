@@ -34,15 +34,25 @@ HRESULT CMonster::Ready_GameObject()
 
     m_pColliderCom->Set_CollisionID(COLL_MONSTER);
 
-    /* 성철 */
+    Set_IsActive(false);
+    m_pColliderCom->Set_IsActive(false);
+
     if (CRoomLayer* pLayer = dynamic_cast<CRoomLayer*>(m_pOwner))
     {
         pLayer->IncreaseEntityCount();
         pLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t);});
     }
-    Set_IsActive(false);
-    /* ---- */
-    m_pColliderCom->Set_IsActive(false);
+
+    if (m_bSammon == true)
+    {
+        Set_IsActive(true);
+		CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+        pLayer->Add_GameObject(L"Speyeder", this);
+
+        pLayer->IncreaseEntityCount();
+        pLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t); });
+    }
+
 
     __super::Ready_GameObject();
     return S_OK;
@@ -92,7 +102,7 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
     // 충돌 처리 여부를 위해 충돌 매니저에 몬스터의 콜라이더를 등록
 	CCollisionMgr::GetInstance()->Add_Collider(COLL_MONSTER, m_pColliderCom);
 
-    _vec3       vPos;
+    _vec3 vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     CGameObject::Compute_ViewZ(&vPos);
 }

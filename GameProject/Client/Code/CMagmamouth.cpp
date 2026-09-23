@@ -2,12 +2,14 @@
 #include "CMagmamouth.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
+#include "CGameStatusMgr.h"
 #include "CTimerMgr.h"
 #include "CTerrain.h"
 #include "CSpeyeder.h"
 #include "CFireball.h"
 #include "CTrail_MagmaMouth.h"
-#include "CEffect_YellowBox.h"
+#include "CEffect_Rectangle.h"
+#include "CEffect_Sphere.h"
 
 CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(0.f), m_fStateUpdateDuration(2.f), 
@@ -218,8 +220,8 @@ void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
 
     if (iFlag != 0)
     {
-        CGameObject* pGameObject = CSpeyeder::Create(m_pGraphicDev);
-        pGameObject->Set_IsActive(true);
+        CGameObject* pGameObject = CSpeyeder::Create(m_pGraphicDev, true);
+
         CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
             ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
         if (nullptr == pPlayerTransformCom) return;
@@ -242,9 +244,11 @@ void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
         static_cast<CSpeyeder*>(pGameObject)->Set_Velocity(vVelocity);
         if (nullptr == pGameObject)
             return;
-        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-        if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject)))
-            return;
+        //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        //CLayer* pLayer = (CLayer*)CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+        //CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+        //if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject)))
+        //    return;
     }
 }
 
@@ -294,8 +298,8 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
 
     if (iFlag != 0)
     {
-        CGameObject* pGameObject = CFireball::Create(m_pGraphicDev);
-        pGameObject->Set_IsActive(true);
+        CGameObject* pGameObject = CFireball::Create(m_pGraphicDev, true);
+
 
         //_uint x = rand() % 100;
         //_uint y = rand() % 100;
@@ -319,11 +323,11 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
 
         static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
         static_cast<CFireball*>(pGameObject)->Set_Velocity(vVelocity);
-        if (nullptr == pGameObject)
-            return;
-        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-        if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject)))
-            return;
+        //if (nullptr == pGameObject)
+        //    return;
+        //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        //if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject)))
+        //    return;
     }
 
 }
@@ -735,7 +739,7 @@ void CMagmamouth::Set_Motion_CloseOpenMouth(const _float& fTimeDelta)
 void CMagmamouth::MagmaMouth_Trail(const _float& fTimeDelta)
 {
     m_fTrailTime2 += fTimeDelta;
-    //if (m_bMoveFlag2 == true)return;
+
 	if (m_fTrailTime2>1.5f || m_bMoveFlag2 == true)return;
     _vec3 vPos, vUp, vDown;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -832,6 +836,8 @@ void CMagmamouth::MagmaMouth_DeadEffect(const _float& fTimeDelta)
         CGameObject* pGameObject = nullptr;
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
 
+        D3DXCOLOR eColor = { 1.f,1.f,0.f,1.f };
+
         for (int i = 0; i < 5; ++i)
         {
             iRand1 = rand() % 128 - 64;
@@ -839,12 +845,14 @@ void CMagmamouth::MagmaMouth_DeadEffect(const _float& fTimeDelta)
             iRand3 = rand() % 128 - 64;
 
             vVelocity = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
-            pGameObject = CEffect_YellowBox::Create(m_pGraphicDev, vPos, vVelocity);
-            if (nullptr == pGameObject)
-                return;
-            if (FAILED(pLayer->Add_GameObject(L"Effect_YellowBox", pGameObject)))
-                return;
+
+            pGameObject = CEffect_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, eColor);
+            if (nullptr == pGameObject) return;
+            if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
         }
+        pGameObject = CEffect_Sphere::Create(m_pGraphicDev, vPos, CEffect_Sphere::RED, 10);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
     }
 
 }

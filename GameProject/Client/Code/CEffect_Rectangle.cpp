@@ -1,31 +1,20 @@
 ﻿#include "pch.h"
-#include "CEffect_YellowBox.h"
+#include "CEffect_Rectangle.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CManagement.h"
 #include <ctime>
 
-CEffect_YellowBox::CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(0.5f)
+CEffect_Rectangle::CEffect_Rectangle(LPDIRECT3DDEVICE9 pGraphicDev)
+    : CEffect(pGraphicDev)
 {
 }
 
-//CEffect_YellowBox::CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vPoint)[4])
-//    : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(0.5f)
-//{
-//}
-//
-//CEffect_YellowBox::CEffect_YellowBox(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vPoint)[4], const _float& fLifeTime)
-//    : CEffect(pGraphicDev), m_fElapsedLifeTime(0.f), m_fLifeTime(fLifeTime)
-//{
-//}
-
-
-CEffect_YellowBox::~CEffect_YellowBox()
+CEffect_Rectangle::~CEffect_Rectangle()
 {
 }
 
-HRESULT CEffect_YellowBox::Ready_GameObject()
+HRESULT CEffect_Rectangle::Ready_GameObject()
 {
     CEffect::Ready_GameObject();
     if (FAILED(Add_Component()))
@@ -44,7 +33,7 @@ HRESULT CEffect_YellowBox::Ready_GameObject()
     D3DXCOLOR color[4];
     for (int i = 0; i < 4; ++i)
     {
-        color[i] = { 1.f, 1.f, 0.f, 1.f };
+        color[i] = m_eColor;
     }
 
     static_cast<CRcColCustom*>(m_pBufferCom)->Set_Buffer(vec3, color);
@@ -52,11 +41,11 @@ HRESULT CEffect_YellowBox::Ready_GameObject()
     return S_OK;
 }
 
-_int CEffect_YellowBox::Update_GameObject(const _float& fTimeDelta)
+_int CEffect_Rectangle::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CEffect::Update_GameObject(fTimeDelta);
-    m_fElapsedLifeTime += fTimeDelta;
-    if (m_fElapsedLifeTime > m_fLifeTime)
+    
+    if (m_fElapsedTime > m_fLifeTime)
     {
         Set_Dead(true);
     }
@@ -73,7 +62,7 @@ _int CEffect_YellowBox::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CEffect_YellowBox::LateUpdate_GameObject(const _float& fTimeDelta)
+void CEffect_Rectangle::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CEffect::LateUpdate_GameObject(fTimeDelta);
 
@@ -92,7 +81,7 @@ void CEffect_YellowBox::LateUpdate_GameObject(const _float& fTimeDelta)
 
 }
 
-void CEffect_YellowBox::Render_GameObject()
+void CEffect_Rectangle::Render_GameObject()
 {
     CEffect::Render_GameObject();
 
@@ -106,10 +95,9 @@ void CEffect_YellowBox::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-HRESULT CEffect_YellowBox::Add_Component()
+HRESULT CEffect_Rectangle::Add_Component()
 {
     CComponent* pComponent = nullptr;
-
 
     // RcTex
     pComponent = m_pBufferCom = dynamic_cast<CRcColCustom*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcColCustom"));
@@ -124,53 +112,41 @@ HRESULT CEffect_YellowBox::Add_Component()
 }
 
 
-CEffect_YellowBox* CEffect_YellowBox::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CEffect_Rectangle* CEffect_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CEffect_YellowBox* pEffect_YellowBox = new CEffect_YellowBox(pGraphicDev);
+    CEffect_Rectangle* pEffect_Rectangle = new CEffect_Rectangle(pGraphicDev);
 
-    if (FAILED(pEffect_YellowBox->Ready_GameObject()))
+    if (FAILED(pEffect_Rectangle->Ready_GameObject()))
     {
-        Safe_Release(pEffect_YellowBox);
-        MSG_BOX("CEffect_YellowBox Create Failed");
+        Safe_Release(pEffect_Rectangle);
+        MSG_BOX("CEffect_Rectangle Create Failed");
         return nullptr;
     }
 
-    return pEffect_YellowBox;
+    return pEffect_Rectangle;
 }
 
-CEffect_YellowBox* CEffect_YellowBox::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos)
-{
-    CEffect_YellowBox* pEffect_YellowBox = new CEffect_YellowBox(pGraphicDev);
 
-    if (FAILED(pEffect_YellowBox->Ready_GameObject()))
+CEffect_Rectangle* CEffect_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vVelocity, D3DXCOLOR eColor)
+{
+    CEffect_Rectangle* pEffect = new CEffect_Rectangle(pGraphicDev);
+    pEffect->Set_Velocity(vVelocity);
+    pEffect->Set_Color(eColor);
+
+    if (FAILED(pEffect->Ready_GameObject()))
     {
-        Safe_Release(pEffect_YellowBox);
-        MSG_BOX("CEffect_YellowBox Create Failed");
+        Safe_Release(pEffect);
+        MSG_BOX("CEffect_Rectangle Create Failed");
         return nullptr;
     }
-    pEffect_YellowBox->Set_Pos(vPos);
-    return pEffect_YellowBox;
-}
+    pEffect->Set_Pos(vPos);
 
-CEffect_YellowBox* CEffect_YellowBox::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vVelocity)
-{
-    CEffect_YellowBox* pEffect_YellowBox = new CEffect_YellowBox(pGraphicDev);
-
-    if (FAILED(pEffect_YellowBox->Ready_GameObject()))
-    {
-        Safe_Release(pEffect_YellowBox);
-        MSG_BOX("CEffect_YellowBox Create Failed");
-        return nullptr;
-    }
-    pEffect_YellowBox->Set_Pos(vPos);
-    pEffect_YellowBox->Set_Velocity(vVelocity);
-
-    return pEffect_YellowBox;
+    return pEffect;
 }
 
 
 
-void CEffect_YellowBox::Free()
+void CEffect_Rectangle::Free()
 {
     CEffect::Free();
 }

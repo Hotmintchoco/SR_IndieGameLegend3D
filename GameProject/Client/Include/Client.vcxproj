@@ -159,7 +159,7 @@
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEffect.h" />
     <ClInclude Include="..\Header\CEffect_Sphere.h" />
-    <ClInclude Include="..\Header\CEffect_YellowBox.h" />
+    <ClInclude Include="..\Header\CEffect_Rectangle.h" />
     <ClInclude Include="..\Header\CEnergy.h" />
     <ClInclude Include="..\Header\CExplodeRange.h" />
     <ClInclude Include="..\Header\CExplodeSphere.h" />
@@ -241,7 +241,7 @@
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEffect.cpp" />
     <ClCompile Include="..\Code\CEffect_Sphere.cpp" />
-    <ClCompile Include="..\Code\CEffect_YellowBox.cpp" />
+    <ClCompile Include="..\Code\CEffect_Rectangle.cpp" />
     <ClCompile Include="..\Code\CEnergy.cpp" />
     <ClCompile Include="..\Code\CExplodeRange.cpp" />
     <ClCompile Include="..\Code\CExplodeSphere.cpp" />

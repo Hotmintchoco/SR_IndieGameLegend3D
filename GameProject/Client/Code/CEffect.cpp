@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CEffect.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -27,6 +27,8 @@ _int CEffect::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
+    m_fElapsedTime += fTimeDelta;
+
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
 
     return iExit;
@@ -40,14 +42,6 @@ void CEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CEffect::Render_GameObject()
 {
-    //m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-    //m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-    //
-    //m_pTextureCom->Set_Texture((_uint)m_fFrame);
-
-    //m_pBufferCom->Render_Buffer();
-    //
-    //m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 HRESULT CEffect::Add_Component()

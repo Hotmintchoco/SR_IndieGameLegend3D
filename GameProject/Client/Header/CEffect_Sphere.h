@@ -10,6 +10,8 @@ namespace Engine
 
 class CEffect_Sphere : public CEffect
 {
+public:
+	enum EFFECT_SPHERE_COLOR {BLACK, YELLOW, ORANGE, RED};
 protected:
 	explicit CEffect_Sphere(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CEffect_Sphere();
@@ -20,8 +22,11 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-	void SetScale(const float fScale);
-	void SetOpacity(const int iOpacity);
+	void Set_Scale(const _float fScale);
+	void Set_Opacity(const _int iOpacity);
+	void Set_Color(const EFFECT_SPHERE_COLOR eColor) { m_eColor = eColor; }
+
+	void Scale_Up(const _float fTimeDelta);
 
 private:
 	HRESULT	Add_Component();
@@ -29,11 +34,13 @@ private:
 	Engine::CPlyTex* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
 
-	int m_iOpacity = 100;
-	float m_fScale = 1.f;
+	EFFECT_SPHERE_COLOR m_eColor = BLACK;
+
+	_int m_iOpacity = 100;
+	_float m_fScale = 1.f;
 
 public:
-	static CEffect_Sphere* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CEffect_Sphere* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, EFFECT_SPHERE_COLOR eColor, _int iOpacity);
 
 private:
 	virtual void		Free();

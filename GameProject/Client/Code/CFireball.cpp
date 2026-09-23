@@ -152,6 +152,22 @@ CFireball* CFireball::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pMonster;
 }
 
+CFireball* CFireball::Create(LPDIRECT3DDEVICE9 pGraphicDev, _bool bSammon)
+{
+    CFireball* pMonster = new CFireball(pGraphicDev);
+    pMonster->Set_Sammon(bSammon);
+
+    if (FAILED(pMonster->Ready_GameObject()))
+    {
+        Safe_Release(pMonster);
+        MSG_BOX("CFireball Create Failed");
+        return nullptr;
+    }
+
+    return pMonster;
+}
+
+
 void CFireball::Throw(const _float& fTimeDelta)
 {
     m_fLandingTime += fTimeDelta;

@@ -25,6 +25,10 @@ protected:
 protected:
 	Engine::CTransform* m_pTransformCom = nullptr;
 	_float				m_fFrame;
+
+	_float m_fLifeTime = 0.f;
+	_float m_fElapsedTime = 0.f;
+
 public:
 	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	void Set_Pos(_vec3 vPos);
