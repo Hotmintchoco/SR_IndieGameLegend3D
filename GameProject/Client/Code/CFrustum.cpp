@@ -85,19 +85,20 @@ HRESULT CFrustum::Add_Component()
 
 _bool CFrustum::CheckDestroyCondition(CCollider* pOtherCollider)
 {
-    _int ColliderID = -1;
+    if (!pOtherCollider) return false;
+    _int ColliderID = pOtherCollider->Get_CollisionID();
 
-    if (pOtherCollider)
-        ColliderID = pOtherCollider->Get_CollisionID();
-    else
-        return false;
-
-    if (ColliderID == COLL_PBULLET || ColliderID == COLL_MBULLET || ColliderID == COLL_EXPLODERANGE)
+    switch (ColliderID)
     {
+    case COLL_PBULLET:
+    case COLL_MBULLET:
+    case COLL_EXPLODERANGE:
         return true;
+        break;
+    default:
+        return false;
+        break;
     }
-
-    return false;
 }
 
 void CFrustum::OnRoomEvent(const TRoomEventCtx& t)
