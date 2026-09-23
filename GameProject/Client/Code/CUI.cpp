@@ -51,7 +51,7 @@ void CUI::Render_GameObject()
 
 void CUI::Set_Pos(const _vec2& vPos)
 {
-    m_vPos = {vPos};
+    m_vPos = {vPos.x, vPos.y, 0.f}; /* 성철 : 형변환 경고 떠서 임의로 변경 */
     if (nullptr != m_pTransformCom)
 		m_pTransformCom->Set_Pos(vPos.x - WINCX * 0.5f, -vPos.y + WINCY * 0.5f, 0.f);
 }
