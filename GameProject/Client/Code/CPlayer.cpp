@@ -211,12 +211,6 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
-    // 현재 플레이어 인덱스 참조
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_1))
-    {
-        cout << CGameStatusMgr::GetInstance()->GetCurrentRoomIndex();
-    }
-
     _vec3	vLook;
     _vec3   vRight;
     m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
