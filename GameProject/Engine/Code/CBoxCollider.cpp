@@ -65,6 +65,11 @@ _int CBoxCollider::Update_Component(const _float& fTimeDelta)
 
 void CBoxCollider::LateUpdate_Component()
 {
+    SyncPositionToOwner();
+}
+
+void CBoxCollider::SyncPositionToOwner()
+{
     CTransform* pOwnerTransformCom = dynamic_cast<CTransform*>(m_pOwner->Get_Component(ID_DYNAMIC, L"Com_Transform"));
     if (nullptr == pOwnerTransformCom) return;
 

@@ -228,22 +228,22 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
     if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
     {
-        vFinalVec = vFinalVec + vLook;
+        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vLook, &vLook), fSpeed, fTimeDelta);
     }
 
     if (CDInputMgr::GetInstance()->Key_Press(DIK_S))
     {
-        vFinalVec = vFinalVec - vLook;
+        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vLook, &vLook), -fSpeed, fTimeDelta);
     }
 
     if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
     {
-        vFinalVec = vFinalVec - vRight;
+        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vRight, &vRight), -fSpeed, fTimeDelta);
     }
 
     if (CDInputMgr::GetInstance()->Key_Press(DIK_D))
     {
-        vFinalVec = vFinalVec + vRight;
+        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vRight, &vRight), fSpeed, fTimeDelta);
     }
 
     if (vFinalVec.x > FLT_EPSILON || vFinalVec.y || FLT_EPSILON && vFinalVec.z || FLT_EPSILON)  m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vFinalVec, &vFinalVec), fSpeed, fTimeDelta);

@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 #include "CComponent.h"
 #include "IRenderable.h"
 
@@ -35,6 +35,8 @@ public:
 	virtual void	OnCollisionStay(CCollider* pOther);
 	virtual void	OnCollisionExit(CCollider* pOther);
 
+	virtual void SyncPositionToOwner() PURE;
+
 public:
 	virtual _int	Update_Component(const _float& fTimeDelta) { return 0; };
 	virtual void	LateUpdate_Component() {}
@@ -52,8 +54,8 @@ protected:
 	virtual void		Free();
 
 protected:
-	_bool			m_bIsTrigger;	// íŠ¸ë¦¬ê±° ì—¬ë¶€ë¥¼ ë‚˜íƒ€ë‚´ëŠ” ë³€ìˆ˜(ì•„ì§ ì•ˆì”€)
-	_bool			m_bIsCollided;	// ì¶©ëŒ ì—¬ë¶€ë¥¼ ë‚˜íƒ€ë‚´ëŠ” ë³€ìˆ˜
+	_bool			m_bIsTrigger;	// Æ®¸®°Å ¿©ºÎ¸¦ ³ªÅ¸³»´Â º¯¼ö(¾ÆÁ÷ ¾È¾¸)
+	_bool			m_bIsCollided;	// Ãæµ¹ ¿©ºÎ¸¦ ³ªÅ¸³»´Â º¯¼ö
 	_float			m_fRadius;
 
 	COLLIDER_TYPE	m_eColliderType = CT_NONE;

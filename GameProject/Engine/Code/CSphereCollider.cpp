@@ -79,12 +79,7 @@ _int CSphereCollider::Update_Component(const _float& fTimeDelta)
 
 void CSphereCollider::LateUpdate_Component()
 {
-	if (!m_pOwner) return;
-	CTransform* pOwnerTransformCom = dynamic_cast<CTransform*>(m_pOwner->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-
-	_vec3   vOwnerPos;
-	pOwnerTransformCom->Get_Info(INFO_POS, &vOwnerPos);
-	m_tSphere.Center = { vOwnerPos.x, vOwnerPos.y, vOwnerPos.z };
+	SyncPositionToOwner();
 }
 
 CCollider* CSphereCollider::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -101,6 +96,16 @@ void CSphereCollider::Set_Radius(const _float& fRadius)
 {
 	m_fRadius = fRadius;
 	m_tSphere.Radius = fRadius;
+}
+
+void CSphereCollider::SyncPositionToOwner()
+{
+	if (!m_pOwner) return;
+	CTransform* pOwnerTransformCom = dynamic_cast<CTransform*>(m_pOwner->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+
+	_vec3   vOwnerPos;
+	pOwnerTransformCom->Get_Info(INFO_POS, &vOwnerPos);
+	m_tSphere.Center = { vOwnerPos.x, vOwnerPos.y, vOwnerPos.z };
 }
 
 void CSphereCollider::Free()

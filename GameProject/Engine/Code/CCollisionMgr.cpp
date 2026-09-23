@@ -1,4 +1,4 @@
-ï»¿#include "CCollider.h"
+#include "CCollider.h"
 #include "CGameObject.h"
 #include "CCollisionMgr.h"
 
@@ -41,7 +41,7 @@ CCollisionMgr::COLLIDER_TOKEN_PAIR CCollisionMgr::Make_ColliderTokenPair(CCollid
 
 void CCollisionMgr::Update_Collision()
 {
-    const _uint IterativeCount = 4;
+    const _uint IterativeCount = 1;
 
     std::set<COLLIDER_TOKEN_PAIR, CColliderTokenPairLess> setCurCollisionPairs;
     std::set<CCollider*> setCurColliders;
@@ -67,19 +67,19 @@ void CCollisionMgr::Update_Collision()
                     {
                         mapLiveColliders[pColRight->GetToken()] = pColRight;
 
-                        // ê°™ì€ ì½œë¼ì´ë”ë¼ë¦¬ ì¶©ëŒ ì²´í¬ë¥¼ í•˜ì§€ ì•ŠìŒ
+                        // °°Àº Äİ¶óÀÌ´õ³¢¸® Ãæµ¹ Ã¼Å©¸¦ ÇÏÁö ¾ÊÀ½
                         if (pColLeft == pColRight)
                             continue;
 
-                        // ì¤‘ë³µ ì²´í¬ ë°©ì§€
+                        // Áßº¹ Ã¼Å© ¹æÁö
                         if (i == j && pColRight < pColLeft)
                             continue;
 
-                        // ë¹„í™œì„±í™”ëœ ì½œë¼ì´ë”ëŠ” ì¶©ëŒ ì²´í¬ë¥¼ í•˜ì§€ ì•ŠìŒ
+                        // ºñÈ°¼ºÈ­µÈ Äİ¶óÀÌ´õ´Â Ãæµ¹ Ã¼Å©¸¦ ÇÏÁö ¾ÊÀ½
                         if (!pColLeft->Get_IsActive() || !pColRight->Get_IsActive())
                             continue;
 
-                        // ì¶©ëŒ ì²´í¬ë¥¼ ìˆ˜í–‰í•˜ê³ , ì¶©ëŒí•˜ì§€ ì•Šìœ¼ë©´ ë‹¤ìŒ ì½œë¼ì´ë”ë¡œ ë„˜ì–´ê°
+                        // Ãæµ¹ Ã¼Å©¸¦ ¼öÇàÇÏ°í, Ãæµ¹ÇÏÁö ¾ÊÀ¸¸é ´ÙÀ½ Äİ¶óÀÌ´õ·Î ³Ñ¾î°¨
                         if (!pColLeft->Intersect(pColRight))
                             continue;
 
@@ -104,7 +104,7 @@ void CCollisionMgr::Update_Collision()
                         }
                         else
                         {
-                            // ê°™ì€ í”„ë ˆì„ì˜ ì¶”ê°€ solver passì—ì„œ ê²¹ì¹¨ì´ ê³„ì†ë˜ë©´ Stayë¥¼ ì¶”ê°€ í˜¸ì¶œ
+                            // °°Àº ÇÁ·¹ÀÓÀÇ Ãß°¡ solver pass¿¡¼­ °ãÄ§ÀÌ °è¼ÓµÇ¸é Stay¸¦ Ãß°¡ È£Ãâ
                             pColLeft->OnCollisionStay(pColRight);
                             pColRight->OnCollisionStay(pColLeft);
                         }
@@ -123,7 +123,7 @@ void CCollisionMgr::Update_Collision()
         const std::shared_ptr<void> spRight = tPrevPair.second.lock();
 
         if (!spLeft || !spRight)
-            continue; // ì´ë¯¸ ì†Œë©¸ëœ ì½œë¼ì´ë”ëŠ” ì¶©ëŒ ì¢…ë£Œ ì´ë²¤íŠ¸ë¥¼ í˜¸ì¶œí•˜ì§€ ì•ŠìŒ
+            continue; // ÀÌ¹Ì ¼Ò¸êµÈ Äİ¶óÀÌ´õ´Â Ãæµ¹ Á¾·á ÀÌº¥Æ®¸¦ È£ÃâÇÏÁö ¾ÊÀ½
 
         auto itLeft = mapLiveColliders.find(spLeft);
         auto itRight = mapLiveColliders.find(spRight);
