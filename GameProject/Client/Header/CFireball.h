@@ -29,7 +29,6 @@ private:
 
 public:
 	static CFireball* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	static CFireball* Create(LPDIRECT3DDEVICE9 pGraphicDev, _bool bSammon);
 
 public:
 	void Set_Velocity(const _vec3& vLocation) { m_vVelocity = vLocation; }

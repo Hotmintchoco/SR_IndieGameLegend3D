@@ -176,22 +176,6 @@ CSpeyeder* CSpeyeder::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pMonster;
 }
 
-CSpeyeder* CSpeyeder::Create(LPDIRECT3DDEVICE9 pGraphicDev, _bool bSammom)
-{
-    CSpeyeder* pMonster = new CSpeyeder(pGraphicDev);
-    pMonster->Set_Sammon(bSammom);
-
-    if (FAILED(pMonster->Ready_GameObject()))
-    {
-        Safe_Release(pMonster);
-        MSG_BOX("CSpeyeder Create Failed");
-        return nullptr;
-    }
-
-    return pMonster;
-}
-
-
 void CSpeyeder::Land(const _float& fTimeDelta)
 {
     _vec3 vPos;

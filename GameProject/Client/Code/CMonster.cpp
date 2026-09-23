@@ -43,17 +43,6 @@ HRESULT CMonster::Ready_GameObject()
         pLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t);});
     }
 
-    if (m_bSammon == true)
-    {
-        Set_IsActive(true);
-		CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-        pLayer->Add_GameObject(L"Speyeder", this);
-
-        pLayer->IncreaseEntityCount();
-        pLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t); });
-    }
-
-
     __super::Ready_GameObject();
     return S_OK;
 }

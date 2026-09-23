@@ -30,7 +30,7 @@ HRESULT CFireball::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(0.25f, 0.25f, 0.25f);
-    //m_pColliderCom->Set_Radius(0.25f);
+    m_pColliderCom->Set_Radius(0.25f);
     m_iHp = 100;
     return S_OK;
 }
@@ -151,22 +151,6 @@ CFireball* CFireball::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
     return pMonster;
 }
-
-CFireball* CFireball::Create(LPDIRECT3DDEVICE9 pGraphicDev, _bool bSammon)
-{
-    CFireball* pMonster = new CFireball(pGraphicDev);
-    pMonster->Set_Sammon(bSammon);
-
-    if (FAILED(pMonster->Ready_GameObject()))
-    {
-        Safe_Release(pMonster);
-        MSG_BOX("CFireball Create Failed");
-        return nullptr;
-    }
-
-    return pMonster;
-}
-
 
 void CFireball::Throw(const _float& fTimeDelta)
 {

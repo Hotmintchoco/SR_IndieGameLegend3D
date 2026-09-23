@@ -10,6 +10,7 @@
 #include "CTrail_MagmaMouth.h"
 #include "CEffect_Rectangle.h"
 #include "CEffect_Sphere.h"
+#include "CRoomLayer.h"
 
 CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(0.f), m_fStateUpdateDuration(2.f), 
@@ -180,7 +181,9 @@ void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
 
     if (iFlag != 0)
     {
-        CGameObject* pGameObject = CSpeyeder::Create(m_pGraphicDev, true);
+        CGameObject* pGameObject = CSpeyeder::Create(m_pGraphicDev);
+        if (nullptr == pGameObject) return;
+        pGameObject->Set_IsActive(true);
 
         CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
             ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
@@ -202,8 +205,9 @@ void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
 
         static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
         static_cast<CSpeyeder*>(pGameObject)->Set_Velocity(vVelocity);
-        if (nullptr == pGameObject)
-            return;
+
+        CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+        pLayer->Add_GameObject(L"Speyeder", pGameObject);
     }
 }
 
@@ -253,7 +257,9 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
 
     if (iFlag != 0)
     {
-        CGameObject* pGameObject = CFireball::Create(m_pGraphicDev, true);
+        CGameObject* pGameObject = CFireball::Create(m_pGraphicDev);
+        if (nullptr == pGameObject) return;
+        pGameObject->Set_IsActive(true);
 
         CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
             ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
@@ -275,6 +281,9 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
 
         static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
         static_cast<CFireball*>(pGameObject)->Set_Velocity(vVelocity);
+
+        CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+        pLayer->Add_GameObject(L"Fireball", pGameObject);
     }
 
 }
@@ -830,7 +839,10 @@ void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
 
             for (int i = 0; i < 360.f / fDegreeInterval; ++i)
             {
-                CGameObject* pGameObject = CFireball::Create(m_pGraphicDev, true);
+                CGameObject* pGameObject = CFireball::Create(m_pGraphicDev);
+                if (nullptr == pGameObject) return;
+                pGameObject->Set_IsActive(true);
+
                 _vec3 vVelocity = { 0.f,0.f,1.f };
                 D3DXMatrixRotationY(&matRot, D3DXToRadian(fDegreeInterval) * i);
                 D3DXVec3TransformNormal(&vVelocity, &vVelocity, &matRot);
@@ -839,6 +851,9 @@ void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
 
                 static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
                 static_cast<CFireball*>(pGameObject)->Set_Velocity(vVelocity);
+
+                CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+                if (FAILED(pLayer->Add_GameObject(L"Fireball", pGameObject))) return;
             }
         }
     }
