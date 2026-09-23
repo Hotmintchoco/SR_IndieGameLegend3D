@@ -88,13 +88,8 @@ void CMinimapUI::Render_GameObject()
         vPos.x = m_vPos.x + (x - pX) * fSize * 2;
         vPos.y = m_vPos.y + (y - pY) * fSize * 2;
         vPos.z = 0.f;
-        m_pTransformCom->Set_Pos(vPos);
 
-        m_pTransformCom->Set_Pos(
-            vPos.x - WINCX * 0.5f,
-            -vPos.y + WINCY * 0.5f,
-            vPos.z);
-
+        m_pTransformCom->Set_Pos(vPos.x - WINCX * 0.5f, -vPos.y + WINCY * 0.5f, vPos.z);
         m_pTransformCom->Set_Scale(fSize, fSize, 1.f);
         m_pTransformCom->Update_Component(0.f);
 
