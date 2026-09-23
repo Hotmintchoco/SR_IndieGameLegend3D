@@ -1,4 +1,4 @@
-ï»¿#include "pch.h"
+#include "pch.h"
 #include "CFrustumExplodeEffect.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -55,7 +55,7 @@ void CFrustumExplodeEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CFrustumExplodeEffect::BillBoard()
 {
-    /* ë¹Œë³´ë“œ */
+    /* ºôº¸µå */
     _vec3 vPlayerPos, vEffectPos;
     CTransform* pPlayerTransform = static_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
     pPlayerTransform->Get_Info(INFO_POS, &vPlayerPos);
@@ -65,7 +65,6 @@ void CFrustumExplodeEffect::BillBoard()
     float fYaw = atan2f(vDist.x, vDist.z);
 
     m_pTransformCom->Set_Rotation_Raw(_vec3{ 0.f, D3DXToDegree(fYaw), 0.f });
-    m_pTransformCom->ForceUpdateWorldMatrix();
 }
 
 void CFrustumExplodeEffect::Render_GameObject()

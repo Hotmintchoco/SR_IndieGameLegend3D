@@ -20,6 +20,9 @@ CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_iHp(0), m_fFrame(0.f), m_fHitEffectDuration(0.1f), m_fHitEffectTime(0.f), m_bHitState(false)
 {
     ++iMonsterIdx;
+    /* 성철 */
+    if (!m_pOwner) m_pOwner = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+    /* --- */
 }
 
 
@@ -33,15 +36,12 @@ HRESULT CMonster::Ready_GameObject()
         return E_FAIL;
 
     m_pColliderCom->Set_CollisionID(COLL_MONSTER);
-
+    
     Set_IsActive(false);
     m_pColliderCom->Set_IsActive(false);
 
-    if (CRoomLayer* pLayer = dynamic_cast<CRoomLayer*>(m_pOwner))
-    {
-        pLayer->IncreaseEntityCount();
-        pLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t);});
-    }
+    static_cast<CRoomLayer*>(m_pOwner)->IncreaseEntityCount();
+    static_cast<CRoomLayer*>(m_pOwner)->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t); });
 
     __super::Ready_GameObject();
     return S_OK;
@@ -219,6 +219,9 @@ void CMonster::OnRoomEvent(const TRoomEventCtx& t)
     {
     case ERoomEventType::ROOM_BEGIN:
         Set_IsActive(true);
+        break;
+    case ERoomEventType::RESET_ROOM:
+        m_bDelete = true;
         break;
     default:
         break;

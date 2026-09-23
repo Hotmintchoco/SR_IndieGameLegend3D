@@ -1,14 +1,18 @@
-ï»¿#include "pch.h"
+#include "pch.h"
 #include "CFrustum.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CBoxCollider.h"
 #include "CCollisionMgr.h"
+#include "Client_Struct.h"
 #include "Client_Enum.h"
+#include "CGameStatusMgr.h"
+#include "CRoomLayer.h"
 
 CFrustum::CFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
 {
+    if (!m_pOwner) m_pOwner = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
 }
 
 CFrustum::~CFrustum()
@@ -20,7 +24,7 @@ HRESULT CFrustum::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    /* Note : ìˆœì„œì— ì£¼ì˜ (PostInitalizeë¡œ ë¹¼ëŠ” ê²ƒë„ ê³ ë ¤) */
+    /* Note : ¼ø¼­¿¡ ÁÖÀÇ (PostInitalize·Î »©´Â °Íµµ °í·Á) */
     if (FAILED(CGameObject::Ready_GameObject()))
         return E_FAIL;
 
@@ -81,19 +85,32 @@ HRESULT CFrustum::Add_Component()
 
 _bool CFrustum::CheckDestroyCondition(CCollider* pOtherCollider)
 {
-    _int ColliderID = -1;
+    if (!pOtherCollider) return false;
+    _int ColliderID = pOtherCollider->Get_CollisionID();
 
-    if (pOtherCollider)
-        ColliderID = pOtherCollider->Get_CollisionID();
-    else
-        return false;
-
-    if (ColliderID == COLL_PBULLET || ColliderID == COLL_MBULLET)
+    switch (ColliderID)
     {
+    case COLL_PBULLET:
+    case COLL_MBULLET:
+    case COLL_EXPLODERANGE:
         return true;
+        break;
+    default:
+        return false;
+        break;
     }
+}
 
-    return false;
+void CFrustum::OnRoomEvent(const TRoomEventCtx& t)
+{
+    switch (t.eType)
+    {
+    case ERoomEventType::RESET_ROOM:
+        Destroy();
+        break;
+    default:
+        break;
+    }
 }
 
 void CFrustum::Free()

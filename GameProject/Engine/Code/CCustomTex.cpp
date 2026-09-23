@@ -1,4 +1,4 @@
-ï»¿#include "CCustomTex.h"
+#include "CCustomTex.h"
 
 CCustomTex::CCustomTex()
 {
@@ -36,7 +36,7 @@ HRESULT CCustomTex::Ready_Buffer(vector<VTXTEX>& vecVtx, vector<INDEX16>& vecIdx
 
 	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
 
-	for (_int i = 0; i < m_dwVtxCnt; i++)
+	for (_int i = 0; i < (int)m_dwVtxCnt; i++)
 	{
 		pVertex[i].vPosition = vecVtx[i].vPosition;
 		pVertex[i].vNormal = vecVtx[i].vNormal;
@@ -47,7 +47,7 @@ HRESULT CCustomTex::Ready_Buffer(vector<VTXTEX>& vecVtx, vector<INDEX16>& vecIdx
 
 	m_pIB->Lock(0, 0, (void**)&pIndex, 0);
 
-	for (_int j = 0; j < m_dwTriCnt; j++)
+	for (_int j = 0; j < (int)m_dwTriCnt; j++)
 	{
 		pIndex[j]._0 = vecIdx[j]._0;
 		pIndex[j]._1 = vecIdx[j]._1;
@@ -78,7 +78,7 @@ HRESULT CCustomTex::Ready_Buffer(vector<VTXTEX_NORMAL_NONE>& vecVtx, vector<INDE
 
 	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
 
-	for (_int i = 0; i < m_dwVtxCnt; i++)
+	for (_int i = 0; i < (int)m_dwVtxCnt; i++)
 	{
 		pVertex[i].vPosition = vecVtx[i].vPosition;
 		pVertex[i].vTexUV = vecVtx[i].vTexUV;
@@ -88,7 +88,7 @@ HRESULT CCustomTex::Ready_Buffer(vector<VTXTEX_NORMAL_NONE>& vecVtx, vector<INDE
 
 	m_pIB->Lock(0, 0, (void**)&pIndex, 0);
 
-	for (_int j = 0; j < m_dwTriCnt; j++)
+	for (_int j = 0; j < (int)m_dwTriCnt; j++)
 	{
 		pIndex[j]._0 = vecIdx[j]._0;
 		pIndex[j]._1 = vecIdx[j]._1;
@@ -147,9 +147,9 @@ void CCustomTex::Free()
 
 
 
-// í”Œë ˆì´ì–´ ë°ë¯¸ì§€ ìž…ì„ìˆ˜ìžˆë„ë¡
-// í”Œë ˆì´ì–´ í”¼ê²©ë¬´ì‹œ
-// í”Œë ˆì´ì–´ ì‚¬ë§ ë° ë¶€í™œ
-// í”Œë ˆì´ì–´ ëª¬ìŠ¤í„° ì¶©ëŒ ì‹œ ë°ë¯¸ì§€
-// ì´ì•Œ 2ê°œ ë‹¤enum
-// ë¹¨ê°œì§€ëŠ”ê±°
+// ÇÃ·¹ÀÌ¾î µ¥¹ÌÁö ÀÔÀ»¼öÀÖµµ·Ï
+// ÇÃ·¹ÀÌ¾î ÇÇ°Ý¹«½Ã
+// ÇÃ·¹ÀÌ¾î »ç¸Á ¹× ºÎÈ°
+// ÇÃ·¹ÀÌ¾î ¸ó½ºÅÍ Ãæµ¹ ½Ã µ¥¹ÌÁö
+// ÃÑ¾Ë 2°³ ´Ùenum
+// »¡°³Áö´Â°Å

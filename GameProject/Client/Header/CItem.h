@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "CGameObject.h"
 
 namespace Engine
@@ -26,7 +26,6 @@ private:
 
 	virtual void OnCollisionEnter(CGameObject* pOther) override;
 
-	void CalculateAlphaZ();
 	void BillBoard();
 	void Drop(_float fTimeDelta);
 	void Attract_To_Player(const _float& fTimeDelta);

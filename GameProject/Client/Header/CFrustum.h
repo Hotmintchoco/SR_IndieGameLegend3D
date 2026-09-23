@@ -8,6 +8,8 @@ namespace Engine
 	class CBoxCollider;
 }
 
+struct TRoomEventCtx;
+
 class CFrustum : public CGameObject
 {
 protected:
@@ -30,6 +32,8 @@ protected:
 	_bool			CheckDestroyCondition(CCollider* pOtherCollider);
 
 	virtual void Destroy() {}
+
+	void OnRoomEvent(const TRoomEventCtx& t);
 
 protected:
 	Engine::CTransform* m_pTransformCom;

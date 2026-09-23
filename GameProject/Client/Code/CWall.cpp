@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CWall.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -129,6 +129,7 @@ void CWall::OnRoomEvent(const TRoomEventCtx& t)
         BlockDoor(true);
         break;
     case ERoomEventType::ROOM_CLEAR:
+    case ERoomEventType::RESET_ROOM:
         BlockDoor(false);
         break;
     default:
@@ -212,7 +213,7 @@ void CWall::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 
-    // 충돌 처리
+    // �浹 ó��
     for (int i = 0; i < 2; ++i)
         CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom[i]);
 }

@@ -173,7 +173,7 @@ void CGameObject::Obstacle_Collision(CGameObject* pOther, CCollider* pObstacleCo
     vPos += vPush;
     pOtherTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
 
-    pOtherCollider->Update_Component(0.f);
+    pOtherCollider->SyncPositionToOwner();
 }
 
 

@@ -55,12 +55,16 @@ private:
 	void UpdateCameraInfo();
 	int GetRoomIndexFromPlayerPosition(const _vec3& vPos);
 
+	/* �ʱⰪ */
+	const _vec3 m_vInitPos = {60.f, 0.f, 60.f};
+	const int m_iInitRoomIdx = 12;
+
 	/* Minimap */
-	int m_iCurrentRoomIndex = 12;
-	int m_iPrevRoomIndex = 12;
+	int m_iCurrentRoomIndex = m_iInitRoomIdx;
+	int m_iPrevRoomIndex = m_iInitRoomIdx;
 	bool m_bVisitTable[25] = { false };
 	bool m_bClearTable[25] = { false };
-	_vec3 m_vPlayerPos = _vec3{ 0.f, 0.f, 0.f };
+	_vec3 m_vPlayerPos = m_vInitPos;
 
 	/* Player */
 	int m_iPlayerHp = 12;

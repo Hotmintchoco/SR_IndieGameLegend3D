@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CDoor.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -28,6 +28,7 @@ HRESULT CDoor::Ready_GameObject()
         pLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) { OnRoomEvent(t); });
     }
 
+    Open();
 
     return S_OK;
 }
@@ -36,11 +37,7 @@ _int CDoor::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
-
-    _vec3   vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    Compute_ViewZ(&vPos);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
 
     if (m_bOnAnimation)
     {
@@ -51,10 +48,15 @@ _int CDoor::Update_GameObject(const _float& fTimeDelta)
             m_iTextureIdx += 1 * m_iPlayDirection;
         }
 
-        if (m_iTextureIdx <= 0 || m_iTextureIdx >= m_iFrameCnt)
+        if (m_iPlayDirection == -1 && m_iTextureIdx <= 0)
         {
             m_bOnAnimation = false;
-            m_iTextureIdx = (m_iPlayDirection == -1) ? 0 : m_iFrameCnt - 1;
+            m_iTextureIdx = 0;
+        }
+        else if (m_iPlayDirection == 1 && m_iTextureIdx >= m_iFrameCnt)
+        {
+            m_bOnAnimation = false;
+            m_iTextureIdx = m_iFrameCnt - 1;
         }
     }
 
@@ -118,6 +120,7 @@ void CDoor::OnRoomEvent(const TRoomEventCtx& t)
         Close();
         break;
     case ERoomEventType::ROOM_CLEAR:
+    case ERoomEventType::RESET_ROOM:
         Open();
         break;
     default:

@@ -34,6 +34,8 @@ public:
 	void Set_Radius(const _float& fRadius) override;
 
 private:
+	virtual void SyncPositionToOwner() override;
+
 	CPlyTex* m_pDebugSphereTex = nullptr;
 
 	virtual void Free() override;

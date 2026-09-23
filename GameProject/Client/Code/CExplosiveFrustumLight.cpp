@@ -71,7 +71,6 @@ void CExplosiveFrustumLight::PropagateTransform(CTransform* pParentTransform)
     float fYaw = atan2f(vDist.x, vDist.z);
 
     m_pTransformCom->Set_Rotation_Raw(_vec3{ 0.f, D3DXToDegree(fYaw), 0.f });
-    m_pTransformCom->ForceUpdateWorldMatrix();
 
     _matrix* pWorld = m_pTransformCom->Get_World();
     _matrix* pParentWorld;

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "CCollider.h"
 
 BEGIN(Engine)
@@ -38,6 +38,8 @@ public:
 	BoundingBox		m_tBox;
 
 private:
+	virtual void SyncPositionToOwner() override;
+
 	CCubeTex*		m_pDebugCubeTex = nullptr;
 	_vec3 			m_vDiffPos = _vec3{ 0.f, 0.f, 0.f };
 

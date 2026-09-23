@@ -44,7 +44,6 @@ void CPseudoDark::LateUpdate_GameObject(const _float& fTimeDelta)
     pTransform->Get_Info(INFO_POS, &vPos);
     pTransform->Get_Info(INFO_LOOK, &vLook);
     m_pTransformCom->Set_Pos(vPos);
-    m_pTransformCom->ForceUpdateWorldMatrix();
 
     /* 가상의 위치로 알파 소팅 */
     vAlphaZ = vPos + vLook * m_fScale;
