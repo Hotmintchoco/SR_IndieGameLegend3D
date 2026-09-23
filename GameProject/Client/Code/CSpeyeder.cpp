@@ -59,6 +59,7 @@ _int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
             return E_FAIL;
     }
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
+
     if (m_bLandingState == true)
     {
         Set_OnTerrain();
@@ -69,6 +70,7 @@ _int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
     else
     {
         Land(fTimeDelta);
+        m_pColliderCom->Set_IsActive(false);
     }
     
 

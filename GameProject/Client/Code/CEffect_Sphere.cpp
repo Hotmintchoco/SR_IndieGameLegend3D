@@ -20,8 +20,8 @@ HRESULT CEffect_Sphere::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    m_fLifeTime=10.f;
-    m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
+    m_fLifeTime=0.5f;
+    Set_Scale(m_fScale);
 
     return S_OK;
 }
@@ -77,7 +77,7 @@ void CEffect_Sphere::Set_Opacity(const _int iOpacity)
 
 void CEffect_Sphere::Scale_Up(const _float fTimeDelta)
 {
-    m_fScale += fTimeDelta * 0.5f * 0.5f;
+    m_fScale += fTimeDelta*1.5f;
     Set_Scale(m_fScale);
 }
 

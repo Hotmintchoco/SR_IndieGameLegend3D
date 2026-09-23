@@ -60,52 +60,12 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
         m_fFrame = 3.f;
         m_pColliderCom->Set_IsActive(false);
     }
-
-    m_fStateUpdateTime += fTimeDelta;
-    if (m_fStateUpdateTime > m_fStateUpdateDuration && m_eMagmaMouthState !=DEAD)
+    else if (m_iHp < 3)
     {
-        m_fStateUpdateTime = 0.f;
-        m_bCloseMouth = false;
-
-        m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 3);
-        //m_eMagmaMouthState = SPAWN;
-        //m_eMagmaMouthState = FIREBALL;
-        //m_eMagmaMouthState = MOVE;
-        if (m_eMagmaMouthState == SPAWN)
-        {
-            Shuffle_Array(4);
-            ZeroMemory(m_bSpawnFinish, sizeof(m_bSpawnFinish));
-            m_fSpawnTime = 0.f;
-            m_fStateUpdateDuration = 2.f;
-            m_fSpawn_CoolDown = 0.25f;
-
-            //m_fFrame = 3.f;
-        }
-        else if (m_eMagmaMouthState == FIREBALL)
-        {
-            Shuffle_Array(3);
-            ZeroMemory(m_bFireballFinish, sizeof(m_bFireballFinish));
-            m_fSpawnTime = 0.f;
-            m_fStateUpdateDuration = 2.f;
-            m_fSpawn_CoolDown = 0.5f;
-            
-            //m_fFrame = 3.f;
-        }
-        else if (m_eMagmaMouthState == MOVE)
-        {
-            Set_MovePosition();
-            m_fStateUpdateDuration = 4.f;
-            m_bMoveFlag = false;
-            m_bMoveFlag2 = false;
-            m_bTrailStart = false;
-            m_fTrailTime2 = 0.f;
-            m_fFrame = 3.f;
-        }
-        else if (m_eMagmaMouthState == IDLE)
-        {
-            m_fFrame = 3.f;
-        }
+        m_iPhase = 1;
     }
+    Update_Motion(fTimeDelta);
+   
     switch (m_eMagmaMouthState)
     {
     case IDLE:
@@ -244,11 +204,6 @@ void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
         static_cast<CSpeyeder*>(pGameObject)->Set_Velocity(vVelocity);
         if (nullptr == pGameObject)
             return;
-        //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-        //CLayer* pLayer = (CLayer*)CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-        //CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-        //if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject)))
-        //    return;
     }
 }
 
@@ -300,9 +255,6 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
     {
         CGameObject* pGameObject = CFireball::Create(m_pGraphicDev, true);
 
-
-        //_uint x = rand() % 100;
-        //_uint y = rand() % 100;
         CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
             ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
         if (nullptr == pPlayerTransformCom) return;
@@ -323,11 +275,6 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
 
         static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
         static_cast<CFireball*>(pGameObject)->Set_Velocity(vVelocity);
-        //if (nullptr == pGameObject)
-        //    return;
-        //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-        //if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject)))
-        //    return;
     }
 
 }
@@ -385,6 +332,59 @@ void CMagmamouth::Move_Magmamouth(const _float& fTimeDelta)
     {
         D3DXVec3Normalize(&vDir, &vDir);
         m_pTransformCom->Move_Pos(&vDir, 3.f, fTimeDelta);
+    }
+}
+
+void CMagmamouth::Update_Motion(const _float& fTimeDelta)
+{
+    m_fStateUpdateTime += fTimeDelta;
+
+    if (m_fStateUpdateTime > m_fStateUpdateDuration && m_eMagmaMouthState != DEAD)
+    {
+        m_fStateUpdateTime = 0.f;
+        m_bCloseMouth = false;
+
+        if (m_iPhase == 0)
+        {
+            m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 3);
+        }
+        else
+        {
+            m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 2);
+        }
+        //m_eMagmaMouthState = SPAWN;
+        //m_eMagmaMouthState = FIREBALL;
+        //m_eMagmaMouthState = MOVE;
+        if (m_eMagmaMouthState == SPAWN)
+        {
+            Shuffle_Array(4);
+            ZeroMemory(m_bSpawnFinish, sizeof(m_bSpawnFinish));
+            m_fSpawnTime = 0.f;
+            m_fStateUpdateDuration = 2.f;
+            m_fSpawn_CoolDown = 0.25f;
+        }
+        else if (m_eMagmaMouthState == FIREBALL)
+        {
+            Shuffle_Array(3);
+            ZeroMemory(m_bFireballFinish, sizeof(m_bFireballFinish));
+            m_fSpawnTime = 0.f;
+            m_fStateUpdateDuration = 2.f;
+            m_fSpawn_CoolDown = 0.5f;
+        }
+        else if (m_eMagmaMouthState == MOVE)
+        {
+            Set_MovePosition();
+            m_fStateUpdateDuration = 4.f;
+            m_bMoveFlag = false;
+            m_bMoveFlag2 = false;
+            m_bTrailStart = false;
+            m_fTrailTime2 = 0.f;
+            m_fFrame = 3.f;
+        }
+        else if (m_eMagmaMouthState == IDLE)
+        {
+            m_fFrame = 3.f;
+        }
     }
 }
 
@@ -806,7 +806,7 @@ void CMagmamouth::MagmaMouth_Trail(const _float& fTimeDelta)
 
 void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
 {
-    MagmaMouth_DeadEffect(fTimeDelta);
+    MagmaMouth_Dead_Effect(fTimeDelta);
 
     m_fElapsedDeadTime += fTimeDelta;
 
@@ -815,14 +815,40 @@ void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
         m_bDelete = true;
     }
 
+    for (int j = 0; j < 3; ++j)
+    {
+        if (m_fElapsedDeadTime > m_fDeadTime - 1.f + 0.5f * j && m_DeadFireball[j] == false)
+        {
+            m_DeadFireball[j] = true;
+            _vec3 vPos;
+            _matrix matRot;
+            _float fDegreeInterval = 30.f;
+            _float fVelocityY;
+            fVelocityY = 2.f +4.f * j;
 
+            m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
+            for (int i = 0; i < 360.f / fDegreeInterval; ++i)
+            {
+                CGameObject* pGameObject = CFireball::Create(m_pGraphicDev, true);
+                _vec3 vVelocity = { 0.f,0.f,1.f };
+                D3DXMatrixRotationY(&matRot, D3DXToRadian(fDegreeInterval) * i);
+                D3DXVec3TransformNormal(&vVelocity, &vVelocity, &matRot);
+                vVelocity *= 4.f - 0.5f * j;
+                vVelocity.y = fVelocityY;
+
+                static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
+                static_cast<CFireball*>(pGameObject)->Set_Velocity(vVelocity);
+            }
+        }
+    }
 }
 
-void CMagmamouth::MagmaMouth_DeadEffect(const _float& fTimeDelta)
+void CMagmamouth::MagmaMouth_Dead_Effect(const _float& fTimeDelta)
 {
-    if (m_fElapsedDeadTime > m_fDeadTime - 0.5f) return;
+    //if (m_fElapsedDeadTime > m_fDeadTime - 0.5f) return;
     m_fElapsedDeadTime2 += fTimeDelta;
+    m_fElapsedDeadTime3 += fTimeDelta;
     if (m_fElapsedDeadTime2 > 0.25f)
     {
         m_fElapsedDeadTime2 = 0.f;
@@ -850,9 +876,38 @@ void CMagmamouth::MagmaMouth_DeadEffect(const _float& fTimeDelta)
             if (nullptr == pGameObject) return;
             if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
         }
-        pGameObject = CEffect_Sphere::Create(m_pGraphicDev, vPos, CEffect_Sphere::RED, 10);
+    }
+
+    if (m_fElapsedDeadTime3 > 0.125f)
+    {
+        m_fElapsedDeadTime3 = 0.f;
+
+        _vec3 vPos, vVelocity;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+        _int iRand1 = 0;
+        _int iRand2 = 0;
+        _int iRand3 = 0;
+        CGameObject* pGameObject = nullptr;
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+
+		iRand1 = rand() % 128 - 64;
+		iRand2 = rand() % 128 - 64;
+		iRand3 = rand() % 128 - 64;
+
+		vVelocity = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
+
+       vPos += vVelocity / 3.f * 2.f;
+
+        CEffect_Sphere::EFFECT_SPHERE_COLOR eEffect_Color;
+        int iRand = rand() % 3;
+        if (iRand % 3 == 0) eEffect_Color = CEffect_Sphere::RED;
+        else if (iRand % 3 == 1) eEffect_Color = CEffect_Sphere::ORANGE;
+        else eEffect_Color = CEffect_Sphere::YELLOW;
+
+        pGameObject = CEffect_Sphere::Create(m_pGraphicDev, vPos, eEffect_Color, 45);
         if (nullptr == pGameObject) return;
-        if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
     }
 
 }

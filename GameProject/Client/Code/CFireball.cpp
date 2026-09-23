@@ -30,7 +30,7 @@ HRESULT CFireball::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(0.25f, 0.25f, 0.25f);
-    m_pColliderCom->Set_Radius(0.25f);
+    //m_pColliderCom->Set_Radius(0.25f);
     m_iHp = 100;
     return S_OK;
 }

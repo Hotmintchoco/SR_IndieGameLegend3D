@@ -37,7 +37,8 @@ private:
 	EFFECT_SPHERE_COLOR m_eColor = BLACK;
 
 	_int m_iOpacity = 100;
-	_float m_fScale = 1.f;
+	_float m_fScale = 0.f;
+	//_float m_fScale_Speed = 1.f;
 
 public:
 	static CEffect_Sphere* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, EFFECT_SPHERE_COLOR eColor, _int iOpacity);
