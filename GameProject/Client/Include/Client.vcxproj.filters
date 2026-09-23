@@ -214,9 +214,6 @@
     <Filter Include="02. GameObject\09. Bullet\BulletParticle">
       <UniqueIdentifier>{d9883dde-8be5-4d6d-84d7-3d4d56bc6919}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. Effect\Trail_MagmaMouth">
-      <UniqueIdentifier>{66a04df7-ebf3-4bd2-8103-73c4dcefb56e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Frustum\Explosive\ExplodeSphere">
       <UniqueIdentifier>{50d3b930-96f7-46d0-9513-601ce505a7a7}</UniqueIdentifier>
     </Filter>
@@ -228,6 +225,12 @@
     </Filter>
     <Filter Include="100. Util">
       <UniqueIdentifier>{237be30c-3143-4c28-a3d6-1be2ba2b0ac6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Effect\Trail">
+      <UniqueIdentifier>{0d4e4e58-582c-4be8-a5b3-f5d6a4245cf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Effect\Trail\Trail_MagmaMouth">
+      <UniqueIdentifier>{66a04df7-ebf3-4bd2-8103-73c4dcefb56e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -433,7 +436,7 @@
       <Filter>02. GameObject\02. Monster\Magmamouth\Fireball</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTrail_MagmaMouth.h">
-      <Filter>02. GameObject\06. Effect\Trail_MagmaMouth</Filter>
+      <Filter>02. GameObject\06. Effect\Trail\Trail_MagmaMouth</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CPseudoDark.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\PseudoBlack</Filter>
@@ -473,6 +476,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CDebugPrint.h">
       <Filter>100. Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTrail.h">
+      <Filter>02. GameObject\06. Effect\Trail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -651,7 +657,7 @@
       <Filter>02. GameObject\02. Monster\Magmamouth\Fireball</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTrail_MagmaMouth.cpp">
-      <Filter>02. GameObject\06. Effect\Trail_MagmaMouth</Filter>
+      <Filter>02. GameObject\06. Effect\Trail\Trail_MagmaMouth</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CPseudoDark.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\PseudoBlack</Filter>
@@ -691,6 +697,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CDebugPrint.cpp">
       <Filter>100. Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTrail.cpp">
+      <Filter>02. GameObject\06. Effect\Trail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
