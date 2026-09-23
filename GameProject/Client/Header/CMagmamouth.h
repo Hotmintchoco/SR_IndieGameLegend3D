@@ -40,6 +40,7 @@ private:
 	void Throw_Fireball(const _float& fTimeDelta);
 	void Move_Magmamouth(const _float& fTimeDelta);
 
+	void Update_Motion(const _float& fTimeDelta);
 
 	void Set_MovePosition();
 	void Set_Position();
@@ -53,7 +54,7 @@ private:
 	void MagmaMouth_Trail(const _float& fTimeDelta);
 
 	void MagmaMouth_Dead(const _float& fTimeDelta);
-	void MagmaMouth_DeadEffect(const _float& fTimeDelta);
+	void MagmaMouth_Dead_Effect(const _float& fTimeDelta);
 
 protected:
 	virtual void		Free();
@@ -92,6 +93,10 @@ private:
 
 	_float m_fElapsedDeadTime = 0.f;
 	_float m_fElapsedDeadTime2 = 0.f;
+	_float m_fElapsedDeadTime3 = 0.f;
 	_float m_fDeadTime = 5.f;
+	_bool m_DeadFireball[3] = { false, false, false };
 
+
+	_uint m_iPhase = 0;
 };

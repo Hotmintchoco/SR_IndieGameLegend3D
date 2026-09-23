@@ -1,6 +1,6 @@
 #pragma once
 
-/* º® ¹æÇâ */
+/* ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
 enum class EWallDir
 {
 	NONE,
@@ -54,7 +54,7 @@ enum COLLISIONID
 	COLL_MAX
 };
 
-/* ¸Ê ¹èÄ¡ ¿ÀºêÁ§Æ® Å¸ÀÔ */
+/* ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® Å¸ï¿½ï¿½ */
 enum class EObjectType
 {
 	NONE = 0,

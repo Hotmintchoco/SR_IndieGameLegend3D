@@ -11,8 +11,6 @@ class CTrail_MagmaMouth : public CEffect
 {
 protected:
 	explicit CTrail_MagmaMouth(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CTrail_MagmaMouth(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4]);
-	explicit CTrail_MagmaMouth(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const _float& fLifeTime);
 	virtual ~CTrail_MagmaMouth();
 
 public:
@@ -21,6 +19,14 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+
+	void Set_TrailPoint(const _vec3(&vTrailPoint)[4]) {
+		for (int i = 0; i < 4; ++i)
+		{
+			m_vTrailPoint[i] = vTrailPoint[i];
+		}
+	}
+	void Set_LifeTime(const _float& fLifeTime) { m_fLifeTime = fLifeTime; }
 private:
 	HRESULT			Add_Component();
 
@@ -29,7 +35,6 @@ private:
 
 public:
 	static CTrail_MagmaMouth* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	static CTrail_MagmaMouth* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4]);
 	static CTrail_MagmaMouth* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const _float& fLifeTime);
 
 private:

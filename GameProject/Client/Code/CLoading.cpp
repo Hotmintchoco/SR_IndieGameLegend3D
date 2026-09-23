@@ -75,7 +75,10 @@ _uint CLoading::Loading_Stage()
     
     lstrcpy(m_szLoading, L"Effect Texture Loading............................");
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_smallexplodeTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/smallexplode/smallExplode_%d.png", 4)))) return E_FAIL;
-
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Black_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/Black/%d.png", 101)))) return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Yellow_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/Yellow/%d.png", 101)))) return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Orange_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/Orange/%d.png", 101)))) return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Red_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/Red/%d.png", 101)))) return E_FAIL;
 
     lstrcpy(m_szLoading, L"Texture Loading............................");
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/Invisible.png", 1))))
@@ -228,10 +231,6 @@ _uint CLoading::Loading_Stage()
 
     /* 문 */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Door_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/door_%d.png", 5))))
-        return E_FAIL;
-
-    /* 가짜 어둠 */
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Black_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Black/%d.png", 101))))
         return E_FAIL;
 
     /* 게임기 */

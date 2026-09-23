@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CMonster.h"
 
@@ -34,7 +34,7 @@ public:
 	void Set_Velocity(const _vec3& vLocation) { m_vVelocity = vLocation; }
 	void Throw(const _float& fTimeDelta);
 private:
-	/* ��ö */
+	/* 성철 */
 	void CheckDeadCondition();
 	/* --- */
 
