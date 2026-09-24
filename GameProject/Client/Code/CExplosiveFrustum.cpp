@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CExplosiveFrustum.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -13,6 +13,7 @@
 #include "CExplodeRange.h"
 #include "CRandomMgr.h"
 #include "CExplodeSphere.h"
+#include "CSoundMgr.h"
 
 CExplosiveFrustum::CExplosiveFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CFrustum(pGraphicDev)
@@ -28,7 +29,7 @@ HRESULT CExplosiveFrustum::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    // Note : ¼ø¼­¿¡ ÁÖÀÇ
+    // Note : ìˆœì„œì— ì£¼ì˜
     if (FAILED(CFrustum::Ready_GameObject()))
         return E_FAIL;
 
@@ -113,7 +114,7 @@ void CExplosiveFrustum::SpawnChildren()
 
     m_pLight = pLight;
     pLight->AttachTo(this);
-    /* ¾Æ¸¶ ÀÌ¸§Àº Áßº¹ÀÌ ¿©·µ µÉ °Í. ÀÏ´Ü ½ºÆù¸¸ È®ÀÎ */
+    /* ì•„ë§ˆ ì´ë¦„ì€ ì¤‘ë³µì´ ì—¬ëŸ¿ ë  ê²ƒ. ì¼ë‹¨ ìŠ¤í°ë§Œ í™•ì¸ */
     m_pOwner->Add_GameObject(L"Explosive_Frustum_Light", pLight);
 
     CExplosiveFrustumGlass* pGlass = CExplosiveFrustumGlass::Create(m_pGraphicDev);
@@ -126,7 +127,7 @@ void CExplosiveFrustum::SpawnChildren()
 
     m_pGlass = pGlass;
     pGlass->AttachTo(this);
-    /* ¾Æ¸¶ ÀÌ¸§Àº Áßº¹ÀÌ ¿©·µ µÉ °Í. ÀÏ´Ü ½ºÆù¸¸ È®ÀÎ */
+    /* ì•„ë§ˆ ì´ë¦„ì€ ì¤‘ë³µì´ ì—¬ëŸ¿ ë  ê²ƒ. ì¼ë‹¨ ìŠ¤í°ë§Œ í™•ì¸ */
     m_pOwner->Add_GameObject(L"Explosive_Frustum_Glass", pGlass);
 
     CExplodeRange* pArea = CExplodeRange::Create(m_pGraphicDev);
@@ -139,7 +140,7 @@ void CExplosiveFrustum::SpawnChildren()
 
     m_pExplodeRange = pArea;
     pArea->AttachTo(this);
-    /* ¾Æ¸¶ ÀÌ¸§Àº Áßº¹ÀÌ ¿©·µ µÉ °Í. ÀÏ´Ü ½ºÆù¸¸ È®ÀÎ */
+    /* ì•„ë§ˆ ì´ë¦„ì€ ì¤‘ë³µì´ ì—¬ëŸ¿ ë  ê²ƒ. ì¼ë‹¨ ìŠ¤í°ë§Œ í™•ì¸ */
     m_pOwner->Add_GameObject(L"Explode_Range", pArea);
 
     m_pExplodeRange->SetScale(2.f);
@@ -151,19 +152,19 @@ void CExplosiveFrustum::Destroy()
 {
     CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
 
-    /* ÀÚ½Ä ¿ÀºêÁ§Æ® »èÁ¦ Ã³¸® */
+    /* ìžì‹ ì˜¤ë¸Œì íŠ¸ ì‚­ì œ ì²˜ë¦¬ */
     m_pLight->Set_Dead(true);
     m_pGlass->Set_Dead(true);
 
-    /* Áö¿¬ ÆøÆÄ Ä«¿îÆ® ½ÃÀÛ */
+    /* ì§€ì—° í­íŒŒ ì¹´ìš´íŠ¸ ì‹œìž‘ */
     m_pExplodeRange->OnSwitch();
 
-    /* ¾ÆÀÌÅÛ */
+    /* ì•„ì´í…œ */
     CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
     if (pObject)
         pLayer->Add_GameObject(L"Item", pObject);
 
-    /* Æø¹ß È¿°ú */
+    /* í­ë°œ íš¨ê³¼ */
     _vec3 vPosNoise = _vec3{
     CRandomMgr::GetInstance()->GetRandomValue<float>(-0.1f, 0.1f),
     CRandomMgr::GetInstance()->GetRandomValue<float>(0.4f, 0.6f),
@@ -176,7 +177,7 @@ void CExplosiveFrustum::Destroy()
     if (FAILED(pLayer->Add_GameObject(L"FrustumExplode", pObject)))
         assert(0);
     
-    /* Æø¹ß È¿°ú (±¸) */
+    /* í­ë°œ íš¨ê³¼ (êµ¬) */
     vPosNoise = _vec3{
         CRandomMgr::GetInstance()->GetRandomValue<float>(-0.2f, 0.2f),
         CRandomMgr::GetInstance()->GetRandomValue<float>(0.2f, 0.4f),
@@ -191,9 +192,10 @@ void CExplosiveFrustum::Destroy()
     if (FAILED(pLayer->Add_GameObject(L"ExplodeSphere", pObject)))
         assert(0);
     
+    /* í­ë°œ ì‚¬ìš´ë“œ */
+    CSoundMgr::GetInstance()->PlaySFX(L"sfxExplode.wav");
 
-
-    /* ¹æ ±ôºýÀÓ */
+    /* ë°© ê¹œë¹¡ìž„ */
     if (CRandomMgr::GetInstance()->Chance(m_fFlickerChance))
     {
         static_cast<CRoomLayer*>(m_pOwner)->FlickerLight(m_fFlickerDuration);

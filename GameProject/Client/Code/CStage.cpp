@@ -26,6 +26,7 @@
 #include "CMagmamouth.h"
 #include "CPseudoDark.h"
 #include "CGameStatusMgr.h"
+#include "CSoundMgr.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -77,6 +78,10 @@ HRESULT CStage::Ready_Scene()
 	/* 투사체와의 충돌 */
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PROJECTILE, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PROJECTILE, COLL_OBSTACLE);
+
+	CSoundMgr::GetInstance()->PlayBGM(L"Sector1.wav");
+	CSoundMgr::GetInstance()->SetBGMVolume(0.f);
+	CSoundMgr::GetInstance()->SetSFXVolume(0.f);
 
 	return S_OK;
 }

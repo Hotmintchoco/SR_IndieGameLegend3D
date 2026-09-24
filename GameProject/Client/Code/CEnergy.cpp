@@ -6,6 +6,7 @@
 #include "CTransform.h"
 #include "CWeapon.h"
 #include "CManagement.h"
+#include "CSoundMgr.h"
 
 CEnergy::CEnergy(LPDIRECT3DDEVICE9 pGraphicDev)
     : CItem(pGraphicDev)
@@ -81,6 +82,8 @@ void CEnergy::Consume()
     pGun->GainEnergy();
 
     Set_Dead(true);
+
+    CSoundMgr::GetInstance()->PlaySFX(L"sfxEnergy.wav");
 }
 
 CEnergy* CEnergy::Create(LPDIRECT3DDEVICE9 pGraphicDev, Engine::CGameObject* pSpawner)

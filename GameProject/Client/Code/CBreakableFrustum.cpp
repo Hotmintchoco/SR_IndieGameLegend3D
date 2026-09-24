@@ -1,10 +1,11 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CBreakableFrustum.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CAbstractFactory.h"
 #include "CRoomLayer.h"
 #include "CGameStatusMgr.h"
+#include "CSoundMgr.h"
 
 CBreakableFrustum::CBreakableFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CFrustum(pGraphicDev)
@@ -20,7 +21,7 @@ HRESULT CBreakableFrustum::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    // Note : ¼ø¼­¿¡ ÁÖÀÇ
+    // Note : ìˆœì„œì— ì£¼ì˜
     if (FAILED(CFrustum::Ready_GameObject()))
         return E_FAIL;
 
@@ -93,6 +94,8 @@ void CBreakableFrustum::Destroy()
         pLayer->Add_GameObject(L"Item", pObject);
 
     Set_Dead(true);
+
+    CSoundMgr::GetInstance()->PlaySFX(L"sfxBreak.wav");
 }
 
 CBreakableFrustum* CBreakableFrustum::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -12,6 +12,7 @@
 #include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
 #include "Client_Struct.h"
+#include "CSoundMgr.h"
 
 _uint CMonster::iMonsterIdx=0;
 
@@ -76,6 +77,10 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
         }
         /* ---- */
         Set_Dead(true);
+
+        /* 성철 : 임시 몬스터 사망 소리 */
+        CSoundMgr::GetInstance()->PlaySFX(L"sfxKill.wav");
+        /* ------------------------- */
     }
 
     return iExit;

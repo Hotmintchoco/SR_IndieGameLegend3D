@@ -6,6 +6,7 @@
 #include "CCameraMgr.h"
 #include "CDebugMgr.h"
 #include "CRoomLoadingMgr.h"
+#include "CSoundMgr.h"
 
 IMPLEMENT_SINGLETON(CGameStatusMgr);
 
@@ -115,6 +116,35 @@ void CGameStatusMgr::RenderImGui()
     // --- Etc ---
     ImGui::Separator();
     ImGui::Text("Gem : %d", m_iGem);
+
+
+    // --- Sound ---
+    ImGui::SeparatorText("Sound");
+    {
+        CSoundMgr* pSound = CSoundMgr::GetInstance();
+
+        // 뮤트 체크박스 + 볼륨 슬라이더 한 줄. 값이 바뀌면 true
+        auto VolumeRow = [](const char* szLabel, float& fVolume, _bool& bMute) -> _bool
+            {
+                ImGui::PushID(szLabel);
+
+                _bool bChanged = ImGui::Checkbox("Mute", &bMute);
+                ImGui::SameLine();
+
+                ImGui::BeginDisabled(bMute);
+                bChanged |= ImGui::SliderFloat(szLabel, &fVolume, 0.f, 1.f, "%.2f");
+                ImGui::EndDisabled();
+
+                ImGui::PopID();
+                return bChanged;
+            };
+
+        if (VolumeRow("BGM", m_fBGMVolume, m_bBGMMute))
+            pSound->SetBGMVolume(m_bBGMMute ? 0.f : m_fBGMVolume);
+
+        if (VolumeRow("SFX", m_fSFXVolume, m_bSFXMute))
+            pSound->SetSFXVolume(m_bSFXMute ? 0.f : m_fSFXVolume);
+    }
 
     ImGui::End();
 }

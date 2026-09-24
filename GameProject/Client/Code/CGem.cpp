@@ -6,6 +6,7 @@
 #include "CManagement.h"
 #include "CTransform.h"
 #include "CUI.h"
+#include "CSoundMgr.h"
 
 CGem::CGem(LPDIRECT3DDEVICE9 pGraphicDev)
     : CItem(pGraphicDev)
@@ -83,6 +84,8 @@ void CGem::Consume()
     Update_GemCountUI();
 
     Set_Dead(true);
+
+    CSoundMgr::GetInstance()->PlaySFX(L"sfxCoin.wav");
 }
 
 void CGem::Update_GemCountUI()

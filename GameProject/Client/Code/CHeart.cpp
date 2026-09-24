@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CHeart.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -6,6 +6,7 @@
 #include "CTransform.h"
 #include "CManagement.h"
 #include "CPlayer.h"
+#include "CSoundMgr.h"
 
 CHeart::CHeart(LPDIRECT3DDEVICE9 pGraphicDev)
     : CItem(pGraphicDev)
@@ -78,6 +79,8 @@ void CHeart::Consume()
     pPlayer->GetItem(ITEMID::ITEM_HEAL);
 
     Set_Dead(true);
+
+    CSoundMgr::GetInstance()->PlaySFX(L"sfxpickup.wav");
 }
 
 CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev, Engine::CGameObject* pSpawner)

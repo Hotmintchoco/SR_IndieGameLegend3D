@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Engine_Define.h"
 
@@ -55,7 +55,7 @@ private:
 	void UpdateCameraInfo();
 	int GetRoomIndexFromPlayerPosition(const _vec3& vPos);
 
-	/* �ʱⰪ */
+	/* 초기값 */
 	const _vec3 m_vInitPos = {60.f, 0.f, 60.f};
 	const int m_iInitRoomIdx = 12;
 
@@ -86,6 +86,12 @@ private:
 	/* Render Debug */
 	bool m_bShowDark = false;
 	vector<CGameObject*> m_vecPseudoDark;
+
+	/* 사운드 */
+	float m_fBGMVolume = 0.5f;
+	float m_fSFXVolume = 1.f;
+	bool m_bBGMMute = true;
+	bool m_bSFXMute = true;
 
 private:
 	virtual void Free();

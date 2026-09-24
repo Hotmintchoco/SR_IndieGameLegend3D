@@ -8,6 +8,7 @@
 #include "CProjectile.h"
 #include "CDInputMgr.h"
 #include "CGameStatusMgr.h"
+#include "CSoundMgr.h"
 
 CWeapon::CWeapon(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -143,6 +144,8 @@ void CWeapon::TryShoot()
 
     CProjectile* pProjectile = CProjectile::Create(m_pGraphicDev, m_vBulletFrom, vDir);
     CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+
+    CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
 
     m_bIsCoolTime = true;
     m_fCoolTimeLeft = m_fShootInterval;

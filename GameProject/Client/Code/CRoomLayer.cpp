@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CRoomLayer.h"
 #include "CRoomLoadingMgr.h"
 #include "CTransform.h"
@@ -15,6 +15,7 @@
 #include "CPressAllButtonCondition.h"
 #include "CManagement.h"
 #include "CButtonTile.h"
+#include "CSoundMgr.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -40,7 +41,7 @@ _int CRoomLayer::Update_Layer(const _float& fTimeDelta)
 
 	_int iExit = CLayer::Update_Layer(fTimeDelta);
 
-	/* ¹æ¹®ÇÏÁö ¾ÊÀº ¹æÀÌ ¹Ù·Î Å¬¸®¾î Ã³¸®µÇ´Â °ÍÀ» ¸·±â À§ÇÔ */
+	/* ë°©ë¬¸í•˜ì§€ ì•Šì€ ë°©ì´ ë°”ë¡œ í´ë¦¬ì–´ ì²˜ë¦¬ë˜ëŠ” ê²ƒì„ ë§‰ê¸° ìœ„í•¨ */
 	if (!m_bCleared && m_bVisited)
 	{
 		CheckClearCondition();
@@ -80,7 +81,7 @@ void CRoomLayer::PlayerTileInteraction()
 	switch (eType)
 	{
 	case EContaminateType::LAVA:
-		/* TODO ÇÃ·¹ÀÌ¾î µ¥¹ÌÁö */
+		/* TODO í”Œë ˆì´ì–´ ë°ë¯¸ì§€ */
 		break;
 	default:
 		break;
@@ -120,7 +121,7 @@ HRESULT CRoomLayer::SpawnRoom()
 {
 	TRoomData* t = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iRoomIndex);
 
-	/* Å¬¸®¾î Á¶°Ç */
+	/* í´ë¦¬ì–´ ì¡°ê±´ */
 	for (auto& wstrClearCondtiion : t->vecClearCondition)
 	{
 		CClearCondition* pCondition = nullptr;
@@ -148,11 +149,11 @@ HRESULT CRoomLayer::SpawnRoom()
 		m_vecClearCondition.push_back(pCondition);
 	}
 
-	/* ÁøÀÔ ½Ã ¾îµÒ ¿©ºÎ */
+	/* ì§„ì… ì‹œ ì–´ë‘  ì—¬ë¶€ */
 	m_bDark = t->bDark;
 	m_bCurrentDark = t->bDark;
 
-	/* ¹æ ±âº» Á¤º¸ */
+	/* ë°© ê¸°ë³¸ ì •ë³´ */
 	int iRoomColCount = CRoomLoadingMgr::GetInstance()->GetRoomColCount();
 	int iRoomRowCount = CRoomLoadingMgr::GetInstance()->GetRoomRowCount();
 	_vec3 vOuterRoomSize = CRoomLoadingMgr::GetInstance()->GetOuterRoomSize();
@@ -175,7 +176,7 @@ HRESULT CRoomLayer::SpawnRoom()
 
 	CGameObject* pGameObject = nullptr;
 
-	/* Å¸ÀÏ */
+	/* íƒ€ì¼ */
 	for (size_t i = 0; i < t->vecTile.size(); ++i)
 	{
 		int iTileX = (int)i % (int)vInnerRoomSize.x;
@@ -190,7 +191,7 @@ HRESULT CRoomLayer::SpawnRoom()
 		int iTileIdx = (t->vecTile.at(i) == 0) ? t->iDefaultTileIdx : t->vecTile.at(i);
 		if (iTileIdx >= 0 && iTileIdx <= 56)
 		{
-			/* ÀÏ¹İ Å¸ÀÏ*/
+			/* ì¼ë°˜ íƒ€ì¼*/
 			bool bResistContamination = t->vecResistContamination.at(i) == 1;
 			pGameObject = CSpriteTile::Create(pDevice, (int)i, iTileIdx, bResistContamination);
 			if (nullptr == pGameObject)
@@ -198,7 +199,7 @@ HRESULT CRoomLayer::SpawnRoom()
 		}
 		else if (iTileIdx == 70 || iTileIdx == 71)
 		{
-			/* ¹öÆ° : 70 °íÁ¤ ¹öÆ°, 71 ºñ°íÁ¤ ¹öÆ° */
+			/* ë²„íŠ¼ : 70 ê³ ì • ë²„íŠ¼, 71 ë¹„ê³ ì • ë²„íŠ¼ */
 			bool bFixed = (iTileIdx == 70);
 			pGameObject = CButtonTile::Create(pDevice, (int)i, bFixed);
 			if (nullptr == pGameObject)
@@ -219,7 +220,7 @@ HRESULT CRoomLayer::SpawnRoom()
 		pTransformCom->Set_Pos(vRoomCenterPos.x + vTileOffset.x, 0.f, vRoomCenterPos.z + vTileOffset.z);
 	}
 
-	/* º® : µ¿³²¼­ºÏ ¼ø */
+	/* ë²½ : ë™ë‚¨ì„œë¶ ìˆœ */
 	for (size_t i = 0; i < t->vecDoorInfo.size(); ++i)
 	{
 		pGameObject = CWall::Create(pDevice, (EWallDir)(i + 1), t->vecDoorInfo.at(i));
@@ -238,7 +239,7 @@ HRESULT CRoomLayer::SpawnRoom()
 		CWall* pWall = static_cast<CWall*>(pGameObject);
 		if (pWall->HasDoor())
 		{
-			/* ¾È°³ */
+			/* ì•ˆê°œ */
 			int iDir = (int)pWall->GetDir();
 
 			_vec3 vDir{ 0.f, 0.f, 1.f };
@@ -265,7 +266,7 @@ HRESULT CRoomLayer::SpawnRoom()
 				pTransformCom->Move_Pos(&vDir, 5.7f + (iDir % 2) * 1.f + 0.2f * i, 1.f);
 			}
 
-			/* ¹® ÂÊ Å¸ÀÏ */
+			/* ë¬¸ ìª½ íƒ€ì¼ */
 			pGameObject = CSpriteTile::Create(pDevice, (int)i, (t->vecDoorTile[iDir - 1] == 0) ? t->iDefaultTileIdx : t->vecDoorTile[iDir - 1]);
 			if (nullptr == pGameObject)
 				return E_FAIL;
@@ -280,7 +281,7 @@ HRESULT CRoomLayer::SpawnRoom()
 			pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
 			pTransformCom->Move_Pos(&vDir, 6.f + (iDir % 2) * 1.f, 1.f);
 
-			/* ½ÃÀÛ Æ®¸®°Å ¹Ú½º */
+			/* ì‹œì‘ íŠ¸ë¦¬ê±° ë°•ìŠ¤ */
 			pGameObject = CTriggerBox::Create(pDevice);
 			if (nullptr == pGameObject)
 				return E_FAIL;
@@ -295,7 +296,7 @@ HRESULT CRoomLayer::SpawnRoom()
 			pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
 			pTransformCom->Move_Pos(&vDir, 4.f + (iDir % 2) * 1.f, 1.f);
 
-			/* ¹® */
+			/* ë¬¸ */
 
 			pGameObject = CDoor::Create(pDevice);
 			if (nullptr == pGameObject)
@@ -317,7 +318,7 @@ HRESULT CRoomLayer::SpawnRoom()
 
 	}
 
-	/* ¸Ê ¿ÀºêÁ§Æ® */
+	/* ë§µ ì˜¤ë¸Œì íŠ¸ */
 	for (size_t i = 0; i < t->vecObjectTilingInfo.size(); ++i)
 	{
 		int iTileX = (int)i % (int)vInnerRoomSize.x;
@@ -400,6 +401,7 @@ void CRoomLayer::OnRoomTriggerBlockCollided()
 		TRoomEventCtx t{ ERoomEventType::ROOM_BEGIN };
 		m_OnRoomEvent.Broadcast(t);
 		m_bOnProgress = true;
+		CSoundMgr::GetInstance()->PlaySFX(L"sfxDoorClose.wav");
 	}
 }
 
@@ -451,12 +453,13 @@ void CRoomLayer::CheckClearCondition()
 		if (!c->IsSatisfied()) return;
 	}
 
-	/* ¸ğµç Å¬¸®¾î Á¶°ÇÀÌ ¸¸Á· */
+	/* ëª¨ë“  í´ë¦¬ì–´ ì¡°ê±´ì´ ë§Œì¡± */
 	CGameStatusMgr::GetInstance()->UpdateClearTable(m_iRoomIndex);
 	TRoomEventCtx t{ ERoomEventType::ROOM_CLEAR };
 	m_OnRoomEvent.Broadcast(t);
 	m_bOnProgress = false;
 	m_bCleared = true;
+	CSoundMgr::GetInstance()->PlaySFX(L"sfxDoorOpen.wav");
 }
 
 CTile* CRoomLayer::GetTileFromWorldPosition(const _vec3& vWorldPos)
@@ -535,7 +538,7 @@ void CRoomLayer::ResetState()
 		if (FAILED(Add_GameObject(wstrTileName, pGameObject)))
 			return;
 
-		/* Note : ¿ÀºêÁ§Æ® ÀÌ¸§ÀÌ Áßº¹µÇ´Â °æ¿ì¿¡ ¹®Á¦°¡ »ı°Ü, ¿ÀºêÁ§Æ® Æ÷ÀÎÅÍ·Î Á÷Á¢ ÄÄÆ÷³ÍÆ® Á¢±Ù */
+		/* Note : ì˜¤ë¸Œì íŠ¸ ì´ë¦„ì´ ì¤‘ë³µë˜ëŠ” ê²½ìš°ì— ë¬¸ì œê°€ ìƒê²¨, ì˜¤ë¸Œì íŠ¸ í¬ì¸í„°ë¡œ ì§ì ‘ ì»´í¬ë„ŒíŠ¸ ì ‘ê·¼ */
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 
 		pTransformCom->Set_Pos(m_vRoomCenterPos.x + vTileOffset.x, 0.f, m_vRoomCenterPos.z + vTileOffset.z);
@@ -557,7 +560,7 @@ void CRoomLayer::ResetState()
 		if (FAILED(Add_GameObject(wstrMonsterName, pGameObject)))
 			return;
 
-		/* Note : ¿ÀºêÁ§Æ® ÀÌ¸§ÀÌ Áßº¹µÇ´Â °æ¿ì¿¡ ¹®Á¦°¡ »ı°Ü, ¿ÀºêÁ§Æ® Æ÷ÀÎÅÍ·Î Á÷Á¢ ÄÄÆ÷³ÍÆ® Á¢±Ù */
+		/* Note : ì˜¤ë¸Œì íŠ¸ ì´ë¦„ì´ ì¤‘ë³µë˜ëŠ” ê²½ìš°ì— ë¬¸ì œê°€ ìƒê²¨, ì˜¤ë¸Œì íŠ¸ í¬ì¸í„°ë¡œ ì§ì ‘ ì»´í¬ë„ŒíŠ¸ ì ‘ê·¼ */
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 
 		pTransformCom->Set_Pos(m_vRoomCenterPos.x + tMapEntity.vPos.x, m_vRoomCenterPos.y + tMapEntity.vPos.y, m_vRoomCenterPos.z + tMapEntity.vPos.z);
