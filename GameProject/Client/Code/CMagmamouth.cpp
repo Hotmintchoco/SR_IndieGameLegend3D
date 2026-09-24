@@ -260,7 +260,11 @@ void CMagmamouth::Opening_MagmaMouth(const _float& fTimeDelta)
 
         if (m_bOpeningMoveFlag == true)
         {
-            m_bOpening = false;
+            Set_Motion_CloseMouth(fTimeDelta);
+            if (m_fFrame <= 0.f)
+            {
+                m_bOpening = false;
+            }
         }
         else
         {
