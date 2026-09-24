@@ -1,5 +1,6 @@
 #include "CCameraObj.h"
 #include "CCameraFPVPerspective.h"
+#include "CCameraTPVPerspective.h"
 
 CCameraObj::CCameraObj(LPDIRECT3DDEVICE9 pGraphicDev)
 	: m_pGraphicDev(pGraphicDev)
@@ -17,10 +18,8 @@ CCameraObj* CCameraObj::Create(CAMERAID tagCameraType, LPDIRECT3DDEVICE9 pGraphi
 	{
 	case CAMERA_FPV_PERSPECTIVE:
 		return CCameraFPVPerspective::Create(pGraphicDev);
-		/*
-		case CAMERA_TPV_PERSPECTIVE :
-			return CCameraTPVPerspective::Create(pGraphicDev);
-		*/
+	case CAMERA_TPV_PERSPECTIVE:
+		return CCameraTPVPerspective::Create(pGraphicDev);
 	default:
 		return nullptr;
 	}
