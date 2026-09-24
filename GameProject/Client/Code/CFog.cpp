@@ -18,8 +18,7 @@ HRESULT CFog::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    m_pTransformCom->m_vScale.x = 0.5f;
-    m_pTransformCom->m_vScale.y = 1.5f;
+    m_pTransformCom->Set_Scale(_vec3{0.5f, 1.5f, 1.f});
 
     return S_OK;
 }

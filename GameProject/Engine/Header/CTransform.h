@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CComponent.h"
 
 BEGIN(Engine)
@@ -65,9 +65,11 @@ public:
 		UpdateWorldMatrix();
 	}
 
+	inline _vec3 Get_Scale() { return m_vScale; }
+
 	void UpdateWorldMatrix();
 
-	/* ºÎ¸ğ ¿ÀºêÁ§Æ® ¾ø´Â ¿ÀºêÁ§Æ®¿¡ ´ëÇØ¼­, Set World ÀÌÈÄ¿¡ ¿µ±¸ÀûÀ¸·Î transformÀ» ÀúÀåÇÏ°í ½ÍÀ» ¶§ »ç¿ëÇÏ½Ã¿À */
+	/* ë¶€ëª¨ ì˜¤ë¸Œì íŠ¸ ì—†ëŠ” ì˜¤ë¸Œì íŠ¸ì— ëŒ€í•´ì„œ, Set World ì´í›„ì— ì˜êµ¬ì ìœ¼ë¡œ transformì„ ì €ì¥í•˜ê³  ì‹¶ì„ ë•Œ ì‚¬ìš©í•˜ì‹œì˜¤ */
 	void WorldMatrixDecompose();
 
 public:
