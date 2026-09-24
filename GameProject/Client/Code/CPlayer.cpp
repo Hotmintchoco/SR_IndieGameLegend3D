@@ -223,8 +223,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
         fSpeed *= 2;
     }
 
-    _bool bIsMove = false;
-    _vec3 vFinalVec = { 0.f, 0.f, 0.f };
 
     if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
     {
@@ -246,7 +244,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
         m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vRight, &vRight), fSpeed, fTimeDelta);
     }
 
-    if (vFinalVec.x > FLT_EPSILON || vFinalVec.y || FLT_EPSILON && vFinalVec.z || FLT_EPSILON)  m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vFinalVec, &vFinalVec), fSpeed, fTimeDelta);
 
 
     if (CDInputMgr::GetInstance()->Key_Down(DIK_TAB))
