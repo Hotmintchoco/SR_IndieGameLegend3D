@@ -29,6 +29,7 @@ public:
 private:
 	HRESULT	Add_Component();
 	void Animation(const _float& fTimeDelta);
+	void CheckLifeTime(const _float& fTimeDelta);
 	void BillBoard();
 
 	Engine::CRcTex* m_pBufferCom = nullptr;
@@ -42,7 +43,7 @@ private:
 
 	/* 기본 속성 */
 	float m_fSpeed = 3.f;
-	float m_fLifeTime = 10.f;
+	float m_fLifeTime = 3.f;
 	float m_fLeftLifeTime = m_fLifeTime;
 
 	/* 애니메이션 */

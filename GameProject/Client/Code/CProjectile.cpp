@@ -40,6 +40,8 @@ _int CProjectile::Update_GameObject(const _float& fTimeDelta)
 
     m_pTransformCom->Move_Pos(&m_vDir, m_fSpeed, fTimeDelta);
 
+    CheckLifeTime(fTimeDelta);
+
     Animation(fTimeDelta);
 
     return iExit;
@@ -144,6 +146,15 @@ void CProjectile::BillBoard()
     memcpy(&pMatWorld->m[0][0], &vRightS, sizeof(_vec3));
     memcpy(&pMatWorld->m[1][0], &vUpS, sizeof(_vec3));
     memcpy(&pMatWorld->m[2][0], &vLookS, sizeof(_vec3));
+}
+
+void CProjectile::CheckLifeTime(const Engine::_float& fTimeDelta)
+{
+    m_fLeftLifeTime -= fTimeDelta;
+    if (m_fLeftLifeTime <= 0.f)
+    {
+        Set_Dead(true);
+    }
 }
 
 CProjectile* CProjectile::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir)
