@@ -68,19 +68,25 @@ void CMinimapUI::Render_GameObject()
     {
         _int x = i % 5;
         _int y = i / 5;
-        
-        TRoomData* pRoomData = CRoomLoadingMgr::GetInstance()->GetRoomData(i);
+
+        // 방문 여부 체크
+		_bool bVisited = CGameStatusMgr::GetInstance()->IsVisited(i);
         _uint iDoorMask = 0;
 
-        // vecDoorInfo 순서: 동(1), 남(2), 서(4), 북(8)
-        if (pRoomData->vecDoorInfo.size() > 0 && pRoomData->vecDoorInfo[0])
-            iDoorMask |= 1;
-        if (pRoomData->vecDoorInfo.size() > 1 && pRoomData->vecDoorInfo[1])
-            iDoorMask |= 2;
-        if (pRoomData->vecDoorInfo.size() > 2 && pRoomData->vecDoorInfo[2])
-            iDoorMask |= 4;
-        if (pRoomData->vecDoorInfo.size() > 3 && pRoomData->vecDoorInfo[3])
-            iDoorMask |= 8;
+        if (bVisited || i == iPlayerRoomIndex)
+        {
+            TRoomData* pRoomData = CRoomLoadingMgr::GetInstance()->GetRoomData(i);
+
+            // vecDoorInfo 순서: 동(1), 남(2), 서(4), 북(8)
+            if (pRoomData->vecDoorInfo[0])
+                iDoorMask |= 1;
+            if (pRoomData->vecDoorInfo[1])
+                iDoorMask |= 2;
+            if (pRoomData->vecDoorInfo[2])
+                iDoorMask |= 4;
+            if (pRoomData->vecDoorInfo[3])
+                iDoorMask |= 8;
+        }
 
         _float fSize = 22.f;
 
