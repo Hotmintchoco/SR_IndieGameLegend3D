@@ -17,7 +17,7 @@
 _uint CMonster::iMonsterIdx=0;
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_iHp(0), m_fFrame(0.f), m_fHitEffectDuration(0.1f), m_fHitEffectTime(0.f), m_bHitState(false)
+    : CGameObject(pGraphicDev), m_iHp(0), m_fFrame(0.f), m_fHitEffectTime(0.1f), m_fHitEffectElapsedTime(0.f), m_bHitState(false)
 {
     ++iMonsterIdx;
     /* 성철 */
@@ -57,14 +57,8 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
     }
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
     
-    if (m_fHitEffectTime < m_fHitEffectDuration && m_bHitState == true)
-    {
-        m_fHitEffectTime += fTimeDelta;
-    }
-    else  if (m_fHitEffectTime >= m_fHitEffectDuration)
-    {
-        m_bHitState = false;
-    }
+    Update_HitState(fTimeDelta);
+
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
 
 
@@ -107,36 +101,40 @@ void CMonster::OnCollisionEnter(CGameObject* pOther)
     
     if (pCollider && pCollider->Get_CollisionID() == COLL_PBULLET)
     {
-        m_fHitEffectTime = 0.f;
         m_bHitState = true;
+        m_fHitEffectElapsedTime = 0.f;
         m_iHp -= static_cast<CBullet*>(pOther)->Get_Damage();
+    }
+}
+
+void CMonster::Update_HitState(const _float& fTimeDelta)
+{
+    if (m_bHitState == true && m_fHitEffectElapsedTime < m_fHitEffectTime)
+    {
+        m_fHitEffectElapsedTime += fTimeDelta;
+    }
+    else  if (m_fHitEffectElapsedTime >= m_fHitEffectTime)
+    {
+        m_bHitState = false;
+        m_fHitEffectElapsedTime = 0.f;
     }
 }
 
 void CMonster::Enable_HitRenderState()
 {
-
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
 
     // 빨간색
-    m_pGraphicDev->SetRenderState(
-        D3DRS_TEXTUREFACTOR,
-        D3DCOLOR_ARGB(255, 255, 0, 0)
-    );
+    m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 0, 0));
 }
 
 void CMonster::Disable_HitRenderState()
 {
-
-    m_pGraphicDev->SetTextureStageState(
-        0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-
-    m_pGraphicDev->SetTextureStageState(
-        0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-
+    m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+    m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 }
 
 HRESULT CMonster::Add_Component()

@@ -156,7 +156,6 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CDebugMgr.h" />
     <ClInclude Include="..\Header\CCustomTex.h" />
     <ClInclude Include="..\Header\CDInputMgr.h" />
-    <ClInclude Include="..\Header\CEffectMgr.h" />
     <ClInclude Include="..\Header\CEventDelegate.h" />
     <ClInclude Include="..\Header\CFont.h" />
     <ClInclude Include="..\Header\CFontMgr.h" />
@@ -210,7 +209,6 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CDebugMgr.cpp" />
     <ClCompile Include="..\Code\CCustomTex.cpp" />
     <ClCompile Include="..\Code\CDInputMgr.cpp" />
-    <ClCompile Include="..\Code\CEffectMgr.cpp" />
     <ClCompile Include="..\Code\CEventDelegate.cpp" />
     <ClCompile Include="..\Code\CFont.cpp" />
     <ClCompile Include="..\Code\CFontMgr.cpp" />

@@ -1,21 +1,21 @@
 ﻿#include "pch.h"
-#include "CEffect.h"
+#include "CParticle.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CManagement.h"
 #include <ctime>
 
-CEffect::CEffect(LPDIRECT3DDEVICE9 pGraphicDev)
+CParticle::CParticle(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_fFrame(0.f)
 {
 }
 
 
-CEffect::~CEffect()
+CParticle::~CParticle()
 {
 }
 
-HRESULT CEffect::Ready_GameObject()
+HRESULT CParticle::Ready_GameObject()
 {
     if (FAILED(Add_Component()))
         return E_FAIL;
@@ -23,7 +23,7 @@ HRESULT CEffect::Ready_GameObject()
     return S_OK;
 }
 
-_int CEffect::Update_GameObject(const _float& fTimeDelta)
+_int CParticle::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -34,17 +34,17 @@ _int CEffect::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CEffect::LateUpdate_GameObject(const _float& fTimeDelta)
+void CParticle::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 
 }
 
-void CEffect::Render_GameObject()
+void CParticle::Render_GameObject()
 {
 }
 
-HRESULT CEffect::Add_Component()
+HRESULT CParticle::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
@@ -60,9 +60,9 @@ HRESULT CEffect::Add_Component()
 }
 
 
-CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CParticle* CParticle::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CEffect* pEffect = new CEffect(pGraphicDev);
+    CParticle* pEffect = new CParticle(pGraphicDev);
 
     if (FAILED(pEffect->Ready_GameObject()))
     {
@@ -74,17 +74,26 @@ CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pEffect;
 }
 
-void CEffect::Free()
+void CParticle::Free()
 {
     CGameObject::Free();
 }
 
-void CEffect::Set_Pos(const _vec3& vPos)
+void CParticle::Set_Pos(_vec3 vPos)
 {
     m_pTransformCom->Set_Pos(vPos);
 }
+void CParticle::Set_Pos(_float fX, _float fY, _float fZ)
+{
+    m_pTransformCom->Set_Pos(fX, fY, fZ);
+}
 
-void CEffect::Set_Scale(const _vec3& vPos)
+void CParticle::Set_Scale(_vec3 vPos)
 {
     m_pTransformCom->Set_Scale(vPos);
+}
+
+void CParticle::Set_Scale(_float fX, _float fY, _float fZ)
+{
+    m_pTransformCom->Set_Scale(fX, fY, fZ);
 }

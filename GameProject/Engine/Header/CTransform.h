@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CComponent.h"
 
 BEGIN(Engine)
@@ -64,6 +64,8 @@ public:
 		m_vScale = vScale;
 		UpdateWorldMatrix();
 	}
+
+	_vec3 Get_Scale() { return m_vScale; }
 
 	void UpdateWorldMatrix();
 

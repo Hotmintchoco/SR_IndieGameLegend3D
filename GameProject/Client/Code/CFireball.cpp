@@ -12,6 +12,7 @@
 #include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
 #include "CSpriteTile.h"
+#include "CParticle_Sphere.h"
 
 CFireball::CFireball(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_fLandingTime(0.f), m_iLandingCount(0), m_fLandingVelocity(0.f)
@@ -154,7 +155,7 @@ CFireball* CFireball::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CFireball::Throw(const _float& fTimeDelta)
 {
-    m_fLandingTime += fTimeDelta;
+    //m_fLandingTime += fTimeDelta;
 
     _vec3 vPos, vVelocity;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -179,6 +180,17 @@ void CFireball::Throw(const _float& fTimeDelta)
         CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->RequestTileContamination(vPos, 1, EContaminateType::LAVA, 3.f);
         /* -------------------------------------- */
         
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        CGameObject* pGameObject = nullptr;
+
+        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::ORANGE, 45, 5.f, 0.16f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
+
+        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::ORANGE, 45, 3.f, 0.16f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
+
         return;
     }
     m_pTransformCom->Move_Pos(&vVelocity, 1.f, fTimeDelta);

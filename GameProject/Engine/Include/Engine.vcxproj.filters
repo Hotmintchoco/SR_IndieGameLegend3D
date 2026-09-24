@@ -130,9 +130,6 @@
     <ClCompile Include="..\Code\CCustomTex.cpp">
       <Filter>05. Component\00. VIBuffer\07. CustomTex</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CEffectMgr.cpp">
-      <Filter>15. EffectMgr</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CGraphicDev.h">
@@ -288,9 +285,6 @@
     <ClInclude Include="..\Header\CCustomTex.h">
       <Filter>05. Component\00. VIBuffer\07. CustomTex</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CEffectMgr.h">
-      <Filter>15. EffectMgr</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00. GraphicDev">
@@ -418,9 +412,6 @@
     </Filter>
     <Filter Include="05. Component\00. VIBuffer\07. CustomTex">
       <UniqueIdentifier>{baa4eca3-7e34-4316-9fa3-a6087ec6921e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="15. EffectMgr">
-      <UniqueIdentifier>{29f7eca8-7ebc-425f-97fb-6b7589219ae7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

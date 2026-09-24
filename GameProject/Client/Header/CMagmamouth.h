@@ -36,6 +36,8 @@ public:
 private:
 	void Shuffle_Array(_uint N);
 
+	void Opening_MagmaMouth(const _float& fTimeDelta);
+
 	void Spawn_Speyeder(const _float& fTimeDelta);
 	void Throw_Fireball(const _float& fTimeDelta);
 	void Move_Magmamouth(const _float& fTimeDelta);
@@ -60,7 +62,7 @@ protected:
 	virtual void		Free();
 
 private:
-	enum MAGMAMOUTHSTATE { SPAWN, FIREBALL, MOVE, IDLE, DEAD };
+	enum MAGMAMOUTHSTATE { SPAWN, FIREBALL, MOVE, IDLE, DEAD, OPENING };
 	MAGMAMOUTHSTATE m_eMagmaMouthState;
 
 	_float m_fSpawn_CoolDown;
@@ -73,7 +75,7 @@ private:
 	_bool m_bFireballFinish[3];
 
 	_vec3 m_vRoomCenterLocation;
-	_vec3 m_MovePosition;
+	_vec3 m_vMovePosition;
 	_bool m_bMoveFlag;
 	_bool m_bMoveFlag2;
 
@@ -94,9 +96,32 @@ private:
 	_float m_fElapsedDeadTime = 0.f;
 	_float m_fElapsedDeadTime2 = 0.f;
 	_float m_fElapsedDeadTime3 = 0.f;
+	_float m_fElapsedDeadTime4 = 0.f;
 	_float m_fDeadTime = 5.f;
 	_bool m_DeadFireball[3] = { false, false, false };
+	_bool m_DeadExplosion = false;
+
+	_bool m_bOpening = true;
+	_bool m_bOpeningMoveFlag = false;
+	_float m_bElapsedOpeningTime = 0.f;
+	//_vec3 m_vOpeningMoveDirection[9] =
+	//{
+	//	{1,0,1}, {-1,0,-1},
+	//	{-1,0,-1}, {1,0,1},
+	//	{1,0,-1}, {-1,0,1},
+	//	{-1,0,1}, {1,0,-1},
+	//	{-4.5f,0,0}
+	//};
+	_vec3 m_vOpeningMoveDirection[5] =
+	{
+		{3,0,3}, {-6,0,0},
+		{0,0,-6}, {3,0,3},
+		{-4.5f,0,0}
+	};
+	_int m_iOpeningMoveIndex = 0;
+
 
 
 	_uint m_iPhase = 0;
+	_bool m_bMoveState = true;
 };

@@ -7,11 +7,11 @@ namespace Engine
 	class CTransform;
 }
 
-class CEffect : public CGameObject
+class CParticle : public CGameObject
 {
 protected:
-	explicit CEffect(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CEffect();
+	explicit CParticle(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CParticle();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -22,20 +22,21 @@ public:
 protected:
 	HRESULT			Add_Component();
 
-public:
-	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	void Set_Pos(const _vec3& vPos);
-	void Set_Scale(const _vec3& vScale);
-	void Set_LifeTime(const _float& fLifeTime) { m_fLifeTime = fLifeTime; }
-
 protected:
 	Engine::CTransform* m_pTransformCom = nullptr;
-
 	_float				m_fFrame;
 
 	_float m_fLifeTime = 0.f;
 	_float m_fElapsedTime = 0.f;
 
+public:
+	static CParticle* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	void Set_Pos(_vec3 vPos);
+	void Set_Pos(_float fX, _float fY, _float fZ);
+	void Set_Scale(_vec3 vPos);
+	void Set_Scale(_float fX, _float fY, _float fZ);
+
+	void Set_LifeTime(const _float& fLifeTime) { m_fLifeTime = fLifeTime; }
 
 
 public:

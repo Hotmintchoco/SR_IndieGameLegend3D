@@ -27,8 +27,11 @@ public:
 
 
 	virtual			void		OnCollisionEnter(CGameObject* pOther) override;
+
+	void Update_HitState(const _float& fTimeDelta);
 	void Enable_HitRenderState();
 	void Disable_HitRenderState();
+
 protected:
 	HRESULT			Add_Component();
 	void Set_OnTerrain();
@@ -42,8 +45,8 @@ protected:
 
 	_int m_iHp;
 	_float m_fFrame;
-	_float m_fHitEffectDuration;
 	_float m_fHitEffectTime;
+	_float m_fHitEffectElapsedTime;
 	_bool m_bHitState;
 
 	_bool m_bDelete = false;

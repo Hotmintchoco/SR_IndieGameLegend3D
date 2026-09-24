@@ -1,17 +1,17 @@
 ﻿#pragma once
 
-#include "CEffect.h"
+#include "CParticle.h"
 
 namespace Engine
 {
 	class CRcColCustom;
 }
 
-class CEffect_Rectangle : public CEffect
+class CParticle_Rectangle : public CParticle
 {
 protected:
-	explicit CEffect_Rectangle(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CEffect_Rectangle();
+	explicit CParticle_Rectangle(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CParticle_Rectangle();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -26,8 +26,8 @@ protected:
 	Engine::CRcColCustom* m_pBufferCom = nullptr;
 
 public:
-	static CEffect_Rectangle* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	static CEffect_Rectangle* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vVelocity, D3DXCOLOR eColor);
+	static CParticle_Rectangle* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CParticle_Rectangle* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vVelocity, D3DXCOLOR eColor);
 
 	void Set_Velocity(const _vec3& vVelocity) { m_vVelocity = vVelocity; }
 	void Set_Color(const D3DXCOLOR& eColor) { m_eColor = eColor; }

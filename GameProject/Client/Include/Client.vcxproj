@@ -159,8 +159,9 @@
     <ClInclude Include="..\Header\CDoor.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEffect.h" />
-    <ClInclude Include="..\Header\CEffect_Sphere.h" />
-    <ClInclude Include="..\Header\CEffect_Rectangle.h" />
+    <ClInclude Include="..\Header\CParticle.h" />
+    <ClInclude Include="..\Header\CParticle_Sphere.h" />
+    <ClInclude Include="..\Header\CParticle_Rectangle.h" />
     <ClInclude Include="..\Header\CEnergy.h" />
     <ClInclude Include="..\Header\CExplodeRange.h" />
     <ClInclude Include="..\Header\CExplodeSphere.h" />
@@ -200,7 +201,6 @@
     <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CTile.h" />
     <ClInclude Include="..\Header\CTrail.h" />
-    <ClInclude Include="..\Header\CTrail_MagmaMouth.h" />
     <ClInclude Include="..\Header\CTriggerBox.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CWall.h" />
@@ -243,8 +243,9 @@
     <ClCompile Include="..\Code\CDoor.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEffect.cpp" />
-    <ClCompile Include="..\Code\CEffect_Sphere.cpp" />
-    <ClCompile Include="..\Code\CEffect_Rectangle.cpp" />
+    <ClCompile Include="..\Code\CParticle.cpp" />
+    <ClCompile Include="..\Code\CParticle_Sphere.cpp" />
+    <ClCompile Include="..\Code\CParticle_Rectangle.cpp" />
     <ClCompile Include="..\Code\CEnergy.cpp" />
     <ClCompile Include="..\Code\CExplodeRange.cpp" />
     <ClCompile Include="..\Code\CExplodeSphere.cpp" />
@@ -283,7 +284,6 @@
     <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CTile.cpp" />
     <ClCompile Include="..\Code\CTrail.cpp" />
-    <ClCompile Include="..\Code\CTrail_MagmaMouth.cpp" />
     <ClCompile Include="..\Code\CTriggerBox.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CWall.cpp" />

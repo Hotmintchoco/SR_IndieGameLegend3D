@@ -1,6 +1,6 @@
-#pragma once
+﻿#pragma once
 
-#include "CEffect.h"
+#include "CParticle.h"
 
 namespace Engine
 {
@@ -8,7 +8,7 @@ namespace Engine
 	class CTexture;
 }
 
-class CSmallExplode : public CEffect
+class CSmallExplode : public CParticle
 {
 protected:
 	explicit CSmallExplode(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -217,20 +217,17 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Frustum\Explosive\ExplodeSphere">
       <UniqueIdentifier>{50d3b930-96f7-46d0-9513-601ce505a7a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. Effect\Effect_Sphere">
-      <UniqueIdentifier>{baff450c-8090-4bfb-8c04-27f3610217e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\06. Effect\Effect_Rectangle">
-      <UniqueIdentifier>{bc89f83d-5714-4323-8fab-14f2cd737f2f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="100. Util">
       <UniqueIdentifier>{237be30c-3143-4c28-a3d6-1be2ba2b0ac6}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\06. Effect\Trail">
       <UniqueIdentifier>{0d4e4e58-582c-4be8-a5b3-f5d6a4245cf2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. Effect\Trail\Trail_MagmaMouth">
-      <UniqueIdentifier>{66a04df7-ebf3-4bd2-8103-73c4dcefb56e}</UniqueIdentifier>
+    <Filter Include="02. GameObject\06. Effect\Particle_Sphere">
+      <UniqueIdentifier>{baff450c-8090-4bfb-8c04-27f3610217e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Effect\Particle_Rectangle">
+      <UniqueIdentifier>{bc89f83d-5714-4323-8fab-14f2cd737f2f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -279,7 +276,7 @@
     <ClInclude Include="..\Header\CSkyBox.h">
       <Filter>02. GameObject\05. SkyBox</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CEffect.h">
+    <ClInclude Include="..\Header\CParticle.h">
       <Filter>02. GameObject\06. Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CGun.h">
@@ -435,9 +432,6 @@
     <ClInclude Include="..\Header\CFireball.h">
       <Filter>02. GameObject\02. Monster\Magmamouth\Fireball</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CTrail_MagmaMouth.h">
-      <Filter>02. GameObject\06. Effect\Trail\Trail_MagmaMouth</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CPseudoDark.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\PseudoBlack</Filter>
     </ClInclude>
@@ -468,17 +462,20 @@
     <ClInclude Include="..\Header\CBulletParticle.h">
       <Filter>02. GameObject\09. Bullet\BulletParticle</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CEffect_Rectangle.h">
-      <Filter>02. GameObject\06. Effect\Effect_Rectangle</Filter>
+    <ClInclude Include="..\Header\CParticle_Rectangle.h">
+      <Filter>02. GameObject\06. Effect\Particle_Rectangle</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CEffect_Sphere.h">
-      <Filter>02. GameObject\06. Effect\Effect_Sphere</Filter>
+    <ClInclude Include="..\Header\CParticle_Sphere.h">
+      <Filter>02. GameObject\06. Effect\Particle_Sphere</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CDebugPrint.h">
       <Filter>100. Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTrail.h">
       <Filter>02. GameObject\06. Effect\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEffect.h">
+      <Filter>02. GameObject\06. Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -518,7 +515,7 @@
     <ClCompile Include="..\Code\CSkyBox.cpp">
       <Filter>02. GameObject\05. SkyBox</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CEffect.cpp">
+    <ClCompile Include="..\Code\CParticle.cpp">
       <Filter>02. GameObject\06. Effect</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CGun.cpp">
@@ -656,9 +653,6 @@
     <ClCompile Include="..\Code\CFireball.cpp">
       <Filter>02. GameObject\02. Monster\Magmamouth\Fireball</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CTrail_MagmaMouth.cpp">
-      <Filter>02. GameObject\06. Effect\Trail\Trail_MagmaMouth</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CPseudoDark.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\PseudoBlack</Filter>
     </ClCompile>
@@ -689,17 +683,20 @@
     <ClCompile Include="..\Code\CBulletParticle.cpp">
       <Filter>02. GameObject\09. Bullet\BulletParticle</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CEffect_Rectangle.cpp">
-      <Filter>02. GameObject\06. Effect\Effect_Rectangle</Filter>
+    <ClCompile Include="..\Code\CParticle_Rectangle.cpp">
+      <Filter>02. GameObject\06. Effect\Particle_Rectangle</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CEffect_Sphere.cpp">
-      <Filter>02. GameObject\06. Effect\Effect_Sphere</Filter>
+    <ClCompile Include="..\Code\CParticle_Sphere.cpp">
+      <Filter>02. GameObject\06. Effect\Particle_Sphere</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CDebugPrint.cpp">
       <Filter>100. Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTrail.cpp">
       <Filter>02. GameObject\06. Effect\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEffect.cpp">
+      <Filter>02. GameObject\06. Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
