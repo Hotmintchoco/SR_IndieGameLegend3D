@@ -23,9 +23,9 @@ public:
 		*(((_float*)&m_vAngle) + eType) += fAngle;
 		UpdateWorldMatrix();
 	}
-	void		Set_Rotation_Raw(const _vec3& vRadAngle)
+	void		Set_Rotation_Raw(const _vec3& vDegreeAngle)
 	{
-		m_vAngle = vRadAngle;
+		m_vAngle = vDegreeAngle;
 		UpdateWorldMatrix();
 	}
 
