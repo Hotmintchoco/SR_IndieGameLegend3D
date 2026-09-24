@@ -130,6 +130,9 @@
     <ClCompile Include="..\Code\CCustomTex.cpp">
       <Filter>05. Component\00. VIBuffer\07. CustomTex</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CSoundMgr.cpp">
+      <Filter>15. Sound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CGraphicDev.h">
@@ -285,6 +288,9 @@
     <ClInclude Include="..\Header\CCustomTex.h">
       <Filter>05. Component\00. VIBuffer\07. CustomTex</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CSoundMgr.h">
+      <Filter>15. Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00. GraphicDev">
@@ -412,6 +418,9 @@
     </Filter>
     <Filter Include="05. Component\00. VIBuffer\07. CustomTex">
       <UniqueIdentifier>{baa4eca3-7e34-4316-9fa3-a6087ec6921e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="15. Sound">
+      <UniqueIdentifier>{541ae4de-6182-4806-b205-f090097c1e66}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

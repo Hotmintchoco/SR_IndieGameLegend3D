@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CMainApp.h"
 #include "CTimerMgr.h"
 #include "CFrameMgr.h"
@@ -16,6 +16,7 @@
 #include "CGameStatusMgr.h"
 #include "CRandomMgr.h"
 #include "CDebugMgr.h"
+#include "CSoundMgr.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -38,6 +39,9 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(CImGuiTool::Ready(g_hWnd, m_pGraphicDev)))
 		return E_FAIL;
 
+	if (FAILED(CSoundMgr::GetInstance()->Ready()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -48,6 +52,8 @@ int CMainApp::Update_MainApp(const _float& fTimeDelta)
 	m_pManagementClass->Update_Scene(fTimeDelta);
 
 	CGameStatusMgr::GetInstance()->Update(fTimeDelta);
+
+	CSoundMgr::GetInstance()->Update();
 
 	return 0;
 }
@@ -86,22 +92,22 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 
 	(*ppGraphicDev) = m_pDeviceClass->Get_GraphicDev();
 
-	// ÆùÆ® Ãß°¡
+	// í°íŠ¸ ì¶”ê°€
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"¹ÙÅÁ", 20, 20, FW_HEAVY)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"ë°”íƒ•", 20, 20, FW_HEAVY)))
 		return E_FAIL;
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Jinji", L"±Ã¼­", 15, 15, FW_THIN)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Jinji", L"ê¶ì„œ", 15, 15, FW_THIN)))
 		return E_FAIL;
 
 	(*ppGraphicDev)->SetRenderState(D3DRS_LIGHTING, FALSE);
 
-	// ¸¶¿ì½º ÃÊ±âÈ­
+	// ë§ˆìš°ìŠ¤ ì´ˆê¸°í™”
 
 	if (FAILED(CDInputMgr::GetInstance()->Ready_InputDev(g_hInst, g_hWnd)))
 		return E_FAIL;
 
-	// ÇÊÅÍ¸µ Àû¿ë
+	// í•„í„°ë§ ì ìš©
 	m_pGraphicDev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
 	m_pGraphicDev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 	m_pGraphicDev->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
@@ -159,6 +165,7 @@ void CMainApp::Free()
 	CGameStatusMgr::DestroyInstance();
 	CRandomMgr::DestroyInstance();
 	CDebugMgr::DestroyInstance();
+	CSoundMgr::DestroyInstance();
 
 	m_pManagementClass->DestroyInstance();
 	m_pDeviceClass->DestroyInstance();
