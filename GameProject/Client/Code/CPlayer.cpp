@@ -326,14 +326,6 @@ void CPlayer::GetItem(ITEMID iItemID)
     case ITEM_HEAL : 
         UpdateHP(1);
         break;
-    case ITEM_SKILLGAUGE : 
-        CGun* pGun = dynamic_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"));
-        if (pGun != nullptr)
-        {
-            pGun->UpdateUltimateGauge(0.05f);
-            pGun->UpdateSpecialGauge(0.05f);
-        }
-        break;
     }
 }
 

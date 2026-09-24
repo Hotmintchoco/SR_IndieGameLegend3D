@@ -55,9 +55,6 @@
     <Filter Include="02. GameObject\07. Room">
       <UniqueIdentifier>{b9d90846-4426-48a5-9d9f-65b142898dac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\08. Gun">
-      <UniqueIdentifier>{392630cc-bd20-4eb7-9704-747e40434189}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03. Resource">
       <UniqueIdentifier>{39c1497e-736d-4f33-890a-bf345083759c}</UniqueIdentifier>
     </Filter>
@@ -229,6 +226,12 @@
     <Filter Include="100. Util">
       <UniqueIdentifier>{237be30c-3143-4c28-a3d6-1be2ba2b0ac6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Weapon">
+      <UniqueIdentifier>{392630cc-bd20-4eb7-9704-747e40434189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Weapon\00. Gun">
+      <UniqueIdentifier>{2607640a-46ee-4d50-9c31-bc52fb843dfb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -278,9 +281,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CEffect.h">
       <Filter>02. GameObject\06. Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CGun.h">
-      <Filter>02. GameObject\08. Gun</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CWall.h">
       <Filter>02. GameObject\07. Room\BaseProp\Wall</Filter>
@@ -474,6 +474,9 @@
     <ClInclude Include="..\Header\CDebugPrint.h">
       <Filter>100. Util</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGun.h">
+      <Filter>02. GameObject\08. Weapon\00. Gun</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -514,9 +517,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEffect.cpp">
       <Filter>02. GameObject\06. Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CGun.cpp">
-      <Filter>02. GameObject\08. Gun</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CWall.cpp">
       <Filter>02. GameObject\07. Room\BaseProp\Wall</Filter>
@@ -691,6 +691,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CDebugPrint.cpp">
       <Filter>100. Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGun.cpp">
+      <Filter>02. GameObject\08. Weapon\00. Gun</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

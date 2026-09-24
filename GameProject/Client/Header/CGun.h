@@ -1,7 +1,6 @@
-癤�#pragma once
+#pragma once
 
 #include "CGameObject.h"
-#include "Client_Enum.h"
 
 namespace Engine
 {
@@ -17,90 +16,70 @@ protected:
 	virtual ~CGun();
 
 public:
-	virtual			HRESULT		Ready_GameObject();
-	virtual			_int		Update_GameObject(const _float& fTimeDelta);
-	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
-	virtual			void		Render_GameObject();
+	virtual	HRESULT Ready_GameObject();
+	virtual	_int Update_GameObject(const _float& fTimeDelta);
+	virtual	void LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual	void Render_GameObject();
 
-
-private:
-	HRESULT				Add_Component();
-	void				RenderImGui();
-	pair<_vec3, _vec3>	Get_MouseRay();
-	template <typename T1, typename T2>
-    _bool               CheckVtxIntersect(LPDIRECT3DVERTEXBUFFER9 pVB, LPDIRECT3DINDEXBUFFER9 pIB, T1 pVertex, T2 pIndex, _ulong dwVtxCnt, _ulong dwTriCnt, _float& fToDistance, _vec3& vResult, _matrix matWorld, _vec3 vRayPos, _vec3 vRayDir);
+	/* 에너지 아이템 획득 */
+	void GainEnergy();
 
 private:
-	Engine::CPlyTex* m_pBufferCom;
-	Engine::CTransform* m_pTransformCom;
-	Engine::CTexture* m_pTextureCom;
+	HRESULT	Add_Component();
+	void SyncTransformToCamera();
+	void TryShoot();
+	void UpdateLocalTransform(const _vec3& vScale, const _vec3& vRotation, const _vec3& vTransition);
+	void RenderEditorPanel();
+	void UltimateAttack();
+	void Animation(const _float fTimeDelta);
+	void StartShotAnimation();
+	void GetKeyInput();
+
+	Engine::CPlyTex* m_pBufferCom = nullptr;
+	Engine::CTransform* m_pTransformCom = nullptr;
+	Engine::CTexture* m_pTextureCom = nullptr;
+
+	/* 카메라 시점 기준 로컬 오프셋 */
+	_vec3 m_vScaleLocal{0.3f, 0.3f, 0.45f};
+	_vec3 m_vPositionLocal{0.13f, -0.33f, 0.35f};
+	_vec3 m_vRotationLocal{ -1.f, -2.f, 0.f };
+	_vec3 m_vMuzzlePositionLocal{0.0f, 0.4f, 0.7f};
+
+	/* 발사 쿨타임 */
+	float m_fShootInterval = 0.1f; // 애니메이션 시간은 여기에 맞추기
+	float m_fCoolTimeLeft = 0.0f;
+	bool m_bIsCoolTime = false;
+
+	/* 발사 목적지 */
+	float m_fTargetDistance = 10.f;
+	_vec3 m_vBulletFrom{ 0.f, 0.f, 0.f };
+	_vec3 m_vBulletTo{ 0.f, 0.f, 0.f };
+
+	/* 특수 공격 */
+	bool m_bSpecialAttackSwitchOn = false;
+	float m_fSpecialAtkGauge = 0.f;
+	
+	/* 궁극기 */
+	float m_fUltimateAtkGauge = 0.f;
+	float m_bIsUltimateAttackReady = false;
+
+	/* 애니메이션 */
+	bool m_bOnMoveAnimation = false;
+	bool m_bOnSprint = false;
+	float m_fTimeAfterMove = 0.f; // 매개변수 t 
+	float m_fMoveAnimationFrequency = 1.f; // 애니메이션이 초당 몇 번
+	float m_fHorizontalMove = 0.02f; // 가로로 움직이는 거리
+	float m_fQuadraticA = 0.02f; // 이차함수 제곱항 계수
+	bool m_bShotAnimation = false;
+	float m_fMaxRecoilAngle = -20.f;
+	float m_fRecoilDamping = 2.f; // 반동 감쇠. 0으로 갈수록 직선, 값이 커질수록 아래로 굽은 곡선
+	float m_fTimeAfterShot = 0.f;
+
 
 public:
 	static CGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
-public:
-    void    UpdateUltimateGauge(_float fAmount);
-    void    UpdateSpecialGauge(_float iAmount);
-public:
-	BULLETID	m_iCurBullet;
-	_int		m_iDmg;
-
 private:
-	_float			m_fLastShotTime;
-	_float			m_fShootRate;
-	_float			m_fRunningTime;
-    _float          m_fUltimateGauge;
-    _float          m_fSpecialGauge;
-	_float			m_fUltimateTimer;
-    _float          m_fUltimateDuration;
-    _float			m_fSpecialTimer;
-    _float          m_fSpecialDuration;
-	_bool			m_bUltimateActivated;
-    _bool           m_bSpecialActivated;
-
-private:
-	virtual void		Free();
+	virtual void Free() override;
 };
 
-
-
-template <typename T1, typename T2>
-_bool CGun::CheckVtxIntersect(LPDIRECT3DVERTEXBUFFER9 pVB, LPDIRECT3DINDEXBUFFER9 pIB, T1 pVertex, T2 pIndex, _ulong dwVtxCnt, _ulong dwTriCnt, _float& fToDistance, _vec3& vResult, _matrix matWorld, _vec3 vRayPos, _vec3 vRayDir)
-{
-    _bool bIsHit = false;
-    pVB->Lock(0, 0, (void**)&pVertex, D3DLOCK_READONLY);
-    pIB->Lock(0, 0, (void**)&pIndex, 0);
-
-
-    vector<_vec3> vecVtx;
-
-    for (_ulong dwCnt = 0; dwCnt < dwTriCnt; dwCnt++)
-    {
-        _vec3 vVtxInfo[3] =
-            { pVertex[pIndex[dwCnt]._0].vPosition,
-            pVertex[pIndex[dwCnt]._1].vPosition,
-            pVertex[pIndex[dwCnt]._2].vPosition};
-        
-        for (_int i = 0; i < 3; i++)
-        {
-            D3DXVec3TransformCoord(&vVtxInfo[i], &vVtxInfo[i], &matWorld);
-        }
-        _vec3 vCurHit;
-        _float fU, fV, fCurToDistance;
-        if (D3DXIntersectTri(&vVtxInfo[0], &vVtxInfo[1], &vVtxInfo[2], &vRayPos, &vRayDir, &fU, &fV, &fCurToDistance))
-        {
-            bIsHit = true;
-            if (fabs(fCurToDistance) < fToDistance || fToDistance == 0.f)
-            {
-                fToDistance = fabs(fCurToDistance);
-                vResult = vVtxInfo[0] + fU * (vVtxInfo[1] - vVtxInfo[0]) + fV * (vVtxInfo[2] - vVtxInfo[0]);
-            }
-        }
-
-    }
-
-    pVB->Unlock();
-    pIB->Unlock();
-
-    return bIsHit;
-}

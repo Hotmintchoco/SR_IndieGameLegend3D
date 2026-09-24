@@ -1,4 +1,4 @@
-Ôªø#include "pch.h"
+#include "pch.h"
 #include "CBullet.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -10,7 +10,7 @@
 #include "CBulletParticle.h"
 
 CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_vDir(0.f, 0.f, 0.f), m_iBulletID(BULLET_DEFAULT), m_iBulletDmg(10), m_fBulletLife(0.f), m_fSpeed(50.f)
+    : CGameObject(pGraphicDev), m_vDir(0.f, 0.f, 0.f), m_iBulletID(BULLET_DEFAULT), m_iBulletDmg(1), m_fBulletLife(0.f), m_fSpeed(30.f)
 {
 }
 
@@ -21,8 +21,8 @@ CBullet::~CBullet()
 
 HRESULT CBullet::Ready_GameObject(const _vec3* pPos, const _vec3* pDir)
 {
-    m_iBulletID = static_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"))->m_iCurBullet;
-    m_iBulletDmg = static_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"))->m_iDmg;
+    //m_iBulletID = static_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"))->m_iCurBullet;
+    //m_iBulletDmg = static_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"))->m_iDmg;
 
     if (FAILED(Add_Component()))
         return E_FAIL;
@@ -32,7 +32,7 @@ HRESULT CBullet::Ready_GameObject(const _vec3* pPos, const _vec3* pDir)
     switch (m_iBulletID)
     {
     case BULLET_DEFAULT : 
-        m_pTransformCom->m_vScale = { 0.3f, 0.3f, 0.3f };
+        m_pTransformCom->m_vScale = { 0.1f, 0.1f, 0.1f };
         break;
     case BULLET_SMALL : 
         m_pTransformCom->m_vScale = { 0.15f, 0.15f, 0.15f };
@@ -63,8 +63,8 @@ HRESULT CBullet::Ready_GameObject(const _vec3* pPos, const _vec3* pDir)
     }
     
 
-    m_pBulletTrail = CBulletTrail::Create(m_pGraphicDev, pPos, &m_vDir, m_fSpeed);
-    CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"BulletTrail", m_pBulletTrail);
+    //m_pBulletTrail = CBulletTrail::Create(m_pGraphicDev, pPos, &m_vDir, m_fSpeed);
+    //CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"BulletTrail", m_pBulletTrail);
 
     return S_OK;
 }
@@ -78,7 +78,7 @@ _int CBullet::Update_GameObject(const _float& fTimeDelta)
     if (m_fBulletLife >= fBulletLife)
     {
         Set_Dead(TRUE);
-        m_pBulletTrail->Set_Dead(TRUE);
+        //m_pBulletTrail->Set_Dead(TRUE);
 
         _vec3 vPos, vRight, vUp, vLook;
 
@@ -144,7 +144,7 @@ void CBullet::LateUpdate_GameObject(const _float& fTimeDelta)
 
     m_pTransformCom->Set_World(&matWorld);
 
-    // Ï∂©Îèå Îß§ÎãàÏ†ÄÏóê ÏΩúÎùºÏù¥Îçî Îì±Î°ù
+    // √Êµπ ∏≈¥œ¿˙ø° ƒ›∂Û¿Ã¥ı µÓ∑œ
 
     switch (m_iBulletID)
     {

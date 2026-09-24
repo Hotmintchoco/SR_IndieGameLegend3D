@@ -6,7 +6,6 @@
 #include "CTransform.h"
 #include "CGun.h"
 #include "CManagement.h"
-#include "CPlayer.h"
 
 CEnergy::CEnergy(LPDIRECT3DDEVICE9 pGraphicDev)
     : CItem(pGraphicDev)
@@ -78,8 +77,8 @@ HRESULT CEnergy::Add_Component()
 
 void CEnergy::Consume()
 {
-    CPlayer* pPlayer = static_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
-    pPlayer->GetItem(ITEMID::ITEM_SKILLGAUGE);
+    CGun* pGun = static_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"));
+    pGun->GainEnergy();
 
     Set_Dead(true);
 }
