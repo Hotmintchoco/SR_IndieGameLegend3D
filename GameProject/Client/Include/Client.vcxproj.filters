@@ -70,9 +70,6 @@
     <Filter Include="04. Manager">
       <UniqueIdentifier>{21b47c84-577f-4f39-b3ac-01f370fb2f24}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\09. Bullet">
-      <UniqueIdentifier>{6bdbc102-7ebf-41d5-b4a6-11d635b0163e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Monster\Skull">
       <UniqueIdentifier>{8c263690-d182-4997-b6e2-5af20f8f6cd2}</UniqueIdentifier>
     </Filter>
@@ -205,12 +202,6 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\GameMachine">
       <UniqueIdentifier>{31be8105-a523-4dda-914e-225628b9d96c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\09. Bullet\BulletTrail">
-      <UniqueIdentifier>{507fc53d-54bb-44af-a564-17e6d18d5a96}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\09. Bullet\BulletParticle">
-      <UniqueIdentifier>{d9883dde-8be5-4d6d-84d7-3d4d56bc6919}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\06. Effect\Trail_MagmaMouth">
       <UniqueIdentifier>{66a04df7-ebf3-4bd2-8103-73c4dcefb56e}</UniqueIdentifier>
     </Filter>
@@ -226,11 +217,14 @@
     <Filter Include="100. Util">
       <UniqueIdentifier>{237be30c-3143-4c28-a3d6-1be2ba2b0ac6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\08. Weapon">
+    <Filter Include="02. GameObject\08. Combat">
       <UniqueIdentifier>{392630cc-bd20-4eb7-9704-747e40434189}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\08. Weapon\00. Gun">
+    <Filter Include="02. GameObject\08. Combat\00. Gun">
       <UniqueIdentifier>{2607640a-46ee-4d50-9c31-bc52fb843dfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile">
+      <UniqueIdentifier>{6bdbc102-7ebf-41d5-b4a6-11d635b0163e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -302,9 +296,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CFog.h">
       <Filter>02. GameObject\07. Room\BaseProp\Fog</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CBullet.h">
-      <Filter>02. GameObject\09. Bullet</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CSkull.h">
       <Filter>02. GameObject\02. Monster\Skull</Filter>
@@ -459,12 +450,6 @@
     <ClInclude Include="..\Header\CGameMachine.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\GameMachine</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CBulletTrail.h">
-      <Filter>02. GameObject\09. Bullet\BulletTrail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CBulletParticle.h">
-      <Filter>02. GameObject\09. Bullet\BulletParticle</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CEffect_Rectangle.h">
       <Filter>02. GameObject\06. Effect\Effect_Rectangle</Filter>
     </ClInclude>
@@ -475,7 +460,10 @@
       <Filter>100. Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CGun.h">
-      <Filter>02. GameObject\08. Weapon\00. Gun</Filter>
+      <Filter>02. GameObject\08. Combat\00. Gun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CProjectile.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -526,9 +514,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CFog.cpp">
       <Filter>02. GameObject\07. Room\BaseProp\Fog</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CBullet.cpp">
-      <Filter>02. GameObject\09. Bullet</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CImGuiTool.cpp">
       <Filter>999. ImGUI</Filter>
@@ -677,12 +662,6 @@
     <ClCompile Include="..\Code\CGameMachine.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\GameMachine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CBulletTrail.cpp">
-      <Filter>02. GameObject\09. Bullet\BulletTrail</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CBulletParticle.cpp">
-      <Filter>02. GameObject\09. Bullet\BulletParticle</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CEffect_Rectangle.cpp">
       <Filter>02. GameObject\06. Effect\Effect_Rectangle</Filter>
     </ClCompile>
@@ -693,7 +672,10 @@
       <Filter>100. Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CGun.cpp">
-      <Filter>02. GameObject\08. Weapon\00. Gun</Filter>
+      <Filter>02. GameObject\08. Combat\00. Gun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CProjectile.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -148,11 +148,9 @@
     <ClInclude Include="..\Header\CBackGround.h" />
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
     <ClInclude Include="..\Header\CBoss1.h" />
-    <ClInclude Include="..\Header\CBullet.h" />
-    <ClInclude Include="..\Header\CBulletParticle.h" />
+    <ClInclude Include="..\Header\CProjectile.h" />
     <ClInclude Include="..\Header\CButtonTile.h" />
     <ClInclude Include="..\Header\CClearCondition.h" />
-    <ClInclude Include="..\Header\CBulletTrail.h" />
     <ClInclude Include="..\Header\CCrosshair.h" />
     <ClInclude Include="..\Header\CDebugPrint.h" />
     <ClInclude Include="..\Header\CDirectionUI.h" />
@@ -231,11 +229,9 @@
     <ClCompile Include="..\Code\CBackGround.cpp" />
     <ClCompile Include="..\Code\CBreakableFrustum.cpp" />
     <ClCompile Include="..\Code\CBoss1.cpp" />
-    <ClCompile Include="..\Code\CBullet.cpp" />
+    <ClCompile Include="..\Code\CProjectile.cpp" />
     <ClCompile Include="..\Code\CButtonTile.cpp" />
-    <ClCompile Include="..\Code\CBulletParticle.cpp" />
     <ClCompile Include="..\Code\CClearCondition.cpp" />
-    <ClCompile Include="..\Code\CBulletTrail.cpp" />
     <ClCompile Include="..\Code\CCrosshair.cpp" />
     <ClCompile Include="..\Code\CDebugPrint.cpp" />
     <ClCompile Include="..\Code\CDirectionUI.cpp" />

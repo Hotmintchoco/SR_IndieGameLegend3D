@@ -12,7 +12,6 @@
 #include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
 #include "Client_Struct.h"
-#include "CBullet.h"
 
 _uint CMonster::iMonsterIdx=0;
 
@@ -105,11 +104,11 @@ void CMonster::OnCollisionEnter(CGameObject* pOther)
 {
 	CCollider* pCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
     
-    if (pCollider && pCollider->Get_CollisionID() == COLL_PBULLET)
+    if (pCollider && pCollider->Get_CollisionID() == COLL_PROJECTILE)
     {
         m_fHitEffectTime = 0.f;
         m_bHitState = true;
-        m_iHp -= static_cast<CBullet*>(pOther)->Get_Damage();
+        m_iHp -= 1; /* 성철 : Collider ID, 데미지 받는 방식 임시로 바꿔둠 */
     }
 }
 

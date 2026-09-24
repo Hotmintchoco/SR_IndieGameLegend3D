@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 /* �� ���� */
 enum class EWallDir
@@ -28,7 +28,7 @@ enum COLLISIONID
 	/* COLL_ID8  */	COLL_EXPLODERANGE,
 	/* COLL_ID9  */	COLL_BUTTON,
 	/* COLL_ID10 */	COLL_GAMEMACHINE,
-	/* COLL_ID11 */	COLL_ID11,
+	/* COLL_ID11 */	COLL_PROJECTILE,
 	/* COLL_ID12 */	COLL_ID12,
 	/* COLL_ID13 */	COLL_ID13,
 	/* COLL_ID14 */	COLL_ID14,

@@ -1,11 +1,11 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CGun.h"
 #include "CRenderer.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CCameraMgr.h"
 #include "CImGuiTool.h"
-#include "CBullet.h"
+#include "CProjectile.h"
 #include "CDInputMgr.h"
 #include "CGameStatusMgr.h"
 
@@ -103,13 +103,13 @@ void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CGun::SyncTransformToCamera()
 {
-    /* Ä«¸Þ¶ó À§Ä¡¸¦ ¹Þ¾Æ À§Ä¡°ª Á¶Á¤*/
+    /* ì¹´ë©”ë¼ ìœ„ì¹˜ë¥¼ ë°›ì•„ ìœ„ì¹˜ê°’ ì¡°ì •*/
     _matrix matCamera, matWorld;
     CCameraMgr::GetInstance()->GetCamera(L"Camera_Player_FPV")->GetWorld(&matCamera);
     D3DXMatrixMultiply(&matWorld, m_pTransformCom->Get_World(), &matCamera);
     m_pTransformCom->Set_World(&matWorld);
     
-    /* ÃÑ±¸ À§Ä¡¿Í ¹ß»ç ¹æÇâ ¾÷µ¥ÀÌÆ® */
+    /* ì´êµ¬ ìœ„ì¹˜ì™€ ë°œì‚¬ ë°©í–¥ ì—…ë°ì´íŠ¸ */
     D3DXVec3TransformCoord(&m_vBulletFrom, &m_vMuzzlePositionLocal, &matWorld);
     _vec3 vCameraLook, vCameraPos;
     memcpy(&vCameraLook, &matCamera.m[2][0], sizeof(_vec3));
@@ -139,10 +139,10 @@ void CGun::TryShoot()
 {
     if (m_bIsCoolTime) return;
 
-    _vec3 tmp = m_vBulletTo - m_vBulletFrom;
+    _vec3 vDir = m_vBulletTo - m_vBulletFrom;
 
-    CGameObject* pGameObject = CBullet::Create(m_pGraphicDev, &m_vBulletFrom, &tmp);
-    CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"Bullet", pGameObject);
+    CProjectile* pProjectile = CProjectile::Create(m_pGraphicDev, m_vBulletFrom, vDir);
+    CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
     m_bIsCoolTime = true;
     m_fCoolTimeLeft = m_fShootInterval;
@@ -231,7 +231,7 @@ void CGun::UltimateAttack()
     CGameStatusMgr::GetInstance()->SetUltimateGauge(m_fUltimateAtkGauge);
     m_bIsUltimateAttackReady = false;
 
-    cout << " ±Ã±Ø±â " << endl;
+    cout << " ê¶ê·¹ê¸° " << endl;
 }
 
 void CGun::Animation(const _float fTimeDelta)

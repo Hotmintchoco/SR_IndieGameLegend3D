@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CFrustum.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -24,7 +24,7 @@ HRESULT CFrustum::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    /* Note : ¼ø¼­¿¡ ÁÖÀÇ (PostInitalize·Î »©´Â °Íµµ °í·Á) */
+    /* Note : ìˆœì„œì— ì£¼ì˜ (PostInitalizeë¡œ ë¹¼ëŠ” ê²ƒë„ ê³ ë ¤) */
     if (FAILED(CGameObject::Ready_GameObject()))
         return E_FAIL;
 
@@ -90,7 +90,7 @@ _bool CFrustum::CheckDestroyCondition(CCollider* pOtherCollider)
 
     switch (ColliderID)
     {
-    case COLL_PBULLET:
+    case COLL_PROJECTILE:
     case COLL_MBULLET:
     case COLL_EXPLODERANGE:
         return true;
