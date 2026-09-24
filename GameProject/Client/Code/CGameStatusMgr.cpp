@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CGameStatusMgr.h"
 #include "CManagement.h"
 #include "CRoomLayer.h"
@@ -26,7 +26,7 @@ void CGameStatusMgr::Update(const float fTimeDelta)
 
 void CGameStatusMgr::UpdateRoomIndex()
 {
-    /* Player¿¡¼­ ÀÌ¹Ì ÀÚ½ÅÀÇ À§Ä¡¸¦ ¾÷µ¥ÀÌÆ® ÇÏ°í ÀÖÀ½ */
+    /* Playerì—ì„œ ì´ë¯¸ ìì‹ ì˜ ìœ„ì¹˜ë¥¼ ì—…ë°ì´íŠ¸ í•˜ê³  ìˆìŒ */
     m_iCurrentRoomIndex = GetRoomIndexFromPlayerPosition(m_vPlayerPos);
     if (m_iPrevRoomIndex != m_iCurrentRoomIndex)
     {
@@ -47,8 +47,8 @@ void CGameStatusMgr::UpdateCameraInfo()
 
 void CGameStatusMgr::Render()
 {
-    RenderImGui();
-    DebugPanelForRendering();
+    // RenderImGui();
+    // DebugPanelForRendering();
 }
 
 void CGameStatusMgr::RenderImGui()
@@ -82,7 +82,7 @@ void CGameStatusMgr::RenderImGui()
                 if (m_bClearTable[idx]) { mark = "O"; col = ImVec4(0.3f, 1.0f, 0.3f, 1.0f); }
                 else if (m_bVisitTable[idx]) { mark = "A"; col = ImVec4(1.0f, 0.9f, 0.3f, 1.0f); }
 
-                // ÇöÀç ¹æ °­Á¶
+                // í˜„ì¬ ë°© ê°•ì¡°
                 if (idx == m_iCurrentRoomIndex)
                     col = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
 

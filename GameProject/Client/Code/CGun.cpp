@@ -132,7 +132,7 @@ void CGun::Render_GameObject()
 
     m_pBufferCom->Render_Buffer();
 
-    RenderEditorPanel();
+    // RenderEditorPanel();
 }
 
 void CGun::TryShoot()
