@@ -50,6 +50,7 @@ public:
 	
 	inline int GetCurrentRoomIndex() const { return m_iCurrentRoomIndex; }
 	inline bool IsVisited(int iIndex) const { return m_bVisitTable[iIndex]; }
+	inline const _vec3& GetPlayerPosition() const { return m_vPlayerPos; }
 
 	inline void RegisterPseudoDark(CGameObject* pObject) { m_vecPseudoDark.push_back(pObject); }
 

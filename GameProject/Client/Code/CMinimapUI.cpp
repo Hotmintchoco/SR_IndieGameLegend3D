@@ -64,6 +64,7 @@ void CMinimapUI::Render_GameObject()
 	_int pX = iPlayerRoomIndex % 5;
 	_int pY = iPlayerRoomIndex / 5;
 
+    m_pTransformCom->Set_Rotation_Raw({ 0.f, 0.f, 0.f });
     for (_int i = 0; i < CRoomLoadingMgr::GetInstance()->GetRoomTotalCount(); ++i)
     {
         _int x = i % 5;
@@ -102,10 +103,9 @@ void CMinimapUI::Render_GameObject()
         m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 		m_pTextureCom->Set_Texture(iDoorMask);
         m_pBufferCom->Render_Buffer();
-
-        if (i == iPlayerRoomIndex)
-            RenderPlayerMark();
 	}
+
+    RenderPlayerMark();
 
     // Scissor Test 끄기 (다른 UI에 영향 안 주도록 복구)
     m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
@@ -152,12 +152,48 @@ HRESULT CMinimapUI::Add_Component()
 
 void CMinimapUI::RenderPlayerMark()
 {
-    // 현재 방 중앙에 플레이어 마커를 방 타일 위로 렌더링
-    m_pTransformCom->Set_Pos(
-        m_vPos.x - WINCX * 0.5f,
-        -m_vPos.y + WINCY * 0.5f,
-        0.f);
-    m_pTransformCom->Set_Scale(14.f, 14.f, 1.f);
+    const _int iPlayerRoomIndex = CGameStatusMgr::GetInstance()->GetCurrentRoomIndex();
+    const _int iRoomColCount = CRoomLoadingMgr::GetInstance()->GetRoomColCount();
+    const _int iRoomRowCount = CRoomLoadingMgr::GetInstance()->GetRoomRowCount();
+
+    const _int iRoomRow = iPlayerRoomIndex / iRoomColCount;
+    const _int iRoomCol = iPlayerRoomIndex % iRoomColCount;
+
+    const _vec3 vCenterRoomPosition = CRoomLoadingMgr::GetInstance()->GetCenterRoomPosition();
+    const _vec3 vOuterRoomSize = CRoomLoadingMgr::GetInstance()->GetOuterRoomSize();
+    const _vec3 vInnerRoomSize = CRoomLoadingMgr::GetInstance()->GetInnerRoomSize();
+    const _vec3 vPlayerPos = CGameStatusMgr::GetInstance()->GetPlayerPosition();
+
+    _vec3 vRoomCenterPos;
+    vRoomCenterPos.x =
+        vCenterRoomPosition.x - (iRoomColCount - 1) * 0.5f * vOuterRoomSize.x + iRoomCol * vOuterRoomSize.x;
+
+    vRoomCenterPos.y = 0.f;
+
+    vRoomCenterPos.z =
+        vCenterRoomPosition.z + (iRoomRowCount - 1) * 0.5f * vOuterRoomSize.z - iRoomRow * vOuterRoomSize.z;
+
+    _float fRatioX = (vPlayerPos.x - vRoomCenterPos.x) / (vInnerRoomSize.x * 0.5f);
+    _float fRatioZ = (vPlayerPos.z - vRoomCenterPos.z) / (vInnerRoomSize.z * 0.5f);
+
+    fRatioX = (fRatioX < -1.f) ? -1.f : (fRatioX > 1.f) ? 1.f : fRatioX;
+    fRatioZ = (fRatioZ < -1.f) ? -1.f : (fRatioZ > 1.f) ? 1.f : fRatioZ;
+
+    const _float fRoomSize = 33.f;
+    const _float fPlayerMarkSize = 16.f;
+    const _float fMoveRange = fRoomSize * 0.5f - fPlayerMarkSize * 0.5f;
+
+    _vec3 vMarkPos;
+    vMarkPos.x = m_vPos.x + fRatioX * fMoveRange;
+    vMarkPos.y = m_vPos.y - fRatioZ * fMoveRange;
+    vMarkPos.z = 0.f;
+
+    // 방향 설정
+    const _float fYawDegree = -D3DXToDegree(CGameStatusMgr::GetInstance()->GetYaw());
+
+    m_pTransformCom->Set_Scale(fPlayerMarkSize, fPlayerMarkSize, 1.f);
+    m_pTransformCom->Set_Rotation_Raw({ 0.f, 0.f, fYawDegree });
+    m_pTransformCom->Set_Pos(vMarkPos.x - WINCX * 0.5f, -vMarkPos.y + WINCY * 0.5f, vMarkPos.z);
     m_pTransformCom->Update_Component(0.f);
 
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
