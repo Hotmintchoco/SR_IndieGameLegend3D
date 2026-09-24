@@ -9,7 +9,6 @@
 #include "CImGuiTool.h"
 #include "CCameraMgr.h"
 #include "CGameStatusMgr.h"
-#include "CGun.h"
 #include "CRoomLayer.h"
 #include "CUI.h"
 #include "CStage.h"

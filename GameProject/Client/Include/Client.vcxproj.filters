@@ -459,7 +459,7 @@
     <ClInclude Include="..\Header\CDebugPrint.h">
       <Filter>100. Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CGun.h">
+    <ClInclude Include="..\Header\CWeapon.h">
       <Filter>02. GameObject\08. Combat\00. Gun</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CProjectile.h">
@@ -671,7 +671,7 @@
     <ClCompile Include="..\Code\CDebugPrint.cpp">
       <Filter>100. Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CGun.cpp">
+    <ClCompile Include="..\Code\CWeapon.cpp">
       <Filter>02. GameObject\08. Combat\00. Gun</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CProjectile.cpp">

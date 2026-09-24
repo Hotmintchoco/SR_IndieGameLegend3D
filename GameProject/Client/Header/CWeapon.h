@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CGameObject.h"
 
@@ -9,11 +9,11 @@ namespace Engine
 	class CTexture;
 }
 
-class CGun : public CGameObject
+class CWeapon : public CGameObject
 {
 protected:
-	explicit CGun(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CGun();
+	explicit CWeapon(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CWeapon();
 
 public:
 	virtual	HRESULT Ready_GameObject();
@@ -21,7 +21,7 @@ public:
 	virtual	void LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual	void Render_GameObject();
 
-	/* ¿¡³ÊÁö ¾ÆÀÌÅÛ È¹µæ */
+	/* ì—ë„ˆì§€ ì•„ì´í…œ íšë“ */
 	void GainEnergy();
 
 private:
@@ -39,45 +39,45 @@ private:
 	Engine::CTransform* m_pTransformCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
 
-	/* Ä«¸Ş¶ó ½ÃÁ¡ ±âÁØ ·ÎÄÃ ¿ÀÇÁ¼Â */
+	/* ì¹´ë©”ë¼ ì‹œì  ê¸°ì¤€ ë¡œì»¬ ì˜¤í”„ì…‹ */
 	_vec3 m_vScaleLocal{0.3f, 0.3f, 0.45f};
 	_vec3 m_vPositionLocal{0.13f, -0.33f, 0.35f};
 	_vec3 m_vRotationLocal{ -1.f, -2.f, 0.f };
 	_vec3 m_vMuzzlePositionLocal{0.0f, 0.4f, 0.7f};
 
-	/* ¹ß»ç ÄğÅ¸ÀÓ */
-	float m_fShootInterval = 0.1f; // ¾Ö´Ï¸ŞÀÌ¼Ç ½Ã°£Àº ¿©±â¿¡ ¸ÂÃß±â
+	/* ë°œì‚¬ ì¿¨íƒ€ì„ */
+	float m_fShootInterval = 0.1f; // ì• ë‹ˆë©”ì´ì…˜ ì‹œê°„ì€ ì—¬ê¸°ì— ë§ì¶”ê¸°
 	float m_fCoolTimeLeft = 0.0f;
 	bool m_bIsCoolTime = false;
 
-	/* ¹ß»ç ¸ñÀûÁö */
+	/* ë°œì‚¬ ëª©ì ì§€ */
 	float m_fTargetDistance = 10.f;
 	_vec3 m_vBulletFrom{ 0.f, 0.f, 0.f };
 	_vec3 m_vBulletTo{ 0.f, 0.f, 0.f };
 
-	/* Æ¯¼ö °ø°İ */
+	/* íŠ¹ìˆ˜ ê³µê²© */
 	bool m_bSpecialAttackSwitchOn = false;
 	float m_fSpecialAtkGauge = 0.f;
 	
-	/* ±Ã±Ø±â */
+	/* ê¶ê·¹ê¸° */
 	float m_fUltimateAtkGauge = 0.f;
 	float m_bIsUltimateAttackReady = false;
 
-	/* ¾Ö´Ï¸ŞÀÌ¼Ç */
+	/* ì• ë‹ˆë©”ì´ì…˜ */
 	bool m_bOnMoveAnimation = false;
 	bool m_bOnSprint = false;
-	float m_fTimeAfterMove = 0.f; // ¸Å°³º¯¼ö t 
-	float m_fMoveAnimationFrequency = 1.f; // ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ÃÊ´ç ¸î ¹ø
-	float m_fHorizontalMove = 0.02f; // °¡·Î·Î ¿òÁ÷ÀÌ´Â °Å¸®
-	float m_fQuadraticA = 0.02f; // ÀÌÂ÷ÇÔ¼ö Á¦°öÇ× °è¼ö
+	float m_fTimeAfterMove = 0.f; // ë§¤ê°œë³€ìˆ˜ t 
+	float m_fMoveAnimationFrequency = 1.f; // ì• ë‹ˆë©”ì´ì…˜ì´ ì´ˆë‹¹ ëª‡ ë²ˆ
+	float m_fHorizontalMove = 0.02f; // ê°€ë¡œë¡œ ì›€ì§ì´ëŠ” ê±°ë¦¬
+	float m_fQuadraticA = 0.02f; // ì´ì°¨í•¨ìˆ˜ ì œê³±í•­ ê³„ìˆ˜
 	bool m_bShotAnimation = false;
 	float m_fMaxRecoilAngle = -20.f;
-	float m_fRecoilDamping = 2.f; // ¹İµ¿ °¨¼è. 0À¸·Î °¥¼ö·Ï Á÷¼±, °ªÀÌ Ä¿Áú¼ö·Ï ¾Æ·¡·Î ±ÁÀº °î¼±
+	float m_fRecoilDamping = 2.f; // ë°˜ë™ ê°ì‡ . 0ìœ¼ë¡œ ê°ˆìˆ˜ë¡ ì§ì„ , ê°’ì´ ì»¤ì§ˆìˆ˜ë¡ ì•„ë˜ë¡œ êµ½ì€ ê³¡ì„ 
 	float m_fTimeAfterShot = 0.f;
 
 
 public:
-	static CGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CWeapon* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void Free() override;

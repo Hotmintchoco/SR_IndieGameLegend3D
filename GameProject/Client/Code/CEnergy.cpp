@@ -1,10 +1,10 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CEnergy.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CGameStatusMgr.h"
 #include "CTransform.h"
-#include "CGun.h"
+#include "CWeapon.h"
 #include "CManagement.h"
 
 CEnergy::CEnergy(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -77,7 +77,7 @@ HRESULT CEnergy::Add_Component()
 
 void CEnergy::Consume()
 {
-    CGun* pGun = static_cast<CGun*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"));
+    CWeapon* pGun = static_cast<CWeapon*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"));
     pGun->GainEnergy();
 
     Set_Dead(true);

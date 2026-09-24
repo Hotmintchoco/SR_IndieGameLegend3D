@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "CGun.h"
+#include "CWeapon.h"
 #include "CRenderer.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -9,16 +9,16 @@
 #include "CDInputMgr.h"
 #include "CGameStatusMgr.h"
 
-CGun::CGun(LPDIRECT3DDEVICE9 pGraphicDev)
+CWeapon::CWeapon(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
 {
 }
 
-CGun::~CGun()
+CWeapon::~CWeapon()
 {
 }
 
-HRESULT CGun::Ready_GameObject()
+HRESULT CWeapon::Ready_GameObject()
 {
     if (FAILED(Add_Component()))
         return E_FAIL;
@@ -28,7 +28,7 @@ HRESULT CGun::Ready_GameObject()
     return S_OK;
 }
 
-_int CGun::Update_GameObject(const _float& fTimeDelta)
+_int CWeapon::Update_GameObject(const _float& fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -52,7 +52,7 @@ _int CGun::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CGun::GetKeyInput()
+void CWeapon::GetKeyInput()
 {
     if (CDInputMgr::GetInstance()->Mouse_Press(DIM_LB))
     {
@@ -94,14 +94,14 @@ void CGun::GetKeyInput()
     }
 }
 
-void CGun::LateUpdate_GameObject(const _float& fTimeDelta)
+void CWeapon::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     SyncTransformToCamera();
 
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
-void CGun::SyncTransformToCamera()
+void CWeapon::SyncTransformToCamera()
 {
     /* 카메라 위치를 받아 위치값 조정*/
     _matrix matCamera, matWorld;
@@ -117,7 +117,7 @@ void CGun::SyncTransformToCamera()
     m_vBulletTo = vCameraPos + vCameraLook * m_fTargetDistance;
 }
 
-void CGun::Render_GameObject()
+void CWeapon::Render_GameObject()
 {
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
@@ -135,7 +135,7 @@ void CGun::Render_GameObject()
     // RenderEditorPanel();
 }
 
-void CGun::TryShoot()
+void CWeapon::TryShoot()
 {
     if (m_bIsCoolTime) return;
 
@@ -149,7 +149,7 @@ void CGun::TryShoot()
     StartShotAnimation();
 }
 
-void CGun::GainEnergy()
+void CWeapon::GainEnergy()
 {
     m_fSpecialAtkGauge += 0.1f;
     m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
@@ -164,7 +164,7 @@ void CGun::GainEnergy()
     CGameStatusMgr::GetInstance()->SetUltimateGauge(m_fUltimateAtkGauge);
 }
 
-HRESULT CGun::Add_Component()
+HRESULT CWeapon::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
@@ -195,7 +195,7 @@ HRESULT CGun::Add_Component()
     return S_OK;
 }
 
-void CGun::RenderEditorPanel()
+void CWeapon::RenderEditorPanel()
 {
     ImGui::Begin("Gun");
 
@@ -216,7 +216,7 @@ void CGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CGun::UpdateLocalTransform(const _vec3& vScale, const _vec3& vRotation, const _vec3& vTransition)
+void CWeapon::UpdateLocalTransform(const _vec3& vScale, const _vec3& vRotation, const _vec3& vTransition)
 {
     if (!m_pTransformCom) return;
 
@@ -225,7 +225,7 @@ void CGun::UpdateLocalTransform(const _vec3& vScale, const _vec3& vRotation, con
     m_pTransformCom->Set_Pos(vTransition);
 }
 
-void CGun::UltimateAttack()
+void CWeapon::UltimateAttack()
 {
     m_fUltimateAtkGauge = 0.f;
     CGameStatusMgr::GetInstance()->SetUltimateGauge(m_fUltimateAtkGauge);
@@ -234,7 +234,7 @@ void CGun::UltimateAttack()
     cout << " 궁극기 " << endl;
 }
 
-void CGun::Animation(const _float fTimeDelta)
+void CWeapon::Animation(const _float fTimeDelta)
 {
     if (m_bShotAnimation)
     {
@@ -266,27 +266,27 @@ void CGun::Animation(const _float fTimeDelta)
     }
 }
 
-void CGun::StartShotAnimation()
+void CWeapon::StartShotAnimation()
 {
     m_bShotAnimation = true;
     m_fTimeAfterShot = 0.f;
 }
 
-CGun* CGun::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CWeapon* CWeapon::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CGun* pGun = new CGun(pGraphicDev);
+    CWeapon* pGun = new CWeapon(pGraphicDev);
 
     if (FAILED(pGun->Ready_GameObject()))
     {
         Safe_Release(pGun);
-        MSG_BOX("CGun Create Failed");
+        MSG_BOX("CWeapon Create Failed");
         return nullptr;
     }
 
     return pGun;
 }
 
-void CGun::Free()
+void CWeapon::Free()
 {
     CGameObject::Free();
 }

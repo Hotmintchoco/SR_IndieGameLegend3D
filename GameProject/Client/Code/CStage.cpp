@@ -9,7 +9,7 @@
 #include "CSkyBox.h"
 #include "CLightMgr.h"
 #include "CEffect.h"
-#include "CGun.h"
+#include "CWeapon.h"
 #include "CManagement.h"
 #include "CFontMgr.h"
 #include "CDInputMgr.h"
@@ -191,7 +191,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	// Gun
-	pGameObject = CGun::Create(m_pGraphicDev);
+	pGameObject = CWeapon::Create(m_pGraphicDev);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
