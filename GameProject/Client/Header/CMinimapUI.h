@@ -16,6 +16,12 @@ public:
 protected:
 	HRESULT			Add_Component();
 
+private:
+	void			RenderPlayerMark();
+
+private:
+	Engine::CTexture* m_pPlayerTextureCom;
+
 public:
 	static CMinimapUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

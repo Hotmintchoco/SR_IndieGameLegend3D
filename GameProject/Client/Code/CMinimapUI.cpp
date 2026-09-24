@@ -102,6 +102,9 @@ void CMinimapUI::Render_GameObject()
         m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 		m_pTextureCom->Set_Texture(iDoorMask);
         m_pBufferCom->Render_Buffer();
+
+        if (i == iPlayerRoomIndex)
+            RenderPlayerMark();
 	}
 
     // Scissor Test 끄기 (다른 UI에 영향 안 주도록 복구)
@@ -136,7 +139,30 @@ HRESULT CMinimapUI::Add_Component()
 
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
+    // Player Texture
+    pComponent = m_pPlayerTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerMarkTexture"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_PlayerTexture", pComponent });
+
     return S_OK;
+}
+
+void CMinimapUI::RenderPlayerMark()
+{
+    // 현재 방 중앙에 플레이어 마커를 방 타일 위로 렌더링
+    m_pTransformCom->Set_Pos(
+        m_vPos.x - WINCX * 0.5f,
+        -m_vPos.y + WINCY * 0.5f,
+        0.f);
+    m_pTransformCom->Set_Scale(14.f, 14.f, 1.f);
+    m_pTransformCom->Update_Component(0.f);
+
+    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+    m_pPlayerTextureCom->Set_Texture(0);
+    m_pBufferCom->Render_Buffer();
 }
 
 CMinimapUI* CMinimapUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
