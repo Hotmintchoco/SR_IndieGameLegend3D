@@ -29,6 +29,7 @@ public:
 	virtual			void		OnCollisionEnter(CGameObject* pOther) override;
 	void Enable_HitRenderState();
 	void Disable_HitRenderState();
+	void Set_Sammon(_bool bSammon) { m_bSammon = bSammon; }
 protected:
 	HRESULT			Add_Component();
 	void Set_OnTerrain();
@@ -47,6 +48,7 @@ protected:
 	_bool m_bHitState;
 
 	_bool m_bDelete = false;
+	_bool m_bSammon = false;
 
 private:
 	/* 성철 */
