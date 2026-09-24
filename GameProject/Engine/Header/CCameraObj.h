@@ -18,6 +18,10 @@ public:
 	virtual void		LateUpdate_Camera(const _float& fTimeDelta) = 0;
 	void				Get_CamLook(_vec3* pLook);
 	void				Get_CameraAngle(_float* pAngle) { memcpy(pAngle, &m_fAngle, sizeof(_float)); }
+	
+	/* ¼ºÃ¶ */
+	void GetWorld(_matrix* pMat) { D3DXMatrixInverse(pMat, nullptr, &m_matView); }
+	/* --- */
 
 protected:
 	LPDIRECT3DDEVICE9	m_pGraphicDev;

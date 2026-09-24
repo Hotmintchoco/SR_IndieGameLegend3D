@@ -25,6 +25,9 @@ public:
 	HRESULT		Get_CamLook(_vec3* pLook);
 	HRESULT		Get_CameraAngle(_float* pAngle);
 
+	/* ¼ºÃ¶ */
+	inline CCameraObj* GetCamera(const _tchar* pCameraTag) { return m_mapCamera.at(pCameraTag); }
+	/* --- */
 
 private:
 	CCameraObj* Find_Camera(const _tchar* pCameraTag);
