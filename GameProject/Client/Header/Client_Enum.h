@@ -76,6 +76,12 @@ enum class EObjectType
 	ITEM_ENERGY,
 	ITEM_MAX,
 
+	WEAPON_NONE = 41,
+	WEAPON_DEFAULT,
+	WEAPON_SHOTGUN,
+	WEAPON_MAX,
+
+
 	MAX,
 };
 

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CAbstractFactory.h"
 #include "CGraphicDev.h"
 #include "CRandomMgr.h"
@@ -13,6 +13,8 @@
 #include "CGem.h"
 #include "CMagmamouth.h"
 #include "CGameMachine.h"
+#include "CDefaultGun.h"
+#include "CShotGun.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -32,6 +34,9 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::ITEM_HEART,               [](const TCreateDesc& t) -> Engine::CGameObject* { return CHeart::Create(t.pDevice, t.pSpawner); } },
         {EObjectType::ITEM_ENERGY,              [](const TCreateDesc& t) -> Engine::CGameObject* { return CEnergy::Create(t.pDevice, t.pSpawner); } },
         {EObjectType::ITEM_GEM,                 [](const TCreateDesc& t) -> Engine::CGameObject* { return CGem::Create(t.pDevice, t.pSpawner); } },
+
+        {EObjectType::WEAPON_DEFAULT,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CDefaultGun::Create(t.pDevice); } },
+        {EObjectType::WEAPON_SHOTGUN,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CShotGun::Create(t.pDevice); } },
     };
 }
 
@@ -71,6 +76,22 @@ Engine::CGameObject* CAbstractFactory::CreateRandomItem(CGameObject* pSpawner) c
     Engine::CGameObject* pObject = m_mapCreator.at(eType)(t);
 
     return pObject;
+}
+
+CWeapon* CAbstractFactory::CraeteWeapon(EObjectType eType) const
+{
+    if ((int)eType <= (int)EObjectType::WEAPON_NONE || (int)eType >= (int)EObjectType::WEAPON_MAX) return nullptr;
+
+    TCreateDesc t
+    {
+        CGraphicDev::GetInstance()->Get_GraphicDev(),
+    };
+
+    LPDIRECT3DDEVICE9 pDevice = CGraphicDev::GetInstance()->Get_GraphicDev();
+
+    Engine::CGameObject* pObject = m_mapCreator.at(eType)(t);
+
+    return static_cast<CWeapon*>(pObject);
 }
 
 void CAbstractFactory::Free()

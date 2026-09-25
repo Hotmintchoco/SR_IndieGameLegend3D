@@ -238,6 +238,9 @@
     <Filter Include="02. GameObject\08. Combat\01. Projectile\00. DefaultBullet">
       <UniqueIdentifier>{051ec279-8928-49fb-abe7-4435831cceec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\01. SGBullet">
+      <UniqueIdentifier>{7e13e70c-0e75-4081-9136-cb7588f1149f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -489,6 +492,9 @@
     <ClInclude Include="..\Header\CDefaultBullet.h">
       <Filter>02. GameObject\08. Combat\01. Projectile\00. DefaultBullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CSGBullet.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\01. SGBullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -712,6 +718,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CDefaultBullet.cpp">
       <Filter>02. GameObject\08. Combat\01. Projectile\00. DefaultBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSGBullet.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\01. SGBullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

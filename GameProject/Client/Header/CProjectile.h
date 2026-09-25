@@ -23,7 +23,7 @@ public:
 
 protected:
 	HRESULT	Add_Component();
-	void CheckLifeTime(const _float& fTimeDelta);
+	virtual void CheckLifeTime(const _float& fTimeDelta);
 	void BillBoard();
 
 	Engine::CTransform* m_pTransformCom = nullptr;

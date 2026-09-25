@@ -59,6 +59,7 @@ protected:
 
 	/* 특수 공격 */
 	float m_fGaugeConsumePerSpecialAtk = 0.04f;
+	float m_fSpecialAtkInterval = 0.1f;
 
 	/* 애니메이션 */
 	bool m_bOnMoveAnimation = false;

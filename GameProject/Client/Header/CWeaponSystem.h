@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CGameObject.h"
+#include "Client_Enum.h"
 
 class CWeapon;
 
@@ -20,11 +21,12 @@ public:
 	void GainEnergy();
 
 private:	
+	HRESULT AddWeapon(EObjectType eType, const wstring& wstrName);
 	void GetKeyInput();
 	void SwitchWeaponTo(int iIndex);
 
 	vector<CWeapon*> m_vecWeapon;
-	int m_iCurrentIndex = -1;
+	int m_iCurrentIndex = 0;
 
 	/* 특수 공격 */
 	bool m_bSpecialAttackSwitchOn = false;

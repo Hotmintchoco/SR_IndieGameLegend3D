@@ -14,6 +14,8 @@ struct TCreateDesc
 	CGameObject* pSpawner = nullptr;
 };
 
+class CWeapon;
+
 class CAbstractFactory : public CBase
 {
 	DECLARE_SINGLETON(CAbstractFactory);
@@ -27,6 +29,9 @@ public:
 
 	/* Item */
 	Engine::CGameObject* CreateRandomItem(CGameObject* pSpawner) const;
+
+	/* Weapon */
+	CWeapon* CraeteWeapon(EObjectType eType) const;
 
 private:
 	virtual void Free();

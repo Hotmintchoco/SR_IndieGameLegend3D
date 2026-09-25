@@ -2,10 +2,12 @@
 #include "CWeaponSystem.h"
 #include "CWeapon.h"
 #include "CDefaultGun.h"
+#include "CShotGun.h"
 #include "CDInputMgr.h"
 #include "CGameStatusMgr.h"
 #include "Client_Struct.h"
 #include "CLayer.h"
+#include "CAbstractFactory.h"
 
 CWeaponSystem::CWeaponSystem(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -18,18 +20,11 @@ CWeaponSystem::~CWeaponSystem()
 
 HRESULT CWeaponSystem::Ready_GameObject()
 {
-    CDefaultGun* pDefault = CDefaultGun::Create(m_pGraphicDev);
-    m_pOwner->Add_GameObject(L"DefaultGun", pDefault);
-    
-    if (pDefault)
-    {
-        m_vecWeapon.push_back(pDefault);
-        m_iCurrentIndex = 0;
-    }
-    else
-    {
+    if (FAILED(AddWeapon(EObjectType::WEAPON_DEFAULT, L"DefaultGun")))
         return E_FAIL;
-    }
+
+    if (FAILED(AddWeapon(EObjectType::WEAPON_SHOTGUN, L"ShotGun")))
+        return E_FAIL;
 
 	return S_OK;
 }
@@ -53,6 +48,23 @@ void CWeaponSystem::Render_GameObject()
 }
 
 
+HRESULT CWeaponSystem::AddWeapon(EObjectType eType, const wstring& wstrName)
+{
+    CWeapon* pWeapon = CAbstractFactory::GetInstance()->CraeteWeapon(eType);
+
+    if (pWeapon)
+    {
+        m_pOwner->Add_GameObject(wstrName, pWeapon);
+        m_vecWeapon.push_back(pWeapon);
+        SwitchWeaponTo((int)m_vecWeapon.size() - 1);
+        return S_OK;
+    }
+    else
+    {
+        return E_FAIL;
+    }
+}
+
 void CWeaponSystem::GetKeyInput()
 {
     if (CDInputMgr::GetInstance()->Key_Down(DIK_Q))
@@ -65,7 +77,7 @@ void CWeaponSystem::GetKeyInput()
         if (m_bSpecialAttackSwitchOn)
         {
             GetCurrentWeapon()->SpecialAttack();
-            m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
+            // m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
             m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
             if (m_fSpecialAtkGauge <= 0.f)
             {
@@ -127,8 +139,11 @@ void CWeaponSystem::GetKeyInput()
 
 void CWeaponSystem::SwitchWeaponTo(int iIndex)
 {
+    if (iIndex < 0 || iIndex >= (int)m_vecWeapon.size()) return;
 
+    m_vecWeapon.at(m_iCurrentIndex)->Set_IsActive(false);
     m_iCurrentIndex = iIndex;
+    m_vecWeapon.at(m_iCurrentIndex)->Set_IsActive(true);
 }
 
 void CWeaponSystem::GainEnergy()

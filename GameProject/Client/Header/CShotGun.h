@@ -8,11 +8,11 @@ namespace Engine
 	class CTexture;
 }
 
-class CDefaultGun : public CWeapon
+class CShotGun : public CWeapon
 {
 protected:
-	explicit CDefaultGun(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CDefaultGun();
+	explicit CShotGun(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CShotGun();
 
 public:
 	virtual	HRESULT Ready_GameObject() override;
@@ -29,8 +29,13 @@ private:
 	Engine::CPlyTex* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
 
+	int m_iBulletPerSpecialAtk = 10;
+
+	/* 샷건 총알 발사 노이즈 계산 시 필요 */
+	_matrix m_matWorldCached;
+
 public:
-	static CDefaultGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CShotGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void Free() override;
