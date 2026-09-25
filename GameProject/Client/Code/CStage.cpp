@@ -32,6 +32,7 @@
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
+	, m_bTPVCamera(false)
 {
 }
 
@@ -62,6 +63,9 @@ HRESULT CStage::Ready_Scene()
 		return E_FAIL;
 
 	if (FAILED(CCameraMgr::GetInstance()->Ready_Camera(L"Camera_Player_FPV", CAMERA_FPV_PERSPECTIVE, m_pGraphicDev)))
+		return E_FAIL;
+
+	if (FAILED(CCameraMgr::GetInstance()->Ready_Camera(L"Camera_Player_TPV", CAMERA_TPV_PERSPECTIVE, m_pGraphicDev)))
 		return E_FAIL;
 
 	if (FAILED(CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_FPV")))
@@ -96,6 +100,12 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 	pPlayerTrans->Get_Info(INFO_LOOK, &vPlayerLook);
 	pPlayerTrans->Get_Info(INFO_POS, &vPlayerPos);
 	pPlayerTrans->Get_Info(INFO_RIGHT, &vPlayerRight);
+
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_V))
+	{
+		m_bTPVCamera = !m_bTPVCamera;
+		CCameraMgr::GetInstance()->Select_Camera(m_bTPVCamera ? L"Camera_Player_TPV" : L"Camera_Player_FPV");
+	}
 
 	CCameraMgr::GetInstance()->Update_Camera(fTimeDelta, vPlayerLook, vPlayerPos, vPlayerRight);
 

@@ -14,16 +14,11 @@
 #include "CUI.h"
 #include "CStage.h"
 
-namespace
-{
-    const _vec3     PLAYER_SPAWN_POS = { 60.f, 1.f, 60.f };
-    const _int      START_ROOM_INDEX = 12;
-    const _float    RESPAWN_DELAY = 1.5f;
-}
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_bFix(true), m_bCheck(true), m_iHP(12), m_iMaxHP(12), m_fInvTime(2.f)
     , m_bDeathState(false), m_fRespawnTimer(0.f)
+    , m_vKnockbackDir(0.f, 0.f, 0.f), m_fKnockbackSpeed(0.f)
 {
 }
 
@@ -44,7 +39,8 @@ HRESULT CPlayer::Ready_GameObject()
     m_pColliderCom->Set_Radius(0.5f);
 	m_pColliderCom->Set_CollisionID(COLL_PLAYER);
 
-	m_pTransformCom->Set_Pos(PLAYER_SPAWN_POS);
+
+	m_pTransformCom->Set_Pos({ 60.f, 1.f, 60.f });
 
     return S_OK;
 }
@@ -64,6 +60,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
     else
     {
         Key_Input(fTimeDelta);
+        Update_Knockback(fTimeDelta);
     }
 
     m_fInvTime -= fTimeDelta;
@@ -82,7 +79,6 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	// 충돌 처리 여부를 위해 충돌 매니저에 플레이어의 콜라이더를 등록
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 
@@ -152,24 +148,33 @@ void CPlayer::OnCollisionEnter(CGameObject* pOther)
 {
 
 
-    if (m_fInvTime <= 0.f)     MonsterCollision(dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider")));
+    MonsterCollision(pOther, Find_OtherCollider(pOther));
 
 }
 
 void CPlayer::OnCollisionStay(CGameObject* pOther)
 {
     // 장애물과 충돌 시에 마찰력 적용
-    CCollider* pOtherCollider = nullptr;
-        
-	if (nullptr == pOtherCollider)
-        pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
+    CCollider* pOtherCollider = Find_OtherCollider(pOther);
+
+    MonsterCollision(pOther, pOtherCollider);
+
+    if (pOtherCollider && pOtherCollider->Get_CollisionID() == COLL_OBSTACLE)
+        m_fFrictionForce = 0.75f; // 마찰력 적용
+}
+
+CCollider* CPlayer::Find_OtherCollider(CGameObject* pOther)
+{
+    if (nullptr == pOther)
+        return nullptr;
+
+    CCollider* pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
     if (nullptr == pOtherCollider)
         pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider0"));
     if (nullptr == pOtherCollider)
         pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider1"));
 
-    if (pOtherCollider && pOtherCollider->Get_CollisionID() == COLL_OBSTACLE)
-        m_fFrictionForce = 0.75f; // 마찰력 적용
+    return pOtherCollider;
 }
 
 HRESULT CPlayer::Add_Component()
@@ -384,7 +389,8 @@ void CPlayer::Die()
     CGameStatusMgr::GetInstance()->SetPlayerHp(0);
 
     m_bDeathState = true;
-    m_fRespawnTimer = RESPAWN_DELAY;
+    m_fRespawnTimer = 1.5f;
+    m_fKnockbackSpeed = 0.f;
 
     if (nullptr != m_pColliderCom)
         m_pColliderCom->Set_IsActive(false);
@@ -401,7 +407,7 @@ void CPlayer::Die()
 
 void CPlayer::Respawn()
 {
-    m_pTransformCom->Set_Pos(PLAYER_SPAWN_POS);
+    m_pTransformCom->Set_Pos({ 60.f, 1.f, 60.f });
     m_pTransformCom->Set_Rotation_Raw(_vec3(0.f, 0.f, 0.f));
 
     m_iHP = m_iMaxHP;
@@ -412,6 +418,7 @@ void CPlayer::Respawn()
 
     m_fInvTime = 2.f;
     m_fRespawnTimer = 0.f;
+    m_fKnockbackSpeed = 0.f;
     m_bDeathState = false;
     m_bFix = true;
 
@@ -429,20 +436,64 @@ void CPlayer::Free()
 
 
 
-void CPlayer::MonsterCollision(CCollider* pOtherCollider)
+void CPlayer::MonsterCollision(CGameObject* pOther, CCollider* pOtherCollider)
 {
-    _int ColliderID = -1;
+    if (m_bDeathState || m_fInvTime > 0.f)
+        return;
 
-    if (pOtherCollider)
-        ColliderID = pOtherCollider->Get_CollisionID();
+    if (nullptr == pOtherCollider)
+        return;
 
+    const _int iColliderID = pOtherCollider->Get_CollisionID();
 
-    if (ColliderID == COLL_MONSTER || ColliderID == COLL_MBULLET)
+    if (iColliderID != COLL_MONSTER && iColliderID != COLL_MBULLET)
+        return;
+
+    UpdateHP(-1);
+    _float fInvTime = 1.f;
+
+    m_fInvTime = fInvTime;
+    Apply_Knockback(pOther);
+}
+
+void CPlayer::Apply_Knockback(CGameObject* pAttacker)
+{
+    if (m_bDeathState || nullptr == pAttacker)
+        return;
+
+    CTransform* pAttackerTransformCom =
+        dynamic_cast<CTransform*>(pAttacker->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+    if (nullptr == pAttackerTransformCom)
+        return;
+
+    _vec3   vPlayerPos, vAttackerPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    pAttackerTransformCom->Get_Info(INFO_POS, &vAttackerPos);
+
+    _vec3   vDir = vPlayerPos - vAttackerPos;   
+    vDir.y = 0.f;                             
+
+    if (D3DXVec3Length(&vDir) < FLT_EPSILON)   
     {
-        UpdateHP(-1);
-        m_fInvTime = 1.0f;
+        m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
+        vDir.y = 0.f;
+        vDir *= -1.f;
     }
 
+    D3DXVec3Normalize(&m_vKnockbackDir, &vDir);
+    m_fKnockbackSpeed = 14.f;
+}
+
+void CPlayer::Update_Knockback(const _float& fTimeDelta)
+{
+    if (m_fKnockbackSpeed <= 0.f)
+        return;
+
+    m_pTransformCom->Move_Pos(&m_vKnockbackDir, m_fKnockbackSpeed * m_fFrictionForce, fTimeDelta);
+
+    m_fKnockbackSpeed -= 60.f * fTimeDelta;
+    if (m_fKnockbackSpeed < 0.f)
+        m_fKnockbackSpeed = 0.f;
 }
 
 void CPlayer::Update_HPUI()
