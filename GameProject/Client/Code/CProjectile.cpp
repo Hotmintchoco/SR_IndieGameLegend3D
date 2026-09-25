@@ -84,8 +84,8 @@ void CProjectile::BillBoard()
 
 void CProjectile::CheckLifeTime(const Engine::_float& fTimeDelta)
 {
-    m_fLeftLifeTime -= fTimeDelta;
-    if (m_fLeftLifeTime <= 0.f)
+    m_fTimeAfterBirth += fTimeDelta;
+    if (m_fTimeAfterBirth >= m_pData->fLifeTime)
     {
         Set_Dead(true);
     }

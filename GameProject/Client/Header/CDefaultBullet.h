@@ -35,6 +35,11 @@ private:
 	_vec3 m_vStart{ 0.f, 0.f, 0.f };
 	_vec3 m_vDir{ 0.f, 0.f, 0.f };
 
+	inline static TProjectileData s_tData = []()-> TProjectileData {
+		TProjectileData t;
+		return t;
+	}();
+
 	/* 애니메이션 */
 	float m_fFrameInterval = 0.1f;
 	float m_fSingleFrameAccTime = 0.f;

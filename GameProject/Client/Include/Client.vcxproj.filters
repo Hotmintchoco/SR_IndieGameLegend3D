@@ -247,6 +247,15 @@
     <Filter Include="02. GameObject\08. Combat\00. Weapon\01. RapidGun">
       <UniqueIdentifier>{2607640a-46ee-4d50-9c31-bc52fb843dfb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Combat\00. Weapon\03. CLaserGun">
+      <UniqueIdentifier>{cf4ee992-a88e-4fb4-b526-8567e728558f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\02. Laser">
+      <UniqueIdentifier>{4d25ee11-4ae6-4ca2-85cf-b8ec56d48f38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\02. Laser\LaserBuffer">
+      <UniqueIdentifier>{223c98ee-0a36-41f5-be05-8c71871e9cda}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -507,6 +516,15 @@
     <ClInclude Include="..\Header\CSGBullet.h">
       <Filter>02. GameObject\08. Combat\01. Projectile\01. SGBullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CLaserGun.h">
+      <Filter>02. GameObject\08. Combat\00. Weapon\03. CLaserGun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLaserBuffer.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\02. Laser\LaserBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLaser.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\02. Laser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -739,6 +757,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGaugeUI.cpp">
       <Filter>02. GameObject\10. UI\Gauge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLaserGun.cpp">
+      <Filter>02. GameObject\08. Combat\00. Weapon\03. CLaserGun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLaserBuffer.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\02. Laser\LaserBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLaser.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\02. Laser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

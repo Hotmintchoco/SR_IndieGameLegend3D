@@ -7,6 +7,12 @@ namespace Engine
 	class CTransform;
 }
 
+struct TProjectileData
+{
+	float fSpeed = 20.f;
+	float fLifeTime = 1.5f;
+};
+
 class CProjectile : public CGameObject
 {
 protected:
@@ -28,10 +34,8 @@ protected:
 
 	Engine::CTransform* m_pTransformCom = nullptr;
 
-	/* 기본 속성 */
-	float m_fSpeed = 3.f;
-	float m_fLifeTime = 1.5f;
-	float m_fLeftLifeTime = m_fLifeTime;
+	const TProjectileData* m_pData = nullptr;
+	float m_fTimeAfterBirth = 0.f;
 
 	/* 이름 구분용 ID */
 	static _uint g_iProjectileID;

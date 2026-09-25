@@ -5,6 +5,7 @@
 #include "CRoomLoadingMgr.h"
 #include "Utils.h"
 #include "CSoundMgr.h"
+#include "CLaserBuffer.h"
 
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoadingID(LOADING_END)
@@ -137,6 +138,12 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bullet_Default_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Projectile/bigbullet_%d.png", 2))))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Laser_Buffer", CLaserBuffer::Create(m_pGraphicDev))))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Laser_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Projectile/laserbullet.png", 1))))
         return E_FAIL;
 
 

@@ -1,22 +1,23 @@
 ﻿#include "pch.h"
-#include "CRapidGun.h"
+#include "CLaserGun.h"
 #include "CImGuiTool.h"
 #include "CProtoMgr.h"
-#include "CDefaultBullet.h"
+#include "CLaser.h"
 #include "CSoundMgr.h"
 #include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
+#include "CRandomMgr.h"
 
-CRapidGun::CRapidGun(LPDIRECT3DDEVICE9 pGraphicDev)
+CLaserGun::CLaserGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
 {
 }
 
-CRapidGun::~CRapidGun()
+CLaserGun::~CLaserGun()
 {
 }
 
-HRESULT CRapidGun::Ready_GameObject()
+HRESULT CLaserGun::Ready_GameObject()
 {
     if (FAILED(CWeapon::Ready_GameObject()))
         return E_FAIL;
@@ -26,24 +27,24 @@ HRESULT CRapidGun::Ready_GameObject()
 
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 
-    m_fSpecialAtkInterval = 0.1f;
+    m_fSpecialAtkInterval = 0.5f;
 
     return S_OK;
 }
 
-_int CRapidGun::Update_GameObject(const _float& fTimeDelta)
+_int CLaserGun::Update_GameObject(const _float& fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
     return iExit;
 }
 
-void CRapidGun::LateUpdate_GameObject(const _float& fTimeDelta)
+void CLaserGun::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CWeapon::LateUpdate_GameObject(fTimeDelta);
 }
 
-void CRapidGun::Render_GameObject()
+void CLaserGun::Render_GameObject()
 {
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
@@ -59,9 +60,11 @@ void CRapidGun::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 
     // RenderEditorPanel();
+
+    // CLaser::RenderEditorPanel();
 }
 
-void CRapidGun::RenderEditorPanel()
+void CLaserGun::RenderEditorPanel()
 {
     ImGui::Begin("Gun");
 
@@ -82,26 +85,26 @@ void CRapidGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CRapidGun::SpecialAttack()
+void CLaserGun::SpecialAttack()
 {
     _vec3 vDir = m_vBulletTo - m_vBulletFrom;
     D3DXVec3Normalize(&vDir, &vDir);
 
-    CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
+    CProjectile* pProjectile = CLaser::Create(m_pGraphicDev, m_vBulletFrom, vDir);
     CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
-    CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
+    CSoundMgr::GetInstance()->PlaySFX(L"sfxLaser.wav");
 
     m_bIsCoolTime = true;
     m_fCoolTimeLeft = m_fSpecialAtkInterval;
     StartShotAnimation();
 }
 
-void CRapidGun::UltimateAttack()
+void CLaserGun::UltimateAttack()
 {
 }
 
-HRESULT CRapidGun::Add_Component()
+HRESULT CLaserGun::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
@@ -124,21 +127,21 @@ HRESULT CRapidGun::Add_Component()
     return S_OK;
 }
 
-CRapidGun* CRapidGun::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CLaserGun* CLaserGun::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CRapidGun* pGun = new CRapidGun(pGraphicDev);
+    CLaserGun* pGun = new CLaserGun(pGraphicDev);
 
     if (FAILED(pGun->Ready_GameObject()))
     {
         Safe_Release(pGun);
-        MSG_BOX("CRapidGun Create Failed");
+        MSG_BOX("CLaserGun Create Failed");
         return nullptr;
     }
 
     return pGun;
 }
 
-void CRapidGun::Free()
+void CLaserGun::Free()
 {
     CWeapon::Free();
 }

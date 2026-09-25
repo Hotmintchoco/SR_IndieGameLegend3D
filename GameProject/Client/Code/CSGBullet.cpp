@@ -22,8 +22,11 @@ HRESULT CSGBullet::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
+    m_pData = &s_tData; 
+
     m_pTransformCom->Set_Pos(m_vStart);
-    m_pTransformCom->Set_Scale(_vec3{ m_fInitScale * m_fScaleCoef, m_fInitScale * m_fScaleCoef, m_fInitScale * m_fScaleCoef });
+    m_fInitScale = s_tData.fDefaultScale * m_fScaleCoef;
+    m_pTransformCom->Set_Scale(_vec3{ m_fInitScale, m_fInitScale, m_fInitScale });
     m_pColliderCom->Set_Owner(this);
     m_pColliderCom->Set_Radius(0.3f);
     m_iTotalFrameCount = m_pTextureCom->GetCount();
@@ -38,11 +41,9 @@ _int CSGBullet::Update_GameObject(const _float& fTimeDelta)
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PROJECTILE, m_pColliderCom);
 
-    m_pTransformCom->Move_Pos(&m_vDir, m_fSpeed, fTimeDelta);
+    m_pTransformCom->Move_Pos(&m_vDir, s_tData.fSpeed, fTimeDelta);
 
     SyncScaleToLifeTime();
-
-    CheckLifeTime(fTimeDelta);
 
     Animation(fTimeDelta);
 
@@ -113,8 +114,8 @@ void CSGBullet::Animation(const _float& fTimeDelta)
 
 void CSGBullet::CheckLifeTime(const _float& fTimeDelta)
 {
-    m_fLeftLifeTime -= fTimeDelta;
-    if (m_fLeftLifeTime <= 0.f)
+    m_fTimeAfterBirth += fTimeDelta;
+    if (m_fTimeAfterBirth >= s_tData.fLifeTime)
     {
         Set_Dead(true);
     }
@@ -127,8 +128,8 @@ void CSGBullet::CheckLifeTime(const _float& fTimeDelta)
 
 void CSGBullet::SyncScaleToLifeTime()
 {
-    float fLastTime = m_fLifeTime - m_fLeftLifeTime;
-    m_fCurrentScale = m_fInitScale - fLastTime * m_fShrinkSpeed;
+    float fLastTime = s_tData.fLifeTime - m_fTimeAfterBirth;
+    m_fCurrentScale = m_fInitScale - fLastTime * s_tData.fShrinkSpeed;
     if (m_fCurrentScale <= 0.f) return;
 
     m_pTransformCom->Set_Scale(m_fCurrentScale, m_fCurrentScale, m_fCurrentScale);

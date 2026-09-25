@@ -30,7 +30,7 @@ private:
 
 	/* 특수 공격 */
 	bool m_bSpecialAttackSwitchOn = false;
-	float m_fSpecialAtkGauge = 0.f;
+	float m_fSpecialAtkGauge = 1.f;
 
 	/* 궁극기 */
 	float m_fUltimateAtkGauge = 0.f;

@@ -24,6 +24,9 @@ HRESULT CWeaponSystem::Ready_GameObject()
     if (FAILED(AddWeapon(EObjectType::WEAPON_SHOTGUN, L"ShotGun")))
         return E_FAIL;
 
+    if (FAILED(AddWeapon(EObjectType::WEAPON_LASERGUN, L"LaserGun")))
+        return E_FAIL;
+
 	return S_OK;
 }
 

@@ -9,6 +9,12 @@ namespace Engine
 	class CSphereCollider;
 }
 
+struct TSGBulletData : public TProjectileData
+{
+	float fShrinkSpeed = 0.1f;
+	float fDefaultScale = 0.2f;
+};
+
 class CSGBullet : public CProjectile
 {
 protected:
@@ -37,9 +43,13 @@ private:
 	_vec3 m_vStart{ 0.f, 0.f, 0.f };
 	_vec3 m_vDir{ 0.f, 0.f, 0.f };
 	float m_fScaleCoef = 1.f;
-	float m_fInitScale = 0.2f;
-	float m_fCurrentScale = m_fScaleCoef * m_fInitScale;
-	float m_fShrinkSpeed = 0.1f;
+	float m_fCurrentScale = 1.f;
+	float m_fInitScale = 1.f;
+	
+	inline static TSGBulletData s_tData = []()-> TSGBulletData {
+		TSGBulletData t;
+		return t;
+	}();
 
 	/* 애니메이션 */
 	float m_fFrameInterval = 0.1f;

@@ -22,6 +22,8 @@ HRESULT CDefaultBullet::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
+    m_pData = &s_tData;
+
     m_pTransformCom->Set_Pos(m_vStart);
     m_pTransformCom->Set_Scale(_vec3{ 0.1f, 0.1f, 0.1f });
     m_pColliderCom->Set_Owner(this);
@@ -38,9 +40,7 @@ _int CDefaultBullet::Update_GameObject(const _float& fTimeDelta)
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PROJECTILE, m_pColliderCom);
 
-    m_pTransformCom->Move_Pos(&m_vDir, m_fSpeed, fTimeDelta);
-
-    CheckLifeTime(fTimeDelta);
+    m_pTransformCom->Move_Pos(&m_vDir, s_tData.fSpeed, fTimeDelta);
 
     Animation(fTimeDelta);
 
