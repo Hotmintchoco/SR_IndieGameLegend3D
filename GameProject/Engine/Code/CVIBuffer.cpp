@@ -1,11 +1,10 @@
-#include "CVIBuffer.h"
+ï»¿#include "CVIBuffer.h"
 
 CVIBuffer::CVIBuffer() : m_pVB(nullptr), m_pIB(nullptr)
 , m_dwVtxSize(0)
 , m_dwVtxCnt(0)
 , m_dwTriCnt(0)
 , m_dwIdxSize(0)
-, m_VtxStructType(VTXSTRUCT_DEFAULT)
 {
 }
 
@@ -15,7 +14,6 @@ CVIBuffer::CVIBuffer(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_dwVtxCnt(0)
 	, m_dwTriCnt(0)
 	, m_dwIdxSize(0)
-	, m_VtxStructType(VTXSTRUCT_DEFAULT)
 
 {
 }
@@ -28,7 +26,6 @@ CVIBuffer::CVIBuffer(const CVIBuffer& rhs)
 	, m_dwFVF(rhs.m_dwFVF)
 	, m_dwIdxSize(rhs.m_dwIdxSize)
 	, m_IdxFmt(rhs.m_IdxFmt)
-	, m_VtxStructType(rhs.m_VtxStructType)
 {
 	m_pVB->AddRef();
 	m_pIB->AddRef();
@@ -40,26 +37,26 @@ CVIBuffer::~CVIBuffer()
 
 HRESULT CVIBuffer::Ready_Buffer()
 {
-	// D3DPOOL_DEFAULT : ±×·¡ÇÈ ¸Þ¸ð¸®
-	// D3DPOOL_MANAGED : ±×·¡ÇÈ ¸Þ¸ð¸®¿¡ ÀúÀå, ¸ÞÀÎ ¸Þ¸ð¸® ¹é¾÷
-	// D3DPOOL_SYSTEMMEM : ¸ÞÀÎ ¸Þ¸ð¸®¿¡ ÀúÀå
-	// D3DPOOL_SCRATCH : ¸ÞÀÎ ¸Þ¸ð¸®¿¡ ÀúÀå(DX ÀåÄ¡·Î Á¢±Ù ºÒ°¡)
+	// D3DPOOL_DEFAULT : ê·¸ëž˜í”½ ë©”ëª¨ë¦¬
+	// D3DPOOL_MANAGED : ê·¸ëž˜í”½ ë©”ëª¨ë¦¬ì— ì €ìž¥, ë©”ì¸ ë©”ëª¨ë¦¬ ë°±ì—…
+	// D3DPOOL_SYSTEMMEM : ë©”ì¸ ë©”ëª¨ë¦¬ì— ì €ìž¥
+	// D3DPOOL_SCRATCH : ë©”ì¸ ë©”ëª¨ë¦¬ì— ì €ìž¥(DX ìž¥ì¹˜ë¡œ ì ‘ê·¼ ë¶ˆê°€)
 
-	if (FAILED(m_pGraphicDev->CreateVertexBuffer(m_dwVtxCnt * m_dwVtxSize,	// ¹öÅØ½º ¹öÆÛÀÇ Å©±â
-												0,							// 0ÀÎ °æ¿ì Á¤Àû ¹öÆÛ, D3DUSAGE_DYNAMICÀÎ °æ¿ì µ¿Àû ¹öÆÛ
-												m_dwFVF,					// ¹öÅØ½º ¼Ó¼º
-												D3DPOOL_MANAGED,			// ¸Þ¸ð¸® Ç® ¼¼ÆÃ
-												&m_pVB,						// ¹öÅØ½º ¹öÆÛ °´Ã¼
-												NULL)))						// °øÀ¯ÇÒ ÀÏ ¾ø¾î¼­ null
+	if (FAILED(m_pGraphicDev->CreateVertexBuffer(m_dwVtxCnt * m_dwVtxSize,	// ë²„í…ìŠ¤ ë²„í¼ì˜ í¬ê¸°
+												0,							// 0ì¸ ê²½ìš° ì •ì  ë²„í¼, D3DUSAGE_DYNAMICì¸ ê²½ìš° ë™ì  ë²„í¼
+												m_dwFVF,					// ë²„í…ìŠ¤ ì†ì„±
+												D3DPOOL_MANAGED,			// ë©”ëª¨ë¦¬ í’€ ì„¸íŒ…
+												&m_pVB,						// ë²„í…ìŠ¤ ë²„í¼ ê°ì²´
+												NULL)))						// ê³µìœ í•  ì¼ ì—†ì–´ì„œ null
 												return E_FAIL;
 
 
-	if (FAILED(m_pGraphicDev->CreateIndexBuffer(m_dwTriCnt * m_dwIdxSize,	// ÀÎµ¦½º ¹öÆÛÀÇ Å©±â
-												0,							// 0ÀÎ °æ¿ì Á¤Àû ¹öÆÛ, D3DUSAGE_DYNAMICÀÎ °æ¿ì µ¿Àû ¹öÆÛ
-												m_IdxFmt,					// ÀÎµ¦½º ¼Ó¼º
-												D3DPOOL_MANAGED,			// ¸Þ¸ð¸® Ç® ¼¼ÆÃ
-												&m_pIB,						// ¹öÅØ½º ¹öÆÛ °´Ã¼
-												NULL)))						// °øÀ¯ÇÒ ÀÏ ¾ø¾î¼­ null
+	if (FAILED(m_pGraphicDev->CreateIndexBuffer(m_dwTriCnt * m_dwIdxSize,	// ì¸ë±ìŠ¤ ë²„í¼ì˜ í¬ê¸°
+												0,							// 0ì¸ ê²½ìš° ì •ì  ë²„í¼, D3DUSAGE_DYNAMICì¸ ê²½ìš° ë™ì  ë²„í¼
+												m_IdxFmt,					// ì¸ë±ìŠ¤ ì†ì„±
+												D3DPOOL_MANAGED,			// ë©”ëª¨ë¦¬ í’€ ì„¸íŒ…
+												&m_pIB,						// ë²„í…ìŠ¤ ë²„í¼ ê°ì²´
+												NULL)))						// ê³µìœ í•  ì¼ ì—†ì–´ì„œ null
 												return E_FAIL;
 
 

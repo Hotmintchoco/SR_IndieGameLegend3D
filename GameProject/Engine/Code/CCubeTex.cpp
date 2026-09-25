@@ -1,4 +1,4 @@
-#include "CCubeTex.h"
+ï»¿#include "CCubeTex.h"
 
 CCubeTex::CCubeTex()
 {
@@ -28,17 +28,16 @@ HRESULT CCubeTex::Ready_Buffer()
 
 	m_dwIdxSize = sizeof(INDEX32);
 	m_IdxFmt = D3DFMT_INDEX32;
-	m_VtxStructType = VTXSTRUCT_CUBE;
 
 	if (FAILED(CVIBuffer::Ready_Buffer()))
 		return E_FAIL;
 
 	VTXCUBE* pVertex = NULL;
 
-	/// &pVertex : ¹öÅØ½º ¹öÆÛ¿¡ ÀúÀåµÈ ¹öÅØ½º Áß Ã¹ ¹øÂ° ¹öÅØ½º
+	/// &pVertex : ë²„í…ìŠ¤ ë²„í¼ì— ì €ìž¥ëœ ë²„í…ìŠ¤ ì¤‘ ì²« ë²ˆì§¸ ë²„í…ìŠ¤
 	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
 
-	/// ¿À¸¥ÂÊ À§
+	/// ì˜¤ë¥¸ìª½ ìœ„
 
 	pVertex[0].vPosition = { -1.f, 1.f, -1.f };
 	pVertex[0].vTexUV = pVertex[0].vPosition;
@@ -75,7 +74,7 @@ HRESULT CCubeTex::Ready_Buffer()
 	pIndex[0]._1 = 5;
 	pIndex[0]._2 = 6;
 
-	// ¿ÞÂÊ ¾Æ·¡
+	// ì™¼ìª½ ì•„ëž˜
 	pIndex[1]._0 = 1;
 	pIndex[1]._1 = 6;
 	pIndex[1]._2 = 2;
@@ -85,7 +84,7 @@ HRESULT CCubeTex::Ready_Buffer()
 	pIndex[2]._1 = 0;
 	pIndex[2]._2 = 3;
 
-	// ¿ÞÂÊ ¾Æ·¡
+	// ì™¼ìª½ ì•„ëž˜
 	pIndex[3]._0 = 4;
 	pIndex[3]._1 = 3;
 	pIndex[3]._2 = 7;
@@ -95,7 +94,7 @@ HRESULT CCubeTex::Ready_Buffer()
 	pIndex[4]._1 = 5;
 	pIndex[4]._2 = 1;
 
-	// ¿ÞÂÊ ¾Æ·¡
+	// ì™¼ìª½ ì•„ëž˜
 	pIndex[5]._0 = 4;
 	pIndex[5]._1 = 1;
 	pIndex[5]._2 = 0;
@@ -105,7 +104,7 @@ HRESULT CCubeTex::Ready_Buffer()
 	pIndex[6]._1 = 2;
 	pIndex[6]._2 = 6;
 
-	// ¿ÞÂÊ ¾Æ·¡
+	// ì™¼ìª½ ì•„ëž˜
 	pIndex[7]._0 = 3;
 	pIndex[7]._1 = 6;
 	pIndex[7]._2 = 7;
@@ -115,7 +114,7 @@ HRESULT CCubeTex::Ready_Buffer()
 	pIndex[8]._1 = 6;
 	pIndex[8]._2 = 5;
 
-	// ¿ÞÂÊ ¾Æ·¡
+	// ì™¼ìª½ ì•„ëž˜
 	pIndex[9]._0 = 7;
 	pIndex[9]._1 = 5;
 	pIndex[9]._2 = 4;
@@ -125,7 +124,7 @@ HRESULT CCubeTex::Ready_Buffer()
 	pIndex[10]._1 = 1;
 	pIndex[10]._2 = 2;
 
-	// ¿ÞÂÊ ¾Æ·¡
+	// ì™¼ìª½ ì•„ëž˜
 	pIndex[11]._0 = 0;
 	pIndex[11]._1 = 2;
 	pIndex[11]._2 = 3;

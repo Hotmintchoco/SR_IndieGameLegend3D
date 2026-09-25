@@ -1,4 +1,4 @@
-#include "CPlaneTex.h"
+ï»¿#include "CPlaneTex.h"
 
 CPlaneTex::CPlaneTex()
 {
@@ -28,17 +28,16 @@ HRESULT CPlaneTex::Ready_Buffer()
 
 	m_dwIdxSize = sizeof(INDEX16);
 	m_IdxFmt = D3DFMT_INDEX16;
-	m_VtxStructType = VTXSTRUCT_TEX;
 
 	if (FAILED(CVIBuffer::Ready_Buffer()))
 		return E_FAIL;
 
 	VTXTEX* pVertex = NULL;
 
-	/// &pVertex : ¹öÅØ½º ¹öÆÛ¿¡ ÀúÀåµÈ ¹öÅØ½º Áß Ã¹ ¹øÂ° ¹öÅØ½º
+	/// &pVertex : ë²„í…ìŠ¤ ë²„í¼ì— ì €ìž¥ëœ ë²„í…ìŠ¤ ì¤‘ ì²« ë²ˆì§¸ ë²„í…ìŠ¤
 	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
 
-	/// ¿À¸¥ÂÊ À§
+	/// ì˜¤ë¥¸ìª½ ìœ„
 
 	pVertex[0].vPosition = { -0.5f, 0.f, 0.5f };
 	pVertex[0].vTexUV = { 0.f, 0.f };
@@ -58,12 +57,12 @@ HRESULT CPlaneTex::Ready_Buffer()
 
 	m_pIB->Lock(0, 0, (void**)&pIndex, 0);
 
-	// ¿À¸¥ÂÊ À§
+	// ì˜¤ë¥¸ìª½ ìœ„
 	pIndex[0]._0 = 0;
 	pIndex[0]._1 = 1;
 	pIndex[0]._2 = 2;
 
-	// ¿ÞÂÊ ¾Æ·¡
+	// ì™¼ìª½ ì•„ëž˜
 	pIndex[1]._0 = 0;
 	pIndex[1]._1 = 2;
 	pIndex[1]._2 = 3;

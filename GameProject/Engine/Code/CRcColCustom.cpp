@@ -1,4 +1,4 @@
-#include "CRcColCustom.h"
+ï»¿#include "CRcColCustom.h"
 
 CRcColCustom::CRcColCustom()
 {
@@ -34,17 +34,16 @@ HRESULT CRcColCustom::Ready_Buffer()
 
 	m_dwIdxSize = sizeof(INDEX16);
 	m_IdxFmt = D3DFMT_INDEX16;
-	m_VtxStructType = VTXSTRUCT_COL;
 
 	if (FAILED(CVIBuffer::Ready_Buffer()))
 		return E_FAIL;
 
 	VTXCOL* pVertex = NULL;
 
-	/// &pVertex : ¹öÅØ½º ¹öÆÛ¿¡ ÀúÀåµÈ ¹öÅØ½º Áß Ã¹ ¹øÂ° ¹öÅØ½º
+	/// &pVertex : ë²„í…ìŠ¤ ë²„í¼ì— ì €ìž¥ëœ ë²„í…ìŠ¤ ì¤‘ ì²« ë²ˆì§¸ ë²„í…ìŠ¤
 	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
 
-	/// ¿À¸¥ÂÊ À§
+	/// ì˜¤ë¥¸ìª½ ìœ„
 
 	pVertex[0].vPosition = { -1.f, 1.f, 0.f };
 	pVertex[0].dwColor = D3DXCOLOR(1.f, 1.f, 0.f, 1.f);
@@ -70,12 +69,12 @@ HRESULT CRcColCustom::Ready_Buffer()
 
 	m_pIB->Lock(0, 0, (void**)&pIndex, 0);
 
-	// ¿À¸¥ÂÊ À§
+	// ì˜¤ë¥¸ìª½ ìœ„
 	pIndex[0]._0 = 0;
 	pIndex[0]._1 = 1;
 	pIndex[0]._2 = 2;
 
-	// ¿ÞÂÊ ¾Æ·¡
+	// ì™¼ìª½ ì•„ëž˜
 	pIndex[1]._0 = 0;
 	pIndex[1]._1 = 2;
 	pIndex[1]._2 = 3;
@@ -100,17 +99,16 @@ HRESULT CRcColCustom::Set_Buffer(const _vec3(&vec3)[4], const D3DXCOLOR(&color)[
 
 	m_dwIdxSize = sizeof(INDEX16);
 	m_IdxFmt = D3DFMT_INDEX16;
-	m_VtxStructType = VTXSTRUCT_COL;
 
 	if (FAILED(CVIBuffer::Ready_Buffer()))
 		return E_FAIL;
 
 	VTXCOL* pVertex = NULL;
 
-	/// &pVertex : ¹öÅØ½º ¹öÆÛ¿¡ ÀúÀåµÈ ¹öÅØ½º Áß Ã¹ ¹øÂ° ¹öÅØ½º
+	/// &pVertex : ë²„í…ìŠ¤ ë²„í¼ì— ì €ìž¥ëœ ë²„í…ìŠ¤ ì¤‘ ì²« ë²ˆì§¸ ë²„í…ìŠ¤
 	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
 
-	/// ¿À¸¥ÂÊ À§
+	/// ì˜¤ë¥¸ìª½ ìœ„
 
 	for (int i = 0; i < 4; ++i)
 	{
@@ -124,12 +122,12 @@ HRESULT CRcColCustom::Set_Buffer(const _vec3(&vec3)[4], const D3DXCOLOR(&color)[
 
 	m_pIB->Lock(0, 0, (void**)&pIndex, 0);
 
-	// ¿À¸¥ÂÊ À§
+	// ì˜¤ë¥¸ìª½ ìœ„
 	pIndex[0]._0 = 0;
 	pIndex[0]._1 = 1;
 	pIndex[0]._2 = 2;
 
-	// ¿ÞÂÊ ¾Æ·¡
+	// ì™¼ìª½ ì•„ëž˜
 	pIndex[1]._0 = 0;
 	pIndex[1]._1 = 2;
 	pIndex[1]._2 = 3;

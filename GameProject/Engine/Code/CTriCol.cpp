@@ -1,4 +1,4 @@
-#include "CTriCol.h"
+ï»¿#include "CTriCol.h"
 
 CTriCol::CTriCol()
 {
@@ -27,14 +27,13 @@ HRESULT CTriCol::Ready_Buffer()
 
 	m_dwIdxSize = sizeof(INDEX16);
 	m_IdxFmt = D3DFMT_INDEX16;
-	m_VtxStructType = VTXSTRUCT_COL;
 
 	if (FAILED(CVIBuffer::Ready_Buffer()))
 		return E_FAIL;
 
 	VTXCOL* pVertex = NULL;
 
-	// &pVertex : ¹öÅØ½º ¹öÆÛ¿¡ ÀúÀåµÈ ¹öÅØ½º Áß Ã¹ ¹øÂ° ¹öÅØ½ºÀÇ ÁÖ¼Ò¸¦ ¾ò¾î¿È
+	// &pVertex : ë²„í…ìŠ¤ ë²„í¼ì— ì €ìž¥ëœ ë²„í…ìŠ¤ ì¤‘ ì²« ë²ˆì§¸ ë²„í…ìŠ¤ì˜ ì£¼ì†Œë¥¼ ì–»ì–´ì˜´
 	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
 
 	pVertex[0].vPosition = { 0.f, 1.f, 0.f };

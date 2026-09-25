@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "CComponent.h"
 
 BEGIN(Engine)
@@ -18,32 +18,14 @@ public:
 protected:
 	LPDIRECT3DVERTEXBUFFER9			m_pVB;
 
-	_ulong		m_dwVtxSize;		// ¡§¡°¿« ≈©±‚
-	_ulong		m_dwVtxCnt;			// ¡§¡°¿« ∞≥ºˆ
-	_ulong		m_dwTriCnt;			// ªÔ∞¢«¸¿« ∞≥ºˆ
-	_ulong		m_dwFVF;			// ¡§¡°¿« ø…º«
+	_ulong		m_dwVtxSize;		// Ï†ïÏ†êÏùò ÌÅ¨Í∏∞
+	_ulong		m_dwVtxCnt;			// Ï†ïÏ†êÏùò Í∞úÏàò
+	_ulong		m_dwTriCnt;			// ÏÇºÍ∞ÅÌòïÏùò Í∞úÏàò
+	_ulong		m_dwFVF;			// Ï†ïÏ†êÏùò ÏòµÏÖò
 
 	LPDIRECT3DINDEXBUFFER9			m_pIB;
-	VTXSTRUCTTYPE	m_VtxStructType;
 	_ulong			m_dwIdxSize;
 	D3DFORMAT		m_IdxFmt;
-
-public : 
-	void	Get_VIInfo	(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer,
-						LPDIRECT3DINDEXBUFFER9& pIdxBuffer,
-						VTXSTRUCTTYPE& vtxStructType,
-						D3DFORMAT& idxFmt,
-						_ulong& dwVtxCnt,
-						_ulong& dwTriCnt)
-	{
-		pVtxBuffer = m_pVB;
-		pIdxBuffer = m_pIB;
-		vtxStructType = m_VtxStructType;
-		idxFmt = m_IdxFmt;
-		dwVtxCnt = m_dwVtxCnt;
-		dwTriCnt = m_dwTriCnt;
-	}
-
 
 public:
 	virtual void	Free();

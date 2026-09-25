@@ -1,4 +1,4 @@
-#include "CTerrainTex.h"
+ï»¿#include "CTerrainTex.h"
 
 CTerrainTex::CTerrainTex() : m_pPos(nullptr)
 {
@@ -32,7 +32,6 @@ HRESULT		CTerrainTex::Ready_Buffer(const _ulong& dwVtxCntX,
 
 	m_dwIdxSize = sizeof(INDEX32);
 	m_IdxFmt = D3DFMT_INDEX32;
-	m_VtxStructType = VTXSTRUCT_TEX;
 
 	m_pPos = new _vec3[m_dwVtxCnt];
 
@@ -43,7 +42,7 @@ HRESULT		CTerrainTex::Ready_Buffer(const _ulong& dwVtxCntX,
 	
 	_ulong dwIndex = 0;
 
-	/// &pVertex : ¹öÅØ½º ¹öÆÛ¿¡ ÀúÀåµÈ ¹öÅØ½º Áß Ã¹ ¹øÂ° ¹öÅØ½º
+	/// &pVertex : ë²„í…ìŠ¤ ë²„í¼ì— ì €ìž¥ëœ ë²„í…ìŠ¤ ì¤‘ ì²« ë²ˆì§¸ ë²„í…ìŠ¤
 	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
 	
 
@@ -81,7 +80,7 @@ HRESULT		CTerrainTex::Ready_Buffer(const _ulong& dwVtxCntX,
 		{
 			dwIndex = i * dwVtxCntX + j;
 			
-			// ¿À¸¥ÂÊ À§
+			// ì˜¤ë¥¸ìª½ ìœ„
 
 			pIndex[dwTriCnt]._0 = dwIndex + dwVtxCntX;
 			pIndex[dwTriCnt]._1 = dwIndex + dwVtxCntX + 1;
@@ -98,7 +97,7 @@ HRESULT		CTerrainTex::Ready_Buffer(const _ulong& dwVtxCntX,
 			
 			dwTriCnt++;
 
-			// ¿ÞÂÊ ¾Æ·¡
+			// ì™¼ìª½ ì•„ëž˜
 			pIndex[dwTriCnt]._0 = dwIndex + dwVtxCntX;
 			pIndex[dwTriCnt]._1 = dwIndex + 1;
 			pIndex[dwTriCnt]._2 = dwIndex;

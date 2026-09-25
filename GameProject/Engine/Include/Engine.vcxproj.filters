@@ -130,9 +130,6 @@
     <ClCompile Include="..\Code\IRenderable.cpp">
       <Filter>08. Renderer\Interface</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CCustomTex.cpp">
-      <Filter>05. Component\00. VIBuffer\07. CustomTex</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CSoundMgr.cpp">
       <Filter>15. Sound</Filter>
     </ClCompile>
@@ -291,9 +288,6 @@
     <ClInclude Include="..\Header\IRenderable.h">
       <Filter>08. Renderer\Interface</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CCustomTex.h">
-      <Filter>05. Component\00. VIBuffer\07. CustomTex</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CSoundMgr.h">
       <Filter>15. Sound</Filter>
     </ClInclude>
@@ -424,9 +418,6 @@
     </Filter>
     <Filter Include="08. Renderer\Interface">
       <UniqueIdentifier>{c0423c80-7b59-4445-a095-ad629dfa4ca7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05. Component\00. VIBuffer\07. CustomTex">
-      <UniqueIdentifier>{baa4eca3-7e34-4316-9fa3-a6087ec6921e}</UniqueIdentifier>
     </Filter>
     <Filter Include="15. Sound">
       <UniqueIdentifier>{541ae4de-6182-4806-b205-f090097c1e66}</UniqueIdentifier>
