@@ -293,8 +293,8 @@ HRESULT CRoomLayer::SpawnRoom()
 
 			pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrBoxName, L"Com_Transform"));
 
-			pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
-			pTransformCom->Move_Pos(&vDir, 4.f + (iDir % 2) * 1.f, 1.f);
+			pTransformCom->Set_Pos(vRoomCenterPos.x, 0.5f, vRoomCenterPos.z);
+			pTransformCom->Move_Pos(&vDir, 4.0f + (iDir % 2) * 1.f, 1.f);
 
 			/* 문 */
 
