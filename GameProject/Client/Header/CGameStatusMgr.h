@@ -38,6 +38,8 @@ public:
 
 	inline void SetUltimateGauge(float fAmount) { m_fUltGauge = fAmount; }
 	inline void SetSpecialAttackGauge(float fAmount) { m_fSpecialAtkGauge = fAmount; }
+	inline float GetUltimateGauge() const { return m_fUltGauge; }
+	inline float GetSpecialAttackGauge() const { return m_fSpecialAtkGauge; }
 
 	inline void UpdateGem(int iAmount) { m_iGem += iAmount; }
 

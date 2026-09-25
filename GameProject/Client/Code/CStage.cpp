@@ -330,7 +330,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	// Gem Cnt
 	fStartX += fGap + 15.f;
-	fGap = 6.f;
+	fGap = 4.f;
 	for (int i = 0; i < iCountMax; ++i)
 	{
 		pUI = CUI::Create(m_pGraphicDev, L"Proto_NumberTexture");

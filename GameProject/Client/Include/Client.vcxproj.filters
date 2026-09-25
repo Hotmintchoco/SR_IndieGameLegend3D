@@ -232,6 +232,9 @@
     <Filter Include="02. GameObject\10. UI\Minimap">
       <UniqueIdentifier>{2607f307-e85e-4c6a-aaf2-41e82286d73c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. UI\Gauge">
+      <UniqueIdentifier>{2b7f91d6-6939-4b42-854e-848d5ec51968}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
