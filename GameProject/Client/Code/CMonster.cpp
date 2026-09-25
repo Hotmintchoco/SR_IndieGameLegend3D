@@ -234,3 +234,8 @@ void		CMonster::Set_Pos(_float fX, _float fY, _float fZ)
 {
     m_pTransformCom->Set_Pos(fX, fY, fZ);
 }
+
+void CMonster::Get_Pos(_vec3* pPos)
+{
+	m_pTransformCom->Get_Info(INFO_POS, pPos);
+}

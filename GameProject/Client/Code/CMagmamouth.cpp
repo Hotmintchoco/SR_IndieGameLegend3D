@@ -424,8 +424,10 @@ void CMagmamouth::Update_Motion(const _float& fTimeDelta)
             if (m_bMoveState == true)
             {
                 m_eMagmaMouthState = MOVE;
+                m_bMoveState = false;
+
             }
-            m_bMoveState = !m_bMoveState;
+            //m_bMoveState = !m_bMoveState;
         }
         else
         {
@@ -706,7 +708,7 @@ void CMagmamouth::Set_Motion()
 
     if (m_eMagmaMouthState == MOVE)
     {
-        _vec3 vMonsterLook, vPlayerLook, vPos;
+        _vec3 vMonsterLook, vPlayerLook,vPlayerPos, vPos;
 
         CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
             ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
@@ -715,9 +717,11 @@ void CMagmamouth::Set_Motion()
             return;
 
         pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
-        vMonsterLook = m_vMovePosition - vPos;
 
+        vMonsterLook = m_vMovePosition - vPos;
+        
         vPlayerLook.y = 0;
         vMonsterLook.y = 0;
 
@@ -734,7 +738,7 @@ void CMagmamouth::Set_Motion()
         }
         else if (D3DXToDegree(fAngle) > 45.f)
         {
-            _vec3 vecA = m_vRoomCenterLocation - vPos;
+            _vec3 vecA = vPlayerPos - vPos;
             m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
             if (D3DXVec3Dot(D3DXVec3Cross(&vCross, &vecA, &vMonsterLook), &vAxis) > 0.f)
                 m_fFrame = 6.f;
