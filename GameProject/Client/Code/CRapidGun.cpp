@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "CDefaultGun.h"
+#include "CRapidGun.h"
 #include "CImGuiTool.h"
 #include "CProtoMgr.h"
 #include "CDefaultBullet.h"
@@ -7,16 +7,16 @@
 #include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
 
-CDefaultGun::CDefaultGun(LPDIRECT3DDEVICE9 pGraphicDev)
+CRapidGun::CRapidGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
 {
 }
 
-CDefaultGun::~CDefaultGun()
+CRapidGun::~CRapidGun()
 {
 }
 
-HRESULT CDefaultGun::Ready_GameObject()
+HRESULT CRapidGun::Ready_GameObject()
 {
     if (FAILED(CWeapon::Ready_GameObject()))
         return E_FAIL;
@@ -29,19 +29,19 @@ HRESULT CDefaultGun::Ready_GameObject()
     return S_OK;
 }
 
-_int CDefaultGun::Update_GameObject(const _float& fTimeDelta)
+_int CRapidGun::Update_GameObject(const _float& fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
     return iExit;
 }
 
-void CDefaultGun::LateUpdate_GameObject(const _float& fTimeDelta)
+void CRapidGun::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CWeapon::LateUpdate_GameObject(fTimeDelta);
 }
 
-void CDefaultGun::Render_GameObject()
+void CRapidGun::Render_GameObject()
 {
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
@@ -59,7 +59,7 @@ void CDefaultGun::Render_GameObject()
     // RenderEditorPanel();
 }
 
-void CDefaultGun::RenderEditorPanel()
+void CRapidGun::RenderEditorPanel()
 {
     ImGui::Begin("Gun");
 
@@ -80,7 +80,7 @@ void CDefaultGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CDefaultGun::SpecialAttack()
+void CRapidGun::SpecialAttack()
 {
     _vec3 vDir = m_vBulletTo - m_vBulletFrom;
 
@@ -94,11 +94,11 @@ void CDefaultGun::SpecialAttack()
     StartShotAnimation();
 }
 
-void CDefaultGun::UltimateAttack()
+void CRapidGun::UltimateAttack()
 {
 }
 
-HRESULT CDefaultGun::Add_Component()
+HRESULT CRapidGun::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
@@ -121,21 +121,21 @@ HRESULT CDefaultGun::Add_Component()
     return S_OK;
 }
 
-CDefaultGun* CDefaultGun::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CRapidGun* CRapidGun::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CDefaultGun* pGun = new CDefaultGun(pGraphicDev);
+    CRapidGun* pGun = new CRapidGun(pGraphicDev);
 
     if (FAILED(pGun->Ready_GameObject()))
     {
         Safe_Release(pGun);
-        MSG_BOX("CDefaultGun Create Failed");
+        MSG_BOX("CRapidGun Create Failed");
         return nullptr;
     }
 
     return pGun;
 }
 
-void CDefaultGun::Free()
+void CRapidGun::Free()
 {
     CWeapon::Free();
 }

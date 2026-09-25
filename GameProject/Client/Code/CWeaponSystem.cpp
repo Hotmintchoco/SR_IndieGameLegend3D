@@ -1,8 +1,6 @@
 ﻿#include "pch.h"
 #include "CWeaponSystem.h"
 #include "CWeapon.h"
-#include "CDefaultGun.h"
-#include "CShotGun.h"
 #include "CDInputMgr.h"
 #include "CGameStatusMgr.h"
 #include "Client_Struct.h"
@@ -20,7 +18,7 @@ CWeaponSystem::~CWeaponSystem()
 
 HRESULT CWeaponSystem::Ready_GameObject()
 {
-    if (FAILED(AddWeapon(EObjectType::WEAPON_DEFAULT, L"DefaultGun")))
+    if (FAILED(AddWeapon(EObjectType::WEAPON_DEFAULT, L"RapidGun")))
         return E_FAIL;
 
     if (FAILED(AddWeapon(EObjectType::WEAPON_SHOTGUN, L"ShotGun")))
@@ -112,6 +110,7 @@ void CWeaponSystem::GetKeyInput()
         }
     }
     t.bSpecialAtk = m_bSpecialAttackSwitchOn;
+    CGameStatusMgr::GetInstance()->SetSpecialAttackSwtich(m_bSpecialAttackSwitchOn);
 
     if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
     {

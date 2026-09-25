@@ -8,11 +8,11 @@ namespace Engine
 	class CTexture;
 }
 
-class CDefaultGun : public CWeapon
+class CRapidGun : public CWeapon
 {
 protected:
-	explicit CDefaultGun(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CDefaultGun();
+	explicit CRapidGun(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CRapidGun();
 
 public:
 	virtual	HRESULT Ready_GameObject() override;
@@ -30,7 +30,7 @@ private:
 	Engine::CTexture* m_pTextureCom = nullptr;
 
 public:
-	static CDefaultGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CRapidGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void Free() override;

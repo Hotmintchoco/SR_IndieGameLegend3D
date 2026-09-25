@@ -229,9 +229,6 @@
     <Filter Include="02. GameObject\08. Combat\00. Weapon\00. WeaponSystem">
       <UniqueIdentifier>{fbf2d5c7-7d2b-448d-8b61-e7d9009f0835}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\08. Combat\00. Weapon\01. DefaultGun">
-      <UniqueIdentifier>{2607640a-46ee-4d50-9c31-bc52fb843dfb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\08. Combat\00. Weapon\02. ShotGun">
       <UniqueIdentifier>{9619b96b-3086-4414-835e-7f0627bdd560}</UniqueIdentifier>
     </Filter>
@@ -246,6 +243,9 @@
     </Filter>
     <Filter Include="02. GameObject\10. UI\Gauge">
       <UniqueIdentifier>{2b7f91d6-6939-4b42-854e-848d5ec51968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\00. Weapon\01. RapidGun">
+      <UniqueIdentifier>{2607640a-46ee-4d50-9c31-bc52fb843dfb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -492,8 +492,8 @@
     <ClInclude Include="..\Header\CWeapon.h">
       <Filter>02. GameObject\08. Combat\00. Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CDefaultGun.h">
-      <Filter>02. GameObject\08. Combat\00. Weapon\01. DefaultGun</Filter>
+    <ClInclude Include="..\Header\CRapidGun.h">
+      <Filter>02. GameObject\08. Combat\00. Weapon\01. RapidGun</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CWeaponSystem.h">
       <Filter>02. GameObject\08. Combat\00. Weapon\00. WeaponSystem</Filter>
@@ -719,8 +719,8 @@
     <ClCompile Include="..\Code\CWeapon.cpp">
       <Filter>02. GameObject\08. Combat\00. Weapon</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CDefaultGun.cpp">
-      <Filter>02. GameObject\08. Combat\00. Weapon\01. DefaultGun</Filter>
+    <ClCompile Include="..\Code\CRapidGun.cpp">
+      <Filter>02. GameObject\08. Combat\00. Weapon\01. RapidGun</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CWeaponSystem.cpp">
       <Filter>02. GameObject\08. Combat\00. Weapon\00. WeaponSystem</Filter>

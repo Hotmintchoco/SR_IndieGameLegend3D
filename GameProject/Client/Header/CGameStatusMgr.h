@@ -38,8 +38,10 @@ public:
 
 	inline void SetUltimateGauge(float fAmount) { m_fUltGauge = fAmount; }
 	inline void SetSpecialAttackGauge(float fAmount) { m_fSpecialAtkGauge = fAmount; }
+	inline void SetSpecialAttackSwtich(bool bFlag) { m_bSpecialAtkSwitch = bFlag; }
 	inline float GetUltimateGauge() const { return m_fUltGauge; }
 	inline float GetSpecialAttackGauge() const { return m_fSpecialAtkGauge; }
+	inline bool GetSpecialAttackSwitch() const { return m_bSpecialAtkSwitch; }
 
 	inline void UpdateGem(int iAmount) { m_iGem += iAmount; }
 
@@ -79,6 +81,7 @@ private:
 	/* Weapon */
 	float m_fUltGauge = 0.f;
 	float m_fSpecialAtkGauge = 0.f;
+	float m_bSpecialAtkSwitch = false;
 	
 	/* Item */
 	int m_iGem = 0;

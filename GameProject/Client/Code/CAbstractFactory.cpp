@@ -13,7 +13,7 @@
 #include "CGem.h"
 #include "CMagmamouth.h"
 #include "CGameMachine.h"
-#include "CDefaultGun.h"
+#include "CRapidGun.h"
 #include "CShotGun.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
@@ -35,7 +35,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::ITEM_ENERGY,              [](const TCreateDesc& t) -> Engine::CGameObject* { return CEnergy::Create(t.pDevice, t.pSpawner); } },
         {EObjectType::ITEM_GEM,                 [](const TCreateDesc& t) -> Engine::CGameObject* { return CGem::Create(t.pDevice, t.pSpawner); } },
 
-        {EObjectType::WEAPON_DEFAULT,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CDefaultGun::Create(t.pDevice); } },
+        {EObjectType::WEAPON_DEFAULT,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CRapidGun::Create(t.pDevice); } },
         {EObjectType::WEAPON_SHOTGUN,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CShotGun::Create(t.pDevice); } },
     };
 }
