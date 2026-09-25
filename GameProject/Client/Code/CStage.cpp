@@ -9,7 +9,7 @@
 #include "CSkyBox.h"
 #include "CLightMgr.h"
 #include "CEffect.h"
-#include "CWeapon.h"
+#include "CWeaponSystem.h"
 #include "CManagement.h"
 #include "CFontMgr.h"
 #include "CDInputMgr.h"
@@ -195,12 +195,12 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 		return E_FAIL;
 
-	// Gun
-	pGameObject = CWeapon::Create(m_pGraphicDev);
+	// Weapon System
+	pGameObject = CWeaponSystem::Create(m_pGraphicDev);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"Gun", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"WeaponSystem", pGameObject)))
 		return E_FAIL;
 
 	// PseudoDark

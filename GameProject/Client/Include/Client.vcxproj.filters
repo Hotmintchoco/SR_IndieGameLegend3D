@@ -220,11 +220,20 @@
     <Filter Include="02. GameObject\08. Combat">
       <UniqueIdentifier>{392630cc-bd20-4eb7-9704-747e40434189}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\08. Combat\00. Gun">
-      <UniqueIdentifier>{2607640a-46ee-4d50-9c31-bc52fb843dfb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\08. Combat\01. Projectile">
       <UniqueIdentifier>{6bdbc102-7ebf-41d5-b4a6-11d635b0163e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\00. Weapon">
+      <UniqueIdentifier>{42ddf94d-ec98-489e-87d1-a5cb606ba7ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\00. Weapon\00. WeaponSystem">
+      <UniqueIdentifier>{fbf2d5c7-7d2b-448d-8b61-e7d9009f0835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\00. Weapon\01. DefaultGun">
+      <UniqueIdentifier>{2607640a-46ee-4d50-9c31-bc52fb843dfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\00. Weapon\02. ShotGun">
+      <UniqueIdentifier>{9619b96b-3086-4414-835e-7f0627bdd560}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -459,11 +468,20 @@
     <ClInclude Include="..\Header\CDebugPrint.h">
       <Filter>100. Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CWeapon.h">
-      <Filter>02. GameObject\08. Combat\00. Gun</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CProjectile.h">
       <Filter>02. GameObject\08. Combat\01. Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWeapon.h">
+      <Filter>02. GameObject\08. Combat\00. Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CDefaultGun.h">
+      <Filter>02. GameObject\08. Combat\00. Weapon\01. DefaultGun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWeaponSystem.h">
+      <Filter>02. GameObject\08. Combat\00. Weapon\00. WeaponSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CShotGun.h">
+      <Filter>02. GameObject\08. Combat\00. Weapon\02. ShotGun</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -671,11 +689,20 @@
     <ClCompile Include="..\Code\CDebugPrint.cpp">
       <Filter>100. Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CWeapon.cpp">
-      <Filter>02. GameObject\08. Combat\00. Gun</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CProjectile.cpp">
       <Filter>02. GameObject\08. Combat\01. Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWeapon.cpp">
+      <Filter>02. GameObject\08. Combat\00. Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDefaultGun.cpp">
+      <Filter>02. GameObject\08. Combat\00. Weapon\01. DefaultGun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWeaponSystem.cpp">
+      <Filter>02. GameObject\08. Combat\00. Weapon\00. WeaponSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CShotGun.cpp">
+      <Filter>02. GameObject\08. Combat\00. Weapon\02. ShotGun</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

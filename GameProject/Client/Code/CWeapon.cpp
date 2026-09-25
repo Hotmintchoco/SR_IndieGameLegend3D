@@ -9,6 +9,8 @@
 #include "CDInputMgr.h"
 #include "CGameStatusMgr.h"
 #include "CSoundMgr.h"
+#include "Client_Struct.h"
+#include "CRoomLayer.h"
 
 CWeapon::CWeapon(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -24,8 +26,6 @@ HRESULT CWeapon::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
-
     return S_OK;
 }
 
@@ -34,11 +34,16 @@ _int CWeapon::Update_GameObject(const _float& fTimeDelta)
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
-
-    GetKeyInput();
     
     Animation(fTimeDelta);
 
+    CheckCoolTime(fTimeDelta);
+
+    return iExit;
+}
+
+void CWeapon::CheckCoolTime(const _float& fTimeDelta)
+{
     if (m_bIsCoolTime)
     {
         m_fCoolTimeLeft -= fTimeDelta;
@@ -48,50 +53,6 @@ _int CWeapon::Update_GameObject(const _float& fTimeDelta)
             m_bIsCoolTime = false;
             m_fCoolTimeLeft = 0.f;
         }
-    }
-
-    return iExit;
-}
-
-void CWeapon::GetKeyInput()
-{
-    if (CDInputMgr::GetInstance()->Mouse_Press(DIM_LB))
-    {
-        TryShoot();
-    }
-
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_F))
-    {
-        m_bSpecialAttackSwitchOn = !m_bSpecialAttackSwitchOn;
-    }
-
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_C))
-    {
-        if (m_bIsUltimateAttackReady)
-        {
-            UltimateAttack();
-        }
-    }
-
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
-    {
-        m_bOnSprint = true;
-    }
-    else
-    {
-        m_bOnSprint = false;
-    }
-
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_W)
-        || CDInputMgr::GetInstance()->Key_Press(DIK_A)
-        || CDInputMgr::GetInstance()->Key_Press(DIK_S)
-        || CDInputMgr::GetInstance()->Key_Press(DIK_D))
-    {
-        m_bOnMoveAnimation = true;
-    }
-    else
-    {
-        m_bOnMoveAnimation = false;
     }
 }
 
@@ -118,32 +79,12 @@ void CWeapon::SyncTransformToCamera()
     m_vBulletTo = vCameraPos + vCameraLook * m_fTargetDistance;
 }
 
-void CWeapon::Render_GameObject()
+void CWeapon::DefaultAttack()
 {
-    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-
-    if (m_bSpecialAttackSwitchOn)
-    {
-        m_pTextureCom->Set_Texture(1);
-    }
-    else
-    {
-        m_pTextureCom->Set_Texture(0);
-    }
-
-    m_pBufferCom->Render_Buffer();
-
-    // RenderEditorPanel();
-}
-
-void CWeapon::TryShoot()
-{
-    if (m_bIsCoolTime) return;
-
     _vec3 vDir = m_vBulletTo - m_vBulletFrom;
 
     CProjectile* pProjectile = CProjectile::Create(m_pGraphicDev, m_vBulletFrom, vDir);
-    CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
 
@@ -152,72 +93,13 @@ void CWeapon::TryShoot()
     StartShotAnimation();
 }
 
-void CWeapon::GainEnergy()
+void CWeapon::UpdateAnimationArgs(const TWeaponAnimArgs& t)
 {
-    m_fSpecialAtkGauge += 0.1f;
-    m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
-    CGameStatusMgr::GetInstance()->SetSpecialAttackGauge(m_fSpecialAtkGauge);
-
-    m_fUltimateAtkGauge += 0.1f;
-    m_fUltimateAtkGauge = clamp(m_fUltimateAtkGauge, 0.f, 1.f);
-    if (m_fUltimateAtkGauge == 1.f)
-    {
-        m_bIsUltimateAttackReady = true;
-    }
-    CGameStatusMgr::GetInstance()->SetUltimateGauge(m_fUltimateAtkGauge);
+    m_bOnSprint = t.bSprint;
+    m_bOnMoveAnimation = t.bMove;
+    m_bSpecialAttackSwitchOn = t.bSpecialAtk;
 }
 
-HRESULT CWeapon::Add_Component()
-{
-    CComponent* pComponent = nullptr;
-
-    // Mesh
-    pComponent = m_pBufferCom = dynamic_cast<CPlyTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Gun_Vertex"));
-
-    if (nullptr == pComponent)
-        return E_FAIL;
-
-    m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
-
-    // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Gun_Texture"));
-
-    if (nullptr == pComponent)
-        return E_FAIL;
-
-    m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
-
-    // Transform
-    pComponent = m_pTransformCom = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
-
-    if (nullptr == pComponent)
-        return E_FAIL;
-
-    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
-
-    return S_OK;
-}
-
-void CWeapon::RenderEditorPanel()
-{
-    ImGui::Begin("Gun");
-
-    ImGui::SeparatorText("Transform");
-    ImGui::DragFloat3("Scale", &m_vScaleLocal.x, 0.01f, 0.001f, 100.f);
-    ImGui::DragFloat3("Position", &m_vPositionLocal.x, 0.01f);
-    ImGui::DragFloat3("Rotation", &m_vRotationLocal.x, 0.5f, -360.f, 360.f);
-
-    ImGui::SeparatorText("Animation");
-    ImGui::DragFloat("Move Cycle", &m_fMoveAnimationFrequency, 0.01f, 0.05f, 5.f, "%.2f s");
-    ImGui::DragFloat("Horizontal Move", &m_fHorizontalMove, 0.001f, 0.f, 1.f);
-    ImGui::DragFloat("Quadratic A", &m_fQuadraticA, 0.001f, 0.f, 1.f);
-    ImGui::DragFloat("Max Recoil Angle", &m_fMaxRecoilAngle, 0.5f, -90.f, 0.f);
-    ImGui::DragFloat("Recoil Damping", &m_fRecoilDamping, 0.05f, 0.f, 20.f);
-
-    ImGui::End();
-
-    UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
-}
 
 void CWeapon::UpdateLocalTransform(const _vec3& vScale, const _vec3& vRotation, const _vec3& vTransition)
 {
@@ -226,15 +108,6 @@ void CWeapon::UpdateLocalTransform(const _vec3& vScale, const _vec3& vRotation, 
     m_pTransformCom->Set_Scale(vScale);
     m_pTransformCom->Set_Rotation_Raw(vRotation);
     m_pTransformCom->Set_Pos(vTransition);
-}
-
-void CWeapon::UltimateAttack()
-{
-    m_fUltimateAtkGauge = 0.f;
-    CGameStatusMgr::GetInstance()->SetUltimateGauge(m_fUltimateAtkGauge);
-    m_bIsUltimateAttackReady = false;
-
-    cout << " 궁극기 " << endl;
 }
 
 void CWeapon::Animation(const _float fTimeDelta)
@@ -275,18 +148,19 @@ void CWeapon::StartShotAnimation()
     m_fTimeAfterShot = 0.f;
 }
 
-CWeapon* CWeapon::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+HRESULT CWeapon::Add_Component()
 {
-    CWeapon* pGun = new CWeapon(pGraphicDev);
+    CComponent* pComponent = nullptr;
 
-    if (FAILED(pGun->Ready_GameObject()))
-    {
-        Safe_Release(pGun);
-        MSG_BOX("CWeapon Create Failed");
-        return nullptr;
-    }
+    // Transform
+    pComponent = m_pTransformCom = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
 
-    return pGun;
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
+
+    return S_OK;
 }
 
 void CWeapon::Free()

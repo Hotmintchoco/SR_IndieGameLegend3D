@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include <vector>
 #include <string>
@@ -6,7 +6,7 @@
 #include "Engine_Define.h"
 #include "Client_Enum.h"
 
-/* ∏  ¡§∫∏∏¶ ¥„¿∫ ±∏¡∂√º */
+/* Îßµ Ï†ïÎ≥¥Î•º Îã¥ÏùÄ Íµ¨Ï°∞Ï≤¥ */
 struct TRoomEntity
 {
 	int    iType = 0;
@@ -39,4 +39,11 @@ struct TTileIdx
 {
 	int iRow;
 	int iCol;
+};
+
+struct TWeaponAnimArgs
+{
+	bool bSprint;
+	bool bMove;
+	bool bSpecialAtk;
 };

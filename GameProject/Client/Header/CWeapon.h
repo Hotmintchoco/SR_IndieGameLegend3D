@@ -1,13 +1,14 @@
 ﻿#pragma once
 
 #include "CGameObject.h"
+#include "Client_Enum.h"
 
 namespace Engine
 {
-	class CPlyTex;
 	class CTransform;
-	class CTexture;
 }
+
+struct TWeaponAnimArgs;
 
 class CWeapon : public CGameObject
 {
@@ -19,25 +20,25 @@ public:
 	virtual	HRESULT Ready_GameObject();
 	virtual	_int Update_GameObject(const _float& fTimeDelta);
 	virtual	void LateUpdate_GameObject(const _float& fTimeDelta);
-	virtual	void Render_GameObject();
+	virtual	void Render_GameObject() PURE;
 
-	/* 에너지 아이템 획득 */
-	void GainEnergy();
+	void DefaultAttack();
+	virtual void SpecialAttack() PURE;
+	virtual void UltimateAttack() PURE;
 
-private:
+	void UpdateAnimationArgs(const TWeaponAnimArgs& t);
+
+	bool IsOnCoolTime() { return m_bIsCoolTime; }
+
+protected:
 	HRESULT	Add_Component();
 	void SyncTransformToCamera();
-	void TryShoot();
 	void UpdateLocalTransform(const _vec3& vScale, const _vec3& vRotation, const _vec3& vTransition);
-	void RenderEditorPanel();
-	void UltimateAttack();
+	void CheckCoolTime(const _float& fTimeDelta);
 	void Animation(const _float fTimeDelta);
 	void StartShotAnimation();
-	void GetKeyInput();
 
-	Engine::CPlyTex* m_pBufferCom = nullptr;
 	Engine::CTransform* m_pTransformCom = nullptr;
-	Engine::CTexture* m_pTextureCom = nullptr;
 
 	/* 카메라 시점 기준 로컬 오프셋 */
 	_vec3 m_vScaleLocal{0.3f, 0.3f, 0.45f};
@@ -45,23 +46,15 @@ private:
 	_vec3 m_vRotationLocal{ -1.f, -2.f, 0.f };
 	_vec3 m_vMuzzlePositionLocal{0.0f, 0.4f, 0.7f};
 
-	/* 발사 쿨타임 */
-	float m_fShootInterval = 0.1f; // 애니메이션 시간은 여기에 맞추기
+	/* 기본 공격 */
+	float m_fShootInterval = 0.2f; // 애니메이션 시간은 여기에 맞추기
 	float m_fCoolTimeLeft = 0.0f;
 	bool m_bIsCoolTime = false;
-
+	
 	/* 발사 목적지 */
 	float m_fTargetDistance = 10.f;
 	_vec3 m_vBulletFrom{ 0.f, 0.f, 0.f };
 	_vec3 m_vBulletTo{ 0.f, 0.f, 0.f };
-
-	/* 특수 공격 */
-	bool m_bSpecialAttackSwitchOn = false;
-	float m_fSpecialAtkGauge = 0.f;
-	
-	/* 궁극기 */
-	float m_fUltimateAtkGauge = 0.f;
-	float m_bIsUltimateAttackReady = false;
 
 	/* 애니메이션 */
 	bool m_bOnMoveAnimation = false;
@@ -74,12 +67,9 @@ private:
 	float m_fMaxRecoilAngle = -20.f;
 	float m_fRecoilDamping = 2.f; // 반동 감쇠. 0으로 갈수록 직선, 값이 커질수록 아래로 굽은 곡선
 	float m_fTimeAfterShot = 0.f;
+	bool m_bSpecialAttackSwitchOn = false;
 
-
-public:
-	static CWeapon* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-
-private:
+protected:
 	virtual void Free() override;
 };
 

@@ -4,7 +4,7 @@
 #include "CRenderer.h"
 #include "CGameStatusMgr.h"
 #include "CTransform.h"
-#include "CWeapon.h"
+#include "CWeaponSystem.h"
 #include "CManagement.h"
 #include "CSoundMgr.h"
 
@@ -78,8 +78,8 @@ HRESULT CEnergy::Add_Component()
 
 void CEnergy::Consume()
 {
-    CWeapon* pGun = static_cast<CWeapon*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun"));
-    pGun->GainEnergy();
+    CWeaponSystem* pSystem = static_cast<CWeaponSystem*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"WeaponSystem"));
+    pSystem->GainEnergy();
 
     Set_Dead(true);
 

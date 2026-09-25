@@ -148,6 +148,7 @@
     <ClInclude Include="..\Header\CBackGround.h" />
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
     <ClInclude Include="..\Header\CBoss1.h" />
+    <ClInclude Include="..\Header\CDefaultGun.h" />
     <ClInclude Include="..\Header\CProjectile.h" />
     <ClInclude Include="..\Header\CButtonTile.h" />
     <ClInclude Include="..\Header\CClearCondition.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="..\Header\CFrustumExplodeEffect.h" />
     <ClInclude Include="..\Header\CGameMachine.h" />
     <ClInclude Include="..\Header\CGameStatusMgr.h" />
+    <ClInclude Include="..\Header\CShotGun.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
     <ClInclude Include="..\Header\CMagmamouth.h" />
     <ClInclude Include="..\Header\CGem.h" />
@@ -201,6 +203,7 @@
     <ClInclude Include="..\Header\CTriggerBox.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CWall.h" />
+    <ClInclude Include="..\Header\CWeaponSystem.h" />
     <ClInclude Include="..\Header\CWorm.h" />
     <ClInclude Include="..\Header\CWorm_Tail.h" />
     <ClInclude Include="..\Header\CWorm_Boby.h" />
@@ -229,6 +232,7 @@
     <ClCompile Include="..\Code\CBackGround.cpp" />
     <ClCompile Include="..\Code\CBreakableFrustum.cpp" />
     <ClCompile Include="..\Code\CBoss1.cpp" />
+    <ClCompile Include="..\Code\CDefaultGun.cpp" />
     <ClCompile Include="..\Code\CProjectile.cpp" />
     <ClCompile Include="..\Code\CButtonTile.cpp" />
     <ClCompile Include="..\Code\CClearCondition.cpp" />
@@ -252,6 +256,7 @@
     <ClCompile Include="..\Code\CFrustumExplodeEffect.cpp" />
     <ClCompile Include="..\Code\CGameMachine.cpp" />
     <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
+    <ClCompile Include="..\Code\CShotGun.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
     <ClCompile Include="..\Code\CMagmamouth.cpp" />
     <ClCompile Include="..\Code\CGem.cpp" />
@@ -281,6 +286,7 @@
     <ClCompile Include="..\Code\CTriggerBox.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CWall.cpp" />
+    <ClCompile Include="..\Code\CWeaponSystem.cpp" />
     <ClCompile Include="..\Code\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
