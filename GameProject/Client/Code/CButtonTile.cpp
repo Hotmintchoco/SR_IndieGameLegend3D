@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CButtonTile.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -30,7 +30,6 @@ HRESULT CButtonTile::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    m_pColliderCom->Set_CollisionID(COLL_BUTTON);
     m_pColliderCom->Set_Extents(_vec3{ 0.3f, 0.3f, 0.3f });
     m_pColliderCom->Set_DiffPos(_vec3{ 0.f, 0.4f, 0.f });
 
@@ -43,7 +42,7 @@ _int CButtonTile::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CTile::Update_GameObject(fTimeDelta);
 
-    CCollisionMgr::GetInstance()->Add_Collider(COLL_BUTTON, m_pColliderCom);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_ROOMLOGIC, m_pColliderCom);
 
     return iExit;
 }

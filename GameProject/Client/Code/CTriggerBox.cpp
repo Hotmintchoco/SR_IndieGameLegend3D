@@ -38,7 +38,7 @@ _int CTriggerBox::Update_GameObject(const _float& fTimeDelta)
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     m_pColliderCom->m_tBox.Center = XMFLOAT3{ vPos.x, vPos.y, vPos.z };
 
-    CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_ROOMLOGIC, m_pColliderCom);
 
     return iExit;
 }

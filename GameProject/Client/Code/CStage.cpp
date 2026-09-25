@@ -71,9 +71,10 @@ HRESULT CStage::Ready_Scene()
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MBULLET, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_ITEM);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODERANGE, COLL_OBSTACLE);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_BUTTON, COLL_PLAYER);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_GAMEMACHINE, COLL_PLAYER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MONSTER, COLL_OBSTACLE);
+
+	/* 방 로직 */
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_ROOMLOGIC, COLL_PLAYER);
 
 	/* 투사체와의 충돌 */
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PROJECTILE, COLL_MONSTER);

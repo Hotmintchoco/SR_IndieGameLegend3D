@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CGameMachine.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -33,7 +33,7 @@ _int CGameMachine::Update_GameObject(const _float& fTimeDelta)
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
-    CCollisionMgr::GetInstance()->Add_Collider(COLL_GAMEMACHINE, m_pColliderCom);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_ROOMLOGIC, m_pColliderCom);
 
     return iExit;
 }
@@ -92,7 +92,7 @@ HRESULT CGameMachine::Add_Component()
 
 void CGameMachine::OnCollisionEnter(CGameObject* pOther)
 {
-    cout << "°ÔÀÓ±â »óÈ£ÀÛ¿ë °¡´É" << endl;
+    cout << "ê²Œìž„ê¸° ìƒí˜¸ìž‘ìš© ê°€ëŠ¥" << endl;
 }
 
 CGameMachine* CGameMachine::Create(LPDIRECT3DDEVICE9 pGraphicDev)
