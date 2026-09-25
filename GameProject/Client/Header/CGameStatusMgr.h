@@ -38,6 +38,8 @@ public:
 
 	inline void SetUltimateGauge(float fAmount) { m_fUltGauge = fAmount; }
 	inline void SetSpecialAttackGauge(float fAmount) { m_fSpecialAtkGauge = fAmount; }
+	inline float GetUltimateGauge() const { return m_fUltGauge; }
+	inline float GetSpecialAttackGauge() const { return m_fSpecialAtkGauge; }
 
 	inline void UpdateGem(int iAmount) { m_iGem += iAmount; }
 
@@ -47,6 +49,10 @@ public:
 
 	inline float GetYaw() const { return m_fYaw; }
 	inline int GetGemCount() const { return m_iGem; }
+	
+	inline int GetCurrentRoomIndex() const { return m_iCurrentRoomIndex; }
+	inline bool IsVisited(int iIndex) const { return m_bVisitTable[iIndex]; }
+	inline const _vec3& GetPlayerPosition() const { return m_vPlayerPos; }
 
 	inline void RegisterPseudoDark(CGameObject* pObject) { m_vecPseudoDark.push_back(pObject); }
 

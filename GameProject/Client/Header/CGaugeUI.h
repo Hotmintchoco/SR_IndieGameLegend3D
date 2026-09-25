@@ -1,12 +1,11 @@
 ﻿#pragma once
 #include "CUI.h"
 
-class CCrosshair : public CUI
+class CGaugeUI : public CUI
 {
 protected:
-	explicit CCrosshair(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CCrosshair();
-
+	explicit CGaugeUI(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CGaugeUI();
 public:
 	virtual			HRESULT		Ready_GameObject();
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
@@ -17,7 +16,8 @@ protected:
 	HRESULT			Add_Component();
 
 public:
-	static CCrosshair* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CGaugeUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CGaugeUI* Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& wstrTextureTag);
 
 protected:
 	virtual void		Free();

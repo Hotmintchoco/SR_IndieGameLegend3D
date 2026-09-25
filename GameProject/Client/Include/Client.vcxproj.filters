@@ -241,6 +241,12 @@
     <Filter Include="02. GameObject\08. Combat\01. Projectile\01. SGBullet">
       <UniqueIdentifier>{7e13e70c-0e75-4081-9136-cb7588f1149f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. UI\Minimap">
+      <UniqueIdentifier>{2607f307-e85e-4c6a-aaf2-41e82286d73c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. UI\Gauge">
+      <UniqueIdentifier>{2b7f91d6-6939-4b42-854e-848d5ec51968}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -473,6 +479,12 @@
     </ClInclude>
     <ClInclude Include="..\Header\CDebugPrint.h">
       <Filter>100. Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMinimapUI.h">
+      <Filter>02. GameObject\10. UI\Minimap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGaugeUI.h">
+      <Filter>02. GameObject\10. UI\Gauge</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CProjectile.h">
       <Filter>02. GameObject\08. Combat\01. Projectile</Filter>
@@ -721,6 +733,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSGBullet.cpp">
       <Filter>02. GameObject\08. Combat\01. Projectile\01. SGBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMinimapUI.cpp">
+      <Filter>02. GameObject\10. UI\Minimap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGaugeUI.cpp">
+      <Filter>02. GameObject\10. UI\Gauge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

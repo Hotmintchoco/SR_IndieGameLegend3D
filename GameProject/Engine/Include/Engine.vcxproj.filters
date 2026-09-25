@@ -103,6 +103,9 @@
     <ClCompile Include="..\Code\CCameraFPVPerspective.cpp">
       <Filter>11. CameraMgr\CameraObj\Camera_FPV_Perspective</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CCameraTPVPerspective.cpp">
+      <Filter>11. CameraMgr\CameraObj\Camera_TPV_Perspective</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CCameraObj.cpp">
       <Filter>11. CameraMgr\CameraObj</Filter>
     </ClCompile>
@@ -261,6 +264,9 @@
     <ClInclude Include="..\Header\CCameraFPVPerspective.h">
       <Filter>11. CameraMgr\CameraObj\Camera_FPV_Perspective</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CCameraTPVPerspective.h">
+      <Filter>11. CameraMgr\CameraObj\Camera_TPV_Perspective</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CCameraObj.h">
       <Filter>11. CameraMgr\CameraObj</Filter>
     </ClInclude>
@@ -397,6 +403,9 @@
     </Filter>
     <Filter Include="11. CameraMgr\CameraObj\Camera_FPV_Perspective">
       <UniqueIdentifier>{02857908-3a33-459c-a703-0ce0e3c67a0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. CameraMgr\CameraObj\Camera_TPV_Perspective">
+      <UniqueIdentifier>{5b7e2c41-9d3a-4f6e-8a12-c4d7e9f03b18}</UniqueIdentifier>
     </Filter>
     <Filter Include="11. CameraMgr\CameraObj\Camera_TPV_Perspective">
       <UniqueIdentifier>{92de3bac-9e8d-49da-84ff-a0e99cbd9d54}</UniqueIdentifier>

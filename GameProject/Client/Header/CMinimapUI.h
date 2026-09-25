@@ -1,11 +1,11 @@
 ﻿#pragma once
 #include "CUI.h"
 
-class CCrosshair : public CUI
+class CMinimapUI : public CUI
 {
 protected:
-	explicit CCrosshair(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CCrosshair();
+	explicit CMinimapUI(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CMinimapUI();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -16,8 +16,14 @@ public:
 protected:
 	HRESULT			Add_Component();
 
+private:
+	void			RenderPlayerMark();
+
+private:
+	Engine::CTexture* m_pPlayerTextureCom;
+
 public:
-	static CCrosshair* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CMinimapUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 protected:
 	virtual void		Free();
