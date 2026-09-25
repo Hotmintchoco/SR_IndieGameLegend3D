@@ -71,7 +71,8 @@ void CRoomLayer::FlickerHandling(const Engine::_float& fTimeDelta)
 
 void CRoomLayer::PlayerTileInteraction()
 {
-	CTransform* pTransform = static_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+	CPlayer* pPlayer = static_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
+	CTransform* pTransform = static_cast<CTransform*>(pPlayer->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 	_vec3 vPos;
 	pTransform->Get_Info(INFO_POS, &vPos);
 	
@@ -83,7 +84,6 @@ void CRoomLayer::PlayerTileInteraction()
 	switch (eType)
 	{
 	case EContaminateType::LAVA:
-		CPlayer* pPlayer = static_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
 		/* 여기에 플레이어 데미지 함수 */
 		break;
 	default:
