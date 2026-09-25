@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CBase.h"
 #include "Engine_Define.h"
@@ -19,7 +19,7 @@ public:
 	void				Get_CamLook(_vec3* pLook);
 	void				Get_CameraAngle(_float* pAngle) { memcpy(pAngle, &m_fAngle, sizeof(_float)); }
 	
-	/* ��ö */
+	/* 성철 : (임시) 카메라의 월드 행렬을 가져오는 함수 */
 	void GetWorld(_matrix* pMat) { D3DXMatrixInverse(pMat, nullptr, &m_matView); }
 	/* --- */
 

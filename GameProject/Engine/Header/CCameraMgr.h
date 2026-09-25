@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CBase.h"
 #include "CCameraObj.h"
@@ -25,7 +25,7 @@ public:
 	HRESULT		Get_CamLook(_vec3* pLook);
 	HRESULT		Get_CameraAngle(_float* pAngle);
 
-	/* ��ö */
+	/* 성철 : (임시) 카메라의 이름으로 카메라 포인터를 가져오는 함수 */
 	inline CCameraObj* GetCamera(const _tchar* pCameraTag) { return m_mapCamera.at(pCameraTag); }
 	/* --- */
 
@@ -34,7 +34,7 @@ private:
 
 private:
 	map<const _tchar*, CCameraObj*>			m_mapCamera;
-	pair<const _tchar*, CCameraObj*>			m_pCurCamera; // ���� ������ ī�޶� ����
+	pair<const _tchar*, CCameraObj*>			m_pCurCamera; // 현재 선택한 카메라 정보
 
 
 private:
