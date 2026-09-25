@@ -5,7 +5,7 @@
 #include "CManagement.h"
 #include "CCameraMgr.h"
 #include "CImGuiTool.h"
-#include "CProjectile.h"
+#include "CDefaultBullet.h"
 #include "CDInputMgr.h"
 #include "CGameStatusMgr.h"
 #include "CSoundMgr.h"
@@ -83,7 +83,7 @@ void CWeapon::DefaultAttack()
 {
     _vec3 vDir = m_vBulletTo - m_vBulletFrom;
 
-    CProjectile* pProjectile = CProjectile::Create(m_pGraphicDev, m_vBulletFrom, vDir);
+    CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
     CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");

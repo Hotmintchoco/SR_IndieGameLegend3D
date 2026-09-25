@@ -1,15 +1,12 @@
 ﻿#include "pch.h"
 #include "CProjectile.h"
-#include "CRenderer.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
-#include "CCollisionMgr.h"
-#include "Client_Enum.h"
 
 _uint CProjectile::g_iProjectileID = 0;
 
-CProjectile::CProjectile(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir)
-    : CGameObject(pGraphicDev), m_vStart(vStart), m_vDir(vDir), m_iID(++g_iProjectileID)
+CProjectile::CProjectile(LPDIRECT3DDEVICE9 pGraphicDev)
+    : CGameObject(pGraphicDev), m_iID(++g_iProjectileID)
 {
 }
 
@@ -22,12 +19,6 @@ HRESULT CProjectile::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    m_pTransformCom->Set_Pos(m_vStart);
-    m_pTransformCom->Set_Scale(_vec3{ 0.1f, 0.1f, 0.1f });
-    m_pColliderCom->Set_Owner(this);
-    m_pColliderCom->Set_Radius(0.3f);
-    m_iTotalFrameCount = m_pTextureCom->GetCount();
-
     return S_OK;
 }
 
@@ -35,14 +26,7 @@ _int CProjectile::Update_GameObject(const _float& fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
-    CCollisionMgr::GetInstance()->Add_Collider(COLL_PROJECTILE, m_pColliderCom);
-
-    m_pTransformCom->Move_Pos(&m_vDir, m_fSpeed, fTimeDelta);
-
     CheckLifeTime(fTimeDelta);
-
-    Animation(fTimeDelta);
 
     return iExit;
 }
@@ -50,43 +34,11 @@ _int CProjectile::Update_GameObject(const _float& fTimeDelta)
 void CProjectile::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
-
-    BillBoard();
-}
-
-void CProjectile::Render_GameObject()
-{
-    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-
-    m_pTextureCom->Set_Texture(m_iCurrentTexureIdx);
-    
-    m_pBufferCom->Render_Buffer();
-}
-
-void CProjectile::OnCollisionEnter(CGameObject* pObject)
-{
-    Set_Dead(true);
 }
 
 HRESULT CProjectile::Add_Component()
 {
     CComponent* pComponent = nullptr;
-
-    // Mesh
-    pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
-
-    if (nullptr == pComponent)
-        return E_FAIL;
-
-    m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
-
-    // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Bullet_Default_Texture"));
-
-    if (nullptr == pComponent)
-        return E_FAIL;
-
-    m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
     // Transform
     pComponent = m_pTransformCom = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
@@ -96,25 +48,7 @@ HRESULT CProjectile::Add_Component()
 
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
-    // Transform
-    pComponent = m_pColliderCom = dynamic_cast<CSphereCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SphereCollider"));
-
-    if (nullptr == pComponent)
-        return E_FAIL;
-
-    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });
-
     return S_OK;
-}
-
-void CProjectile::Animation(const _float& fTimeDelta)
-{
-    m_fSingleFrameAccTime += fTimeDelta;
-    if (m_fSingleFrameAccTime >= m_fFrameInterval)
-    {
-        m_fSingleFrameAccTime -= m_fFrameInterval;
-        m_iCurrentTexureIdx = (m_iCurrentTexureIdx + 1) % m_iTotalFrameCount;
-    }
 }
 
 void CProjectile::BillBoard()
@@ -155,20 +89,6 @@ void CProjectile::CheckLifeTime(const Engine::_float& fTimeDelta)
     {
         Set_Dead(true);
     }
-}
-
-CProjectile* CProjectile::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir)
-{
-    CProjectile* pGun = new CProjectile(pGraphicDev, vStart, vDir);
-
-    if (FAILED(pGun->Ready_GameObject()))
-    {
-        Safe_Release(pGun);
-        MSG_BOX("CProjectile Create Failed");
-        return nullptr;
-    }
-
-    return pGun;
 }
 
 void CProjectile::Free()

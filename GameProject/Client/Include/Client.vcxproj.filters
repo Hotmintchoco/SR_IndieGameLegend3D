@@ -235,6 +235,9 @@
     <Filter Include="02. GameObject\08. Combat\00. Weapon\02. ShotGun">
       <UniqueIdentifier>{9619b96b-3086-4414-835e-7f0627bdd560}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\00. DefaultBullet">
+      <UniqueIdentifier>{051ec279-8928-49fb-abe7-4435831cceec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -483,6 +486,9 @@
     <ClInclude Include="..\Header\CShotGun.h">
       <Filter>02. GameObject\08. Combat\00. Weapon\02. ShotGun</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CDefaultBullet.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\00. DefaultBullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -703,6 +709,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CShotGun.cpp">
       <Filter>02. GameObject\08. Combat\00. Weapon\02. ShotGun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDefaultBullet.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\00. DefaultBullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

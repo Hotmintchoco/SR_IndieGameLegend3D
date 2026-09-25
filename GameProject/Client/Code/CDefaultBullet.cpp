@@ -1,0 +1,129 @@
+﻿#include "pch.h"
+#include "CDefaultBullet.h"
+#include "CProtoMgr.h"
+#include "CRenderer.h"
+#include "CCollisionMgr.h"
+#include "Client_Enum.h"
+
+CDefaultBullet::CDefaultBullet(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir)
+    : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir)
+{
+}
+
+CDefaultBullet::~CDefaultBullet()
+{
+}
+
+HRESULT CDefaultBullet::Ready_GameObject()
+{
+    if (FAILED(CProjectile::Ready_GameObject()))
+        return E_FAIL;
+
+    if (FAILED(Add_Component()))
+        return E_FAIL;
+
+    m_pTransformCom->Set_Pos(m_vStart);
+    m_pTransformCom->Set_Scale(_vec3{ 0.1f, 0.1f, 0.1f });
+    m_pColliderCom->Set_Owner(this);
+    m_pColliderCom->Set_Radius(0.3f);
+    m_iTotalFrameCount = m_pTextureCom->GetCount();
+
+    return S_OK;
+}
+
+_int CDefaultBullet::Update_GameObject(const _float& fTimeDelta)
+{
+    _int iExit = CProjectile::Update_GameObject(fTimeDelta);
+
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_PROJECTILE, m_pColliderCom);
+
+    m_pTransformCom->Move_Pos(&m_vDir, m_fSpeed, fTimeDelta);
+
+    CheckLifeTime(fTimeDelta);
+
+    Animation(fTimeDelta);
+
+    return iExit;
+}
+
+void CDefaultBullet::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+    CProjectile::LateUpdate_GameObject(fTimeDelta);
+
+    BillBoard();
+}
+
+void CDefaultBullet::Render_GameObject()
+{
+    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+
+    m_pTextureCom->Set_Texture(m_iCurrentTexureIdx);
+
+    m_pBufferCom->Render_Buffer();
+}
+
+void CDefaultBullet::OnCollisionEnter(CGameObject* pObject)
+{
+    Set_Dead(true);
+}
+
+HRESULT CDefaultBullet::Add_Component()
+{
+    CComponent* pComponent = nullptr;
+
+    // Mesh
+    pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
+
+    // Texture
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Bullet_Default_Texture"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+
+    // Transform
+    pComponent = m_pColliderCom = dynamic_cast<CSphereCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SphereCollider"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });
+
+    return S_OK;
+}
+
+void CDefaultBullet::Animation(const _float& fTimeDelta)
+{
+    m_fSingleFrameAccTime += fTimeDelta;
+    if (m_fSingleFrameAccTime >= m_fFrameInterval)
+    {
+        m_fSingleFrameAccTime -= m_fFrameInterval;
+        m_iCurrentTexureIdx = (m_iCurrentTexureIdx + 1) % m_iTotalFrameCount;
+    }
+}
+
+CDefaultBullet* CDefaultBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir)
+{
+    CDefaultBullet* pBullet = new CDefaultBullet(pGraphicDev, vStart, vDir);
+
+    if (FAILED(pBullet->Ready_GameObject()))
+    {
+        Safe_Release(pBullet);
+        MSG_BOX("CDefaultBullet Create Failed");
+        return nullptr;
+    }
+
+    return pBullet;
+}
+
+void CDefaultBullet::Free()
+{
+    CProjectile::Free();
+}
