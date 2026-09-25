@@ -483,6 +483,9 @@
     <ClInclude Include="..\Header\CMinimapUI.h">
       <Filter>02. GameObject\10. UI\Minimap</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGaugeUI.h">
+      <Filter>02. GameObject\10. UI\Gauge</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -703,6 +706,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMinimapUI.cpp">
       <Filter>02. GameObject\10. UI\Minimap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGaugeUI.cpp">
+      <Filter>02. GameObject\10. UI\Gauge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

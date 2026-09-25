@@ -28,6 +28,7 @@
 #include "CPseudoDark.h"
 #include "CGameStatusMgr.h"
 #include "CMinimapUI.h"
+#include "CGaugeUI.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -390,7 +391,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	// Hud Attack Info Ammo
-	pUI = CUI::Create(m_pGraphicDev, L"Proto_AmmoTexture");
+	pUI = CGaugeUI::Create(m_pGraphicDev, L"Proto_AmmoTexture");
 	if (nullptr == pUI)
 		return E_FAIL;
 

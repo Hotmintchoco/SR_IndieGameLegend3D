@@ -173,6 +173,7 @@
     <ClInclude Include="..\Header\CFrustumExplodeEffect.h" />
     <ClInclude Include="..\Header\CGameMachine.h" />
     <ClInclude Include="..\Header\CGameStatusMgr.h" />
+    <ClInclude Include="..\Header\CGaugeUI.h" />
     <ClInclude Include="..\Header\CMagmamouth.h" />
     <ClInclude Include="..\Header\CGem.h" />
     <ClInclude Include="..\Header\CHeart.h" />
@@ -257,6 +258,7 @@
     <ClCompile Include="..\Code\CFrustumExplodeEffect.cpp" />
     <ClCompile Include="..\Code\CGameMachine.cpp" />
     <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
+    <ClCompile Include="..\Code\CGaugeUI.cpp" />
     <ClCompile Include="..\Code\CMagmamouth.cpp" />
     <ClCompile Include="..\Code\CGem.cpp" />
     <ClCompile Include="..\Code\CHeart.cpp" />
