@@ -1,4 +1,4 @@
-#include "CCollider.h"
+Ôªø#include "CCollider.h"
 #include "CGameObject.h"
 #include "CCollisionMgr.h"
 
@@ -22,129 +22,121 @@ void CCollisionMgr::Check_Group(_int iLeft, _int iRight)
 
 void CCollisionMgr::Add_Collider(_int iGroup, CCollider* pCollider)
 {
-    pCollider->Set_CollisionID(iGroup);
+	if (nullptr == pCollider)
+		return;
 
+	pCollider->Set_CollisionID(iGroup);
 	m_ColList[iGroup].push_back(pCollider);
 }
 
-CCollisionMgr::COLLIDER_TOKEN_PAIR CCollisionMgr::Make_ColliderTokenPair(CCollider* pA, CCollider* pB) const
+ULONGLONG CCollisionMgr::Make_ColliderPairKey(CCollider* pLeft, CCollider* pRight) const
 {
-    const std::shared_ptr<void> spA = pA->GetToken();
-    const std::shared_ptr<void> spB = pB->GetToken();
+	_uint iLeftId = pLeft->GetID();
+	_uint iRightId = pRight->GetID();
 
-    std::owner_less<std::shared_ptr<void>> lessShared;
-    if (lessShared(spA, spB))
-        return { COLLIDER_TOKEN(spA), COLLIDER_TOKEN(spB) };
+	if (iLeftId > iRightId)
+	{
+		const _uint iTemp = iLeftId;
+		iLeftId = iRightId;
+		iRightId = iTemp;
+	}
 
-    return { COLLIDER_TOKEN(spB), COLLIDER_TOKEN(spA) };
+	return (static_cast<ULONGLONG>(iLeftId) << 32) | iRightId;
 }
 
 void CCollisionMgr::Update_Collision()
 {
-    const _uint IterativeCount = 1;
+	unordered_map<ULONGLONG, COLLIDER_PAIR_INFO> mapCurCollisionPairs;
 
-    std::set<COLLIDER_TOKEN_PAIR, CColliderTokenPairLess> setCurCollisionPairs;
-    std::set<CCollider*> setCurColliders;
-    std::map<std::shared_ptr<void>, CCollider*, std::owner_less<std::shared_ptr<void>>> mapLiveColliders;
+	for (_uint i = 0; i < COLL_END; ++i)
+	{
+		for (CCollider* pCollider : m_ColList[i])
+		{
+			if (nullptr != pCollider)
+				pCollider->Set_IsCollided(false);
+		}
+	}
 
-    for (_uint iPass = 0; iPass < IterativeCount; ++iPass)
-    {
-        for (_uint i = 0; i < COLL_END; ++i)
-        {
-            for (_uint j = i; j < COLL_END; ++j)
-            {
-                if (!m_bCheckMatrix[i][j])
-                    continue;
+	for (_uint i = 0; i < COLL_END; ++i)
+	{
+		for (_uint j = i; j < COLL_END; ++j)
+		{
+			if (!m_bCheckMatrix[i][j])
+				continue;
 
-                auto& LeftList = m_ColList[i];
-                auto& RightList = m_ColList[j];
+			auto& leftList = m_ColList[i];
+			auto& rightList = m_ColList[j];
 
-                for (auto& pColLeft : LeftList)
-                {
-                    mapLiveColliders[pColLeft->GetToken()] = pColLeft;
+			for (auto iterLeft = leftList.begin(); iterLeft != leftList.end(); ++iterLeft)
+			{
+				CCollider* pLeft = *iterLeft;
+				if (nullptr == pLeft || !pLeft->Get_IsActive())
+					continue;
 
-                    for (auto& pColRight : RightList)
-                    {
-                        mapLiveColliders[pColRight->GetToken()] = pColRight;
+				auto iterRight = rightList.begin();
 
-                        // ∞∞¿∫ ƒ›∂Û¿Ã¥ı≥¢∏Æ √Êµπ √º≈©∏¶ «œ¡ˆ æ ¿Ω
-                        if (pColLeft == pColRight)
-                            continue;
+				// Í∞ôÏùÄ Í∑∏Î£πÏùÄ ÏûêÍ∏∞ ÏûêÏã†Í≥º Ï§ëÎ≥µ PairÎ•º Ï†úÏô∏ÌïúÎã§.
+				if (i == j)
+				{
+					iterRight = iterLeft;
+					++iterRight;
+				}
 
-                        // ¡ﬂ∫π √º≈© πÊ¡ˆ
-                        if (i == j && pColRight < pColLeft)
-                            continue;
+				for (; iterRight != rightList.end(); ++iterRight)
+				{
+					CCollider* pRight = *iterRight;
+					if (nullptr == pRight || !pRight->Get_IsActive())
+						continue;
 
-                        // ∫Ò»∞º∫»≠µ» ƒ›∂Û¿Ã¥ı¥¬ √Êµπ √º≈©∏¶ «œ¡ˆ æ ¿Ω
-                        if (!pColLeft->Get_IsActive() || !pColRight->Get_IsActive())
-                            continue;
+					if (!pLeft->Intersect(pRight))
+						continue;
 
-                        // √Êµπ √º≈©∏¶ ºˆ«‡«œ∞Ì, √Êµπ«œ¡ˆ æ ¿∏∏È ¥Ÿ¿Ω ƒ›∂Û¿Ã¥ı∑Œ ≥—æÓ∞®
-                        if (!pColLeft->Intersect(pColRight))
-                            continue;
+					pLeft->Set_IsCollided(true);
+					pRight->Set_IsCollided(true);
 
-                        const COLLIDER_TOKEN_PAIR tPair = Make_ColliderTokenPair(pColLeft, pColRight);
-                        const bool bFirstCollisionThisFrame = setCurCollisionPairs.insert(tPair).second;
+					const ULONGLONG ullPairKey = Make_ColliderPairKey(pLeft, pRight);
 
-                        if (bFirstCollisionThisFrame)
-                        {
-                            setCurColliders.insert(pColLeft);
-                            setCurColliders.insert(pColRight);
+					COLLIDER_PAIR_INFO pairInfo;
+					pairInfo.pLeft = pLeft;
+					pairInfo.pRight = pRight;
+					pairInfo.wLeftToken = pLeft->GetToken();
+					pairInfo.wRightToken = pRight->GetToken();
 
-                            if (m_setPrevCollisionPairs.find(tPair) == m_setPrevCollisionPairs.end())
-                            {
-                                pColLeft->OnCollisionEnter(pColRight);
-                                pColRight->OnCollisionEnter(pColLeft);
-                            }
-                            else
-                            {
-                                pColLeft->OnCollisionStay(pColRight);
-                                pColRight->OnCollisionStay(pColLeft);
-                            }
-                        }
-                        else
-                        {
-                            // ∞∞¿∫ «¡∑π¿”¿« √ﬂ∞° solver passø°º≠ ∞„ƒß¿Ã ∞Ëº”µ«∏È Stay∏¶ √ﬂ∞° »£√‚
-                            pColLeft->OnCollisionStay(pColRight);
-                            pColRight->OnCollisionStay(pColLeft);
-                        }
-                    }
-                }
-            }
-        }
-    }
+					const bool bFirstPairThisFrame = mapCurCollisionPairs.emplace(ullPairKey, pairInfo).second;
+					if (!bFirstPairThisFrame)
+						continue;
 
-    for (const auto& tPrevPair : m_setPrevCollisionPairs)
-    {
-        if (setCurCollisionPairs.find(tPrevPair) != setCurCollisionPairs.end())
-            continue;
+					if (m_mapPrevCollisionPairs.find(ullPairKey) == m_mapPrevCollisionPairs.end())
+					{
+						pLeft->OnCollisionEnter(pRight);
+						pRight->OnCollisionEnter(pLeft);
+					}
+					else
+					{
+						pLeft->OnCollisionStay(pRight);
+						pRight->OnCollisionStay(pLeft);
+					}
+				}
+			}
+		}
+	}
 
-        const std::shared_ptr<void> spLeft = tPrevPair.first.lock();
-        const std::shared_ptr<void> spRight = tPrevPair.second.lock();
+	for (const auto& prevPair : m_mapPrevCollisionPairs)
+	{
+		if (mapCurCollisionPairs.find(prevPair.first) != mapCurCollisionPairs.end())
+			continue;
 
-        if (!spLeft || !spRight)
-            continue; // ¿ÃπÃ º“∏Íµ» ƒ›∂Û¿Ã¥ı¥¬ √Êµπ ¡æ∑· ¿Ã∫•∆Æ∏¶ »£√‚«œ¡ˆ æ ¿Ω
+		const COLLIDER_PAIR_INFO& pairInfo = prevPair.second;
 
-        auto itLeft = mapLiveColliders.find(spLeft);
-        auto itRight = mapLiveColliders.find(spRight);
+		// Ïù¥ÎØ∏ ÌååÍ¥¥Îêú ColliderÏóêÎäî ExitÎ•º Ìò∏Ï∂úÌïòÏßÄ ÏïäÎäîÎã§.
+		if (pairInfo.wLeftToken.expired() || pairInfo.wRightToken.expired())
+			continue;
 
-        if (itLeft == mapLiveColliders.end() || itRight == mapLiveColliders.end())
-            continue;
+		pairInfo.pLeft->OnCollisionExit(pairInfo.pRight);
+		pairInfo.pRight->OnCollisionExit(pairInfo.pLeft);
+	}
 
-        itLeft->second->OnCollisionExit(itRight->second);
-        itRight->second->OnCollisionExit(itLeft->second);
-    }
-
-    m_setPrevCollisionPairs = std::move(setCurCollisionPairs);
-
-    for (_uint i = 0; i < COLL_END; ++i)
-    {
-        for (auto& pCol : m_ColList[i])
-        {
-            const bool bCollided = (setCurColliders.find(pCol) != setCurColliders.end());
-            pCol->Set_IsCollided(bCollided);
-        }
-    }
+	m_mapPrevCollisionPairs.swap(mapCurCollisionPairs);
 }
 
 void CCollisionMgr::Clear_ColliderList()
@@ -158,5 +150,5 @@ void CCollisionMgr::Free()
 	for (_uint i = 0; i < COLL_END; ++i)
 		m_ColList[i].clear();
 
-	m_setPrevCollisionPairs.clear();
+	m_mapPrevCollisionPairs.clear();
 }
