@@ -16,6 +16,8 @@
 #include "CManagement.h"
 #include "CButtonTile.h"
 #include "CSoundMgr.h"
+#include "CPlayer.h"
+#include "CManagement.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -81,7 +83,8 @@ void CRoomLayer::PlayerTileInteraction()
 	switch (eType)
 	{
 	case EContaminateType::LAVA:
-		/* TODO 플레이어 데미지 */
+		CPlayer* pPlayer = static_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
+		/* 여기에 플레이어 데미지 함수 */
 		break;
 	default:
 		break;
