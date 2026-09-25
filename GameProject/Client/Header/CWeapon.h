@@ -28,7 +28,8 @@ public:
 
 	void UpdateAnimationArgs(const TWeaponAnimArgs& t);
 
-	bool IsOnCoolTime() { return m_bIsCoolTime; }
+	inline bool IsOnCoolTime() { return m_bIsCoolTime; }
+	inline float GetSpecialAtkGaugeConsume() { return m_fGaugeConsumePerSpecialAtk; }
 
 protected:
 	HRESULT	Add_Component();
@@ -55,6 +56,9 @@ protected:
 	float m_fTargetDistance = 10.f;
 	_vec3 m_vBulletFrom{ 0.f, 0.f, 0.f };
 	_vec3 m_vBulletTo{ 0.f, 0.f, 0.f };
+
+	/* 특수 공격 */
+	float m_fGaugeConsumePerSpecialAtk = 0.04f;
 
 	/* 애니메이션 */
 	bool m_bOnMoveAnimation = false;

@@ -65,6 +65,13 @@ void CWeaponSystem::GetKeyInput()
         if (m_bSpecialAttackSwitchOn)
         {
             GetCurrentWeapon()->SpecialAttack();
+            m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
+            m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
+            if (m_fSpecialAtkGauge <= 0.f)
+            {
+                m_bSpecialAttackSwitchOn = false;
+            }
+            CGameStatusMgr::GetInstance()->SetSpecialAttackGauge(m_fSpecialAtkGauge);
         }
         else
         {
@@ -87,7 +94,10 @@ void CWeaponSystem::GetKeyInput()
 
     if (CDInputMgr::GetInstance()->Key_Down(DIK_F))
     {
-        m_bSpecialAttackSwitchOn = !m_bSpecialAttackSwitchOn;
+        if (m_fSpecialAtkGauge > 0.f)
+        {
+            m_bSpecialAttackSwitchOn = !m_bSpecialAttackSwitchOn;
+        }
     }
     t.bSpecialAtk = m_bSpecialAttackSwitchOn;
 
