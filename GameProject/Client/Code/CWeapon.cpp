@@ -82,6 +82,7 @@ void CWeapon::SyncTransformToCamera()
 void CWeapon::DefaultAttack()
 {
     _vec3 vDir = m_vBulletTo - m_vBulletFrom;
+    D3DXVec3Normalize(&vDir, &vDir);
 
     CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
     CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);

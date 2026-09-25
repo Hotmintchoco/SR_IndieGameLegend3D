@@ -98,6 +98,7 @@ void CShotGun::SpecialAttack()
         D3DXVec3TransformNormal(&vecNoiseWorld, &vecNoiseLocal, &m_matWorldCached);
 
         _vec3 vDir = vecNoiseWorld + m_vBulletTo - m_vBulletFrom;
+        D3DXVec3Normalize(&vDir, &vDir);
 
         float fNoiseScale = CRandomMgr::GetInstance()->GetRandomValue<float>(1.f, 3.f);
 
