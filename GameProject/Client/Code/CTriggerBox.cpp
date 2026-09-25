@@ -31,8 +31,6 @@ _int CTriggerBox::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
-
     /* 콜라이더 update에 부모 위치 맞춰주는 기능이 있긴 한데, 안되어서 일단 수동으로 */
     _vec3 vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -50,7 +48,6 @@ void CTriggerBox::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CTriggerBox::Render_GameObject()
 {
-    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 }
 
 HRESULT CTriggerBox::Add_Component()
