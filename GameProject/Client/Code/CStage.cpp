@@ -10,6 +10,7 @@
 #include "CLightMgr.h"
 #include "CEffect.h"
 #include "CWeaponSystem.h"
+#include "CParticle.h"
 #include "CManagement.h"
 #include "CFontMgr.h"
 #include "CDInputMgr.h"

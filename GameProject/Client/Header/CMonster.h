@@ -27,12 +27,17 @@ public:
 
 
 	virtual			void		OnCollisionEnter(CGameObject* pOther) override;
-	void Enable_HitRenderState();
-	void Disable_HitRenderState();
-	void Set_Sammon(_bool bSammon) { m_bSammon = bSammon; }
+
+
+
+
 protected:
 	HRESULT			Add_Component();
 	void Set_OnTerrain();
+
+	void Update_HitState(const _float& fTimeDelta);
+	void Enable_HitRenderState();
+	void Disable_HitRenderState();
 
 protected:
 	Engine::CRcTex* m_pBufferCom = nullptr;
@@ -43,12 +48,11 @@ protected:
 
 	_int m_iHp;
 	_float m_fFrame;
-	_float m_fHitEffectDuration;
 	_float m_fHitEffectTime;
+	_float m_fHitEffectElapsedTime;
 	_bool m_bHitState;
 
 	_bool m_bDelete = false;
-	_bool m_bSammon = false;
 
 private:
 	/* 성철 */
@@ -59,6 +63,8 @@ public:
 	static _uint iMonsterIdx;
 	void Set_Pos(_vec3 vPos);
 	void Set_Pos(_float fX, _float fY, _float fZ);
+
+	void Get_Pos(_vec3* pPos);
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

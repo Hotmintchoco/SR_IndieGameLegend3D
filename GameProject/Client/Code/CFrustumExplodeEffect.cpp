@@ -1,11 +1,11 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CFrustumExplodeEffect.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CManagement.h"
 
 CFrustumExplodeEffect::CFrustumExplodeEffect(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CEffect(pGraphicDev)
+    : CParticle(pGraphicDev)
 {
 }
 
@@ -16,7 +16,7 @@ CFrustumExplodeEffect::~CFrustumExplodeEffect()
 
 HRESULT CFrustumExplodeEffect::Ready_GameObject()
 {
-    CEffect::Ready_GameObject();
+    CParticle::Ready_GameObject();
 
     if (FAILED(Add_Component()))
         return E_FAIL;
@@ -28,7 +28,7 @@ HRESULT CFrustumExplodeEffect::Ready_GameObject()
 
 _int CFrustumExplodeEffect::Update_GameObject(const _float& fTimeDelta)
 {
-    _int    iExit = CEffect::Update_GameObject(fTimeDelta);
+    _int    iExit = CParticle::Update_GameObject(fTimeDelta);
 
     m_fSingleFrameAccTime += fTimeDelta;
     if (m_fSingleFrameAccTime >= m_fFrameInterval)
@@ -48,14 +48,14 @@ _int CFrustumExplodeEffect::Update_GameObject(const _float& fTimeDelta)
 
 void CFrustumExplodeEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    CEffect::LateUpdate_GameObject(fTimeDelta);
+    CParticle::LateUpdate_GameObject(fTimeDelta);
 
     BillBoard();
 }
 
 void CFrustumExplodeEffect::BillBoard()
 {
-    /* ºôº¸µå */
+    /* ë¹Œë³´ë“œ */
     _vec3 vPlayerPos, vEffectPos;
     CTransform* pPlayerTransform = static_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
     pPlayerTransform->Get_Info(INFO_POS, &vPlayerPos);
@@ -71,7 +71,7 @@ void CFrustumExplodeEffect::Render_GameObject()
 {
     if (Is_Dead()) return;
 
-    CEffect::Render_GameObject();
+    CParticle::Render_GameObject();
 
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
     m_pTextureCom->Set_Texture(m_iCurrentFrame);
@@ -139,5 +139,5 @@ CFrustumExplodeEffect* CFrustumExplodeEffect::Create(LPDIRECT3DDEVICE9 pGraphicD
 
 void CFrustumExplodeEffect::Free()
 {
-    CEffect::Free();
+    CParticle::Free();
 }
