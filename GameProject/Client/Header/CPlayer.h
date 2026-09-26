@@ -28,6 +28,7 @@ public:
 
 	virtual			void		OnCollisionEnter(CGameObject* pOther) override;
 	virtual			void		OnCollisionStay(CGameObject* pOther) override;
+	void						Hit(CGameObject* pOther);// 히트백 적용 안할 시 nullptr 넣어주세요
 
 private:
 	HRESULT			Add_Component();
@@ -43,6 +44,7 @@ private:
 	void			Update_Knockback(const _float& fTimeDelta);
 
 	void			Update_HPUI();
+
 
 private:
 	Engine::CRcTex*				m_pBufferCom;

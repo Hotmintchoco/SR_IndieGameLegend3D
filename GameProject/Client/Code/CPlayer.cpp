@@ -437,11 +437,8 @@ void CPlayer::MonsterCollision(CGameObject* pOther, CCollider* pOtherCollider)
     if (iColliderID != COLL_MONSTER && iColliderID != COLL_MBULLET)
         return;
 
-    UpdateHP(-1);
-    _float fInvTime = 1.f;
 
-    m_fInvTime = fInvTime;
-    Apply_Knockback(pOther);
+    Hit(pOther);
 }
 
 void CPlayer::Apply_Knockback(CGameObject* pAttacker)
@@ -505,4 +502,13 @@ void CPlayer::Update_HPUI()
 
         pUI->Set_Texture((_uint)iSlotHP);
     }
+}
+
+void CPlayer::Hit(CGameObject* pAttacker) // 히트백 적용 안할 시 nullptr 넣어주세요
+{
+    UpdateHP(-1);
+    _float fInvTime = 1.f;
+
+    m_fInvTime = fInvTime;
+    if (pAttacker != nullptr) Apply_Knockback(pAttacker);
 }
