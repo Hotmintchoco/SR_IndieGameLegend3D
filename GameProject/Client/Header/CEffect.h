@@ -10,7 +10,7 @@ namespace Engine
 class CEffect : public CGameObject
 {
 public:
-	enum EFFECT_TYPE {MAGMA_FIREBALL, MAGMA_TRAIL, MAGMA_EXPLOSION1, MAGMA_EXPLOSION2, IDLE};
+	enum EFFECT_TYPE {MAGMA_FIREBALL, MAGMA_TRAIL, MAGMA_DEAD_EFFECT, MAGMA_EXPLOSION1, MAGMA_EXPLOSION2, IDLE};
 protected:
 	explicit CEffect(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CEffect();
@@ -44,11 +44,13 @@ protected:
 
 	_float m_fLifeTime = 0.f;
 	_float m_fElapsedTime = 0.f;
+	_float m_fElapsedTime2 = 0.f;
+	_float m_fElapsedTime3 = 0.f;
+
 
 	EFFECT_TYPE m_eEffect_Type = IDLE;
 
-	_float m_fLifeTime = 0.f;
-	_float m_fElaspedTime = 0.f;
+
 	//CGameObject* m_pEffect_Owner = nullptr;
 	
 public:
@@ -57,3 +59,4 @@ protected:
 	virtual void		Free();
 };
 
+#define MAGMA_DEAD_TIME 5.f

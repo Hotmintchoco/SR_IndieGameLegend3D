@@ -56,7 +56,7 @@ private:
 	void MagmaMouth_Trail(const _float& fTimeDelta);
 
 	void MagmaMouth_Dead(const _float& fTimeDelta);
-	void MagmaMouth_Dead_Effect(const _float& fTimeDelta);
+	void MagmaMouth_Dead_Effect();
 
 protected:
 	virtual void		Free();
@@ -93,10 +93,10 @@ private:
 
 	_bool m_bCloseMouth;
 
+	_bool m_bDead_Effect1 = false;
+	_bool m_bDead_Effect2 = false;
 	_float m_fElapsedDeadTime = 0.f;
 	_float m_fElapsedDeadTime2 = 0.f;
-	_float m_fElapsedDeadTime3 = 0.f;
-	_float m_fElapsedDeadTime4 = 0.f;
 	_float m_fDeadTime = 5.f;
 	_bool m_DeadFireball[3] = { false, false, false };
 	_bool m_DeadExplosion = false;

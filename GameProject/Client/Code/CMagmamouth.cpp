@@ -9,6 +9,7 @@
 #include "CFireball.h"
 #include "CTrail.h"
 #include "CParticle_Rectangle.h"
+#include "CEffect.h"
 #include "CParticle_Sphere.h"
 #include "CRoomLayer.h"
 
@@ -877,18 +878,18 @@ void CMagmamouth::MagmaMouth_Trail(const _float& fTimeDelta)
 
 void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
 {
-    MagmaMouth_Dead_Effect(fTimeDelta);
+    MagmaMouth_Dead_Effect();
 
     m_fElapsedDeadTime += fTimeDelta;
-    m_fElapsedDeadTime4 += fTimeDelta;
+    m_fElapsedDeadTime2 += fTimeDelta;
 
     if (m_fElapsedDeadTime > m_fDeadTime)
     {
         m_bDelete = true;
     }
-    if (m_fElapsedDeadTime4 > 0.5f)
+    if (m_fElapsedDeadTime2 > 0.5f)
     {
-        m_fElapsedDeadTime4 = 0.f;
+        m_fElapsedDeadTime2 = 0.f;
 		m_bHitState = !m_bHitState;
         m_fHitEffectElapsedTime = 0.f;
     }
@@ -945,89 +946,44 @@ void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
     }
 }
 
-void CMagmamouth::MagmaMouth_Dead_Effect(const _float& fTimeDelta)
+void CMagmamouth::MagmaMouth_Dead_Effect()
 {
-    m_fElapsedDeadTime2 += fTimeDelta;
-    m_fElapsedDeadTime3 += fTimeDelta;
-    if (m_fElapsedDeadTime2 > 0.25f)
+    if (m_bDead_Effect1 == false)
     {
-        m_fElapsedDeadTime2 = 0.f;
-        _vec3 vPos, vVelocity;
-        m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
-        _int iRand1 = 0;
-        _int iRand2 = 0;
-        _int iRand3 = 0;
-        CGameObject* pGameObject = nullptr;
-        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-
-        D3DXCOLOR eColor = { 1.f,1.f,0.f,1.f };
-
-        for (int i = 0; i < 5; ++i)
-        {
-            iRand1 = rand() % 128 - 64;
-            iRand2 = rand() % 128 - 64;
-            iRand3 = rand() % 128 - 64;
-
-            vVelocity = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
-
-            pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, eColor);
-            if (nullptr == pGameObject) return;
-            if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
-        }
-    }
-
-    if (m_fElapsedDeadTime3 > 0.125f && m_fElapsedDeadTime<m_fDeadTime-0.5f)
-    {
-        m_fElapsedDeadTime3 = 0.f;
-
-        _vec3 vPos, vVelocity;
-        m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
-        _int iRand1 = 0;
-        _int iRand2 = 0;
-        _int iRand3 = 0;
-        CGameObject* pGameObject = nullptr;
-        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-
-		iRand1 = rand() % 128 - 64;
-		iRand2 = rand() % 128 - 64;
-		iRand3 = rand() % 128 - 64;
-
-		vVelocity = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
-
-       vPos += vVelocity / 3.f * 2.f;
-
-        CParticle_Sphere::EFFECT_SPHERE_COLOR eEffect_Color;
-        int iRand = rand() % 3;
-        if (iRand % 3 == 0) eEffect_Color = CParticle_Sphere::RED;
-        else if (iRand % 3 == 1) eEffect_Color = CParticle_Sphere::ORANGE;
-        else eEffect_Color = CParticle_Sphere::YELLOW;
-
-        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, eEffect_Color, 25, 1.5f, 0.5f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
-        if (nullptr == pGameObject) return;
-        if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
-
-        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, eEffect_Color, 15, 1.0f, 0.5f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
-        if (nullptr == pGameObject) return;
-        if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
-    }
-
-    //if (m_fElapsedDeadTime > m_fDeadTime - 0.75f && m_fElapsedDeadTime < m_fDeadTime - 0.25f)
-    if (m_fElapsedDeadTime > m_fDeadTime && m_DeadExplosion==false)
-    {
-        m_DeadExplosion = true;
+        m_bDead_Effect1 = true;
         _vec3 vPos;
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
-        CGameObject* pGameObject = nullptr;
-        //pGameObject = CEffect_Sphere::Create(m_pGraphicDev, vPos, CEffect_Sphere::RED, 50, 2.f, 1.f, { 0.f,0.f,0.f }, CEffect_Sphere::UP_DOWN);
-        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::RED, 60, 3.f, 1.f, { 1.f,1.f,1.f }, CParticle_Sphere::DOWN);
-        //pGameObject = CEffect_Sphere::Create(m_pGraphicDev, vPos, CEffect_Sphere::RED, 5, 2.f, 1.f, { 1.f,1.f,1.f }, CEffect_Sphere::DOWN);
-        if (nullptr == pGameObject) return;
-
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-        if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
+        CGameObject* pGameObject = nullptr;
+
+        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::MAGMA_DEAD_EFFECT, vPos);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Magma_Dead", pGameObject))) return;
+    }
+
+    if (m_bDead_Effect2 == false)
+    {
+        m_bDead_Effect2 = true;
+        _vec3 vPos;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        CGameObject* pGameObject = nullptr;
+
+        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::MAGMA_EXPLOSION1, vPos);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Magma_Explosion1", pGameObject))) return;
+    }
+
+    if (m_fElapsedDeadTime > m_fDeadTime)
+    {
+        _vec3 vPos;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        CGameObject* pGameObject = nullptr;
+
+        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::MAGMA_EXPLOSION2, vPos);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Magma_Explosion2", pGameObject))) return;
     }
 }
 

@@ -184,14 +184,7 @@ void CFireball::Throw(const _float& fTimeDelta)
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
         CGameObject* pGameObject = nullptr;
 
-        //pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::ORANGE, 45, 5.f, 0.16f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
-        //if (nullptr == pGameObject) return;
-        //if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
-
-        //pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::ORANGE, 45, 3.f, 0.16f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
-        //if (nullptr == pGameObject) return;
-        //if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
-        
+       
 		pGameObject = CEffect::Create(m_pGraphicDev, CEffect::MAGMA_FIREBALL, vPos);
 		if (nullptr == pGameObject) return;
 		if (FAILED(pLayer->Add_GameObject(L"Effect_Fireball", pGameObject))) return;

@@ -229,6 +229,9 @@
     <Filter Include="02. GameObject\06. Effect\Particle_Rectangle">
       <UniqueIdentifier>{bc89f83d-5714-4323-8fab-14f2cd737f2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\11">
+      <UniqueIdentifier>{7a47d356-d425-4c6b-a048-ba98ba2e0613}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
