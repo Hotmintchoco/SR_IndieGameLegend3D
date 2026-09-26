@@ -40,9 +40,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // TODO: 여기에 코드를 입력합니다.
 //#ifdef _DEBUG
-    AllocConsole();
-    FILE* fp;
-    freopen_s(&fp, "CONOUT$", "w", stdout);
+    //AllocConsole();
+    //FILE* fp;
+    //freopen_s(&fp, "CONOUT$", "w", stdout);
 //#endif
 
     // 전역 문자열을 초기화합니다.
@@ -118,7 +118,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
 //#ifdef _DEBUG
-    FreeConsole();
+    //FreeConsole();
 //#endif
 
     return (int) msg.wParam;
