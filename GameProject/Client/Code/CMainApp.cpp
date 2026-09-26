@@ -33,13 +33,13 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(Ready_DefaultSetting(&m_pGraphicDev)))
 		return E_FAIL;
 
+	if (FAILED(CSoundMgr::GetInstance()->Ready()))
+		return E_FAIL;
+
 	if (FAILED(Ready_Scene(m_pGraphicDev)))
 		return E_FAIL;
 
 	if (FAILED(CImGuiTool::Ready(g_hWnd, m_pGraphicDev)))
-		return E_FAIL;
-
-	if (FAILED(CSoundMgr::GetInstance()->Ready()))
 		return E_FAIL;
 
 	return S_OK;
