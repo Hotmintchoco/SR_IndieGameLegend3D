@@ -1,18 +1,24 @@
 ﻿#include "CCollider.h"
 #include "CGameObject.h"
 
+_uint CCollider::s_iNextColliderId = 0;
+
 CCollider::CCollider()
-	: m_bIsTrigger(false), m_fRadius(0.f)
+	: m_bIsTrigger(false), m_bIsCollided(false), m_fRadius(0.f)
+	, m_iColliderId(++s_iNextColliderId)
 {
 }
 
 CCollider::CCollider(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CComponent(pGraphicDev), m_bIsTrigger(false), m_fRadius(0.f)
+	: CComponent(pGraphicDev), m_bIsTrigger(false), m_bIsCollided(false), m_fRadius(0.f)
+	, m_iColliderId(++s_iNextColliderId)
 {
 }
 
 CCollider::CCollider(const CCollider& rhs)
-	: CComponent(rhs), m_bIsTrigger(rhs.m_bIsTrigger), m_eColliderType(rhs.m_eColliderType), m_fRadius(rhs.m_fRadius)
+	: CComponent(rhs), m_bIsTrigger(rhs.m_bIsTrigger), m_bIsCollided(false)
+	, m_eColliderType(rhs.m_eColliderType), m_fRadius(rhs.m_fRadius)
+	, m_iColliderId(++s_iNextColliderId)
 {
 }
 

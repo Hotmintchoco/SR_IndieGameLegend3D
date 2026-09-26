@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 #include "CComponent.h"
 #include "IRenderable.h"
 
@@ -24,10 +24,13 @@ public:
 	virtual void	Set_Radius(const _float& fRadius) {}
 	_float			Get_Radius() { return m_fRadius; }
 
-	COLLIDER_TYPE	Get_ColliderType() { return m_eColliderType; }
-
 	void			Set_CollisionID(const _int& iCollisionID) { m_iCollisionID = iCollisionID; }
 	_int			Get_CollisionID() { return m_iCollisionID; }
+
+	void			Set_ColliderType(const COLLIDER_TYPE& eColliderType) { m_eColliderType = eColliderType; }
+	COLLIDER_TYPE	Get_ColliderType() { return m_eColliderType; }
+
+	_uint			GetID() const { return m_iColliderId; }
 
 	virtual _bool	Intersect(CCollider* pOther) PURE;
 
@@ -54,12 +57,16 @@ protected:
 	virtual void		Free();
 
 protected:
-	_bool			m_bIsTrigger;	// 트리거 여부를 나타내는 변수(아직 안씀)
-	_bool			m_bIsCollided;	// 충돌 여부를 나타내는 변수
+	_bool			m_bIsTrigger;
+	_bool			m_bIsCollided;
 	_float			m_fRadius;
 
 	COLLIDER_TYPE	m_eColliderType = CT_NONE;
 	_int			m_iCollisionID = COLL_END;
+
+private:
+	static _uint	s_iNextColliderId;
+	_uint			m_iColliderId;
 };
 
 END
