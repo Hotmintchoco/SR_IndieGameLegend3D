@@ -17,7 +17,8 @@
 #include "CButtonTile.h"
 #include "CSoundMgr.h"
 #include "CPlayer.h"
-#include "CManagement.h"
+#include "CBoxCollider.h"
+#include "CFloor.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -178,6 +179,19 @@ HRESULT CRoomLayer::SpawnRoom()
 	LPDIRECT3DDEVICE9 pDevice = CGraphicDev::GetInstance()->GetInstance()->Get_GraphicDev();
 
 	CGameObject* pGameObject = nullptr;
+
+	/* 바닥 충돌체 */
+	wstring wstrName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Floor";
+	pGameObject = CFloor::Create(pDevice);
+
+	if (FAILED(Add_GameObject(wstrName, pGameObject)))
+		return E_FAIL;
+
+	CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrName, L"Com_Transform"));
+	pTransformCom->Set_Pos(vRoomCenterPos.x, -0.5f, vRoomCenterPos.z);
+	
+	CBoxCollider* pColliderCom = dynamic_cast<CBoxCollider*>(Get_Component(ID_DYNAMIC, wstrName, L"Com_BoxCollider"));
+	pColliderCom->Set_Extents(vOuterRoomSize.x / 2.f, 0.5f, vOuterRoomSize.z / 2.f);
 
 	/* 타일 */
 	for (size_t i = 0; i < t->vecTile.size(); ++i)

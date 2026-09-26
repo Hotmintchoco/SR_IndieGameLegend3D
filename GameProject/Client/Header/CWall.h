@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CGameObject.h"
+#include "IReflectable.h"
 #include "Client_Enum.h"
 
 struct TRoomEventCtx;
@@ -14,7 +15,7 @@ namespace Engine
 	class CBoxCollider;
 }
 
-class CWall : public CGameObject
+class CWall : public CGameObject, public IReflectable
 {
 protected:
 	explicit CWall(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -32,6 +33,9 @@ public:
 
 	inline EWallDir GetDir() { return m_eDir; };
 	inline bool HasDoor() { return m_bHasDoor; };
+
+	/* IReflectable */
+	virtual const _vec3 GetNormal() override;
 
 private:
 	HRESULT Add_Component();

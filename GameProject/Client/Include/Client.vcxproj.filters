@@ -256,6 +256,12 @@
     <Filter Include="02. GameObject\08. Combat\01. Projectile\02. Laser\LaserBuffer">
       <UniqueIdentifier>{223c98ee-0a36-41f5-be05-8c71871e9cda}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Room\BaseProp\FLoor">
+      <UniqueIdentifier>{07bae97f-417b-4eab-8517-c3328d71d1f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\BaseProp\Reflectable">
+      <UniqueIdentifier>{ef527500-86bd-4cb7-82d2-54f5e51a4862}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -525,6 +531,12 @@
     <ClInclude Include="..\Header\CLaser.h">
       <Filter>02. GameObject\08. Combat\01. Projectile\02. Laser</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CFloor.h">
+      <Filter>02. GameObject\07. Room\BaseProp\FLoor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\IReflectable.h">
+      <Filter>02. GameObject\07. Room\BaseProp\Reflectable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -766,6 +778,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLaser.cpp">
       <Filter>02. GameObject\08. Combat\01. Projectile\02. Laser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFloor.cpp">
+      <Filter>02. GameObject\07. Room\BaseProp\FLoor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\IReflectable.cpp">
+      <Filter>02. GameObject\07. Room\BaseProp\Reflectable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

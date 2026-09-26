@@ -8,10 +8,19 @@
 #include "CManagement.h"
 #include "CCameraMgr.h"
 #include "CImGuiTool.h"
+#include "CGameStatusMgr.h"
+#include "CRoomLayer.h"
+#include "IReflectable.h"
 
 CLaser::CLaser(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir)
     : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir)
 {
+}
+
+CLaser::CLaser(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, const float fTimeAfterBirth, CGameObject* pIgnoreCollision)
+    : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir), m_pPrevGenerationCollidedObject(pIgnoreCollision), m_fBirthTime(fTimeAfterBirth)
+{
+    m_fTimeAfterBirth = fTimeAfterBirth;
 }
 
 CLaser::~CLaser()
@@ -31,6 +40,8 @@ HRESULT CLaser::Ready_GameObject()
     m_pTransformCom->Set_Pos(m_vStart);
     m_pColliderCom->Set_Owner(this);
     m_pColliderCom->Set_Radius(0.3f);
+    m_pColliderComReflection->Set_Owner(this);
+    m_pColliderComReflection->Set_Radius(0.01f);
 
     return S_OK;
 }
@@ -40,29 +51,36 @@ _int CLaser::Update_GameObject(const _float& fTimeDelta)
     _int iExit = CProjectile::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
+    // CCollisionMgr::GetInstance()->Add_Collider(COLL_LASER, m_pColliderComReflection);
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PROJECTILE, m_pColliderCom);
 
+    CalculateLength(fTimeDelta);
 
-    /* Expanding */
-    if (s_tData.fSpeed * m_fTimeAfterBirth < s_tData.fMaxLength)
+    return iExit;
+}
+
+void CLaser::CalculateLength(const _float& fTimeDelta)
+{
+    if (!m_bReflected)
     {
-        m_fCurrentLength = s_tData.fSpeed * m_fTimeAfterBirth;
-    }
-    /* Shrinking */
-    else if (s_tData.fSpeed * (s_tData.fLifeTime - m_fTimeAfterBirth) < s_tData.fMaxLength)
-    {
-        m_fCurrentLength = (s_tData.fLifeTime - m_fTimeAfterBirth) * s_tData.fSpeed;
+        float fSinceBirth = m_fTimeAfterBirth - m_fBirthTime;
+
+        m_fCurrentLength = min(s_tData.fSpeed * fSinceBirth, s_tData.fMaxLength);
+
+        m_pTransformCom->Move_Pos(&m_vDir, s_tData.fSpeed, fTimeDelta);
+
+        m_pTransformCom->Set_Scale(s_tData.fWidth, 1.f, m_fCurrentLength);
     }
     else
     {
-        m_fCurrentLength = s_tData.fMaxLength;
+        float fSinceReflect = m_fTimeAfterBirth - m_fReflectTime;
+
+        m_fCurrentLength = min(m_fReflectLength, s_tData.fMaxLength - s_tData.fSpeed * fSinceReflect);
+
+        if (m_fCurrentLength <= 0.f) Set_Dead(true);
+
+        m_pTransformCom->Set_Scale(s_tData.fWidth, 1.f, m_fCurrentLength);
     }
-
-    m_pTransformCom->Move_Pos(&m_vDir, s_tData.fSpeed, fTimeDelta);
-
-    m_pTransformCom->Set_Scale(s_tData.fWidth, 1.f, m_fCurrentLength);
-
-    return iExit;
 }
 
 void CLaser::LateUpdate_GameObject(const _float& fTimeDelta)
@@ -83,7 +101,44 @@ void CLaser::Render_GameObject()
 
 void CLaser::OnCollisionEnter(CGameObject* pObject)
 {
-    Set_Dead(true);
+    if (m_pPrevGenerationCollidedObject == pObject) return;
+    if (IReflectable* pReflectable = dynamic_cast<IReflectable*>(pObject))
+    {
+        /* 충돌체 크기만큼 앞으로 좀 보내기 */
+        m_pTransformCom->Move_Pos(&m_vDir, 0.3f, 1.f);
+
+        /* 자식 레이저가 생성되자마자 충돌되는 것 방지 */
+        m_pPrevGenerationCollidedObject = pObject;
+
+        /* 자식 레이저 생성 */
+        Reflect(pReflectable->GetNormal());
+
+        /* 시각적 어색함을 없애기 위한 길이 상한 */
+        m_fReflectLength = m_fCurrentLength;
+        m_fReflectTime = m_fTimeAfterBirth;
+
+        /* 더 이상 충돌 처리를 하지 않음 */
+        m_pColliderCom->Set_IsActive(false);
+
+        /* 길이 계산식이 변경됨 */
+        m_bReflected = true;
+    }
+}
+
+void CLaser::Reflect(const _vec3& vNormal)
+{
+    _vec3 vN;
+    D3DXVec3Normalize(&vN, &vNormal);
+
+    _vec3 vReflect = m_vDir - 2.f * D3DXVec3Dot(&m_vDir, &vN) * vN;
+    D3DXVec3Normalize(&vReflect, &vReflect);
+
+    _vec3 vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+    CProjectile* pProjectile = CLaser::Create(m_pGraphicDev, vPos, vReflect, m_fTimeAfterBirth, m_pPrevGenerationCollidedObject);
+    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+
 }
 
 HRESULT CLaser::Add_Component()
@@ -106,13 +161,21 @@ HRESULT CLaser::Add_Component()
 
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
-    // Transform
+    // Collider
     pComponent = m_pColliderCom = dynamic_cast<CSphereCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SphereCollider"));
 
     if (nullptr == pComponent)
         return E_FAIL;
 
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });
+    
+    // Collider
+    pComponent = m_pColliderComReflection = dynamic_cast<CSphereCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SphereCollider"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_ReflectCollider", pComponent });
 
     return S_OK;
 }
@@ -183,6 +246,20 @@ void CLaser::RenderEditorPanel()
 CLaser* CLaser::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir)
 {
     CLaser* pBullet = new CLaser(pGraphicDev, vStart, vDir);
+
+    if (FAILED(pBullet->Ready_GameObject()))
+    {
+        Safe_Release(pBullet);
+        MSG_BOX("CLaser Create Failed");
+        return nullptr;
+    }
+
+    return pBullet;
+}
+
+CLaser* CLaser::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, const float fTimeAfterBirth, CGameObject* pIgnoreCollision)
+{
+    CLaser* pBullet = new CLaser(pGraphicDev, vStart, vDir, fTimeAfterBirth, pIgnoreCollision);
 
     if (FAILED(pBullet->Ready_GameObject()))
     {

@@ -1,6 +1,7 @@
-#pragma once
+﻿#pragma once
 
 #include "CFrustum.h"
+#include "IReflectable.h"
 
 namespace Engine
 {
@@ -9,7 +10,7 @@ namespace Engine
 	class CGameObject;
 }
 
-class CUnbreakableFrustum : public CFrustum
+class CUnbreakableFrustum : public CFrustum, public IReflectable
 {
 protected:
 	explicit CUnbreakableFrustum(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -21,8 +22,10 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-
 	virtual void	OnCollisionEnter(CGameObject* pOther) override;
+
+	/* IReflectable */
+	virtual const _vec3 GetNormal() override;
 
 private:
 	HRESULT			Add_Component();

@@ -1,7 +1,10 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CUnbreakableFrustum.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
+#include "CCollisionMgr.h"
+#include "Client_Enum.h"
+#include "CRandomMgr.h"
 
 CUnbreakableFrustum::CUnbreakableFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CFrustum(pGraphicDev)
@@ -17,7 +20,7 @@ HRESULT CUnbreakableFrustum::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    // Note : ¼ø¼­¿¡ ÁÖÀÇ
+    // Note : ìˆœì„œì— ì£¼ì˜
     if (FAILED(CFrustum::Ready_GameObject()))
         return E_FAIL;
 
@@ -29,6 +32,7 @@ _int CUnbreakableFrustum::Update_GameObject(const _float& fTimeDelta)
     _int    iExit = CFrustum::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    // CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE_REFLECT, m_pColliderCom);
 
     return iExit;
 }
@@ -50,6 +54,18 @@ void CUnbreakableFrustum::Render_GameObject()
 void CUnbreakableFrustum::OnCollisionEnter(CGameObject* pOther)
 {
 
+}
+
+const _vec3 CUnbreakableFrustum::GetNormal()
+{
+    float fX = CRandomMgr::GetInstance()->GetRandomValue<float>(-1.f, 1.f);
+    float fY = CRandomMgr::GetInstance()->GetRandomValue<float>(-1.f, 1.f);
+    float fZ = CRandomMgr::GetInstance()->GetRandomValue<float>(-1.f, 1.f);
+
+    _vec3 vNormal{fX, fY, fZ};
+    D3DXVec3Normalize(&vNormal, &vNormal);
+
+    return vNormal;
 }
 
 HRESULT CUnbreakableFrustum::Add_Component()

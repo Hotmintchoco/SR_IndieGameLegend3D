@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CWall.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -213,9 +213,12 @@ void CWall::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 
-    // �浹 ó��
+    // 충돌 처리
     for (int i = 0; i < 2; ++i)
+    {
         CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom[i]);
+        // CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE_REFLECT, m_pColliderCom[i]);
+    }
 }
 
 void CWall::Render_GameObject()
@@ -228,7 +231,6 @@ void CWall::Render_GameObject()
 
 void CWall::OnCollisionEnter(CGameObject* pOther)
 {
-    
 }
 
 void CWall::OnCollisionStay(CGameObject* pOther)
@@ -242,6 +244,28 @@ void CWall::OnCollisionStay(CGameObject* pOther)
             continue;
 
         Obstacle_Collision(pOther, m_pColliderCom[i]);
+    }
+}
+
+const _vec3 CWall::GetNormal()
+{
+    switch (m_eDir)
+    {
+    case EWallDir::EAST:
+        return _vec3{ -1.f, 0.f, 0.f };
+        break;
+    case EWallDir::SOUTH:
+        return _vec3{ 0.f, 0.f, 1.f };
+        break;
+    case EWallDir::WEST:
+        return _vec3{ 1.f, 0.f, 0.f };
+        break;
+    case EWallDir::NORTH:
+        return _vec3{ 0.f, 0.f, -1.f };
+        break;
+    default:
+        assert(0);
+        return _vec3{ 0.f, 1.f, 0.f };
     }
 }
 

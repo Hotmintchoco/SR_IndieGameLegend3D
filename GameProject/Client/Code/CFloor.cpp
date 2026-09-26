@@ -1,56 +1,52 @@
 ﻿#include "pch.h"
-#include "CTriggerBox.h"
+#include "CFloor.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CBoxCollider.h"
 #include "CPlayer.h"
 #include "CCollisionMgr.h"
 #include "CRoomLayer.h"
+#include "CLaser.h"
 
-CTriggerBox::CTriggerBox(LPDIRECT3DDEVICE9 pGraphicDev)
+CFloor::CFloor(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
 {
 }
 
-CTriggerBox::~CTriggerBox()
+CFloor::~CFloor()
 {
 }
 
-HRESULT CTriggerBox::Ready_GameObject()
+HRESULT CFloor::Ready_GameObject()
 {
     if (FAILED(Add_Component()))
         return E_FAIL;
 
     m_pColliderCom->Set_Owner(this);
-    m_pColliderCom->Set_Extents(0.6f, 0.6f, 0.6f);
 
     return S_OK;
 }
 
-_int CTriggerBox::Update_GameObject(const _float& fTimeDelta)
+_int CFloor::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    /* 콜라이더 update에 부모 위치 맞춰주는 기능이 있긴 한데, 안되어서 일단 수동으로 */
-    _vec3 vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    m_pColliderCom->m_tBox.Center = XMFLOAT3{ vPos.x, vPos.y, vPos.z };
-
-    CCollisionMgr::GetInstance()->Add_Collider(COLL_ROOMLOGIC, m_pColliderCom);
+    // CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE_REFLECT, m_pColliderCom);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom);
 
     return iExit;
 }
 
-void CTriggerBox::LateUpdate_GameObject(const _float& fTimeDelta)
+void CFloor::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
-void CTriggerBox::Render_GameObject()
+void CFloor::Render_GameObject()
 {
 }
 
-HRESULT CTriggerBox::Add_Component()
+HRESULT CFloor::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
@@ -73,31 +69,30 @@ HRESULT CTriggerBox::Add_Component()
     return S_OK;
 }
 
-void CTriggerBox::OnCollisionEnter(CGameObject* pOther)
+void CFloor::OnCollisionEnter(CGameObject* pOther)
 {
-    CPlayer* pPlayer = dynamic_cast<CPlayer*>(pOther);
-    if (pPlayer)
-    {
-        /* Box는 Ready 단계에서만 만들어지니까 Owner가 보장됨 */
-        static_cast<CRoomLayer*>(m_pOwner)->OnRoomTriggerBlockCollided();
-    }
 }
 
-CTriggerBox* CTriggerBox::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+const _vec3 CFloor::GetNormal()
 {
-    CTriggerBox* pTriggerBox = new CTriggerBox(pGraphicDev);
+    return _vec3{ 0.f, 1.f, 0.f };
+}
+
+CFloor* CFloor::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+{
+    CFloor* pTriggerBox = new CFloor(pGraphicDev);
 
     if (FAILED(pTriggerBox->Ready_GameObject()))
     {
         Safe_Release(pTriggerBox);
-        MSG_BOX("CTriggerBox Create Failed");
+        MSG_BOX("CFloor Create Failed");
         return nullptr;
     }
 
     return pTriggerBox;
 }
 
-void CTriggerBox::Free()
+void CFloor::Free()
 {
     CGameObject::Free();
 }
