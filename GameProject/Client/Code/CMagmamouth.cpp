@@ -432,7 +432,7 @@ void CMagmamouth::Update_Motion(const _float& fTimeDelta)
         }
         else
         {
-            m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 2);
+            m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 3);
         }
         //m_eMagmaMouthState = SPAWN;
         //m_eMagmaMouthState = FIREBALL;
