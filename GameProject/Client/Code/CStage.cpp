@@ -27,9 +27,12 @@
 #include "CMagmamouth.h"
 #include "CPseudoDark.h"
 #include "CGameStatusMgr.h"
+#include "CMinimapUI.h"
+#include "CGaugeUI.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
+	, m_bTPVCamera(false)
 {
 }
 
@@ -60,6 +63,9 @@ HRESULT CStage::Ready_Scene()
 		return E_FAIL;
 
 	if (FAILED(CCameraMgr::GetInstance()->Ready_Camera(L"Camera_Player_FPV", CAMERA_FPV_PERSPECTIVE, m_pGraphicDev)))
+		return E_FAIL;
+
+	if (FAILED(CCameraMgr::GetInstance()->Ready_Camera(L"Camera_Player_TPV", CAMERA_TPV_PERSPECTIVE, m_pGraphicDev)))
 		return E_FAIL;
 
 	if (FAILED(CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_FPV")))
@@ -94,6 +100,12 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 	pPlayerTrans->Get_Info(INFO_LOOK, &vPlayerLook);
 	pPlayerTrans->Get_Info(INFO_POS, &vPlayerPos);
 	pPlayerTrans->Get_Info(INFO_RIGHT, &vPlayerRight);
+
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_V))
+	{
+		m_bTPVCamera = !m_bTPVCamera;
+		CCameraMgr::GetInstance()->Select_Camera(m_bTPVCamera ? L"Camera_Player_TPV" : L"Camera_Player_FPV");
+	}
 
 	CCameraMgr::GetInstance()->Update_Camera(fTimeDelta, vPlayerLook, vPlayerPos, vPlayerRight);
 
@@ -329,7 +341,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	// Gem Cnt
 	fStartX += fGap + 15.f;
-	fGap = 6.f;
+	fGap = 4.f;
 	for (int i = 0; i < iCountMax; ++i)
 	{
 		pUI = CUI::Create(m_pGraphicDev, L"Proto_NumberTexture");
@@ -363,6 +375,17 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	pUI->Set_Pos(WINCX - 90.f, 480.f, 0.f);
 	pUI->Set_Size({ 76.f, 92.f });
 
+	if (FAILED(pLayer->Add_GameObject(L"HudMiniMap", pUI)))
+		return E_FAIL;
+
+	// Minimap
+	pUI = CMinimapUI::Create(m_pGraphicDev);
+	if (nullptr == pUI)
+		return E_FAIL;
+	
+	pUI->Set_Pos(WINCX - 90.f, 498.f, 0.f);
+	pUI->Set_Size({ 128.f, 128.f });
+	
 	if (FAILED(pLayer->Add_GameObject(L"MiniMap", pUI)))
 		return E_FAIL;
 
@@ -378,7 +401,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	// Hud Attack Info Ammo
-	pUI = CUI::Create(m_pGraphicDev, L"Proto_AmmoTexture");
+	pUI = CGaugeUI::Create(m_pGraphicDev, L"Proto_AmmoTexture");
 	if (nullptr == pUI)
 		return E_FAIL;
 

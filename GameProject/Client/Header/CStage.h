@@ -25,6 +25,9 @@ private:
 	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
 	HRESULT			Ready_Light();
 
+private:
+	_bool			m_bTPVCamera;
+
 public:
 	static CStage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

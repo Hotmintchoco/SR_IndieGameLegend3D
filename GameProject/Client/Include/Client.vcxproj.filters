@@ -232,6 +232,12 @@
     <Filter Include="02. GameObject\02. Monster\11">
       <UniqueIdentifier>{7a47d356-d425-4c6b-a048-ba98ba2e0613}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. UI\Minimap">
+      <UniqueIdentifier>{2607f307-e85e-4c6a-aaf2-41e82286d73c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. UI\Gauge">
+      <UniqueIdentifier>{2b7f91d6-6939-4b42-854e-848d5ec51968}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -480,6 +486,12 @@
     <ClInclude Include="..\Header\CEffect.h">
       <Filter>02. GameObject\06. Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMinimapUI.h">
+      <Filter>02. GameObject\10. UI\Minimap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGaugeUI.h">
+      <Filter>02. GameObject\10. UI\Gauge</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -700,6 +712,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEffect.cpp">
       <Filter>02. GameObject\06. Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMinimapUI.cpp">
+      <Filter>02. GameObject\10. UI\Minimap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGaugeUI.cpp">
+      <Filter>02. GameObject\10. UI\Gauge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

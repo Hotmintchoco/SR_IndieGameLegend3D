@@ -174,6 +174,7 @@
     <ClInclude Include="..\Header\CFrustumExplodeEffect.h" />
     <ClInclude Include="..\Header\CGameMachine.h" />
     <ClInclude Include="..\Header\CGameStatusMgr.h" />
+    <ClInclude Include="..\Header\CGaugeUI.h" />
     <ClInclude Include="..\Header\CMagmamouth.h" />
     <ClInclude Include="..\Header\CGem.h" />
     <ClInclude Include="..\Header\CHeart.h" />
@@ -186,6 +187,7 @@
     <ClInclude Include="..\Header\CLoading.h" />
     <ClInclude Include="..\Header\CLogo.h" />
     <ClInclude Include="..\Header\CMainApp.h" />
+    <ClInclude Include="..\Header\CMinimapUI.h" />
     <ClInclude Include="..\Header\CPseudoDark.h" />
     <ClInclude Include="..\Header\CPressAllButtonCondition.h" />
     <ClInclude Include="..\Header\CRoomLayer.h" />
@@ -258,6 +260,7 @@
     <ClCompile Include="..\Code\CFrustumExplodeEffect.cpp" />
     <ClCompile Include="..\Code\CGameMachine.cpp" />
     <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
+    <ClCompile Include="..\Code\CGaugeUI.cpp" />
     <ClCompile Include="..\Code\CMagmamouth.cpp" />
     <ClCompile Include="..\Code\CGem.cpp" />
     <ClCompile Include="..\Code\CHeart.cpp" />
@@ -269,6 +272,7 @@
     <ClCompile Include="..\Code\CLoading.cpp" />
     <ClCompile Include="..\Code\CLogo.cpp" />
     <ClCompile Include="..\Code\CMainApp.cpp" />
+    <ClCompile Include="..\Code\CMinimapUI.cpp" />
     <ClCompile Include="..\Code\CPseudoDark.cpp" />
     <ClCompile Include="..\Code\CPressAllButtonCondition.cpp" />
     <ClCompile Include="..\Code\CRoomLayer.cpp" />

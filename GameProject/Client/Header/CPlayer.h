@@ -37,7 +37,10 @@ private:
 	_vec3			Picking_OnTerrain();
 
 	void			RenderImGui();
-	void			MonsterCollision(CCollider* pOtherCollider);
+	Engine::CCollider*	Find_OtherCollider(CGameObject* pOther);
+	void			MonsterCollision(CGameObject* pOther, Engine::CCollider* pOtherCollider);
+	void			Apply_Knockback(CGameObject* pAttacker);
+	void			Update_Knockback(const _float& fTimeDelta);
 
 	void			Update_HPUI();
 
@@ -57,6 +60,9 @@ private:
 	_float		m_fInvTime;
 	_bool		m_bDeathState;
 	_float		m_fRespawnTimer;
+
+	_vec3		m_vKnockbackDir;		
+	_float		m_fKnockbackSpeed;		
 
 public:
 	static	CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
