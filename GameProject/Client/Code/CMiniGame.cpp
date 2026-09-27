@@ -38,7 +38,7 @@ _int CMiniGame::Update_Scene(const _float& fTimeDelta)
     // Scene Change
     if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
     {
-        if (FAILED(CManagement::GetInstance()->Change_Scene(0)))
+        if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
             return -1;
     }
 

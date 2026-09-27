@@ -37,18 +37,6 @@ CLayer* CManagement::Get_Layer(const _tchar* pLayerTag)
     return m_pScene->Get_Layer(pLayerTag);
 }
 
-HRESULT CManagement::Set_Scene(CScene* pScene)
-{
-    if (nullptr == pScene)
-        return  E_FAIL;
-
-    Safe_Release(m_pScene);
-
-    m_pScene = pScene;
-
-    return S_OK;
-}
-
 HRESULT CManagement::Change_Scene(_int iSceneIdx, CScene* pNewScene, bool bDestoryOld)
 {
     // 1. 기존 씬이 있다면 퇴장(Exit) 처리
@@ -58,7 +46,7 @@ HRESULT CManagement::Change_Scene(_int iSceneIdx, CScene* pNewScene, bool bDesto
         // 핵심: 이전 씬을 지워야 한다면 맵에서 제거하고 메모리 해제
         if (bDestoryOld)
         {
-            auto iter = m_mapScene.find(iSceneIdx);
+            auto iter = m_mapScene.find(m_iSceneIdx);
             if (iter != m_mapScene.end())
             {
                 Safe_Release(iter->second); // CLogo 메모리 해제
