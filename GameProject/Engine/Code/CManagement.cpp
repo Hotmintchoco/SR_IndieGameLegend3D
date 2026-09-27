@@ -113,5 +113,9 @@ void CManagement::Render_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CManagement::Free()
 {
-    Safe_Release(m_pScene);
+    for (auto& Pair : m_mapScene)
+    {
+        Safe_Release(Pair.second);
+    }
+    m_mapScene.clear();
 }

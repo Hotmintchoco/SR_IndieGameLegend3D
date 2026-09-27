@@ -125,7 +125,7 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 		if (nullptr == pMiniGame)
 			return E_FAIL;
 
-		if (FAILED(CManagement::GetInstance()->Set_Scene(pMiniGame)))
+		if (FAILED(CManagement::GetInstance()->Change_Scene(1, pMiniGame)))
 		{
 			Safe_Release(pMiniGame);
 			MSG_BOX("MiniGame Create Failed");

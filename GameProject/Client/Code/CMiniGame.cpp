@@ -38,17 +38,8 @@ _int CMiniGame::Update_Scene(const _float& fTimeDelta)
     // Scene Change
     if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
     {
-        CScene* pStage = CStage::Create(m_pGraphicDev);
-        if (nullptr == pStage)
-            return E_FAIL;
-
-        if (FAILED(CManagement::GetInstance()->Set_Scene(pStage)))
-        {
-            Safe_Release(pStage);
-            MSG_BOX("Stage Create Failed");
+        if (FAILED(CManagement::GetInstance()->Change_Scene(0)))
             return -1;
-        }
-        pStage->Update_Scene(fTimeDelta);
     }
 
     return iExit;
