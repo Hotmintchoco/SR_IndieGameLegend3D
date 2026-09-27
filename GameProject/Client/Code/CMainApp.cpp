@@ -122,7 +122,7 @@ HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (nullptr == pLogo)
 		return E_FAIL;
 
-	if (FAILED(m_pManagementClass->Set_Scene(pLogo)))
+	if (FAILED(m_pManagementClass->Change_Scene(0, pLogo, true)))
 	{
 		Safe_Release(pLogo);
 		MSG_BOX("Logo Create Failed");

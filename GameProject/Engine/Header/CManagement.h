@@ -28,7 +28,9 @@ public:
 
 public:
 	HRESULT			Set_Scene(CScene* pNewScene);
-	HRESULT			Change_Scene(_int iSceneIdx, CScene* pScene = nullptr);
+
+	// 씬 전환 (이전 씬을 삭제하거나 유지할 수 있음)
+	HRESULT			Change_Scene(_int iSceneIdx, CScene* pScene = nullptr, bool bDestoryOld = false);
 	_int			Update_Scene(const _float& fTimeDelta);
 	void			LateUpdate_Scene(const _float& fTimeDelta);
 	void			Render_Scene(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -49,12 +49,23 @@ HRESULT CManagement::Set_Scene(CScene* pScene)
     return S_OK;
 }
 
-HRESULT CManagement::Change_Scene(_int iSceneIdx, CScene* pNewScene)
+HRESULT CManagement::Change_Scene(_int iSceneIdx, CScene* pNewScene, bool bDestoryOld)
 {
     // 1. 기존 씬이 있다면 퇴장(Exit) 처리
     if (nullptr != m_pScene)
     {
         m_pScene->OnExit();
+        // 핵심: 이전 씬을 지워야 한다면 맵에서 제거하고 메모리 해제
+        if (bDestoryOld)
+        {
+            auto iter = m_mapScene.find(iSceneIdx);
+            if (iter != m_mapScene.end())
+            {
+                Safe_Release(iter->second); // CLogo 메모리 해제
+                m_mapScene.erase(iter);    // 맵에서 CLogo 삭제
+            }
+            m_pScene = nullptr;
+        }
     }
 
     // 2. 맵에서 씬 검색
