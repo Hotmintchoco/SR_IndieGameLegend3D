@@ -29,7 +29,7 @@ public:
 
 protected:
 	map<wstring, CLayer*>			m_mapLayer;
-	LPDIRECT3DDEVICE9					m_pGraphicDev;
+	LPDIRECT3DDEVICE9				m_pGraphicDev;
 
 protected:
 	virtual void			Free();

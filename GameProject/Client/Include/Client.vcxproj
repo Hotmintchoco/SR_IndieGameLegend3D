@@ -153,6 +153,7 @@
     <ClInclude Include="..\Header\CLaser.h" />
     <ClInclude Include="..\Header\CLaserBuffer.h" />
     <ClInclude Include="..\Header\CLaserGun.h" />
+    <ClInclude Include="..\Header\CMiniGame.h" />
     <ClInclude Include="..\Header\CRapidGun.h" />
     <ClInclude Include="..\Header\CProjectile.h" />
     <ClInclude Include="..\Header\CButtonTile.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="..\Header\CGameMachine.h" />
     <ClInclude Include="..\Header\CGameStatusMgr.h" />
     <ClInclude Include="..\Header\CGaugeUI.h" />
+    <ClInclude Include="..\Header\CSceneMgr.h" />
     <ClInclude Include="..\Header\CSGBullet.h" />
     <ClInclude Include="..\Header\CShotGun.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
@@ -232,7 +234,6 @@
     <ClInclude Include="..\Header\json_fwd.hpp" />
     <ClInclude Include="..\Header\CUnbreakableFrustum.h" />
     <ClInclude Include="Client.h" />
-    <ClInclude Include="CMiniGame.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -248,6 +249,7 @@
     <ClCompile Include="..\Code\CLaser.cpp" />
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />
     <ClCompile Include="..\Code\CLaserGun.cpp" />
+    <ClCompile Include="..\Code\CMiniGame.cpp" />
     <ClCompile Include="..\Code\CRapidGun.cpp" />
     <ClCompile Include="..\Code\CProjectile.cpp" />
     <ClCompile Include="..\Code\CButtonTile.cpp" />
@@ -273,6 +275,7 @@
     <ClCompile Include="..\Code\CFrustumExplodeEffect.cpp" />
     <ClCompile Include="..\Code\CGameMachine.cpp" />
     <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
+    <ClCompile Include="..\Code\CSceneMgr.cpp" />
     <ClCompile Include="..\Code\CSGBullet.cpp" />
     <ClCompile Include="..\Code\CShotGun.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
@@ -335,7 +338,6 @@
     <ClCompile Include="..\Code\CUnbreakableFrustum.cpp" />
     <ClCompile Include="..\Code\IReflectable.cpp" />
     <ClCompile Include="Client.cpp" />
-    <ClCompile Include="CMiniGame.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

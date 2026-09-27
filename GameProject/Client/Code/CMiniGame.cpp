@@ -68,48 +68,7 @@ void CMiniGame::Render_Scene()
 
 HRESULT CMiniGame::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
-  CComponent* pPrototype = CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex");
-    if (nullptr == pPrototype)
-    {
-        if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTex", Engine::CRcTex::Create(m_pGraphicDev))))
-            return E_FAIL;
-    }
-    else
-    {
-        Safe_Release(pPrototype);
-    }
-
-    pPrototype = CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_LogoTexture");
-    if (nullptr == pPrototype)
-    {
-        if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LogoTexture",
-            Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Logo/sana.jpg", 1))))
-            return E_FAIL;
-    }
-    else
-    {
-        Safe_Release(pPrototype);
-    }
-
-    CLayer* pLayer = CLayer::Create();
-    if (nullptr == pLayer)
-        return E_FAIL;
-
-    CGameObject* pGameObject = CBackGround::Create(m_pGraphicDev);
-    if (nullptr == pGameObject)
-    {
-        Safe_Release(pLayer);
-        return E_FAIL;
-    }
-
-    if (FAILED(pLayer->Add_GameObject(L"BackGround", pGameObject)))
-    {
-        Safe_Release(pGameObject);
-        Safe_Release(pLayer);
-        return E_FAIL;
-    }
-
-    m_mapLayer.insert({ pLayerTag, pLayer });
+    
     return S_OK;
 }
 

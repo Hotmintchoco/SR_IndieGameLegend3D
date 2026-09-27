@@ -49,6 +49,16 @@ HRESULT CManagement::Set_Scene(CScene* pScene)
     return S_OK;
 }
 
+HRESULT CManagement::Change_Scene(CScene* pScene)
+{
+    if (pScene == nullptr)
+		return E_FAIL;
+
+    m_pScene = pScene;
+
+    return S_OK;
+}
+
 _int CManagement::Update_Scene(const _float& fTimeDelta)
 {
     if (nullptr == m_pScene)
