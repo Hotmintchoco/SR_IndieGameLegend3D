@@ -8,7 +8,6 @@
 #include "CCameraMgr.h"
 #include "CSkyBox.h"
 #include "CLightMgr.h"
-#include "CEffect.h"
 #include "CWeaponSystem.h"
 #include "CParticle.h"
 #include "CManagement.h"
@@ -30,6 +29,7 @@
 #include "CMinimapUI.h"
 #include "CGaugeUI.h"
 #include "CSoundMgr.h"
+#include "CMiniGame.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -117,6 +117,22 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 	}
 
 	CCameraMgr::GetInstance()->Update_Camera(fTimeDelta, vPlayerLook, vPlayerPos, vPlayerRight);
+
+	// Scene Change
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
+	{
+		CScene* pMiniGame = CMiniGame::Create(m_pGraphicDev);
+		if (nullptr == pMiniGame)
+			return E_FAIL;
+
+		if (FAILED(CManagement::GetInstance()->Set_Scene(pMiniGame)))
+		{
+			Safe_Release(pMiniGame);
+			MSG_BOX("MiniGame Create Failed");
+			return -1;
+		}
+		pMiniGame->Update_Scene(fTimeDelta);
+	}
 
 	return iExit;
 }

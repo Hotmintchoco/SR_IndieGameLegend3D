@@ -205,12 +205,6 @@
     <Filter Include="02. GameObject\06. Effect\Trail_MagmaMouth">
       <UniqueIdentifier>{66a04df7-ebf3-4bd2-8103-73c4dcefb56e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\09. Bullet\BulletTrail">
-      <UniqueIdentifier>{507fc53d-54bb-44af-a564-17e6d18d5a96}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\09. Bullet\BulletParticle">
-      <UniqueIdentifier>{d9883dde-8be5-4d6d-84d7-3d4d56bc6919}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Frustum\Explosive\ExplodeSphere">
       <UniqueIdentifier>{50d3b930-96f7-46d0-9513-601ce505a7a7}</UniqueIdentifier>
     </Filter>
@@ -273,6 +267,9 @@
     </Filter>
     <Filter Include="02. GameObject\07. Room\BaseProp\Reflectable">
       <UniqueIdentifier>{ef527500-86bd-4cb7-82d2-54f5e51a4862}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame">
+      <UniqueIdentifier>{c1d0cb1c-a82c-4dd0-ba2e-ba944ff4ecc0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -495,15 +492,6 @@
     <ClInclude Include="..\Header\CGameMachine.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\GameMachine</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CBulletTrail.h">
-      <Filter>02. GameObject\09. Bullet\BulletTrail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CBulletParticle.h">
-      <Filter>02. GameObject\09. Bullet\BulletParticle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CEffect_Rectangle.h">
-      <Filter>02. GameObject\06. Effect\Effect_Rectangle</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CParticle_Rectangle.h">
       <Filter>02. GameObject\06. Effect\Particle_Rectangle</Filter>
     </ClInclude>
@@ -560,6 +548,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\IReflectable.h">
       <Filter>02. GameObject\07. Room\BaseProp\Reflectable</Filter>
+    </ClInclude>
+    <ClInclude Include="CMiniGame.h">
+      <Filter>01. Scene\MiniGame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -755,15 +746,6 @@
     <ClCompile Include="..\Code\CGameMachine.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\GameMachine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CBulletTrail.cpp">
-      <Filter>02. GameObject\09. Bullet\BulletTrail</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CBulletParticle.cpp">
-      <Filter>02. GameObject\09. Bullet\BulletParticle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CEffect_Rectangle.cpp">
-      <Filter>02. GameObject\06. Effect\Effect_Rectangle</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CParticle_Rectangle.cpp">
       <Filter>02. GameObject\06. Effect\Particle_Rectangle</Filter>
     </ClCompile>
@@ -820,6 +802,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\IReflectable.cpp">
       <Filter>02. GameObject\07. Room\BaseProp\Reflectable</Filter>
+    </ClCompile>
+    <ClCompile Include="CMiniGame.cpp">
+      <Filter>01. Scene\MiniGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

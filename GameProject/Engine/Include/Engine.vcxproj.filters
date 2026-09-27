@@ -422,5 +422,8 @@
     <Filter Include="15. Sound">
       <UniqueIdentifier>{541ae4de-6182-4806-b205-f090097c1e66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="16. SceneMgr">
+      <UniqueIdentifier>{2c0da591-4174-4472-89c3-c4e66c4c0d40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

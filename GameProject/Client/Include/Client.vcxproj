@@ -232,6 +232,7 @@
     <ClInclude Include="..\Header\json_fwd.hpp" />
     <ClInclude Include="..\Header\CUnbreakableFrustum.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="CMiniGame.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -334,6 +335,7 @@
     <ClCompile Include="..\Code\CUnbreakableFrustum.cpp" />
     <ClCompile Include="..\Code\IReflectable.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="CMiniGame.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
