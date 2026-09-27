@@ -49,13 +49,34 @@ HRESULT CManagement::Set_Scene(CScene* pScene)
     return S_OK;
 }
 
-HRESULT CManagement::Change_Scene(CScene* pScene)
+HRESULT CManagement::Change_Scene(_int iSceneIdx, CScene* pNewScene)
 {
-    if (pScene == nullptr)
-		return E_FAIL;
+    // 1. 기존 씬이 있다면 퇴장(Exit) 처리
+    if (nullptr != m_pScene)
+    {
+        m_pScene->OnExit();
+    }
 
-    m_pScene = pScene;
+    // 2. 맵에서 씬 검색
+    auto iter = m_mapScene.find(iSceneIdx);
+    if (iter != m_mapScene.end())
+    {
+        // 3-A. 씬이 이미 존재하면 재사용 및 입장(Enter) 처리
+        m_pScene = iter->second;
+        m_pScene->OnEnter();
+    }
+    else
+    {
+        // 3-B. 씬이 없으면 맵에 추가하고 최초 입장(Enter) 처리
+        if (nullptr == pNewScene)
+            return E_FAIL;
 
+        m_mapScene.emplace(iSceneIdx, pNewScene);
+        m_pScene = pNewScene;
+        m_pScene->OnEnter();
+    }
+
+    m_iSceneIdx = iSceneIdx;
     return S_OK;
 }
 

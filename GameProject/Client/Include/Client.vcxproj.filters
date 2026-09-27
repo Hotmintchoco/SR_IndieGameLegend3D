@@ -271,9 +271,6 @@
     <Filter Include="01. Scene\MiniGame">
       <UniqueIdentifier>{c1d0cb1c-a82c-4dd0-ba2e-ba944ff4ecc0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. Manager\02. SceneMgr">
-      <UniqueIdentifier>{3d9aa650-8d21-4567-a767-fc7d3456241b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -555,9 +552,6 @@
     <ClInclude Include="..\Header\CMiniGame.h">
       <Filter>01. Scene\MiniGame</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CSceneMgr.h">
-      <Filter>04. Manager\02. SceneMgr</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -811,9 +805,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMiniGame.cpp">
       <Filter>01. Scene\MiniGame</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CSceneMgr.cpp">
-      <Filter>04. Manager\02. SceneMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

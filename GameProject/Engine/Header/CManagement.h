@@ -27,14 +27,16 @@ public:
 	inline CScene* GetCurrentScene() { return m_pScene; }
 
 public:
-	HRESULT			Set_Scene(CScene* pScene);
-	HRESULT			Change_Scene(CScene* pScene);
+	HRESULT			Set_Scene(CScene* pNewScene);
+	HRESULT			Change_Scene(_int iSceneIdx, CScene* pScene = nullptr);
 	_int			Update_Scene(const _float& fTimeDelta);
 	void			LateUpdate_Scene(const _float& fTimeDelta);
 	void			Render_Scene(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
-	CScene*					m_pScene;
+	unordered_map<int, CScene*>	m_mapScene;
+	CScene*						m_pScene;
+	_int						m_iSceneIdx;
 
 public:
 	virtual void			Free();
