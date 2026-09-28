@@ -29,12 +29,34 @@ public:
 	inline CCameraObj* GetCamera(const _tchar* pCameraTag) { return m_mapCamera.at(pCameraTag); }
 	/* --- */
 
+	void		SetCameraMove(const _vec3& vStartPos, const _vec3& vEndPos, const _vec3& vLook, _float fTime);
+	void		SetCameraMoveAt(const _vec3& vStartPos, const _vec3& vEndPos, const _vec3& vAt, _float fTime);
+	void		ClearCameraMove();
+	_bool		IsCameraMoving() const { return m_iMoveIndex < m_vecCameraMove.size(); }
+
+private:
+	struct CAMERA_MOVE
+	{
+		_vec3	vStartPos;
+		_vec3	vEndPos;
+		_vec3	vTarget;
+		_bool	bLookAt;
+		_float	fTime;
+	};
+
 private:
 	CCameraObj* Find_Camera(const _tchar* pCameraTag);
+	void		Update_CameraMove(const _float& fTimeDelta);
+	void		Apply_CameraMove(const CAMERA_MOVE& tMove, _float fRatio);
+	void		Push_CameraMove(CAMERA_MOVE tMove);
 
 private:
 	map<const _tchar*, CCameraObj*>			m_mapCamera;
-	pair<const _tchar*, CCameraObj*>			m_pCurCamera; // 현재 선택한 카메라 정보
+	pair<const _tchar*, CCameraObj*>			m_pCurCamera; 
+
+	vector<CAMERA_MOVE>						m_vecCameraMove;
+	_uint									m_iMoveIndex;
+	_float									m_fMoveDuring;
 
 
 private:

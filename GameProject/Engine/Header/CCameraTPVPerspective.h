@@ -14,13 +14,13 @@ public:
 	HRESULT			Ready_Camera() override;
 	void			Update_Camera(const _float& fTimeDelta, const _vec3& vTargetLook, const _vec3& vTargetPos, const _vec3& vTargetRight) override;
 	void			LateUpdate_Camera(const _float& fTimeDelta) override;
+	void			Input_Camera() override { Mouse_Move(); }
 
 private:
 	void			Mouse_Move();
 
 private:
 	_float			m_fDistance;
-	_float			m_fHeight;
 
 public:
 	static CCameraObj* Create(LPDIRECT3DDEVICE9 pGraphicDev);

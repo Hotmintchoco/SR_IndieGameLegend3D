@@ -1,10 +1,10 @@
-#include "CCameraMgr.h"
+﻿#include "CCameraMgr.h"
 #include "CDInputMgr.h"
 
 IMPLEMENT_SINGLETON(CCameraMgr)
 
 CCameraMgr::CCameraMgr()
-	: m_pCurCamera(NULL, nullptr)
+	: m_pCurCamera(NULL, nullptr), m_iMoveIndex(0), m_fMoveDuring(0.f)
 {
 }
 
@@ -15,7 +15,113 @@ CCameraMgr::~CCameraMgr()
 
 void CCameraMgr::Update_Camera(const _float& fTimeDelta, const _vec3& vTargetLook, const _vec3& vTargetPos, const _vec3& vTargetRight)
 {
-	m_pCurCamera.second->Update_Camera(fTimeDelta, vTargetLook, vTargetPos, vTargetRight);
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_B))
+	{
+		SetCameraMove({ 30.f, 1.f, 20.f }, { 20.f, 20.f, 30.f }, { 1.f, 0.f, 1.f }, 2.f);
+	}
+
+	if (nullptr == m_pCurCamera.second)
+		return;
+
+	if (!IsCameraMoving())
+		m_pCurCamera.second->Input_Camera();
+
+	for (auto& Pair : m_mapCamera)
+		Pair.second->Update_Camera(fTimeDelta, vTargetLook, vTargetPos, vTargetRight);
+
+	if (IsCameraMoving())
+		Update_CameraMove(fTimeDelta);
+
+	m_pCurCamera.second->Apply_Transform();
+}
+
+void CCameraMgr::Update_CameraMove(const _float& fTimeDelta)
+{
+	m_fMoveDuring += fTimeDelta;
+
+	while (IsCameraMoving() && m_fMoveDuring >= m_vecCameraMove[m_iMoveIndex].fTime)
+	{
+		if (m_iMoveIndex + 1 == m_vecCameraMove.size())
+		{
+			Apply_CameraMove(m_vecCameraMove[m_iMoveIndex], 1.f);
+			ClearCameraMove();
+			return;
+		}
+
+		m_fMoveDuring -= m_vecCameraMove[m_iMoveIndex].fTime;
+		++m_iMoveIndex;
+	}
+
+	const CAMERA_MOVE& tMove = m_vecCameraMove[m_iMoveIndex];
+	Apply_CameraMove(tMove, m_fMoveDuring / tMove.fTime);
+}
+
+void CCameraMgr::Apply_CameraMove(const CAMERA_MOVE& tMove, _float fRatio)
+{
+	_vec3 vEye;
+	D3DXVec3Lerp(&vEye, &tMove.vStartPos, &tMove.vEndPos, fRatio);
+
+	_vec3 vAt = tMove.bLookAt ? tMove.vTarget : vEye + tMove.vTarget;
+
+	_vec3 vDir = vAt - vEye;
+	if (D3DXVec3Length(&vDir) < FLT_EPSILON)
+	{
+		m_pCurCamera.second->Get_CamLook(&vDir);
+		vAt = vEye + vDir;
+	}
+
+	m_pCurCamera.second->Set_View(vEye, vAt);
+}
+
+void CCameraMgr::Push_CameraMove(CAMERA_MOVE tMove)
+{
+	if (tMove.fTime <= 0.f)
+		tMove.fTime = 0.0001f;
+
+	if (!IsCameraMoving())
+		ClearCameraMove();
+
+	m_vecCameraMove.push_back(tMove);
+}
+
+void CCameraMgr::SetCameraMoveAt(const _vec3& vStartPos, const _vec3& vEndPos, const _vec3& vAt, _float fTime)
+{
+	CAMERA_MOVE tMove;
+	tMove.vStartPos = vStartPos;
+	tMove.vEndPos = vEndPos;
+	tMove.vTarget = vAt;
+	tMove.bLookAt = true;
+	tMove.fTime = fTime;
+
+	Push_CameraMove(tMove);
+}
+
+void CCameraMgr::SetCameraMove(const _vec3& vStartPos, const _vec3& vEndPos, const _vec3& vLook, _float fTime)
+{
+	CAMERA_MOVE tMove;
+	tMove.vStartPos = vStartPos;
+	tMove.vEndPos = vEndPos;
+	tMove.bLookAt = false;
+	tMove.fTime = fTime;
+
+	_vec3 vDir = vLook;
+	if (D3DXVec3Length(&vDir) < FLT_EPSILON)
+		vDir = vEndPos - vStartPos;
+	if (D3DXVec3Length(&vDir) < FLT_EPSILON && nullptr != m_pCurCamera.second)
+		m_pCurCamera.second->Get_CamLook(&vDir);
+	if (D3DXVec3Length(&vDir) < FLT_EPSILON)
+		vDir = { 0.f, 0.f, 1.f };
+
+	D3DXVec3Normalize(&tMove.vTarget, &vDir);
+
+	Push_CameraMove(tMove);
+}
+
+void CCameraMgr::ClearCameraMove()
+{
+	m_vecCameraMove.clear();
+	m_iMoveIndex = 0;
+	m_fMoveDuring = 0.f;
 }
 
 void CCameraMgr::LateUpdate_Camera(const _float& fTimeDelta)
@@ -46,6 +152,12 @@ HRESULT CCameraMgr::Select_Camera(const _tchar* pCameraTag)
 
 	if (nullptr == pCamera)
 		return E_FAIL;
+
+	if (pCamera != m_pCurCamera.second)
+	{
+		for (auto& Pair : m_mapCamera)
+			Pair.second->Reset_Angle();
+	}
 
 	m_pCurCamera = { pCameraTag, pCamera };
 

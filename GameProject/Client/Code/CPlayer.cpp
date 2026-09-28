@@ -39,7 +39,7 @@ HRESULT CPlayer::Ready_GameObject()
 	m_pColliderCom->Set_CollisionID(COLL_PLAYER);
 
 
-	m_pTransformCom->Set_Pos({ 60.f, 1.f, 60.f });
+	m_pTransformCom->Set_Pos({ 60.f, 0.7f, 60.f });
 
     return S_OK;
 }
@@ -395,7 +395,7 @@ void CPlayer::Die()
 
 void CPlayer::Respawn()
 {
-    m_pTransformCom->Set_Pos({ 60.f, 1.f, 60.f });
+    m_pTransformCom->Set_Pos({ 60.f, 0.7f, 60.f });
     m_pTransformCom->Set_Rotation_Raw(_vec3(0.f, 0.f, 0.f));
 
     m_iHP = m_iMaxHP;
