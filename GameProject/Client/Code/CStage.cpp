@@ -33,7 +33,7 @@
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
-	, m_bTPVCamera(false)
+	, m_CurCamera(CAMERA_FPV_PERSPECTIVE)
 {
 }
 
@@ -67,6 +67,9 @@ HRESULT CStage::Ready_Scene()
 		return E_FAIL;
 
 	if (FAILED(CCameraMgr::GetInstance()->Ready_Camera(L"Camera_Player_TPV", CAMERA_TPV_PERSPECTIVE, m_pGraphicDev)))
+		return E_FAIL;
+
+	if (FAILED(CCameraMgr::GetInstance()->Ready_Camera(L"Camera_Free", CAMERA_FREE_PERSPECTIVE, m_pGraphicDev)))
 		return E_FAIL;
 
 	if (FAILED(CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_FPV")))
@@ -112,8 +115,26 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_V))
 	{
-		m_bTPVCamera = !m_bTPVCamera;
-		CCameraMgr::GetInstance()->Select_Camera(m_bTPVCamera ? L"Camera_Player_TPV" : L"Camera_Player_FPV");
+		CPlayer* pPlayer = nullptr;
+		switch (m_CurCamera)
+		{
+		case CAMERA_FPV_PERSPECTIVE : 
+			CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_TPV");
+			m_CurCamera = CAMERA_TPV_PERSPECTIVE;
+			break;
+		case CAMERA_TPV_PERSPECTIVE : 
+			CCameraMgr::GetInstance()->Select_Camera(L"Camera_Free");
+			pPlayer = dynamic_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
+			if (pPlayer != nullptr) pPlayer->Freeze();
+			m_CurCamera = CAMERA_FREE_PERSPECTIVE;
+			break;
+		case CAMERA_FREE_PERSPECTIVE : 
+			CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_FPV");
+			pPlayer = dynamic_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
+			if (pPlayer != nullptr) pPlayer->Unfreeze();
+			m_CurCamera = CAMERA_FPV_PERSPECTIVE;
+			break;
+		}
 	}
 
 	CCameraMgr::GetInstance()->Update_Camera(fTimeDelta, vPlayerLook, vPlayerPos, vPlayerRight);

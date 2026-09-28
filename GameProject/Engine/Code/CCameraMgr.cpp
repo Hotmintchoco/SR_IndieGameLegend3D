@@ -15,10 +15,6 @@ CCameraMgr::~CCameraMgr()
 
 void CCameraMgr::Update_Camera(const _float& fTimeDelta, const _vec3& vTargetLook, const _vec3& vTargetPos, const _vec3& vTargetRight)
 {
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_B))
-	{
-		SetCameraMove({ 30.f, 1.f, 20.f }, { 20.f, 20.f, 30.f }, { 1.f, 0.f, 1.f }, 2.f);
-	}
 
 	if (nullptr == m_pCurCamera.second)
 		return;
@@ -188,7 +184,7 @@ HRESULT CCameraMgr::Select_Camera(const _tchar* pCameraTag)
 	if (pCamera != m_pCurCamera.second)
 	{
 		for (auto& Pair : m_mapCamera)
-			Pair.second->Reset_Angle();
+			Pair.second->Reset_Setting();
 	}
 
 	m_pCurCamera = { pCameraTag, pCamera };

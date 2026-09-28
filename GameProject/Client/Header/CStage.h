@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CScene.h"
 
@@ -26,7 +26,7 @@ private:
 	HRESULT			Ready_Light();
 
 private:
-	_bool			m_bTPVCamera;
+	CAMERAID			m_CurCamera;
 
 public:
 	static CStage* Create(LPDIRECT3DDEVICE9 pGraphicDev);

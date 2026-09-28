@@ -28,7 +28,12 @@ public:
 
 	virtual			void		OnCollisionEnter(CGameObject* pOther) override;
 	virtual			void		OnCollisionStay(CGameObject* pOther) override;
-	void						Hit(CGameObject* pOther);// 히트백 적용 안할 시 nullptr 넣어주세요
+	void						Hit(CGameObject* pOther);	// 히트백 적용 안할 시 nullptr 넣어주세요
+	void						Freeze()				{ m_fFreezeTimer += 3000.f; } // 플레이어 상호작용 키 막기
+	void						Freeze(_float fTime)	{ m_fFreezeTimer += fTime; }
+	void						Unfreeze()				{ m_fFreezeTimer = 0.f; }
+	void						GiveInvTime(_float fInvTime) { m_fInvTime += fInvTime; }
+	void						ClearInvTime() { m_fInvTime = 0.f; }
 
 private:
 	HRESULT			Add_Component();
@@ -62,6 +67,7 @@ private:
 	_float		m_fInvTime;
 	_bool		m_bDeathState;
 	_float		m_fRespawnTimer;
+	_float		m_fFreezeTimer;
 
 	_vec3		m_vKnockbackDir;		
 	_float		m_fKnockbackSpeed;		
