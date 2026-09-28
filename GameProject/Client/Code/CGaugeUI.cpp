@@ -47,13 +47,6 @@ void CGaugeUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CGaugeUI::Render_GameObject()
 {
-    D3DCOLOR gaugeColor;
-    if (m_bOnSwitch)
-		gaugeColor = D3DCOLOR_ARGB(255, 255, 255, 255);
-    else
-		gaugeColor = D3DCOLOR_ARGB(255, 100, 100, 100);
-
-
     // 게이지 크기만큼 그리기
 	_float fPercent = CGameStatusMgr::GetInstance()->GetSpecialAttackGauge();
 
@@ -64,20 +57,9 @@ void CGaugeUI::Render_GameObject()
 	rcClip.bottom = LONG(m_vPos.y + m_vSize.y);
     m_pGraphicDev->SetScissorRect(&rcClip);
     m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
-    m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, gaugeColor);
-
-    m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-    m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
-    m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-
-    m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-    m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
-    m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 
     CUI::Render_GameObject();
 
-    m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-    m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
 	m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
 
 }

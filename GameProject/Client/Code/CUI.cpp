@@ -38,11 +38,30 @@ void CUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CUI::Render_GameObject()
 {
+    D3DCOLOR gaugeColor;
+    if (m_bOnSwitch)
+        gaugeColor = D3DCOLOR_ARGB(255, 255, 255, 255);
+    else
+        gaugeColor = D3DCOLOR_ARGB(255, 100, 100, 100);
+
+    m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, gaugeColor);
+
+    m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+    m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
+    m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+
+    m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+    m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
+    m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
     if (nullptr != m_pTextureCom)
         m_pTextureCom->Set_Texture((_uint)m_fFrame);
 	m_pBufferCom->Render_Buffer();
+
+    m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+    m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
 }
 
 void CUI::Set_Pos(const _vec2& vPos)

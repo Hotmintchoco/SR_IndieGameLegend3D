@@ -30,6 +30,7 @@
 #include "CGaugeUI.h"
 #include "CSoundMgr.h"
 #include "CMiniGame.h"
+#include "CUIMgr.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -101,6 +102,7 @@ HRESULT CStage::Ready_Scene()
 _int CStage::Update_Scene(const _float& fTimeDelta)
 {
 	_int iExit = CScene::Update_Scene(fTimeDelta);
+	CUIMgr::GetInstance()->Update_UI();
 
 	//Camera Update
 
@@ -453,6 +455,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	pUI->Set_Pos(222.f, WINCY - 60.f, 0.6f);
 	pUI->Set_Size({ 125.f, 18.f });
+	CUIMgr::GetInstance()->Add_UI(UI_SPECIAL, pUI);
 
 	if (FAILED(pLayer->Add_GameObject(L"AmmoInfo", pUI)))
 		return E_FAIL;
@@ -464,6 +467,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	pUI->Set_Pos(63.f, WINCY - 60.f, 0.4f);
 	pUI->Set_Size({ 28.f, 28.f });
+	CUIMgr::GetInstance()->Add_UI(UI_SPECIAL, pUI);
 
 	if (FAILED(pLayer->Add_GameObject(L"SkillInfo", pUI)))
 		return E_FAIL;

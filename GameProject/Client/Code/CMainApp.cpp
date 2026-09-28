@@ -17,6 +17,7 @@
 #include "CRandomMgr.h"
 #include "CDebugMgr.h"
 #include "CSoundMgr.h"
+#include "CUIMgr.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -166,6 +167,7 @@ void CMainApp::Free()
 	CRandomMgr::DestroyInstance();
 	CDebugMgr::DestroyInstance();
 	CSoundMgr::DestroyInstance();
+	CUIMgr::DestroyInstance();
 
 	m_pManagementClass->DestroyInstance();
 	m_pDeviceClass->DestroyInstance();
