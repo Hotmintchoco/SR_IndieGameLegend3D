@@ -221,7 +221,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
     if (CDInputMgr::GetInstance()->Key_Down(DIK_B))
     {
-        CCameraMgr::GetInstance()->SetCameraMoveInRoomAt(12, { -0.8f , 0.5f, -0.8f }, { 0.8f, 0.6f, 0.8f }, { 0.f, 0.5f, 0.f }, 2.f);
+        CCameraMgr::GetInstance()->SetCameraMoveInRoomAt(12, { -0.8f , 0.5f, -0.8f }, { 0.8f, 0.6f, 0.8f }, { 0.0f, 0.5f, 0.2f }, 2.f);
         Freeze(2.f);
         GiveInvTime(2.f);
     }

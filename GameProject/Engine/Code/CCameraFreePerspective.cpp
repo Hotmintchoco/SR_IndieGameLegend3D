@@ -106,13 +106,7 @@ void CCameraFreePerspective::Free()
 
 void CCameraFreePerspective::Key_Input(const _float& fTimeDelta, _vec3 vDir, _vec3 vRight)
 {
-	_float fSpeed = 7.f;
-
-	if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
-	{
-		fSpeed *= 2.f;
-	}
-
+	_float fSpeed = 10.f;
 
 	if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
 	{
@@ -132,6 +126,12 @@ void CCameraFreePerspective::Key_Input(const _float& fTimeDelta, _vec3 vDir, _ve
 	if (CDInputMgr::GetInstance()->Key_Press(DIK_D))
 	{
 		m_vPos += vRight * fSpeed * fTimeDelta;
+	}
+
+	if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
+	{
+		_vec3 vUp = { 0.f, 1.f, 0.f };
+		m_vPos -= vUp * fSpeed * fTimeDelta;
 	}
 
 	if (CDInputMgr::GetInstance()->Key_Press(DIK_SPACE))
