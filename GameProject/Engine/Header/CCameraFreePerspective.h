@@ -15,7 +15,7 @@ public:
 	void			Update_Camera(const _float& fTimeDelta, const _vec3& vTargetLook, const _vec3& vTargetPos, const _vec3& vTargetRight) override;
 	void			LateUpdate_Camera(const _float& fTimeDelta) override;
 	void			Input_Camera() override { Mouse_Move(); }
-	void			Reset_Setting() override { m_fAngle = 0.f; m_vPos = { 60.f, 1.f, 60.f }; m_vDir = { 1.f, 0.f, 0.f }; m_vRight={ 0.f, 0.f, 1.f }; }
+	void			Reset_Setting() override;
 
 private:
 	void			Mouse_Move();

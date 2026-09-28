@@ -84,6 +84,15 @@ void CCameraFreePerspective::Mouse_Move()
 	}
 }
 
+void CCameraFreePerspective::Reset_Setting()
+{
+	m_fAngle = 0.f;
+	CTransform* pPlayerTrans = static_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+	_vec3 vPlayerPos = { 60.f, 1.f, 60.f };
+	if (pPlayerTrans != nullptr) pPlayerTrans->Get_Info(INFO_POS, &vPlayerPos);
+	m_vPos = vPlayerPos;
+}
+
 
 
 CCameraObj* CCameraFreePerspective::Create(LPDIRECT3DDEVICE9 pGraphicDev)
