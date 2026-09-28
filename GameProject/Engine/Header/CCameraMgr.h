@@ -55,7 +55,7 @@ private:
 
 private:
 	map<const _tchar*, CCameraObj*>			m_mapCamera;
-	pair<const _tchar*, CCameraObj*>			m_pCurCamera; 
+	pair<const _tchar*, CCameraObj*>		m_pCurCamera; 
 
 	vector<CAMERA_MOVE>						m_vecCameraMove;
 	_uint									m_iMoveIndex;

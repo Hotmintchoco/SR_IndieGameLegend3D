@@ -85,7 +85,7 @@ void CRoomLayer::PlayerTileInteraction()
 	switch (eType)
 	{
 	case EContaminateType::LAVA:
-		/* 여기에 플레이어 데미지 함수 */
+		dynamic_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"))->Hit(nullptr);
 		break;
 	default:
 		break;

@@ -522,6 +522,7 @@ void CPlayer::Update_HPUI()
 
 void CPlayer::Hit(CGameObject* pAttacker) // 히트백 적용 안할 시 nullptr 넣어주세요
 {
+    if (m_fInvTime > 0.f) return;
     UpdateHP(-1);
     _float fInvTime = 1.f;
 
