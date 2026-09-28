@@ -263,6 +263,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
         m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vRight, &vRight), fSpeed, fTimeDelta);
     }
 
+    FREEZE:
 
     if (CDInputMgr::GetInstance()->Key_Down(DIK_TAB))
     {
@@ -282,8 +283,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
         return;
 
     Mouse_Move();
-
-    FREEZE : 
 
     Mouse_Fix();
 }
