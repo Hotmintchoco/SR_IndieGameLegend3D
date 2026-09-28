@@ -182,6 +182,7 @@
     <ClInclude Include="..\Header\CGaugeUI.h" />
     <ClInclude Include="..\Header\CSGBullet.h" />
     <ClInclude Include="..\Header\CShotGun.h" />
+    <ClInclude Include="..\Header\CUIMgr.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
     <ClInclude Include="..\Header\CMagmamouth.h" />
     <ClInclude Include="..\Header\CGem.h" />
@@ -276,6 +277,7 @@
     <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
     <ClCompile Include="..\Code\CSGBullet.cpp" />
     <ClCompile Include="..\Code\CShotGun.cpp" />
+    <ClCompile Include="..\Code\CUIMgr.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
     <ClCompile Include="..\Code\CGaugeUI.cpp" />
     <ClCompile Include="..\Code\CMagmamouth.cpp" />

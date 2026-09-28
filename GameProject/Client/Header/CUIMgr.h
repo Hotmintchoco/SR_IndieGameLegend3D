@@ -13,6 +13,7 @@ private:
     virtual ~CUIMgr();
 
 public:
+
     
 
 private:
