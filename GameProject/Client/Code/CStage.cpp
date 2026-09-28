@@ -8,7 +8,6 @@
 #include "CCameraMgr.h"
 #include "CSkyBox.h"
 #include "CLightMgr.h"
-#include "CEffect.h"
 #include "CWeaponSystem.h"
 #include "CParticle.h"
 #include "CManagement.h"
@@ -30,6 +29,9 @@
 #include "CMinimapUI.h"
 #include "CGaugeUI.h"
 #include "CSoundMgr.h"
+#include "CMiniGame.h"
+#include "CUIMgr.h"
+#include "CHitCreenUI.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -101,6 +103,7 @@ HRESULT CStage::Ready_Scene()
 _int CStage::Update_Scene(const _float& fTimeDelta)
 {
 	_int iExit = CScene::Update_Scene(fTimeDelta);
+	CUIMgr::GetInstance()->Update_UI();
 
 	//Camera Update
 
@@ -138,6 +141,22 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 	}
 
 	CCameraMgr::GetInstance()->Update_Camera(fTimeDelta, vPlayerLook, vPlayerPos, vPlayerRight);
+
+	// Scene Change
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
+	{
+		CScene* pMiniGame = CMiniGame::Create(m_pGraphicDev);
+		if (nullptr == pMiniGame)
+			return E_FAIL;
+
+		if (FAILED(CManagement::GetInstance()->Change_Scene(1, pMiniGame)))
+		{
+			Safe_Release(pMiniGame);
+			MSG_BOX("MiniGame Create Failed");
+			return -1;
+		}
+		pMiniGame->Update_Scene(fTimeDelta);
+	}
 
 	return iExit;
 }
@@ -437,6 +456,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	pUI->Set_Pos(222.f, WINCY - 60.f, 0.6f);
 	pUI->Set_Size({ 125.f, 18.f });
+	CUIMgr::GetInstance()->Add_UI(UI_SPECIAL, pUI);
 
 	if (FAILED(pLayer->Add_GameObject(L"AmmoInfo", pUI)))
 		return E_FAIL;
@@ -448,8 +468,36 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	pUI->Set_Pos(63.f, WINCY - 60.f, 0.4f);
 	pUI->Set_Size({ 28.f, 28.f });
+	CUIMgr::GetInstance()->Add_UI(UI_SPECIAL, pUI);
 
 	if (FAILED(pLayer->Add_GameObject(L"SkillInfo", pUI)))
+		return E_FAIL;
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
+
+	// Hud Skill Enable UI
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_SkillEnableTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(63.f, WINCY - 60.f, 0.3f);
+	pUI->Set_Size({ 28.f, 28.f });
+	pUI->Set_SyncSwitchToActive(true);
+
+	CUIMgr::GetInstance()->Add_UI(UI_SPECIAL, pUI);
+
+	if (FAILED(pLayer->Add_GameObject(L"SkillEnableUI", pUI)))
+		return E_FAIL;
+
+	// Hud Hit Effect UI
+	pUI = CHitCreenUI::Create(m_pGraphicDev, L"Proto_HitScreenTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(WINCX >> 1, WINCY >> 1, 0.f);
+	pUI->Set_Size({ WINCX >> 1, WINCY >> 1 });
+
+	if (FAILED(pLayer->Add_GameObject(L"HitScreen", pUI)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag, pLayer });

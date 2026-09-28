@@ -271,6 +271,15 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Ddokddak">
       <UniqueIdentifier>{8029e05a-482a-4890-b0ab-89b15aeb1f3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\MiniGame">
+      <UniqueIdentifier>{c1d0cb1c-a82c-4dd0-ba2e-ba944ff4ecc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Manager\02. UI">
+      <UniqueIdentifier>{2af4903b-b465-4105-96d6-0b42d1af34aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. UI\HitScreen">
+      <UniqueIdentifier>{1912728d-3bab-4c0e-a846-ef0f8bbe6c42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -552,6 +561,15 @@
     <ClInclude Include="..\Header\CDdokddak.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Ddokddak</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMiniGame.h">
+      <Filter>01. Scene\MiniGame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CUIMgr.h">
+      <Filter>04. Manager\02. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CHitCreenUI.h">
+      <Filter>02. GameObject\10. UI\HitScreen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -805,6 +823,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CDdokddak.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Ddokddak</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMiniGame.cpp">
+      <Filter>01. Scene\MiniGame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUIMgr.cpp">
+      <Filter>04. Manager\02. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CHitCreenUI.cpp">
+      <Filter>02. GameObject\10. UI\HitScreen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

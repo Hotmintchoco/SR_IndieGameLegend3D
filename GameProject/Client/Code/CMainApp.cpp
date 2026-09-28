@@ -17,6 +17,7 @@
 #include "CRandomMgr.h"
 #include "CDebugMgr.h"
 #include "CSoundMgr.h"
+#include "CUIMgr.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -122,7 +123,7 @@ HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (nullptr == pLogo)
 		return E_FAIL;
 
-	if (FAILED(m_pManagementClass->Set_Scene(pLogo)))
+	if (FAILED(m_pManagementClass->Change_Scene(0, pLogo, true)))
 	{
 		Safe_Release(pLogo);
 		MSG_BOX("Logo Create Failed");
@@ -166,6 +167,7 @@ void CMainApp::Free()
 	CRandomMgr::DestroyInstance();
 	CDebugMgr::DestroyInstance();
 	CSoundMgr::DestroyInstance();
+	CUIMgr::DestroyInstance();
 
 	m_pManagementClass->DestroyInstance();
 	m_pDeviceClass->DestroyInstance();

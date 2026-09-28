@@ -151,9 +151,11 @@
     <ClInclude Include="..\Header\CDdokddak.h" />
     <ClInclude Include="..\Header\CDefaultBullet.h" />
     <ClInclude Include="..\Header\CFloor.h" />
+    <ClInclude Include="..\Header\CHitCreenUI.h" />
     <ClInclude Include="..\Header\CLaser.h" />
     <ClInclude Include="..\Header\CLaserBuffer.h" />
     <ClInclude Include="..\Header\CLaserGun.h" />
+    <ClInclude Include="..\Header\CMiniGame.h" />
     <ClInclude Include="..\Header\CRapidGun.h" />
     <ClInclude Include="..\Header\CProjectile.h" />
     <ClInclude Include="..\Header\CButtonTile.h" />
@@ -182,6 +184,7 @@
     <ClInclude Include="..\Header\CGaugeUI.h" />
     <ClInclude Include="..\Header\CSGBullet.h" />
     <ClInclude Include="..\Header\CShotGun.h" />
+    <ClInclude Include="..\Header\CUIMgr.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
     <ClInclude Include="..\Header\CMagmamouth.h" />
     <ClInclude Include="..\Header\CGem.h" />
@@ -246,9 +249,11 @@
     <ClCompile Include="..\Code\CDdokddak.cpp" />
     <ClCompile Include="..\Code\CDefaultBullet.cpp" />
     <ClCompile Include="..\Code\CFloor.cpp" />
+    <ClCompile Include="..\Code\CHitCreenUI.cpp" />
     <ClCompile Include="..\Code\CLaser.cpp" />
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />
     <ClCompile Include="..\Code\CLaserGun.cpp" />
+    <ClCompile Include="..\Code\CMiniGame.cpp" />
     <ClCompile Include="..\Code\CRapidGun.cpp" />
     <ClCompile Include="..\Code\CProjectile.cpp" />
     <ClCompile Include="..\Code\CButtonTile.cpp" />
@@ -276,6 +281,7 @@
     <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
     <ClCompile Include="..\Code\CSGBullet.cpp" />
     <ClCompile Include="..\Code\CShotGun.cpp" />
+    <ClCompile Include="..\Code\CUIMgr.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
     <ClCompile Include="..\Code\CGaugeUI.cpp" />
     <ClCompile Include="..\Code\CMagmamouth.cpp" />

@@ -25,11 +25,16 @@ public:
 	virtual			HRESULT		Ready_Scene();
 	virtual			_int		Update_Scene(const _float& fTimeDelta);
 	virtual			void		LateUpdate_Scene(const _float& fTimeDelta);
-	virtual			void		Render_Scene()PURE;
+	virtual			void		Render_Scene() PURE;
+
+	// 씬이 CurrentScene으로 지정	될 때 호출되는 함수
+	virtual			void		OnEnter() {}
+	// 다른 씬으로 넘어가면서 화면에서 사라질 때 호출되는 함수
+	virtual			void		OnExit() {}
 
 protected:
 	map<wstring, CLayer*>			m_mapLayer;
-	LPDIRECT3DDEVICE9					m_pGraphicDev;
+	LPDIRECT3DDEVICE9				m_pGraphicDev;
 
 protected:
 	virtual void			Free();
