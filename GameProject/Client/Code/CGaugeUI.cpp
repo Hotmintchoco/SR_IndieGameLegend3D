@@ -47,10 +47,8 @@ void CGaugeUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CGaugeUI::Render_GameObject()
 {
-	_bool bOnSpecial = CGameStatusMgr::GetInstance()->GetSpecialAttackSwitch();
-    
     D3DCOLOR gaugeColor;
-    if (bOnSpecial)
+    if (m_bOnSwitch)
 		gaugeColor = D3DCOLOR_ARGB(255, 255, 255, 255);
     else
 		gaugeColor = D3DCOLOR_ARGB(255, 100, 100, 100);

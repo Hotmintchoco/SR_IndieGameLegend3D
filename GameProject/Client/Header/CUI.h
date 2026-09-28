@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CGameObject.h"
 
 namespace Engine
@@ -25,6 +25,7 @@ public:
 	void			Set_Pos(_float fX, _float fY, _float fZ);
 	void			Set_Size(const _vec2& vSize);
 	void            Set_Texture(const _uint& iIndex);
+	void			Set_OnSwitch(_bool bFlag) { m_bOnSwitch = bFlag; }
 
 protected:
 	HRESULT			Add_Component();
@@ -37,6 +38,7 @@ protected:
 	_vec3				m_vPos;
 	_vec2				m_vSize;
 	_float				m_fFrame;
+	_bool				m_bOnSwitch;
 
 	wstring				m_wstrTextureTag;
 
