@@ -31,6 +31,7 @@
 #include "CSoundMgr.h"
 #include "CMiniGame.h"
 #include "CUIMgr.h"
+#include "CHitCreenUI.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -486,6 +487,17 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	CUIMgr::GetInstance()->Add_UI(UI_SPECIAL, pUI);
 
 	if (FAILED(pLayer->Add_GameObject(L"SkillEnableUI", pUI)))
+		return E_FAIL;
+
+	// Hud Hit Effect UI
+	pUI = CHitCreenUI::Create(m_pGraphicDev, L"Proto_HitScreenTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(WINCX >> 1, WINCY >> 1, 0.f);
+	pUI->Set_Size({ WINCX >> 1, WINCY >> 1 });
+
+	if (FAILED(pLayer->Add_GameObject(L"HitScreen", pUI)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag, pLayer });

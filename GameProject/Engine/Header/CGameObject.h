@@ -37,7 +37,7 @@ public:
 	virtual CBase* GetBase() { return static_cast<CBase*>(this); }
 	/* ----------- */
 
-	// UI
+	// 직교 투영
 	virtual _float Get_Z();
 
 public:

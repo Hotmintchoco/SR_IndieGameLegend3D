@@ -274,6 +274,9 @@
     <Filter Include="04. Manager\02. UI">
       <UniqueIdentifier>{2af4903b-b465-4105-96d6-0b42d1af34aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. UI\HitScreen">
+      <UniqueIdentifier>{1912728d-3bab-4c0e-a846-ef0f8bbe6c42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -558,6 +561,9 @@
     <ClInclude Include="..\Header\CUIMgr.h">
       <Filter>04. Manager\02. UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CHitCreenUI.h">
+      <Filter>02. GameObject\10. UI\HitScreen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -814,6 +820,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CUIMgr.cpp">
       <Filter>04. Manager\02. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CHitCreenUI.cpp">
+      <Filter>02. GameObject\10. UI\HitScreen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
