@@ -148,6 +148,7 @@
     <ClInclude Include="..\Header\CBackGround.h" />
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
     <ClInclude Include="..\Header\CBoss1.h" />
+    <ClInclude Include="..\Header\CDdokddak.h" />
     <ClInclude Include="..\Header\CDefaultBullet.h" />
     <ClInclude Include="..\Header\CFloor.h" />
     <ClInclude Include="..\Header\CLaser.h" />
@@ -242,6 +243,7 @@
     <ClCompile Include="..\Code\CBackGround.cpp" />
     <ClCompile Include="..\Code\CBreakableFrustum.cpp" />
     <ClCompile Include="..\Code\CBoss1.cpp" />
+    <ClCompile Include="..\Code\CDdokddak.cpp" />
     <ClCompile Include="..\Code\CDefaultBullet.cpp" />
     <ClCompile Include="..\Code\CFloor.cpp" />
     <ClCompile Include="..\Code\CLaser.cpp" />
@@ -352,12 +354,11 @@
     <None Include="..\Bin\Resource\Map\DefaultRoom.json" />
     <None Include="..\Bin\Resource\Map\Room 작성 가이드.md" />
     <None Include="..\Bin\Resource\Map\Room_1_1.json" />
-    <None Include="..\Bin\Resource\Map\Room_2_3.json" />
-    <None Include="..\Bin\Resource\Map\Room_2_0.json" />
+    <None Include="..\Bin\Resource\Map\Room_1_2.json" />
+    <None Include="..\Bin\Resource\Map\Room_1_3.json" />
+    <None Include="..\Bin\Resource\Map\Room_1_4.json" />
     <None Include="..\Bin\Resource\Map\Room_2_1.json" />
     <None Include="..\Bin\Resource\Map\Room_2_2.json" />
-    <None Include="..\Bin\Resource\Map\Room_1_0.json" />
-    <None Include="..\Bin\Resource\Map\Room_3_1.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

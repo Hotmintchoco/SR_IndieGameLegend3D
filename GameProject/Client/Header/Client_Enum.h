@@ -61,6 +61,7 @@ enum class EObjectType
 	UNBREAKABLE_FRUSTUM,
 	EXPLOSIVE_FRUSTUM,
 	GAME_MACHINE,
+	DDOKDDAK,
 
 	Skull = 11,
 	Boss1,
@@ -116,6 +117,18 @@ enum class ETileType
 
 	SPRITE,
 	BUTTON,
+
+	MAX,
+};
+
+enum class EDirection
+{
+	NONE,
+
+	EAST,	// +x
+	SOUTH,	// -z
+	WEST,	// -x
+	NORTH,	// +z
 
 	MAX,
 };
