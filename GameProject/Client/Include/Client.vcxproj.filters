@@ -280,6 +280,12 @@
     <Filter Include="02. GameObject\10. UI\HitScreen">
       <UniqueIdentifier>{1912728d-3bab-4c0e-a846-ef0f8bbe6c42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Combat\00. Weapon\04. Bow">
+      <UniqueIdentifier>{0875b4ce-e4e6-4b0e-9281-c40880306022}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\00. Weapon\04. Bow\VoxelBuffer">
+      <UniqueIdentifier>{e826893d-5b22-4dae-816a-fc6d7fdbb511}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -570,6 +576,12 @@
     <ClInclude Include="..\Header\CHitCreenUI.h">
       <Filter>02. GameObject\10. UI\HitScreen</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CVoxelBuffer.h">
+      <Filter>02. GameObject\08. Combat\00. Weapon\04. Bow\VoxelBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBow.h">
+      <Filter>02. GameObject\08. Combat\00. Weapon\04. Bow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -832,6 +844,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CHitCreenUI.cpp">
       <Filter>02. GameObject\10. UI\HitScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CVoxelBuffer.cpp">
+      <Filter>02. GameObject\08. Combat\00. Weapon\04. Bow\VoxelBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBow.cpp">
+      <Filter>02. GameObject\08. Combat\00. Weapon\04. Bow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
