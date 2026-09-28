@@ -1,22 +1,22 @@
 ﻿#include "pch.h"
-#include "CEffect_Rectangle.h"
+#include "CParticle_Rectangle.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CManagement.h"
 #include <ctime>
 
-CEffect_Rectangle::CEffect_Rectangle(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CEffect(pGraphicDev)
+CParticle_Rectangle::CParticle_Rectangle(LPDIRECT3DDEVICE9 pGraphicDev)
+    : CParticle(pGraphicDev)
 {
 }
 
-CEffect_Rectangle::~CEffect_Rectangle()
+CParticle_Rectangle::~CParticle_Rectangle()
 {
 }
 
-HRESULT CEffect_Rectangle::Ready_GameObject()
+HRESULT CParticle_Rectangle::Ready_GameObject()
 {
-    CEffect::Ready_GameObject();
+    CParticle::Ready_GameObject();
     if (FAILED(Add_Component()))
         return E_FAIL;
 
@@ -41,9 +41,9 @@ HRESULT CEffect_Rectangle::Ready_GameObject()
     return S_OK;
 }
 
-_int CEffect_Rectangle::Update_GameObject(const _float& fTimeDelta)
+_int CParticle_Rectangle::Update_GameObject(const _float& fTimeDelta)
 {
-    _int    iExit = CEffect::Update_GameObject(fTimeDelta);
+    _int    iExit = CParticle::Update_GameObject(fTimeDelta);
     
     if (m_fElapsedTime > m_fLifeTime)
     {
@@ -62,9 +62,9 @@ _int CEffect_Rectangle::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CEffect_Rectangle::LateUpdate_GameObject(const _float& fTimeDelta)
+void CParticle_Rectangle::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    CEffect::LateUpdate_GameObject(fTimeDelta);
+    CParticle::LateUpdate_GameObject(fTimeDelta);
 
     CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
         ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
@@ -81,9 +81,9 @@ void CEffect_Rectangle::LateUpdate_GameObject(const _float& fTimeDelta)
 
 }
 
-void CEffect_Rectangle::Render_GameObject()
+void CParticle_Rectangle::Render_GameObject()
 {
-    CEffect::Render_GameObject();
+    CParticle::Render_GameObject();
 
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -95,7 +95,7 @@ void CEffect_Rectangle::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-HRESULT CEffect_Rectangle::Add_Component()
+HRESULT CParticle_Rectangle::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
@@ -112,9 +112,9 @@ HRESULT CEffect_Rectangle::Add_Component()
 }
 
 
-CEffect_Rectangle* CEffect_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CParticle_Rectangle* CParticle_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CEffect_Rectangle* pEffect_Rectangle = new CEffect_Rectangle(pGraphicDev);
+    CParticle_Rectangle* pEffect_Rectangle = new CParticle_Rectangle(pGraphicDev);
 
     if (FAILED(pEffect_Rectangle->Ready_GameObject()))
     {
@@ -127,9 +127,9 @@ CEffect_Rectangle* CEffect_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 }
 
 
-CEffect_Rectangle* CEffect_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vVelocity, D3DXCOLOR eColor)
+CParticle_Rectangle* CParticle_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vVelocity, D3DXCOLOR eColor)
 {
-    CEffect_Rectangle* pEffect = new CEffect_Rectangle(pGraphicDev);
+    CParticle_Rectangle* pEffect = new CParticle_Rectangle(pGraphicDev);
     pEffect->Set_Velocity(vVelocity);
     pEffect->Set_Color(eColor);
 
@@ -146,7 +146,7 @@ CEffect_Rectangle* CEffect_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec
 
 
 
-void CEffect_Rectangle::Free()
+void CParticle_Rectangle::Free()
 {
-    CEffect::Free();
+    CParticle::Free();
 }

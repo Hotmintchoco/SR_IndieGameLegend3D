@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CSmallExplode.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -6,7 +6,7 @@
 #include <ctime>
 
 CSmallExplode::CSmallExplode(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CEffect(pGraphicDev)
+    : CParticle(pGraphicDev)
 {
 }
 
@@ -17,7 +17,7 @@ CSmallExplode::~CSmallExplode()
 
 HRESULT CSmallExplode::Ready_GameObject()
 {
-    CEffect::Ready_GameObject();
+    CParticle::Ready_GameObject();
     if (FAILED(Add_Component()))
         return E_FAIL;
 
@@ -27,7 +27,7 @@ HRESULT CSmallExplode::Ready_GameObject()
 
 _int CSmallExplode::Update_GameObject(const _float& fTimeDelta)
 {
-    _int    iExit = CEffect::Update_GameObject(fTimeDelta);
+    _int    iExit = CParticle::Update_GameObject(fTimeDelta);
 
     m_fFrame += 6.f * fTimeDelta;
 
@@ -41,13 +41,11 @@ _int CSmallExplode::Update_GameObject(const _float& fTimeDelta)
 
 void CSmallExplode::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    CEffect::LateUpdate_GameObject(fTimeDelta);
+    CParticle::LateUpdate_GameObject(fTimeDelta);
 
     CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
         ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-    if (nullptr == pPlayerTransformCom)
-        return;
+    if (nullptr == pPlayerTransformCom) return;
 
     _vec3   vPlayerPos;
     _vec3   vPlayerLook;
@@ -60,7 +58,7 @@ void CSmallExplode::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CSmallExplode::Render_GameObject()
 {
-    CEffect::Render_GameObject();
+    CParticle::Render_GameObject();
 
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -130,5 +128,5 @@ CSmallExplode* CSmallExplode::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, 
 
 void CSmallExplode::Free()
 {
-    CEffect::Free();
+    CParticle::Free();
 }

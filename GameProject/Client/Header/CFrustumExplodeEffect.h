@@ -1,6 +1,6 @@
-#pragma once
+﻿#pragma once
 
-#include "CEffect.h"
+#include "CParticle.h"
 
 namespace Engine
 {
@@ -9,7 +9,7 @@ namespace Engine
 	class CTransform;
 }
 
-class CFrustumExplodeEffect : public CEffect
+class CFrustumExplodeEffect : public CParticle
 {
 protected:
 	explicit CFrustumExplodeEffect(LPDIRECT3DDEVICE9 pGraphicDev);
