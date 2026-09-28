@@ -31,6 +31,9 @@ public:
 	inline bool IsOnCoolTime() { return m_bIsCoolTime; }
 	inline float GetSpecialAtkGaugeConsume() { return m_fGaugeConsumePerSpecialAtk; }
 
+	virtual void ChargeStart();
+	virtual void ChargeEnd();
+
 protected:
 	HRESULT	Add_Component();
 	void SyncTransformToCamera();

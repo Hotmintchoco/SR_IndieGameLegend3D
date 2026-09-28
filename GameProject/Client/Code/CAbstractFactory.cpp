@@ -17,6 +17,7 @@
 #include "CShotGun.h"
 #include "CLaserGun.h"
 #include "CDdokddak.h"
+#include "CBow.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -41,6 +42,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::WEAPON_DEFAULT,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CRapidGun::Create(t.pDevice); } },
         {EObjectType::WEAPON_SHOTGUN,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CShotGun::Create(t.pDevice); } },
         {EObjectType::WEAPON_LASERGUN,          [](const TCreateDesc& t) -> Engine::CGameObject* { return CLaserGun::Create(t.pDevice); } },
+        {EObjectType::WEAPON_BOW,               [](const TCreateDesc& t) -> Engine::CGameObject* { return CBow::Create(t.pDevice); } },
     };
 }
 

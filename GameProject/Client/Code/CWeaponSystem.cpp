@@ -27,6 +27,9 @@ HRESULT CWeaponSystem::Ready_GameObject()
     if (FAILED(AddWeapon(EObjectType::WEAPON_LASERGUN, L"LaserGun")))
         return E_FAIL;
 
+    if (FAILED(AddWeapon(EObjectType::WEAPON_BOW, L"Bow")))
+        return E_FAIL;
+
 	return S_OK;
 }
 
@@ -90,6 +93,15 @@ void CWeaponSystem::GetKeyInput()
         {
             GetCurrentWeapon()->DefaultAttack();
         }
+    }
+
+    if (CDInputMgr::GetInstance()->Mouse_Down(DIM_RB))
+    {
+        GetCurrentWeapon()->ChargeStart();
+    }
+    if (CDInputMgr::GetInstance()->Mouse_Up(DIM_RB))
+    {
+        GetCurrentWeapon()->ChargeEnd();
     }
 
     if (CDInputMgr::GetInstance()->Key_Down(DIK_C))

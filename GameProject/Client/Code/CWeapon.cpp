@@ -32,8 +32,6 @@ HRESULT CWeapon::Ready_GameObject()
 _int CWeapon::Update_GameObject(const _float& fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
-
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
     
     Animation(fTimeDelta);
 
@@ -147,6 +145,14 @@ void CWeapon::StartShotAnimation()
 {
     m_bShotAnimation = true;
     m_fTimeAfterShot = 0.f;
+}
+
+void CWeapon::ChargeStart()
+{
+}
+
+void CWeapon::ChargeEnd()
+{
 }
 
 HRESULT CWeapon::Add_Component()

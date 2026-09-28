@@ -6,6 +6,7 @@
 #include "Utils.h"
 #include "CSoundMgr.h"
 #include "CLaserBuffer.h"
+#include "CVoxelBuffer.h"
 
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoadingID(LOADING_END)
@@ -140,7 +141,25 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Gun_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Gun.ply"))))
         return E_FAIL;
 
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_0_Vertex", CVoxelBuffer::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Weapon/Bow/bow.png"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_1_Vertex", CVoxelBuffer::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Weapon/Bow/bow_pulling_0.png"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_2_Vertex", CVoxelBuffer::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Weapon/Bow/bow_pulling_1.png"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_3_Vertex", CVoxelBuffer::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Weapon/Bow/bow_pulling_2.png"))))
+        return E_FAIL;
+
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Gun_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/Gun_Diffuse_%d.png", 2))))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_0_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Bow/bow.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_1_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Bow/bow_pulling_0.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_2_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Bow/bow_pulling_1.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_3_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Bow/bow_pulling_2.png", 1))))
         return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bullet_Default_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Projectile/bigbullet_%d.png", 2))))

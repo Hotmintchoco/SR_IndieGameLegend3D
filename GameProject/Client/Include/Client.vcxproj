@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="..\Header\CAbstractFactory.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
+    <ClInclude Include="..\Header\CBow.h" />
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
     <ClInclude Include="..\Header\CBoss1.h" />
     <ClInclude Include="..\Header\CDdokddak.h" />
@@ -245,6 +246,7 @@
   <ItemGroup>
     <ClCompile Include="..\Code\CAbstractFactory.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
+    <ClCompile Include="..\Code\CBow.cpp" />
     <ClCompile Include="..\Code\CBreakableFrustum.cpp" />
     <ClCompile Include="..\Code\CBoss1.cpp" />
     <ClCompile Include="..\Code\CDdokddak.cpp" />

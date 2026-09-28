@@ -6,6 +6,7 @@
 #include "CSoundMgr.h"
 #include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
+#include "CRenderer.h"
 
 CRapidGun::CRapidGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -34,6 +35,8 @@ HRESULT CRapidGun::Ready_GameObject()
 _int CRapidGun::Update_GameObject(const _float& fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
+
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
     return iExit;
 }

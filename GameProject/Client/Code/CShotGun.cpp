@@ -7,6 +7,7 @@
 #include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
 #include "CRandomMgr.h"
+#include "CRenderer.h"
 
 CShotGun::CShotGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -36,6 +37,8 @@ HRESULT CShotGun::Ready_GameObject()
 _int CShotGun::Update_GameObject(const _float& fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
+
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
     return iExit;
 }
