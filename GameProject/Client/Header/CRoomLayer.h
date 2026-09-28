@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CLayer.h"
 #include "CEventDelegate.h"
@@ -25,42 +25,43 @@ public:
 	inline bool IsCleared() { return m_bCleared; }
 	inline bool HasVisited() { return m_bVisited; }
 	inline bool IsOnProgress() { return m_bOnProgress; }
+	inline _vec3 GetCenterPos() { return m_vRoomCenterPos; }
 
 	CEventDelegate<TRoomEventCtx> m_OnRoomEvent;
 	void OnRoomTriggerBlockCollided();
 	void OnButtonInteracted(bool bPressed);
 
-	/* ¸ó½ºÅÍ Å¬·¡½º°¡ »ç¿ë */
+	/* ëª¬ìŠ¤í„° í´ë˜ìŠ¤ê°€ ì‚¬ìš© */
 	inline void IncreaseEntityCount() { ++m_iEntityCount; }
 	inline void DecreaseEntityCount() { --m_iEntityCount; }
 	inline int GetEntityCount() { return m_iEntityCount; }
 
-	/* Å¸ÀÏÀÌ ¿À¿°µÇ´Â °ø°İ */
+	/* íƒ€ì¼ì´ ì˜¤ì—¼ë˜ëŠ” ê³µê²© */
 	void RequestTileContamination(const _vec3& vPos, int iRange, EContaminateType eType, float fDuration);
 	CTile* GetTileFromWorldPosition(const _vec3& vWorldPos);
 
-	/* ¹æ º¯°æ¿¡ µû¸¥ Á¶¸í Á¶Á¤*/
+	/* ë°© ë³€ê²½ì— ë”°ë¥¸ ì¡°ëª… ì¡°ì •*/
 	void ApplyDarkness();
 	void FlickerLight(const float fDuration);
 
-	/* ¹æ ÃÊ±âÈ­ */
+	/* ë°© ì´ˆê¸°í™” */
 	void ResetState();
 
 private:
-	/* ¾îµÒ ½ºÀ§Ä¡ */
+	/* ì–´ë‘  ìŠ¤ìœ„ì¹˜ */
 	void SetPseudoDark(bool bFlag);
-	bool m_bDark = false; // ¹æÀÇ ¿ø·¡ ¼Ó¼º
-	bool m_bCurrentDark = false; // Flickering µîÀ¸·Î ÀÎÇÑ ÇöÀç ¹æÀÇ ºÒºû »óÅÂ
+	bool m_bDark = false; // ë°©ì˜ ì›ë˜ ì†ì„±
+	bool m_bCurrentDark = false; // Flickering ë“±ìœ¼ë¡œ ì¸í•œ í˜„ì¬ ë°©ì˜ ë¶ˆë¹› ìƒíƒœ
 	float m_fLeftFlickerTime = 0.f;
 	void FlickerHandling(const Engine::_float& fTimeDelta);
 
 	void CheckClearCondition();
 	CTile* GetTileFromIndex2D(const TTileIdx& tIdx);
 
-	/* ¿À¿° Å¸ÀÏ°ú ÇÃ·¹ÀÌ¾î */
+	/* ì˜¤ì—¼ íƒ€ì¼ê³¼ í”Œë ˆì´ì–´ */
 	void PlayerTileInteraction();
 
-	/* ÀÎÁ¢ÇÑ ¹æÀÏ¶§¸¸ ¾÷µ¥ÀÌÆ® */
+	/* ì¸ì ‘í•œ ë°©ì¼ë•Œë§Œ ì—…ë°ì´íŠ¸ */
 	bool IsValidUpdateTarget();
 
 	int m_iRoomIndex = -1;
