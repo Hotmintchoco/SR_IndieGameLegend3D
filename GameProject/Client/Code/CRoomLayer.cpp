@@ -85,7 +85,7 @@ void CRoomLayer::PlayerTileInteraction()
 	switch (eType)
 	{
 	case EContaminateType::LAVA:
-		/* 여기에 플레이어 데미지 함수 */
+		pPlayer->Hit(nullptr);
 		break;
 	default:
 		break;
