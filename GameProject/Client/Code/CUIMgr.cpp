@@ -36,6 +36,9 @@ void CUIMgr::SpecialAtkCheck()
     {
         _bool bSwitch = CGameStatusMgr::GetInstance()->GetSpecialAttackSwitch();
         pUI->Set_OnSwitch(bSwitch);
+
+        if (pUI->Get_SyncSwitchToActive())
+            pUI->Set_IsActive(bSwitch);
     }
 }
 

@@ -11,6 +11,7 @@ class IRenderable
 public:
 	virtual void Render(LPDIRECT3DDEVICE9& pGraphicDev) PURE;
 	virtual _float Get_ViewZ() PURE;
+	virtual _float Get_Z() PURE;
 	virtual CBase* GetBase() PURE;
 };
 

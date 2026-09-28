@@ -5,7 +5,7 @@
 #include "CRenderer.h"
 
 CUI::CUI(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CGameObject(pGraphicDev), m_fFrame(0.f), m_bOnSwitch(true)
+	: CGameObject(pGraphicDev), m_fFrame(0.f), m_bOnSwitch(true), m_bSyncSwitchToActive(false)
 {
 }
 
@@ -24,6 +24,12 @@ HRESULT CUI::Ready_GameObject()
 
 _int CUI::Update_GameObject(const _float& fTimeDelta)
 {
+    if (m_bSyncSwitchToActive && !m_bOnSwitch)
+        m_bIsActive = false;
+   
+    if (m_bOnSwitch)
+		m_bIsActive = true;
+
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);

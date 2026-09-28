@@ -1,4 +1,4 @@
-#include "CGameObject.h"
+﻿#include "CGameObject.h"
 #include "CComponent.h"
 #include "CLayerContext.h"
 #include "CTransform.h"
@@ -51,7 +51,7 @@ _int CGameObject::Update_GameObject(const _float& fTimeDelta)
     for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
         pComponent.second->Update_Component(fTimeDelta);
 
-    // ������ �ʱ�ȭ
+    // 마찰력 초기화
     m_fFrictionForce = 1.f;
 
     return 0;
@@ -61,6 +61,19 @@ void CGameObject::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
         pComponent.second->LateUpdate_Component();
+}
+
+_float CGameObject::Get_Z()
+{
+    _vec3 vPos;
+    CTransform* pOtherTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"Com_Transform"));
+
+    if (pOtherTransformCom)
+        pOtherTransformCom->Get_Info(INFO_POS, &vPos);
+    else
+		return 1000.f; // 만약에 Transform 컴포넌트가 없으면 먼 값을 반환
+
+    return vPos.z;
 }
 
 void CGameObject::Compute_ViewZ(const _vec3* pPos)
@@ -79,6 +92,8 @@ void CGameObject::Compute_ViewZ(const _vec3* pPos)
 
 void CGameObject::Obstacle_Collision(CGameObject* pOther, CCollider* pObstacleCollider)
 {
+	pOther->Get_Component(ID_DYNAMIC, L"Com_Collider");
+
     if (nullptr == pOther || nullptr == pObstacleCollider)
         return;
 

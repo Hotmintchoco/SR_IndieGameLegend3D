@@ -474,6 +474,22 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
+	// Hud Skill Enable UI
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_SkillEnableTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(63.f, WINCY - 60.f, 0.3f);
+	pUI->Set_Size({ 28.f, 28.f });
+	pUI->Set_SyncSwitchToActive(true);
+
+	CUIMgr::GetInstance()->Add_UI(UI_SPECIAL, pUI);
+
+	if (FAILED(pLayer->Add_GameObject(L"SkillEnableUI", pUI)))
+		return E_FAIL;
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
+
 	return S_OK;
 }
 
