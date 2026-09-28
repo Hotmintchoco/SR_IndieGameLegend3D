@@ -16,6 +16,9 @@
 #include "CRapidGun.h"
 #include "CShotGun.h"
 #include "CLaserGun.h"
+#include "CSprnub1.h"
+#include "CSprnub2.h"
+#include "CSprnub3.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -31,6 +34,9 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::Boss1,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CBoss1::Create(t.pDevice); } },
         {EObjectType::Speyeder,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSpeyeder::Create(t.pDevice); } },
         {EObjectType::Magmamouth,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CMagmamouth::Create(t.pDevice); } },
+        {EObjectType::Sprnub1,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub1::Create(t.pDevice); } },
+        {EObjectType::Sprnub2,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub2::Create(t.pDevice); } },
+        {EObjectType::Sprnub3,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub3::Create(t.pDevice); } },
 
         {EObjectType::ITEM_HEART,               [](const TCreateDesc& t) -> Engine::CGameObject* { return CHeart::Create(t.pDevice, t.pSpawner); } },
         {EObjectType::ITEM_ENERGY,              [](const TCreateDesc& t) -> Engine::CGameObject* { return CEnergy::Create(t.pDevice, t.pSpawner); } },

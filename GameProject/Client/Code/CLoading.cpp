@@ -74,7 +74,11 @@ _uint CLoading::Loading_Stage()
     //magmamouth
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_magmamouthTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/magmamouth/magmamouth_%d.png", 7)))) return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_fireballTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/fireball/fireBall_%d.png", 4)))) return E_FAIL;
-    
+    //sprnub1
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_sprnub1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/sprnub/sprnub1_%d.png", 2)))) return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_sprnub2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/sprnub/sprnub2_%d.png", 2)))) return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_sprnub3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/sprnub/sprnub3_%d.png", 2)))) return E_FAIL;
+
     lstrcpy(m_szLoading, L"Effect Texture Loading............................");
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_smallexplodeTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/smallexplode/smallExplode_%d.png", 4)))) return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Black_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/Black/%d.png", 101)))) return E_FAIL;

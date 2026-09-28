@@ -42,7 +42,12 @@ HRESULT CMagmamouth::Ready_GameObject()
     m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
     
-    m_vRoomCenterLocation = { 30.f,0.f,60.f };
+    //int iX =  CGameStatusMgr::GetInstance()->GetCurrentRoomIndex();
+    //int iX = 10;
+    //m_vRoomCenterLocation = { 30.f,0.f,60.f };
+    //m_vRoomCenterLocation = { 30.f + 15.f *(iX%5),0.f,60.f-26.f + 13.f*(iX/5)};
+    m_vRoomCenterLocation = { 90.f,0.f,73.f };
+
     m_pTransformCom->Get_Info(INFO_POS, &m_vMovePosition);
     m_vMovePosition = m_vOpeningMoveDirection[m_iOpeningMoveIndex] + m_vRoomCenterLocation;
     m_vMovePosition.y = 2.f;
@@ -57,7 +62,8 @@ HRESULT CMagmamouth::Ready_GameObject()
 _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
-
+    _vec3 a;
+    m_pTransformCom->Get_Info(INFO_POS, &a);
     if (m_iHp <= 0)
     {
         m_eMagmaMouthState = DEAD;
