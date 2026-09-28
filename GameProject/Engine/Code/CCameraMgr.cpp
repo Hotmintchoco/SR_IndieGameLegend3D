@@ -117,6 +117,38 @@ void CCameraMgr::SetCameraMove(const _vec3& vStartPos, const _vec3& vEndPos, con
 	Push_CameraMove(tMove);
 }
 
+void CCameraMgr::SetCameraMoveInRoom(_int iRoomIndex, const _vec3& vStartPos, const _vec3& vEndPos, const _vec3& vLook, _float fTime)
+{
+	SetCameraMove(RoomNormalizedToWorld(iRoomIndex, vStartPos), RoomNormalizedToWorld(iRoomIndex, vEndPos), vLook, fTime);
+}
+
+void CCameraMgr::SetCameraMoveInRoomAt(_int iRoomIndex, const _vec3& vStartPos, const _vec3& vEndPos, const _vec3& vAt, _float fTime)
+{
+	SetCameraMoveAt(RoomNormalizedToWorld(iRoomIndex, vStartPos), RoomNormalizedToWorld(iRoomIndex, vEndPos), RoomNormalizedToWorld(iRoomIndex, vAt), fTime);
+}
+
+_vec3 CCameraMgr::RoomNormalizedToWorld(_int iRoomIndex, const _vec3& vNorm) const
+{
+	_int iRoomRow = iRoomIndex / m_iRoomColCount;
+	_int iRoomCol = iRoomIndex % m_iRoomColCount;
+
+	_vec3 vRoomCenterPos{
+		m_vCenterRoomPosition.x - (_float)(m_iRoomColCount - 1) / 2.f * m_vOuterRoomSize.x + m_vOuterRoomSize.x * (_float)iRoomCol,
+		0.f,
+		m_vCenterRoomPosition.z + (_float)(m_iRoomRowCount - 1) / 2.f * m_vOuterRoomSize.z - m_vOuterRoomSize.z * (_float)iRoomRow
+	};
+
+	_float fX = max(-1.f, min(1.f, vNorm.x));
+	_float fY = max(0.f, min(1.f, vNorm.y));
+	_float fZ = max(-1.f, min(1.f, vNorm.z));
+
+	return _vec3{
+		vRoomCenterPos.x + fX * m_vInnerRoomSize.x * 0.5f,
+		fY * m_fRoomHeight,
+		vRoomCenterPos.z + fZ * m_vInnerRoomSize.z * 0.5f
+	};
+}
+
 void CCameraMgr::ClearCameraMove()
 {
 	m_vecCameraMove.clear();

@@ -31,6 +31,8 @@ public:
 
 	void		SetCameraMove(const _vec3& vStartPos, const _vec3& vEndPos, const _vec3& vLook, _float fTime);
 	void		SetCameraMoveAt(const _vec3& vStartPos, const _vec3& vEndPos, const _vec3& vAt, _float fTime);
+	void		SetCameraMoveInRoom(_int iRoomIndex, const _vec3& vStartPos, const _vec3& vEndPos, const _vec3& vLook, _float fTime);
+	void		SetCameraMoveInRoomAt(_int iRoomIndex, const _vec3& vStartPos, const _vec3& vEndPos, const _vec3& vAt, _float fTime);
 	void		ClearCameraMove();
 	_bool		IsCameraMoving() const { return m_iMoveIndex < m_vecCameraMove.size(); }
 
@@ -49,6 +51,7 @@ private:
 	void		Update_CameraMove(const _float& fTimeDelta);
 	void		Apply_CameraMove(const CAMERA_MOVE& tMove, _float fRatio);
 	void		Push_CameraMove(CAMERA_MOVE tMove);
+	_vec3		RoomNormalizedToWorld(_int iRoomIndex, const _vec3& vNorm) const;
 
 private:
 	map<const _tchar*, CCameraObj*>			m_mapCamera;
@@ -57,6 +60,13 @@ private:
 	vector<CAMERA_MOVE>						m_vecCameraMove;
 	_uint									m_iMoveIndex;
 	_float									m_fMoveDuring;
+
+	const _vec3								m_vCenterRoomPosition = _vec3{ 60.f, 0.f, 60.f };
+	const _vec3								m_vInnerRoomSize = _vec3{ 13.f, 0.f, 11.f };
+	const _vec3								m_vOuterRoomSize = _vec3{ 15.f, 0.f, 13.f };
+	const _int								m_iRoomRowCount = 5;
+	const _int								m_iRoomColCount = 5;
+	const _float							m_fRoomHeight = 3.f;
 
 
 private:
