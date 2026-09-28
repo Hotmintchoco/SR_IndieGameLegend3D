@@ -48,8 +48,8 @@ void CGameStatusMgr::UpdateCameraInfo()
 
 void CGameStatusMgr::Render()
 {
-    RenderImGui();
-    DebugPanelForRendering();
+    // RenderImGui();
+    // DebugPanelForRendering();
 }
 
 void CGameStatusMgr::RenderImGui()

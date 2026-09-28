@@ -70,7 +70,7 @@ void CBow::Render_GameObject()
     
     m_pBufferCom[m_iRenderIdx]->Render_Buffer();
 
-    RenderEditorPanel();
+    // RenderEditorPanel();
 }
 
 void CBow::ChargeStart()
