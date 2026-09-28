@@ -4,6 +4,7 @@
 
 namespace Engine
 {
+	class CPlaneTex;
 	class CTexture;
 	class CSphereCollider;
 }
@@ -14,6 +15,7 @@ struct TLaserData : public TProjectileData
 	int iRefelctionClone = 2;
 	int iMaxReflection = 4;
 	float fWidth = 0.3f;
+	bool bShowCorner = false; // 디버그 용 변수
 };
 
 class CLaserBuffer;
@@ -43,11 +45,17 @@ private:
 	void CalculateLength(const _float& fTimeDelta);
 	bool ComputeFacingUp(const _vec3& vCamPos, const _vec3& vPos, const _vec3& vDir, _vec3* pOutUp = nullptr);
 
+
 	CLaserBuffer* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
 	Engine::CSphereCollider* m_pColliderCom = nullptr;
 	Engine::CSphereCollider* m_pColliderComReflection = nullptr;
 
+	/* 코너 어색함 개선 */
+	Engine::CTransform* m_pTransformCorner = nullptr;
+	Engine::CPlaneTex* m_pBufferComCorner = nullptr;
+	Engine::CTexture* m_pTextureComCorner = nullptr;
+	
 	/* 초기값 */
 	_vec3 m_vStart{ 0.f, 0.f, 0.f };
 	_vec3 m_vDir{ 0.f, 0.f, 0.f };
@@ -55,6 +63,7 @@ private:
 	inline static TLaserData s_tData = []()->TLaserData {
 		TLaserData t;
 		t.fLifeTime = 5.f;
+		t.fSpeed = 10.f;
 		return t;
 	}();
 

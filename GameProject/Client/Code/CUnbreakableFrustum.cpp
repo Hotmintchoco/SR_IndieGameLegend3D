@@ -59,7 +59,7 @@ void CUnbreakableFrustum::OnCollisionEnter(CGameObject* pOther)
 const _vec3 CUnbreakableFrustum::GetNormal()
 {
     float fX = CRandomMgr::GetInstance()->GetRandomValue<float>(-1.f, 1.f);
-    float fY = CRandomMgr::GetInstance()->GetRandomValue<float>(-1.f, 1.f);
+    float fY = CRandomMgr::GetInstance()->GetRandomValue<float>(0.f, 1.f);
     float fZ = CRandomMgr::GetInstance()->GetRandomValue<float>(-1.f, 1.f);
 
     _vec3 vNormal{fX, fY, fZ};
