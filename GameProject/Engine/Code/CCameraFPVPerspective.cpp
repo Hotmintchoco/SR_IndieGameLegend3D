@@ -30,8 +30,6 @@ HRESULT CCameraFPVPerspective::Ready_Camera()
 
 void CCameraFPVPerspective::Update_Camera(const _float& fTimeDelta, const _vec3& vTargetLook, const _vec3& vTargetPos, const _vec3& vTargetRight)
 {
-	Mouse_Move();
-
 	_vec3   vLook = vTargetLook;
 	_vec3   vPos = vTargetPos;
 	_vec3	vRight = vTargetRight;
@@ -47,10 +45,7 @@ void CCameraFPVPerspective::Update_Camera(const _float& fTimeDelta, const _vec3&
 	//m_vAt = vPos + vLook;
 
 	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
-	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
-
 	D3DXMatrixPerspectiveFovLH(&m_matProj, m_fFov, m_fAspect, m_fNear, m_fFar);
-	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &m_matProj);
 }
 
 void CCameraFPVPerspective::LateUpdate_Camera(const _float& fTimeDelta)

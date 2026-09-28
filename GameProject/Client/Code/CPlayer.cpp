@@ -17,7 +17,7 @@
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_bFix(true), m_bCheck(true), m_iHP(12), m_iMaxHP(12), m_fInvTime(2.f)
     , m_bDeathState(false), m_fRespawnTimer(0.f)
-    , m_vKnockbackDir(0.f, 0.f, 0.f), m_fKnockbackSpeed(0.f)
+    , m_vKnockbackDir(0.f, 0.f, 0.f), m_fKnockbackSpeed(0.f), m_fFreezeTimer(0.f)
 {
 }
 
@@ -61,6 +61,9 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
         Key_Input(fTimeDelta);
         Update_Knockback(fTimeDelta);
     }
+
+    m_fFreezeTimer -= fTimeDelta;
+    if (m_fFreezeTimer < 0.f) m_fFreezeTimer = 0.f;
 
     m_fInvTime -= fTimeDelta;
     if (m_fInvTime < 0.f) m_fInvTime = 0.f;
@@ -215,12 +218,24 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
+
+    if (CDInputMgr::GetInstance()->Key_Down(DIK_B))
+    {
+        CCameraMgr::GetInstance()->SetCameraMoveInRoomAt(12, { -0.8f , 0.5f, -0.8f }, { 0.8f, 0.6f, 0.8f }, { 0.0f, 0.5f, 0.2f }, 2.f);
+        Freeze(2.f);
+        GiveInvTime(2.f);
+    }
+
     _vec3	vLook;
     _vec3   vRight;
+    _float fSpeed = 5.f * m_fFrictionForce;
+
+    if (m_fFreezeTimer > 0.f) goto FREEZE;
+
+
     m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
     m_pTransformCom->Get_Info(INFO_RIGHT, &vRight);
 
-    _float fSpeed = 5.f * m_fFrictionForce;
 
     if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
     {
@@ -248,7 +263,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
         m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vRight, &vRight), fSpeed, fTimeDelta);
     }
 
-
+    FREEZE:
 
     if (CDInputMgr::GetInstance()->Key_Down(DIK_TAB))
     {
@@ -268,6 +283,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
         return;
 
     Mouse_Move();
+
     Mouse_Fix();
 }
 
@@ -437,11 +453,8 @@ void CPlayer::MonsterCollision(CGameObject* pOther, CCollider* pOtherCollider)
     if (iColliderID != COLL_MONSTER && iColliderID != COLL_MBULLET)
         return;
 
-    UpdateHP(-1);
-    _float fInvTime = 1.f;
 
-    m_fInvTime = fInvTime;
-    Apply_Knockback(pOther);
+    Hit(pOther);
 }
 
 void CPlayer::Apply_Knockback(CGameObject* pAttacker)
@@ -505,4 +518,13 @@ void CPlayer::Update_HPUI()
 
         pUI->Set_Texture((_uint)iSlotHP);
     }
+}
+
+void CPlayer::Hit(CGameObject* pAttacker) // 히트백 적용 안할 시 nullptr 넣어주세요
+{
+    UpdateHP(-1);
+    _float fInvTime = 1.f;
+
+    m_fInvTime = fInvTime;
+    if (pAttacker != nullptr) Apply_Knockback(pAttacker);
 }
