@@ -16,6 +16,10 @@ public:
 	virtual	HRESULT		Ready_Camera() = 0;
 	virtual void		Update_Camera(const _float& fTimeDelta, const _vec3& vTargetLook, const _vec3& vTargetPos, const _vec3& vTargetRight)PURE;
 	virtual void		LateUpdate_Camera(const _float& fTimeDelta) = 0;
+	virtual void		Input_Camera() = 0;
+	void				Apply_Transform();
+	void				Set_View(const _vec3& vEye, const _vec3& vAt);
+	virtual void		Reset_Setting() = 0;
 	void				Get_CamLook(_vec3* pLook);
 	void				Get_CameraAngle(_float* pAngle) { memcpy(pAngle, &m_fAngle, sizeof(_float)); }
 	

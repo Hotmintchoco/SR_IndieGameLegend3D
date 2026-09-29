@@ -37,15 +37,45 @@ CLayer* CManagement::Get_Layer(const _tchar* pLayerTag)
     return m_pScene->Get_Layer(pLayerTag);
 }
 
-HRESULT CManagement::Set_Scene(CScene* pScene)
+HRESULT CManagement::Change_Scene(_int iSceneIdx, CScene* pNewScene, bool bDestoryOld)
 {
-    if (nullptr == pScene)
-        return  E_FAIL;
+    // 1. 기존 씬이 있다면 퇴장(Exit) 처리
+    if (nullptr != m_pScene)
+    {
+        m_pScene->OnExit();
+        // 핵심: 이전 씬을 지워야 한다면 맵에서 제거하고 메모리 해제
+        if (bDestoryOld)
+        {
+            auto iter = m_mapScene.find(m_iSceneIdx);
+            if (iter != m_mapScene.end())
+            {
+                Safe_Release(iter->second); // CLogo 메모리 해제
+                m_mapScene.erase(iter);    // 맵에서 CLogo 삭제
+            }
+            m_pScene = nullptr;
+        }
+    }
 
-    Safe_Release(m_pScene);
+    // 2. 맵에서 씬 검색
+    auto iter = m_mapScene.find(iSceneIdx);
+    if (iter != m_mapScene.end())
+    {
+        // 3-A. 씬이 이미 존재하면 재사용 및 입장(Enter) 처리
+        m_pScene = iter->second;
+        m_pScene->OnEnter();
+    }
+    else
+    {
+        // 3-B. 씬이 없으면 맵에 추가하고 최초 입장(Enter) 처리
+        if (nullptr == pNewScene)
+            return E_FAIL;
 
-    m_pScene = pScene;
+        m_mapScene.emplace(iSceneIdx, pNewScene);
+        m_pScene = pNewScene;
+        m_pScene->OnEnter();
+    }
 
+    m_iSceneIdx = iSceneIdx;
     return S_OK;
 }
 
@@ -71,5 +101,9 @@ void CManagement::Render_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CManagement::Free()
 {
-    Safe_Release(m_pScene);
+    for (auto& Pair : m_mapScene)
+    {
+        Safe_Release(Pair.second);
+    }
+    m_mapScene.clear();
 }

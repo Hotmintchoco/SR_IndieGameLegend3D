@@ -47,6 +47,7 @@ void CGaugeUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CGaugeUI::Render_GameObject()
 {
+    // 게이지 크기만큼 그리기
 	_float fPercent = CGameStatusMgr::GetInstance()->GetSpecialAttackGauge();
 
     RECT rcClip;
@@ -56,7 +57,9 @@ void CGaugeUI::Render_GameObject()
 	rcClip.bottom = LONG(m_vPos.y + m_vSize.y);
     m_pGraphicDev->SetScissorRect(&rcClip);
     m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
+
     CUI::Render_GameObject();
+
 	m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
 
 }

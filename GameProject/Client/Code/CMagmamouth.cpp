@@ -42,12 +42,7 @@ HRESULT CMagmamouth::Ready_GameObject()
     m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
     
-    //int iX =  CGameStatusMgr::GetInstance()->GetCurrentRoomIndex();
-    //int iX = 10;
-    //m_vRoomCenterLocation = { 30.f,0.f,60.f };
-    //m_vRoomCenterLocation = { 30.f + 15.f *(iX%5),0.f,60.f-26.f + 13.f*(iX/5)};
-    m_vRoomCenterLocation = { 90.f,0.f,73.f };
-
+    m_vRoomCenterLocation = static_cast<CRoomLayer*>(m_pOwner)->GetCenterPos();
     m_pTransformCom->Get_Info(INFO_POS, &m_vMovePosition);
     m_vMovePosition = m_vOpeningMoveDirection[m_iOpeningMoveIndex] + m_vRoomCenterLocation;
     m_vMovePosition.y = 2.f;
