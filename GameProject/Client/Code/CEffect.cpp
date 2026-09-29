@@ -96,22 +96,6 @@ CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type
 
     return pEffect;
 }
- 
-//CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, CGameObject* pEffect_Owner)
-//{
-//    CEffect* pEffect = new CEffect(pGraphicDev);
-//    pEffect->Set_Effect_Type(eEffect_Type);
-//    pEffect->Set_Effect_Owner(pEffect_Owner);
-//
-//    if (FAILED(pEffect->Ready_GameObject()))
-//    {
-//        Safe_Release(pEffect);
-//        MSG_BOX("CEffect Create Failed");
-//        return nullptr;
-//    }
-//
-//    return pEffect;
-//}
 
 void CEffect::Free()
 {
@@ -135,30 +119,26 @@ void CEffect::Ready_Effect()
     switch (m_eEffect_Type)
     {
     case MAGMA_FIREBALL:
-        //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-        //CGameObject* pGameObject = nullptr;
-
-        //pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::ORANGE, 45, 5.f, 0.16f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
-        //if (nullptr == pGameObject) return;
-        //if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
-
-        //pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::ORANGE, 45, 3.f, 0.16f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
-        //if (nullptr == pGameObject) return;
-        //if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
         break;
     case MAGMA_TRAIL:
         break;
     case MAGMA_DEAD_EFFECT:
         m_fLifeTime = MAGMA_DEAD_TIME;
         break;
-    case BOSS1_DEAD_EFFECT:
-        m_fLifeTime = BOSS1_DEAD_TIME;
-        break;
     case MAGMA_EXPLOSION1:
         m_fLifeTime = MAGMA_DEAD_TIME;
         break;
     case MAGMA_EXPLOSION2:
         m_fLifeTime = MAGMA_DEAD_TIME;
+        break;
+    case BOSS1_DEAD_EFFECT:
+        m_fLifeTime = BOSS1_DEAD_TIME;
+        break;
+    case BOSS1_EXPLOSION1:
+        m_fLifeTime = BOSS1_DEAD_TIME;
+        break;
+    case BOSS1_EXPLOSION2:
+        m_fLifeTime = BOSS1_DEAD_TIME;
         break;
     }
 }
@@ -292,12 +272,6 @@ void CEffect::Update_Effect(const _float fTimeDelta)
             Set_Dead(true);
         break;
     case MAGMA_EXPLOSION2:
-
-		//_vec3 vPos;
-		//m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		//CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-		//CGameObject* pGameObject = nullptr;
-
 		pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::RED, 50, 3.f, 1.f, { 1.f,1.f,1.f }, CParticle_Sphere::DOWN);
 		if (nullptr == pGameObject) return;
 		if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
@@ -305,5 +279,16 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         Set_Dead(true);
 
         break;
+
+
+    case BOSS1_EXPLOSION2:
+        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::PINK, 50, 6.f, 1.f, { 1.5f,1.5f,1.5f }, CParticle_Sphere::DOWN);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
+
+        Set_Dead(true);
+
+        break;
     }
+
 }

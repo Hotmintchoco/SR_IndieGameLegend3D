@@ -7,6 +7,10 @@
 #include "CTerrain.h"
 #include "CRoomLayer.h"
 #include "CEffect.h"
+#include "CSprnub1.h"
+#include "CSprnub2.h"
+#include "CSprnub3.h"
+#include "CGameStatusMgr.h"
 
 CBoss1::CBoss1(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -398,6 +402,41 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
     Set_OnTerrain();
     Look_AtPlayer();
     Set_Stand(fTimeDelta);
+
+    //m_fSpawnTime += fTimeDelta;
+    //_vec3 vPos, vVelocity;
+    //_int iFlag = 0;
+
+
+    //CGameObject* pGameObject = CSprnub1::Create(m_pGraphicDev);
+    //if (nullptr == pGameObject) return;
+    //pGameObject->Set_IsActive(true);
+
+    //CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+    //    ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+    //if (nullptr == pPlayerTransformCom) return;
+    //_vec3   vPlayerPos;
+    //pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    //m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    //vVelocity = vPlayerPos - vPos;
+    //vVelocity.y = 0.f;
+    //D3DXVec3Normalize(&vVelocity, &vVelocity);
+
+    //_matrix matRot;
+    //D3DXMatrixRotationY(&matRot, D3DXToRadian(45.f) - D3DXToRadian(30.f) * m_iSpawnOrderArr[iFlag - 1]);
+
+    //D3DXVec3TransformNormal(&vVelocity, &vVelocity, &matRot);
+
+    //vVelocity *= 4.f;
+    //vVelocity.y = 3.f;
+
+    //static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
+    ////static_cast<CSpnnub1r*>(pGameObject)->Set_Velocity(vVelocity);
+
+    //CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+    //if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject))) return;
+
+
 }
 
 void CBoss1::IDLE_Boss1(const _float& fTimeDelta)
@@ -588,7 +627,7 @@ void CBoss1::Boss1_Dead_Effect()
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
         CGameObject* pGameObject = nullptr;
 
-        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::MAGMA_EXPLOSION2, vPos);
+        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BOSS1_EXPLOSION2, vPos);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Magma_Explosion2", pGameObject))) return;
     }

@@ -61,6 +61,7 @@ enum class EObjectType
 	UNBREAKABLE_FRUSTUM,
 	EXPLOSIVE_FRUSTUM,
 	GAME_MACHINE,
+	DDOKDDAK,
 
 	Skull = 11,
 	Boss1 = 12,
