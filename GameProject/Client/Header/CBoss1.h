@@ -35,7 +35,10 @@ private:
 	void IDLE_Boss1(const _float& fTimeDelta);
 
 	void Set_Stand(const _float& fTimeDelta);
+	void Set_Walking(const _float& fTimeDelta);
 	void Look_AtPlayer();
+	void Look_AtDestination();
+	void Chase_Player(const _float& fTimeDelta);
 
 
 protected:

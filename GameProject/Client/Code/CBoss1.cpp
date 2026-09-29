@@ -5,6 +5,7 @@
 #include "CTimerMgr.h"
 //#include "CDInputMgr.h"
 #include "CTerrain.h"
+#include "CRoomLayer.h"
 
 CBoss1::CBoss1(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -23,6 +24,8 @@ HRESULT CBoss1::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
+
+    m_vRoomCenterLocation = static_cast<CRoomLayer*>(m_pOwner)->GetCenterPos();
 
     m_pTransformCom2->Set_Scale(1.f, 1.f, 1.f);
     m_pTransformCom2->Set_Pos(m_pTransformCom->m_vInfo[INFO_POS].x, m_pTransformCom->m_vInfo[INFO_POS].y, m_pTransformCom->m_vInfo[INFO_POS].z);
@@ -273,9 +276,7 @@ void CBoss1::Update_Motion(const _float& fTimeDelta)
 
 void CBoss1::Move_Boss1(const _float& fTimeDelta)
 {
-    m_fFrame += fTimeDelta * 6.f;
-    if (m_fFrame > 4.f)
-        m_fFrame = 0.f;
+
     _vec3 vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
@@ -296,42 +297,81 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
 
     if (m_iLandingCount == 0 || m_iLandingCount == 1)
     {
+        Set_Stand(fTimeDelta);
+       
         vPlayerLook.y = 0;
         D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
         m_vLandingDirection = vPlayerLook;
         m_vLandingDirection.y = 3.f;
         m_fLandingTime += fTimeDelta;
         m_vLandingDirection.y -= m_fLandingTime * 9.8f;
-        m_pTransformCom->Move_Pos(&m_vLandingDirection, 3.f, fTimeDelta);
-        Look_AtPlayer();
+        
+        _vec3 vDest = vPos + m_vLandingDirection * 3.f * 0.7f;
+        _float fBlank = 2.1f;
+        if (vDest.x > m_vRoomCenterLocation.x + 6.5f - fBlank ||
+            vDest.x < m_vRoomCenterLocation.x - 6.5f + fBlank ||
+            vDest.z > m_vRoomCenterLocation.z + 5.0f - fBlank ||
+            vDest.z < m_vRoomCenterLocation.z - 5.0f + fBlank)
+        {
+            _vec3 vVerticalDirection = { 0.f,m_vLandingDirection.y,0.f };
+            m_pTransformCom->Move_Pos(&vVerticalDirection, 3.f, fTimeDelta);
+        }
+        else
+        {
+            m_pTransformCom->Move_Pos(&m_vLandingDirection, 3.f, fTimeDelta);
+        }
+        
+
         if (vPos.y <= 2.f && m_fLandingTime > 0.5f)
         {
             m_fLandingTime = 0.f;
             ++m_iLandingCount;
 
-        }
+            //_vec3 vPlayerPos;
+            pPlayerTransformCom->Get_Info(INFO_POS, &m_vMovePosition);
 
+            _float fBlank = 2.1f;
+            if (m_vMovePosition.x > m_vRoomCenterLocation.x + 6.5f - fBlank)
+            {
+                m_vMovePosition.x = m_vRoomCenterLocation.x + 6.5f - fBlank;
+            }
+            if (m_vMovePosition.x < m_vRoomCenterLocation.x - 6.5f + fBlank)
+            {
+                m_vMovePosition.x = m_vRoomCenterLocation.x - 6.5f + fBlank;
+            }
+            if (m_vMovePosition.z > m_vRoomCenterLocation.z + 5.0f - fBlank)
+            {
+                m_vMovePosition.z = m_vRoomCenterLocation.z + 5.0f - fBlank;
+            }
+            if (m_vMovePosition.z < m_vRoomCenterLocation.z - 5.0f + fBlank)
+            {
+                m_vMovePosition.z = m_vRoomCenterLocation.z - 5.0f + fBlank;
+            }
+
+
+            m_vMovePosition.y = 2.f;
+        }
+        Look_AtPlayer();
     }
     else
     {
         Set_OnTerrain();
+        Set_Walking(fTimeDelta);
 
 
+        _vec3 vec3 = vPos - m_vMovePosition;
 
-
-        //CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        //    ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-        //if (nullptr == pPlayerTransformCom)
-        //    return;
-
-        //_vec3   vPlayerPos;
-        //pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-
-        //_vec3   vPlayerLook;
-        //pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
-
-        m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 0.8f, fTimeDelta);
+        if (D3DXVec3Length(&vec3)<0.1f)
+        {
+            Look_AtPlayer();
+        }
+        else
+        {
+            _vec3 vDir = m_vMovePosition - vPos;
+            D3DXVec3Normalize(&vDir, &vDir);
+            m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
+            Look_AtDestination();
+        }
     }
     //Look_AtPlayer();
     
@@ -349,8 +389,8 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
 void CBoss1::IDLE_Boss1(const _float& fTimeDelta)
 {
     Set_OnTerrain();
-    Look_AtPlayer();
-    Set_Stand(fTimeDelta);
+    Chase_Player(fTimeDelta);
+    Set_Walking(fTimeDelta);
 
 }
 
@@ -365,6 +405,13 @@ void CBoss1::Set_Stand(const _float& fTimeDelta)
 			m_bStand = true;
         }
     }
+}
+
+void CBoss1::Set_Walking(const _float& fTimeDelta)
+{
+    m_fFrame += fTimeDelta * 6.f;
+    if (m_fFrame > 4.f)
+        m_fFrame = 0.f;
 }
 
 void CBoss1::Look_AtPlayer()
@@ -382,6 +429,32 @@ void CBoss1::Look_AtPlayer()
     pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
     m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+}
+
+void CBoss1::Look_AtDestination()
+{
+    _vec3 vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vecLook = vPos - m_vMovePosition;
+    m_pTransformCom->LookAt_Player(&m_vMovePosition, &vecLook);
+
+}
+
+void CBoss1::Chase_Player(const _float& fTimeDelta)
+{
+	CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+		->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+
+	if (nullptr == pPlayerTransformCom)
+		return;
+
+	_vec3   vPlayerPos;
+	pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+
+	_vec3   vPlayerLook;
+	pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+
+	m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 1.f, fTimeDelta);
 }
 
 void CBoss1::Shuffle_Array(_uint N)
