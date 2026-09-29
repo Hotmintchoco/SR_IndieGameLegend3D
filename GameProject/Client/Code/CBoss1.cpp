@@ -182,7 +182,6 @@ void CBoss1::Render_GameObject()
 void CBoss1::OnCollisionEnter(COLLINFO eCollInfo)
 {
     CMonster::OnCollisionEnter(eCollInfo);
-
 }
 
 HRESULT CBoss1::Add_Component()

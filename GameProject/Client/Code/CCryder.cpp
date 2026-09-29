@@ -142,9 +142,9 @@ void CCryder::Render_GameObject()
     if (m_bHitState == true) CMonster::Disable_HitRenderState();
 }
 
-void CCryder::OnCollisionEnter(CGameObject* pOther)
+void CCryder::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    CMonster::OnCollisionEnter(pOther);
+    CMonster::OnCollisionEnter(eCollInfo);
 }
 
 HRESULT CCryder::Add_Component()
