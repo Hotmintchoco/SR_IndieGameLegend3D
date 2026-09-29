@@ -140,6 +140,9 @@ void CEffect::Ready_Effect()
     case BOSS1_EXPLOSION2:
         m_fLifeTime = BOSS1_DEAD_TIME;
         break;
+    case BOSS1_SPAWN:
+        m_fLifeTime = 2.f;
+        break;
     }
 }
 
@@ -176,6 +179,7 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         if (m_fElapsedTime2 > 0.25f)
         {
             m_fElapsedTime2 = 0.f;
+
             _vec3 vVelocity;
 
             _int iRand1 = 0;
@@ -204,7 +208,7 @@ void CEffect::Update_Effect(const _float fTimeDelta)
     case BOSS1_DEAD_EFFECT:
         m_fElapsedTime2 += fTimeDelta;
 
-        if (m_fElapsedTime2 > 0.25f && m_fElapsedTime < m_fLifeTime - 0.5f)
+        if (m_fElapsedTime2 > 0.3f && m_fElapsedTime < m_fLifeTime - 0.5f)
         {
             m_fElapsedTime2 = 0.f;
             _vec3 vVelocity;
@@ -215,15 +219,23 @@ void CEffect::Update_Effect(const _float fTimeDelta)
 
             D3DXCOLOR eColor = { 1.f,1.f,0.f,1.f };
 
+            _vec3 vRand;
+            vRand.x = (_float)(rand() % 128 - 64) / 64.f;
+            vRand.y = (_float)(rand() % 128 - 64) / 64.f;
+            vRand.z = (_float)(rand() % 128 - 64) / 64.f;
+
+            vPos += vRand;
+
             for (int i = 0; i < 16; ++i)
             {
                 iRand1 = rand() % 128 - 64;
-                iRand2 = rand() % 128 - 64;
+                iRand2 = rand() % 128;
                 iRand3 = rand() % 128 - 64;
 
-                vVelocity = { _float(iRand1) / 48.f,_float(iRand2) / 48.f,_float(iRand3) / 48.f };
+                vVelocity = { _float(iRand1) / 48.f,_float(iRand2) / 96.f,_float(iRand3) / 48.f };
+                vVelocity *= 2;
 
-                pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, eColor);
+                pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, eColor, 0.5f);
                 if (nullptr == pGameObject) return;
                 if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
             }
@@ -282,7 +294,7 @@ void CEffect::Update_Effect(const _float fTimeDelta)
 
 
     case BOSS1_EXPLOSION2:
-        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::PINK, 50, 6.f, 1.f, { 1.5f,1.5f,1.5f }, CParticle_Sphere::DOWN);
+        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::PINK, 40, 6.f, 1.f, { 1.5f,1.5f,1.5f }, CParticle_Sphere::DOWN);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
 

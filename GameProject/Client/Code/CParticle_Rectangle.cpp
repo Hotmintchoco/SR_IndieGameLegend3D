@@ -126,7 +126,6 @@ CParticle_Rectangle* CParticle_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pEffect_Rectangle;
 }
 
-
 CParticle_Rectangle* CParticle_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vVelocity, D3DXCOLOR eColor)
 {
     CParticle_Rectangle* pEffect = new CParticle_Rectangle(pGraphicDev);
@@ -140,6 +139,24 @@ CParticle_Rectangle* CParticle_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
         return nullptr;
     }
     pEffect->Set_Pos(vPos);
+
+    return pEffect;
+}
+
+CParticle_Rectangle* CParticle_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vVelocity, D3DXCOLOR eColor, _float fLifeTime)
+{
+    CParticle_Rectangle* pEffect = new CParticle_Rectangle(pGraphicDev);
+    pEffect->Set_Velocity(vVelocity);
+    pEffect->Set_Color(eColor);
+
+    if (FAILED(pEffect->Ready_GameObject()))
+    {
+        Safe_Release(pEffect);
+        MSG_BOX("CEffect_Rectangle Create Failed");
+        return nullptr;
+    }
+    pEffect->Set_Pos(vPos);
+    pEffect->Set_LifeTime(fLifeTime);
 
     return pEffect;
 }

@@ -38,6 +38,7 @@ HRESULT CBoss1::Ready_GameObject()
 
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
 
+    m_iMaxHp = 10;
     m_iHp = m_iMaxHp;
     return S_OK;
 }
@@ -240,7 +241,7 @@ void CBoss1::Update_Motion(const _float& fTimeDelta)
 
         if (m_iPhase == 0)
         {
-            m_eBoss1State = static_cast<BOSS1STATE>(rand() % 3);
+            m_eBoss1State = static_cast<BOSS1STATE>(rand() % 2);
             if (m_bMoveState == true)
             {
                 m_eBoss1State = MOVE;
@@ -250,17 +251,21 @@ void CBoss1::Update_Motion(const _float& fTimeDelta)
         }
         else
         {
-            m_eBoss1State = static_cast<BOSS1STATE>(rand() % 3);
+            m_eBoss1State = static_cast<BOSS1STATE>(rand() % 2);
         }
         //m_eBoss1State = SPAWN;
-        m_eBoss1State = MOVE;
+        //m_eBoss1State = MOVE;
         if (m_eBoss1State == SPAWN)
         {
             Shuffle_Array(4);
             ZeroMemory(m_bSpawnFinish, sizeof(m_bSpawnFinish));
             m_fSpawnTime = 0.f;
-            m_fStateUpdateDuration = 2.f;
-            m_fSpawn_CoolDown = 0.25f;
+            m_fStateUpdateDuration = 6.f;
+            m_fSpawn_CoolDown = 1.f;
+
+            m_iLandingCount = 0;
+            m_bMoveFlag = false;
+            m_bMoveFlag2 = false;
         }
         else if (m_eBoss1State == MOVE)
         {
@@ -382,8 +387,8 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
                 D3DXVec3Normalize(&vDir, &vDir);
                 m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
                 //Look_AtDestination();
-                Look_AtPlayer();
             }
+			Look_AtPlayer();
         }
     }
     else
@@ -399,44 +404,138 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
 
 void CBoss1::Spawn_Spn(const _float& fTimeDelta)
 {
-    Set_OnTerrain();
-    Look_AtPlayer();
     Set_Stand(fTimeDelta);
 
-    //m_fSpawnTime += fTimeDelta;
-    //_vec3 vPos, vVelocity;
-    //_int iFlag = 0;
+    if (m_bMoveFlag == false)
+    {
+        _vec3 vPos;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+        if (nullptr == pPlayerTransformCom) return;
+
+        _vec3   vPlayerPos;
+        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+        _vec3   vPlayerLook;
+        pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+
+        if (m_iLandingCount == 0)
+        {
+            vPlayerLook.y = 0;
+            D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
+            m_vLandingDirection = vPlayerLook;
+            m_vLandingDirection.y = 3.f;
+            m_vLandingDirection.x /= 2.f;
+            m_vLandingDirection.z /= 2.f;
+            m_fLandingTime += fTimeDelta;
+            m_vLandingDirection.y -= m_fLandingTime * 9.8f;
+
+            _vec3 vDest = vPos + m_vLandingDirection * 3.f * 0.7f;
+            _float fBlank = 2.1f;
+            if (vDest.x > m_vRoomCenterLocation.x + 6.5f - fBlank ||
+                vDest.x < m_vRoomCenterLocation.x - 6.5f + fBlank ||
+                vDest.z > m_vRoomCenterLocation.z + 5.0f - fBlank ||
+                vDest.z < m_vRoomCenterLocation.z - 5.0f + fBlank)
+            {
+                _vec3 vVerticalDirection = { 0.f,m_vLandingDirection.y,0.f };
+                m_pTransformCom->Move_Pos(&vVerticalDirection, 3.f, fTimeDelta);
+            }
+            else
+            {
+                m_pTransformCom->Move_Pos(&m_vLandingDirection, 3.f, fTimeDelta);
+            }
 
 
-    //CGameObject* pGameObject = CSprnub1::Create(m_pGraphicDev);
-    //if (nullptr == pGameObject) return;
-    //pGameObject->Set_IsActive(true);
+            if (vPos.y <= 2.f && m_fLandingTime > 0.5f)
+            {
+                m_fLandingTime = 0.f;
+                ++m_iLandingCount;
+                m_bMoveFlag = true;
+            }
+            Look_AtPlayer();
+        }
+    }
 
-    //CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-    //    ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-    //if (nullptr == pPlayerTransformCom) return;
-    //_vec3   vPlayerPos;
-    //pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-    //m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    //vVelocity = vPlayerPos - vPos;
-    //vVelocity.y = 0.f;
-    //D3DXVec3Normalize(&vVelocity, &vVelocity);
+    else
+    {
+        Set_OnTerrain();
+        m_fSpawnTime += fTimeDelta;
+        _vec3 vPos, vVelocity;
+        _int iFlag = 0;
+        CGameObject* pGameObject = nullptr;
 
-    //_matrix matRot;
-    //D3DXMatrixRotationY(&matRot, D3DXToRadian(45.f) - D3DXToRadian(30.f) * m_iSpawnOrderArr[iFlag - 1]);
+        if (m_fSpawnTime > m_fSpawn_CoolDown && m_bSpawnFinish[0] == false)
+        {
+            m_bSpawnFinish[0] = true;
+            iFlag = 1;
 
-    //D3DXVec3TransformNormal(&vVelocity, &vVelocity, &matRot);
+            pGameObject = CSprnub1::Create(m_pGraphicDev);
+            if (nullptr == pGameObject) return;
+            pGameObject->Set_IsActive(true);
+            //m_pSpawnMonster[iFlag - 1] = pGameObject;
+        }
+        else if (m_fSpawnTime > m_fSpawn_CoolDown * 2 && m_bSpawnFinish[1] == false)
+        {
+            m_bSpawnFinish[1] = true;
+            iFlag = 2;
 
-    //vVelocity *= 4.f;
-    //vVelocity.y = 3.f;
+            pGameObject = CSprnub1::Create(m_pGraphicDev);
+            if (nullptr == pGameObject) return;
+            pGameObject->Set_IsActive(true);
+            //m_pSpawnMonster[iFlag - 1] = pGameObject;
+        }
+        else if (m_fSpawnTime > m_fSpawn_CoolDown * 3 && m_bSpawnFinish[2] == false)
+        {
+            m_bSpawnFinish[2] = true;
+            iFlag = 3;
 
-    //static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
-    ////static_cast<CSpnnub1r*>(pGameObject)->Set_Velocity(vVelocity);
+            pGameObject = CSprnub2::Create(m_pGraphicDev);
+            if (nullptr == pGameObject) return;
+            pGameObject->Set_IsActive(true);
+            //m_pSpawnMonster[iFlag - 1] = pGameObject;
+        }
+        else if (m_fSpawnTime > m_fSpawn_CoolDown * 4 && m_bSpawnFinish[3] == false)
+        {
+            m_bSpawnFinish[3] = true;
+            iFlag = 4;
 
-    //CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-    //if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject))) return;
+            pGameObject = CSprnub3::Create(m_pGraphicDev);
+            if (nullptr == pGameObject) return;
+            pGameObject->Set_IsActive(true);
 
+           // m_pSpawnMonster[iFlag - 1] = pGameObject;
 
+            m_eBoss1State = IDLE;
+
+        }
+
+        if (iFlag != 0)
+        {
+            CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+                ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+            if (nullptr == pPlayerTransformCom) return;
+            _vec3   vPlayerPos;
+            pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+            m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            vVelocity = vPlayerPos - vPos;
+            vVelocity.y = 0.f;
+            D3DXVec3Normalize(&vVelocity, &vVelocity);
+
+            _matrix matRot;
+            D3DXMatrixRotationY(&matRot, D3DXToRadian(45.f) - D3DXToRadian(30.f) * m_iSpawnOrderArr[iFlag - 1]);
+
+            D3DXVec3TransformNormal(&vVelocity, &vVelocity, &matRot);
+
+            vVelocity *= 4.f;
+            vPos += vVelocity;
+            static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
+
+            CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+            if (FAILED(pLayer->Add_GameObject(L"Sprnub", pGameObject))) return;
+        }
+        Look_AtPlayer();
+    }
 }
 
 void CBoss1::IDLE_Boss1(const _float& fTimeDelta)
@@ -599,12 +698,13 @@ void CBoss1::Boss1_Dead_Effect()
         m_bDead_Effect1 = true;
         _vec3 vPos;
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
         CGameObject* pGameObject = nullptr;
 
         pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BOSS1_DEAD_EFFECT, vPos);
         if (nullptr == pGameObject) return;
-        if (FAILED(pLayer->Add_GameObject(L"Effect_Magma_Dead", pGameObject))) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Boss1_Dead", pGameObject))) return;
     }
 
     if (m_bDead_Effect2 == false)
@@ -612,12 +712,13 @@ void CBoss1::Boss1_Dead_Effect()
         m_bDead_Effect2 = true;
         _vec3 vPos;
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
         CGameObject* pGameObject = nullptr;
 
         pGameObject = CEffect::Create(m_pGraphicDev, CEffect::MAGMA_EXPLOSION1, vPos);
         if (nullptr == pGameObject) return;
-        if (FAILED(pLayer->Add_GameObject(L"Effect_Magma_Explosion1", pGameObject))) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Boss1_Explosion1", pGameObject))) return;
     }
 
     if (m_fElapsedDeadTime > m_fDeadTime)
@@ -629,6 +730,6 @@ void CBoss1::Boss1_Dead_Effect()
 
         pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BOSS1_EXPLOSION2, vPos);
         if (nullptr == pGameObject) return;
-        if (FAILED(pLayer->Add_GameObject(L"Effect_Magma_Explosion2", pGameObject))) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Boss1_Explosion2", pGameObject))) return;
     }
 }

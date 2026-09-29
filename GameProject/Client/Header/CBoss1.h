@@ -55,18 +55,17 @@ protected:
 
 private:
 	enum BOSS1STATE { SPAWN, MOVE, IDLE, DEAD, OPENING };
-	//BOSS1STATE m_eBoss1State = OPENING;
 	BOSS1STATE m_eBoss1State = OPENING;
 	_bool m_bOpening = true;
 	_bool m_bStand = false;
 
 	_int m_iPhase = 0;
 
-
-	_float m_fSpawn_CoolDown = 0.25f;
+	_float m_fSpawn_CoolDown = 1.0f;
 	_float m_fSpawnTime = 0.f;
 	_bool m_bSpawnFinish[4] = {};
 	_uint m_iSpawnOrderArr[4] = {};
+	CGameObject* m_pSpawnMonster[4] = {};
 
 	_float m_fStateUpdateTime = 0.f;
 	_float m_fStateUpdateDuration = 2.f;
@@ -84,17 +83,11 @@ private:
 	_float m_fTrailDuration = 0.f;
 	_vec3 m_fTrailPoint[4] = {};
 
-	//_uint m_iMonsterX;
-	//_uint m_iMonsterZ;
-	//_uint m_iPlayerX;
-	//_uint m_iPlayerZ;
-
 	_bool m_bLandingState = true;
 	_vec3 m_vLandingDirection = {};
 	_float m_fLandingTime = 0.f;
 	_float m_fVelocityY = 0.f;
 	_uint m_iLandingCount = 0;
-
 
 	_bool m_bDead_Effect1 = false;
 	_bool m_bDead_Effect2 = false;
@@ -112,7 +105,7 @@ private:
 		{2.5f,0,0}, {-5,0,0},
 		{5,0,0}, {-5,0,0},
 		{2.5f,0,0},
-		{0,0,+3.f}
+		{0,0,+2.5f}
 	};
 	_int m_iOpeningMoveIndex = 0;
 };
