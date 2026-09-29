@@ -69,7 +69,7 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
         m_bMoveFlag2 = false;
         m_pColliderCom->Set_IsActive(false);
     }
-    else if (m_iHp < m_iMaxHp/2.f)
+    else if (m_iHp <= m_iMaxHp/2.f)
     {
         m_iPhase = 1;
         _fTimeDelta *= 1.5f;

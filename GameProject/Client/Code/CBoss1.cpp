@@ -618,7 +618,7 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
 
             CLayer* pGameLogicLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
             _vec3 vScale;
-            if (m_iPhase == 1)
+            if (m_iPhase == 0)
             {
                 if (iFlag == 1 || iFlag == 2)vScale = { 0.25f,0.25f, 0.25f };
                 else if (iFlag == 3)vScale = { 0.5f,0.5f, 0.5f };

@@ -50,12 +50,31 @@ _int CParticle_Rectangle::Update_GameObject(const _float& fTimeDelta)
         Set_Dead(true);
     }
 
-    m_pTransformCom->Move_Pos(&m_vVelocity, 1.25f, fTimeDelta);
+    if (m_eType == DEAD)
+    {
+        m_pTransformCom->Move_Pos(&m_vVelocity, 1.25f, fTimeDelta);
 
-    m_pTransformCom->Rotation(ROT_X, D3DXToRadian(30.f * m_vVelocity.x));
-    m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(30.f * m_vVelocity.y));
-    m_pTransformCom->Rotation(ROT_Z, D3DXToRadian(30.f * m_vVelocity.z));
+        m_pTransformCom->Rotation(ROT_X, D3DXToRadian(30.f * m_vVelocity.x));
+        m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(30.f * m_vVelocity.y));
+        m_pTransformCom->Rotation(ROT_Z, D3DXToRadian(30.f * m_vVelocity.z));
+    }
+    else if (m_eType == BULLET)
+    {
+        m_pTransformCom->Move_Pos(&m_vVelocity, 1.f, fTimeDelta);
 
+        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+
+        if (nullptr == pPlayerTransformCom)
+            return E_FAIL;
+
+        _vec3   vPlayerPos;
+        _vec3   vPlayerLook;
+        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+        pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+
+        m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+    }
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
@@ -65,20 +84,6 @@ _int CParticle_Rectangle::Update_GameObject(const _float& fTimeDelta)
 void CParticle_Rectangle::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CParticle::LateUpdate_GameObject(fTimeDelta);
-
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-    if (nullptr == pPlayerTransformCom)
-        return;
-
-    _vec3   vPlayerPos;
-    _vec3   vPlayerLook;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
-
-    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
-
 }
 
 void CParticle_Rectangle::Render_GameObject()
@@ -161,7 +166,44 @@ CParticle_Rectangle* CParticle_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
     return pEffect;
 }
 
+CParticle_Rectangle* CParticle_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vVelocity, _vec3 vScale, D3DXCOLOR eColor, _float fLifeTime)
+{
+    CParticle_Rectangle* pEffect = new CParticle_Rectangle(pGraphicDev);
+    pEffect->Set_Velocity(vVelocity);
+    pEffect->Set_Color(eColor);
 
+    if (FAILED(pEffect->Ready_GameObject()))
+    {
+        Safe_Release(pEffect);
+        MSG_BOX("CEffect_Rectangle Create Failed");
+        return nullptr;
+    }
+    pEffect->Set_Pos(vPos);
+    pEffect->Set_LifeTime(fLifeTime);
+    pEffect->Set_Scale(vScale);
+
+    return pEffect;
+}
+
+CParticle_Rectangle* CParticle_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vVelocity, _vec3 vScale, D3DXCOLOR eColor, _float fLifeTime, PARTICLE_RECT_TYPE eType)
+{
+    CParticle_Rectangle* pEffect = new CParticle_Rectangle(pGraphicDev);
+    pEffect->Set_Velocity(vVelocity);
+    pEffect->Set_Color(eColor);
+    pEffect->Set_Type(eType);
+
+    if (FAILED(pEffect->Ready_GameObject()))
+    {
+        Safe_Release(pEffect);
+        MSG_BOX("CEffect_Rectangle Create Failed");
+        return nullptr;
+    }
+    pEffect->Set_Pos(vPos);
+    pEffect->Set_LifeTime(fLifeTime);
+    pEffect->Set_Scale(vScale);
+
+    return pEffect;
+}
 
 void CParticle_Rectangle::Free()
 {

@@ -143,6 +143,9 @@ void CEffect::Ready_Effect()
     case BOSS1_SPAWN:
         m_fLifeTime = 2.f;
         break;
+    case BULLET_EFFECT:
+        m_fLifeTime = 1.f;
+        break;
     }
 }
 
@@ -196,8 +199,9 @@ void CEffect::Update_Effect(const _float fTimeDelta)
 
                 vVelocity = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
 
-                if (rand() % 3 == 0) eColor.g = 245.f / 256.f;
-                else if (rand() % 3 == 1) eColor.g = 235.f / 256.f;
+                int iRand = rand() % 3;
+                if (iRand == 0) eColor.g = 245.f / 256.f;
+                else if (iRand == 1) eColor.g = 235.f / 256.f;
 
                 pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, eColor);
                 if (nullptr == pGameObject) return;
@@ -238,8 +242,9 @@ void CEffect::Update_Effect(const _float fTimeDelta)
                 vVelocity = { _float(iRand1) / 48.f,_float(iRand2) / 96.f,_float(iRand3) / 48.f };
                 vVelocity *= 2;
 
-				if (rand() % 3 == 0) eColor.g = 245.f / 256.f;
-				else if (rand() % 3 == 1) eColor.g = 235.f / 256.f;
+                int iRand = rand() % 3;
+				if (iRand == 0) eColor.g = 245.f / 256.f;
+				else if (iRand == 1) eColor.g = 235.f / 256.f;
 
                 pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, eColor, 0.5f);
                 if (nullptr == pGameObject) return;
@@ -306,6 +311,65 @@ void CEffect::Update_Effect(const _float fTimeDelta)
 
         Set_Dead(true);
 
+        break;
+    case BULLET_EFFECT:
+
+		_vec3 vVelocity;
+
+		_float fRand1 = 0;
+		_float fRand2 = 0;
+        _float fRand3 = 0;
+
+        _float fRandRed = 0;
+        _float fRandGreen = 0;
+        _float fRandBlue = 0;
+
+
+        D3DXCOLOR eColor = {};
+        for (int i = 0; i < 3; ++i)
+		{
+            _float fRandColor = (rand() % 101) / 100.f;
+
+            fRandRed = 1.0f - 0.2f * fRandColor;
+            fRandGreen = 1.0f - 0.1f * fRandColor;
+            fRandBlue = 1.0f;
+
+            eColor = { fRandRed , fRandGreen, fRandBlue, 1.f };
+
+            CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+                ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+
+            if (nullptr == pPlayerTransformCom)
+                return;
+
+            _vec3   vPlayerPos;
+            pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+
+            _vec3   vPlayerLook;
+            pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+            D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
+
+            fRand1 = (_float)(rand() % 128 - 64) / 64.f;
+            fRand2 = (_float)(rand() % 128 - 64) / 64.f;
+            fRand3 = (_float)(rand() % 128 - 64) / 64.f;
+
+            vVelocity = { fRand1,fRand2,fRand3 };
+
+            D3DXVec3Cross(&vVelocity, &vPlayerLook, &vVelocity);
+
+            _float fRandScale = _float(rand() % 128 - 64) / (64.f * 64.f);
+
+            _float fScale = 0.25f * 0.25f * 0.75f;
+            _vec3 vScale = { fScale,fScale,fScale };
+            _vec3 vRandScale = { fRandScale ,fRandScale ,fRandScale };
+            vScale += vRandScale;
+
+			pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, vScale, eColor, 0.25f, CParticle_Rectangle::BULLET);
+			if (nullptr == pGameObject) return;
+			if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
+		}
+        
+        Set_Dead(true);
         break;
     }
 

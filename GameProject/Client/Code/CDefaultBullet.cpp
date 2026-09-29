@@ -4,6 +4,8 @@
 #include "CRenderer.h"
 #include "CCollisionMgr.h"
 #include "Client_Enum.h"
+#include "CManagement.h"
+#include "CEffect.h"
 
 CDefaultBullet::CDefaultBullet(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir)
     : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir)
@@ -66,6 +68,17 @@ void CDefaultBullet::Render_GameObject()
 void CDefaultBullet::OnCollisionEnter(CGameObject* pObject)
 {
     Set_Dead(true);
+
+    //260926 재현
+    _vec3 vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+    CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+    CGameObject* pGameObject = nullptr;
+
+    pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BULLET_EFFECT, vPos);
+    if (nullptr == pGameObject) return;
+    if (FAILED(pLayer->Add_GameObject(L"Effect_Bullet_Dead", pGameObject))) return;
 }
 
 HRESULT CDefaultBullet::Add_Component()
