@@ -97,6 +97,51 @@ HRESULT CCameraMgr::SetCameraMove(const CAMERA_MOVE& camMoveInfo)
 	return S_OK;
 }
 
+HRESULT	CCameraMgr::SetCameraMove(const _vec3& vFrom, const _vec3& vTo, const _vec3& vDir, _float fTime)
+{
+	CAMERA_MOVE camMove;
+
+	camMove.eyeMoveAttr = EYE_LINEAR;
+	camMove.atMoveAttr = AT_STATIC;
+	camMove.vEyeInfo[EYE_FROM] = vFrom;
+	camMove.vEyeInfo[EYE_TO] = vTo;
+	camMove.vAtInfo[AT_DIRECTION] = vDir;
+	camMove.fTime = fTime;
+
+	if (SetCameraMove(camMove) == E_FAIL) return E_FAIL;
+	return S_OK;
+}
+
+HRESULT	CCameraMgr::SetCameraMoveAt(const _vec3& vFrom, const _vec3& vTo, const _vec3& vAt, _float fTime)
+{
+	CAMERA_MOVE camMove;
+
+	camMove.eyeMoveAttr = EYE_LINEAR;
+	camMove.atMoveAttr = AT_POINT;
+	camMove.vEyeInfo[EYE_FROM] = vFrom;
+	camMove.vEyeInfo[EYE_TO] = vTo;
+	camMove.vAtInfo[AT_POS] = vAt;
+	camMove.fTime = fTime;
+
+	if (SetCameraMove(camMove) == E_FAIL) return E_FAIL;
+	return S_OK;
+}
+HRESULT	CCameraMgr::SetCameraTrace(const _tchar* pLayerTag, const _tchar* pObjTag, _float fTime)
+{
+	CAMERA_MOVE camMove;
+
+	camMove.eyeMoveAttr = EYE_TRACE;
+	camMove.atMoveAttr = AT_TRACE;
+	camMove.vEyeInfo[EYE_TRACE_RELATIVE] = { 0.f, 0.f, 2.f };
+	camMove.vAtInfo[AT_TRACE_RELATIVE] = { 0.f, 0.f, 0.f };
+	camMove.pEyeTraceTarget = { pLayerTag , pObjTag };
+	camMove.pAtTraceTarget = { pLayerTag , pObjTag };
+	camMove.fTime = fTime;
+
+	if (SetCameraMove(camMove) == E_FAIL) return E_FAIL;
+	return S_OK;
+}
+
 HRESULT CCameraMgr::ClearCameraMove()
 {
 	if (m_pCameraWorking == nullptr) return E_FAIL;

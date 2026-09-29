@@ -31,6 +31,9 @@ public:
 	/* --- */
 
 	HRESULT		SetCameraMove(const CAMERA_MOVE& camMoveInfo);
+	HRESULT		SetCameraMove(const _vec3& vFrom, const _vec3& vTo, const _vec3& vDir, _float fTime);
+	HRESULT		SetCameraMoveAt(const _vec3& vFrom, const _vec3& vTo, const _vec3& vAt, _float fTime);
+	HRESULT		SetCameraTrace(const _tchar* pLayerTag, const _tchar* pObjTag, _float fTime);
 	HRESULT		ClearCameraMove();
 
 private:
