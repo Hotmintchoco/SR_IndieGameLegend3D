@@ -286,6 +286,18 @@
     <Filter Include="02. GameObject\08. Combat\00. Weapon\04. Bow\VoxelBuffer">
       <UniqueIdentifier>{e826893d-5b22-4dae-816a-fc6d7fdbb511}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\03. Arrow">
+      <UniqueIdentifier>{be8dcc4a-66f7-4499-abeb-6f4f7b8d2224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\03. Arrow\CrossBuffer">
+      <UniqueIdentifier>{885071a5-b6ac-47df-976a-21322cd8c5b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\ItemContainer">
+      <UniqueIdentifier>{ca027f21-bd91-414a-beca-60817a5506bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Item\WeaponPickup">
+      <UniqueIdentifier>{d0b5ddd7-28b0-4a2b-9b64-7753045b1e66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -582,6 +594,18 @@
     <ClInclude Include="..\Header\CBow.h">
       <Filter>02. GameObject\08. Combat\00. Weapon\04. Bow</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CArrow.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCrossBuffer.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow\CrossBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CItemContainer.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\ItemContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWeaponPickup.h">
+      <Filter>02. GameObject\11. Item\WeaponPickup</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -850,6 +874,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBow.cpp">
       <Filter>02. GameObject\08. Combat\00. Weapon\04. Bow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CArrow.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCrossBuffer.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow\CrossBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CItemContainer.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\ItemContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWeaponPickup.cpp">
+      <Filter>02. GameObject\11. Item\WeaponPickup</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

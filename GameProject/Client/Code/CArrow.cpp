@@ -1,0 +1,144 @@
+﻿#include "pch.h"
+#include "CArrow.h"
+#include "CProtoMgr.h"
+#include "CRenderer.h"
+#include "CCollisionMgr.h"
+#include "Client_Enum.h"
+#include "CCrossBuffer.h"
+
+CArrow::CArrow(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, int iShotPower)
+    : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir), m_iShotPower(iShotPower)
+{
+}
+
+CArrow::~CArrow()
+{
+}
+
+HRESULT CArrow::Ready_GameObject()
+{
+    if (FAILED(CProjectile::Ready_GameObject()))
+        return E_FAIL;
+
+    if (FAILED(Add_Component()))
+        return E_FAIL;
+
+    m_pData = &s_tData;
+    s_tData.fSpeed = m_iShotPower * m_fSpeedPerShotPower;
+
+    LookTowardShotDirection();
+    
+    m_pColliderCom->Set_Owner(this);
+    m_pColliderCom->Set_Radius(0.3f);
+
+    return S_OK;
+}
+
+void CArrow::LookTowardShotDirection()
+{
+    m_pTransformCom->Set_Pos(m_vStart);
+    m_pTransformCom->Set_Scale(_vec3{ 0.33f, 0.33f, 1.f });
+
+    _vec3 vLook, vUp, vRight;
+    D3DXVec3Normalize(&vLook, &m_vDir);
+    vUp = _vec3{ 0.f, 1.f, 0.f };
+    D3DXVec3Cross(&vRight, &vUp, &vLook);
+    D3DXVec3Cross(&vUp, &vLook, &vRight);
+
+    _matrix* pWorld = m_pTransformCom->Get_World();
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+    vRight = vScale.x * vRight;
+    vUp = vScale.y * vUp;
+    vLook = vScale.z * vLook;
+
+    memcpy(&pWorld->m[0][0], &vRight, sizeof(_vec3));
+    memcpy(&pWorld->m[1][0], &vUp, sizeof(_vec3));
+    memcpy(&pWorld->m[2][0], &vLook, sizeof(_vec3));
+
+    m_pTransformCom->WorldMatrixDecompose();
+}
+
+_int CArrow::Update_GameObject(const _float& fTimeDelta)
+{
+    _int iExit = CProjectile::Update_GameObject(fTimeDelta);
+
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_PROJECTILE, m_pColliderCom);
+
+    m_pTransformCom->Move_Pos(&m_vDir, s_tData.fSpeed, fTimeDelta);
+
+    return iExit;
+}
+
+void CArrow::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+    CProjectile::LateUpdate_GameObject(fTimeDelta);
+}
+
+void CArrow::Render_GameObject()
+{
+    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+
+    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+    m_pTextureCom->Set_Texture(0);
+
+    m_pBufferCom->Render_Buffer();
+
+    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+}
+
+void CArrow::OnCollisionEnter(CGameObject* pObject)
+{
+    Set_Dead(true);
+}
+
+HRESULT CArrow::Add_Component()
+{
+    CComponent* pComponent = nullptr;
+
+    // Mesh
+    pComponent = m_pBufferCom = dynamic_cast<CCrossBuffer*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Cross_Buffer"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
+
+    // Texture
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Arrow_Texture"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+
+    // Transform
+    pComponent = m_pColliderCom = dynamic_cast<CSphereCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SphereCollider"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });
+
+    return S_OK;
+}
+
+CArrow* CArrow::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, int iShotPower)
+{
+    CArrow* pBullet = new CArrow(pGraphicDev, vStart, vDir, iShotPower);
+
+    if (FAILED(pBullet->Ready_GameObject()))
+    {
+        Safe_Release(pBullet);
+        MSG_BOX("CArrow Create Failed");
+        return nullptr;
+    }
+
+    return pBullet;
+}
+
+void CArrow::Free()
+{
+    CProjectile::Free();
+}
