@@ -38,7 +38,7 @@ private:
 
 	void Opening_MagmaMouth(const _float& fTimeDelta);
 
-	void Spawn_Speyeder(const _float& fTimeDelta);
+	void Spawn_Spider(const _float& fTimeDelta);
 	void Throw_Fireball(const _float& fTimeDelta);
 	void Move_Magmamouth(const _float& fTimeDelta);
 
@@ -72,7 +72,7 @@ private:
 
 	_float m_fStateUpdateTime;
 	_float m_fStateUpdateDuration;
-	_bool m_bFireballFinish[3];
+	_bool m_bFireballFinish[4];
 
 	_vec3 m_vRoomCenterLocation;
 	_vec3 m_vMovePosition;

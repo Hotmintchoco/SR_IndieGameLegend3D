@@ -40,7 +40,7 @@ private:
 	void Set_Walking(const _float& fTimeDelta);
 	void Look_AtPlayer();
 	void Look_AtDestination();
-	void Chase_Player(const _float& fTimeDelta);
+	void Chase_Player_Boss1(const _float& fTimeDelta);
 
 	void Boss1_Dead(const _float& fTimeDelta);
 	void Boss1_Dead_Effect();
@@ -97,6 +97,7 @@ private:
 	_float m_fElapsedDeadTime = 0.f;
 	_float m_fElapsedDeadTime2 = 0.f;
 	_float m_fDeadTime = 5.f;
+	_bool m_bDeadStart = false;
 	_bool m_DeadExplosion = false;
 
 	_bool m_bOpeningMoveFlag = false;

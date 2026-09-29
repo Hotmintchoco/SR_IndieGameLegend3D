@@ -6,6 +6,7 @@
 #include "CTimerMgr.h"
 #include "CTerrain.h"
 #include "CSpeyeder.h"
+#include "CCryder.h"
 #include "CFireball.h"
 #include "CTrail.h"
 #include "CParticle_Rectangle.h"
@@ -58,9 +59,8 @@ HRESULT CMagmamouth::Ready_GameObject()
     
 _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
 {
-    _int    iExit = CMonster::Update_GameObject(fTimeDelta);
-    _vec3 a;
-    m_pTransformCom->Get_Info(INFO_POS, &a);
+
+    _float _fTimeDelta = fTimeDelta;
     if (m_iHp <= 0)
     {
         m_eMagmaMouthState = DEAD;
@@ -69,32 +69,37 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
         m_bMoveFlag2 = false;
         m_pColliderCom->Set_IsActive(false);
     }
-    else if (m_iHp < 3)
+    else if (m_iHp < m_iMaxHp/2.f)
     {
         m_iPhase = 1;
+        _fTimeDelta *= 1.5f;
     }
-    Update_Motion(fTimeDelta);
+
+    _int    iExit = CMonster::Update_GameObject(_fTimeDelta);
+
+
+    Update_Motion(_fTimeDelta);
    
     switch (m_eMagmaMouthState)
     {
     case IDLE:
-        Set_Motion_CloseOpenMouth(fTimeDelta);
+        Set_Motion_CloseOpenMouth(_fTimeDelta);
         break;
     case SPAWN:
-        Spawn_Speyeder(fTimeDelta);
+        Spawn_Spider(_fTimeDelta);
         break;
     case FIREBALL:
-        Throw_Fireball(fTimeDelta);
+        Throw_Fireball(_fTimeDelta);
         break;
     case MOVE:
-        Move_Magmamouth(fTimeDelta);
-        MagmaMouth_Trail(fTimeDelta);
+        Move_Magmamouth(_fTimeDelta);
+        MagmaMouth_Trail(_fTimeDelta);
         break;
     case DEAD:
-        MagmaMouth_Dead(fTimeDelta);
+        MagmaMouth_Dead(_fTimeDelta);
         break;
     case OPENING:
-        Opening_MagmaMouth(fTimeDelta);
+        Opening_MagmaMouth(_fTimeDelta);
         //MagmaMouth_Trail(fTimeDelta);
         break;
     }
@@ -157,7 +162,7 @@ CMagmamouth* CMagmamouth::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pMonster;
 }
 
-void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
+void CMagmamouth::Spawn_Spider(const _float& fTimeDelta)
 {
     if (m_fFrame < 3.f)
     {
@@ -193,7 +198,15 @@ void CMagmamouth::Spawn_Speyeder(const _float& fTimeDelta)
 
     if (iFlag != 0)
     {
-        CGameObject* pGameObject = CSpeyeder::Create(m_pGraphicDev);
+        CGameObject* pGameObject = nullptr;
+        if(m_iPhase==0)
+        { 
+            pGameObject = CSpeyeder::Create(m_pGraphicDev);
+        }
+        else
+        {
+            pGameObject = CCryder::Create(m_pGraphicDev);
+        }
         if (nullptr == pGameObject) return;
         pGameObject->Set_IsActive(true);
 
@@ -319,6 +332,15 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
     {
         m_bFireballFinish[2] = true;
         iFlag = 3;
+        if (m_iPhase == 0)
+        {
+            m_eMagmaMouthState = IDLE;
+        }
+    }
+    else if (m_fSpawnTime > m_fSpawn_CoolDown * 4 && m_bFireballFinish[3] == false && m_iPhase == 1)
+    {
+        m_bFireballFinish[3] = true;
+        iFlag = 4;
         m_eMagmaMouthState = IDLE;
     }
 
@@ -339,8 +361,14 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
         D3DXVec3Normalize(&vVelocity, &vVelocity);
 
         _matrix matRot;
-        D3DXMatrixRotationY(&matRot, D3DXToRadian(10.f) - D3DXToRadian(10.f) * m_iSpawnOrderArr[iFlag - 1]);
-
+        if (m_iPhase == 0)
+        {
+            D3DXMatrixRotationY(&matRot, D3DXToRadian(10.f) - D3DXToRadian(10.f) * m_iSpawnOrderArr[iFlag - 1]);
+        }
+        else
+        {
+            D3DXMatrixRotationY(&matRot, D3DXToRadian(15.f) - D3DXToRadian(10.f) * m_iSpawnOrderArr[iFlag - 1]);
+        }
         D3DXVec3TransformNormal(&vVelocity, &vVelocity, &matRot);
 
         vVelocity *= 6.f;
@@ -450,11 +478,19 @@ void CMagmamouth::Update_Motion(const _float& fTimeDelta)
         }
         else if (m_eMagmaMouthState == FIREBALL)
         {
-            Shuffle_Array(3);
-            ZeroMemory(m_bFireballFinish, sizeof(m_bFireballFinish));
-            m_fSpawnTime = 0.f;
-            m_fStateUpdateDuration = 2.f;
-            m_fSpawn_CoolDown = 0.5f;
+			if (m_iPhase == 0)
+			{
+				Shuffle_Array(3);
+
+			}
+			else
+			{
+				Shuffle_Array(4);
+			}
+			ZeroMemory(m_bFireballFinish, sizeof(m_bFireballFinish));
+			m_fSpawnTime = 0.f;
+			m_fStateUpdateDuration = 2.f;
+			m_fSpawn_CoolDown = 0.5f;
         }
         else if (m_eMagmaMouthState == MOVE)
         {

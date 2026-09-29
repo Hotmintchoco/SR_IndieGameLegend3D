@@ -31,10 +31,16 @@ public:
 	static CSprnub1* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	static CSprnub1* Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fActiveTime);
 	void Set_ActiveTime(_float fActiveTime) { m_fActiveTime = fActiveTime; }
-
+private:
+	void Jump(const _float& fTimeDelta);
 private:
 	_float m_fActiveTime = 0.f;
 	_float m_fActiveElapsedTime = 0.f;
+
+	_bool m_bLandingState = false;
+	_vec3 m_vJumpDirection = {};
+	_float m_fJumpTime = 0.f;
+	_float m_fVelocityY = 0.f;
 
 
 protected:

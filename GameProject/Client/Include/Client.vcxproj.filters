@@ -277,6 +277,9 @@
     <Filter Include="02. GameObject\06. Effect\Shockwave">
       <UniqueIdentifier>{bb3a9fa1-0000-4723-a7a8-963b5a1f268c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Cryder">
+      <UniqueIdentifier>{6710e0ba-2e64-4032-ae33-fb5134fb11fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -576,6 +579,9 @@
     <ClInclude Include="..\Header\CShockwave.h">
       <Filter>02. GameObject\06. Effect\Shockwave</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CCryder.h">
+      <Filter>02. GameObject\02. Monster\Cryder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -847,6 +853,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CShockwave.cpp">
       <Filter>02. GameObject\06. Effect\Shockwave</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCryder.cpp">
+      <Filter>02. GameObject\02. Monster\Cryder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

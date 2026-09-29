@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "CSpeyeder.h"
+#include "CCryder.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CTimerMgr.h"
@@ -11,30 +11,30 @@
 #include "CGem.h"
 #include "CEnergy.h"
 
-CSpeyeder::CSpeyeder(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev)
+CCryder::CCryder(LPDIRECT3DDEVICE9 pGraphicDev)
+    : CMonster(pGraphicDev), m_bLandingState(false), m_fLandingTime(0.f), m_fVelocityY(0.f), m_vLandingDirection{ 0.f,0.f,0.f }
 {
 }
 
 
-CSpeyeder::~CSpeyeder()
+CCryder::~CCryder()
 {
 }
 
-HRESULT CSpeyeder::Ready_GameObject()
+HRESULT CCryder::Ready_GameObject()
 {
     if (FAILED(Add_Component()))
         return E_FAIL;
     CMonster::Ready_GameObject();
 
-    m_pTransformCom->Set_Scale(0.25f, 0.25f, 0.25f);
+    m_pTransformCom->Set_Scale(0.35f, 0.35f, 0.35f);
     //m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
     m_pColliderCom->Set_Radius(0.5f);
-    m_iHp = 2;
+    m_iHp = 4;
     return S_OK;
 }
 
-_int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
+_int CCryder::Update_GameObject(const _float& fTimeDelta)
 {
     if (m_iHp <= 0)
     {
@@ -73,13 +73,13 @@ _int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
         Land(fTimeDelta);
         m_pColliderCom->Set_IsActive(false);
     }
-    
+
 
 
     return iExit;
 }
 
-void CSpeyeder::LateUpdate_GameObject(const _float& fTimeDelta)
+void CCryder::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 
@@ -97,7 +97,7 @@ void CSpeyeder::LateUpdate_GameObject(const _float& fTimeDelta)
         _vec3   vPlayerLook;
         pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
-        m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 2.f, fTimeDelta);
+        m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 3.f, fTimeDelta);
     }
     else
     {
@@ -108,7 +108,7 @@ void CSpeyeder::LateUpdate_GameObject(const _float& fTimeDelta)
             return;
 
         _vec3   vPlayerPos;
-        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);   
+        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
 
         _vec3   vPlayerLook;
         pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
@@ -117,7 +117,7 @@ void CSpeyeder::LateUpdate_GameObject(const _float& fTimeDelta)
     }
 }
 
-void CSpeyeder::Render_GameObject()
+void CCryder::Render_GameObject()
 {
 
     if (m_bHitState == true) CMonster::Enable_HitRenderState();
@@ -142,17 +142,17 @@ void CSpeyeder::Render_GameObject()
     if (m_bHitState == true) CMonster::Disable_HitRenderState();
 }
 
-void CSpeyeder::OnCollisionEnter(CGameObject* pOther)
+void CCryder::OnCollisionEnter(CGameObject* pOther)
 {
     CMonster::OnCollisionEnter(pOther);
 }
 
-HRESULT CSpeyeder::Add_Component()
+HRESULT CCryder::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
     // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_speyederTexture"));
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_cryderTexture"));
 
     if (nullptr == pComponent)
         return E_FAIL;
@@ -163,27 +163,27 @@ HRESULT CSpeyeder::Add_Component()
 }
 
 
-CSpeyeder* CSpeyeder::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CCryder* CCryder::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    CSpeyeder* pMonster = new CSpeyeder(pGraphicDev);
+    CCryder* pMonster = new CCryder(pGraphicDev);
 
     if (FAILED(pMonster->Ready_GameObject()))
     {
         Safe_Release(pMonster);
-        MSG_BOX("CSpeyeder Create Failed");
+        MSG_BOX("CCryder Create Failed");
         return nullptr;
     }
 
     return pMonster;
 }
 
-void CSpeyeder::Land(const _float& fTimeDelta)
+void CCryder::Land(const _float& fTimeDelta)
 {
     _vec3 vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     m_vLandingDirection.y -= 9.8f * fTimeDelta;
 
-    if(m_pTransformCom->m_vInfo[INFO_POS].y < m_pTransformCom->m_vScale.y)
+    if (m_pTransformCom->m_vInfo[INFO_POS].y < m_pTransformCom->m_vScale.y)
     {
         _float y = m_pTransformCom->m_vScale.y;
         _float x = m_pTransformCom->m_vInfo[INFO_POS].x;
@@ -193,10 +193,10 @@ void CSpeyeder::Land(const _float& fTimeDelta)
         return;
     }
     m_pTransformCom->Move_Pos(&m_vLandingDirection, 1.f, fTimeDelta);
-    
+
 }
 
-void CSpeyeder::Free()
+void CCryder::Free()
 {
     CMonster::Free();
 }

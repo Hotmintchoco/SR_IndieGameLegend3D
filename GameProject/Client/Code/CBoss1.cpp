@@ -45,6 +45,7 @@ HRESULT CBoss1::Ready_GameObject()
 
 _int CBoss1::Update_GameObject(const _float& fTimeDelta)
 {
+    _float _fTimeDelta = fTimeDelta;
     if (m_iHp <= 0)
     {
         m_eBoss1State = DEAD;
@@ -52,35 +53,41 @@ _int CBoss1::Update_GameObject(const _float& fTimeDelta)
         m_bMoveFlag = false;
         m_bMoveFlag2 = false;
         m_pColliderCom->Set_IsActive(false);
+        if (m_bDeadStart == false)
+        {
+            m_bDeadStart = true;
+            m_bStand = false;
+        }
     }
     else if (m_iHp <= m_iMaxHp / 2)
     {
         m_iPhase = 1;
+        _fTimeDelta *= 1.5f;
     }
 
-    _int    iExit = CMonster::Update_GameObject(fTimeDelta);
+    _int    iExit = CMonster::Update_GameObject(_fTimeDelta);
 
 
 
-    Update_Motion(fTimeDelta);
+    Update_Motion(_fTimeDelta);
 
     switch (m_eBoss1State)
     {
     case IDLE:
-        IDLE_Boss1(fTimeDelta);
+        IDLE_Boss1(_fTimeDelta);
         break;
     case SPAWN:
-        Spawn_Spn(fTimeDelta);
+        Spawn_Spn(_fTimeDelta);
         break;
     case MOVE:
-        Move_Boss1(fTimeDelta);
+        Move_Boss1(_fTimeDelta);
         //Trail(fTimeDelta);
         break;
     case DEAD:
-        Boss1_Dead(fTimeDelta);
+        Boss1_Dead(_fTimeDelta);
         break;
     case OPENING:
-        Opening_Boss1(fTimeDelta);
+        Opening_Boss1(_fTimeDelta);
         break;
     }
 
@@ -91,7 +98,7 @@ _int CBoss1::Update_GameObject(const _float& fTimeDelta)
 
 void CBoss1::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    CMonster::LateUpdate_GameObject(fTimeDelta);
+    
 
     //Angry버전 Transform->chase업데이트
     if (m_iPhase == 1)
@@ -141,6 +148,7 @@ void CBoss1::LateUpdate_GameObject(const _float& fTimeDelta)
         matWorld = matScale * matRot * matTrans;
         m_pTransformCom2->Set_World(&matWorld);
     }
+    CMonster::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CBoss1::Render_GameObject()
@@ -399,7 +407,7 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
     {
         Set_OnTerrain();
         Set_Walking(fTimeDelta);
-        Chase_Player(fTimeDelta);
+        Chase_Player_Boss1(fTimeDelta);
     }
     
     
@@ -475,7 +483,14 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
             m_bSpawnFinish[0] = true;
             iFlag = 1;
 
-            pGameObject = CSprnub1::Create(m_pGraphicDev, 0.75f);
+            if (m_iPhase == 0)
+            {
+                pGameObject = CSprnub1::Create(m_pGraphicDev, 0.75f);
+            }
+            else
+            {
+                pGameObject = CSprnub2::Create(m_pGraphicDev, 0.75f);
+            }
             if (nullptr == pGameObject) return;
             //pGameObject->Set_IsActive(true);
             m_pSpawnMonster[iFlag - 1] = pGameObject;
@@ -485,7 +500,14 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
             m_bSpawnFinish[1] = true;
             iFlag = 2;
 
-            pGameObject = CSprnub1::Create(m_pGraphicDev, 0.75f);
+            if (m_iPhase == 0)
+            {
+                pGameObject = CSprnub1::Create(m_pGraphicDev, 0.75f);
+            }
+            else
+            {
+                pGameObject = CSprnub2::Create(m_pGraphicDev, 0.75f);
+            }
             if (nullptr == pGameObject) return;
             //pGameObject->Set_IsActive(true);
             m_pSpawnMonster[iFlag - 1] = pGameObject;
@@ -495,7 +517,14 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
             m_bSpawnFinish[2] = true;
             iFlag = 3;
 
-            pGameObject = CSprnub2::Create(m_pGraphicDev, 0.75f);
+            if (m_iPhase == 0)
+            {
+                pGameObject = CSprnub2::Create(m_pGraphicDev, 0.75f);
+            }
+            else
+            {
+                pGameObject = CSprnub3::Create(m_pGraphicDev, 0.75f);
+            }
             if (nullptr == pGameObject) return;
             //pGameObject->Set_IsActive(true);
             m_pSpawnMonster[iFlag - 1] = pGameObject;
@@ -505,7 +534,14 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
             m_bSpawnFinish[3] = true;
             iFlag = 4;
 
-            pGameObject = CSprnub3::Create(m_pGraphicDev, 0.75f);
+            if (m_iPhase == 0)
+            {
+                pGameObject = CSprnub3::Create(m_pGraphicDev, 0.75f);
+            }
+            else
+            {
+                pGameObject = CSprnub3::Create(m_pGraphicDev, 0.75f);
+            }
             if (nullptr == pGameObject) return;
             //pGameObject->Set_IsActive(true);
 
@@ -582,9 +618,18 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
 
             CLayer* pGameLogicLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
             _vec3 vScale;
-            if (iFlag == 1 || iFlag == 2)vScale = { 0.25f,0.25f, 0.25f };
-            else if (iFlag == 3)vScale = { 0.5f,0.5f, 0.5f };
-            else vScale = { 0.75f,0.75f, 0.75f };
+            if (m_iPhase == 1)
+            {
+                if (iFlag == 1 || iFlag == 2)vScale = { 0.25f,0.25f, 0.25f };
+                else if (iFlag == 3)vScale = { 0.5f,0.5f, 0.5f };
+                else vScale = { 0.75f,0.75f, 0.75f };
+            }
+            else
+            {
+                if (iFlag == 1 || iFlag == 2)vScale = { 0.5f,0.5f, 0.5f };
+                else if (iFlag == 3)vScale = { 0.75f,0.75f, 0.75f };
+                else vScale = { 0.75f,0.75f, 0.75f };
+            }
             vScale *= 1.25f;
             vPos.y = vScale.y;
 
@@ -606,7 +651,7 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
 void CBoss1::IDLE_Boss1(const _float& fTimeDelta)
 {
     Set_OnTerrain();
-    Chase_Player(fTimeDelta);
+    Chase_Player_Boss1(fTimeDelta);
     Set_Walking(fTimeDelta);
 
 }
@@ -702,7 +747,7 @@ void CBoss1::Look_AtDestination()
 
 }
 
-void CBoss1::Chase_Player(const _float& fTimeDelta)
+void CBoss1::Chase_Player_Boss1(const _float& fTimeDelta)
 {
 	CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
 		->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));

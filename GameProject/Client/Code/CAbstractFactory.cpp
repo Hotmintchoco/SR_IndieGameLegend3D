@@ -19,6 +19,7 @@
 #include "CSprnub1.h"
 #include "CSprnub2.h"
 #include "CSprnub3.h"
+#include "CCryder.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -37,6 +38,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::Sprnub1,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub1::Create(t.pDevice); } },
         {EObjectType::Sprnub2,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub2::Create(t.pDevice); } },
         {EObjectType::Sprnub3,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub3::Create(t.pDevice); } },
+        {EObjectType::Cryder,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CCryder::Create(t.pDevice); } },
 
         {EObjectType::ITEM_HEART,               [](const TCreateDesc& t) -> Engine::CGameObject* { return CHeart::Create(t.pDevice, t.pSpawner); } },
         {EObjectType::ITEM_ENERGY,              [](const TCreateDesc& t) -> Engine::CGameObject* { return CEnergy::Create(t.pDevice, t.pSpawner); } },

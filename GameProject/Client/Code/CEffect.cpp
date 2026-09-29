@@ -196,6 +196,9 @@ void CEffect::Update_Effect(const _float fTimeDelta)
 
                 vVelocity = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
 
+                if (rand() % 3 == 0) eColor.g = 245.f / 256.f;
+                else if (rand() % 3 == 1) eColor.g = 235.f / 256.f;
+
                 pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, eColor);
                 if (nullptr == pGameObject) return;
                 if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
@@ -234,6 +237,9 @@ void CEffect::Update_Effect(const _float fTimeDelta)
 
                 vVelocity = { _float(iRand1) / 48.f,_float(iRand2) / 96.f,_float(iRand3) / 48.f };
                 vVelocity *= 2;
+
+				if (rand() % 3 == 0) eColor.g = 245.f / 256.f;
+				else if (rand() % 3 == 1) eColor.g = 235.f / 256.f;
 
                 pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, eColor, 0.5f);
                 if (nullptr == pGameObject) return;

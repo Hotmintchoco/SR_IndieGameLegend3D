@@ -50,6 +50,7 @@ HRESULT CMonster::Ready_GameObject()
 _int CMonster::Update_GameObject(const _float& fTimeDelta)
 {
     if (!Get_IsActive()) return S_OK;
+    m_fElapsedTime += fTimeDelta;
 
     if (!m_pColliderCom->Get_IsActive())
     {
@@ -193,6 +194,10 @@ void CMonster::Set_OnTerrain()
     _float  fY = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
 
     m_pTransformCom->Set_Pos(vPos.x, fY + m_pTransformCom->m_vScale.y, vPos.z);
+}
+
+void CMonster::Chase_Player(const _float& fTimeDelta)
+{
 }
 
 CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev)
