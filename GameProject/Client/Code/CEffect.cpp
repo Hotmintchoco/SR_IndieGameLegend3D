@@ -149,10 +149,16 @@ void CEffect::Ready_Effect()
     case MAGMA_TRAIL:
         break;
     case MAGMA_DEAD_EFFECT:
+        m_fLifeTime = MAGMA_DEAD_TIME;
+        break;
+    case BOSS1_DEAD_EFFECT:
+        m_fLifeTime = BOSS1_DEAD_TIME;
         break;
     case MAGMA_EXPLOSION1:
+        m_fLifeTime = MAGMA_DEAD_TIME;
         break;
     case MAGMA_EXPLOSION2:
+        m_fLifeTime = MAGMA_DEAD_TIME;
         break;
     }
 }
@@ -211,13 +217,44 @@ void CEffect::Update_Effect(const _float fTimeDelta)
                 if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
             }
         }
-        if (m_fElapsedTime > MAGMA_DEAD_TIME)
+        if (m_fElapsedTime > m_fLifeTime)
+            Set_Dead(true);
+
+        break;
+    case BOSS1_DEAD_EFFECT:
+        m_fElapsedTime2 += fTimeDelta;
+
+        if (m_fElapsedTime2 > 0.25f && m_fElapsedTime < m_fLifeTime - 0.5f)
+        {
+            m_fElapsedTime2 = 0.f;
+            _vec3 vVelocity;
+
+            _int iRand1 = 0;
+            _int iRand2 = 0;
+            _int iRand3 = 0;
+
+            D3DXCOLOR eColor = { 1.f,1.f,0.f,1.f };
+
+            for (int i = 0; i < 16; ++i)
+            {
+                iRand1 = rand() % 128 - 64;
+                iRand2 = rand() % 128 - 64;
+                iRand3 = rand() % 128 - 64;
+
+                vVelocity = { _float(iRand1) / 48.f,_float(iRand2) / 48.f,_float(iRand3) / 48.f };
+
+                pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, eColor);
+                if (nullptr == pGameObject) return;
+                if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
+            }
+        }
+        if (m_fElapsedTime > m_fLifeTime)
             Set_Dead(true);
 
         break;
     case MAGMA_EXPLOSION1:
         m_fElapsedTime3 += fTimeDelta;
-        if (m_fElapsedTime3 > 0.125f && m_fElapsedTime < MAGMA_DEAD_TIME - 0.5f)
+        if (m_fElapsedTime3 > 0.125f && m_fElapsedTime < m_fLifeTime - 0.5f)
         {
             m_fElapsedTime3 = 0.f;
 
@@ -251,7 +288,7 @@ void CEffect::Update_Effect(const _float fTimeDelta)
             if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
         }
 
-        if (m_fElapsedTime > MAGMA_DEAD_TIME)
+        if (m_fElapsedTime > m_fLifeTime)
             Set_Dead(true);
         break;
     case MAGMA_EXPLOSION2:

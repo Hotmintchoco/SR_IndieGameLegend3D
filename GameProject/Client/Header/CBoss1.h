@@ -30,10 +30,10 @@ private:
 	void Shuffle_Array(_uint N);
 	void Update_Motion(const _float& fTimeDelta);
 
+	void Opening_Boss1(const _float& fTimeDelta);
 	void Move_Boss1(const _float& fTimeDelta);
 	void Spawn_Spn(const _float& fTimeDelta);
 	void IDLE_Boss1(const _float& fTimeDelta);
-	void Opening_Boss1(const _float& fTimeDelta);
 
 	void Set_Stand(const _float& fTimeDelta);
 	void Set_Walking(const _float& fTimeDelta);
@@ -41,6 +41,8 @@ private:
 	void Look_AtDestination();
 	void Chase_Player(const _float& fTimeDelta);
 
+	void Boss1_Dead(const _float& fTimeDelta);
+	void Boss1_Dead_Effect();
 
 protected:
 	Engine::CTexture* m_pTextureCom2 = nullptr;
@@ -110,7 +112,7 @@ private:
 		{2.5f,0,0}, {-5,0,0},
 		{5,0,0}, {-5,0,0},
 		{2.5f,0,0},
-		{0,0,+5}
+		{0,0,+3.f}
 	};
 	_int m_iOpeningMoveIndex = 0;
 };

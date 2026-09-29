@@ -6,6 +6,7 @@
 //#include "CDInputMgr.h"
 #include "CTerrain.h"
 #include "CRoomLayer.h"
+#include "CEffect.h"
 
 CBoss1::CBoss1(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -41,8 +42,6 @@ _int CBoss1::Update_GameObject(const _float& fTimeDelta)
 {
     if (m_iHp <= 0)
     {
-        m_bDelete = true;
-
         m_eBoss1State = DEAD;
 
         m_bMoveFlag = false;
@@ -73,7 +72,7 @@ _int CBoss1::Update_GameObject(const _float& fTimeDelta)
         //Trail(fTimeDelta);
         break;
     case DEAD:
-        //MagmaMouth_Dead(fTimeDelta);
+        Boss1_Dead(fTimeDelta);
         break;
     case OPENING:
         Opening_Boss1(fTimeDelta);
@@ -153,11 +152,13 @@ void CBoss1::Render_GameObject()
 
     if (m_iPhase == 1)
     {
-        m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
+        if(m_eBoss1State!=DEAD)
+			m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
         m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
         m_pTextureCom2->Set_Texture((_uint)m_fFrame / 2);
         m_pBufferCom->Render_Buffer();
-        m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
+        if (m_eBoss1State != DEAD)
+            m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
     }
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
@@ -411,14 +412,11 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
 {
 	m_bElapsedOpeningTime += fTimeDelta;
 
-
     if (m_bOpeningMoveFlag == true)
-    {
-        //if (m_bElapsedOpeningTime > 7.f)
-        {
-            m_bOpening = false;
-        }
-        return;
+	{
+		m_bOpening = false;
+		Look_AtPlayer();
+		return;
     }
     if (m_bOpeningMoveFlag2 == false)
     {
@@ -531,5 +529,67 @@ void CBoss1::Shuffle_Array(_uint N)
         int temp = m_iSpawnOrderArr[i];
         m_iSpawnOrderArr[i] = m_iSpawnOrderArr[j];
         m_iSpawnOrderArr[j] = temp;
+    }
+}
+
+void CBoss1::Boss1_Dead(const _float& fTimeDelta)
+{
+    Boss1_Dead_Effect();
+    Set_Stand(fTimeDelta);
+    Look_AtPlayer();
+
+    m_fElapsedDeadTime += fTimeDelta;
+    m_fElapsedDeadTime2 += fTimeDelta;
+
+    if (m_fElapsedDeadTime > m_fDeadTime)
+    {
+        m_bDelete = true;
+    }
+    if (m_fElapsedDeadTime2 > 0.5f)
+    {
+        m_fElapsedDeadTime2 = 0.f;
+        m_bHitState = !m_bHitState;
+        m_fHitEffectElapsedTime = 0.f;
+    }
+}
+
+void CBoss1::Boss1_Dead_Effect()
+{
+    if (m_bDead_Effect1 == false)
+    {
+        m_bDead_Effect1 = true;
+        _vec3 vPos;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        CGameObject* pGameObject = nullptr;
+
+        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BOSS1_DEAD_EFFECT, vPos);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Magma_Dead", pGameObject))) return;
+    }
+
+    if (m_bDead_Effect2 == false)
+    {
+        m_bDead_Effect2 = true;
+        _vec3 vPos;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        CGameObject* pGameObject = nullptr;
+
+        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::MAGMA_EXPLOSION1, vPos);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Magma_Explosion1", pGameObject))) return;
+    }
+
+    if (m_fElapsedDeadTime > m_fDeadTime)
+    {
+        _vec3 vPos;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        CGameObject* pGameObject = nullptr;
+
+        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::MAGMA_EXPLOSION2, vPos);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Magma_Explosion2", pGameObject))) return;
     }
 }

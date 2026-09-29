@@ -10,7 +10,7 @@ namespace Engine
 class CEffect : public CGameObject
 {
 public:
-	enum EFFECT_TYPE {MAGMA_FIREBALL, MAGMA_TRAIL, MAGMA_DEAD_EFFECT, MAGMA_EXPLOSION1, MAGMA_EXPLOSION2, IDLE};
+	enum EFFECT_TYPE {MAGMA_FIREBALL, MAGMA_TRAIL, MAGMA_DEAD_EFFECT, MAGMA_EXPLOSION1, MAGMA_EXPLOSION2, BOSS1_DEAD_EFFECT, IDLE};
 protected:
 	explicit CEffect(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CEffect();
@@ -60,3 +60,4 @@ protected:
 };
 
 #define MAGMA_DEAD_TIME 5.f
+#define BOSS1_DEAD_TIME 5.f
