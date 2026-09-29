@@ -28,6 +28,7 @@ private:
 	HRESULT			Add_Component();
 
 	void Shuffle_Array(_uint N);
+
 	void Update_Motion(const _float& fTimeDelta);
 
 	void Opening_Boss1(const _float& fTimeDelta);
@@ -64,6 +65,8 @@ private:
 	_float m_fSpawn_CoolDown = 1.0f;
 	_float m_fSpawnTime = 0.f;
 	_bool m_bSpawnFinish[4] = {};
+	_bool m_bSpawnFinish2[4] = {};
+	_float m_fSpawnStartTime[4] = {};
 	_uint m_iSpawnOrderArr[4] = {};
 	CGameObject* m_pSpawnMonster[4] = {};
 
@@ -105,7 +108,7 @@ private:
 		{2.5f,0,0}, {-5,0,0},
 		{5,0,0}, {-5,0,0},
 		{2.5f,0,0},
-		{0,0,+2.5f}
+		{0,0,+2.0f}
 	};
 	_int m_iOpeningMoveIndex = 0;
 };

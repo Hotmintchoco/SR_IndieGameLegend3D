@@ -29,10 +29,13 @@ private:
 
 public:
 	static CSprnub3* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CSprnub3* Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fActiveTime);
+	void Set_ActiveTime(_float fActiveTime) { m_fActiveTime = fActiveTime; }
 
 
 private:
-
+	_float m_fActiveTime = 0.f;
+	_float m_fActiveElapsedTime = 0.f;
 
 protected:
 	virtual void		Free();

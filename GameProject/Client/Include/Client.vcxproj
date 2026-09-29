@@ -182,6 +182,7 @@
     <ClInclude Include="..\Header\CGameStatusMgr.h" />
     <ClInclude Include="..\Header\CGaugeUI.h" />
     <ClInclude Include="..\Header\CSGBullet.h" />
+    <ClInclude Include="..\Header\CShockwave.h" />
     <ClInclude Include="..\Header\CShotGun.h" />
     <ClInclude Include="..\Header\CSprnub2.h" />
     <ClInclude Include="..\Header\CSprnub3.h" />
@@ -281,6 +282,7 @@
     <ClCompile Include="..\Code\CGameMachine.cpp" />
     <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
     <ClCompile Include="..\Code\CSGBullet.cpp" />
+    <ClCompile Include="..\Code\CShockwave.cpp" />
     <ClCompile Include="..\Code\CShotGun.cpp" />
     <ClCompile Include="..\Code\CSprnub2.cpp" />
     <ClCompile Include="..\Code\CSprnub3.cpp" />

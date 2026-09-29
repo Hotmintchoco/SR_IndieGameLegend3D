@@ -88,7 +88,16 @@ void CSprnub3::LateUpdate_GameObject(const _float& fTimeDelta)
     _vec3   vPlayerLook;
     pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
-    m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 2.f, fTimeDelta);
+    if (m_fActiveElapsedTime < m_fActiveTime)
+    {
+        m_fActiveElapsedTime += fTimeDelta;
+        m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+
+    }
+    else
+    {
+        m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 2.f, fTimeDelta);
+    }
 
 
 }
@@ -139,6 +148,21 @@ HRESULT CSprnub3::Add_Component()
 CSprnub3* CSprnub3::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
     CSprnub3* pMonster = new CSprnub3(pGraphicDev);
+
+    if (FAILED(pMonster->Ready_GameObject()))
+    {
+        Safe_Release(pMonster);
+        MSG_BOX("CSprnub3 Create Failed");
+        return nullptr;
+    }
+
+    return pMonster;
+}
+
+CSprnub3* CSprnub3::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fActiveTime)
+{
+    CSprnub3* pMonster = new CSprnub3(pGraphicDev);
+    pMonster->Set_ActiveTime(fActiveTime);
 
     if (FAILED(pMonster->Ready_GameObject()))
     {

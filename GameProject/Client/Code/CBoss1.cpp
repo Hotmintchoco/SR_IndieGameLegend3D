@@ -3,7 +3,6 @@
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CTimerMgr.h"
-//#include "CDInputMgr.h"
 #include "CTerrain.h"
 #include "CRoomLayer.h"
 #include "CEffect.h"
@@ -11,6 +10,7 @@
 #include "CSprnub2.h"
 #include "CSprnub3.h"
 #include "CGameStatusMgr.h"
+#include "CShockwave.h"
 
 CBoss1::CBoss1(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -28,12 +28,12 @@ HRESULT CBoss1::Ready_GameObject()
         return E_FAIL;
     CMonster::Ready_GameObject();
 
-    m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
+    m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.5f);
 
     m_vRoomCenterLocation = static_cast<CRoomLayer*>(m_pOwner)->GetCenterPos();
 
 
-    m_pTransformCom2->Set_Scale(1.f, 1.f, 1.f);
+    m_pTransformCom2->Set_Scale(0.75f, 0.75f, 0.75f);
     m_pTransformCom2->Set_Pos(m_pTransformCom->m_vInfo[INFO_POS].x, m_pTransformCom->m_vInfo[INFO_POS].y, m_pTransformCom->m_vInfo[INFO_POS].z);
 
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
@@ -246,7 +246,6 @@ void CBoss1::Update_Motion(const _float& fTimeDelta)
             {
                 m_eBoss1State = MOVE;
                 m_bMoveState = false;
-
             }
         }
         else
@@ -259,6 +258,8 @@ void CBoss1::Update_Motion(const _float& fTimeDelta)
         {
             Shuffle_Array(4);
             ZeroMemory(m_bSpawnFinish, sizeof(m_bSpawnFinish));
+            ZeroMemory(m_bSpawnFinish2, sizeof(m_bSpawnFinish2));
+            ZeroMemory(m_fSpawnStartTime, sizeof(m_fSpawnStartTime));
             m_fSpawnTime = 0.f;
             m_fStateUpdateDuration = 6.f;
             m_fSpawn_CoolDown = 1.f;
@@ -266,6 +267,9 @@ void CBoss1::Update_Motion(const _float& fTimeDelta)
             m_iLandingCount = 0;
             m_bMoveFlag = false;
             m_bMoveFlag2 = false;
+
+            m_bStand = false;
+
         }
         else if (m_eBoss1State == MOVE)
         {
@@ -273,8 +277,8 @@ void CBoss1::Update_Motion(const _float& fTimeDelta)
             m_fStateUpdateDuration = 5.f;
             m_bMoveFlag = false;
             m_bMoveFlag2 = false;
-            m_bTrailStart = false;
-            m_fTrailTime2 = 0.f;
+            //m_bTrailStart = false;
+            //m_fTrailTime2 = 0.f;
 
             m_iLandingCount = 0;
             m_bStand = false;
@@ -322,7 +326,7 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
             m_vLandingDirection.y -= m_fLandingTime * 9.8f;
 
             _vec3 vDest = vPos + m_vLandingDirection * 3.f * 0.7f;
-            _float fBlank = 2.1f;
+            _float fBlank = m_pTransformCom->m_vScale.y;
             if (vDest.x > m_vRoomCenterLocation.x + 6.5f - fBlank ||
                 vDest.x < m_vRoomCenterLocation.x - 6.5f + fBlank ||
                 vDest.z > m_vRoomCenterLocation.z + 5.0f - fBlank ||
@@ -337,7 +341,7 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
             }
 
 
-            if (vPos.y <= 2.f && m_fLandingTime > 0.5f)
+            if (vPos.y <= m_pTransformCom->m_vScale.y && m_fLandingTime > 0.5f)
             {
                 m_fLandingTime = 0.f;
                 ++m_iLandingCount;
@@ -345,7 +349,7 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
                 //_vec3 vPlayerPos;
                 pPlayerTransformCom->Get_Info(INFO_POS, &m_vMovePosition);
 
-                _float fBlank = 2.1f;
+                _float fBlank = m_pTransformCom->m_vScale.y;
                 if (m_vMovePosition.x > m_vRoomCenterLocation.x + 6.5f - fBlank)
                 {
                     m_vMovePosition.x = m_vRoomCenterLocation.x + 6.5f - fBlank;
@@ -364,7 +368,7 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
                 }
 
 
-                m_vMovePosition.y = 2.f;
+                m_vMovePosition.y = m_pTransformCom->m_vScale.y;
             }
             Look_AtPlayer();
         }
@@ -420,7 +424,7 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
         _vec3   vPlayerLook;
         pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
-        if (m_iLandingCount == 0)
+        if (m_iLandingCount == 0 || m_iLandingCount == 1)
         {
             vPlayerLook.y = 0;
             D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
@@ -432,7 +436,7 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
             m_vLandingDirection.y -= m_fLandingTime * 9.8f;
 
             _vec3 vDest = vPos + m_vLandingDirection * 3.f * 0.7f;
-            _float fBlank = 2.1f;
+            _float fBlank = m_pTransformCom->m_vScale.y;
             if (vDest.x > m_vRoomCenterLocation.x + 6.5f - fBlank ||
                 vDest.x < m_vRoomCenterLocation.x - 6.5f + fBlank ||
                 vDest.z > m_vRoomCenterLocation.z + 5.0f - fBlank ||
@@ -447,11 +451,12 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
             }
 
 
-            if (vPos.y <= 2.f && m_fLandingTime > 0.5f)
+            if (vPos.y <= m_pTransformCom->m_vScale.y && m_fLandingTime > 0.5f)
             {
                 m_fLandingTime = 0.f;
                 ++m_iLandingCount;
-                m_bMoveFlag = true;
+                if (m_iLandingCount == 2)
+                    m_bMoveFlag = true;
             }
             Look_AtPlayer();
         }
@@ -470,45 +475,85 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
             m_bSpawnFinish[0] = true;
             iFlag = 1;
 
-            pGameObject = CSprnub1::Create(m_pGraphicDev);
+            pGameObject = CSprnub1::Create(m_pGraphicDev, 0.75f);
             if (nullptr == pGameObject) return;
-            pGameObject->Set_IsActive(true);
-            //m_pSpawnMonster[iFlag - 1] = pGameObject;
+            //pGameObject->Set_IsActive(true);
+            m_pSpawnMonster[iFlag - 1] = pGameObject;
         }
         else if (m_fSpawnTime > m_fSpawn_CoolDown * 2 && m_bSpawnFinish[1] == false)
         {
             m_bSpawnFinish[1] = true;
             iFlag = 2;
 
-            pGameObject = CSprnub1::Create(m_pGraphicDev);
+            pGameObject = CSprnub1::Create(m_pGraphicDev, 0.75f);
             if (nullptr == pGameObject) return;
-            pGameObject->Set_IsActive(true);
-            //m_pSpawnMonster[iFlag - 1] = pGameObject;
+            //pGameObject->Set_IsActive(true);
+            m_pSpawnMonster[iFlag - 1] = pGameObject;
         }
         else if (m_fSpawnTime > m_fSpawn_CoolDown * 3 && m_bSpawnFinish[2] == false)
         {
             m_bSpawnFinish[2] = true;
             iFlag = 3;
 
-            pGameObject = CSprnub2::Create(m_pGraphicDev);
+            pGameObject = CSprnub2::Create(m_pGraphicDev, 0.75f);
             if (nullptr == pGameObject) return;
-            pGameObject->Set_IsActive(true);
-            //m_pSpawnMonster[iFlag - 1] = pGameObject;
+            //pGameObject->Set_IsActive(true);
+            m_pSpawnMonster[iFlag - 1] = pGameObject;
         }
         else if (m_fSpawnTime > m_fSpawn_CoolDown * 4 && m_bSpawnFinish[3] == false)
         {
             m_bSpawnFinish[3] = true;
             iFlag = 4;
 
-            pGameObject = CSprnub3::Create(m_pGraphicDev);
+            pGameObject = CSprnub3::Create(m_pGraphicDev, 0.75f);
             if (nullptr == pGameObject) return;
-            pGameObject->Set_IsActive(true);
+            //pGameObject->Set_IsActive(true);
 
-           // m_pSpawnMonster[iFlag - 1] = pGameObject;
-
-            m_eBoss1State = IDLE;
-
+            m_pSpawnMonster[iFlag - 1] = pGameObject;
         }
+
+        _float fSpawnLatency = 0.5f;
+        if (m_fSpawnTime > m_fSpawn_CoolDown && m_bSpawnFinish2[0] == false)
+        {
+            m_fSpawnStartTime[0] += fTimeDelta;
+            if (m_fSpawnStartTime[0] > fSpawnLatency)
+            {
+                m_pSpawnMonster[0]->Set_IsActive(true);
+                m_bSpawnFinish2[0] = true;
+            }
+        }
+        else if (m_fSpawnTime > m_fSpawn_CoolDown * 2 && m_bSpawnFinish2[1] == false)
+        {
+            m_fSpawnStartTime[1] += fTimeDelta;
+            if (m_fSpawnStartTime[1] > fSpawnLatency)
+            {
+                m_pSpawnMonster[1]->Set_IsActive(true);
+                m_bSpawnFinish2[1] = true;
+            }
+        }
+        else if (m_fSpawnTime > m_fSpawn_CoolDown * 3 && m_bSpawnFinish2[2] == false)
+        {
+            m_fSpawnStartTime[2] += fTimeDelta;
+
+            if (m_fSpawnStartTime[2] > fSpawnLatency)
+            {
+                m_pSpawnMonster[2]->Set_IsActive(true);
+                m_bSpawnFinish2[2] = true;
+            }
+        }
+        else if (m_fSpawnTime > m_fSpawn_CoolDown * 4 && m_bSpawnFinish2[3] == false)
+        {
+            m_fSpawnStartTime[3] += fTimeDelta;
+
+            if (m_fSpawnStartTime[3] > fSpawnLatency)
+            {
+                m_pSpawnMonster[3]->Set_IsActive(true);
+                m_bSpawnFinish2[3] = true;
+
+                m_eBoss1State = IDLE;
+            }
+        }
+
 
         if (iFlag != 0)
         {
@@ -527,12 +572,32 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
 
             D3DXVec3TransformNormal(&vVelocity, &vVelocity, &matRot);
 
-            vVelocity *= 4.f;
+            vVelocity *= 2.f;
             vPos += vVelocity;
             static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
 
             CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
             if (FAILED(pLayer->Add_GameObject(L"Sprnub", pGameObject))) return;
+
+
+            CLayer* pGameLogicLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+            _vec3 vScale;
+            if (iFlag == 1 || iFlag == 2)vScale = { 0.25f,0.25f, 0.25f };
+            else if (iFlag == 3)vScale = { 0.5f,0.5f, 0.5f };
+            else vScale = { 0.75f,0.75f, 0.75f };
+            vScale *= 1.25f;
+            vPos.y = vScale.y;
+
+            _vec3 vEpsilon = vPlayerPos - vPos;
+            vEpsilon.y = 0.f;
+            D3DXVec3Normalize(&vEpsilon, &vEpsilon);
+            vEpsilon *= (0.25f * 0.25f);
+            vPos += vEpsilon;
+            pGameObject = CShockwave::Create(m_pGraphicDev, vPos, vScale);
+            if (nullptr == pGameObject) return;
+
+            if (FAILED(pGameLogicLayer->Add_GameObject(L"Shockwave", pGameObject))) return;
+
         }
         Look_AtPlayer();
     }
@@ -573,7 +638,7 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
         m_fLandingTime += fTimeDelta;
         vDir.y -= m_fLandingTime * 9.8f;
 
-        if (vPos.y <= 2.f && m_fLandingTime > 0.5f)
+        if (vPos.y <= m_pTransformCom->m_vScale.y && m_fLandingTime > 0.5f)
         {
             m_fLandingTime = 0.f;
 

@@ -264,7 +264,7 @@
     </Filter>
     <Filter Include="02. GameObject\02. Monster\Sprnub">
       <UniqueIdentifier>{7a47d356-d425-4c6b-a048-ba98ba2e0613}</UniqueIdentifier>
-    </Filter>      
+    </Filter>
     <Filter Include="01. Scene\MiniGame">
       <UniqueIdentifier>{c1d0cb1c-a82c-4dd0-ba2e-ba944ff4ecc0}</UniqueIdentifier>
     </Filter>
@@ -273,6 +273,9 @@
     </Filter>
     <Filter Include="02. GameObject\10. UI\HitScreen">
       <UniqueIdentifier>{1912728d-3bab-4c0e-a846-ef0f8bbe6c42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Effect\Shockwave">
+      <UniqueIdentifier>{bb3a9fa1-0000-4723-a7a8-963b5a1f268c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -560,7 +563,7 @@
     </ClInclude>
     <ClInclude Include="..\Header\CSprnub3.h">
       <Filter>02. GameObject\02. Monster\Sprnub</Filter>
-    </ClInclude>      
+    </ClInclude>
     <ClInclude Include="..\Header\CMiniGame.h">
       <Filter>01. Scene\MiniGame</Filter>
     </ClInclude>
@@ -569,6 +572,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CHitCreenUI.h">
       <Filter>02. GameObject\10. UI\HitScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CShockwave.h">
+      <Filter>02. GameObject\06. Effect\Shockwave</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -829,7 +835,7 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSprnub3.cpp">
       <Filter>02. GameObject\02. Monster\Sprnub</Filter>
-    </ClCompile>      
+    </ClCompile>
     <ClCompile Include="..\Code\CMiniGame.cpp">
       <Filter>01. Scene\MiniGame</Filter>
     </ClCompile>
@@ -838,6 +844,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CHitCreenUI.cpp">
       <Filter>02. GameObject\10. UI\HitScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CShockwave.cpp">
+      <Filter>02. GameObject\06. Effect\Shockwave</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
