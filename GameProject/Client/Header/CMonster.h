@@ -47,6 +47,7 @@ protected:
 	Engine::CCollider* m_pColliderCom = nullptr;
 
 	_int m_iHp;
+	_int m_iMaxHp = 10;
 	_float m_fFrame;
 	_float m_fHitEffectTime;
 	_float m_fHitEffectElapsedTime;

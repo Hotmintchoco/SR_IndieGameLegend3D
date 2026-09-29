@@ -104,14 +104,7 @@ private:
 	_bool m_bOpening = true;
 	_bool m_bOpeningMoveFlag = false;
 	_float m_bElapsedOpeningTime = 0.f;
-	//_vec3 m_vOpeningMoveDirection[9] =
-	//{
-	//	{1,0,1}, {-1,0,-1},
-	//	{-1,0,-1}, {1,0,1},
-	//	{1,0,-1}, {-1,0,1},
-	//	{-1,0,1}, {1,0,-1},
-	//	{-4.5f,0,0}
-	//};
+
 	_vec3 m_vOpeningMoveDirection[5] =
 	{
 		{-3,0,-3}, {+6,0,0},

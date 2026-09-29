@@ -33,6 +33,7 @@ private:
 	void Move_Boss1(const _float& fTimeDelta);
 	void Spawn_Spn(const _float& fTimeDelta);
 	void IDLE_Boss1(const _float& fTimeDelta);
+	void Opening_Boss1(const _float& fTimeDelta);
 
 	void Set_Stand(const _float& fTimeDelta);
 	void Set_Walking(const _float& fTimeDelta);
@@ -42,8 +43,8 @@ private:
 
 
 protected:
-	Engine::CTexture* m_pTextureCom2;
-	Engine::CTransform* m_pTransformCom2;
+	Engine::CTexture* m_pTextureCom2 = nullptr;
+	Engine::CTransform* m_pTransformCom2 = nullptr;
 public:
 	static CBoss1* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
@@ -53,8 +54,8 @@ protected:
 private:
 	enum BOSS1STATE { SPAWN, MOVE, IDLE, DEAD, OPENING };
 	//BOSS1STATE m_eBoss1State = OPENING;
-	BOSS1STATE m_eBoss1State = IDLE;
-	_bool m_bOpening = false;
+	BOSS1STATE m_eBoss1State = OPENING;
+	_bool m_bOpening = true;
 	_bool m_bStand = false;
 
 	_int m_iPhase = 0;
@@ -101,13 +102,15 @@ private:
 	_bool m_DeadExplosion = false;
 
 	_bool m_bOpeningMoveFlag = false;
+	_bool m_bOpeningMoveFlag2 = false;
 	_float m_bElapsedOpeningTime = 0.f;
 
-	_vec3 m_vOpeningMoveDirection[5] =
+	_vec3 m_vOpeningMoveDirection[6] =
 	{
-		{-3,0,-3}, {+6,0,0},
-		{0,0,+6}, {-3,0,-3},
-		{+4.5f,0,0}
+		{2.5f,0,0}, {-5,0,0},
+		{5,0,0}, {-5,0,0},
+		{2.5f,0,0},
+		{0,0,+5}
 	};
 	_int m_iOpeningMoveIndex = 0;
 };
