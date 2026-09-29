@@ -20,8 +20,9 @@ public:
 	/* 에너지 아이템 획득 */
 	void GainEnergy();
 
-private:	
 	HRESULT AddWeapon(EObjectType eType, const wstring& wstrName);
+
+private:	
 	void GetKeyInput();
 	void SwitchWeaponTo(int iIndex);
 

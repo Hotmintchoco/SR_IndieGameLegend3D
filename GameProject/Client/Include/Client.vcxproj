@@ -153,6 +153,7 @@
     <ClInclude Include="..\Header\CDdokddak.h" />
     <ClInclude Include="..\Header\CDefaultBullet.h" />
     <ClInclude Include="..\Header\CFloor.h" />
+    <ClInclude Include="..\Header\CItemContainer.h" />
     <ClInclude Include="..\Header\CLaser.h" />
     <ClInclude Include="..\Header\CLaserBuffer.h" />
     <ClInclude Include="..\Header\CLaserGun.h" />
@@ -215,6 +216,7 @@
     <ClInclude Include="..\Header\CTriggerBox.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CWall.h" />
+    <ClInclude Include="..\Header\CWeaponPickup.h" />
     <ClInclude Include="..\Header\CWeaponSystem.h" />
     <ClInclude Include="..\Header\CWorm.h" />
     <ClInclude Include="..\Header\CWorm_Tail.h" />
@@ -250,6 +252,7 @@
     <ClCompile Include="..\Code\CDdokddak.cpp" />
     <ClCompile Include="..\Code\CDefaultBullet.cpp" />
     <ClCompile Include="..\Code\CFloor.cpp" />
+    <ClCompile Include="..\Code\CItemContainer.cpp" />
     <ClCompile Include="..\Code\CLaser.cpp" />
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />
     <ClCompile Include="..\Code\CLaserGun.cpp" />
@@ -311,6 +314,7 @@
     <ClCompile Include="..\Code\CTriggerBox.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CWall.cpp" />
+    <ClCompile Include="..\Code\CWeaponPickup.cpp" />
     <ClCompile Include="..\Code\CWeaponSystem.cpp" />
     <ClCompile Include="..\Code\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
