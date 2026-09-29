@@ -364,9 +364,9 @@ HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
     try {
         json data = json::parse(f);
         string str = data.at("roomName").get<string>();
-        wstring wstr = Utils::Utf8ToWide(str);
-        t.wstrRoomName = wstr;
-        data.at("defaultTile").get_to(t.iDefaultTileIdx);
+        t.wstrRoomName = Utils::Utf8ToWide(str);
+        data.at("biome").get_to(t.iBiome);
+        data.at("bossRoom").get_to(t.bBossRoom);
         data.at("tileList").get_to(t.vecTile);
         data.at("resistContaminationList").get_to(t.vecResistContamination);
         data.at("objectTilingList").get_to(t.vecObjectTilingInfo);
@@ -381,6 +381,7 @@ HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
             t.vecClearCondition.push_back(Utils::Utf8ToWide(str));
         }
         data.at("dark").get_to(t.bDark);
+        data.at("clearReward").get_to(t.iClearReward);
 
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
@@ -407,15 +408,15 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
     try {
         json data = json::parse(f);
         string str = data.at("roomName").get<string>();
-        wstring wstr = Utils::Utf8ToWide(str);
-        t.wstrRoomName = wstr;
-        data.at("defaultTile").get_to(t.iDefaultTileIdx);
+        t.wstrRoomName = Utils::Utf8ToWide(str);
+        data.at("biome").get_to(t.iBiome);
+        data.at("bossRoom").get_to(t.bBossRoom);
         data.at("tileList").get_to(t.vecTile);
         data.at("resistContaminationList").get_to(t.vecResistContamination);
         data.at("objectTilingList").get_to(t.vecObjectTilingInfo);
         data.at("objectList").get_to(t.vecObjectInfo);
         data.at("door").get_to(t.vecDoorInfo);
-        data.at("doorTile").get_to(t.vecDoorTile);       
+        data.at("doorTile").get_to(t.vecDoorTile);
         vector<string> vecClearRaw;
         data.at("clear").get_to(vecClearRaw);
         t.vecClearCondition.reserve(vecClearRaw.size());
@@ -424,6 +425,7 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
             t.vecClearCondition.push_back(Utils::Utf8ToWide(str));
         }
         data.at("dark").get_to(t.bDark);
+        data.at("clearReward").get_to(t.iClearReward);
 
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);

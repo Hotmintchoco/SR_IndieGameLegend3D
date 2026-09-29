@@ -18,7 +18,8 @@ struct TRoomData
 {
 	int iVersion = 0;
 	wstring wstrRoomName;
-	int iDefaultTileIdx;
+	int iBiome;
+	bool bBossRoom;
 	vector<int> vecTile;
 	vector<int> vecObjectTilingInfo;
 	vector<int> vecResistContamination;
@@ -27,6 +28,7 @@ struct TRoomData
 	vector<int> vecDoorTile;
 	vector<wstring> vecClearCondition;
 	bool bDark;
+	int iClearReward;
 };
 
 struct TRoomEventCtx
@@ -46,4 +48,10 @@ struct TWeaponAnimArgs
 	bool bSprint;
 	bool bMove;
 	bool bSpecialAtk;
+};
+
+struct TBiomeInfo
+{
+	EBiomeType eType;
+	int iDefaultTileIndex;
 };

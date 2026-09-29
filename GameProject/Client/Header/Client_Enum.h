@@ -133,3 +133,16 @@ enum class EDirection
 
 	MAX,
 };
+
+enum class EBiomeType
+{
+	NONE,
+
+	CYBER,
+	DESERT,
+	AQUA,
+	SNOW,
+	LAVA,
+
+	MAX,
+};

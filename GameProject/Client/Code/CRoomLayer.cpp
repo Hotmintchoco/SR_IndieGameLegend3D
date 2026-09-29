@@ -124,6 +124,9 @@ void CRoomLayer::LateUpdate_Layer(const _float& fTimeDelta)
 HRESULT CRoomLayer::SpawnRoom()
 {
 	TRoomData* t = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iRoomIndex);
+	m_tBiomeInfo = CRoomLoadingMgr::GetInstance()->GetBiomeInfo(t->iBiome);
+	m_bBossRoom = t->bBossRoom;
+	m_eClearRewardType = (EObjectType)t->iClearReward;
 
 	/* 클리어 조건 */
 	for (auto& wstrClearCondtiion : t->vecClearCondition)
@@ -193,6 +196,7 @@ HRESULT CRoomLayer::SpawnRoom()
 	CBoxCollider* pColliderCom = dynamic_cast<CBoxCollider*>(Get_Component(ID_DYNAMIC, wstrName, L"Com_BoxCollider"));
 	pColliderCom->Set_Extents(vOuterRoomSize.x / 2.f, 0.5f, vOuterRoomSize.z / 2.f);
 
+
 	/* 타일 */
 	for (size_t i = 0; i < t->vecTile.size(); ++i)
 	{
@@ -205,7 +209,7 @@ HRESULT CRoomLayer::SpawnRoom()
 			(float)((int)vInnerRoomSize.z - 1) / 2.f * 1.f - 1.f * (float)iTileZ
 		};
 
-		int iTileIdx = (t->vecTile.at(i) == 0) ? t->iDefaultTileIdx : t->vecTile.at(i);
+		int iTileIdx = (t->vecTile.at(i) == 0) ? m_tBiomeInfo.iDefaultTileIndex : t->vecTile.at(i);
 		if (iTileIdx >= 0 && iTileIdx <= 56)
 		{
 			/* 일반 타일*/
@@ -284,7 +288,7 @@ HRESULT CRoomLayer::SpawnRoom()
 			}
 
 			/* 문 쪽 타일 */
-			pGameObject = CSpriteTile::Create(pDevice, (int)i, (t->vecDoorTile[iDir - 1] == 0) ? t->iDefaultTileIdx : t->vecDoorTile[iDir - 1]);
+			pGameObject = CSpriteTile::Create(pDevice, (int)i, (t->vecDoorTile[iDir - 1] == 0) ? m_tBiomeInfo.iDefaultTileIndex : t->vecDoorTile[iDir - 1]);
 			if (nullptr == pGameObject)
 				return E_FAIL;
 

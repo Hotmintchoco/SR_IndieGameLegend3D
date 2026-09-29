@@ -2,6 +2,7 @@
 
 #include "Engine_Define.h"
 #include "Client_Struct.h"
+#include "Client_Enum.h"
 #include <unordered_map>
 
 class CRoomLoadingMgr
@@ -23,6 +24,8 @@ public:
 	inline const int GetRoomRowCount() { return m_iRoomRowCount; }
 	inline const int GetRoomColCount() { return m_iRoomColCount; }
 
+	inline const TBiomeInfo GetBiomeInfo(int iBiomeID) { return m_mapBiomeInfo.at(iBiomeID); }
+
 private:
 	unordered_map<int, TRoomData> m_mapRoomData;
 	const _vec3 m_vCenterRoomPosition = _vec3{ 60.f, 0.f, 60.f };
@@ -30,6 +33,15 @@ private:
 	const _vec3 m_vOuterRoomSize = _vec3{ 15.f, 0.f, 13.f };
 	const int m_iRoomRowCount = 5;
 	const int m_iRoomColCount = 5;
+
+	unordered_map<int, TBiomeInfo> m_mapBiomeInfo =
+	{
+		{1, {EBiomeType::CYBER, 50}},
+		{2, {EBiomeType::DESERT, 44}},
+		{3, {EBiomeType::AQUA, 51}},
+		{4, {EBiomeType::SNOW, 47}},
+		{5, {EBiomeType::LAVA, 6}},
+	};
 
 private:
 	virtual void Free();
