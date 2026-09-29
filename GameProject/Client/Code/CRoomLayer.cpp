@@ -19,6 +19,7 @@
 #include "CPlayer.h"
 #include "CBoxCollider.h"
 #include "CFloor.h"
+#include "CItemContainer.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -481,6 +482,16 @@ void CRoomLayer::CheckClearCondition()
 	m_bOnProgress = false;
 	m_bCleared = true;
 	CSoundMgr::GetInstance()->PlaySFX(L"sfxDoorOpen.wav");
+	if (m_eClearRewardType != EObjectType::NONE)
+	{
+		LPDIRECT3DDEVICE9 pDevice = CGraphicDev::GetInstance()->GetInstance()->Get_GraphicDev();
+		CGameObject* pGameObject = CItemContainer::Create(pDevice, m_eClearRewardType);
+		if (nullptr == pGameObject) return;
+		if (FAILED(Add_GameObject(L"ClearReward", pGameObject))) return;
+		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"ClearReward", L"Com_Transform"));
+		pTransformCom->Set_Pos(m_vRoomCenterPos.x, m_vRoomCenterPos.y, m_vRoomCenterPos.z);
+
+	}
 }
 
 CTile* CRoomLayer::GetTileFromWorldPosition(const _vec3& vWorldPos)

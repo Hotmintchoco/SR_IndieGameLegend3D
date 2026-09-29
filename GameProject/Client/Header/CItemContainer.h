@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CGameObject.h"
+#include "Client_Enum.h"
 
 namespace Engine
 {
@@ -12,7 +13,7 @@ namespace Engine
 class CItemContainer : public CGameObject
 {
 protected:
-	explicit CItemContainer(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CItemContainer(LPDIRECT3DDEVICE9 pGraphicDev, EObjectType eType);
 	virtual ~CItemContainer();
 
 public:
@@ -41,8 +42,10 @@ private:
 	int m_iCurrentFrame = 0;
 	bool m_bAnimationFinished = false;
 
+	EObjectType m_eInnerItemType = EObjectType::NONE;
+
 public:
-	static CItemContainer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CItemContainer* Create(LPDIRECT3DDEVICE9 pGraphicDev, EObjectType eType);
 
 private:
 	virtual void		Free();

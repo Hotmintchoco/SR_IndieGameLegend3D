@@ -8,8 +8,8 @@
 #include "CRoomLayer.h"
 #include "CWeaponPickup.h"
 
-CItemContainer::CItemContainer(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev)
+CItemContainer::CItemContainer(LPDIRECT3DDEVICE9 pGraphicDev, EObjectType eType)
+    : CGameObject(pGraphicDev), m_eInnerItemType(eType)
 {
 }
 
@@ -137,7 +137,7 @@ void CItemContainer::Open()
 {
     m_bOnAnimation = true;
 
-    CGameObject* pGameObject = CWeaponPickup::Create(m_pGraphicDev, this, EObjectType::WEAPON_SHOTGUN);
+    CGameObject* pGameObject = CWeaponPickup::Create(m_pGraphicDev, this, m_eInnerItemType);
     if (!pGameObject) return;
 
     if (FAILED(m_pOwner->Add_GameObject(L"WeaponPickup", pGameObject)))
@@ -154,9 +154,9 @@ void CItemContainer::OnCollisionEnter(CGameObject* pOther)
     }
 }
 
-CItemContainer* CItemContainer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CItemContainer* CItemContainer::Create(LPDIRECT3DDEVICE9 pGraphicDev, EObjectType eType)
 {
-    CItemContainer* pObject = new CItemContainer(pGraphicDev);
+    CItemContainer* pObject = new CItemContainer(pGraphicDev, eType);
 
     if (FAILED(pObject->Ready_GameObject()))
     {

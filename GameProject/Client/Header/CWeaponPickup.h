@@ -19,6 +19,7 @@ private:
 	HRESULT			Add_Component();
 
 	EObjectType m_eWeaponType = EObjectType::WEAPON_NONE;
+	int m_iTextureIndex = -1;
 
 protected:
 	virtual void Consume() override;

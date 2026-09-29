@@ -30,6 +30,8 @@ HRESULT CWeaponPickup::Ready_GameObject()
     m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{ 0.f, 0.85f, 0.f });
     m_pTransformCom->Set_Scale(0.3f, 0.3f, 0.3f);
 
+    m_iTextureIndex = (int)m_eWeaponType - (int)EObjectType::WEAPON_NONE - 1;
+
     return S_OK;
 }
 
@@ -50,7 +52,7 @@ void CWeaponPickup::Render_GameObject()
     if (m_bBlinkStart == true && m_bVisible == false) return;
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-    m_pTextureCom->Set_Texture(0);
+    m_pTextureCom->Set_Texture(m_iTextureIndex);
     m_pBufferCom->Render_Buffer();
 }
 
@@ -70,7 +72,7 @@ HRESULT CWeaponPickup::Add_Component()
 
 void CWeaponPickup::Consume()
 {
-    static_cast<CWeaponSystem*>(m_pOwner->Get_GameObject(L"WeaponSystem"))->AddWeapon(m_eWeaponType, L"Weapon_" + to_wstring((int)m_eWeaponType));
+    static_cast<CWeaponSystem*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"WeaponSystem"))->AddWeapon(m_eWeaponType, L"Weapon_" + to_wstring((int)m_eWeaponType));
 
     Set_Dead(true);
 }
