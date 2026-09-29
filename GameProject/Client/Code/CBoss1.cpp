@@ -27,12 +27,13 @@ HRESULT CBoss1::Ready_GameObject()
 
     m_vRoomCenterLocation = static_cast<CRoomLayer*>(m_pOwner)->GetCenterPos();
 
+
     m_pTransformCom2->Set_Scale(1.f, 1.f, 1.f);
     m_pTransformCom2->Set_Pos(m_pTransformCom->m_vInfo[INFO_POS].x, m_pTransformCom->m_vInfo[INFO_POS].y, m_pTransformCom->m_vInfo[INFO_POS].z);
 
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
 
-    m_iHp = 3;
+    m_iHp = m_iMaxHp;
     return S_OK;
 }
 
@@ -48,7 +49,7 @@ _int CBoss1::Update_GameObject(const _float& fTimeDelta)
         m_bMoveFlag2 = false;
         m_pColliderCom->Set_IsActive(false);
     }
-    else if (m_iHp < 4)
+    else if (m_iHp <= m_iMaxHp / 2)
     {
         m_iPhase = 1;
     }
@@ -69,13 +70,13 @@ _int CBoss1::Update_GameObject(const _float& fTimeDelta)
         break;
     case MOVE:
         Move_Boss1(fTimeDelta);
-        //MagmaMouth_Trail(fTimeDelta);
+        //Trail(fTimeDelta);
         break;
     case DEAD:
         //MagmaMouth_Dead(fTimeDelta);
         break;
     case OPENING:
-        //Opening_MagmaMouth(fTimeDelta);
+        Opening_Boss1(fTimeDelta);
         break;
     }
 
@@ -89,7 +90,7 @@ void CBoss1::LateUpdate_GameObject(const _float& fTimeDelta)
     CMonster::LateUpdate_GameObject(fTimeDelta);
 
     //Angry버전 Transform->chase업데이트
-    if (m_iHp < 4)
+    if (m_iPhase == 1)
     {
         CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
             ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
@@ -150,7 +151,7 @@ void CBoss1::Render_GameObject()
     m_pTextureCom->Set_Texture((_uint)m_fFrame);
     m_pBufferCom->Render_Buffer();
 
-    if (m_iHp < 3)
+    if (m_iPhase == 1)
     {
         m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
         m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
@@ -259,7 +260,7 @@ void CBoss1::Update_Motion(const _float& fTimeDelta)
         else if (m_eBoss1State == MOVE)
         {
             //Set_MovePosition();
-            m_fStateUpdateDuration = 4.f;
+            m_fStateUpdateDuration = 5.f;
             m_bMoveFlag = false;
             m_bMoveFlag2 = false;
             m_bTrailStart = false;
@@ -270,6 +271,7 @@ void CBoss1::Update_Motion(const _float& fTimeDelta)
         }
         else if (m_eBoss1State == IDLE)
         {
+            m_fStateUpdateDuration = 2.f;
         }
     }
 }
@@ -294,86 +296,97 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
 
 
 
-
-    if (m_iLandingCount == 0 || m_iLandingCount == 1)
+    if (m_bMoveFlag == false)
     {
-        Set_Stand(fTimeDelta);
-       
-        vPlayerLook.y = 0;
-        D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
-        m_vLandingDirection = vPlayerLook;
-        m_vLandingDirection.y = 3.f;
-        m_fLandingTime += fTimeDelta;
-        m_vLandingDirection.y -= m_fLandingTime * 9.8f;
-        
-        _vec3 vDest = vPos + m_vLandingDirection * 3.f * 0.7f;
-        _float fBlank = 2.1f;
-        if (vDest.x > m_vRoomCenterLocation.x + 6.5f - fBlank ||
-            vDest.x < m_vRoomCenterLocation.x - 6.5f + fBlank ||
-            vDest.z > m_vRoomCenterLocation.z + 5.0f - fBlank ||
-            vDest.z < m_vRoomCenterLocation.z - 5.0f + fBlank)
+        if (m_iLandingCount == 0 || m_iLandingCount == 1)
         {
-            _vec3 vVerticalDirection = { 0.f,m_vLandingDirection.y,0.f };
-            m_pTransformCom->Move_Pos(&vVerticalDirection, 3.f, fTimeDelta);
+            Set_Stand(fTimeDelta);
+
+            vPlayerLook.y = 0;
+            D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
+            m_vLandingDirection = vPlayerLook;
+            m_vLandingDirection.y = 3.f;
+            m_vLandingDirection.x /= 2.f;
+            m_vLandingDirection.z /= 2.f;
+            m_fLandingTime += fTimeDelta;
+            m_vLandingDirection.y -= m_fLandingTime * 9.8f;
+
+            _vec3 vDest = vPos + m_vLandingDirection * 3.f * 0.7f;
+            _float fBlank = 2.1f;
+            if (vDest.x > m_vRoomCenterLocation.x + 6.5f - fBlank ||
+                vDest.x < m_vRoomCenterLocation.x - 6.5f + fBlank ||
+                vDest.z > m_vRoomCenterLocation.z + 5.0f - fBlank ||
+                vDest.z < m_vRoomCenterLocation.z - 5.0f + fBlank)
+            {
+                _vec3 vVerticalDirection = { 0.f,m_vLandingDirection.y,0.f };
+                m_pTransformCom->Move_Pos(&vVerticalDirection, 3.f, fTimeDelta);
+            }
+            else
+            {
+                m_pTransformCom->Move_Pos(&m_vLandingDirection, 3.f, fTimeDelta);
+            }
+
+
+            if (vPos.y <= 2.f && m_fLandingTime > 0.5f)
+            {
+                m_fLandingTime = 0.f;
+                ++m_iLandingCount;
+
+                //_vec3 vPlayerPos;
+                pPlayerTransformCom->Get_Info(INFO_POS, &m_vMovePosition);
+
+                _float fBlank = 2.1f;
+                if (m_vMovePosition.x > m_vRoomCenterLocation.x + 6.5f - fBlank)
+                {
+                    m_vMovePosition.x = m_vRoomCenterLocation.x + 6.5f - fBlank;
+                }
+                if (m_vMovePosition.x < m_vRoomCenterLocation.x - 6.5f + fBlank)
+                {
+                    m_vMovePosition.x = m_vRoomCenterLocation.x - 6.5f + fBlank;
+                }
+                if (m_vMovePosition.z > m_vRoomCenterLocation.z + 5.0f - fBlank)
+                {
+                    m_vMovePosition.z = m_vRoomCenterLocation.z + 5.0f - fBlank;
+                }
+                if (m_vMovePosition.z < m_vRoomCenterLocation.z - 5.0f + fBlank)
+                {
+                    m_vMovePosition.z = m_vRoomCenterLocation.z - 5.0f + fBlank;
+                }
+
+
+                m_vMovePosition.y = 2.f;
+            }
+            Look_AtPlayer();
         }
         else
         {
-            m_pTransformCom->Move_Pos(&m_vLandingDirection, 3.f, fTimeDelta);
+            Set_OnTerrain();
+            Set_Walking(fTimeDelta);
+
+
+            _vec3 vec3 = vPos - m_vMovePosition;
+
+            if (D3DXVec3Length(&vec3) < 0.1f)
+            {
+                //Look_AtPlayer();
+                m_bMoveFlag = true;
+            }
+            else
+            {
+                _vec3 vDir = m_vMovePosition - vPos;
+                D3DXVec3Normalize(&vDir, &vDir);
+                m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
+                //Look_AtDestination();
+                Look_AtPlayer();
+            }
         }
-        
-
-        if (vPos.y <= 2.f && m_fLandingTime > 0.5f)
-        {
-            m_fLandingTime = 0.f;
-            ++m_iLandingCount;
-
-            //_vec3 vPlayerPos;
-            pPlayerTransformCom->Get_Info(INFO_POS, &m_vMovePosition);
-
-            _float fBlank = 2.1f;
-            if (m_vMovePosition.x > m_vRoomCenterLocation.x + 6.5f - fBlank)
-            {
-                m_vMovePosition.x = m_vRoomCenterLocation.x + 6.5f - fBlank;
-            }
-            if (m_vMovePosition.x < m_vRoomCenterLocation.x - 6.5f + fBlank)
-            {
-                m_vMovePosition.x = m_vRoomCenterLocation.x - 6.5f + fBlank;
-            }
-            if (m_vMovePosition.z > m_vRoomCenterLocation.z + 5.0f - fBlank)
-            {
-                m_vMovePosition.z = m_vRoomCenterLocation.z + 5.0f - fBlank;
-            }
-            if (m_vMovePosition.z < m_vRoomCenterLocation.z - 5.0f + fBlank)
-            {
-                m_vMovePosition.z = m_vRoomCenterLocation.z - 5.0f + fBlank;
-            }
-
-
-            m_vMovePosition.y = 2.f;
-        }
-        Look_AtPlayer();
     }
     else
     {
         Set_OnTerrain();
         Set_Walking(fTimeDelta);
-
-
-        _vec3 vec3 = vPos - m_vMovePosition;
-
-        if (D3DXVec3Length(&vec3)<0.1f)
-        {
-            Look_AtPlayer();
-        }
-        else
-        {
-            _vec3 vDir = m_vMovePosition - vPos;
-            D3DXVec3Normalize(&vDir, &vDir);
-            m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
-            Look_AtDestination();
-        }
+        Chase_Player(fTimeDelta);
     }
-    //Look_AtPlayer();
     
     
    
@@ -392,6 +405,54 @@ void CBoss1::IDLE_Boss1(const _float& fTimeDelta)
     Chase_Player(fTimeDelta);
     Set_Walking(fTimeDelta);
 
+}
+
+void CBoss1::Opening_Boss1(const _float& fTimeDelta)
+{
+	m_bElapsedOpeningTime += fTimeDelta;
+
+
+    if (m_bOpeningMoveFlag == true)
+    {
+        //if (m_bElapsedOpeningTime > 7.f)
+        {
+            m_bOpening = false;
+        }
+        return;
+    }
+    if (m_bOpeningMoveFlag2 == false)
+    {
+        m_bOpeningMoveFlag2 = true;
+        _vec3 vPos{ 0.f,m_pTransformCom->m_vScale.y,0.f };
+        m_pTransformCom->Move_Pos(&vPos, 1.f, 1.f);
+    }
+
+    if (m_bElapsedOpeningTime > 2.f)
+    {
+        _vec3 vPos, vDir;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        vDir = m_vOpeningMoveDirection[m_iOpeningMoveIndex];
+
+        vDir.y = 3.f;
+        m_fLandingTime += fTimeDelta;
+        vDir.y -= m_fLandingTime * 9.8f;
+
+        if (vPos.y <= 2.f && m_fLandingTime > 0.5f)
+        {
+            m_fLandingTime = 0.f;
+
+            ++m_iOpeningMoveIndex;
+
+            if (m_iOpeningMoveIndex == sizeof(m_vOpeningMoveDirection) / sizeof(m_vOpeningMoveDirection[0]))
+            {
+                m_bOpeningMoveFlag = true;
+                //m_eBoss1State = IDLE;
+                return;
+            }
+        }
+        m_pTransformCom->Move_Pos(&vDir, 2.f, fTimeDelta);
+    }
+    Look_AtPlayer();
 }
 
 void CBoss1::Set_Stand(const _float& fTimeDelta)
@@ -454,7 +515,7 @@ void CBoss1::Chase_Player(const _float& fTimeDelta)
 	_vec3   vPlayerLook;
 	pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
-	m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 1.f, fTimeDelta);
+	m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 2.f, fTimeDelta);
 }
 
 void CBoss1::Shuffle_Array(_uint N)
