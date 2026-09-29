@@ -109,11 +109,11 @@ HRESULT CItem::Add_Component()
     return S_OK;
 }
 
-void CItem::OnCollisionEnter(CGameObject* pOther)
+void CItem::OnCollisionEnter(COLLINFO eCollInfo)
 {
     if (m_bAttractStart == true) return;
-    CPlayer* pPlayer = dynamic_cast<CPlayer*>(pOther);
-    if (pPlayer)
+
+    if (eCollInfo.iOtherID == COLL_PLAYER)
     {
         //Consume();
         m_bAttractStart = true;

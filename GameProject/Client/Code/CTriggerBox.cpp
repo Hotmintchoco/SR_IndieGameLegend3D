@@ -73,10 +73,9 @@ HRESULT CTriggerBox::Add_Component()
     return S_OK;
 }
 
-void CTriggerBox::OnCollisionEnter(CGameObject* pOther)
+void CTriggerBox::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    CPlayer* pPlayer = dynamic_cast<CPlayer*>(pOther);
-    if (pPlayer)
+    if (eCollInfo.iOtherID == COLL_PLAYER)
     {
         /* Box는 Ready 단계에서만 만들어지니까 Owner가 보장됨 */
         static_cast<CRoomLayer*>(m_pOwner)->OnRoomTriggerBlockCollided();

@@ -34,9 +34,9 @@ public:
 
 	virtual _bool	Intersect(CCollider* pOther) PURE;
 
-	virtual void	OnCollisionEnter(CCollider* pOther);
-	virtual void	OnCollisionStay(CCollider* pOther);
-	virtual void	OnCollisionExit(CCollider* pOther);
+	virtual void	OnCollisionEnter(COLLINFO eCollInfo);
+	virtual void	OnCollisionStay(COLLINFO eCollInfo);
+	virtual void	OnCollisionExit(COLLINFO eCollInfo);
 
 	virtual void SyncPositionToOwner() PURE;
 

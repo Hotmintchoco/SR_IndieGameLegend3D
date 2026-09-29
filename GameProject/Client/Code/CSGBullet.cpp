@@ -66,7 +66,7 @@ void CSGBullet::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 }
 
-void CSGBullet::OnCollisionEnter(CGameObject* pObject)
+void CSGBullet::OnCollisionEnter(COLLINFO eCollInfo)
 {
     Set_Dead(true);
 }

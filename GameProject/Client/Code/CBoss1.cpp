@@ -166,9 +166,9 @@ void CBoss1::Render_GameObject()
 
 }
 
-void CBoss1::OnCollisionEnter(CGameObject* pOther)
+void CBoss1::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    CMonster::OnCollisionEnter(pOther);
+    CMonster::OnCollisionEnter(eCollInfo);
 
 }
 

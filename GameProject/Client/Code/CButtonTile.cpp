@@ -69,9 +69,9 @@ void CButtonTile::Render_GameObject()
 
 }
 
-void CButtonTile::OnCollisionEnter(CGameObject* pOther)
+void CButtonTile::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    if (pOther == this) return;
+    if (eCollInfo.pOtherCollider == m_pColliderCom) return;
 
     if (m_iCollisionCount == 0)
     {
@@ -84,9 +84,9 @@ void CButtonTile::OnCollisionEnter(CGameObject* pOther)
     ++m_iCollisionCount;
 }
 
-void CButtonTile::OnCollisionExit(CGameObject* pOther)
+void CButtonTile::OnCollisionExit(COLLINFO eCollInfo)
 {
-    if (pOther == this) return;
+    if (eCollInfo.pOtherCollider == m_pColliderCom) return;
 
     --m_iCollisionCount;
     

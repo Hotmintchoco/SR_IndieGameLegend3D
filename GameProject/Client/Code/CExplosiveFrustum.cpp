@@ -69,9 +69,9 @@ void CExplosiveFrustum::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 }
 
-void CExplosiveFrustum::OnCollisionEnter(CGameObject* pOther)
+void CExplosiveFrustum::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    _bool bIsDestroyed = CheckDestroyCondition(dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider")));
+    _bool bIsDestroyed = CheckDestroyCondition(eCollInfo.pOtherCollider);
 
     if (bIsDestroyed)
     {

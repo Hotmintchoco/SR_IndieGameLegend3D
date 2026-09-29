@@ -115,9 +115,9 @@ void CSprnub2::Render_GameObject()
     if (m_bHitState == true) CMonster::Disable_HitRenderState();
 }
 
-void CSprnub2::OnCollisionEnter(CGameObject* pOther)
+void CSprnub2::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    CMonster::OnCollisionEnter(pOther);
+    CMonster::OnCollisionEnter(eCollInfo);
 }
 
 HRESULT CSprnub2::Add_Component()

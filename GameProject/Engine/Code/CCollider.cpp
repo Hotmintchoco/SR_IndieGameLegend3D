@@ -26,40 +26,28 @@ CCollider::~CCollider()
 {
 }
 
-void CCollider::OnCollisionEnter(CCollider* pOther)
+void CCollider::OnCollisionEnter(COLLINFO eCollInfo)
 {
-	if (nullptr == m_pOwner || nullptr == pOther)
+	if (nullptr == m_pOwner || nullptr == eCollInfo.pOtherCollider)
 		return;
 
-	CGameObject* pOtherOwner = pOther->Get_Owner();
-	if (nullptr == pOtherOwner)
-		return;
-
-	m_pOwner->OnCollisionEnter(pOtherOwner);
+	m_pOwner->OnCollisionEnter(eCollInfo);
 }
 
-void CCollider::OnCollisionStay(CCollider* pOther)
+void CCollider::OnCollisionStay(COLLINFO eCollInfo)
 {
-	if (nullptr == m_pOwner || nullptr == pOther)
+	if (nullptr == m_pOwner || nullptr == eCollInfo.pOtherCollider)
 		return;
 
-	CGameObject* pOtherOwner = pOther->Get_Owner();
-	if (nullptr == pOtherOwner)
-		return;
-
-	m_pOwner->OnCollisionStay(pOtherOwner);
+	m_pOwner->OnCollisionStay(eCollInfo);
 }
 
-void CCollider::OnCollisionExit(CCollider* pOther)
+void CCollider::OnCollisionExit(COLLINFO eCollInfo)
 {
-	if (nullptr == m_pOwner || nullptr == pOther)
+	if (nullptr == m_pOwner || nullptr == eCollInfo.pOtherCollider)
 		return;
 
-	CGameObject* pOtherOwner = pOther->Get_Owner();
-	if (nullptr == pOtherOwner)
-		return;
-
-	m_pOwner->OnCollisionExit(pOtherOwner);
+	m_pOwner->OnCollisionExit(eCollInfo);
 }
 
 _float CCollider::Get_ViewZ()

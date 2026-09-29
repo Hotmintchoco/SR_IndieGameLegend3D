@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CFrustum.h"
 
@@ -26,7 +26,7 @@ public:
 	virtual			void		Render_GameObject();
 
 
-	virtual void OnCollisionEnter(CGameObject* pOther) override;
+	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
 
 private:
 	HRESULT			Add_Component();
@@ -43,7 +43,7 @@ private:
 
 	virtual void Destroy() override;
 
-	/* ÆøÆÄ °ü·Ã ¼¼ºÎ°ª */
+	/* í­íŒŒ ê´€ë ¨ ì„¸ë¶€ê°’ */
 	float m_fPropagateSpeed = 0.15f;
 	float m_fPropagateVariance = 0.7f;
 	float m_fFlickerChance = 0.7f;

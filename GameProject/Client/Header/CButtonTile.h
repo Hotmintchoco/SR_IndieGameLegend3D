@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CTile.h"
 
@@ -23,8 +23,8 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-	virtual void OnCollisionEnter(CGameObject* pOther) override;
-	virtual void OnCollisionExit(CGameObject* pOther) override;
+	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
+	virtual void OnCollisionExit(COLLINFO eCollInfo) override;
 
 protected:
 	HRESULT			Add_Component();
@@ -35,8 +35,8 @@ protected:
 	Engine::CTexture* m_pDownTextureCom = nullptr;
 	Engine::CBoxCollider* m_pColliderCom = nullptr;
 
-	bool m_bPressed = false; // ÇöÀç ´­¸² »óÅÂ
-	bool m_bFixed = true; // ´­·¶´Ù ¶¼¾úÀ» ¶§ µ¹¾Æ¿À´ÂÁö
+	bool m_bPressed = false; // í˜„ì¬ ëˆŒë¦¼ ìƒíƒœ
+	bool m_bFixed = true; // ëˆŒë €ë‹¤ ë–¼ì—ˆì„ ë•Œ ëŒì•„ì˜¤ëŠ”ì§€
 	int m_iCollisionCount = 0;
 
 public:
