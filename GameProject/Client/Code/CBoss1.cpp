@@ -38,13 +38,45 @@ _int CBoss1::Update_GameObject(const _float& fTimeDelta)
     if (m_iHp <= 0)
     {
         m_bDelete = true;
+
+        m_eBoss1State = DEAD;
+
+        m_bMoveFlag = false;
+        m_bMoveFlag2 = false;
+        m_pColliderCom->Set_IsActive(false);
+    }
+    else if (m_iHp < 4)
+    {
+        m_iPhase = 1;
     }
 
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
-    Set_OnTerrain();
-    m_fFrame += fTimeDelta * 6.f;
-    if (m_fFrame > 4.f)
-        m_fFrame = 0.f;
+
+
+
+    Update_Motion(fTimeDelta);
+
+    switch (m_eBoss1State)
+    {
+    case IDLE:
+        IDLE_Boss1(fTimeDelta);
+        break;
+    case SPAWN:
+        Spawn_Spn(fTimeDelta);
+        break;
+    case MOVE:
+        Move_Boss1(fTimeDelta);
+        //MagmaMouth_Trail(fTimeDelta);
+        break;
+    case DEAD:
+        //MagmaMouth_Dead(fTimeDelta);
+        break;
+    case OPENING:
+        //Opening_MagmaMouth(fTimeDelta);
+        break;
+    }
+
+
 
     return iExit;
 }
@@ -53,24 +85,15 @@ void CBoss1::LateUpdate_GameObject(const _float& fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-    if (nullptr == pPlayerTransformCom)
-        return;
-
-    _vec3   vPlayerPos;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-
-    _vec3   vPlayerLook;
-    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
-
-    m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 0.8f, fTimeDelta);
-    //m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
-
     //Angry버전 Transform->chase업데이트
     if (m_iHp < 4)
     {
+        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+
+        if (nullptr == pPlayerTransformCom)
+            return;
+
         _matrix	matWorld, matScale, matRot, matTrans;
 
         D3DXMatrixScaling(&matScale, m_pTransformCom2->m_vScale.x, m_pTransformCom2->m_vScale.y, m_pTransformCom2->m_vScale.z);
@@ -90,8 +113,7 @@ void CBoss1::LateUpdate_GameObject(const _float& fTimeDelta)
                 m_pTransformCom->m_vInfo[INFO_POS].z);
         }
         _vec3 vSrc = m_pTransformCom->m_vInfo[INFO_LOOK];
-        _vec3 vDst = -pPlayerTransformCom->m_vInfo[INFO_LOOK]; //플레이어랑 평행하게 정렬
-        //_vec3 vDst = pPlayerTransformCom->m_vInfo[INFO_POS] - m_pTransformCom->m_vInfo[INFO_POS]; //플레이어 시선 기준 정렬
+        _vec3 vDst = -pPlayerTransformCom->m_vInfo[INFO_LOOK];
 
         _vec3 vAxis = { 0.f, 1.f, 0.f };
         _vec3 vCross;
@@ -127,9 +149,11 @@ void CBoss1::Render_GameObject()
 
     if (m_iHp < 3)
     {
+        m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
         m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
         m_pTextureCom2->Set_Texture((_uint)m_fFrame / 2);
         m_pBufferCom->Render_Buffer();
+        m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
     }
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
@@ -175,7 +199,6 @@ HRESULT CBoss1::Add_Component()
     return S_OK;
 }
 
-
 CBoss1* CBoss1::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
     CBoss1* pMonster = new CBoss1(pGraphicDev);
@@ -193,4 +216,186 @@ CBoss1* CBoss1::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 void CBoss1::Free()
 {
     CMonster::Free();
+}
+
+void CBoss1::Update_Motion(const _float& fTimeDelta)
+{
+    if (m_eBoss1State == DEAD || m_bOpening == true)return;
+
+    m_fStateUpdateTime += fTimeDelta;
+
+    if (m_fStateUpdateTime > m_fStateUpdateDuration)
+    {
+        m_fStateUpdateTime = 0.f;
+
+
+        if (m_iPhase == 0)
+        {
+            m_eBoss1State = static_cast<BOSS1STATE>(rand() % 3);
+            if (m_bMoveState == true)
+            {
+                m_eBoss1State = MOVE;
+                m_bMoveState = false;
+
+            }
+        }
+        else
+        {
+            m_eBoss1State = static_cast<BOSS1STATE>(rand() % 3);
+        }
+        //m_eBoss1State = SPAWN;
+        m_eBoss1State = MOVE;
+        if (m_eBoss1State == SPAWN)
+        {
+            Shuffle_Array(4);
+            ZeroMemory(m_bSpawnFinish, sizeof(m_bSpawnFinish));
+            m_fSpawnTime = 0.f;
+            m_fStateUpdateDuration = 2.f;
+            m_fSpawn_CoolDown = 0.25f;
+        }
+        else if (m_eBoss1State == MOVE)
+        {
+            //Set_MovePosition();
+            m_fStateUpdateDuration = 4.f;
+            m_bMoveFlag = false;
+            m_bMoveFlag2 = false;
+            m_bTrailStart = false;
+            m_fTrailTime2 = 0.f;
+
+            m_iLandingCount = 0;
+            m_bStand = false;
+        }
+        else if (m_eBoss1State == IDLE)
+        {
+        }
+    }
+}
+
+void CBoss1::Move_Boss1(const _float& fTimeDelta)
+{
+    m_fFrame += fTimeDelta * 6.f;
+    if (m_fFrame > 4.f)
+        m_fFrame = 0.f;
+    _vec3 vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+
+    if (nullptr == pPlayerTransformCom)
+        return;
+    
+    _vec3   vPlayerPos;
+    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+
+    _vec3   vPlayerLook;
+    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+
+
+
+
+    if (m_iLandingCount == 0 || m_iLandingCount == 1)
+    {
+        vPlayerLook.y = 0;
+        D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
+        m_vLandingDirection = vPlayerLook;
+        m_vLandingDirection.y = 3.f;
+        m_fLandingTime += fTimeDelta;
+        m_vLandingDirection.y -= m_fLandingTime * 9.8f;
+        m_pTransformCom->Move_Pos(&m_vLandingDirection, 3.f, fTimeDelta);
+        Look_AtPlayer();
+        if (vPos.y <= 2.f && m_fLandingTime > 0.5f)
+        {
+            m_fLandingTime = 0.f;
+            ++m_iLandingCount;
+
+        }
+
+    }
+    else
+    {
+        Set_OnTerrain();
+
+
+
+
+        //CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+        //    ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+
+        //if (nullptr == pPlayerTransformCom)
+        //    return;
+
+        //_vec3   vPlayerPos;
+        //pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+
+        //_vec3   vPlayerLook;
+        //pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+
+        m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 0.8f, fTimeDelta);
+    }
+    //Look_AtPlayer();
+    
+    
+   
+}
+
+void CBoss1::Spawn_Spn(const _float& fTimeDelta)
+{
+    Set_OnTerrain();
+    Look_AtPlayer();
+    Set_Stand(fTimeDelta);
+}
+
+void CBoss1::IDLE_Boss1(const _float& fTimeDelta)
+{
+    Set_OnTerrain();
+    Look_AtPlayer();
+    Set_Stand(fTimeDelta);
+
+}
+
+void CBoss1::Set_Stand(const _float& fTimeDelta)
+{
+    if (m_bStand == false)
+    {
+        m_fFrame += fTimeDelta * 6.f;
+        if (m_fFrame > 4.f)
+        {
+            m_fFrame = 0.f;
+			m_bStand = true;
+        }
+    }
+}
+
+void CBoss1::Look_AtPlayer()
+{
+    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+
+    if (nullptr == pPlayerTransformCom)
+        return;
+
+    _vec3   vPlayerPos;
+    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+
+    _vec3   vPlayerLook;
+    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+
+    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+}
+
+void CBoss1::Shuffle_Array(_uint N)
+{
+    for (int i = 0; i < (int)N; ++i)
+    {
+        m_iSpawnOrderArr[i] = i;
+    }
+
+    for (int i = N - 1; i > 0; --i)
+    {
+        int j = rand() % (i + 1);
+        int temp = m_iSpawnOrderArr[i];
+        m_iSpawnOrderArr[i] = m_iSpawnOrderArr[j];
+        m_iSpawnOrderArr[j] = temp;
+    }
 }

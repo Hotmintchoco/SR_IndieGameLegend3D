@@ -27,7 +27,8 @@ HRESULT CSprnub1::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(0.25f, 0.25f, 0.25f);
-    m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
+    //m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
+    m_pColliderCom->Set_Radius(0.5f);
     m_iHp = 2;
     return S_OK;
 }

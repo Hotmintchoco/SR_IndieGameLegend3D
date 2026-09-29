@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CMonster.h"
 
@@ -27,6 +27,17 @@ public:
 private:
 	HRESULT			Add_Component();
 
+	void Shuffle_Array(_uint N);
+	void Update_Motion(const _float& fTimeDelta);
+
+	void Move_Boss1(const _float& fTimeDelta);
+	void Spawn_Spn(const _float& fTimeDelta);
+	void IDLE_Boss1(const _float& fTimeDelta);
+
+	void Set_Stand(const _float& fTimeDelta);
+	void Look_AtPlayer();
+
+
 protected:
 	Engine::CTexture* m_pTextureCom2;
 	Engine::CTransform* m_pTransformCom2;
@@ -35,4 +46,65 @@ public:
 
 protected:
 	virtual void		Free();
+
+private:
+	enum BOSS1STATE { SPAWN, MOVE, IDLE, DEAD, OPENING };
+	//BOSS1STATE m_eBoss1State = OPENING;
+	BOSS1STATE m_eBoss1State = IDLE;
+	_bool m_bOpening = false;
+	_bool m_bStand = false;
+
+	_int m_iPhase = 0;
+
+
+	_float m_fSpawn_CoolDown = 0.25f;
+	_float m_fSpawnTime = 0.f;
+	_bool m_bSpawnFinish[4] = {};
+	_uint m_iSpawnOrderArr[4] = {};
+
+	_float m_fStateUpdateTime = 0.f;
+	_float m_fStateUpdateDuration = 2.f;
+
+	_vec3 m_vRoomCenterLocation = {};
+	_vec3 m_vMovePosition = {};
+	_bool m_bMoveFlag = false;
+	_bool m_bMoveFlag2 = false;
+	_bool m_bMoveState = true;
+
+	_bool m_bTrailStart = false;
+	_bool m_bTrailFinish = false;
+	_float m_fTrailTime = 0.f;
+	_float m_fTrailTime2 = 0.f;
+	_float m_fTrailDuration = 0.f;
+	_vec3 m_fTrailPoint[4] = {};
+
+	//_uint m_iMonsterX;
+	//_uint m_iMonsterZ;
+	//_uint m_iPlayerX;
+	//_uint m_iPlayerZ;
+
+	_bool m_bLandingState = true;
+	_vec3 m_vLandingDirection = {};
+	_float m_fLandingTime = 0.f;
+	_float m_fVelocityY = 0.f;
+	_uint m_iLandingCount = 0;
+
+
+	_bool m_bDead_Effect1 = false;
+	_bool m_bDead_Effect2 = false;
+	_float m_fElapsedDeadTime = 0.f;
+	_float m_fElapsedDeadTime2 = 0.f;
+	_float m_fDeadTime = 5.f;
+	_bool m_DeadExplosion = false;
+
+	_bool m_bOpeningMoveFlag = false;
+	_float m_bElapsedOpeningTime = 0.f;
+
+	_vec3 m_vOpeningMoveDirection[5] =
+	{
+		{-3,0,-3}, {+6,0,0},
+		{0,0,+6}, {-3,0,-3},
+		{+4.5f,0,0}
+	};
+	_int m_iOpeningMoveIndex = 0;
 };
