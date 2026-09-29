@@ -4,7 +4,7 @@
 IMPLEMENT_SINGLETON(CCameraMgr)
 
 CCameraMgr::CCameraMgr()
-	: m_pCurCamera(NULL, nullptr), m_iMoveIndex(0), m_fMoveDuring(0.f)
+	: m_pCurCamera(NULL, nullptr), m_pCameraWorking(nullptr)
 {
 }
 
@@ -19,147 +19,43 @@ void CCameraMgr::Update_Camera(const _float& fTimeDelta, const _vec3& vTargetLoo
 	if (nullptr == m_pCurCamera.second)
 		return;
 
-	if (!IsCameraMoving())
-		m_pCurCamera.second->Input_Camera();
+	if (nullptr == m_pCameraWorking)
+		return;
+
+	if (!static_cast<CCameraWorking*>(m_pCameraWorking)->GetIsMoving()) m_pCurCamera.second->Input_Camera();
 
 	for (auto& Pair : m_mapCamera)
 		Pair.second->Update_Camera(fTimeDelta, vTargetLook, vTargetPos, vTargetRight);
 
-	if (IsCameraMoving())
-		Update_CameraMove(fTimeDelta);
-
-	m_pCurCamera.second->Apply_Transform();
-}
-
-void CCameraMgr::Update_CameraMove(const _float& fTimeDelta)
-{
-	m_fMoveDuring += fTimeDelta;
-
-	while (IsCameraMoving() && m_fMoveDuring >= m_vecCameraMove[m_iMoveIndex].fTime)
-	{
-		if (m_iMoveIndex + 1 == m_vecCameraMove.size())
-		{
-			Apply_CameraMove(m_vecCameraMove[m_iMoveIndex], 1.f);
-			ClearCameraMove();
-			return;
-		}
-
-		m_fMoveDuring -= m_vecCameraMove[m_iMoveIndex].fTime;
-		++m_iMoveIndex;
-	}
-
-	const CAMERA_MOVE& tMove = m_vecCameraMove[m_iMoveIndex];
-	Apply_CameraMove(tMove, m_fMoveDuring / tMove.fTime);
-}
-
-void CCameraMgr::Apply_CameraMove(const CAMERA_MOVE& tMove, _float fRatio)
-{
-	_vec3 vEye;
-	D3DXVec3Lerp(&vEye, &tMove.vStartPos, &tMove.vEndPos, fRatio);
-
-	_vec3 vAt = tMove.bLookAt ? tMove.vTarget : vEye + tMove.vTarget;
-
-	_vec3 vDir = vAt - vEye;
-	if (D3DXVec3Length(&vDir) < FLT_EPSILON)
-	{
-		m_pCurCamera.second->Get_CamLook(&vDir);
-		vAt = vEye + vDir;
-	}
-
-	m_pCurCamera.second->Set_View(vEye, vAt);
-}
-
-void CCameraMgr::Push_CameraMove(CAMERA_MOVE tMove)
-{
-	if (tMove.fTime <= 0.f)
-		tMove.fTime = 0.0001f;
-
-	if (!IsCameraMoving())
-		ClearCameraMove();
-
-	m_vecCameraMove.push_back(tMove);
-}
-
-void CCameraMgr::SetCameraMoveAt(const _vec3& vStartPos, const _vec3& vEndPos, const _vec3& vAt, _float fTime)
-{
-	CAMERA_MOVE tMove;
-	tMove.vStartPos = vStartPos;
-	tMove.vEndPos = vEndPos;
-	tMove.vTarget = vAt;
-	tMove.bLookAt = true;
-	tMove.fTime = fTime;
-
-	Push_CameraMove(tMove);
-}
-
-void CCameraMgr::SetCameraMove(const _vec3& vStartPos, const _vec3& vEndPos, const _vec3& vLook, _float fTime)
-{
-	CAMERA_MOVE tMove;
-	tMove.vStartPos = vStartPos;
-	tMove.vEndPos = vEndPos;
-	tMove.bLookAt = false;
-	tMove.fTime = fTime;
-
-	_vec3 vDir = vLook;
-	if (D3DXVec3Length(&vDir) < FLT_EPSILON)
-		vDir = vEndPos - vStartPos;
-	if (D3DXVec3Length(&vDir) < FLT_EPSILON && nullptr != m_pCurCamera.second)
-		m_pCurCamera.second->Get_CamLook(&vDir);
-	if (D3DXVec3Length(&vDir) < FLT_EPSILON)
-		vDir = { 0.f, 0.f, 1.f };
-
-	D3DXVec3Normalize(&tMove.vTarget, &vDir);
-
-	Push_CameraMove(tMove);
-}
-
-void CCameraMgr::SetCameraMoveInRoom(_int iRoomIndex, const _vec3& vStartPos, const _vec3& vEndPos, const _vec3& vLook, _float fTime)
-{
-	SetCameraMove(RoomNormalizedToWorld(iRoomIndex, vStartPos), RoomNormalizedToWorld(iRoomIndex, vEndPos), vLook, fTime);
-}
-
-void CCameraMgr::SetCameraMoveInRoomAt(_int iRoomIndex, const _vec3& vStartPos, const _vec3& vEndPos, const _vec3& vAt, _float fTime)
-{
-	SetCameraMoveAt(RoomNormalizedToWorld(iRoomIndex, vStartPos), RoomNormalizedToWorld(iRoomIndex, vEndPos), RoomNormalizedToWorld(iRoomIndex, vAt), fTime);
-}
-
-_vec3 CCameraMgr::RoomNormalizedToWorld(_int iRoomIndex, const _vec3& vNorm) const
-{
-	_int iRoomRow = iRoomIndex / m_iRoomColCount;
-	_int iRoomCol = iRoomIndex % m_iRoomColCount;
-
-	_vec3 vRoomCenterPos{
-		m_vCenterRoomPosition.x - (_float)(m_iRoomColCount - 1) / 2.f * m_vOuterRoomSize.x + m_vOuterRoomSize.x * (_float)iRoomCol,
-		0.f,
-		m_vCenterRoomPosition.z + (_float)(m_iRoomRowCount - 1) / 2.f * m_vOuterRoomSize.z - m_vOuterRoomSize.z * (_float)iRoomRow
-	};
-
-	_float fX = max(-1.f, min(1.f, vNorm.x));
-	_float fY = max(0.f, min(1.f, vNorm.y));
-	_float fZ = max(-1.f, min(1.f, vNorm.z));
-
-	return _vec3{
-		vRoomCenterPos.x + fX * m_vInnerRoomSize.x * 0.5f,
-		fY * m_fRoomHeight,
-		vRoomCenterPos.z + fZ * m_vInnerRoomSize.z * 0.5f
-	};
-}
-
-void CCameraMgr::ClearCameraMove()
-{
-	m_vecCameraMove.clear();
-	m_iMoveIndex = 0;
-	m_fMoveDuring = 0.f;
+	m_pCameraWorking->Update_Camera(fTimeDelta, vTargetLook, vTargetPos, vTargetRight);
 }
 
 void CCameraMgr::LateUpdate_Camera(const _float& fTimeDelta)
 {
-	m_pCurCamera.second->LateUpdate_Camera(fTimeDelta);
+	if (nullptr == m_pCurCamera.second)
+		return;
+
+	if (nullptr == m_pCameraWorking)
+		return;
+
+	for (auto& Pair : m_mapCamera)
+		Pair.second->LateUpdate_Camera(fTimeDelta);
+
+	m_pCameraWorking->LateUpdate_Camera(fTimeDelta);
+	
+	if (static_cast<CCameraWorking*>(m_pCameraWorking)->GetIsMoving()) m_pCameraWorking->Apply_Transform();
+	
+	else m_pCurCamera.second->Apply_Transform();
 }
 
 
 HRESULT CCameraMgr::Ready_Camera(const _tchar* pCameraTag, CAMERAID tagCameraType, LPDIRECT3DDEVICE9 pGraphicDev)
 {
+	if (m_pCameraWorking == nullptr)
+	{
+		m_pCameraWorking = CCameraObj::Create(CAMERA_WORKING, pGraphicDev);
+	}
+
 	CCameraObj* pCamera = Find_Camera(pCameraTag);
 
 	if (nullptr != pCamera)
@@ -192,6 +88,25 @@ HRESULT CCameraMgr::Select_Camera(const _tchar* pCameraTag)
 	return S_OK;
 }
 
+HRESULT CCameraMgr::SetCameraMove(const CAMERA_MOVE& camMoveInfo)
+{
+	if (m_pCameraWorking == nullptr) return E_FAIL;
+
+	dynamic_cast<CCameraWorking*>(m_pCameraWorking)->SetCameraMove(camMoveInfo);
+
+	return S_OK;
+}
+
+HRESULT CCameraMgr::ClearCameraMove()
+{
+	if (m_pCameraWorking == nullptr) return E_FAIL;
+
+	dynamic_cast<CCameraWorking*>(m_pCameraWorking)->ClearCameraMove();
+
+	return S_OK;
+}
+
+
 CCameraObj* CCameraMgr::Find_Camera(const _tchar* pCameraTag)
 {
 	auto		iter = find_if(m_mapCamera.begin(), m_mapCamera.end(), CTag_Finder(pCameraTag));
@@ -220,9 +135,9 @@ HRESULT CCameraMgr::Get_CameraAngle(_float* pAngle)
 	return S_OK;
 }
 
-
 void CCameraMgr::Free()
 {
+	Safe_Release(m_pCameraWorking);
 	for_each(m_mapCamera.begin(), m_mapCamera.end(), CDeleteMap());
 	m_mapCamera.clear();
 }

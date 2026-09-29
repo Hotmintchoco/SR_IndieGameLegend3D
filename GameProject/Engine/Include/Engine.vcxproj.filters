@@ -136,6 +136,9 @@
     <ClCompile Include="..\Code\CCameraFreePerspective.cpp">
       <Filter>11. CameraMgr\CameraObj\Camera_Free_Perspective</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CCameraWorking.cpp">
+      <Filter>11. CameraMgr\CameraObj\Camera_Working</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CGraphicDev.h">
@@ -297,6 +300,9 @@
     <ClInclude Include="..\Header\CCameraFreePerspective.h">
       <Filter>11. CameraMgr\CameraObj\Camera_Free_Perspective</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CCameraWorking.h">
+      <Filter>11. CameraMgr\CameraObj\Camera_Working</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00. GraphicDev">
@@ -430,6 +436,9 @@
     </Filter>
     <Filter Include="11. CameraMgr\CameraObj\Camera_Free_Perspective">
       <UniqueIdentifier>{f4a170d6-6702-482a-b1a1-5a24bc740e86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. CameraMgr\CameraObj\Camera_Working">
+      <UniqueIdentifier>{daa0aa16-9bf9-4c3b-8ef9-76ebbf9c8581}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

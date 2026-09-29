@@ -152,6 +152,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CCameraTPVPerspective.h" />
     <ClInclude Include="..\Header\CCameraMgr.h" />
     <ClInclude Include="..\Header\CCameraObj.h" />
+    <ClInclude Include="..\Header\CCameraWorking.h" />
     <ClInclude Include="..\Header\CCollider.h" />
     <ClInclude Include="..\Header\CCollisionMgr.h" />
     <ClInclude Include="..\Header\CComponent.h" />
@@ -207,6 +208,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CCameraTPVPerspective.cpp" />
     <ClCompile Include="..\Code\CCameraMgr.cpp" />
     <ClCompile Include="..\Code\CCameraObj.cpp" />
+    <ClCompile Include="..\Code\CCameraWorking.cpp" />
     <ClCompile Include="..\Code\CCollider.cpp" />
     <ClCompile Include="..\Code\CCollisionMgr.cpp" />
     <ClCompile Include="..\Code\CComponent.cpp" />
