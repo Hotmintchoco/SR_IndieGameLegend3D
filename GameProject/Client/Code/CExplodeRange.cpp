@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CExplodeRange.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -20,7 +20,7 @@ HRESULT CExplodeRange::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    // Note : ¼ø¼­¿¡ ÁÖÀÇ
+    // Note : ìˆœì„œì— ì£¼ì˜
     if (FAILED(CGameObject::Ready_GameObject()))
         return E_FAIL;
 
@@ -57,7 +57,7 @@ void CExplodeRange::Render_GameObject()
 
 void CExplodeRange::PropagateTransform(CTransform* pParentTransform)
 {
-    /* Æø¹ß Àü´Þ¿ë ±¸Çü ÄÝ¶óÀÌ´õ ÀÌ¹Ç·Î ±»ÀÌ È¸Àü, ½ºÄÉÀÏÀº °í·ÁÇÏÁö ¾ÊÀ½. ºÎ¸ð »èÁ¦ ½Ã À§Ä¡ ¾÷µ¥ÀÌÆ® ¹®Á¦µµ ÀÖ°í */    
+    /* í­ë°œ ì „ë‹¬ìš© êµ¬í˜• ì½œë¼ì´ë” ì´ë¯€ë¡œ êµ³ì´ íšŒì „, ìŠ¤ì¼€ì¼ì€ ê³ ë ¤í•˜ì§€ ì•ŠìŒ. ë¶€ëª¨ ì‚­ì œ ì‹œ ìœ„ì¹˜ ì—…ë°ì´íŠ¸ ë¬¸ì œë„ ìžˆê³  */    
     _vec3 vFrustumPos;
     pParentTransform->Get_Info(INFO_POS, &vFrustumPos);
     m_pTransformCom->Set_Pos(vFrustumPos);
@@ -98,7 +98,7 @@ HRESULT CExplodeRange::Add_Component()
     return S_OK;
 }
 
-void CExplodeRange::OnCollisionEnter(CGameObject* pOther)
+void CExplodeRange::OnCollisionEnter(COLLINFO eCollInfo)
 {
 }
 

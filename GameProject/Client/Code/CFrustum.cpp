@@ -51,9 +51,9 @@ void CFrustum::Render_GameObject()
 {
 }
 
-void CFrustum::OnCollisionStay(CGameObject* pOther)
+void CFrustum::OnCollisionStay(COLLINFO eCollInfo)
 {
-	Obstacle_Collision(pOther, m_pColliderCom);
+	Obstacle_Collision(eCollInfo.pOtherCollider, m_pColliderCom);
 }
 
 HRESULT CFrustum::Add_Component()

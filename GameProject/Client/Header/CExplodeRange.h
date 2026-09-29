@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CGameObject.h"
 
@@ -24,7 +24,7 @@ public:
 	inline void AttachTo(Engine::CGameObject* pObject) { m_pParentObject = pObject; }
 	void PropagateTransform(CTransform* pTransform);
 
-	/* ±¸Çü Äİ¶óÀÌ´õ·Î °¡Á¤ */
+	/* êµ¬í˜• ì½œë¼ì´ë”ë¡œ ê°€ì • */
 	void SetScale(const float fScale);
 	inline void SetDelayTime(const float fTime) { m_fLeftCollisionCheckTime = fTime; }
 	inline void OnSwitch() { m_bDelayedSwitch = true; }
@@ -38,10 +38,10 @@ protected:
 
 	Engine::CGameObject* m_pParentObject = nullptr;
 
-	/* Áö¿¬ Æø¹ß Ã³¸® */
+	/* ì§€ì—° í­ë°œ ì²˜ë¦¬ */
 	float m_fLeftCollisionCheckTime = 0.1f;
 	bool m_bDelayedSwitch = false;
-	virtual	void OnCollisionEnter(CGameObject* pOther) override;
+	virtual	void OnCollisionEnter(COLLINFO eCollInfo) override;
 
 public:
 	static CExplodeRange* Create(LPDIRECT3DDEVICE9 pGraphicDev);

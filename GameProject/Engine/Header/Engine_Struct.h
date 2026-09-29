@@ -50,6 +50,15 @@ namespace Engine
 
 	}INDEX32;	
 
+	class CCollider;
+
+	typedef struct tagCollisionInfo
+	{
+		CCollider* pMyCollider = nullptr;
+		CCollider* pOtherCollider = nullptr;
+		_int iMyID = -1;
+		_int iOtherID = -1;
+	}COLLINFO;
 }
 
 

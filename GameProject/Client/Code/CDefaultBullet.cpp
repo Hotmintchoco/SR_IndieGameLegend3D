@@ -65,7 +65,7 @@ void CDefaultBullet::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 }
 
-void CDefaultBullet::OnCollisionEnter(CGameObject* pObject)
+void CDefaultBullet::OnCollisionEnter(COLLINFO eCollInfo)
 {
     Set_Dead(true);
 

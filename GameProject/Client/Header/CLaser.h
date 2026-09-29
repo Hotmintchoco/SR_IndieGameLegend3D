@@ -31,7 +31,7 @@ public:
 	virtual	void LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual	void Render_GameObject();
 
-	virtual void OnCollisionEnter(CGameObject* pObject) override;
+	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
 
 	void Reflect(const _vec3& vNormal);
 

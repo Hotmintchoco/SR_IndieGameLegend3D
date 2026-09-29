@@ -100,9 +100,9 @@ void CMonster::Render_GameObject()
 
 }
 
-void CMonster::OnCollisionEnter(CGameObject* pOther)
+void CMonster::OnCollisionEnter(COLLINFO eCollInfo)
 {
-	CCollider* pCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
+	CCollider* pCollider = eCollInfo.pOtherCollider;
     
     if (pCollider && pCollider->Get_CollisionID() == COLL_PROJECTILE)
     {

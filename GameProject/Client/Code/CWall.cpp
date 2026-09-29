@@ -63,21 +63,21 @@ void CWall::InitializeCollider()
     {
     case EWallDir::EAST:
         fExtentsX = 0.5f;
-        fExtentsZ = 3.5f;
+        fExtentsZ = 4.f;
         fDiffX = 7.f;
         break;
     case EWallDir::SOUTH:
-        fExtentsX = 3.5f;
+        fExtentsX = 4.f;
         fExtentsZ = 0.5f;
         fDiffZ = -6.f;
         break;
     case EWallDir::WEST:
         fExtentsX = 0.5f;
-        fExtentsZ = 3.5f;
+        fExtentsZ = 4.f;
         fDiffX = -7.f;
         break;
     case EWallDir::NORTH:
-        fExtentsX = 3.5f;
+        fExtentsX = 4.f;
         fExtentsZ = 0.5f;
         fDiffZ = 6.f;
         break;
@@ -149,21 +149,21 @@ void CWall::BlockDoor(bool bBlock)
     {
     case EWallDir::EAST:
         fExtentsX = 0.5f;
-        fExtentsZ = 3.5f;
+        fExtentsZ = 4.f;
         fDiffX = 7.f;
         break;
     case EWallDir::SOUTH:
-        fExtentsX = 3.5f;
+        fExtentsX = 4.f;
         fExtentsZ = 0.5f;
         fDiffZ = -6.f;
         break;
     case EWallDir::WEST:
         fExtentsX = 0.5f;
-        fExtentsZ = 3.5f;
+        fExtentsZ = 4.f;
         fDiffX = -7.f;
         break;
     case EWallDir::NORTH:
-        fExtentsX = 3.5f;
+        fExtentsX = 4.f;
         fExtentsZ = 0.5f;
         fDiffZ = 6.f;
         break;
@@ -229,13 +229,9 @@ void CWall::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 }
 
-void CWall::OnCollisionEnter(CGameObject* pOther)
+void CWall::OnCollisionStay(COLLINFO eCollInfo)
 {
-}
-
-void CWall::OnCollisionStay(CGameObject* pOther)
-{
-    if (nullptr == pOther)
+    if (nullptr == eCollInfo.pOtherCollider)
         return;
 
     for (int i = 0; i < 2; ++i)
@@ -243,7 +239,7 @@ void CWall::OnCollisionStay(CGameObject* pOther)
         if (nullptr == m_pColliderCom[i])
             continue;
 
-        Obstacle_Collision(pOther, m_pColliderCom[i]);
+        Obstacle_Collision(eCollInfo.pOtherCollider, m_pColliderCom[i]);
     }
 }
 

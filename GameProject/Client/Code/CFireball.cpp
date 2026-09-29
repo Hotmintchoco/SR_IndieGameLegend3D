@@ -119,7 +119,7 @@ void CFireball::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-void CFireball::OnCollisionEnter(CGameObject* pOther)
+void CFireball::OnCollisionEnter(COLLINFO eCollInfo)
 {
     //CMonster::OnCollisionEnter(pOther);
 }
