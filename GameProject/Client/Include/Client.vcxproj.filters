@@ -271,6 +271,12 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Ddokddak">
       <UniqueIdentifier>{8029e05a-482a-4890-b0ab-89b15aeb1f3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\03. Arrow">
+      <UniqueIdentifier>{be8dcc4a-66f7-4499-abeb-6f4f7b8d2224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\03. Arrow\CrossBuffer">
+      <UniqueIdentifier>{885071a5-b6ac-47df-976a-21322cd8c5b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -552,6 +558,12 @@
     <ClInclude Include="..\Header\CDdokddak.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Ddokddak</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CArrow.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCrossBuffer.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow\CrossBuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -805,6 +817,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CDdokddak.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Ddokddak</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CArrow.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCrossBuffer.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow\CrossBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

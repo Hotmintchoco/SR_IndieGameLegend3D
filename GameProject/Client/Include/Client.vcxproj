@@ -145,9 +145,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CAbstractFactory.h" />
+    <ClInclude Include="..\Header\CArrow.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
     <ClInclude Include="..\Header\CBoss1.h" />
+    <ClInclude Include="..\Header\CCrossBuffer.h" />
     <ClInclude Include="..\Header\CDdokddak.h" />
     <ClInclude Include="..\Header\CDefaultBullet.h" />
     <ClInclude Include="..\Header\CFloor.h" />
@@ -240,9 +242,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CAbstractFactory.cpp" />
+    <ClCompile Include="..\Code\CArrow.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
     <ClCompile Include="..\Code\CBreakableFrustum.cpp" />
     <ClCompile Include="..\Code\CBoss1.cpp" />
+    <ClCompile Include="..\Code\CCrossBuffer.cpp" />
     <ClCompile Include="..\Code\CDdokddak.cpp" />
     <ClCompile Include="..\Code\CDefaultBullet.cpp" />
     <ClCompile Include="..\Code\CFloor.cpp" />
