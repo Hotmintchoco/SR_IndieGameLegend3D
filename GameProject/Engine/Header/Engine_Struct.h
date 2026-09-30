@@ -2,6 +2,7 @@
 #define Engine_Struct_h__
 
 #include "Engine_Typedef.h"
+#include "Engine_Enum.h"
 
 namespace Engine
 {
@@ -59,6 +60,17 @@ namespace Engine
 		_int iMyID = -1;
 		_int iOtherID = -1;
 	}COLLINFO;
+	typedef struct tagCameraMove
+	{
+		EYE_MOVE								eyeMoveAttr;
+		AT_MOVE									atMoveAttr;
+		_vec3									vEyeInfo[EYE_PARAM_END];
+		_vec3									vAtInfo[AT_PARAM_END];
+		std::pair<const _tchar*, const _tchar*>	pEyeTraceTarget;
+		std::pair<const _tchar*, const _tchar*>	pAtTraceTarget;
+		_float									fTime;
+
+	}CAMERA_MOVE;
 }
 
 

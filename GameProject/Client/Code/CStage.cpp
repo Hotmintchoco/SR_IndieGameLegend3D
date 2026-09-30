@@ -167,6 +167,8 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 
 	Engine::CCollisionMgr::GetInstance()->Update_Collision();
 	Engine::CCollisionMgr::GetInstance()->Clear_ColliderList();
+
+	CCameraMgr::GetInstance()->LateUpdate_Camera(fTimeDelta);
 }
 
 void CStage::Render_Scene()

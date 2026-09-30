@@ -70,6 +70,7 @@ void CSGBullet::Render_GameObject()
 
 void CSGBullet::OnCollisionEnter(COLLINFO eCollInfo)
 {
+    m_pColliderCom->Set_IsActive(false);
     Set_Dead(true);
 
     //260926 재현
