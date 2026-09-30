@@ -31,7 +31,6 @@ _int CFloor::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    // CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE_REFLECT, m_pColliderCom);
     CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom);
 
     return iExit;
@@ -65,6 +64,14 @@ HRESULT CFloor::Add_Component()
         return E_FAIL;
 
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_BoxCollider", pComponent });
+    // Collider
+
+    pComponent = m_pBufferCom = dynamic_cast<CPlaneTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlaneTex"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
 
     return S_OK;
 }
@@ -76,6 +83,11 @@ void CFloor::OnCollisionEnter(COLLINFO eCollInfo)
 const _vec3 CFloor::GetNormal()
 {
     return _vec3{ 0.f, 1.f, 0.f };
+}
+
+vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> CFloor::GetRayTestTargetInfo()
+{
+    return vector <pair<Engine::CVIBuffer*, Engine::CTransform*>>{ { m_pBufferCom, m_pTransformCom } };
 }
 
 CFloor* CFloor::Create(LPDIRECT3DDEVICE9 pGraphicDev)

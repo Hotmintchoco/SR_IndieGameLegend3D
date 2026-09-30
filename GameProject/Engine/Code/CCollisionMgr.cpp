@@ -25,6 +25,8 @@ void CCollisionMgr::Add_Collider(_int iGroup, CCollider* pCollider)
 	if (nullptr == pCollider)
 		return;
 
+	if (!pCollider->Get_IsActive()) return;
+
 	pCollider->Set_CollisionID(iGroup);
 	m_ColList[iGroup].push_back(pCollider);
 }

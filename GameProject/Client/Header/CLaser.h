@@ -34,6 +34,7 @@ public:
 	virtual	void Render_GameObject();
 
 	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
+	virtual void OnCollisionExit(COLLINFO eCollInfo) override;
 
 	void Reflect(const _vec3& vNormal);
 
@@ -44,12 +45,11 @@ private:
 	void BillBoardRoll();
 	void CalculateLength(const _float& fTimeDelta);
 	bool ComputeFacingUp(const _vec3& vCamPos, const _vec3& vPos, const _vec3& vDir, _vec3* pOutUp = nullptr);
-
+	void PreciseHitTest(CGameObject* pTarget, const float fTimeDelta);
 
 	CLaserBuffer* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
 	Engine::CSphereCollider* m_pColliderCom = nullptr;
-	Engine::CSphereCollider* m_pColliderComReflection = nullptr;
 
 	/* 코너 어색함 개선 */
 	Engine::CTransform* m_pTransformCorner = nullptr;
@@ -71,6 +71,7 @@ private:
 	bool m_bCollided = false;
 	bool m_bShrinking = false;
 	CGameObject* m_pPrevGenerationCollidedObject = nullptr; // 만들어지자마자 부딪히는 경우 방지
+	vector<CGameObject*> m_vecRayTestTarget;
 	float m_fReflectLength = 0.f; // 충돌 시점 길이
 	float m_fReflectTime = 0.f; // 충돌 시점
 	float m_fBirthTime = 0.f;

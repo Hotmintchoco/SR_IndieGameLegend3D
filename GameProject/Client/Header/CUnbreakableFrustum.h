@@ -2,6 +2,7 @@
 
 #include "CFrustum.h"
 #include "IReflectable.h"
+#include "IRayTestable.h"
 
 namespace Engine
 {

@@ -194,10 +194,12 @@ HRESULT CRoomLayer::SpawnRoom()
 		return E_FAIL;
 
 	CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrName, L"Com_Transform"));
-	pTransformCom->Set_Pos(vRoomCenterPos.x, -0.5f, vRoomCenterPos.z);
+	pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
+	pTransformCom->Set_Scale(13.f, 1.f, 11.f);
 	
 	CBoxCollider* pColliderCom = dynamic_cast<CBoxCollider*>(Get_Component(ID_DYNAMIC, wstrName, L"Com_BoxCollider"));
 	pColliderCom->Set_Extents(vOuterRoomSize.x / 2.f, 0.5f, vOuterRoomSize.z / 2.f);
+	pColliderCom->Set_DiffPos(_vec3{ 0.f, -0.5f, 0.f });
 
 
 	/* 타일 */

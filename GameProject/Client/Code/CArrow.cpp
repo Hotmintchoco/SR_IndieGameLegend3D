@@ -5,6 +5,11 @@
 #include "CCollisionMgr.h"
 #include "Client_Enum.h"
 #include "CCrossBuffer.h"
+#include "CRayCaster.h"
+#include "CManagement.h"
+#include "CStage.h"
+#include "IRayTestable.h"
+#include "CRoomLayer.h"
 
 CArrow::CArrow(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower)
     : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir), m_fSpeed(fShotPower * s_tData.fMaxSpeed)
@@ -44,8 +49,9 @@ void CArrow::InitTransform()
 
     _vec3 vLook, vUp, vRight;
     D3DXVec3Normalize(&vLook, &m_vDir);
-    vUp = _vec3{ 0.f, 1.f, 0.f };
-    D3DXVec3Cross(&vRight, &vUp, &vLook);
+    _vec3 vWorldUp = _vec3{ 0.f, 1.f, 0.f };
+    D3DXVec3Cross(&vRight, &vWorldUp, &vLook);
+    D3DXVec3Normalize(&vRight, &vRight);
     D3DXVec3Cross(&vUp, &vLook, &vRight);
 
     _matrix* pWorld = m_pTransformCom->Get_World();
@@ -74,8 +80,9 @@ void CArrow::SyncTransformToVelocity()
 {
     _vec3 vLook, vUp, vRight;
     D3DXVec3Normalize(&vLook, &m_vVelocity);
-    vUp = _vec3{ 0.f, 1.f, 0.f };
-    D3DXVec3Cross(&vRight, &vUp, &vLook);
+    _vec3 vWorldUp = _vec3{ 0.f, 1.f, 0.f };
+    D3DXVec3Cross(&vRight, &vWorldUp, &vLook);
+    D3DXVec3Normalize(&vRight, &vRight);
     D3DXVec3Cross(&vUp, &vLook, &vRight);
 
     _matrix* pWorld = m_pTransformCom->Get_World();
@@ -98,14 +105,45 @@ _int CArrow::Update_GameObject(const _float& fTimeDelta)
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PROJECTILE, m_pColliderCom);
 
-    
-    if (!m_pStuckTarget)
+    if (!m_bStopped)
     {
         ExertGravity(fTimeDelta);
         SyncTransformToVelocity();
     }
 
+    for (auto pObj : m_vecRayTestTarget)
+    {
+        PreciseHitTest(pObj, fTimeDelta);
+    }
+
     return iExit;
+}
+
+void CArrow::PreciseHitTest(CGameObject* pTarget, const float fTimeDelta)
+{
+    CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
+    _vec3 vPos, vLook;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
+
+    THitInfo t{};
+
+    if (IRayTestable* pRayTestable = dynamic_cast<IRayTestable*>(pTarget))
+    {
+        vector<pair<CVIBuffer*, CTransform*>> vecInfo = pRayTestable->GetRayTestTargetInfo();
+        for (auto& [pBuffer, pTransform] : vecInfo)
+        {
+            pRayCaster->RayTest(t, vPos, vLook, pBuffer, pTransform->Get_World());
+        }
+    }
+
+    const float fThreshold = m_fSpeed * fTimeDelta;
+
+    if (t.bHit && t.fDist < fThreshold)
+    {
+        m_pTransformCom->Set_Pos(t.fHitPoint);
+        m_bStopped = true;
+    }
 }
 
 void CArrow::LateUpdate_GameObject(const _float& fTimeDelta)
@@ -133,7 +171,10 @@ void CArrow::OnCollisionEnter(COLLINFO eCollInfo)
     switch (eCollInfo.iOtherID)
     {
     case COLLISIONID::COLL_OBSTACLE:
-        m_pStuckTarget = pOtherCol->Get_Owner();
+        if (IRayTestable* pRayTestable = dynamic_cast<IRayTestable*>(pOtherCol->Get_Owner()))
+        {
+            m_vecRayTestTarget.push_back(pOtherCol->Get_Owner());
+        }
         break;
     case COLLISIONID::COLL_MONSTER:
         Set_Dead(true);
@@ -145,7 +186,6 @@ void CArrow::OnCollisionEnter(COLLINFO eCollInfo)
 
 void CArrow::OnCollisionExit(COLLINFO eCollInfo)
 {
-    m_pStuckTarget = nullptr;
 }
 
 HRESULT CArrow::Add_Component()

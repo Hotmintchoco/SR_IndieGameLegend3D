@@ -12,7 +12,7 @@ struct TArrowData : public TProjectileData
 {
 	float fMaxSpeed = 20.f;
 	float fGravityCoef = 6.f;
-	_vec3 vInitScale = _vec3{0.33f, 0.33f, 1.f};
+	_vec3 vInitScale = _vec3{0.66f, 0.66f, 1.f};
 };
 
 class CCrossBuffer;
@@ -37,6 +37,7 @@ private:
 	void InitTransform();
 	void ExertGravity(const float fTimeDelta);
 	void SyncTransformToVelocity();
+	void PreciseHitTest(CGameObject* pTarget, const float fTimeDelta);
 
 	CCrossBuffer* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
@@ -59,7 +60,8 @@ private:
 	_vec3 m_vVelocity{0.f, 0.f, 0.f};
 
 	/* 박혔을 때 정보 */
-	CGameObject* m_pStuckTarget = nullptr;
+	vector<CGameObject*> m_vecRayTestTarget;
+	bool m_bStopped = false;
 
 public:
 	static CArrow* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float ShotPower);
