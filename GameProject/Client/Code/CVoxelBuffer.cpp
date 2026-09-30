@@ -35,9 +35,9 @@ HRESULT CVoxelBuffer::Ready_Buffer()
 	vector<BYTE> vecAlpha(tInfo.Width * tInfo.Height);
 
 	BYTE* pBits = (BYTE*)tRect.pBits; /* 이미지 픽셀 바이트 시작 위치를 얻기 위함 */
-	for (int y = 0; y < tInfo.Height; ++y)
+	for (int y = 0; y < (int)tInfo.Height; ++y)
 	{
-		for (int x = 0; x < tInfo.Width; ++x)
+		for (int x = 0; x < (int)tInfo.Width; ++x)
 		{
 			DWORD dwPix = *(DWORD*)(pBits + y * tRect.Pitch + x * 4); /* 패딩이 있는 경우를 대비하여 단순 Width 대신 Pitch 사용 */
 			BYTE byAlpha = BYTE(dwPix >> 24);
@@ -102,13 +102,13 @@ HRESULT CVoxelBuffer::Ready_Buffer()
 				int iCmpX = x + d.dx;
 				int iCmpY = y + d.dy;
 				
-				bool bInValidIdx = iCmpY < 0 || iCmpY >= tInfo.Height || iCmpX < 0 || iCmpX >= tInfo.Width;
+				bool bInValidIdx = iCmpY < 0 || iCmpY >= (int)tInfo.Height || iCmpX < 0 || iCmpX >= (int)tInfo.Width;
 				if (bool bTop = iCmpY < 0 || (!bInValidIdx && vecAlpha[iCmpY * tInfo.Width + iCmpX] == 0 && d.dy == -1))
 				{
 					t = GetSideQuadInfo(x, y, EQuadDirection::TOP, tInfo);
 					vecQuad.push_back(t);
 				}
-				if (bool bBottom = iCmpY >= tInfo.Height || (!bInValidIdx && vecAlpha[iCmpY * tInfo.Width + iCmpX] == 0 && d.dy == 1))
+				if (bool bBottom = iCmpY >= (int)tInfo.Height || (!bInValidIdx && vecAlpha[iCmpY * tInfo.Width + iCmpX] == 0 && d.dy == 1))
 				{
 					t = GetSideQuadInfo(x, y, EQuadDirection::BOTTOM, tInfo);
 					vecQuad.push_back(t);
@@ -118,7 +118,7 @@ HRESULT CVoxelBuffer::Ready_Buffer()
 					t = GetSideQuadInfo(x, y, EQuadDirection::LEFT, tInfo);
 					vecQuad.push_back(t);
 				}
-				if (bool bRight = iCmpX >= tInfo.Width || (!bInValidIdx && vecAlpha[iCmpY * tInfo.Width + iCmpX] == 0 && d.dx == 1))
+				if (bool bRight = iCmpX >= (int)tInfo.Width || (!bInValidIdx && vecAlpha[iCmpY * tInfo.Width + iCmpX] == 0 && d.dx == 1))
 				{
 					t = GetSideQuadInfo(x, y, EQuadDirection::RIGHT, tInfo);
 					vecQuad.push_back(t);
