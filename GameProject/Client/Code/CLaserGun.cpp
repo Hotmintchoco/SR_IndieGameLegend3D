@@ -88,7 +88,7 @@ void CLaserGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CLaserGun::SpecialAttack()
+void CLaserGun::DefaultAttack()
 {
     _vec3 vDir = m_vBulletTo - m_vBulletFrom;
     D3DXVec3Normalize(&vDir, &vDir);
@@ -101,6 +101,10 @@ void CLaserGun::SpecialAttack()
     m_bIsCoolTime = true;
     m_fCoolTimeLeft = m_fSpecialAtkInterval;
     StartShotAnimation();
+}
+
+void CLaserGun::SpecialAttack()
+{
 }
 
 void CLaserGun::UltimateAttack()

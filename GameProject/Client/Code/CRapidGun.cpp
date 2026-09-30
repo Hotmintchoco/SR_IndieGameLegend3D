@@ -85,6 +85,21 @@ void CRapidGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
+void CRapidGun::DefaultAttack()
+{
+    _vec3 vDir = m_vBulletTo - m_vBulletFrom;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
+    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+
+    CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
+
+    m_bIsCoolTime = true;
+    m_fCoolTimeLeft = m_fShootInterval;
+    StartShotAnimation();
+}
+
 void CRapidGun::SpecialAttack()
 {
     _vec3 vDir = m_vBulletTo - m_vBulletFrom;

@@ -81,15 +81,11 @@ void CBow::ChargeStart()
 
 void CBow::ChargeEnd()
 {
-    _vec3 vDir = m_vBulletTo - m_vBulletFrom;
-    D3DXVec3Normalize(&vDir, &vDir);
+    if (!m_bSpecialAttackSwitchOn)
+    {
+        DefaultAttack();
+    }
 
-    CProjectile* pProjectile = CArrow::Create(m_pGraphicDev, m_vBulletFrom, vDir, m_iRenderIdx);
-    cout << m_iChargeLevel;
-    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
-
-    m_bOnCharging = false;
-    m_fChargeTime = 0.f;
 }
 
 void CBow::RenderEditorPanel()
@@ -113,19 +109,21 @@ void CBow::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
+void CBow::DefaultAttack()
+{
+    _vec3 vDir = m_vBulletTo - m_vBulletFrom;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    CProjectile* pProjectile = CArrow::Create(m_pGraphicDev, m_vBulletFrom, vDir, m_iRenderIdx);
+    cout << m_iChargeLevel;
+    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+
+    m_bOnCharging = false;
+    m_fChargeTime = 0.f;
+}
+
 void CBow::SpecialAttack()
 {
-    // _vec3 vDir = m_vBulletTo - m_vBulletFrom;
-    // D3DXVec3Normalize(&vDir, &vDir);
-    // 
-    // CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
-    // CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
-    // 
-    // CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
-    // 
-    // m_bIsCoolTime = true;
-    // m_fCoolTimeLeft = m_fSpecialAtkInterval;
-    // StartShotAnimation();
 }
 
 void CBow::UltimateAttack()

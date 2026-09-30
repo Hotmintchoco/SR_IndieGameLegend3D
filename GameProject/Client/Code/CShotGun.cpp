@@ -89,7 +89,7 @@ void CShotGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CShotGun::SpecialAttack()
+void CShotGun::DefaultAttack()
 {
     for (int i = 0; i < m_iBulletPerSpecialAtk; ++i)
     {
@@ -113,10 +113,14 @@ void CShotGun::SpecialAttack()
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
-    
+
     m_bIsCoolTime = true;
     m_fCoolTimeLeft = m_fSpecialAtkInterval;
     StartShotAnimation();
+}
+
+void CShotGun::SpecialAttack()
+{
 }
 
 void CShotGun::UltimateAttack()

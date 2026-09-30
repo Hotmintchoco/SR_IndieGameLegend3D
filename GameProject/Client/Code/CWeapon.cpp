@@ -77,21 +77,6 @@ void CWeapon::SyncTransformToCamera()
     m_vBulletTo = vCameraPos + vCameraLook * m_fTargetDistance;
 }
 
-void CWeapon::DefaultAttack()
-{
-    _vec3 vDir = m_vBulletTo - m_vBulletFrom;
-    D3DXVec3Normalize(&vDir, &vDir);
-
-    CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
-    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
-
-    CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
-
-    m_bIsCoolTime = true;
-    m_fCoolTimeLeft = m_fShootInterval;
-    StartShotAnimation();
-}
-
 void CWeapon::UpdateAnimationArgs(const TWeaponAnimArgs& t)
 {
     m_bOnSprint = t.bSprint;
