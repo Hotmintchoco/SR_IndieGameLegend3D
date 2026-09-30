@@ -47,7 +47,7 @@ _int CBow::Update_GameObject(const _float& fTimeDelta)
     if (m_bOnCharging)
     {
         m_fChargeTime += fTimeDelta;
-        m_iRenderIdx = ceil(m_fChargeTime / (m_fFullChargeTime / (float)m_iChargeLevel));
+        m_iRenderIdx = (int)ceil(m_fChargeTime / (m_fFullChargeTime / (float)m_iChargeLevel));
         m_iRenderIdx = clamp(m_iRenderIdx, 0, m_iChargeLevel);
     }
     else
