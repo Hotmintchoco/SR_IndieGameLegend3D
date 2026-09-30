@@ -23,7 +23,7 @@ public:
 	virtual	void LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual	void Render_GameObject();
 
-	virtual void OnCollisionEnter(CGameObject* pOther) override;
+	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
 
 protected:
 	HRESULT Add_Component();

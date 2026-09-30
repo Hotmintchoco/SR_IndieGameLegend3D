@@ -32,7 +32,6 @@ _int CUnbreakableFrustum::Update_GameObject(const _float& fTimeDelta)
     _int    iExit = CFrustum::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
-    // CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE_REFLECT, m_pColliderCom);
 
     return iExit;
 }

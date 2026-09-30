@@ -5,6 +5,7 @@
 #include "CManagement.h"
 #include "CCollisionMgr.h"
 #include "Client_Enum.h"
+#include "CPlayer.h"
 
 CExplodeRange::CExplodeRange(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -24,7 +25,7 @@ HRESULT CExplodeRange::Ready_GameObject()
     if (FAILED(CGameObject::Ready_GameObject()))
         return E_FAIL;
 
-    m_pColliderCom->Set_CollisionID(COLL_EXPLODERANGE);
+    m_pColliderCom->Set_CollisionID(COLL_EXPLODE);
 
     return S_OK;
 }
@@ -38,7 +39,7 @@ _int CExplodeRange::Update_GameObject(const _float& fTimeDelta)
         m_fLeftCollisionCheckTime -= fTimeDelta;
         if (m_fLeftCollisionCheckTime <= 0.f)
         {
-            CCollisionMgr::GetInstance()->Add_Collider(COLL_EXPLODERANGE, m_pColliderCom);
+            CCollisionMgr::GetInstance()->Add_Collider(COLL_EXPLODE, m_pColliderCom);
             Set_Dead(true);
         }
     }
@@ -100,6 +101,18 @@ HRESULT CExplodeRange::Add_Component()
 
 void CExplodeRange::OnCollisionEnter(COLLINFO eCollInfo)
 {
+    auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
+
+    switch (iOtherID)
+    {
+    case COLLISIONID::COLL_PLAYER:
+    {
+        static_cast<CPlayer*>(pOtherCol->Get_Owner())->Hit(this);
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 CExplodeRange* CExplodeRange::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -82,7 +82,8 @@ HRESULT CStage::Ready_Scene()
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MBULLET, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_ITEM);
-	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODERANGE, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODE, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODE, COLL_PLAYER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MONSTER, COLL_OBSTACLE);
 
 	/* 방 로직 */
@@ -91,7 +92,6 @@ HRESULT CStage::Ready_Scene()
 	/* 투사체와의 충돌 */
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PROJECTILE, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PROJECTILE, COLL_OBSTACLE);
-	// Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_LASER, COLL_OBSTACLE_REFLECT);
 
 	CSoundMgr::GetInstance()->PlayBGM(L"Sector1.wav");
 	CSoundMgr::GetInstance()->SetBGMVolume(0.f);

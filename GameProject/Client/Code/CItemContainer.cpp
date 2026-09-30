@@ -144,13 +144,18 @@ void CItemContainer::Open()
         return;
 }
 
-#include "CProjectile.h"
-void CItemContainer::OnCollisionEnter(CGameObject* pOther)
+void CItemContainer::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    if (dynamic_cast<CProjectile*>(pOther))
+    auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
+
+    switch (iOtherID)
     {
+    case COLLISIONID::COLL_PROJECTILE:
         m_pColliderCom->Set_IsActive(false);
         Open();
+        break;
+    default:
+        break;
     }
 }
 

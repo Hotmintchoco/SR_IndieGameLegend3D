@@ -217,7 +217,6 @@ void CWall::LateUpdate_GameObject(const _float& fTimeDelta)
     for (int i = 0; i < 2; ++i)
     {
         CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom[i]);
-        // CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE_REFLECT, m_pColliderCom[i]);
     }
 }
 
@@ -234,13 +233,26 @@ void CWall::OnCollisionStay(COLLINFO eCollInfo)
     if (nullptr == eCollInfo.pOtherCollider)
         return;
 
-    for (int i = 0; i < 2; ++i)
+    switch (eCollInfo.iOtherID)
     {
-        if (nullptr == m_pColliderCom[i])
-            continue;
+    case COLLISIONID::COLL_PLAYER:
+    case COLLISIONID::COLL_MONSTER:
+    {
+        for (int i = 0; i < 2; ++i)
+        {
+            if (nullptr == m_pColliderCom[i])
+                continue;
 
-        Obstacle_Collision(eCollInfo.pOtherCollider, m_pColliderCom[i]);
+            Obstacle_Collision(eCollInfo.pOtherCollider, m_pColliderCom[i]);
+        }
+        break;
     }
+    default:
+    {
+        break;
+    }
+    }
+
 }
 
 const _vec3 CWall::GetNormal()

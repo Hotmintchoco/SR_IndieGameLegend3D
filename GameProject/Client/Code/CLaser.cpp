@@ -39,7 +39,7 @@ HRESULT CLaser::Ready_GameObject()
 
     m_pTransformCom->Set_Pos(m_vStart);
     m_pColliderCom->Set_Owner(this);
-    m_pColliderCom->Set_Radius(0.01f);
+    m_pColliderCom->Set_Radius(0.3f);
     m_pColliderComReflection->Set_Owner(this);
     m_pColliderComReflection->Set_Radius(0.01f);
 
@@ -51,7 +51,7 @@ _int CLaser::Update_GameObject(const _float& fTimeDelta)
     _int iExit = CProjectile::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
-    // CCollisionMgr::GetInstance()->Add_Collider(COLL_LASER, m_pColliderComReflection);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_PROJECTILE, m_pColliderComReflection);
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PROJECTILE, m_pColliderCom);
 
     CalculateLength(fTimeDelta);
@@ -108,29 +108,46 @@ void CLaser::Render_GameObject()
 
 void CLaser::OnCollisionEnter(COLLINFO eCollInfo)
 {
+    auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
     auto pObject = eCollInfo.pOtherCollider->Get_Owner();
 
-    if (m_pPrevGenerationCollidedObject == pObject) return;
-
-    /* m_pColliderComReflect */
-    if (IReflectable* pReflectable = dynamic_cast<IReflectable*>(pObject))
+    switch (iOtherID)
     {
-        /* 자식 레이저가 생성되자마자 충돌되는 것 방지 */
-        m_pPrevGenerationCollidedObject = pObject;
+    case COLLISIONID::COLL_OBSTACLE:
+    {
+        if (pMyCol != m_pColliderComReflection) break;
+        
+        if (IReflectable* pReflectable = dynamic_cast<IReflectable*>(pObject))
+        {
+            if (m_pPrevGenerationCollidedObject == pObject) break;
 
-        /* 자식 레이저 생성 */
-        Reflect(pReflectable->GetNormal());
+            /* 자식 레이저가 생성되자마자 충돌되는 것 방지 */
+            m_pPrevGenerationCollidedObject = pObject;
 
-        /* 시각적 어색함을 없애기 위한 길이 상한 */
-        m_fReflectLength = m_fCurrentLength;
-        m_fReflectTime = m_fTimeAfterBirth;
+            /* 자식 레이저 생성 */
+            Reflect(pReflectable->GetNormal());
 
-        /* 더 이상 충돌 처리를 하지 않음 */
-        m_pColliderCom->Set_IsActive(false);
+            /* 시각적 어색함을 없애기 위한 길이 상한 */
+            m_fReflectLength = m_fCurrentLength;
+            m_fReflectTime = m_fTimeAfterBirth;
 
-        /* 길이 계산식이 변경됨 */
-        m_bReflected = true;
+            /* 더 이상 충돌 처리를 하지 않음 */
+            m_pColliderCom->Set_IsActive(false);
+
+            /* 길이 계산식이 변경됨 */
+            m_bReflected = true;
+        }
+        break;
     }
+    case COLLISIONID::COLL_MONSTER:
+        /* 몬스터 피격은 몬스터에 이미 구현 */
+        break;
+    default:
+        break;
+    }
+
+
+
 
     /* m_pColliderCom */
 }

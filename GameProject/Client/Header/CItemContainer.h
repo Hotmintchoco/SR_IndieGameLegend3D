@@ -25,7 +25,7 @@ public:
 private:
 	HRESULT			Add_Component();
 	void Open();
-	virtual void OnCollisionEnter(CGameObject* pOther) override;
+	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
 
 private:
 	Engine::CTransform* m_pTransformCom = nullptr;

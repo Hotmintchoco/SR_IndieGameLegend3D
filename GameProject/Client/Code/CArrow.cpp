@@ -88,7 +88,7 @@ void CArrow::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-void CArrow::OnCollisionEnter(CGameObject* pObject)
+void CArrow::OnCollisionEnter(COLLINFO eCollInfo)
 {
     Set_Dead(true);
 }

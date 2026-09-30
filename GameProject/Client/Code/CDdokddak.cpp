@@ -84,26 +84,28 @@ void CDdokddak::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 }
 
-#include "CWall.h"
-#include "CFrustum.h"
-
-void CDdokddak::OnCollisionEnter(CGameObject* pOther)
+void CDdokddak::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    // COLLISIONID eID = (COLLISIONID)static_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"))->Get_CollisionID();
-    
-    // if (eID == COLL_OBSTACLE)
-    if (dynamic_cast<CWall*>(pOther) || dynamic_cast<CFrustum*>(pOther))
+    auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
+
+    switch (iOtherID)
+    {
+    case COLLISIONID::COLL_OBSTACLE:
     {
         if (m_bSkipCurrentFrameCollision) return;
         m_vDir = -m_vDir;
         CSoundMgr::GetInstance()->PlaySFX(L"sfxslider.wav");
         m_bSkipCurrentFrameCollision = true;
-    }
 
-    // if (eID == COLL_PLAYER)
-    if (dynamic_cast<CPlayer*>(pOther))
+        break;
+    }
+    case COLLISIONID::COLL_PLAYER:
     {
-        static_cast<CPlayer*>(pOther)->Hit(pOther);
+        static_cast<CPlayer*>(pOtherCol->Get_Owner())->Hit(nullptr);
+        break;
+    }
+    default:
+        break;
     }
 }
 

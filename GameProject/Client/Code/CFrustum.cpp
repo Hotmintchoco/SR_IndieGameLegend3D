@@ -53,7 +53,26 @@ void CFrustum::Render_GameObject()
 
 void CFrustum::OnCollisionStay(COLLINFO eCollInfo)
 {
-	Obstacle_Collision(eCollInfo.pOtherCollider, m_pColliderCom);
+    switch (eCollInfo.iOtherID)
+    {
+    case COLLISIONID::COLL_PLAYER:
+    case COLLISIONID::COLL_MONSTER:
+    {
+        for (int i = 0; i < 2; ++i)
+        {
+            if (nullptr == m_pColliderCom)
+                continue;
+
+            Obstacle_Collision(eCollInfo.pOtherCollider, m_pColliderCom);
+        }
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+
 }
 
 HRESULT CFrustum::Add_Component()
@@ -92,7 +111,7 @@ _bool CFrustum::CheckDestroyCondition(CCollider* pOtherCollider)
     {
     case COLL_PROJECTILE:
     case COLL_MBULLET:
-    case COLL_EXPLODERANGE:
+    case COLL_EXPLODE:
         return true;
         break;
     default:
