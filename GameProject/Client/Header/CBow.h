@@ -30,6 +30,7 @@ private:
 	virtual void DefaultAttack() override;
 	virtual void SpecialAttack() override;
 	virtual void UltimateAttack() override;
+	void ShootArrow();
 
 	CVoxelBuffer* m_pBufferCom[4] = { nullptr };
 	Engine::CTexture* m_pTextureCom[4] = { nullptr };

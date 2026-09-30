@@ -30,8 +30,8 @@ HRESULT CBow::Ready_GameObject()
     m_fSpecialAtkInterval = 0.1f;
 
     m_vScaleLocal = _vec3{ 0.05f, 0.05f, 0.05f };
-    m_vPositionLocal = _vec3{ 0.25f, -0.4f, 0.75f };
-    m_vRotationLocal = _vec3{ 45.f, -20.f, -15.f };
+    m_vPositionLocal = _vec3{ 0.3f, -0.4f, 0.75f };
+    m_vRotationLocal = _vec3{ 35.f, -15.f, -10.f };
     m_vMuzzlePositionLocal = _vec3{ 0.0f, 5.f, 5.f };
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 
@@ -71,7 +71,7 @@ void CBow::Render_GameObject()
     
     m_pBufferCom[m_iRenderIdx]->Render_Buffer();
 
-    // RenderEditorPanel();
+    RenderEditorPanel();
 }
 
 void CBow::ChargeStart()
@@ -83,7 +83,7 @@ void CBow::ChargeEnd()
 {
     if (!m_bSpecialAttackSwitchOn)
     {
-        DefaultAttack();
+        ShootArrow();
     }
 
 }
@@ -111,6 +111,18 @@ void CBow::RenderEditorPanel()
 
 void CBow::DefaultAttack()
 {
+}
+
+void CBow::SpecialAttack()
+{
+}
+
+void CBow::UltimateAttack()
+{
+}
+
+void CBow::ShootArrow()
+{
     _vec3 vDir = m_vBulletTo - m_vBulletFrom;
     D3DXVec3Normalize(&vDir, &vDir);
 
@@ -120,14 +132,6 @@ void CBow::DefaultAttack()
 
     m_bOnCharging = false;
     m_fChargeTime = 0.f;
-}
-
-void CBow::SpecialAttack()
-{
-}
-
-void CBow::UltimateAttack()
-{
 }
 
 HRESULT CBow::Add_Component()
