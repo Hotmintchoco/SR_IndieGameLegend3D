@@ -8,6 +8,7 @@
 #include "CRoomLayer.h"
 #include "CVoxelBuffer.h"
 #include "CRenderer.h"
+#include "CArrow.h"
 
 CBow::CBow(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -80,7 +81,12 @@ void CBow::ChargeStart()
 
 void CBow::ChargeEnd()
 {
-    /* 차지 단계에 따라 화살 발사 */
+    _vec3 vDir = m_vBulletTo - m_vBulletFrom;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    CProjectile* pProjectile = CArrow::Create(m_pGraphicDev, m_vBulletFrom, vDir, m_iRenderIdx);
+    cout << m_iChargeLevel;
+    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
     m_bOnCharging = false;
     m_fChargeTime = 0.f;
