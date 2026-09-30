@@ -212,6 +212,11 @@ void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
 	pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
+	m_RenderGroup[RENDER_UI].sort([](IRenderable* pDst, IRenderable* pSrc)
+		{
+			return pDst->Get_Z() > pSrc->Get_Z();
+		});
+
 	for (auto& pObj : m_RenderGroup[RENDER_UI])
 		pObj->Render(pGraphicDev);
 

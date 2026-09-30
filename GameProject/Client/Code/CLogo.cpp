@@ -44,7 +44,7 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 			if (nullptr == pStage)
 				return E_FAIL;
 
-			if (FAILED(CManagement::GetInstance()->Set_Scene(pStage)))
+			if (FAILED(CManagement::GetInstance()->Change_Scene(0, pStage, true)))
 			{
 				Safe_Release(pStage);
 				MSG_BOX("Stage Create Failed");

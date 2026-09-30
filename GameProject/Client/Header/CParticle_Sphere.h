@@ -11,7 +11,7 @@ namespace Engine
 class CParticle_Sphere : public CParticle
 {
 public:
-	enum EFFECT_SPHERE_COLOR { BLACK, YELLOW, ORANGE, RED };
+	enum EFFECT_SPHERE_COLOR { BLACK, YELLOW, ORANGE, RED, PINK };
 	enum EFFECT_SPHERE_OPTION {UP, DOWN, UP_DOWN};
 protected:
 	explicit CParticle_Sphere(LPDIRECT3DDEVICE9 pGraphicDev);

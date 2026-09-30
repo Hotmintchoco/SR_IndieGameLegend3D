@@ -34,9 +34,9 @@ public:
 
 	virtual _bool	Intersect(CCollider* pOther) PURE;
 
-	virtual void	OnCollisionEnter(CCollider* pOther);
-	virtual void	OnCollisionStay(CCollider* pOther);
-	virtual void	OnCollisionExit(CCollider* pOther);
+	virtual void	OnCollisionEnter(COLLINFO eCollInfo);
+	virtual void	OnCollisionStay(COLLINFO eCollInfo);
+	virtual void	OnCollisionExit(COLLINFO eCollInfo);
 
 	virtual void SyncPositionToOwner() PURE;
 
@@ -47,6 +47,7 @@ public:
 	/* Interface IRenderable */
 	virtual void Render(LPDIRECT3DDEVICE9& pGraphicDev) {}
 	virtual _float Get_ViewZ() override;
+	virtual _float Get_Z() { return 0.f; }
 	virtual CBase* GetBase() { return static_cast<CBase*>(this); }
 	/* ---------------------- */
 

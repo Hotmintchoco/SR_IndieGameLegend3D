@@ -99,8 +99,10 @@ void CLaser::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 }
 
-void CLaser::OnCollisionEnter(CGameObject* pObject)
+void CLaser::OnCollisionEnter(COLLINFO eCollInfo)
 {
+    auto pObject = eCollInfo.pOtherCollider->Get_Owner();
+
     if (m_pPrevGenerationCollidedObject == pObject) return;
     if (IReflectable* pReflectable = dynamic_cast<IReflectable*>(pObject))
     {

@@ -22,7 +22,7 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-	virtual			void		OnCollisionEnter(CGameObject* pOther) override;
+	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
 
 private:
 	HRESULT			Add_Component();
@@ -34,10 +34,10 @@ public:
 	void Set_Velocity(const _vec3& vDirection) { m_vLandingDirection = vDirection; }
 	void Land(const _float& fTimeDelta);
 private:
-	_bool m_bLandingState;
-	_vec3 m_vLandingDirection;
-	_float m_fLandingTime;
-	_float m_fVelocityY;
+	_bool m_bLandingState = false;
+	_vec3 m_vLandingDirection = {};
+	_float m_fLandingTime = 0.f;
+	_float m_fVelocityY = 0.f;
 
 protected:
 	virtual void		Free();

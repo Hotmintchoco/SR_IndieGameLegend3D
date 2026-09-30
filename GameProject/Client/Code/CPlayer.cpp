@@ -12,6 +12,7 @@
 #include "CRoomLayer.h"
 #include "CUI.h"
 #include "CStage.h"
+#include "CHitCreenUI.h"
 
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -146,16 +147,17 @@ void CPlayer::RenderImGui()
     ImGui::End();
 }
 
-void CPlayer::OnCollisionEnter(CGameObject* pOther)
+void CPlayer::OnCollisionEnter(COLLINFO eCollInfo)
 {
-
+    auto pOther = eCollInfo.pOtherCollider->Get_Owner();
 
     MonsterCollision(pOther, Find_OtherCollider(pOther));
-
 }
 
-void CPlayer::OnCollisionStay(CGameObject* pOther)
+void CPlayer::OnCollisionStay(COLLINFO eCollInfo)
 {
+    auto pOther = eCollInfo.pOtherCollider->Get_Owner();
+
     // 장애물과 충돌 시에 마찰력 적용
     CCollider* pOtherCollider = Find_OtherCollider(pOther);
 
@@ -555,4 +557,13 @@ void CPlayer::Hit(CGameObject* pAttacker) // 히트백 적용 안할 시 nullptr
 
     m_fInvTime = fInvTime;
     if (pAttacker != nullptr) Apply_Knockback(pAttacker);
+
+	// 정민 : 피격 시 화면 UI 적용
+    CGameObject* pHitUI = CManagement::GetInstance()->Get_GameObject(L"UI_Layer", L"HitScreen");
+    if (nullptr != pHitUI)
+    {
+        CHitCreenUI* pHitScreen = dynamic_cast<CHitCreenUI*>(pHitUI);
+        if (nullptr != pHitScreen)
+            pHitScreen->Hit();
+	}
 }

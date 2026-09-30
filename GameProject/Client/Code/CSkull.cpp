@@ -77,9 +77,9 @@ void CSkull::Render_GameObject()
     if (m_bHitState == true) CMonster::Disable_HitRenderState();
 }
 
-void CSkull::OnCollisionEnter(CGameObject* pOther)
+void CSkull::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    CMonster::OnCollisionEnter(pOther);
+    CMonster::OnCollisionEnter(eCollInfo);
 }
 
 HRESULT CSkull::Add_Component()

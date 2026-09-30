@@ -12,7 +12,7 @@
 #include "CEnergy.h"
 
 CSpeyeder::CSpeyeder(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev), m_bLandingState(false), m_fLandingTime(0.f), m_fVelocityY(0.f), m_vLandingDirection{0.f,0.f,0.f}
+    : CMonster(pGraphicDev)
 {
 }
 
@@ -28,7 +28,8 @@ HRESULT CSpeyeder::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(0.25f, 0.25f, 0.25f);
-    m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
+    //m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
+    m_pColliderCom->Set_Radius(0.5f);
     m_iHp = 2;
     return S_OK;
 }
@@ -141,9 +142,9 @@ void CSpeyeder::Render_GameObject()
     if (m_bHitState == true) CMonster::Disable_HitRenderState();
 }
 
-void CSpeyeder::OnCollisionEnter(CGameObject* pOther)
+void CSpeyeder::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    CMonster::OnCollisionEnter(pOther);
+    CMonster::OnCollisionEnter(eCollInfo);
 }
 
 HRESULT CSpeyeder::Add_Component()

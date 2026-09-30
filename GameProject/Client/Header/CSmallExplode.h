@@ -24,8 +24,8 @@ private:
 	HRESULT			Add_Component();
 
 protected:
-	Engine::CRcTex* m_pBufferCom;
-	Engine::CTexture* m_pTextureCom;
+	Engine::CRcTex* m_pBufferCom = nullptr;
+	Engine::CTexture* m_pTextureCom = nullptr;
 public:
 	static CSmallExplode* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	static CSmallExplode* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vScale);

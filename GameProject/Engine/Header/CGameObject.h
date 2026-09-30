@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CBase.h"
 #include "CComponent.h"
@@ -25,9 +25,9 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject()PURE;
 
-	virtual			void		OnCollisionEnter(CGameObject* pOther) {}
-	virtual			void		OnCollisionStay(CGameObject* pOther) {}
-	virtual			void		OnCollisionExit(CGameObject* pOther) {}
+	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) {}
+	virtual			void		OnCollisionStay(COLLINFO eCollInfo) {}
+	virtual			void		OnCollisionExit(COLLINFO eCollInfo) {}
 
 	inline void					SetOwner(CLayer* pLayer) { m_pOwner = pLayer; }
 
@@ -36,6 +36,9 @@ public:
 	virtual _float		Get_ViewZ() { return m_fViewZ; }
 	virtual CBase* GetBase() { return static_cast<CBase*>(this); }
 	/* ----------- */
+
+	// ì§êµ íˆ¬ì˜
+	virtual _float Get_Z();
 
 public:
 	void			Set_Dead(_bool bDead) { m_bDead = bDead; }
@@ -47,17 +50,17 @@ public:
 	void			Compute_ViewZ(const _vec3* pPos);
 
 protected:
-	void			Obstacle_Collision(CGameObject* pOther, CCollider* pObstacleCollider);
+	void			Obstacle_Collision(CCollider* pOtherCollider, CCollider* pObstacleCollider);
 
 protected:
 	map<const _tchar*, CComponent*>			m_mapComponent[ID_END];
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	_float									m_fViewZ;
-	_float 									m_fFrictionForce; // ¸¶Âû·Â Ãß°¡ (Speed¿¡ °öÇØÁÜ)
+	_float 									m_fFrictionForce; // ë§ˆì°°ë ¥ ì¶”ê°€ (Speedì— ê³±í•´ì¤Œ)
 	_bool									m_bDead;
-	_bool									m_bIsActive;	// È°¼ºÈ­ ¿©ºÎ¸¦ ³ªÅ¸³»´Â º¯¼ö	
+	_bool									m_bIsActive;	// í™œì„±í™” ì—¬ë¶€ë¥¼ ë‚˜íƒ€ë‚´ëŠ” ë³€ìˆ˜	
 	
-	/* Ready ´Ü°è¿¡¼­ Layer Á¢±ÙÀÌ ºÒ°¡ÇÑ ¹®Á¦¸¦ ÇØ°áÇÏ±â À§ÇÑ º¯¼ö·Î, Ready ´Ü°è ÀÌÈÄ¿¡´Â º¸ÀåµÇÁö ¾ÊÀ½ */
+	/* Ready ë‹¨ê³„ì—ì„œ Layer ì ‘ê·¼ì´ ë¶ˆê°€í•œ ë¬¸ì œë¥¼ í•´ê²°í•˜ê¸° ìœ„í•œ ë³€ìˆ˜ë¡œ, Ready ë‹¨ê³„ ì´í›„ì—ëŠ” ë³´ì¥ë˜ì§€ ì•ŠìŒ */
 	CLayer* m_pOwner = nullptr;
 
 private:
