@@ -36,33 +36,7 @@ _int CGameStatus::Update_GameObject(const _float& fTimeDelta)
 
     m_fDT = CTimerMgr::GetInstance()->Get_TimeDelta(L"Timer_FPS60");
 
-    if (m_bRayTest)
-    {
-        CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-
-        const multimap<wstring, CGameObject*>& mapObject = pStage->GetCurrentRoomLayer()->Get_ObjMap();
-        CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
-
-        THitInfo t{};
-
-        for (auto& [wstrName, pObject] : mapObject)
-        {
-            if (IRayTestable* pRayTestable = dynamic_cast<IRayTestable*>(pObject))
-            {
-                vector<pair<CVIBuffer*, CTransform*>> vecInfo = pRayTestable->GetRayTestTargetInfo();
-                for (auto& [pBuffer, pTransform] : vecInfo)
-                {
-                    pRayCaster->RayTest(t, m_vCamPos, m_vCamLook, pBuffer, pTransform->Get_World());
-                }
-            }
-        }
-        cout << t.bHit << ", " << t.fDist << endl;;
-
-        if (t.bHit)
-        {
-            CRenderer::GetInstance()->Add_DebugTriangle(t.vTriVtx, t.fTriNormal);
-        }
-    }
+    DebugRayTest();
 
     return S_OK;
 }
@@ -73,8 +47,37 @@ void CGameStatus::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CGameStatus::Render_GameObject()
 {
-    RenderImGui();
-    DebugPanelForRendering();
+    // RenderImGui();
+    // DebugPanelForRendering();
+}
+
+void CGameStatus::DebugRayTest()
+{
+    if (!m_bDebugTriangle) return;
+    
+    CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+
+    const multimap<wstring, CGameObject*>& mapObject = pStage->GetCurrentRoomLayer()->Get_ObjMap();
+    CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
+
+    THitInfo t{};
+
+    for (auto& [wstrName, pObject] : mapObject)
+    {
+        if (IRayTestable* pRayTestable = dynamic_cast<IRayTestable*>(pObject))
+        {
+            vector<pair<CVIBuffer*, CTransform*>> vecInfo = pRayTestable->GetRayTestTargetInfo();
+            for (auto& [pBuffer, pTransform] : vecInfo)
+            {
+                pRayCaster->RayTest(t, m_vCamPos, m_vCamLook, pBuffer, pTransform->Get_World());
+            }
+        }
+    }
+    
+    if (t.bHit)
+    {
+        CRenderer::GetInstance()->Add_DebugTriangle(t.vTriVtx, t.fTriNormal);
+    }
 }
 
 void CGameStatus::UpdateCameraInfo()
@@ -198,7 +201,8 @@ void CGameStatus::DebugPanelForRendering()
 
     ImGui::SeparatorText("Mesh");
 
-    static const char* szMeshMode[] = { "Solid", "Wireframe", "Hidden" };
+    //static const char* szMeshMode[] = { "Solid", "Wireframe", "Hidden" };
+    static const char* szMeshMode[] = { "Solid", "Wireframe" };
     _int iMeshMode = (_int)pDebug->GetMeshMode();
 
     if (ImGui::Combo("Render Mode", &iMeshMode, szMeshMode, IM_ARRAYSIZE(szMeshMode)))
@@ -223,9 +227,7 @@ void CGameStatus::DebugPanelForRendering()
 
     ImGui::SeparatorText("Ray");
 
-    ImGui::Checkbox("Ray Casting", &m_bRayTest);
-
-    if (ImGui::Checkbox("Debug Triangle", &m_bDebugTriangle))
+    if (ImGui::Checkbox("Ray Cast Triangle", &m_bDebugTriangle))
     {
         CDebugMgr::GetInstance()->SetShowDebugTriangle(m_bDebugTriangle);
     }

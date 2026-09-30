@@ -15,6 +15,7 @@ protected:
 public:
 	virtual	HRESULT	Ready_GameObject() override;
 	virtual	_int Update_GameObject(const _float& fTimeDelta) override;
+	void DebugRayTest();
 	virtual	void LateUpdate_GameObject(const _float& fTimeDelta) override;
 	virtual	void Render_GameObject() override;
 
@@ -86,7 +87,6 @@ private:
 	/* Render Debug */
 	bool m_bShowDark = false;
 	vector<CGameObject*> m_vecPseudoDark;
-	bool m_bRayTest = false;
 	bool m_bDebugTriangle = false;
 
 	/* 사운드 */
