@@ -187,6 +187,7 @@
     <ClInclude Include="..\Header\CGameMachine.h" />
     <ClInclude Include="..\Header\CGameStatus.h" />
     <ClInclude Include="..\Header\CGaugeUI.h" />
+    <ClInclude Include="..\Header\CRayCaster.h" />
     <ClInclude Include="..\Header\CSGBullet.h" />
     <ClInclude Include="..\Header\CShockwave.h" />
     <ClInclude Include="..\Header\CShotGun.h" />
@@ -240,6 +241,7 @@
     <ClInclude Include="..\Header\imstb_rectpack.h" />
     <ClInclude Include="..\Header\imstb_textedit.h" />
     <ClInclude Include="..\Header\imstb_truetype.h" />
+    <ClInclude Include="..\Header\IRayTestable.h" />
     <ClInclude Include="..\Header\IReflectable.h" />
     <ClInclude Include="..\Header\json.hpp" />
     <ClInclude Include="..\Header\JsonAdapter.h" />
@@ -295,6 +297,7 @@
     <ClCompile Include="..\Code\CFrustumExplodeEffect.cpp" />
     <ClCompile Include="..\Code\CGameMachine.cpp" />
     <ClCompile Include="..\Code\CGameStatus.cpp" />
+    <ClCompile Include="..\Code\CRayCaster.cpp" />
     <ClCompile Include="..\Code\CSGBullet.cpp" />
     <ClCompile Include="..\Code\CShockwave.cpp" />
     <ClCompile Include="..\Code\CShotGun.cpp" />
@@ -361,6 +364,7 @@
     <ClCompile Include="..\Code\CWorm_Boby.cpp" />
     <ClCompile Include="..\Code\CWorm_Face.cpp" />
     <ClCompile Include="..\Code\CUnbreakableFrustum.cpp" />
+    <ClCompile Include="..\Code\IRayTestable.cpp" />
     <ClCompile Include="..\Code\IReflectable.cpp" />
     <ClCompile Include="..\Code\CSprnub1.cpp" />
     <ClCompile Include="Client.cpp" />

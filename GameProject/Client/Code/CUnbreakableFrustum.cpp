@@ -62,6 +62,11 @@ const _vec3 CUnbreakableFrustum::GetNormal()
     return vNormal;
 }
 
+vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> CUnbreakableFrustum::GetRayTestTargetInfo()
+{
+    return vector<pair<Engine::CVIBuffer*, Engine::CTransform*>>{{m_pBufferCom, m_pTransformCom}};
+}
+
 HRESULT CUnbreakableFrustum::Add_Component()
 {
     CComponent* pComponent = nullptr;

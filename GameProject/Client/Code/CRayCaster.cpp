@@ -41,17 +41,21 @@ HRESULT CRayCaster::Add_Component()
     return S_OK;
 }
 
-void CRayCaster::RayTest(THitInfo& tHitInfo, const _vec3& vRayStart, const _vec3& vRayDir, CVIBuffer* pBuffer)
+void CRayCaster::RayTest(THitInfo& tHitInfo, const _vec3& vRayStart, const _vec3& vRayDir, CVIBuffer* pBuffer, _matrix* pMatWorld)
 {
 	TVIBufferInfo tBufferInfo = pBuffer->GetInfo();
-	const vector<TTriInfo>& pTriInfo = pBuffer->GetTri();
+	const vector<TTriInfo>& vecTriInfo = pBuffer->GetTri();
 
-	for (int i = 0; i < (int)pTriInfo.size(); ++i)
+	for (int i = 0; i < (int)vecTriInfo.size(); ++i)
 	{
 		/* 세 정점으로 얻은 삼각형에 대해 처리 */
-		_vec3 vPos0 = pTriInfo[i].vTriPos[0];
-		_vec3 vPos1 = pTriInfo[i].vTriPos[1];
-		_vec3 vPos2 = pTriInfo[i].vTriPos[2];
+		_vec3 vPos0 = vecTriInfo[i].vTriPos[0];
+		_vec3 vPos1 = vecTriInfo[i].vTriPos[1];
+		_vec3 vPos2 = vecTriInfo[i].vTriPos[2];
+
+		D3DXVec3TransformCoord(&vPos0, &vPos0, pMatWorld);
+		D3DXVec3TransformCoord(&vPos1, &vPos1, pMatWorld);
+		D3DXVec3TransformCoord(&vPos2, &vPos2, pMatWorld);
 
 		float fU, fV, fDist;
 		bool bHit = D3DXIntersectTri(

@@ -44,11 +44,20 @@ public:
 	void	Render_UI(LPDIRECT3DDEVICE9& pGraphicDev);
 
 	/* 디버그 용 */
-	void	Render_Collider(LPDIRECT3DDEVICE9& pGraphicDev);
-
+	void Render_Collider(LPDIRECT3DDEVICE9& pGraphicDev);
+	void Render_DebugTriangle(LPDIRECT3DDEVICE9& pGraphicDev);
+	void Add_DebugTriangle(const std::array<_vec3, 3>& vTri, const _vec3& vNormal, D3DCOLOR dwColor = D3DCOLOR_ARGB(255, 255, 0, 0));
 
 private:
 	list<IRenderable*>		m_RenderGroup[RENDER_END];
+	struct TDebugTri
+	{
+		std::array<_vec3, 3> vTri;
+		_vec3                vNormal;
+		D3DCOLOR             dwColor;
+	};
+	std::vector<TDebugTri> m_vecDebugTri;
+
 
 private:
 	virtual void	Free();

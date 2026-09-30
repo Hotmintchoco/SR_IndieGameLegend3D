@@ -304,6 +304,9 @@
     <Filter Include="02. GameObject\12. Logic\00. GameStatus">
       <UniqueIdentifier>{575f8b04-0769-4795-9023-f025baa09492}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\12. Logic\01. RayCaster">
+      <UniqueIdentifier>{5466cbee-4409-45a6-b69b-bf80fe1cd263}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -627,6 +630,12 @@
     <ClInclude Include="..\Header\CCryder.h">
       <Filter>02. GameObject\02. Monster\Cryder</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CRayCaster.h">
+      <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\IRayTestable.h">
+      <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -922,6 +931,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CWeaponPickup.cpp">
       <Filter>02. GameObject\11. Item\WeaponPickup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRayCaster.cpp">
+      <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\IRayTestable.cpp">
+      <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

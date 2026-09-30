@@ -7,7 +7,12 @@
 #include "CDebugMgr.h"
 #include "CRoomLoadingMgr.h"
 #include "CSoundMgr.h"
+#include "CVIBuffer.h"
+#include "CRayCaster.h"
+#include "IRayTestable.h"
 #include "CTimerMgr.h"
+#include "CStage.h"
+#include "CRenderer.h"
 
 CGameStatus::CGameStatus(LPDIRECT3DDEVICE9 pGraphicDev)
     :CGameObject(pGraphicDev)
@@ -27,7 +32,37 @@ _int CGameStatus::Update_GameObject(const _float& fTimeDelta)
 {
     UpdateCameraInfo();
 
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+
     m_fDT = CTimerMgr::GetInstance()->Get_TimeDelta(L"Timer_FPS60");
+
+    if (m_bRayTest)
+    {
+        CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+
+        const multimap<wstring, CGameObject*>& mapObject = pStage->GetCurrentRoomLayer()->Get_ObjMap();
+        CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
+
+        THitInfo t{};
+
+        for (auto& [wstrName, pObject] : mapObject)
+        {
+            if (IRayTestable* pRayTestable = dynamic_cast<IRayTestable*>(pObject))
+            {
+                vector<pair<CVIBuffer*, CTransform*>> vecInfo = pRayTestable->GetRayTestTargetInfo();
+                for (auto& [pBuffer, pTransform] : vecInfo)
+                {
+                    pRayCaster->RayTest(t, m_vCamPos, m_vCamLook, pBuffer, pTransform->Get_World());
+                }
+            }
+        }
+        cout << t.bHit << ", " << t.fDist << endl;;
+
+        if (t.bHit)
+        {
+            CRenderer::GetInstance()->Add_DebugTriangle(t.vTriVtx, t.fTriNormal);
+        }
+    }
 
     return S_OK;
 }
@@ -38,15 +73,20 @@ void CGameStatus::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CGameStatus::Render_GameObject()
 {
-    // RenderImGui();
-    // DebugPanelForRendering();
+    RenderImGui();
+    DebugPanelForRendering();
 }
 
 void CGameStatus::UpdateCameraInfo()
 {
-    _vec3 vCameraLook;
-    CCameraMgr::GetInstance()->Get_CamLook(&vCameraLook);
-    m_fYaw = atan2f(vCameraLook.x, vCameraLook.z);
+    CCameraObj* pCamera = CCameraMgr::GetInstance()->GetCamera(L"Camera_Player_FPV");
+    if (!pCamera) return;
+
+    _matrix matCamWorld;
+    pCamera->GetWorld(&matCamWorld);
+    memcpy(&m_vCamLook, &matCamWorld.m[2][0], sizeof(_vec3));
+    memcpy(&m_vCamPos, &matCamWorld.m[3][0], sizeof(_vec3));
+    m_fYaw = atan2f(m_vCamLook.x, m_vCamLook.z);
 }
 
 void CGameStatus::RenderImGui()
@@ -178,6 +218,16 @@ void CGameStatus::DebugPanelForRendering()
         {
             p->Set_IsActive(m_bShowDark);
         }
+    }
+
+
+    ImGui::SeparatorText("Ray");
+
+    ImGui::Checkbox("Ray Casting", &m_bRayTest);
+
+    if (ImGui::Checkbox("Debug Triangle", &m_bDebugTriangle))
+    {
+        CDebugMgr::GetInstance()->SetShowDebugTriangle(m_bDebugTriangle);
     }
 
     ImGui::End();

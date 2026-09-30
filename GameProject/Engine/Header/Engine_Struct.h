@@ -71,6 +71,15 @@ namespace Engine
 		_float									fTime;
 
 	}CAMERA_MOVE;
+
+	struct THitInfo
+	{
+		bool bHit = false;
+		float fDist = FLT_MAX;
+		std::array<_vec3, 3> vTriVtx = { _vec3{0.f, 0.f, 0.f}, _vec3{0.f, 0.f, 0.f}, _vec3{0.f, 0.f, 0.f} };
+		_vec3 fHitPoint{ 0.f, 0.f, 0.f };
+		_vec3 fTriNormal{ 0.f, 0.f, 0.f };
+	};
 }
 
 

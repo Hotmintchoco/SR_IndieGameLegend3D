@@ -2,6 +2,7 @@
 
 #include "CGameObject.h"
 #include "IReflectable.h"
+#include "IRayTestable.h"
 #include "Client_Enum.h"
 
 struct TRoomEventCtx;
@@ -15,7 +16,7 @@ namespace Engine
 	class CBoxCollider;
 }
 
-class CWall : public CGameObject, public IReflectable
+class CWall : public CGameObject, public IReflectable, public IRayTestable
 {
 protected:
 	explicit CWall(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -35,6 +36,9 @@ public:
 
 	/* IReflectable */
 	virtual const _vec3 GetNormal() override;
+
+	/* IRayTestable */
+	virtual vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> GetRayTestTargetInfo() override;
 
 private:
 	HRESULT Add_Component();

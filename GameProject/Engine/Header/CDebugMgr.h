@@ -19,9 +19,13 @@ public:
 	bool GetShowCollider() const { return m_bShowCollider; }
 	void SetShowCollider(bool bFlag) { m_bShowCollider = bFlag; }
 
+	bool GetShowDebugTriangle() const { return m_bShowDebugTriangle; }
+	void SetShowDebugTriangle(bool bFlag) { m_bShowDebugTriangle = bFlag; }
+
 private:
 	bool m_bShowCollider = false;
 	MESHRENDERMODE m_eMeshMode = MESHRENDERMODE::MESH_SOLID;
+	bool m_bShowDebugTriangle = false;
 
 private:
 	virtual void Free();

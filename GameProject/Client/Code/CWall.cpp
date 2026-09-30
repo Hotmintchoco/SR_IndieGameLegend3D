@@ -277,6 +277,11 @@ const _vec3 CWall::GetNormal()
     }
 }
 
+vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> CWall::GetRayTestTargetInfo()
+{
+    return vector<pair<Engine::CVIBuffer*, Engine::CTransform*>>{{ m_pBufferCom, m_pTransformCom }};
+}
+
 HRESULT CWall::Add_Component()
 {
     CComponent* pComponent = nullptr;

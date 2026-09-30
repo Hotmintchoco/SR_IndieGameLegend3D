@@ -32,6 +32,7 @@
 #include "CMiniGame.h"
 #include "CUIMgr.h"
 #include "CHitCreenUI.h"
+#include "CRayCaster.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -285,6 +286,14 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"WeaponSystem", pGameObject)))
+		return E_FAIL;
+
+	// Ray Caster
+	pGameObject = CRayCaster::Create(m_pGraphicDev);
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"RayCaster", pGameObject)))
 		return E_FAIL;
 
 	// PseudoDark
@@ -576,6 +585,7 @@ void CStage::CheckRoomChanged()
 		wstring wstrRoomLayerKey = L"Room_" + to_wstring(m_iCurrentRoomIndex) + L"_Layer";
 		CRoomLayer* pLayer = static_cast<CRoomLayer*>(CManagement::GetInstance()->Get_Layer(wstrRoomLayerKey.c_str()));
 		m_pCurrentRoomLayer = pLayer;
+		if(m_pCurrentRoomLayer) GetCurrentRoomLayer()->ApplyDarkness();
 	}
 }
 

@@ -20,7 +20,7 @@ public:
 	virtual	void LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual	void Render_GameObject();
 
-	void RayTest(THitInfo& tHitInfo, const _vec3& vRayStart, const _vec3& vRayDir, CVIBuffer* pBuffer);
+	void RayTest(THitInfo& tHitInfo, const _vec3& vRayStart, const _vec3& vRayDir, CVIBuffer* pBuffer, _matrix* matWorld);
 
 private:
 	HRESULT	Add_Component();

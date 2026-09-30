@@ -19,6 +19,7 @@
 #include <fstream>
 #include <iostream>
 #include <random>
+#include <array>
 
 #include "Engine_Enum.h"
 #include "Engine_Macro.h"

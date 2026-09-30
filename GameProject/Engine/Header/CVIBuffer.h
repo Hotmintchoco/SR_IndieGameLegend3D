@@ -3,6 +3,20 @@
 
 BEGIN(Engine)
 
+struct TVIBufferInfo
+{
+	D3DFORMAT idxFmt = D3DFMT_UNKNOWN;
+	_ulong dwVtxSize = 0;
+	_ulong dwIdxSize = 0;
+	_ulong dwVtxCnt = 0;
+	_ulong dwTriCnt = 0;
+};
+
+struct TTriInfo
+{
+	_vec3 vTriPos[3] = { {0.f, 0.f, 0.f} }; 
+};
+
 class ENGINE_DLL CVIBuffer : public CComponent
 {
 protected:
@@ -15,6 +29,21 @@ public:
 	virtual HRESULT		Ready_Buffer();
 	virtual void		Render_Buffer();
 
+	inline TVIBufferInfo GetInfo() const {
+		return TVIBufferInfo {
+			m_IdxFmt,
+			m_dwVtxSize,
+			m_dwIdxSize,
+			m_dwVtxCnt,
+			m_dwTriCnt,
+		};
+	}
+	inline const vector<TTriInfo>& GetTri() const 
+	{
+		static const vector<TTriInfo> s_pTri;
+		return m_pTri ? *m_pTri : s_pTri;
+	}
+
 protected:
 	LPDIRECT3DVERTEXBUFFER9			m_pVB;
 
@@ -26,6 +55,9 @@ protected:
 	LPDIRECT3DINDEXBUFFER9			m_pIB;
 	_ulong			m_dwIdxSize;
 	D3DFORMAT		m_IdxFmt;
+
+	shared_ptr<const vector<TTriInfo>> m_pTri;
+	vector<TTriInfo> m_vecTri;
 
 public:
 	virtual void	Free();

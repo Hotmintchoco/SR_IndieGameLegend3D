@@ -76,6 +76,8 @@ private:
 	int m_iGem = 0;
 	
 	/* Camera */
+	_vec3 m_vCamPos{ 60.f, 0.f, 60.f };
+	_vec3 m_vCamLook{ 0.f, 0.f, 1.f };
 	float m_fYaw = 0.f;
 
 	/* FPS */
@@ -84,6 +86,8 @@ private:
 	/* Render Debug */
 	bool m_bShowDark = false;
 	vector<CGameObject*> m_vecPseudoDark;
+	bool m_bRayTest = false;
+	bool m_bDebugTriangle = false;
 
 	/* 사운드 */
 	float m_fBGMVolume = 0.5f;
