@@ -67,6 +67,7 @@ void CDefaultBullet::Render_GameObject()
 
 void CDefaultBullet::OnCollisionEnter(COLLINFO eCollInfo)
 {
+	m_pColliderCom->Set_IsActive(false);
     Set_Dead(true);
 
     //260926 재현
