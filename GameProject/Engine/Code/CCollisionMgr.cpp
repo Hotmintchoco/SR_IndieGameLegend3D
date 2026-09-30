@@ -102,19 +102,32 @@ void CCollisionMgr::Update_Collision()
 					pairInfo.wLeftToken = pLeft->GetToken();
 					pairInfo.wRightToken = pRight->GetToken();
 
+					/* CollisionInfo */
+					COLLINFO eLeftCollInfo;
+					eLeftCollInfo.pMyCollider = pLeft;
+					eLeftCollInfo.pOtherCollider = pRight;
+					eLeftCollInfo.iMyID = i;
+					eLeftCollInfo.iOtherID = j;
+
+					COLLINFO eRightCollInfo;
+					eRightCollInfo.pMyCollider = pRight;
+					eRightCollInfo.pOtherCollider = pLeft;
+					eRightCollInfo.iMyID = j;
+					eRightCollInfo.iOtherID = i;
+
 					const bool bFirstPairThisFrame = mapCurCollisionPairs.emplace(ullPairKey, pairInfo).second;
 					if (!bFirstPairThisFrame)
 						continue;
 
 					if (m_mapPrevCollisionPairs.find(ullPairKey) == m_mapPrevCollisionPairs.end())
 					{
-						pLeft->OnCollisionEnter(pRight);
-						pRight->OnCollisionEnter(pLeft);
+						pLeft->OnCollisionEnter(eLeftCollInfo);
+						pRight->OnCollisionEnter(eRightCollInfo);
 					}
 					else
 					{
-						pLeft->OnCollisionStay(pRight);
-						pRight->OnCollisionStay(pLeft);
+						pLeft->OnCollisionStay(eLeftCollInfo);
+						pRight->OnCollisionStay(eRightCollInfo);
 					}
 				}
 			}
@@ -132,8 +145,11 @@ void CCollisionMgr::Update_Collision()
 		if (pairInfo.wLeftToken.expired() || pairInfo.wRightToken.expired())
 			continue;
 
-		pairInfo.pLeft->OnCollisionExit(pairInfo.pRight);
-		pairInfo.pRight->OnCollisionExit(pairInfo.pLeft);
+		CCollider* pLeftCollider = pairInfo.pLeft;
+		CCollider* pRightCollider = pairInfo.pRight;
+
+		pLeftCollider->OnCollisionExit({ pLeftCollider, pRightCollider, pLeftCollider->Get_CollisionID(), pRightCollider->Get_CollisionID() });
+		pRightCollider->OnCollisionExit({ pRightCollider, pLeftCollider, pRightCollider->Get_CollisionID(), pLeftCollider->Get_CollisionID() });
 	}
 
 	m_mapPrevCollisionPairs.swap(mapCurCollisionPairs);

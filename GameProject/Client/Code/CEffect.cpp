@@ -96,22 +96,6 @@ CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type
 
     return pEffect;
 }
- 
-//CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, CGameObject* pEffect_Owner)
-//{
-//    CEffect* pEffect = new CEffect(pGraphicDev);
-//    pEffect->Set_Effect_Type(eEffect_Type);
-//    pEffect->Set_Effect_Owner(pEffect_Owner);
-//
-//    if (FAILED(pEffect->Ready_GameObject()))
-//    {
-//        Safe_Release(pEffect);
-//        MSG_BOX("CEffect Create Failed");
-//        return nullptr;
-//    }
-//
-//    return pEffect;
-//}
 
 void CEffect::Free()
 {
@@ -135,24 +119,32 @@ void CEffect::Ready_Effect()
     switch (m_eEffect_Type)
     {
     case MAGMA_FIREBALL:
-        //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-        //CGameObject* pGameObject = nullptr;
-
-        //pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::ORANGE, 45, 5.f, 0.16f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
-        //if (nullptr == pGameObject) return;
-        //if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
-
-        //pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::ORANGE, 45, 3.f, 0.16f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
-        //if (nullptr == pGameObject) return;
-        //if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
         break;
     case MAGMA_TRAIL:
         break;
     case MAGMA_DEAD_EFFECT:
+        m_fLifeTime = MAGMA_DEAD_TIME;
         break;
     case MAGMA_EXPLOSION1:
+        m_fLifeTime = MAGMA_DEAD_TIME;
         break;
     case MAGMA_EXPLOSION2:
+        m_fLifeTime = MAGMA_DEAD_TIME;
+        break;
+    case BOSS1_DEAD_EFFECT:
+        m_fLifeTime = BOSS1_DEAD_TIME;
+        break;
+    case BOSS1_EXPLOSION1:
+        m_fLifeTime = BOSS1_DEAD_TIME;
+        break;
+    case BOSS1_EXPLOSION2:
+        m_fLifeTime = BOSS1_DEAD_TIME;
+        break;
+    case BOSS1_SPAWN:
+        m_fLifeTime = 2.f;
+        break;
+    case BULLET_EFFECT:
+        m_fLifeTime = 1.f;
         break;
     }
 }
@@ -190,6 +182,7 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         if (m_fElapsedTime2 > 0.25f)
         {
             m_fElapsedTime2 = 0.f;
+
             _vec3 vVelocity;
 
             _int iRand1 = 0;
@@ -206,18 +199,65 @@ void CEffect::Update_Effect(const _float fTimeDelta)
 
                 vVelocity = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
 
+                int iRand = rand() % 3;
+                if (iRand == 0) eColor.g = 245.f / 256.f;
+                else if (iRand == 1) eColor.g = 235.f / 256.f;
+
                 pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, eColor);
                 if (nullptr == pGameObject) return;
                 if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
             }
         }
-        if (m_fElapsedTime > MAGMA_DEAD_TIME)
+        if (m_fElapsedTime > m_fLifeTime)
+            Set_Dead(true);
+
+        break;
+    case BOSS1_DEAD_EFFECT:
+        m_fElapsedTime2 += fTimeDelta;
+
+        if (m_fElapsedTime2 > 0.3f && m_fElapsedTime < m_fLifeTime - 0.5f)
+        {
+            m_fElapsedTime2 = 0.f;
+            _vec3 vVelocity;
+
+            _int iRand1 = 0;
+            _int iRand2 = 0;
+            _int iRand3 = 0;
+
+            D3DXCOLOR eColor = { 1.f,1.f,0.f,1.f };
+
+            _vec3 vRand;
+            vRand.x = (_float)(rand() % 128 - 64) / 64.f;
+            vRand.y = (_float)(rand() % 128 - 64) / 64.f;
+            vRand.z = (_float)(rand() % 128 - 64) / 64.f;
+
+            vPos += vRand;
+
+            for (int i = 0; i < 16; ++i)
+            {
+                iRand1 = rand() % 128 - 64;
+                iRand2 = rand() % 128;
+                iRand3 = rand() % 128 - 64;
+
+                vVelocity = { _float(iRand1) / 48.f,_float(iRand2) / 96.f,_float(iRand3) / 48.f };
+                vVelocity *= 2;
+
+                int iRand = rand() % 3;
+				if (iRand == 0) eColor.g = 245.f / 256.f;
+				else if (iRand == 1) eColor.g = 235.f / 256.f;
+
+                pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, eColor, 0.5f);
+                if (nullptr == pGameObject) return;
+                if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
+            }
+        }
+        if (m_fElapsedTime > m_fLifeTime)
             Set_Dead(true);
 
         break;
     case MAGMA_EXPLOSION1:
         m_fElapsedTime3 += fTimeDelta;
-        if (m_fElapsedTime3 > 0.125f && m_fElapsedTime < MAGMA_DEAD_TIME - 0.5f)
+        if (m_fElapsedTime3 > 0.125f && m_fElapsedTime < m_fLifeTime - 0.5f)
         {
             m_fElapsedTime3 = 0.f;
 
@@ -251,16 +291,10 @@ void CEffect::Update_Effect(const _float fTimeDelta)
             if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
         }
 
-        if (m_fElapsedTime > MAGMA_DEAD_TIME)
+        if (m_fElapsedTime > m_fLifeTime)
             Set_Dead(true);
         break;
     case MAGMA_EXPLOSION2:
-
-		//_vec3 vPos;
-		//m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		//CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-		//CGameObject* pGameObject = nullptr;
-
 		pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::RED, 50, 3.f, 1.f, { 1.f,1.f,1.f }, CParticle_Sphere::DOWN);
 		if (nullptr == pGameObject) return;
 		if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
@@ -268,5 +302,75 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         Set_Dead(true);
 
         break;
+
+
+    case BOSS1_EXPLOSION2:
+        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::PINK, 40, 6.f, 1.f, { 1.5f,1.5f,1.5f }, CParticle_Sphere::DOWN);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
+
+        Set_Dead(true);
+
+        break;
+    case BULLET_EFFECT:
+
+		_vec3 vVelocity;
+
+		_float fRand1 = 0;
+		_float fRand2 = 0;
+        _float fRand3 = 0;
+
+        _float fRandRed = 0;
+        _float fRandGreen = 0;
+        _float fRandBlue = 0;
+
+
+        D3DXCOLOR eColor = {};
+        for (int i = 0; i < 3; ++i)
+		{
+            _float fRandColor = (rand() % 101) / 100.f;
+
+            fRandRed = 1.0f - 0.2f * fRandColor;
+            fRandGreen = 1.0f - 0.1f * fRandColor;
+            fRandBlue = 1.0f;
+
+            eColor = { fRandRed , fRandGreen, fRandBlue, 1.f };
+
+            CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+                ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+
+            if (nullptr == pPlayerTransformCom)
+                return;
+
+            _vec3   vPlayerPos;
+            pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+
+            _vec3   vPlayerLook;
+            pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+            D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
+
+            fRand1 = (_float)(rand() % 128 - 64) / 64.f;
+            fRand2 = (_float)(rand() % 128 - 64) / 64.f;
+            fRand3 = (_float)(rand() % 128 - 64) / 64.f;
+
+            vVelocity = { fRand1,fRand2,fRand3 };
+
+            D3DXVec3Cross(&vVelocity, &vPlayerLook, &vVelocity);
+
+            _float fRandScale = _float(rand() % 128 - 64) / (64.f * 64.f);
+
+            _float fScale = 0.25f * 0.25f * 0.75f;
+            _vec3 vScale = { fScale,fScale,fScale };
+            _vec3 vRandScale = { fRandScale ,fRandScale ,fRandScale };
+            vScale += vRandScale;
+
+			pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, vScale, eColor, 0.25f, CParticle_Rectangle::BULLET);
+			if (nullptr == pGameObject) return;
+			if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
+		}
+        
+        Set_Dead(true);
+        break;
     }
+
 }

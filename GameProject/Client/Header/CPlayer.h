@@ -26,8 +26,8 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-	virtual			void		OnCollisionEnter(CGameObject* pOther) override;
-	virtual			void		OnCollisionStay(CGameObject* pOther) override;
+	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
+	virtual			void		OnCollisionStay(COLLINFO eCollInfo) override;
 	void						Hit(CGameObject* pOther);	// 히트백 적용 안할 시 nullptr 넣어주세요
 	void						Freeze()				{ m_fFreezeTimer += 3000.f; } // 플레이어 상호작용 키 막기
 	void						Freeze(_float fTime)	{ m_fFreezeTimer += fTime; }

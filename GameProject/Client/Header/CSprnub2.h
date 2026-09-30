@@ -10,11 +10,11 @@ namespace Engine
 	class CCalculator;
 }
 
-class CSpeyeder : public CMonster
+class CSprnub2 : public CMonster
 {
 protected:
-	explicit CSpeyeder(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CSpeyeder();
+	explicit CSprnub2(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CSprnub2();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -28,15 +28,19 @@ private:
 	HRESULT			Add_Component();
 
 public:
-	static CSpeyeder* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-
-public:
-	void Set_Velocity(const _vec3& vDirection) { m_vLandingDirection = vDirection; }
-	void Land(const _float& fTimeDelta);
+	static CSprnub2* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CSprnub2* Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fActiveTime);
+	void Set_ActiveTime(_float fActiveTime) { m_fActiveTime = fActiveTime; }
 private:
+	void Jump(const _float& fTimeDelta);
+
+private:
+	_float m_fActiveTime = 0.f;
+	_float m_fActiveElapsedTime = 0.f;
+
 	_bool m_bLandingState = false;
-	_vec3 m_vLandingDirection = {};
-	_float m_fLandingTime = 0.f;
+	_vec3 m_vJumpDirection = {};
+	_float m_fJumpTime = 0.f;
 	_float m_fVelocityY = 0.f;
 
 protected:

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CGameObject.h"
 
 namespace Engine
@@ -24,7 +24,7 @@ public:
 private:
 	HRESULT			Add_Component();
 
-	virtual void OnCollisionEnter(CGameObject* pOther) override;
+	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
 
 private:
 	Engine::CTransform* m_pTransformCom = nullptr;

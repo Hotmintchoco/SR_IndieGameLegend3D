@@ -106,8 +106,10 @@ void CLaser::Render_GameObject()
     }
 }
 
-void CLaser::OnCollisionEnter(CGameObject* pObject)
+void CLaser::OnCollisionEnter(COLLINFO eCollInfo)
 {
+    auto pObject = eCollInfo.pOtherCollider->Get_Owner();
+
     if (m_pPrevGenerationCollidedObject == pObject) return;
 
     /* m_pColliderComReflect */

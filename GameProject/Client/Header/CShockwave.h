@@ -8,11 +8,11 @@ namespace Engine
 	class CTexture;
 }
 
-class CSmallExplode : public CParticle
+class CShockwave : public CParticle
 {
 protected:
-	explicit CSmallExplode(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CSmallExplode();
+	explicit CShockwave(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CShockwave();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -27,8 +27,8 @@ protected:
 	Engine::CRcTex* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
 public:
-	static CSmallExplode* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	static CSmallExplode* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vScale);
+	static CShockwave* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CShockwave* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vScale);
 
 
 private:

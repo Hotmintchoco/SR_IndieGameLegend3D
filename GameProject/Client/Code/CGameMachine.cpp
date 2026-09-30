@@ -90,7 +90,7 @@ HRESULT CGameMachine::Add_Component()
     return S_OK;
 }
 
-void CGameMachine::OnCollisionEnter(CGameObject* pOther)
+void CGameMachine::OnCollisionEnter(COLLINFO eCollInfo)
 {
     cout << "게임기 상호작용 가능" << endl;
 }

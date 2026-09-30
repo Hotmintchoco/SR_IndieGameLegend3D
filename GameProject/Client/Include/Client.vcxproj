@@ -152,6 +152,7 @@
     <ClInclude Include="..\Header\CBoss1.h" />
     <ClInclude Include="..\Header\CCrossBuffer.h" />
     <ClInclude Include="..\Header\CDdokddak.h" />
+    <ClInclude Include="..\Header\CCryder.h" />
     <ClInclude Include="..\Header\CDefaultBullet.h" />
     <ClInclude Include="..\Header\CFloor.h" />
     <ClInclude Include="..\Header\CItemContainer.h" />
@@ -187,7 +188,10 @@
     <ClInclude Include="..\Header\CGameStatusMgr.h" />
     <ClInclude Include="..\Header\CGaugeUI.h" />
     <ClInclude Include="..\Header\CSGBullet.h" />
+    <ClInclude Include="..\Header\CShockwave.h" />
     <ClInclude Include="..\Header\CShotGun.h" />
+    <ClInclude Include="..\Header\CSprnub2.h" />
+    <ClInclude Include="..\Header\CSprnub3.h" />
     <ClInclude Include="..\Header\CUIMgr.h" />
     <ClInclude Include="..\Header\CVoxelBuffer.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
@@ -241,6 +245,7 @@
     <ClInclude Include="..\Header\JsonAdapter.h" />
     <ClInclude Include="..\Header\json_fwd.hpp" />
     <ClInclude Include="..\Header\CUnbreakableFrustum.h" />
+    <ClInclude Include="..\Header\CSprnub1.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -256,6 +261,7 @@
     <ClCompile Include="..\Code\CBoss1.cpp" />
     <ClCompile Include="..\Code\CCrossBuffer.cpp" />
     <ClCompile Include="..\Code\CDdokddak.cpp" />
+    <ClCompile Include="..\Code\CCryder.cpp" />
     <ClCompile Include="..\Code\CDefaultBullet.cpp" />
     <ClCompile Include="..\Code\CFloor.cpp" />
     <ClCompile Include="..\Code\CHitCreenUI.cpp" />
@@ -290,7 +296,10 @@
     <ClCompile Include="..\Code\CGameMachine.cpp" />
     <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
     <ClCompile Include="..\Code\CSGBullet.cpp" />
+    <ClCompile Include="..\Code\CShockwave.cpp" />
     <ClCompile Include="..\Code\CShotGun.cpp" />
+    <ClCompile Include="..\Code\CSprnub2.cpp" />
+    <ClCompile Include="..\Code\CSprnub3.cpp" />
     <ClCompile Include="..\Code\CUIMgr.cpp" />
     <ClCompile Include="..\Code\CVoxelBuffer.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
@@ -353,6 +362,7 @@
     <ClCompile Include="..\Code\CWorm_Face.cpp" />
     <ClCompile Include="..\Code\CUnbreakableFrustum.cpp" />
     <ClCompile Include="..\Code\IReflectable.cpp" />
+    <ClCompile Include="..\Code\CSprnub1.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -64,10 +64,15 @@ enum class EObjectType
 	DDOKDDAK,
 
 	Skull = 11,
-	Boss1,
-	Speyeder,
-	Magmamouth,
-	Worm,
+	Boss1 = 12,
+	Speyeder = 13,
+	Magmamouth = 14,
+	Worm = 15,
+	Sprnub1 = 16,
+	Sprnub2 = 17,
+	Sprnub3 = 18,
+	Cryder = 19,
+
 
 	ITEM_NONE = 31,
 	ITEM_HEART,

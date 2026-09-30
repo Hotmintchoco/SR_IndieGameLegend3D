@@ -90,18 +90,14 @@ void CGameObject::Compute_ViewZ(const _vec3* pPos)
     m_fViewZ = D3DXVec3Length(&vDir);
 }
 
-void CGameObject::Obstacle_Collision(CGameObject* pOther, CCollider* pObstacleCollider)
+void CGameObject::Obstacle_Collision(CCollider* pOtherCollider, CCollider* pObstacleCollider)
 {
-	pOther->Get_Component(ID_DYNAMIC, L"Com_Collider");
-
-    if (nullptr == pOther || nullptr == pObstacleCollider)
-        return;
+    CGameObject* pOther = pOtherCollider->Get_Owner();
 
     CTransform* pOtherTransformCom = dynamic_cast<CTransform*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Transform"));
     if (nullptr == pOtherTransformCom)
         return;
 
-    CCollider* pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
     if (nullptr == pOtherCollider)
         pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_STATIC, L"Com_Collider"));
 

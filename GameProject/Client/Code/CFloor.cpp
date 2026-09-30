@@ -69,7 +69,7 @@ HRESULT CFloor::Add_Component()
     return S_OK;
 }
 
-void CFloor::OnCollisionEnter(CGameObject* pOther)
+void CFloor::OnCollisionEnter(COLLINFO eCollInfo)
 {
 }
 

@@ -26,7 +26,7 @@ public:
 	virtual			void		Render_GameObject();
 
 
-	virtual			void		OnCollisionEnter(CGameObject* pOther) override;
+	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
 
 
 
@@ -34,11 +34,12 @@ public:
 protected:
 	HRESULT			Add_Component();
 	void Set_OnTerrain();
-
+	void Chase_Player(const _float& fTimeDelta);
 	void Update_HitState(const _float& fTimeDelta);
 	void Enable_HitRenderState();
 	void Disable_HitRenderState();
 
+	enum GENERAL_MONSTER_STATE { MOVE, JUMP, IDLE };
 protected:
 	Engine::CRcTex* m_pBufferCom = nullptr;
 	Engine::CTransform* m_pTransformCom = nullptr;
@@ -47,13 +48,15 @@ protected:
 	Engine::CCollider* m_pColliderCom = nullptr;
 
 	_int m_iHp;
+	_int m_iMaxHp = 10;
 	_float m_fFrame;
 	_float m_fHitEffectTime;
 	_float m_fHitEffectElapsedTime;
 	_bool m_bHitState;
 
 	_bool m_bDelete = false;
-
+	GENERAL_MONSTER_STATE m_eMonsterState = IDLE;
+	_float m_fElapsedTime = 0.f;
 private:
 	/* 성철 */
 	void OnRoomEvent(const TRoomEventCtx& t);

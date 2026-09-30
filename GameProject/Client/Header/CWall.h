@@ -28,8 +28,7 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-	virtual			void		OnCollisionEnter(CGameObject* pOther) override;
-	virtual			void		OnCollisionStay(CGameObject* pOther) override;
+	virtual			void		OnCollisionStay(COLLINFO eCollInfo) override;
 
 	inline EWallDir GetDir() { return m_eDir; };
 	inline bool HasDoor() { return m_bHasDoor; };

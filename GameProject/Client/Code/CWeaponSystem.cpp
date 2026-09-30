@@ -6,6 +6,8 @@
 #include "Client_Struct.h"
 #include "CLayer.h"
 #include "CAbstractFactory.h"
+#include "CManagement.h"
+#include "CUI.h"
 
 CWeaponSystem::CWeaponSystem(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -29,6 +31,8 @@ HRESULT CWeaponSystem::Ready_GameObject()
     // 
     // if (FAILED(AddWeapon(EObjectType::WEAPON_BOW, L"Bow")))
     //     return E_FAIL;
+
+    SwitchWeaponTo(0);
 
 	return S_OK;
 }
@@ -81,7 +85,7 @@ void CWeaponSystem::GetKeyInput()
         if (m_bSpecialAttackSwitchOn)
         {
             GetCurrentWeapon()->SpecialAttack();
-            // m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
+            m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
             m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
             if (m_fSpecialAtkGauge <= 0.f)
             {
@@ -158,6 +162,11 @@ void CWeaponSystem::SwitchWeaponTo(int iIndex)
     m_vecWeapon.at(m_iCurrentIndex)->Set_IsActive(false);
     m_iCurrentIndex = iIndex;
     m_vecWeapon.at(m_iCurrentIndex)->Set_IsActive(true);
+
+    // 정민 : 특수 공격 번호 UI 전달
+    auto pUI = dynamic_cast<CUI*>(CManagement::GetInstance()->Get_GameObject(L"UI_Layer", L"SkillInfo"));
+    if (pUI)
+        pUI->Set_Texture(iIndex);
 }
 
 void CWeaponSystem::GainEnergy()

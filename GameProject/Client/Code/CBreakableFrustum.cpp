@@ -51,9 +51,9 @@ void CBreakableFrustum::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 }
 
-void CBreakableFrustum::OnCollisionEnter(CGameObject* pOther)
+void CBreakableFrustum::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    _bool bOnDestroyCondition = CheckDestroyCondition(dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider")));
+    _bool bOnDestroyCondition = CheckDestroyCondition(eCollInfo.pOtherCollider);
 
     if (bOnDestroyCondition)
     {

@@ -134,6 +134,9 @@ HRESULT CParticle_Sphere::Add_Component()
     case RED:
         pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Red_Texture"));
         break;
+    case PINK:
+        pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Pink_Texture"));
+        break;
     }
 
     if (nullptr == pComponent)

@@ -51,11 +51,6 @@ void CUnbreakableFrustum::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 }
 
-void CUnbreakableFrustum::OnCollisionEnter(CGameObject* pOther)
-{
-
-}
-
 const _vec3 CUnbreakableFrustum::GetNormal()
 {
     float fX = CRandomMgr::GetInstance()->GetRandomValue<float>(-1.f, 1.f);

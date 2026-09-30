@@ -147,16 +147,17 @@ void CPlayer::RenderImGui()
     ImGui::End();
 }
 
-void CPlayer::OnCollisionEnter(CGameObject* pOther)
+void CPlayer::OnCollisionEnter(COLLINFO eCollInfo)
 {
-
+    auto pOther = eCollInfo.pOtherCollider->Get_Owner();
 
     MonsterCollision(pOther, Find_OtherCollider(pOther));
-
 }
 
-void CPlayer::OnCollisionStay(CGameObject* pOther)
+void CPlayer::OnCollisionStay(COLLINFO eCollInfo)
 {
+    auto pOther = eCollInfo.pOtherCollider->Get_Owner();
+
     // 장애물과 충돌 시에 마찰력 적용
     CCollider* pOtherCollider = Find_OtherCollider(pOther);
 

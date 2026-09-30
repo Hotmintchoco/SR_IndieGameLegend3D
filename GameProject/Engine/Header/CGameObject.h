@@ -25,9 +25,9 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject()PURE;
 
-	virtual			void		OnCollisionEnter(CGameObject* pOther) {}
-	virtual			void		OnCollisionStay(CGameObject* pOther) {}
-	virtual			void		OnCollisionExit(CGameObject* pOther) {}
+	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) {}
+	virtual			void		OnCollisionStay(COLLINFO eCollInfo) {}
+	virtual			void		OnCollisionExit(COLLINFO eCollInfo) {}
 
 	inline void					SetOwner(CLayer* pLayer) { m_pOwner = pLayer; }
 
@@ -50,7 +50,7 @@ public:
 	void			Compute_ViewZ(const _vec3* pPos);
 
 protected:
-	void			Obstacle_Collision(CGameObject* pOther, CCollider* pObstacleCollider);
+	void			Obstacle_Collision(CCollider* pOtherCollider, CCollider* pObstacleCollider);
 
 protected:
 	map<const _tchar*, CComponent*>			m_mapComponent[ID_END];

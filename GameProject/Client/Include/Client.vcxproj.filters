@@ -202,9 +202,6 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\GameMachine">
       <UniqueIdentifier>{31be8105-a523-4dda-914e-225628b9d96c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. Effect\Trail_MagmaMouth">
-      <UniqueIdentifier>{66a04df7-ebf3-4bd2-8103-73c4dcefb56e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Frustum\Explosive\ExplodeSphere">
       <UniqueIdentifier>{50d3b930-96f7-46d0-9513-601ce505a7a7}</UniqueIdentifier>
     </Filter>
@@ -219,9 +216,6 @@
     </Filter>
     <Filter Include="02. GameObject\06. Effect\Particle_Rectangle">
       <UniqueIdentifier>{bc89f83d-5714-4323-8fab-14f2cd737f2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Monster\11">
-      <UniqueIdentifier>{7a47d356-d425-4c6b-a048-ba98ba2e0613}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\08. Combat">
       <UniqueIdentifier>{392630cc-bd20-4eb7-9704-747e40434189}</UniqueIdentifier>
@@ -268,6 +262,9 @@
     <Filter Include="02. GameObject\07. Room\BaseProp\Reflectable">
       <UniqueIdentifier>{ef527500-86bd-4cb7-82d2-54f5e51a4862}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Sprnub">
+      <UniqueIdentifier>{7a47d356-d425-4c6b-a048-ba98ba2e0613}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Ddokddak">
       <UniqueIdentifier>{8029e05a-482a-4890-b0ab-89b15aeb1f3a}</UniqueIdentifier>
     </Filter>
@@ -297,6 +294,12 @@
     </Filter>
     <Filter Include="02. GameObject\11. Item\WeaponPickup">
       <UniqueIdentifier>{d0b5ddd7-28b0-4a2b-9b64-7753045b1e66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Effect\Shockwave">
+      <UniqueIdentifier>{bb3a9fa1-0000-4723-a7a8-963b5a1f268c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Cryder">
+      <UniqueIdentifier>{6710e0ba-2e64-4032-ae33-fb5134fb11fc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -579,6 +582,15 @@
     <ClInclude Include="..\Header\CDdokddak.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Ddokddak</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CSprnub1.h">
+      <Filter>02. GameObject\02. Monster\Sprnub</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSprnub2.h">
+      <Filter>02. GameObject\02. Monster\Sprnub</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSprnub3.h">
+      <Filter>02. GameObject\02. Monster\Sprnub</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CMiniGame.h">
       <Filter>01. Scene\MiniGame</Filter>
     </ClInclude>
@@ -605,6 +617,12 @@
     </ClInclude>
     <ClInclude Include="..\Header\CWeaponPickup.h">
       <Filter>02. GameObject\11. Item\WeaponPickup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CShockwave.h">
+      <Filter>02. GameObject\06. Effect\Shockwave</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCryder.h">
+      <Filter>02. GameObject\02. Monster\Cryder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -860,6 +878,15 @@
     <ClCompile Include="..\Code\CDdokddak.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Ddokddak</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CSprnub1.cpp">
+      <Filter>02. GameObject\02. Monster\Sprnub</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSprnub2.cpp">
+      <Filter>02. GameObject\02. Monster\Sprnub</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSprnub3.cpp">
+      <Filter>02. GameObject\02. Monster\Sprnub</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CMiniGame.cpp">
       <Filter>01. Scene\MiniGame</Filter>
     </ClCompile>
@@ -868,6 +895,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CHitCreenUI.cpp">
       <Filter>02. GameObject\10. UI\HitScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CShockwave.cpp">
+      <Filter>02. GameObject\06. Effect\Shockwave</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCryder.cpp">
+      <Filter>02. GameObject\02. Monster\Cryder</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CVoxelBuffer.cpp">
       <Filter>02. GameObject\08. Combat\00. Weapon\04. Bow\VoxelBuffer</Filter>

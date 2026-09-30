@@ -50,6 +50,7 @@ HRESULT CMonster::Ready_GameObject()
 _int CMonster::Update_GameObject(const _float& fTimeDelta)
 {
     if (!Get_IsActive()) return S_OK;
+    m_fElapsedTime += fTimeDelta;
 
     if (!m_pColliderCom->Get_IsActive())
     {
@@ -89,9 +90,9 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
     // 충돌 처리 여부를 위해 충돌 매니저에 몬스터의 콜라이더를 등록
 	CCollisionMgr::GetInstance()->Add_Collider(COLL_MONSTER, m_pColliderCom);
 
-    _vec3 vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    CGameObject::Compute_ViewZ(&vPos);
+    //_vec3 vPos;
+    //m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    //CGameObject::Compute_ViewZ(&vPos);
 }
 
 void CMonster::Render_GameObject()
@@ -99,9 +100,9 @@ void CMonster::Render_GameObject()
 
 }
 
-void CMonster::OnCollisionEnter(CGameObject* pOther)
+void CMonster::OnCollisionEnter(COLLINFO eCollInfo)
 {
-	CCollider* pCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
+	CCollider* pCollider = eCollInfo.pOtherCollider;
     
     if (pCollider && pCollider->Get_CollisionID() == COLL_PROJECTILE)
     {
@@ -193,6 +194,10 @@ void CMonster::Set_OnTerrain()
     _float  fY = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
 
     m_pTransformCom->Set_Pos(vPos.x, fY + m_pTransformCom->m_vScale.y, vPos.z);
+}
+
+void CMonster::Chase_Player(const _float& fTimeDelta)
+{
 }
 
 CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev)
