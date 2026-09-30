@@ -2,7 +2,8 @@
 #include "CWeaponSystem.h"
 #include "CWeapon.h"
 #include "CDInputMgr.h"
-#include "CGameStatusMgr.h"
+#include "CGameStatus.h"
+#include "CStage.h"
 #include "Client_Struct.h"
 #include "CLayer.h"
 #include "CAbstractFactory.h"
@@ -91,7 +92,12 @@ void CWeaponSystem::GetKeyInput()
             {
                 m_bSpecialAttackSwitchOn = false;
             }
-            CGameStatusMgr::GetInstance()->SetSpecialAttackGauge(m_fSpecialAtkGauge);
+
+            CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+            if (pStage)
+            {
+                pStage->GetStatus()->SetSpecialAttackGauge(m_fSpecialAtkGauge);
+            }
         }
         else
         {
@@ -114,8 +120,13 @@ void CWeaponSystem::GetKeyInput()
         {
             GetCurrentWeapon()->UltimateAttack();    
             m_fUltimateAtkGauge = 0.f;
-            CGameStatusMgr::GetInstance()->SetUltimateGauge(m_fUltimateAtkGauge);
             m_bIsUltimateAttackReady = false;
+
+            CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+            if (pStage)
+            {
+                pStage->GetStatus()->SetUltimateGauge(m_fUltimateAtkGauge);
+            }
         }
     }
 
@@ -129,7 +140,12 @@ void CWeaponSystem::GetKeyInput()
         }
     }
     t.bSpecialAtk = m_bSpecialAttackSwitchOn;
-    CGameStatusMgr::GetInstance()->SetSpecialAttackSwtich(m_bSpecialAttackSwitchOn);
+    
+    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+    if (pStage)
+    {
+        pStage->GetStatus()->SetSpecialAttackSwtich(m_bSpecialAttackSwitchOn);
+    }
 
     if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
     {
@@ -173,7 +189,6 @@ void CWeaponSystem::GainEnergy()
 {
     m_fSpecialAtkGauge += 0.1f;
     m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
-    CGameStatusMgr::GetInstance()->SetSpecialAttackGauge(m_fSpecialAtkGauge);
 
     m_fUltimateAtkGauge += 0.1f;
     m_fUltimateAtkGauge = clamp(m_fUltimateAtkGauge, 0.f, 1.f);
@@ -181,7 +196,13 @@ void CWeaponSystem::GainEnergy()
     {
         m_bIsUltimateAttackReady = true;
     }
-    CGameStatusMgr::GetInstance()->SetUltimateGauge(m_fUltimateAtkGauge);
+
+    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+    if (pStage)
+    {
+        pStage->GetStatus()->SetSpecialAttackGauge(m_fSpecialAtkGauge);
+        pStage->GetStatus()->SetUltimateGauge(m_fUltimateAtkGauge);
+    }
 }
 
 CWeaponSystem* CWeaponSystem::Create(LPDIRECT3DDEVICE9 pGraphicDev)

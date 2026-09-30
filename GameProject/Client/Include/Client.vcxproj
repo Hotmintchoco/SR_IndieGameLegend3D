@@ -185,7 +185,7 @@
     <ClInclude Include="..\Header\CFrustum.h" />
     <ClInclude Include="..\Header\CFrustumExplodeEffect.h" />
     <ClInclude Include="..\Header\CGameMachine.h" />
-    <ClInclude Include="..\Header\CGameStatusMgr.h" />
+    <ClInclude Include="..\Header\CGameStatus.h" />
     <ClInclude Include="..\Header\CGaugeUI.h" />
     <ClInclude Include="..\Header\CSGBullet.h" />
     <ClInclude Include="..\Header\CShockwave.h" />
@@ -294,7 +294,7 @@
     <ClCompile Include="..\Code\CFrustum.cpp" />
     <ClCompile Include="..\Code\CFrustumExplodeEffect.cpp" />
     <ClCompile Include="..\Code\CGameMachine.cpp" />
-    <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
+    <ClCompile Include="..\Code\CGameStatus.cpp" />
     <ClCompile Include="..\Code\CSGBullet.cpp" />
     <ClCompile Include="..\Code\CShockwave.cpp" />
     <ClCompile Include="..\Code\CShotGun.cpp" />

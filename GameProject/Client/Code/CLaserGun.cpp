@@ -4,7 +4,7 @@
 #include "CProtoMgr.h"
 #include "CLaser.h"
 #include "CSoundMgr.h"
-#include "CGameStatusMgr.h"
+#include "CManagement.h"
 #include "CRoomLayer.h"
 #include "CRandomMgr.h"
 #include "CRenderer.h"
@@ -94,7 +94,9 @@ void CLaserGun::DefaultAttack()
     D3DXVec3Normalize(&vDir, &vDir);
 
     CProjectile* pProjectile = CLaser::Create(m_pGraphicDev, m_vBulletFrom, vDir);
-    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+
+    pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
     CSoundMgr::GetInstance()->PlaySFX(L"sfxLaser.wav");
 

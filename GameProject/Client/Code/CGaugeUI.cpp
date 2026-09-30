@@ -3,7 +3,8 @@
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CRenderer.h"
-#include "CGameStatusMgr.h"
+#include "CStage.h"
+#include "CGameStatus.h"
 
 CGaugeUI::CGaugeUI(LPDIRECT3DDEVICE9 pGraphicDev)
     : CUI(pGraphicDev)
@@ -47,8 +48,13 @@ void CGaugeUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CGaugeUI::Render_GameObject()
 {
-    // 게이지 크기만큼 그리기
-	_float fPercent = CGameStatusMgr::GetInstance()->GetSpecialAttackGauge();
+    _float fPercent = 0.f;
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+    if (CStage* pStage = dynamic_cast<CStage*>(pScene))
+    {
+        // 게이지 크기만큼 그리기
+	    fPercent = pStage->GetStatus()->GetSpecialAttackGauge();
+    }
 
     RECT rcClip;
 	rcClip.left = LONG(m_vPos.x - m_vSize.x);

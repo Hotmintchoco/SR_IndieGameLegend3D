@@ -1,41 +1,40 @@
 ﻿#pragma once
 
+#include "CGameObject.h"
 #include "Engine_Define.h"
 
 class CRoomLayer;
 
-namespace Engine
+class CGameStatus : public CGameObject
 {
-	class CGameObject;
-}
 
-class CGameStatusMgr
-{
-	DECLARE_SINGLETON(CGameStatusMgr);
-
-private:
-	explicit CGameStatusMgr();
-	virtual ~CGameStatusMgr();
+protected:
+	explicit CGameStatus(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CGameStatus();
 
 public:
-	void Update(const float fTimeDelta);
-	void Render();
+	virtual	HRESULT	Ready_GameObject() override;
+	virtual	_int Update_GameObject(const _float& fTimeDelta) override;
+	virtual	void LateUpdate_GameObject(const _float& fTimeDelta) override;
+	virtual	void Render_GameObject() override;
 
+public:
 	void RenderImGui();
 	void DebugPanelForRendering();
 
-	CRoomLayer* GetCurrentRoomLayer();
-
+	/* 방 관련 정보 */
 	inline void UpdateCurrentRoomIndex(int iIndex) { m_iCurrentRoomIndex = iIndex; }
 	inline void UpdateVisitTable(int iIndex) { m_bVisitTable[iIndex] = true; }
 	inline void UpdateClearTable(int iIndex) { m_bClearTable[iIndex] = true; }
+	inline bool IsVisited(int iIndex) const { return m_bVisitTable[iIndex]; }
 
-	inline void UpdatePlayerPosition(const _vec3& vPos) { m_vPlayerPos = vPos; }
+	/* 플레이어 관련 정보 */
 	inline void UpdatePlayerHp(int iAmount) { m_iPlayerHp += iAmount; }
 	inline void SetPlayerHp(int iHp) { m_iPlayerHp = iHp; }
 	inline int GetPlayerHp() const { return m_iPlayerHp; }
 	inline void UpdatePlayerMaxHp(int iAmount) { m_iPlayerMaxHp += iAmount; }
 
+	/* 무기류 관련 정보 */
 	inline void SetUltimateGauge(float fAmount) { m_fUltGauge = fAmount; }
 	inline void SetSpecialAttackGauge(float fAmount) { m_fSpecialAtkGauge = fAmount; }
 	inline void SetSpecialAttackSwtich(bool bFlag) { m_bSpecialAtkSwitch = bFlag; }
@@ -43,36 +42,26 @@ public:
 	inline float GetSpecialAttackGauge() const { return m_fSpecialAtkGauge; }
 	inline bool GetSpecialAttackSwitch() const { return m_bSpecialAtkSwitch; }
 
+	/* 자원 관련 정보 */
 	inline void UpdateGem(int iAmount) { m_iGem += iAmount; }
-
-	inline void UpdateCameraYaw(float fYaw) { m_fYaw = fYaw; }
-
-	inline void UpdateFPS(float fDT) { m_fDT = fDT; }
-
-	inline float GetYaw() const { return m_fYaw; }
 	inline int GetGemCount() const { return m_iGem; }
-	
-	inline int GetCurrentRoomIndex() const { return m_iCurrentRoomIndex; }
-	inline bool IsVisited(int iIndex) const { return m_bVisitTable[iIndex]; }
-	inline const _vec3& GetPlayerPosition() const { return m_vPlayerPos; }
 
+	/* 카메라 관련 정보 */
+	inline void UpdateCameraYaw(float fYaw) { m_fYaw = fYaw; }
+	inline float GetYaw() const { return m_fYaw; }
+
+	/* 기타 디버깅용 정보 */
+	inline void UpdateFPS(float fDT) { m_fDT = fDT; }
 	inline void RegisterPseudoDark(CGameObject* pObject) { m_vecPseudoDark.push_back(pObject); }
 
 private:
-	void UpdateRoomIndex();
 	void UpdateCameraInfo();
-	int GetRoomIndexFromPlayerPosition(const _vec3& vPos);
-
-	/* 초기값 */
-	const _vec3 m_vInitPos = {60.f, 0.f, 60.f};
-	const int m_iInitRoomIdx = 12;
 
 	/* Minimap */
-	int m_iCurrentRoomIndex = m_iInitRoomIdx;
-	int m_iPrevRoomIndex = m_iInitRoomIdx;
+	int m_iCurrentRoomIndex = -1;
 	bool m_bVisitTable[25] = { false };
 	bool m_bClearTable[25] = { false };
-	_vec3 m_vPlayerPos = m_vInitPos;
+	_vec3 m_vPlayerPos{0.f, 0.f, 0.f};
 
 	/* Player */
 	int m_iPlayerHp = 12;
@@ -102,7 +91,10 @@ private:
 	bool m_bBGMMute = true;
 	bool m_bSFXMute = true;
 
+public:
+	static CGameStatus* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+
 private:
-	virtual void Free();
+	virtual void Free() override;
 };
 

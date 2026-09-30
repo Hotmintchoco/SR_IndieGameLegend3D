@@ -25,7 +25,7 @@
 #include "CDirectionUI.h"
 #include "CMagmamouth.h"
 #include "CPseudoDark.h"
-#include "CGameStatusMgr.h"
+#include "CGameStatus.h"
 #include "CMinimapUI.h"
 #include "CGaugeUI.h"
 #include "CSoundMgr.h"
@@ -96,6 +96,9 @@ HRESULT CStage::Ready_Scene()
 	CSoundMgr::GetInstance()->PlayBGM(L"Sector1.wav");
 	CSoundMgr::GetInstance()->SetBGMVolume(0.f);
 	CSoundMgr::GetInstance()->SetSFXVolume(0.f);
+
+	/* 방 레이어 포인터 초기화 */
+	CheckRoomChanged();
 
 	return S_OK;
 }
@@ -176,10 +179,24 @@ void CStage::Render_Scene()
 
 }
 
+HRESULT CStage::Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject)
+{
+	/* 현재 위치한 방에 오브젝트를 소환 */
+	if (FAILED(m_pCurrentRoomLayer->Add_GameObject(pObjTag, pGameObject)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 void CStage::OnPlayerDead()
 {
-	CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-	pLayer->ResetState();
+	m_pCurrentRoomLayer->ResetState();
+}
+
+void CStage::UpdatePlayerPosition(const _vec3& vPos)
+{
+	m_vPlayerPos = vPos;
+	CheckRoomChanged();
 }
 
 HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
@@ -236,6 +253,16 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	// 오브젝트 추가
 	CGameObject* pGameObject = nullptr;
 
+	// Game Status
+	pGameObject = CGameStatus::Create(m_pGraphicDev);
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"GameStatus", pGameObject)))
+		return E_FAIL;
+
+	m_pStatus = static_cast<CGameStatus*>(pGameObject);
+
 	// Terrain
 	pGameObject = CTerrain::Create(m_pGraphicDev);
 	if (nullptr == pGameObject)
@@ -270,7 +297,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		if (FAILED(pLayer->Add_GameObject(L"PseudoDark_" + to_wstring(i), pGameObject)))
 			return E_FAIL;
 
-		CGameStatusMgr::GetInstance()->RegisterPseudoDark(pGameObject);
+		m_pStatus->RegisterPseudoDark(pGameObject);
 		
 		static_cast<CPseudoDark*>(pGameObject)->SetScale(2.5f + (float)i * 0.75f);
 		if (i == 3)
@@ -536,6 +563,41 @@ HRESULT CStage::Ready_Light()
 	//	return E_FAIL;
 	
 	return S_OK;
+}
+
+void CStage::CheckRoomChanged()
+{
+	int m_iRoomIndex = CalculateRoomIndexFromPlayerPosition();
+
+	if (m_iRoomIndex != m_iCurrentRoomIndex)
+	{
+		m_iCurrentRoomIndex = m_iRoomIndex;
+		m_pStatus->UpdateCurrentRoomIndex(m_iCurrentRoomIndex);
+		wstring wstrRoomLayerKey = L"Room_" + to_wstring(m_iCurrentRoomIndex) + L"_Layer";
+		CRoomLayer* pLayer = static_cast<CRoomLayer*>(CManagement::GetInstance()->Get_Layer(wstrRoomLayerKey.c_str()));
+		m_pCurrentRoomLayer = pLayer;
+	}
+}
+
+int CStage::CalculateRoomIndexFromPlayerPosition()
+{
+	const _vec3 vCenter = CRoomLoadingMgr::GetInstance()->GetCenterRoomPosition();
+	const _vec3 vRoomSize = CRoomLoadingMgr::GetInstance()->GetOuterRoomSize();
+	const int iRowCount = CRoomLoadingMgr::GetInstance()->GetRoomRowCount();
+	const int iColCount = CRoomLoadingMgr::GetInstance()->GetRoomColCount();
+
+	const float fLocalX = m_vPlayerPos.x - vCenter.x;
+	const float fLocalZ = m_vPlayerPos.z - vCenter.z;
+
+	const float fHalfGridX = (float)iColCount * vRoomSize.x * 0.5f;
+	const float fHalfGridZ = (float)iRowCount * vRoomSize.z * 0.5f;
+
+	const int iCol = (int)floorf((fLocalX + fHalfGridX) / vRoomSize.x);
+	const int iRow = (int)floorf((fHalfGridZ - fLocalZ) / vRoomSize.z);
+
+	if (0 > iCol || iCol >= iColCount || 0 > iRow || iRow >= iRowCount) return -1;
+
+	return iRow * iColCount + iCol;
 }
 
 

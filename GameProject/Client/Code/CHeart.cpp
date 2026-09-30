@@ -2,7 +2,6 @@
 #include "CHeart.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
-#include "CGameStatusMgr.h"
 #include "CTransform.h"
 #include "CManagement.h"
 #include "CPlayer.h"

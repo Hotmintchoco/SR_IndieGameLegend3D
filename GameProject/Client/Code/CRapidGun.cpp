@@ -4,7 +4,7 @@
 #include "CProtoMgr.h"
 #include "CDefaultBullet.h"
 #include "CSoundMgr.h"
-#include "CGameStatusMgr.h"
+#include "CManagement.h"
 #include "CRoomLayer.h"
 #include "CRenderer.h"
 
@@ -91,7 +91,8 @@ void CRapidGun::DefaultAttack()
     D3DXVec3Normalize(&vDir, &vDir);
 
     CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
-    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+    pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
 
@@ -106,7 +107,8 @@ void CRapidGun::SpecialAttack()
     D3DXVec3Normalize(&vDir, &vDir);
 
     CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
-    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+    pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
 

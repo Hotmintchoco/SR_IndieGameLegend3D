@@ -14,6 +14,8 @@ public:
 	virtual			void		LateUpdate_Scene(const _float& fTimeDelta);
 	virtual			void		Render_Scene();
 
+	virtual HRESULT Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject) override { return S_OK; }
+
 private:
 	HRESULT			Ready_Environment_Layer(const _tchar* pLayerTag);
 	HRESULT			Ready_GameLogic_Layer(const _tchar* pLayerTag) { return S_OK; }

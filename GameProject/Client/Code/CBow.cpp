@@ -4,7 +4,7 @@
 #include "CProtoMgr.h"
 #include "CDefaultBullet.h"
 #include "CSoundMgr.h"
-#include "CGameStatusMgr.h"
+#include "CManagement.h"
 #include "CRoomLayer.h"
 #include "CVoxelBuffer.h"
 #include "CRenderer.h"
@@ -71,7 +71,7 @@ void CBow::Render_GameObject()
     
     m_pBufferCom[m_iRenderIdx]->Render_Buffer();
 
-    RenderEditorPanel();
+    // RenderEditorPanel();
 }
 
 void CBow::ChargeStart()
@@ -128,7 +128,7 @@ void CBow::ShootArrow()
 
     CProjectile* pProjectile = CArrow::Create(m_pGraphicDev, m_vBulletFrom, vDir, m_iRenderIdx);
     cout << m_iChargeLevel;
-    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+    CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
     m_bOnCharging = false;
     m_fChargeTime = 0.f;

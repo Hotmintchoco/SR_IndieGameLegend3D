@@ -4,7 +4,7 @@
 #include "CProtoMgr.h"
 #include "CSGBullet.h"
 #include "CSoundMgr.h"
-#include "CGameStatusMgr.h"
+#include "CManagement.h"
 #include "CRoomLayer.h"
 #include "CRandomMgr.h"
 #include "CRenderer.h"
@@ -106,7 +106,8 @@ void CShotGun::DefaultAttack()
         float fNoiseScale = CRandomMgr::GetInstance()->GetRandomValue<float>(1.f, 3.f);
 
         CProjectile* pProjectile = CSGBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir, fNoiseScale);
-        CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+        CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+        pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
     }
 

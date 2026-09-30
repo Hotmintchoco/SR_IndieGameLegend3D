@@ -2,7 +2,7 @@
 #include "CMagmamouth.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
-#include "CGameStatusMgr.h"
+#include "CStage.h"
 #include "CTimerMgr.h"
 #include "CTerrain.h"
 #include "CSpeyeder.h"
@@ -231,8 +231,8 @@ void CMagmamouth::Spawn_Spider(const _float& fTimeDelta)
         static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
         static_cast<CSpeyeder*>(pGameObject)->Set_Velocity(vVelocity);
 
-        CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-        if (FAILED(pLayer->Add_GameObject(L"Speyeder", pGameObject))) return;
+        CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+        if (FAILED(pScene->Add_GameObject(L"Speyeder", pGameObject))) return;
     }
 }
 
@@ -377,8 +377,8 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
         static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
         static_cast<CFireball*>(pGameObject)->Set_Velocity(vVelocity);
 
-        CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-        if (FAILED(pLayer->Add_GameObject(L"Fireball", pGameObject))) return;
+        CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+        if (FAILED(pScene->Add_GameObject(L"Fireball", pGameObject))) return;
     }
 }
 
@@ -978,8 +978,8 @@ void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
                 static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
                 static_cast<CFireball*>(pGameObject)->Set_Velocity(vVelocity);
 
-                CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-                if (FAILED(pLayer->Add_GameObject(L"Fireball", pGameObject))) return;
+                CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+                if (FAILED(pScene->Add_GameObject(L"Fireball", pGameObject))) return;
             }
         }
     }

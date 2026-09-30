@@ -5,7 +5,6 @@
 #include "CBoxCollider.h"
 #include "CCollisionMgr.h"
 #include "Client_Enum.h"
-#include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
 #include "CPlayer.h"
 #include "CCollider.h"

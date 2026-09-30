@@ -9,7 +9,6 @@
 #include "CTimerMgr.h"
 //#include "CDInputMgr.h"
 #include "CTerrain.h"
-#include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
 #include "Client_Struct.h"
 #include "CSoundMgr.h"
@@ -20,9 +19,7 @@ CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_iHp(0), m_fFrame(0.f), m_fHitEffectTime(0.1f), m_fHitEffectElapsedTime(0.f), m_bHitState(false)
 {
     ++iMonsterIdx;
-    /* 성철 */
-    if (!m_pOwner) m_pOwner = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-    /* --- */
+
 }
 
 

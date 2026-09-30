@@ -9,7 +9,7 @@
 #include "CHeart.h"
 #include "CGem.h"
 #include "CEnergy.h"
-#include "CGameStatusMgr.h"
+#include "CStage.h"
 #include "CRoomLayer.h"
 #include "CSpriteTile.h"
 #include "CParticle_Sphere.h"
@@ -64,24 +64,29 @@ void CFireball::CheckDeadCondition()
 
     bool bDeadCondition1 = m_iLandingCount == 3;
     
-    CTile* pTile = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->GetTileFromWorldPosition(vPos);
-    bool bDeadCondition2 = false;
-    if (pTile && pTile->GetType() == ETileType::SPRITE)
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+    if (CStage* pStage = dynamic_cast<CStage*>(pScene))
     {
-        bDeadCondition2 = static_cast<CSpriteTile*>(pTile)->GetResistContamination();
-    }
-    else
-    {
-        bDeadCondition2 = true;
-    }
-    
-    if (bDeadCondition1 || bDeadCondition2)
-    {
-        /* 파괴 시에는 큰 범위로 오염 */
-        CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->RequestTileContamination(vPos, 3, EContaminateType::LAVA, 3.f);
-        m_bDelete = true;
-        
+        CRoomLayer* pLayer = pStage->GetCurrentRoomLayer();
+        CTile* pTile = pLayer->GetTileFromWorldPosition(vPos);
 
+        
+        bool bDeadCondition2 = false;
+        if (pTile && pTile->GetType() == ETileType::SPRITE)
+        {
+            bDeadCondition2 = static_cast<CSpriteTile*>(pTile)->GetResistContamination();
+        }
+        else
+        {
+            bDeadCondition2 = true;
+        }
+    
+        if (bDeadCondition1 || bDeadCondition2)
+        {
+            /* 파괴 시에는 큰 범위로 오염 */
+            pLayer->RequestTileContamination(vPos, 3, EContaminateType::LAVA, 3.f);
+            m_bDelete = true;
+        }
     }
 }
 
@@ -178,7 +183,11 @@ void CFireball::Throw(const _float& fTimeDelta)
         /* 성철 : 튕길 때마다 작은 범위의 불 영역 생성 */
         _vec3 vPos;
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
-        CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->RequestTileContamination(vPos, 1, EContaminateType::LAVA, 3.f);
+        CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+        if (CStage* pStage = dynamic_cast<CStage*>(pScene))
+        {
+            pStage->GetCurrentRoomLayer()->RequestTileContamination(vPos, 1, EContaminateType::LAVA, 3.f);
+        }
         /* -------------------------------------- */
         
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");

@@ -9,7 +9,8 @@
 #include "CSpriteTile.h"
 #include "CTriggerBox.h"
 #include "CAbstractFactory.h"
-#include "CGameStatusMgr.h"
+#include "CStage.h"
+#include "CGameStatus.h"
 #include "CDoor.h"
 #include "CKillAllEntityCondition.h"
 #include "CPressAllButtonCondition.h"
@@ -95,9 +96,10 @@ void CRoomLayer::PlayerTileInteraction()
 
 bool CRoomLayer::IsValidUpdateTarget()
 {
-	if (CGameStatusMgr::GetInstance()->GetCurrentRoomLayer() == this) return true;
+	CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+	if (pStage->GetCurrentRoomLayer() == this) return true;
 
-	const pair<int, int> CurrentRoomIndex = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->GetIndex2D();
+	const pair<int, int> CurrentRoomIndex = pStage->GetCurrentRoomLayer()->GetIndex2D();
 	const auto [iCurRow, iCurCol] = CurrentRoomIndex;
 	
 	const pair<int, int> RoomIndex = GetIndex2D();
@@ -414,7 +416,8 @@ void CRoomLayer::OnRoomTriggerBlockCollided()
 
 	if (!m_bVisited)
 	{
-		CGameStatusMgr::GetInstance()->UpdateVisitTable(m_iRoomIndex);
+		CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+		pStage->GetStatus()->UpdateVisitTable(m_iRoomIndex);
 		m_bVisited = true;
 	}
 
@@ -476,7 +479,8 @@ void CRoomLayer::CheckClearCondition()
 	}
 
 	/* 모든 클리어 조건이 만족 */
-	CGameStatusMgr::GetInstance()->UpdateClearTable(m_iRoomIndex);
+	CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+	pStage->GetStatus()->UpdateClearTable(m_iRoomIndex);
 	TRoomEventCtx t{ ERoomEventType::ROOM_CLEAR };
 	m_OnRoomEvent.Broadcast(t);
 	m_bOnProgress = false;

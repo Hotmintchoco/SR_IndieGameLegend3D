@@ -13,7 +13,6 @@
 #include "CImGuiTool.h"
 #include "CRoomLoadingMgr.h"
 #include "CAbstractFactory.h"
-#include "CGameStatusMgr.h"
 #include "CRandomMgr.h"
 #include "CDebugMgr.h"
 #include "CSoundMgr.h"
@@ -52,8 +51,6 @@ int CMainApp::Update_MainApp(const _float& fTimeDelta)
 
 	m_pManagementClass->Update_Scene(fTimeDelta);
 
-	CGameStatusMgr::GetInstance()->Update(fTimeDelta);
-
 	CSoundMgr::GetInstance()->Update();
 
 	return 0;
@@ -71,8 +68,6 @@ void CMainApp::Render_MainApp()
 	CImGuiTool::BeginFrame();
 
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
-
-	CGameStatusMgr::GetInstance()->Render();
 
 	CImGuiTool::EndFrame();
 
@@ -163,7 +158,6 @@ void CMainApp::Free()
 	CCameraMgr::DestroyInstance();
 	CRoomLoadingMgr::DestroyInstance();
 	CAbstractFactory::DestroyInstance();
-	CGameStatusMgr::DestroyInstance();
 	CRandomMgr::DestroyInstance();
 	CDebugMgr::DestroyInstance();
 	CSoundMgr::DestroyInstance();

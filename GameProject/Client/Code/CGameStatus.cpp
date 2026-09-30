@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "CGameStatusMgr.h"
+#include "CGameStatus.h"
 #include "CManagement.h"
 #include "CRoomLayer.h"
 #include "CImGuiTool.h"
@@ -7,52 +7,49 @@
 #include "CDebugMgr.h"
 #include "CRoomLoadingMgr.h"
 #include "CSoundMgr.h"
+#include "CTimerMgr.h"
 
-IMPLEMENT_SINGLETON(CGameStatusMgr);
-
-CGameStatusMgr::CGameStatusMgr()
+CGameStatus::CGameStatus(LPDIRECT3DDEVICE9 pGraphicDev)
+    :CGameObject(pGraphicDev)
 {
 }
 
-CGameStatusMgr::~CGameStatusMgr()
+CGameStatus::~CGameStatus()
 {
 }
 
-void CGameStatusMgr::Update(const float fTimeDelta)
+HRESULT CGameStatus::Ready_GameObject()
+{
+    return S_OK;
+}
+
+_int CGameStatus::Update_GameObject(const _float& fTimeDelta)
 {
     UpdateCameraInfo();
 
-    UpdateRoomIndex();
+    m_fDT = CTimerMgr::GetInstance()->Get_TimeDelta(L"Timer_FPS60");
+
+    return S_OK;
 }
 
-void CGameStatusMgr::UpdateRoomIndex()
+void CGameStatus::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-    /* Player에서 이미 자신의 위치를 업데이트 하고 있음 */
-    m_iCurrentRoomIndex = GetRoomIndexFromPlayerPosition(m_vPlayerPos);
-    if (m_iPrevRoomIndex != m_iCurrentRoomIndex)
-    {
-        m_iPrevRoomIndex = m_iCurrentRoomIndex;
-        if (GetCurrentRoomLayer())
-        {
-            GetCurrentRoomLayer()->ApplyDarkness();
-        }
-    }
 }
 
-void CGameStatusMgr::UpdateCameraInfo()
+void CGameStatus::Render_GameObject()
+{
+    // RenderImGui();
+    // DebugPanelForRendering();
+}
+
+void CGameStatus::UpdateCameraInfo()
 {
     _vec3 vCameraLook;
     CCameraMgr::GetInstance()->Get_CamLook(&vCameraLook);
     m_fYaw = atan2f(vCameraLook.x, vCameraLook.z);
 }
 
-void CGameStatusMgr::Render()
-{
-    // RenderImGui();
-    // DebugPanelForRendering();
-}
-
-void CGameStatusMgr::RenderImGui()
+void CGameStatus::RenderImGui()
 {
     ImGui::Begin("Debug");
 
@@ -149,7 +146,7 @@ void CGameStatusMgr::RenderImGui()
     ImGui::End();
 }
 
-void CGameStatusMgr::DebugPanelForRendering()
+void CGameStatus::DebugPanelForRendering()
 {
     if (!ImGui::Begin("Render Debug View"))
     {
@@ -186,34 +183,21 @@ void CGameStatusMgr::DebugPanelForRendering()
     ImGui::End();
 }
 
-CRoomLayer* CGameStatusMgr::GetCurrentRoomLayer()
+
+CGameStatus* CGameStatus::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-    wstring wstrRoomLayerKey = L"Room_" + to_wstring(m_iCurrentRoomIndex) + L"_Layer";
-    CRoomLayer* pLayer = static_cast<CRoomLayer*>(CManagement::GetInstance()->Get_Layer(wstrRoomLayerKey.c_str()));
-    return pLayer;
+    CGameStatus* pObject = new CGameStatus(pGraphicDev);
+
+    if (FAILED(pObject->Ready_GameObject()))
+    {
+        Safe_Release(pObject);
+        MSG_BOX("CGameStatus Create Failed");
+        return nullptr;
+    }
+
+    return pObject;
 }
 
-int CGameStatusMgr::GetRoomIndexFromPlayerPosition(const _vec3& vPos)
-{
-    const _vec3 vCenter = CRoomLoadingMgr::GetInstance()->GetCenterRoomPosition();
-    const _vec3 vRoomSize = CRoomLoadingMgr::GetInstance()->GetOuterRoomSize();
-    const int iRowCount = CRoomLoadingMgr::GetInstance()->GetRoomRowCount();
-    const int iColCount = CRoomLoadingMgr::GetInstance()->GetRoomColCount();
-
-    const float fLocalX = vPos.x - vCenter.x;
-    const float fLocalZ = vPos.z - vCenter.z;
-
-    const float fHalfGridX = (float)iColCount * vRoomSize.x * 0.5f;
-    const float fHalfGridZ = (float)iRowCount * vRoomSize.z * 0.5f;
-
-    const int iCol = (int)floorf((fLocalX + fHalfGridX) / vRoomSize.x);
-    const int iRow = (int)floorf((fHalfGridZ - fLocalZ) / vRoomSize.z);
-
-    if (0 > iCol || iCol >= iColCount || 0 > iRow || iRow >= iRowCount) return -1;
-
-    return iRow * iColCount + iCol;
-}
-
-void CGameStatusMgr::Free()
+void CGameStatus::Free()
 {
 }

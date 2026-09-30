@@ -103,9 +103,6 @@
     <Filter Include="01. Scene\Stage\Layer">
       <UniqueIdentifier>{864248b1-17e2-4b62-a7b2-574cc5b2efae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. Manager\01. GameStatus">
-      <UniqueIdentifier>{575f8b04-0769-4795-9023-f025baa09492}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\07. Room\BaseProp">
       <UniqueIdentifier>{d5671945-92ba-4fb7-b09c-4ba816215eaa}</UniqueIdentifier>
     </Filter>
@@ -301,6 +298,12 @@
     <Filter Include="02. GameObject\02. Monster\Cryder">
       <UniqueIdentifier>{6710e0ba-2e64-4032-ae33-fb5134fb11fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\12. Logic">
+      <UniqueIdentifier>{520c1d37-777a-469e-8694-86462aad2999}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. Logic\00. GameStatus">
+      <UniqueIdentifier>{575f8b04-0769-4795-9023-f025baa09492}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -435,8 +438,8 @@
     <ClInclude Include="..\Header\CRoomLayer.h">
       <Filter>01. Scene\Stage\Layer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CGameStatusMgr.h">
-      <Filter>04. Manager\01. GameStatus</Filter>
+    <ClInclude Include="..\Header\CGameStatus.h">
+      <Filter>02. GameObject\12. Logic\00. GameStatus</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CExplosiveFrustumLight.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
@@ -734,8 +737,8 @@
     <ClCompile Include="..\Code\CRoomLayer.cpp">
       <Filter>01. Scene\Stage\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CGameStatusMgr.cpp">
-      <Filter>04. Manager\01. GameStatus</Filter>
+    <ClCompile Include="..\Code\CGameStatus.cpp">
+      <Filter>02. GameObject\12. Logic\00. GameStatus</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CExplosiveFrustumLight.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>

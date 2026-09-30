@@ -6,13 +6,11 @@
 #include "CCollisionMgr.h"
 #include "Client_Struct.h"
 #include "Client_Enum.h"
-#include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
 
 CFrustum::CFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
 {
-    if (!m_pOwner) m_pOwner = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
 }
 
 CFrustum::~CFrustum()

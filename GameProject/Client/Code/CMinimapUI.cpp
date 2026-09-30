@@ -4,7 +4,8 @@
 #include "CManagement.h"
 #include "CRenderer.h"
 #include "CCameraMgr.h"
-#include "CGameStatusMgr.h"
+#include "CStage.h"
+#include "CGameStatus.h"
 #include "CRoomLoadingMgr.h"
 
 CMinimapUI::CMinimapUI(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -31,7 +32,6 @@ _int CMinimapUI::Update_GameObject(const _float& fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    const _float fYawRad = CGameStatusMgr::GetInstance()->GetYaw();
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 
@@ -48,7 +48,10 @@ void CMinimapUI::LateUpdate_GameObject(const _float& fTimeDelta)
 }
 
 void CMinimapUI::Render_GameObject()
-{
+{    
+    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+    if(!pStage) return;
+
     RECT rcClip;
     rcClip.left = LONG(m_vPos.x - m_vSize.x * 0.5f);
 	rcClip.top = LONG(m_vPos.y - m_vSize.y * 0.5f);
@@ -60,7 +63,7 @@ void CMinimapUI::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
 
     // 플레이어 맵 인덱스
-	_int iPlayerRoomIndex = CGameStatusMgr::GetInstance()->GetCurrentRoomIndex();
+	_int iPlayerRoomIndex = pStage->GetCurrentRoomIndex();
 	_int pX = iPlayerRoomIndex % 5;
 	_int pY = iPlayerRoomIndex / 5;
 
@@ -71,7 +74,7 @@ void CMinimapUI::Render_GameObject()
         _int y = i / 5;
 
         // 방문 여부 체크
-		_bool bVisited = CGameStatusMgr::GetInstance()->IsVisited(i);
+		_bool bVisited = pStage->GetStatus()->IsVisited(i);
         _uint iDoorMask = 0;
 
         if (bVisited || i == iPlayerRoomIndex)
@@ -152,7 +155,10 @@ HRESULT CMinimapUI::Add_Component()
 
 void CMinimapUI::RenderPlayerMark()
 {
-    const _int iPlayerRoomIndex = CGameStatusMgr::GetInstance()->GetCurrentRoomIndex();
+    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+    if (!pStage) return;
+
+    const _int iPlayerRoomIndex = pStage->GetCurrentRoomIndex();
     const _int iRoomColCount = CRoomLoadingMgr::GetInstance()->GetRoomColCount();
     const _int iRoomRowCount = CRoomLoadingMgr::GetInstance()->GetRoomRowCount();
 
@@ -162,7 +168,7 @@ void CMinimapUI::RenderPlayerMark()
     const _vec3 vCenterRoomPosition = CRoomLoadingMgr::GetInstance()->GetCenterRoomPosition();
     const _vec3 vOuterRoomSize = CRoomLoadingMgr::GetInstance()->GetOuterRoomSize();
     const _vec3 vInnerRoomSize = CRoomLoadingMgr::GetInstance()->GetInnerRoomSize();
-    const _vec3 vPlayerPos = CGameStatusMgr::GetInstance()->GetPlayerPosition();
+    const _vec3 vPlayerPos = pStage->GetPlayerPosition();
 
     _vec3 vRoomCenterPos;
     vRoomCenterPos.x =
@@ -189,7 +195,7 @@ void CMinimapUI::RenderPlayerMark()
     vMarkPos.z = 0.f;
 
     // 방향 설정
-    const _float fYawDegree = -D3DXToDegree(CGameStatusMgr::GetInstance()->GetYaw());
+    const _float fYawDegree = -D3DXToDegree(pStage->GetStatus()->GetYaw());
 
     m_pTransformCom->Set_Scale(fPlayerMarkSize, fPlayerMarkSize, 1.f);
     m_pTransformCom->Set_Rotation_Raw({ 0.f, 0.f, fYawDegree });

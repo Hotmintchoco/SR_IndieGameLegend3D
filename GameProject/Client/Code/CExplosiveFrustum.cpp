@@ -5,7 +5,6 @@
 #include "CExplosiveFrustumLight.h"
 #include "CExplosiveFrustumGlass.h"
 #include "CLayer.h"
-#include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
 #include "CAbstractFactory.h"
 #include "CFrustumExplodeEffect.h"
@@ -14,6 +13,7 @@
 #include "CRandomMgr.h"
 #include "CExplodeSphere.h"
 #include "CSoundMgr.h"
+#include "CManagement.h"
 
 CExplosiveFrustum::CExplosiveFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CFrustum(pGraphicDev)
@@ -150,7 +150,7 @@ void CExplosiveFrustum::SpawnChildren()
 
 void CExplosiveFrustum::Destroy()
 {
-    CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
 
     /* 자식 오브젝트 삭제 처리 */
     m_pLight->Set_Dead(true);
@@ -162,7 +162,7 @@ void CExplosiveFrustum::Destroy()
     /* 아이템 */
     CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
     if (pObject)
-        pLayer->Add_GameObject(L"Item", pObject);
+        pScene->Add_GameObject(L"Item", pObject);
 
     /* 폭발 효과 */
     _vec3 vPosNoise = _vec3{
@@ -174,7 +174,7 @@ void CExplosiveFrustum::Destroy()
     pObject = CFrustumExplodeEffect::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS] + vPosNoise, _vec3{ fScaleNoise, fScaleNoise, fScaleNoise });
     if (nullptr == pObject)
         assert(0);
-    if (FAILED(pLayer->Add_GameObject(L"FrustumExplode", pObject)))
+    if (FAILED(pScene->Add_GameObject(L"FrustumExplode", pObject)))
         assert(0);
     
     /* 폭발 효과 (구) */
@@ -189,16 +189,19 @@ void CExplosiveFrustum::Destroy()
     pObject = CExplodeSphere::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS] + vPosNoise, fStartScale, fEndScale, fLifeTime);
     if (nullptr == pObject)
         assert(0);
-    if (FAILED(pLayer->Add_GameObject(L"ExplodeSphere", pObject)))
+    if (FAILED(pScene->Add_GameObject(L"ExplodeSphere", pObject)))
         assert(0);
     
     /* 폭발 사운드 */
     CSoundMgr::GetInstance()->PlaySFX(L"sfxExplode.wav");
 
-    /* 방 깜빡임 */
-    if (CRandomMgr::GetInstance()->Chance(m_fFlickerChance))
+    /* 메인 스테이지에서 생성된 경우, 방 깜빡임 */
+    if (CRoomLayer* pLayer = dynamic_cast<CRoomLayer*>(m_pOwner))
     {
-        static_cast<CRoomLayer*>(m_pOwner)->FlickerLight(m_fFlickerDuration);
+        if (CRandomMgr::GetInstance()->Chance(m_fFlickerChance))
+        {
+            pLayer->FlickerLight(m_fFlickerDuration);
+        }
     }
 
     Set_Dead(true);

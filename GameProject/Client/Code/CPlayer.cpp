@@ -8,7 +8,7 @@
 #include "CCollisionMgr.h"
 #include "CImGuiTool.h"
 #include "CCameraMgr.h"
-#include "CGameStatusMgr.h"
+#include "CGameStatus.h"
 #include "CRoomLayer.h"
 #include "CUI.h"
 #include "CStage.h"
@@ -74,7 +74,11 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
     /* 성철 : 매니저 객체로 게임 상태를 관리하기 위해 추가. 문제 발생 시 말해줘 */
-    CGameStatusMgr::GetInstance()->UpdatePlayerPosition(vPos);
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+    if (CStage* pStage = dynamic_cast<CStage*>(pScene))
+    {
+        pStage->UpdatePlayerPosition(vPos);
+    }
     /* ---------------------------------------------------------------- */
 
     return iExit;
@@ -380,17 +384,20 @@ void CPlayer::GetItem(ITEMID iItemID)
 
 void CPlayer::UpdateHP(_int iAmount)
 {
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
     if (iAmount > 0)
     {
         if (m_iHP + iAmount > m_iMaxHP)
         {
-            CGameStatusMgr::GetInstance()->UpdatePlayerHp(m_iMaxHP - m_iHP);
+            if (CStage* pStage = dynamic_cast<CStage*>(pScene))
+                pStage->GetStatus()->UpdatePlayerHp(m_iMaxHP - m_iHP);
             m_iHP = m_iMaxHP;
 
         }
         else
         {
-            CGameStatusMgr::GetInstance()->UpdatePlayerHp(iAmount);
+            if (CStage* pStage = dynamic_cast<CStage*>(pScene))
+                pStage->GetStatus()->UpdatePlayerHp(iAmount);
             m_iHP += iAmount;
         }
     }
@@ -398,13 +405,15 @@ void CPlayer::UpdateHP(_int iAmount)
     {
         if (m_iHP + iAmount <= 0)
         {
-            CGameStatusMgr::GetInstance()->UpdatePlayerHp(-m_iHP);
+            if (CStage* pStage = dynamic_cast<CStage*>(pScene))
+                pStage->GetStatus()->UpdatePlayerHp(-m_iHP);
             m_iHP = 0;
             Die();
         }
         else
         {
-            CGameStatusMgr::GetInstance()->UpdatePlayerHp(iAmount);
+            if (CStage* pStage = dynamic_cast<CStage*>(pScene))
+                pStage->GetStatus()->UpdatePlayerHp(iAmount);
             m_iHP += iAmount;
         }
     }
@@ -419,7 +428,12 @@ void CPlayer::Die()
         return;
 
     m_iHP = 0;
-    CGameStatusMgr::GetInstance()->SetPlayerHp(0);
+
+    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+    if (pStage)
+    {
+        pStage->GetStatus()->SetPlayerHp(0);
+    }
 
     m_bDeathState = true;
     m_fRespawnTimer = 1.5f;
@@ -433,8 +447,10 @@ void CPlayer::Die()
         pGun->Set_IsActive(false);
 
     /* 성철 */
-    CStage* pScene = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-    pScene->OnPlayerDead();
+    if (pStage)
+    {
+        pStage->OnPlayerDead();
+    }
     /* ---- */
 }
 
@@ -444,7 +460,11 @@ void CPlayer::Respawn()
     m_pTransformCom->Set_Rotation_Raw(_vec3(0.f, 0.f, 0.f));
 
     m_iHP = m_iMaxHP;
-    CGameStatusMgr::GetInstance()->SetPlayerHp(m_iMaxHP);
+    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+    if (pStage)
+    {
+        pStage->GetStatus()->SetPlayerHp(m_iMaxHP);
+    }
 
     if (nullptr != m_pColliderCom)
         m_pColliderCom->Set_IsActive(true);

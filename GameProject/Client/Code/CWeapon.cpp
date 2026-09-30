@@ -7,7 +7,6 @@
 #include "CImGuiTool.h"
 #include "CDefaultBullet.h"
 #include "CDInputMgr.h"
-#include "CGameStatusMgr.h"
 #include "CSoundMgr.h"
 #include "Client_Struct.h"
 #include "CRoomLayer.h"

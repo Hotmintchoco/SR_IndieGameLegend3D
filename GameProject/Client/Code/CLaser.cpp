@@ -8,7 +8,6 @@
 #include "CManagement.h"
 #include "CCameraMgr.h"
 #include "CImGuiTool.h"
-#include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
 #include "IReflectable.h"
 
@@ -164,7 +163,8 @@ void CLaser::Reflect(const _vec3& vNormal)
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
     CProjectile* pProjectile = CLaser::Create(m_pGraphicDev, vPos, vReflect, m_fTimeAfterBirth, m_pPrevGenerationCollidedObject);
-    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+    pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
     /* 코너용 버퍼 위치 갱신 */
     _vec3 vUp, vLook, vRight;
