@@ -47,6 +47,7 @@ _int CBow::Update_GameObject(const _float& fTimeDelta)
     if (m_bOnCharging)
     {
         m_fChargeTime += fTimeDelta;
+        m_fChargeTime = clamp(m_fChargeTime, 0.f, m_fFullChargeTime);
         m_iRenderIdx = (int)ceil(m_fChargeTime / (m_fFullChargeTime / (float)m_iChargeLevel));
         m_iRenderIdx = clamp(m_iRenderIdx, 0, m_iChargeLevel);
     }
@@ -126,8 +127,7 @@ void CBow::ShootArrow()
     _vec3 vDir = m_vBulletTo - m_vBulletFrom;
     D3DXVec3Normalize(&vDir, &vDir);
 
-    CProjectile* pProjectile = CArrow::Create(m_pGraphicDev, m_vBulletFrom, vDir, m_iRenderIdx);
-    cout << m_iChargeLevel;
+    CProjectile* pProjectile = CArrow::Create(m_pGraphicDev, m_vBulletFrom, vDir, m_fChargeTime / m_fFullChargeTime);
     CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
     m_bOnCharging = false;

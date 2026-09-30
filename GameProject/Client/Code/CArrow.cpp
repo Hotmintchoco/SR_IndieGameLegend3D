@@ -6,8 +6,8 @@
 #include "Client_Enum.h"
 #include "CCrossBuffer.h"
 
-CArrow::CArrow(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, int iShotPower)
-    : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir), m_iShotPower(iShotPower)
+CArrow::CArrow(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower)
+    : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir), m_fSpeed(fShotPower * s_tData.fMaxSpeed)
 {
 }
 
@@ -24,20 +24,23 @@ HRESULT CArrow::Ready_GameObject()
         return E_FAIL;
 
     m_pData = &s_tData;
-    s_tData.fSpeed = m_iShotPower * m_fSpeedPerShotPower;
 
-    LookTowardShotDirection();
+    InitTransform();
     
+    _vec3 vLook;
+    m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
+    m_vVelocity = vLook * m_fSpeed;
+
     m_pColliderCom->Set_Owner(this);
-    m_pColliderCom->Set_Radius(0.3f);
+    m_pColliderCom->Set_Radius(0.1f);
 
     return S_OK;
 }
 
-void CArrow::LookTowardShotDirection()
+void CArrow::InitTransform()
 {
     m_pTransformCom->Set_Pos(m_vStart);
-    m_pTransformCom->Set_Scale(_vec3{ 0.33f, 0.33f, 1.f });
+    m_pTransformCom->Set_Scale(s_tData.vInitScale);
 
     _vec3 vLook, vUp, vRight;
     D3DXVec3Normalize(&vLook, &m_vDir);
@@ -58,6 +61,36 @@ void CArrow::LookTowardShotDirection()
     m_pTransformCom->WorldMatrixDecompose();
 }
 
+void CArrow::ExertGravity(const float fTimeDelta)
+{
+    m_vVelocity.y -= s_tData.fGravityCoef * fTimeDelta;
+    _vec3 vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    vPos += m_vVelocity * fTimeDelta;
+    m_pTransformCom->Set_Pos(vPos);
+}
+
+void CArrow::SyncTransformToVelocity()
+{
+    _vec3 vLook, vUp, vRight;
+    D3DXVec3Normalize(&vLook, &m_vVelocity);
+    vUp = _vec3{ 0.f, 1.f, 0.f };
+    D3DXVec3Cross(&vRight, &vUp, &vLook);
+    D3DXVec3Cross(&vUp, &vLook, &vRight);
+
+    _matrix* pWorld = m_pTransformCom->Get_World();
+    _vec3 vScale = s_tData.vInitScale;
+    vRight = vScale.x * vRight;
+    vUp = vScale.y * vUp;
+    vLook = vScale.z * vLook;
+
+    memcpy(&pWorld->m[0][0], &vRight, sizeof(_vec3));
+    memcpy(&pWorld->m[1][0], &vUp, sizeof(_vec3));
+    memcpy(&pWorld->m[2][0], &vLook, sizeof(_vec3));
+
+    m_pTransformCom->WorldMatrixDecompose();
+}
+
 _int CArrow::Update_GameObject(const _float& fTimeDelta)
 {
     _int iExit = CProjectile::Update_GameObject(fTimeDelta);
@@ -65,7 +98,12 @@ _int CArrow::Update_GameObject(const _float& fTimeDelta)
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PROJECTILE, m_pColliderCom);
 
-    m_pTransformCom->Move_Pos(&m_vDir, s_tData.fSpeed, fTimeDelta);
+    
+    if (!m_pStuckTarget)
+    {
+        ExertGravity(fTimeDelta);
+        SyncTransformToVelocity();
+    }
 
     return iExit;
 }
@@ -90,7 +128,24 @@ void CArrow::Render_GameObject()
 
 void CArrow::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    Set_Dead(true);
+    auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
+
+    switch (eCollInfo.iOtherID)
+    {
+    case COLLISIONID::COLL_OBSTACLE:
+        m_pStuckTarget = pOtherCol->Get_Owner();
+        break;
+    case COLLISIONID::COLL_MONSTER:
+        Set_Dead(true);
+        break;
+    default:
+        break;
+    }
+}
+
+void CArrow::OnCollisionExit(COLLINFO eCollInfo)
+{
+    m_pStuckTarget = nullptr;
 }
 
 HRESULT CArrow::Add_Component()
@@ -113,7 +168,7 @@ HRESULT CArrow::Add_Component()
 
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
-    // Transform
+    // Collider
     pComponent = m_pColliderCom = dynamic_cast<CSphereCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SphereCollider"));
 
     if (nullptr == pComponent)
@@ -124,9 +179,9 @@ HRESULT CArrow::Add_Component()
     return S_OK;
 }
 
-CArrow* CArrow::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, int iShotPower)
+CArrow* CArrow::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower)
 {
-    CArrow* pBullet = new CArrow(pGraphicDev, vStart, vDir, iShotPower);
+    CArrow* pBullet = new CArrow(pGraphicDev, vStart, vDir, fShotPower);
 
     if (FAILED(pBullet->Ready_GameObject()))
     {

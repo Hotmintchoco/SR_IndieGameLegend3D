@@ -39,28 +39,28 @@ HRESULT CCrossBuffer::Ready_Buffer()
 
 	/// 오른쪽 위
 
-	pVertex[0].vPosition = { -0.5f, 0.f, 0.5f };
+	pVertex[0].vPosition = { -0.5f, 0.f, 0.0f };
 	pVertex[0].vTexUV = { 0.f, 0.f };
 
-	pVertex[1].vPosition = { 0.5f, 0.f, 0.5f };
+	pVertex[1].vPosition = { 0.5f, 0.f, 0.0f };
 	pVertex[1].vTexUV = { 1.f, 0.f };
 
-	pVertex[2].vPosition = { 0.5f, 0.f, -0.5f };
+	pVertex[2].vPosition = { 0.5f, 0.f, -1.f };
 	pVertex[2].vTexUV = { 1.f, 1.f };
 
-	pVertex[3].vPosition = { -0.5f, 0.f, -0.5f };
+	pVertex[3].vPosition = { -0.5f, 0.f, -1.f };
 	pVertex[3].vTexUV = { 0.f, 1.f };
 
-	pVertex[4].vPosition = { 0.f, 0.5f, 0.5f };
+	pVertex[4].vPosition = { 0.f, 0.5f, 0.f };
 	pVertex[4].vTexUV = { 0.f, 0.f };
 
-	pVertex[5].vPosition = { 0.f, -0.5f, 0.5f };
+	pVertex[5].vPosition = { 0.f, -0.5f, 0.f };
 	pVertex[5].vTexUV = { 1.f, 0.f };
 
-	pVertex[6].vPosition = { 0.f, -0.5f, -0.5f };
+	pVertex[6].vPosition = { 0.f, -0.5f, -1.f };
 	pVertex[6].vTexUV = { 1.f, 1.f };
 
-	pVertex[7].vPosition = { 0.f, 0.5f, -0.5f };
+	pVertex[7].vPosition = { 0.f, 0.5f, -1.f };
 	pVertex[7].vTexUV = { 0.f, 1.f };
 
 	m_pVB->Unlock();
