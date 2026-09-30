@@ -464,6 +464,18 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"AmmoInfo", pUI)))
 		return E_FAIL;
 
+	// Hud Attack Info Ult
+	pUI = CGaugeUI::Create(m_pGraphicDev, L"Proto_UltTexture", false);
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(21.f, WINCY - 58.5f, 0.4f);
+	pUI->Set_Size({ 6.5f, 32.f });
+	CUIMgr::GetInstance()->Add_UI(UI_ULTIMATE, pUI);
+
+	if (FAILED(pLayer->Add_GameObject(L"UltInfo", pUI)))
+		return E_FAIL;
+
 	// Hud Attack Info Skill
 	pUI = CUI::Create(m_pGraphicDev, L"Proto_SkillTexture");
 	if (nullptr == pUI)

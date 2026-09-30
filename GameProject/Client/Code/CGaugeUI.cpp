@@ -47,21 +47,40 @@ void CGaugeUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CGaugeUI::Render_GameObject()
 {
-    // 게이지 크기만큼 그리기
-	_float fPercent = CGameStatusMgr::GetInstance()->GetSpecialAttackGauge();
+    if (m_bHorizontal)
+        Render_HorizontalGauge();
+    else
+		Render_VerticalGauge();
+}
 
+void CGaugeUI::Render_HorizontalGauge()
+{
     RECT rcClip;
-	rcClip.left = LONG(m_vPos.x - m_vSize.x);
-	rcClip.top = LONG(m_vPos.y - m_vSize.y);
-    rcClip.right = LONG((m_vPos.x - m_vSize.x) + m_vSize.x * 2.f * fPercent);
-	rcClip.bottom = LONG(m_vPos.y + m_vSize.y);
+    rcClip.left = LONG(m_vPos.x - m_vSize.x);
+    rcClip.top = LONG(m_vPos.y - m_vSize.y);
+    rcClip.right = LONG((m_vPos.x - m_vSize.x) + m_vSize.x * 2.f * m_fPercent);
+    rcClip.bottom = LONG(m_vPos.y + m_vSize.y);
     m_pGraphicDev->SetScissorRect(&rcClip);
     m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
 
     CUI::Render_GameObject();
 
-	m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
+    m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
+}
 
+void CGaugeUI::Render_VerticalGauge()
+{
+    RECT rcClip;
+    rcClip.left = LONG(m_vPos.x - m_vSize.x);
+    rcClip.top = LONG((m_vPos.y + m_vSize.y) - m_vSize.y * 2.f * m_fPercent);
+    rcClip.right = LONG(m_vPos.x + m_vSize.x);
+    rcClip.bottom = LONG(m_vPos.y + m_vSize.y);
+    m_pGraphicDev->SetScissorRect(&rcClip);
+    m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
+
+    CUI::Render_GameObject();
+
+    m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
 }
 
 CGaugeUI* CGaugeUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -78,10 +97,11 @@ CGaugeUI* CGaugeUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pGameUI;
 }
 
-CGaugeUI* CGaugeUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& wstrTextureTag)
+CGaugeUI* CGaugeUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& wstrTextureTag, _bool bHorizontal)
 {
     CGaugeUI* pGameUI = new CGaugeUI(pGraphicDev);
     pGameUI->m_wstrTextureTag = wstrTextureTag;
+	pGameUI->m_bHorizontal = bHorizontal;
 
     if (FAILED(pGameUI->Ready_GameObject()))
     {

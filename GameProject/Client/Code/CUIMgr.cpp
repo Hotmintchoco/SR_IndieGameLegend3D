@@ -2,6 +2,7 @@
 #include "CUIMgr.h"
 #include "CUI.h"
 #include "CGameStatusMgr.h"
+#include "CGaugeUI.h"
 
 IMPLEMENT_SINGLETON(CUIMgr)
 
@@ -24,6 +25,9 @@ void CUIMgr::Update_UI()
         case UI_SPECIAL:
             SpecialAtkCheck();
             break;
+		case UI_ULTIMATE:
+            UltimateCheck();
+			break;
         default:
             break;
         }
@@ -39,7 +43,28 @@ void CUIMgr::SpecialAtkCheck()
 
         if (pUI->Get_SyncSwitchToActive())
             pUI->Set_IsActive(bSwitch);
+
+		// 특수 공격 게이지 UI 업데이트
+		auto pGaugeUI = dynamic_cast<CGaugeUI*>(pUI);
+        if (pGaugeUI)
+        {
+            _float fPercent = CGameStatusMgr::GetInstance()->GetSpecialAttackGauge();
+            pGaugeUI->Set_Percent(fPercent);
+		}
     }
+}
+
+void CUIMgr::UltimateCheck()
+{
+    for (auto pUI : m_UIList[UI_ULTIMATE])
+    {
+		auto pGaugeUI = dynamic_cast<CGaugeUI*>(pUI);
+        if (pGaugeUI)
+        {
+            _float fPercent = CGameStatusMgr::GetInstance()->GetUltimateGauge();
+            pGaugeUI->Set_Percent(fPercent);
+		}
+	}
 }
 
 
