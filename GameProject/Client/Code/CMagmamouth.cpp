@@ -13,6 +13,7 @@
 #include "CEffect.h"
 #include "CParticle_Sphere.h"
 #include "CRoomLayer.h"
+#include "CUIMgr.h"
 
 CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(0.f), m_fStateUpdateDuration(2.f), 
@@ -103,6 +104,9 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
         Opening_MagmaMouth(_fTimeDelta);
         break;
     }
+
+    // 정민 : Boss HP 처리
+    CUIMgr::GetInstance()->Set_BossHp(m_iHp / _float(m_iMaxHp));
 
     return iExit;
 }
@@ -305,6 +309,9 @@ void CMagmamouth::Opening_MagmaMouth(const _float& fTimeDelta)
         }
 
     }
+
+    // 정민 : Boss Hp UI 처리
+    CUIMgr::GetInstance()->Active_Boss(true);
 }
 
 void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
@@ -1028,5 +1035,7 @@ void CMagmamouth::MagmaMouth_Dead_Effect()
 
 void CMagmamouth::Free()
 {
+    CUIMgr::GetInstance()->Active_Boss(false);
+
     CMonster::Free();
 }

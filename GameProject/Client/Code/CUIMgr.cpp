@@ -36,6 +36,24 @@ void CUIMgr::Update_UI()
     }
 }
 
+void CUIMgr::Active_Boss(_bool isFlag)
+{
+    for (auto pUI : m_UIList[UI_BOSS])
+        pUI->Set_IsActive(isFlag);
+}
+
+void CUIMgr::Set_BossHp(_float fHp)
+{
+    for (auto pUI : m_UIList[UI_BOSS])
+    {
+        auto pGaugeUI = dynamic_cast<CGaugeUI*>(pUI);
+        if (pGaugeUI)
+        {
+            pGaugeUI->Set_Percent(fHp);
+        }
+    }
+}
+
 void CUIMgr::SpecialAtkCheck()
 {
     CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
@@ -53,13 +71,8 @@ void CUIMgr::SpecialAtkCheck()
 		auto pGaugeUI = dynamic_cast<CGaugeUI*>(pUI);
         if (pGaugeUI)
         {
-            CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
-
-            if (CStage* pStage = dynamic_cast<CStage*>(pScene))
-            {
-                // 게이지 크기만큼 그리기
-                pGaugeUI->Set_Percent(pStage->GetStatus()->GetSpecialAttackGauge());
-            }
+            // 게이지 크기만큼 그리기
+            pGaugeUI->Set_Percent(pStage->GetStatus()->GetSpecialAttackGauge());
 		}
     }
 }
@@ -76,7 +89,7 @@ void CUIMgr::UltimateCheck()
             if (CStage* pStage = dynamic_cast<CStage*>(pScene))
             {
                 // 게이지 크기만큼 그리기
-                pGaugeUI->Set_Percent(pStage->GetStatus()->GetSpecialAttackGauge());
+                pGaugeUI->Set_Percent(pStage->GetStatus()->GetUltimateGauge());
             }
 		}
 	}

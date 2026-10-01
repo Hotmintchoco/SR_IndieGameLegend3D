@@ -395,7 +395,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	// Hp
 	_int iCountMax = 3;
 	_float fStartX = 25.f;
-	_float fStartY = 25.f;
+	_float fStartY = 28.f;
 	_float fIconSize = 17.5f;
 	_float fGap = 25.f;
 
@@ -549,6 +549,48 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	pUI->Set_Size({ WINCX >> 1, WINCY >> 1 });
 
 	if (FAILED(pLayer->Add_GameObject(L"HitScreen", pUI)))
+		return E_FAIL;
+
+	// Boss Font
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_BossFontTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(280.f, 32.f, 0.f);
+	pUI->Set_Size({ 64.f, 28.f });
+	pUI->Set_IsActive(false);
+
+	CUIMgr::GetInstance()->Add_UI(UI_BOSS, pUI);
+
+	if (FAILED(pLayer->Add_GameObject(L"BossFont", pUI)))
+		return E_FAIL;
+
+	// Boss HpBar
+	pUI = CUI::Create(m_pGraphicDev, L"Proto_BossHpBarTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(460.f, 32.f, 0.1f);
+	pUI->Set_Size({ 108.f, 16.f });
+	pUI->Set_IsActive(false);
+
+	CUIMgr::GetInstance()->Add_UI(UI_BOSS, pUI);
+
+	if (FAILED(pLayer->Add_GameObject(L"BossHpBar", pUI)))
+		return E_FAIL;
+
+	// Boss HpUI
+	pUI = CGaugeUI::Create(m_pGraphicDev, L"Proto_RedTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(460.f, 32.f, 0.f);
+	pUI->Set_Size({ 102.f, 13.f });
+	pUI->Set_IsActive(false);
+
+	CUIMgr::GetInstance()->Add_UI(UI_BOSS, pUI);
+
+	if (FAILED(pLayer->Add_GameObject(L"BossHpUI", pUI)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
