@@ -4,6 +4,7 @@
 #include "Engine_Define.h"
 
 class CRoomLayer;
+class CStage;
 
 class CGameStatus : public CGameObject
 {
@@ -15,7 +16,6 @@ protected:
 public:
 	virtual	HRESULT	Ready_GameObject() override;
 	virtual	_int Update_GameObject(_float fTimeDelta) override;
-	void DebugRayTest();
 	virtual	void LateUpdate_GameObject(_float fTimeDelta) override;
 	virtual	void Render_GameObject() override;
 
@@ -55,8 +55,12 @@ public:
 	inline void UpdateFPS(float fDT) { m_fDT = fDT; }
 	inline void RegisterPseudoDark(CGameObject* pObject) { m_vecPseudoDark.push_back(pObject); }
 
+	/* 스테이지 링크 */
+	inline void SetStage(CStage* pStage) { m_pStage = pStage; }
+
 private:
 	void UpdateCameraInfo();
+	void DebugRayTest();
 
 	/* CStage */
 	CStage* m_pStage = nullptr;

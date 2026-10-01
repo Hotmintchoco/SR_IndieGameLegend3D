@@ -13,6 +13,7 @@
 #include "CTimerMgr.h"
 #include "CStage.h"
 #include "CRenderer.h"
+#include "CPlayer.h"
 
 CGameStatus::CGameStatus(LPDIRECT3DDEVICE9 pGraphicDev)
     :CGameObject(pGraphicDev)
@@ -184,6 +185,29 @@ void CGameStatus::RenderImGui()
 
         if (VolumeRow("SFX", m_fSFXVolume, m_bSFXMute))
             pSound->SetSFXVolume(m_bSFXMute ? 0.f : m_fSFXVolume);
+    }
+
+    /* TimeScale */
+
+    ImGui::SeparatorText("Time Scale");
+    {
+        _bool bChanged = false;
+
+        bChanged |= ImGui::SliderFloat("Scale", &m_fTimeScale, 0.1f, 10.f, "%.2f", ImGuiSliderFlags_Logarithmic);
+        bChanged |= ImGui::Checkbox("Exclude Player", &m_bExcludePlayer);
+
+        if (bChanged)
+        {
+            CTimerMgr::GetInstance()->SetGlobalTimeScale(m_fTimeScale);
+            if (m_bExcludePlayer)
+            {
+                CTimerMgr::GetInstance()->SetGroupTimeScale(TG_PLAYER, 1.f / CTimerMgr::GetInstance()->GetGlobalTimeScale());
+            }
+            else
+            {
+                CTimerMgr::GetInstance()->SetGroupTimeScale(TG_PLAYER, 1.f);
+            }
+        }
     }
 
     ImGui::End();

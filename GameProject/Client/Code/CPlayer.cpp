@@ -13,7 +13,7 @@
 #include "CUI.h"
 #include "CStage.h"
 #include "CHitCreenUI.h"
-
+#include "CTimerMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_bFix(true), m_bCheck(true), m_iHP(12), m_iMaxHP(12), m_fInvTime(2.f)
@@ -47,6 +47,10 @@ HRESULT CPlayer::Ready_GameObject()
 
 _int CPlayer::Update_GameObject(_float fTimeDelta)
 {
+    /* 성철 : 커스텀 시간 스케일 적용을 위함 */
+    fTimeDelta *= CTimerMgr::GetInstance()->GetGroupTimeScale(TG_PLAYER);
+    /* --------------------------------- */
+
     _vec3   vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     Compute_ViewZ(&vPos);
@@ -86,6 +90,10 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(_float fTimeDelta)
 {
+    /* 성철 : 커스텀 시간 스케일 적용을 위함 */
+    fTimeDelta *= CTimerMgr::GetInstance()->GetGroupTimeScale(TG_PLAYER);
+    /* --------------------------------- */
+
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 

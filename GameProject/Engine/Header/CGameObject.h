@@ -40,8 +40,6 @@ public:
 	// 직교 투영
 	virtual _float Get_Z();
 
-	inline void SetCustomTimeScale(float fScale) { m_fCustomTimeScale = fScale; }
-
 public:
 	void			Set_Dead(_bool bDead) { m_bDead = bDead; }
 	_bool			Is_Dead() const { return m_bDead; }
@@ -64,9 +62,6 @@ protected:
 	
 	/* Ready 단계에서 Layer 접근이 불가한 문제를 해결하기 위한 변수로, Ready 단계 이후에는 보장되지 않음 */
 	CLayer* m_pOwner = nullptr;
-
-	/* Time Scale이 예외 처리되는 경우 */
-	float m_fCustomTimeScale = 1.f;
 
 private:
 	CComponent* Find_Component(COMPONENTID eID, const _tchar* pComponentTag);

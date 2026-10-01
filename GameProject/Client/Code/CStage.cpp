@@ -263,6 +263,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	m_pStatus = static_cast<CGameStatus*>(pGameObject);
+	m_pStatus->SetStage(this);
 
 	// Terrain
 	pGameObject = CTerrain::Create(m_pGraphicDev);
@@ -279,6 +280,8 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 		return E_FAIL;
+
+	m_pPlayer = static_cast<CPlayer*>(pGameObject);
 
 	// Weapon System
 	pGameObject = CWeaponSystem::Create(m_pGraphicDev);
