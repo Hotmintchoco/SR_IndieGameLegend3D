@@ -1,4 +1,4 @@
-#include "CCameraFPVPerspective.h"
+﻿#include "CCameraFPVPerspective.h"
 #include "CTransform.h"
 #include "CManagement.h"
 #include "CDInputMgr.h"
@@ -38,7 +38,7 @@ void CCameraFPVPerspective::Update_Camera(const _float& fTimeDelta, const _vec3&
 	D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(m_fAngle));
 	D3DXVec3TransformNormal(&vLook, &vLook, &matAxis);
 
-	m_vEye = vPos - [&]()->_vec3 {_vec3 vLookDst;  D3DXVec3Normalize(&vLookDst, &vLook); return vLookDst * 0.5f; }();
+	m_vEye = vPos - [&]()->_vec3 {_vec3 vLookDst;  D3DXVec3Normalize(&vLookDst, &vLook); return vLookDst * 0.0f; }();
 	m_vAt = vPos + [&]()->_vec3 {_vec3 vLookDst;  D3DXVec3Normalize(&vLookDst, &vLook); return vLookDst * 5.0f; }();
 
 	//m_vEye = vPos;

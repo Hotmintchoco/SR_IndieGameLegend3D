@@ -32,6 +32,7 @@ void CRenderer::Render(LPDIRECT3DDEVICE9& pGraphicDev)
 	Render_AlphaTest(pGraphicDev);
 	Render_Alpha(pGraphicDev);
 	Render_Collider(pGraphicDev);
+	Render_DebugTriangle(pGraphicDev);
 
 	Render_UI(pGraphicDev);
 
@@ -244,6 +245,53 @@ void CRenderer::Render_Collider(LPDIRECT3DDEVICE9& pGraphicDev)
 	End_WireFrame(pGraphicDev, tOld);
 
 	pGraphicDev->SetTransform(D3DTS_WORLD, &matOldWorld);
+}
+
+void CRenderer::Render_DebugTriangle(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+	if (!CDebugMgr::GetInstance()->GetShowDebugTriangle()) return;
+
+	if (m_vecDebugTri.empty())
+		return;
+
+	// 상태 백업
+	DWORD dwLighting, dwCull;
+	pGraphicDev->GetRenderState(D3DRS_LIGHTING, &dwLighting);
+	pGraphicDev->GetRenderState(D3DRS_CULLMODE, &dwCull);
+	_matrix matOldWorld, matIdentity;
+	pGraphicDev->GetTransform(D3DTS_WORLD, &matOldWorld);
+	D3DXMatrixIdentity(&matIdentity);
+
+	pGraphicDev->SetTransform(D3DTS_WORLD, &matIdentity);
+	pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+	pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	pGraphicDev->SetTexture(0, nullptr);
+	pGraphicDev->SetFVF(FVF_COL);
+
+	// 요청된 삼각형들을 한 번에 모아서 드로우콜 1회
+	std::vector<VTXCOL> vecVtx;
+	vecVtx.reserve(m_vecDebugTri.size() * 3);
+	for (const auto& t : m_vecDebugTri)
+	{
+		_vec3 vN;
+		D3DXVec3Normalize(&vN, &t.vNormal);
+		for (int i = 0; i < 3; ++i)
+			vecVtx.push_back({ t.vTri[i] + vN * 0.002f, t.dwColor });
+	}
+	pGraphicDev->DrawPrimitiveUP(D3DPT_TRIANGLELIST,
+		(UINT)m_vecDebugTri.size(), vecVtx.data(), sizeof(VTXCOL));
+
+	// 복구
+	pGraphicDev->SetTransform(D3DTS_WORLD, &matOldWorld);
+	pGraphicDev->SetRenderState(D3DRS_LIGHTING, dwLighting);
+	pGraphicDev->SetRenderState(D3DRS_CULLMODE, dwCull);
+
+	m_vecDebugTri.clear();   // 매 프레임 새로 요청받는 방식
+}
+
+void CRenderer::Add_DebugTriangle(const std::array<_vec3, 3>& vTri, const _vec3& vNormal, D3DCOLOR dwColor)
+{
+	m_vecDebugTri.push_back({ vTri, vNormal, dwColor });
 }
 
 void CRenderer::Free()

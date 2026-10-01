@@ -9,7 +9,8 @@
 #include "CSpriteTile.h"
 #include "CTriggerBox.h"
 #include "CAbstractFactory.h"
-#include "CGameStatusMgr.h"
+#include "CStage.h"
+#include "CGameStatus.h"
 #include "CDoor.h"
 #include "CKillAllEntityCondition.h"
 #include "CPressAllButtonCondition.h"
@@ -19,6 +20,8 @@
 #include "CPlayer.h"
 #include "CBoxCollider.h"
 #include "CFloor.h"
+#include "CItemContainer.h"
+#include "CRandomMgr.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -85,7 +88,7 @@ void CRoomLayer::PlayerTileInteraction()
 	switch (eType)
 	{
 	case EContaminateType::LAVA:
-		dynamic_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"))->Hit(nullptr);
+		pPlayer->Hit(nullptr);
 		break;
 	default:
 		break;
@@ -94,9 +97,10 @@ void CRoomLayer::PlayerTileInteraction()
 
 bool CRoomLayer::IsValidUpdateTarget()
 {
-	if (CGameStatusMgr::GetInstance()->GetCurrentRoomLayer() == this) return true;
+	CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+	if (pStage->GetCurrentRoomLayer() == this) return true;
 
-	const pair<int, int> CurrentRoomIndex = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->GetIndex2D();
+	const pair<int, int> CurrentRoomIndex = pStage->GetCurrentRoomLayer()->GetIndex2D();
 	const auto [iCurRow, iCurCol] = CurrentRoomIndex;
 	
 	const pair<int, int> RoomIndex = GetIndex2D();
@@ -124,6 +128,9 @@ void CRoomLayer::LateUpdate_Layer(const _float& fTimeDelta)
 HRESULT CRoomLayer::SpawnRoom()
 {
 	TRoomData* t = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iRoomIndex);
+	m_tBiomeInfo = CRoomLoadingMgr::GetInstance()->GetBiomeInfo(t->iBiome);
+	m_bBossRoom = t->bBossRoom;
+	m_eClearRewardType = (EObjectType)t->iClearReward;
 
 	/* 클리어 조건 */
 	for (auto& wstrClearCondtiion : t->vecClearCondition)
@@ -188,10 +195,13 @@ HRESULT CRoomLayer::SpawnRoom()
 		return E_FAIL;
 
 	CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrName, L"Com_Transform"));
-	pTransformCom->Set_Pos(vRoomCenterPos.x, -0.5f, vRoomCenterPos.z);
+	pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
+	pTransformCom->Set_Scale(13.f, 1.f, 11.f);
 	
 	CBoxCollider* pColliderCom = dynamic_cast<CBoxCollider*>(Get_Component(ID_DYNAMIC, wstrName, L"Com_BoxCollider"));
 	pColliderCom->Set_Extents(vOuterRoomSize.x / 2.f, 0.5f, vOuterRoomSize.z / 2.f);
+	pColliderCom->Set_DiffPos(_vec3{ 0.f, -0.5f, 0.f });
+
 
 	/* 타일 */
 	for (size_t i = 0; i < t->vecTile.size(); ++i)
@@ -205,7 +215,7 @@ HRESULT CRoomLayer::SpawnRoom()
 			(float)((int)vInnerRoomSize.z - 1) / 2.f * 1.f - 1.f * (float)iTileZ
 		};
 
-		int iTileIdx = (t->vecTile.at(i) == 0) ? t->iDefaultTileIdx : t->vecTile.at(i);
+		int iTileIdx = (t->vecTile.at(i) == 0) ? m_tBiomeInfo.iDefaultTileIndex : t->vecTile.at(i);
 		if (iTileIdx >= 0 && iTileIdx <= 56)
 		{
 			/* 일반 타일*/
@@ -240,7 +250,13 @@ HRESULT CRoomLayer::SpawnRoom()
 	/* 벽 : 동남서북 순 */
 	for (size_t i = 0; i < t->vecDoorInfo.size(); ++i)
 	{
-		pGameObject = CWall::Create(pDevice, (EWallDir)(i + 1), t->vecDoorInfo.at(i));
+		int iRandomOffset = CRandomMgr::GetInstance()->GetRandomValue<int>(0, 9);
+		int iBiomeOffset = t->iBiome * 10;
+		int iDoorOffset = (t->vecDoorInfo.at(i)) ? 50 : 0;
+		int iDirOffset = ((i % 2) == 0) ? 100 : 0;
+
+
+		pGameObject = CWall::Create(pDevice, (EWallDir)(i + 1), t->vecDoorInfo.at(i), iDirOffset + iDoorOffset + iBiomeOffset + iRandomOffset);
 		if (nullptr == pGameObject)
 			return E_FAIL;
 
@@ -277,14 +293,15 @@ HRESULT CRoomLayer::SpawnRoom()
 
 				CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
 
-				pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
+				pTransformCom->Set_Scale(_vec3{ 0.5f, 0.75f, 1.f });
+				pTransformCom->Set_Pos(vRoomCenterPos.x, 0.75f, vRoomCenterPos.z);
 				pTransformCom->Rotation(ROT_Y, 90.f * iDir);
 
 				pTransformCom->Move_Pos(&vDir, 5.7f + (iDir % 2) * 1.f + 0.2f * i, 1.f);
 			}
 
 			/* 문 쪽 타일 */
-			pGameObject = CSpriteTile::Create(pDevice, (int)i, (t->vecDoorTile[iDir - 1] == 0) ? t->iDefaultTileIdx : t->vecDoorTile[iDir - 1]);
+			pGameObject = CSpriteTile::Create(pDevice, (int)i, (t->vecDoorTile[iDir - 1] == 0) ? m_tBiomeInfo.iDefaultTileIndex : t->vecDoorTile[iDir - 1]);
 			if (nullptr == pGameObject)
 				return E_FAIL;
 
@@ -409,7 +426,8 @@ void CRoomLayer::OnRoomTriggerBlockCollided()
 
 	if (!m_bVisited)
 	{
-		CGameStatusMgr::GetInstance()->UpdateVisitTable(m_iRoomIndex);
+		CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+		pStage->GetStatus()->UpdateVisitTable(m_iRoomIndex);
 		m_bVisited = true;
 	}
 
@@ -471,12 +489,23 @@ void CRoomLayer::CheckClearCondition()
 	}
 
 	/* 모든 클리어 조건이 만족 */
-	CGameStatusMgr::GetInstance()->UpdateClearTable(m_iRoomIndex);
+	CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+	pStage->GetStatus()->UpdateClearTable(m_iRoomIndex);
 	TRoomEventCtx t{ ERoomEventType::ROOM_CLEAR };
 	m_OnRoomEvent.Broadcast(t);
 	m_bOnProgress = false;
 	m_bCleared = true;
 	CSoundMgr::GetInstance()->PlaySFX(L"sfxDoorOpen.wav");
+	if (m_eClearRewardType != EObjectType::NONE)
+	{
+		LPDIRECT3DDEVICE9 pDevice = CGraphicDev::GetInstance()->GetInstance()->Get_GraphicDev();
+		CGameObject* pGameObject = CItemContainer::Create(pDevice, m_eClearRewardType);
+		if (nullptr == pGameObject) return;
+		if (FAILED(Add_GameObject(L"ClearReward", pGameObject))) return;
+		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"ClearReward", L"Com_Transform"));
+		pTransformCom->Set_Pos(m_vRoomCenterPos.x, m_vRoomCenterPos.y, m_vRoomCenterPos.z);
+
+	}
 }
 
 CTile* CRoomLayer::GetTileFromWorldPosition(const _vec3& vWorldPos)

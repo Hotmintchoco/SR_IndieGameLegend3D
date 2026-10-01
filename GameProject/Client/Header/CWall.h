@@ -2,6 +2,7 @@
 
 #include "CGameObject.h"
 #include "IReflectable.h"
+#include "IRayTestable.h"
 #include "Client_Enum.h"
 
 struct TRoomEventCtx;
@@ -15,11 +16,11 @@ namespace Engine
 	class CBoxCollider;
 }
 
-class CWall : public CGameObject, public IReflectable
+class CWall : public CGameObject, public IReflectable, public IRayTestable
 {
 protected:
 	explicit CWall(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CWall(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor);
+	explicit CWall(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor, int iTextureIdx);
 	virtual ~CWall();
 
 public:
@@ -36,6 +37,9 @@ public:
 	/* IReflectable */
 	virtual const _vec3 GetNormal() override;
 
+	/* IRayTestable */
+	virtual vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> GetRayTestTargetInfo() override;
+
 private:
 	HRESULT Add_Component();
 	void InitializeCollider();
@@ -49,9 +53,10 @@ private:
 
 	EWallDir m_eDir = EWallDir::NONE;
 	bool m_bHasDoor = false;
+	int m_iTextureIdx = -1;
 
 public:
-	static CWall* Create(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor);
+	static CWall* Create(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor, int iTextureIdx);
 
 private:
 	virtual void		Free();

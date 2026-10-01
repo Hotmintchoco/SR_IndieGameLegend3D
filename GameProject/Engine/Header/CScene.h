@@ -19,6 +19,8 @@ public:
 
 	CGameObject* Get_GameObject(const wstring& wstrLayerTag, const _tchar* pObjTag);
 
+	virtual HRESULT Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject) PURE;
+
 	CLayer* Get_Layer(const wstring& wstrLayerTag);
 
 public:

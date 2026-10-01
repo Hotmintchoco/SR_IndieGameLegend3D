@@ -8,9 +8,10 @@
 #include "CManagement.h"
 #include "CCameraMgr.h"
 #include "CImGuiTool.h"
-#include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
 #include "IReflectable.h"
+#include "IRayTestable.h"
+#include "CRayCaster.h"
 
 CLaser::CLaser(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir)
     : CProjectile(pGraphicDev)
@@ -45,8 +46,6 @@ HRESULT CLaser::Ready_GameObject()
     m_pTransformCom->Set_Pos(m_vStart);
     m_pColliderCom->Set_Owner(this);
     m_pColliderCom->Set_Radius(0.3f);
-    m_pColliderComReflection->Set_Owner(this);
-    m_pColliderComReflection->Set_Radius(0.01f);
 
     return S_OK;
 }
@@ -56,10 +55,18 @@ _int CLaser::Update_GameObject(const _float& fTimeDelta)
     _int iExit = CProjectile::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
-    // CCollisionMgr::GetInstance()->Add_Collider(COLL_LASER, m_pColliderComReflection);
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PROJECTILE, m_pColliderCom);
 
     CalculateLength(fTimeDelta);
+
+    if (!m_bReflected && m_vecRayTestTarget.size() > 0)
+    {
+        for (auto p : m_vecRayTestTarget)
+        {
+            PreciseHitTest(p, fTimeDelta);
+            if (m_bReflected) break;
+        }
+    }
 
     return iExit;
 }
@@ -102,33 +109,79 @@ void CLaser::Render_GameObject()
     m_pTextureCom->Set_Texture(0);
 
     m_pBufferCom->Render_Buffer();
+
+    if (m_bReflected && s_tData.bShowCorner)
+    {
+        m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCorner->Get_World());
+        m_pTextureComCorner->Set_Texture(0);
+        m_pBufferComCorner->Render_Buffer();
+    }
 }
 
 void CLaser::OnCollisionEnter(COLLINFO eCollInfo)
 {
+    auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
     auto pObject = eCollInfo.pOtherCollider->Get_Owner();
 
-    if (m_pPrevGenerationCollidedObject == pObject) return;
-    if (IReflectable* pReflectable = dynamic_cast<IReflectable*>(pObject))
+    switch (iOtherID)
     {
-        /* 충돌체 크기만큼 앞으로 좀 보내기 */
-        m_pTransformCom->Move_Pos(&m_vDir, 0.3f, 1.f);
+    case COLLISIONID::COLL_OBSTACLE:
+    {
+        if (dynamic_cast<IRayTestable*>(pObject))
+        {
+            // if (m_pPrevGenerationCollidedObject == pObject) break;
 
-        /* 자식 레이저가 생성되자마자 충돌되는 것 방지 */
-        m_pPrevGenerationCollidedObject = pObject;
+            m_vecRayTestTarget.push_back(pObject);
+        }
+        break;
+    }
+    case COLLISIONID::COLL_MONSTER:
+        /* 몬스터 피격은 몬스터에 이미 구현 */
+        break;
+    default:
+        break;
+    }
+}
+
+void CLaser::OnCollisionExit(COLLINFO eCollInfo)
+{
+}
+
+void CLaser::PreciseHitTest(CGameObject* pTarget, const float fTimeDelta)
+{
+    CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
+    _vec3 vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+    THitInfo t{};
+
+    if (IRayTestable* pRayTestable = dynamic_cast<IRayTestable*>(pTarget))
+    {
+        vector<pair<CVIBuffer*, CTransform*>> vecInfo = pRayTestable->GetRayTestTargetInfo();
+        for (auto& [pBuffer, pTransform] : vecInfo)
+        {
+            pRayCaster->RayTest(t, vPos, m_vDir, pBuffer, pTransform->Get_World());
+        }
+    }
+
+    const float fThreshold = s_tData.fSpeed * fTimeDelta;
+
+    if (t.bHit && t.fDist < fThreshold)
+    {
+        m_pPrevGenerationCollidedObject = pTarget;
 
         /* 자식 레이저 생성 */
-        Reflect(pReflectable->GetNormal());
+        Reflect(t.fTriNormal);
 
         /* 시각적 어색함을 없애기 위한 길이 상한 */
         m_fReflectLength = m_fCurrentLength;
         m_fReflectTime = m_fTimeAfterBirth;
 
-        /* 더 이상 충돌 처리를 하지 않음 */
-        m_pColliderCom->Set_IsActive(false);
-
         /* 길이 계산식이 변경됨 */
         m_bReflected = true;
+
+        /* 더 이상 충돌 처리를 하지 않음 */
+        m_pColliderCom->Set_IsActive(false);
     }
 }
 
@@ -144,8 +197,37 @@ void CLaser::Reflect(const _vec3& vNormal)
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
     CProjectile* pProjectile = CLaser::Create(m_pGraphicDev, vPos, vReflect, m_fTimeAfterBirth, m_pPrevGenerationCollidedObject);
-    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+    pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
+
+    if (s_tData.bShowCorner)
+    {
+        /* 코너용 버퍼 위치 갱신 */
+        _vec3 vUp, vLook, vRight;
+        vUp = vNormal;
+        if (vUp == _vec3{ 1.f, 0.f, 0.f } || vUp == _vec3{ -1.f, 0.f, 0.f })
+        {
+            vRight = _vec3{ 0.f, -1.f, 0.f }; /* 계산용 가짜 값 */
+        }
+        else
+        {
+            vRight = _vec3{ 1.f, 0.f, 0.f }; /* 계산용 가짜 값 */
+        }
+        D3DXVec3Cross(&vLook, &vRight, &vUp);
+
+        _matrix* pWorld = m_pTransformCorner->Get_World();
+
+        _vec3 vR = s_tData.fWidth * vRight;
+        _vec3 vU = s_tData.fWidth * vUp;
+        _vec3 vL = s_tData.fWidth * vLook;
+        memcpy(&pWorld->m[0][0], &vR, sizeof(_vec3));
+        memcpy(&pWorld->m[1][0], &vU, sizeof(_vec3));
+        memcpy(&pWorld->m[2][0], &vL, sizeof(_vec3));
+        memcpy(&pWorld->m[3][0], &vPos, sizeof(_vec3));
+        m_pTransformCorner->WorldMatrixDecompose();
+        m_pTransformCorner->Move_Pos(&vUp, 0.04f, 1.f);
+    }
 }
 
 HRESULT CLaser::Add_Component()
@@ -160,6 +242,14 @@ HRESULT CLaser::Add_Component()
 
     m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
 
+    // Mesh
+    pComponent = m_pBufferComCorner = dynamic_cast<CPlaneTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlaneTex"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_BufferCorner", pComponent });
+
     // Texture
     pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Laser_Texture"));
 
@@ -168,6 +258,14 @@ HRESULT CLaser::Add_Component()
 
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
+    // Texture
+    pComponent = m_pTextureComCorner = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Laser_Corner_Texture"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_TextureCorner", pComponent });
+
     // Collider
     pComponent = m_pColliderCom = dynamic_cast<CSphereCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SphereCollider"));
 
@@ -175,14 +273,14 @@ HRESULT CLaser::Add_Component()
         return E_FAIL;
 
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });
-    
-    // Collider
-    pComponent = m_pColliderComReflection = dynamic_cast<CSphereCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SphereCollider"));
+
+    // Transform
+    pComponent = m_pTransformCorner = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
 
     if (nullptr == pComponent)
         return E_FAIL;
 
-    m_mapComponent[ID_DYNAMIC].insert({ L"Com_ReflectCollider", pComponent });
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_TransformCorner", pComponent });
 
     return S_OK;
 }
@@ -245,6 +343,7 @@ void CLaser::RenderEditorPanel()
         ImGui::DragFloat("Length", &s_tData.fMaxLength, 0.01f, 0.f, 10.f);
         ImGui::DragFloat("Width", &s_tData.fWidth, 0.01f, 0.f, 5.f);
         ImGui::SliderInt("Reflect Clone", &s_tData.iRefelctionClone, 0, 10);
+        ImGui::Checkbox("Corner Complement", &s_tData.bShowCorner);
     }
 
     ImGui::End();

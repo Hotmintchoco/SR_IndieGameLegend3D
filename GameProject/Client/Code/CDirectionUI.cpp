@@ -4,7 +4,8 @@
 #include "CManagement.h"
 #include "CRenderer.h"
 #include "CCameraMgr.h"
-#include "CGameStatusMgr.h"
+#include "CStage.h"
+#include "CGameStatus.h"
 
 CDirectionUI::CDirectionUI(LPDIRECT3DDEVICE9 pGraphicDev)
     : CUI(pGraphicDev), m_fCompassUOffset(0.f)
@@ -33,7 +34,12 @@ _int CDirectionUI::Update_GameObject(const _float& fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	const _float fYawRad = CGameStatusMgr::GetInstance()->GetYaw();
+    _float fYawRad = 0.f;
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+    if (CStage* pStage = dynamic_cast<CStage*>(pScene))
+    {
+        fYawRad = pStage->GetStatus()->GetYaw();
+    }
 
     // [-pi, pi] -> [0, 1)
     m_fCompassUOffset = fYawRad / (2.f * D3DX_PI) + 0.06f;

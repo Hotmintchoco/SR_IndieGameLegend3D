@@ -1,7 +1,9 @@
 ﻿#include "pch.h"
 #include "CUIMgr.h"
 #include "CUI.h"
-#include "CGameStatusMgr.h"
+#include "CGameStatus.h"
+#include "CManagement.h"
+#include "CStage.h"
 
 IMPLEMENT_SINGLETON(CUIMgr)
 
@@ -32,14 +34,18 @@ void CUIMgr::Update_UI()
 
 void CUIMgr::SpecialAtkCheck()
 {
+    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+    if (!pStage) return;
+
     for (auto pUI : m_UIList[UI_SPECIAL])
     {
-        _bool bSwitch = CGameStatusMgr::GetInstance()->GetSpecialAttackSwitch();
+        _bool bSwitch = pStage->GetStatus()->GetSpecialAttackSwitch();
         pUI->Set_OnSwitch(bSwitch);
 
         if (pUI->Get_SyncSwitchToActive())
             pUI->Set_IsActive(bSwitch);
     }
+
 }
 
 

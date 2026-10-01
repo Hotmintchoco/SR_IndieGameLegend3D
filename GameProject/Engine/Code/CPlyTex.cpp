@@ -58,6 +58,9 @@ HRESULT CPlyTex::Ready_Buffer(const _tchar* szFilePath)
 	m_dwIdxSize = sizeof(INDEX16);
 	m_IdxFmt = D3DFMT_INDEX16;
 
+	auto pTri = std::make_shared<std::vector<TTriInfo>>();
+	pTri->reserve(m_dwTriCnt);
+
 	if (FAILED(CVIBuffer::Ready_Buffer()))
 		return E_FAIL;
 
@@ -83,7 +86,15 @@ HRESULT CPlyTex::Ready_Buffer(const _tchar* szFilePath)
 		pIndex[i]._0 = (_ushort)m_vecIdx[i * 3 + 0];
 		pIndex[i]._1 = (_ushort)m_vecIdx[i * 3 + 1];
 		pIndex[i]._2 = (_ushort)m_vecIdx[i * 3 + 2];
+
+		pTri->push_back(TTriInfo{
+			pVertex[pIndex[i]._0].vPosition,
+			pVertex[pIndex[i]._1].vPosition,
+			pVertex[pIndex[i]._2].vPosition,
+			});
 	}
+
+	m_pTri = move(pTri);
 
 	m_pIB->Unlock();
 

@@ -47,6 +47,8 @@ public:
 	/* 방 초기화 */
 	void ResetState();
 
+	inline bool IsBossRoom() { return m_bBossRoom;; }
+
 private:
 	/* 어둠 스위치 */
 	void SetPseudoDark(bool bFlag);
@@ -73,6 +75,15 @@ private:
 
 	vector<CClearCondition*> m_vecClearCondition;
 	int m_iEntityCount = 0;
+
+	/* 바이옴 */
+	TBiomeInfo m_tBiomeInfo = {};
+
+	/* 클리어 시 중앙에 리워드 생성 */
+	EObjectType m_eClearRewardType = EObjectType::NONE;
+
+	/* 보스 룸 여부 */
+	bool m_bBossRoom = false;
 
 public:
 	static CRoomLayer* Create(int iRoomIndex);

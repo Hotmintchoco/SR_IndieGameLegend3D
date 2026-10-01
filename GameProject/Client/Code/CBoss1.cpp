@@ -9,7 +9,6 @@
 #include "CSprnub1.h"
 #include "CSprnub2.h"
 #include "CSprnub3.h"
-#include "CGameStatusMgr.h"
 #include "CShockwave.h"
 
 CBoss1::CBoss1(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -612,8 +611,8 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
             vPos += vVelocity;
             static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
 
-            CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-            if (FAILED(pLayer->Add_GameObject(L"Sprnub", pGameObject))) return;
+            CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+            if (FAILED(pScene->Add_GameObject(L"Sprnub", pGameObject))) return;
 
 
             CLayer* pGameLogicLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");

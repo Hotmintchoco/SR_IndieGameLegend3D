@@ -29,6 +29,9 @@ HRESULT CPlaneTex::Ready_Buffer()
 	m_dwIdxSize = sizeof(INDEX16);
 	m_IdxFmt = D3DFMT_INDEX16;
 
+	auto pTri = std::make_shared<std::vector<TTriInfo>>();
+	pTri->reserve(m_dwTriCnt);
+
 	if (FAILED(CVIBuffer::Ready_Buffer()))
 		return E_FAIL;
 
@@ -66,6 +69,17 @@ HRESULT CPlaneTex::Ready_Buffer()
 	pIndex[1]._0 = 0;
 	pIndex[1]._1 = 2;
 	pIndex[1]._2 = 3;
+
+	for (_ulong i = 0; i < m_dwTriCnt; ++i)
+	{
+		pTri->push_back(TTriInfo{
+			pVertex[pIndex[i]._0].vPosition,
+			pVertex[pIndex[i]._1].vPosition,
+			pVertex[pIndex[i]._2].vPosition,
+			});
+	}
+
+	m_pTri = move(pTri);
 
 	m_pIB->Unlock();
 

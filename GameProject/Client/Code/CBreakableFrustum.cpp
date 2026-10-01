@@ -4,7 +4,7 @@
 #include "CRenderer.h"
 #include "CAbstractFactory.h"
 #include "CRoomLayer.h"
-#include "CGameStatusMgr.h"
+#include "CManagement.h"
 #include "CSoundMgr.h"
 
 CBreakableFrustum::CBreakableFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -86,12 +86,13 @@ HRESULT CBreakableFrustum::Add_Component()
 
 void CBreakableFrustum::Destroy()
 {
-    CRoomLayer* pLayer = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
 
     CGameObject* pObject = CAbstractFactory::GetInstance()->CreateRandomItem(this);
-
     if (pObject)
-        pLayer->Add_GameObject(L"Item", pObject);
+    {
+        pScene->Add_GameObject(L"Item", pObject);
+    }
 
     Set_Dead(true);
 

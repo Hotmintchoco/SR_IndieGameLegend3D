@@ -4,7 +4,6 @@
 #include "CManagement.h"
 #include "CRenderer.h"
 #include "CCameraMgr.h"
-#include "CGameStatusMgr.h"
 
 CHitCreenUI::CHitCreenUI(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUI(pGraphicDev), m_fAlpha(0.f)

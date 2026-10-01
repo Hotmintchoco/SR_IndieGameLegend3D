@@ -23,13 +23,13 @@ enum COLLISIONID
 	/* COLL_ID5  */	COLL_ID5,
 	/* COLL_ID6  */	COLL_ITEM,
 	/* COLL_ID7  */	COLL_OBSTACLE,
-	/* COLL_ID8  */	COLL_EXPLODERANGE,
+	/* COLL_ID8  */	COLL_EXPLODE,
 	/* COLL_ID9  */	COLL_ID9,
 	/* COLL_ID10 */	COLL_ID10,
 	/* COLL_ID11 */	COLL_PROJECTILE,
 	/* COLL_ID12 */	COLL_ROOMLOGIC,
-	/* COLL_ID13 */	COLL_OBSTACLE_REFLECT,
-	/* COLL_ID14 */	COLL_LASER,
+	/* COLL_ID13 */	COLL_ID13,
+	/* COLL_ID14 */	COLL_ID14,
 	/* COLL_ID15 */	COLL_ID15,
 	/* COLL_ID16 */	COLL_ID16,
 	/* COLL_ID17 */	COLL_ID17,
@@ -85,6 +85,7 @@ enum class EObjectType
 	WEAPON_DEFAULT,
 	WEAPON_SHOTGUN,
 	WEAPON_LASERGUN,
+	WEAPON_BOW,
 	WEAPON_MAX,
 
 
@@ -123,6 +124,31 @@ enum class ETileType
 
 	SPRITE,
 	BUTTON,
+
+	MAX,
+};
+
+enum class EDirection
+{
+	NONE,
+
+	EAST,	// +x
+	SOUTH,	// -z
+	WEST,	// -x
+	NORTH,	// +z
+
+	MAX,
+};
+
+enum class EBiomeType
+{
+	NONE,
+
+	CYBER,
+	DESERT,
+	AQUA,
+	SNOW,
+	LAVA,
 
 	MAX,
 };

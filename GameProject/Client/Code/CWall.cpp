@@ -12,14 +12,15 @@
 #include <algorithm>
 #include <cfloat>
 #include <ctime>
+#include "CRandomMgr.h"
 
 CWall::CWall(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
 {
 }
 
-CWall::CWall(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor)
-    : CGameObject(pGraphicDev), m_eDir(eDir), m_bHasDoor(bHasDoor)
+CWall::CWall(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor, int iTextureIdx)
+    : CGameObject(pGraphicDev), m_eDir(eDir), m_bHasDoor(bHasDoor), m_iTextureIdx(iTextureIdx)
 {
 }
 
@@ -217,7 +218,6 @@ void CWall::LateUpdate_GameObject(const _float& fTimeDelta)
     for (int i = 0; i < 2; ++i)
     {
         CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom[i]);
-        // CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE_REFLECT, m_pColliderCom[i]);
     }
 }
 
@@ -225,7 +225,7 @@ void CWall::Render_GameObject()
 {
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-    m_pTextureCom->Set_Texture(0);
+    m_pTextureCom->Set_Texture(m_iTextureIdx);
     m_pBufferCom->Render_Buffer();
 }
 
@@ -234,13 +234,26 @@ void CWall::OnCollisionStay(COLLINFO eCollInfo)
     if (nullptr == eCollInfo.pOtherCollider)
         return;
 
-    for (int i = 0; i < 2; ++i)
+    switch (eCollInfo.iOtherID)
     {
-        if (nullptr == m_pColliderCom[i])
-            continue;
+    case COLLISIONID::COLL_PLAYER:
+    case COLLISIONID::COLL_MONSTER:
+    {
+        for (int i = 0; i < 2; ++i)
+        {
+            if (nullptr == m_pColliderCom[i])
+                continue;
 
-        Obstacle_Collision(eCollInfo.pOtherCollider, m_pColliderCom[i]);
+            Obstacle_Collision(eCollInfo.pOtherCollider, m_pColliderCom[i]);
+        }
+        break;
     }
+    default:
+    {
+        break;
+    }
+    }
+
 }
 
 const _vec3 CWall::GetNormal()
@@ -265,11 +278,16 @@ const _vec3 CWall::GetNormal()
     }
 }
 
+vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> CWall::GetRayTestTargetInfo()
+{
+    return vector<pair<Engine::CVIBuffer*, Engine::CTransform*>>{{ m_pBufferCom, m_pTransformCom }};
+}
+
 HRESULT CWall::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
-    wstring wstrBufferName, wstrTextureName, wstrDir, wstrDoor;
+    wstring wstrBufferName, wstrDir, wstrDoor;
 
     if (m_bHasDoor)
     {
@@ -296,7 +314,6 @@ HRESULT CWall::Add_Component()
     }
 
     wstrBufferName = L"Proto_Wall_" + wstrDir + L"_" + wstrDoor + L"Door_Vertex";
-    wstrTextureName = L"Proto_Wall_" + wstrDir + L"_" + wstrDoor + L"Door_Texture";
 
     // TerrainTex
     pComponent = m_pBufferCom = dynamic_cast<CPlyTex*>(CProtoMgr::GetInstance()->Clone_Prototype(wstrBufferName.c_str()));
@@ -305,7 +322,7 @@ HRESULT CWall::Add_Component()
     m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
 
     // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(wstrTextureName.c_str()));
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Wall_Texture"));
     if (nullptr == pComponent)
         return E_FAIL;
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
@@ -335,9 +352,9 @@ HRESULT CWall::Add_Component()
     return S_OK;
 }
 
-CWall* CWall::Create(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor)
+CWall* CWall::Create(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor, int iTextureIdx)
 {
-    CWall* pWall = new CWall(pGraphicDev, eDir, bHasDoor);
+    CWall* pWall = new CWall(pGraphicDev, eDir, bHasDoor, iTextureIdx);
 
     if (FAILED(pWall->Ready_GameObject()))
     {

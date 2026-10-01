@@ -2,7 +2,8 @@
 #include "CGem.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
-#include "CGameStatusMgr.h"
+#include "CStage.h"
+#include "CGameStatus.h"
 #include "CManagement.h"
 #include "CTransform.h"
 #include "CUI.h"
@@ -78,10 +79,15 @@ HRESULT CGem::Add_Component()
 
 void CGem::Consume()
 {
-    CGameStatusMgr::GetInstance()->UpdateGem(1);
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+    if (CStage* pStage = dynamic_cast<CStage*>(pScene))
+    {
+        pStage->GetStatus()->UpdateGem(1);
 
-    // Update Gem Count UI
-    Update_GemCountUI();
+        // Update Gem Count UI
+        Update_GemCountUI();
+
+    }
 
     Set_Dead(true);
 
@@ -90,19 +96,23 @@ void CGem::Consume()
 
 void CGem::Update_GemCountUI()
 {
-    int iCnt = CGameStatusMgr::GetInstance()->GetGemCount();
-    int iDiv = 100;
-    // 100으로 나누고..
-
-    for (int i = 0; i < 3; ++i)
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+    if (CStage* pStage = dynamic_cast<CStage*>(pScene))
     {
-        int iNum = iCnt / iDiv;
-        wstring wstrTag = L"GemNum_" + to_wstring(i);
+        int iCnt = pStage->GetStatus()->GetGemCount();
+        int iDiv = 100;
+        // 100으로 나누고..
 
-        CUI* pUI = static_cast<CUI*>(CManagement::GetInstance()->Get_GameObject(L"UI_Layer", wstrTag.c_str()));
-        pUI->Set_Texture(iNum);
-        iCnt = iCnt % iDiv;
-        iDiv /= 10;
+        for (int i = 0; i < 3; ++i)
+        {
+            int iNum = iCnt / iDiv;
+            wstring wstrTag = L"GemNum_" + to_wstring(i);
+
+            CUI* pUI = static_cast<CUI*>(CManagement::GetInstance()->Get_GameObject(L"UI_Layer", wstrTag.c_str()));
+            pUI->Set_Texture(iNum);
+            iCnt = iCnt % iDiv;
+            iDiv /= 10;
+        }
     }
 }
 

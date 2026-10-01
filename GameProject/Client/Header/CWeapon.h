@@ -22,7 +22,7 @@ public:
 	virtual	void LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual	void Render_GameObject() PURE;
 
-	void DefaultAttack();
+	virtual void DefaultAttack() PURE;
 	virtual void SpecialAttack() PURE;
 	virtual void UltimateAttack() PURE;
 
@@ -30,6 +30,9 @@ public:
 
 	inline bool IsOnCoolTime() { return m_bIsCoolTime; }
 	inline float GetSpecialAtkGaugeConsume() { return m_fGaugeConsumePerSpecialAtk; }
+
+	virtual void ChargeStart();
+	virtual void ChargeEnd();
 
 protected:
 	HRESULT	Add_Component();

@@ -7,7 +7,6 @@
 #include "CImGuiTool.h"
 #include "CDefaultBullet.h"
 #include "CDInputMgr.h"
-#include "CGameStatusMgr.h"
 #include "CSoundMgr.h"
 #include "Client_Struct.h"
 #include "CRoomLayer.h"
@@ -32,8 +31,6 @@ HRESULT CWeapon::Ready_GameObject()
 _int CWeapon::Update_GameObject(const _float& fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
-
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
     
     Animation(fTimeDelta);
 
@@ -77,21 +74,6 @@ void CWeapon::SyncTransformToCamera()
     memcpy(&vCameraLook, &matCamera.m[2][0], sizeof(_vec3));
     memcpy(&vCameraPos, &matCamera.m[3][0], sizeof(_vec3));
     m_vBulletTo = vCameraPos + vCameraLook * m_fTargetDistance;
-}
-
-void CWeapon::DefaultAttack()
-{
-    _vec3 vDir = m_vBulletTo - m_vBulletFrom;
-    D3DXVec3Normalize(&vDir, &vDir);
-
-    CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
-    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
-
-    CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
-
-    m_bIsCoolTime = true;
-    m_fCoolTimeLeft = m_fShootInterval;
-    StartShotAnimation();
 }
 
 void CWeapon::UpdateAnimationArgs(const TWeaponAnimArgs& t)
@@ -147,6 +129,14 @@ void CWeapon::StartShotAnimation()
 {
     m_bShotAnimation = true;
     m_fTimeAfterShot = 0.f;
+}
+
+void CWeapon::ChargeStart()
+{
+}
+
+void CWeapon::ChargeEnd()
+{
 }
 
 HRESULT CWeapon::Add_Component()

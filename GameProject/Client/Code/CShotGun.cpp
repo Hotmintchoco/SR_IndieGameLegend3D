@@ -4,9 +4,10 @@
 #include "CProtoMgr.h"
 #include "CSGBullet.h"
 #include "CSoundMgr.h"
-#include "CGameStatusMgr.h"
+#include "CManagement.h"
 #include "CRoomLayer.h"
 #include "CRandomMgr.h"
+#include "CRenderer.h"
 
 CShotGun::CShotGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -36,6 +37,8 @@ HRESULT CShotGun::Ready_GameObject()
 _int CShotGun::Update_GameObject(const _float& fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
+
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
     return iExit;
 }
@@ -86,7 +89,7 @@ void CShotGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CShotGun::SpecialAttack()
+void CShotGun::DefaultAttack()
 {
     for (int i = 0; i < m_iBulletPerSpecialAtk; ++i)
     {
@@ -103,17 +106,22 @@ void CShotGun::SpecialAttack()
         float fNoiseScale = CRandomMgr::GetInstance()->GetRandomValue<float>(1.f, 3.f);
 
         CProjectile* pProjectile = CSGBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir, fNoiseScale);
-        CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+        CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+        pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
     }
 
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
-    
+
     m_bIsCoolTime = true;
     m_fCoolTimeLeft = m_fSpecialAtkInterval;
     StartShotAnimation();
+}
+
+void CShotGun::SpecialAttack()
+{
 }
 
 void CShotGun::UltimateAttack()

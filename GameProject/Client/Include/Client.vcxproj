@@ -145,7 +145,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CAbstractFactory.h" />
+    <ClInclude Include="..\Header\CArrow.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
+    <ClInclude Include="..\Header\CBow.h" />
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
     <ClInclude Include="..\Header\CBoss1.h" />
     <ClInclude Include="..\Header\CBullet_Trail.h" />
@@ -153,6 +155,12 @@
     <ClInclude Include="..\Header\CDefaultBullet.h" />
     <ClInclude Include="..\Header\CFloor.h" />
     <ClInclude Include="..\Header\CGlubba.h" />
+    <ClInclude Include="..\Header\CCrossBuffer.h" />
+    <ClInclude Include="..\Header\CDdokddak.h" />
+    <ClInclude Include="..\Header\CCryder.h" />
+    <ClInclude Include="..\Header\CDefaultBullet.h" />
+    <ClInclude Include="..\Header\CFloor.h" />
+    <ClInclude Include="..\Header\CItemContainer.h" />
     <ClInclude Include="..\Header\CHitCreenUI.h" />
     <ClInclude Include="..\Header\CLaser.h" />
     <ClInclude Include="..\Header\CLaserBuffer.h" />
@@ -182,14 +190,16 @@
     <ClInclude Include="..\Header\CFrustum.h" />
     <ClInclude Include="..\Header\CFrustumExplodeEffect.h" />
     <ClInclude Include="..\Header\CGameMachine.h" />
-    <ClInclude Include="..\Header\CGameStatusMgr.h" />
+    <ClInclude Include="..\Header\CGameStatus.h" />
     <ClInclude Include="..\Header\CGaugeUI.h" />
+    <ClInclude Include="..\Header\CRayCaster.h" />
     <ClInclude Include="..\Header\CSGBullet.h" />
     <ClInclude Include="..\Header\CShockwave.h" />
     <ClInclude Include="..\Header\CShotGun.h" />
     <ClInclude Include="..\Header\CSprnub2.h" />
     <ClInclude Include="..\Header\CSprnub3.h" />
     <ClInclude Include="..\Header\CUIMgr.h" />
+    <ClInclude Include="..\Header\CVoxelBuffer.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
     <ClInclude Include="..\Header\CMagmamouth.h" />
     <ClInclude Include="..\Header\CGem.h" />
@@ -221,6 +231,7 @@
     <ClInclude Include="..\Header\CTriggerBox.h" />
     <ClInclude Include="..\Header\CUI.h" />
     <ClInclude Include="..\Header\CWall.h" />
+    <ClInclude Include="..\Header\CWeaponPickup.h" />
     <ClInclude Include="..\Header\CWeaponSystem.h" />
     <ClInclude Include="..\Header\CWorm.h" />
     <ClInclude Include="..\Header\CWorm_Tail.h" />
@@ -235,6 +246,7 @@
     <ClInclude Include="..\Header\imstb_rectpack.h" />
     <ClInclude Include="..\Header\imstb_textedit.h" />
     <ClInclude Include="..\Header\imstb_truetype.h" />
+    <ClInclude Include="..\Header\IRayTestable.h" />
     <ClInclude Include="..\Header\IReflectable.h" />
     <ClInclude Include="..\Header\json.hpp" />
     <ClInclude Include="..\Header\JsonAdapter.h" />
@@ -249,15 +261,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CAbstractFactory.cpp" />
+    <ClCompile Include="..\Code\CArrow.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
+    <ClCompile Include="..\Code\CBow.cpp" />
     <ClCompile Include="..\Code\CBreakableFrustum.cpp" />
     <ClCompile Include="..\Code\CBoss1.cpp" />
     <ClCompile Include="..\Code\CBullet_Trail.cpp" />
+    <ClCompile Include="..\Code\CCrossBuffer.cpp" />
+    <ClCompile Include="..\Code\CDdokddak.cpp" />
     <ClCompile Include="..\Code\CCryder.cpp" />
     <ClCompile Include="..\Code\CDefaultBullet.cpp" />
     <ClCompile Include="..\Code\CFloor.cpp" />
     <ClCompile Include="..\Code\CGlubba.cpp" />
     <ClCompile Include="..\Code\CHitCreenUI.cpp" />
+    <ClCompile Include="..\Code\CItemContainer.cpp" />
     <ClCompile Include="..\Code\CLaser.cpp" />
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />
     <ClCompile Include="..\Code\CLaserGun.cpp" />
@@ -286,13 +303,15 @@
     <ClCompile Include="..\Code\CFrustum.cpp" />
     <ClCompile Include="..\Code\CFrustumExplodeEffect.cpp" />
     <ClCompile Include="..\Code\CGameMachine.cpp" />
-    <ClCompile Include="..\Code\CGameStatusMgr.cpp" />
+    <ClCompile Include="..\Code\CGameStatus.cpp" />
+    <ClCompile Include="..\Code\CRayCaster.cpp" />
     <ClCompile Include="..\Code\CSGBullet.cpp" />
     <ClCompile Include="..\Code\CShockwave.cpp" />
     <ClCompile Include="..\Code\CShotGun.cpp" />
     <ClCompile Include="..\Code\CSprnub2.cpp" />
     <ClCompile Include="..\Code\CSprnub3.cpp" />
     <ClCompile Include="..\Code\CUIMgr.cpp" />
+    <ClCompile Include="..\Code\CVoxelBuffer.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
     <ClCompile Include="..\Code\CGaugeUI.cpp" />
     <ClCompile Include="..\Code\CMagmamouth.cpp" />
@@ -324,6 +343,7 @@
     <ClCompile Include="..\Code\CTriggerBox.cpp" />
     <ClCompile Include="..\Code\CUI.cpp" />
     <ClCompile Include="..\Code\CWall.cpp" />
+    <ClCompile Include="..\Code\CWeaponPickup.cpp" />
     <ClCompile Include="..\Code\CWeaponSystem.cpp" />
     <ClCompile Include="..\Code\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -351,6 +371,7 @@
     <ClCompile Include="..\Code\CWorm_Boby.cpp" />
     <ClCompile Include="..\Code\CWorm_Face.cpp" />
     <ClCompile Include="..\Code\CUnbreakableFrustum.cpp" />
+    <ClCompile Include="..\Code\IRayTestable.cpp" />
     <ClCompile Include="..\Code\IReflectable.cpp" />
     <ClCompile Include="..\Code\CSprnub1.cpp" />
     <ClCompile Include="Client.cpp" />
@@ -372,12 +393,11 @@
     <None Include="..\Bin\Resource\Map\DefaultRoom.json" />
     <None Include="..\Bin\Resource\Map\Room 작성 가이드.md" />
     <None Include="..\Bin\Resource\Map\Room_1_1.json" />
-    <None Include="..\Bin\Resource\Map\Room_2_3.json" />
-    <None Include="..\Bin\Resource\Map\Room_2_0.json" />
+    <None Include="..\Bin\Resource\Map\Room_1_2.json" />
+    <None Include="..\Bin\Resource\Map\Room_1_3.json" />
+    <None Include="..\Bin\Resource\Map\Room_1_4.json" />
     <None Include="..\Bin\Resource\Map\Room_2_1.json" />
     <None Include="..\Bin\Resource\Map\Room_2_2.json" />
-    <None Include="..\Bin\Resource\Map\Room_1_0.json" />
-    <None Include="..\Bin\Resource\Map\Room_3_1.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

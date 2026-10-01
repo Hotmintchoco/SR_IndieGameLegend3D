@@ -32,7 +32,6 @@ _int CUnbreakableFrustum::Update_GameObject(const _float& fTimeDelta)
     _int    iExit = CFrustum::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
-    // CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE_REFLECT, m_pColliderCom);
 
     return iExit;
 }
@@ -54,13 +53,18 @@ void CUnbreakableFrustum::Render_GameObject()
 const _vec3 CUnbreakableFrustum::GetNormal()
 {
     float fX = CRandomMgr::GetInstance()->GetRandomValue<float>(-1.f, 1.f);
-    float fY = CRandomMgr::GetInstance()->GetRandomValue<float>(-1.f, 1.f);
+    float fY = CRandomMgr::GetInstance()->GetRandomValue<float>(0.f, 1.f);
     float fZ = CRandomMgr::GetInstance()->GetRandomValue<float>(-1.f, 1.f);
 
     _vec3 vNormal{fX, fY, fZ};
     D3DXVec3Normalize(&vNormal, &vNormal);
 
     return vNormal;
+}
+
+vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> CUnbreakableFrustum::GetRayTestTargetInfo()
+{
+    return vector<pair<Engine::CVIBuffer*, Engine::CTransform*>>{{m_pBufferCom, m_pTransformCom}};
 }
 
 HRESULT CUnbreakableFrustum::Add_Component()

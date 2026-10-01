@@ -103,9 +103,6 @@
     <Filter Include="01. Scene\Stage\Layer">
       <UniqueIdentifier>{864248b1-17e2-4b62-a7b2-574cc5b2efae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. Manager\01. GameStatus">
-      <UniqueIdentifier>{575f8b04-0769-4795-9023-f025baa09492}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\07. Room\BaseProp">
       <UniqueIdentifier>{d5671945-92ba-4fb7-b09c-4ba816215eaa}</UniqueIdentifier>
     </Filter>
@@ -265,6 +262,9 @@
     <Filter Include="02. GameObject\02. Monster\Sprnub">
       <UniqueIdentifier>{7a47d356-d425-4c6b-a048-ba98ba2e0613}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Ddokddak">
+      <UniqueIdentifier>{8029e05a-482a-4890-b0ab-89b15aeb1f3a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01. Scene\MiniGame">
       <UniqueIdentifier>{c1d0cb1c-a82c-4dd0-ba2e-ba944ff4ecc0}</UniqueIdentifier>
     </Filter>
@@ -273,6 +273,24 @@
     </Filter>
     <Filter Include="02. GameObject\10. UI\HitScreen">
       <UniqueIdentifier>{1912728d-3bab-4c0e-a846-ef0f8bbe6c42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\00. Weapon\04. Bow">
+      <UniqueIdentifier>{0875b4ce-e4e6-4b0e-9281-c40880306022}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\00. Weapon\04. Bow\VoxelBuffer">
+      <UniqueIdentifier>{e826893d-5b22-4dae-816a-fc6d7fdbb511}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\03. Arrow">
+      <UniqueIdentifier>{be8dcc4a-66f7-4499-abeb-6f4f7b8d2224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\03. Arrow\CrossBuffer">
+      <UniqueIdentifier>{885071a5-b6ac-47df-976a-21322cd8c5b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\ItemContainer">
+      <UniqueIdentifier>{ca027f21-bd91-414a-beca-60817a5506bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Item\WeaponPickup">
+      <UniqueIdentifier>{d0b5ddd7-28b0-4a2b-9b64-7753045b1e66}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\06. Effect\Shockwave">
       <UniqueIdentifier>{bb3a9fa1-0000-4723-a7a8-963b5a1f268c}</UniqueIdentifier>
@@ -285,6 +303,15 @@
     </Filter>
     <Filter Include="02. GameObject\02. Monster\Glubba">
       <UniqueIdentifier>{b8d75b4c-2a17-49be-8913-a428d8256e67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. Logic">
+      <UniqueIdentifier>{520c1d37-777a-469e-8694-86462aad2999}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. Logic\00. GameStatus">
+      <UniqueIdentifier>{575f8b04-0769-4795-9023-f025baa09492}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. Logic\01. RayCaster">
+      <UniqueIdentifier>{5466cbee-4409-45a6-b69b-bf80fe1cd263}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -420,8 +447,8 @@
     <ClInclude Include="..\Header\CRoomLayer.h">
       <Filter>01. Scene\Stage\Layer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CGameStatusMgr.h">
-      <Filter>04. Manager\01. GameStatus</Filter>
+    <ClInclude Include="..\Header\CGameStatus.h">
+      <Filter>02. GameObject\12. Logic\00. GameStatus</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CExplosiveFrustumLight.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
@@ -564,6 +591,9 @@
     <ClInclude Include="..\Header\IReflectable.h">
       <Filter>02. GameObject\07. Room\BaseProp\Reflectable</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CDdokddak.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Ddokddak</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CSprnub1.h">
       <Filter>02. GameObject\02. Monster\Sprnub</Filter>
     </ClInclude>
@@ -582,6 +612,24 @@
     <ClInclude Include="..\Header\CHitCreenUI.h">
       <Filter>02. GameObject\10. UI\HitScreen</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CVoxelBuffer.h">
+      <Filter>02. GameObject\08. Combat\00. Weapon\04. Bow\VoxelBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBow.h">
+      <Filter>02. GameObject\08. Combat\00. Weapon\04. Bow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CArrow.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCrossBuffer.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow\CrossBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CItemContainer.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\ItemContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWeaponPickup.h">
+      <Filter>02. GameObject\11. Item\WeaponPickup</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CShockwave.h">
       <Filter>02. GameObject\06. Effect\Shockwave</Filter>
     </ClInclude>
@@ -593,6 +641,12 @@
     </ClInclude>
     <ClInclude Include="..\Header\CGlubba.h">
       <Filter>02. GameObject\02. Monster\Glubba</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRayCaster.h">
+      <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\IRayTestable.h">
+      <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -704,8 +758,8 @@
     <ClCompile Include="..\Code\CRoomLayer.cpp">
       <Filter>01. Scene\Stage\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CGameStatusMgr.cpp">
-      <Filter>04. Manager\01. GameStatus</Filter>
+    <ClCompile Include="..\Code\CGameStatus.cpp">
+      <Filter>02. GameObject\12. Logic\00. GameStatus</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CExplosiveFrustumLight.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
@@ -845,6 +899,9 @@
     <ClCompile Include="..\Code\IReflectable.cpp">
       <Filter>02. GameObject\07. Room\BaseProp\Reflectable</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CDdokddak.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Ddokddak</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CSprnub1.cpp">
       <Filter>02. GameObject\02. Monster\Sprnub</Filter>
     </ClCompile>
@@ -875,6 +932,30 @@
     <ClCompile Include="..\Code\CGlubba.cpp">
       <Filter>02. GameObject\02. Monster\Glubba</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CVoxelBuffer.cpp">
+      <Filter>02. GameObject\08. Combat\00. Weapon\04. Bow\VoxelBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBow.cpp">
+      <Filter>02. GameObject\08. Combat\00. Weapon\04. Bow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CArrow.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCrossBuffer.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow\CrossBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CItemContainer.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\ItemContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWeaponPickup.cpp">
+      <Filter>02. GameObject\11. Item\WeaponPickup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRayCaster.cpp">
+      <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\IRayTestable.cpp">
+      <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -893,28 +974,25 @@
     <None Include="..\Bin\Resource\Map\DefaultRoom.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
-    <None Include="..\Bin\Resource\Map\Room_2_2.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_1_0.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_2_1.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
     <None Include="..\Bin\Resource\Map\Room 작성 가이드.md">
       <Filter>03. Resource\01. Map</Filter>
     </None>
     <None Include="..\Bin\Resource\Map\Room_1_1.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
-    <None Include="..\Bin\Resource\Map\Room_2_0.json">
+    <None Include="..\Bin\Resource\Map\Room_1_2.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
-    <None Include="..\Bin\Resource\Map\Room_3_1.json">
+    <None Include="..\Bin\Resource\Map\Room_1_3.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
-    <None Include="..\Bin\Resource\Map\Room_2_3.json">
+    <None Include="..\Bin\Resource\Map\Room_1_4.json">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Map\Room_2_1.json">
+      <Filter>03. Resource\01. Map</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Map\Room_2_2.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
   </ItemGroup>

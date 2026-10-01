@@ -4,9 +4,10 @@
 #include "CProtoMgr.h"
 #include "CLaser.h"
 #include "CSoundMgr.h"
-#include "CGameStatusMgr.h"
+#include "CManagement.h"
 #include "CRoomLayer.h"
 #include "CRandomMgr.h"
+#include "CRenderer.h"
 
 CLaserGun::CLaserGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -35,6 +36,8 @@ HRESULT CLaserGun::Ready_GameObject()
 _int CLaserGun::Update_GameObject(const _float& fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
+
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
     return iExit;
 }
@@ -85,19 +88,25 @@ void CLaserGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CLaserGun::SpecialAttack()
+void CLaserGun::DefaultAttack()
 {
     _vec3 vDir = m_vBulletTo - m_vBulletFrom;
     D3DXVec3Normalize(&vDir, &vDir);
 
     CProjectile* pProjectile = CLaser::Create(m_pGraphicDev, m_vBulletFrom, vDir);
-    CGameStatusMgr::GetInstance()->GetCurrentRoomLayer()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+
+    pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
 
     CSoundMgr::GetInstance()->PlaySFX(L"sfxLaser.wav");
 
     m_bIsCoolTime = true;
     m_fCoolTimeLeft = m_fSpecialAtkInterval;
     StartShotAnimation();
+}
+
+void CLaserGun::SpecialAttack()
+{
 }
 
 void CLaserGun::UltimateAttack()

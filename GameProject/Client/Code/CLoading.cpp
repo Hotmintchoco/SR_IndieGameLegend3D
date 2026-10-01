@@ -6,6 +6,8 @@
 #include "Utils.h"
 #include "CSoundMgr.h"
 #include "CLaserBuffer.h"
+#include "CVoxelBuffer.h"
+#include "CCrossBuffer.h"
 
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoadingID(LOADING_END)
@@ -150,7 +152,25 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Gun_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Gun.ply"))))
         return E_FAIL;
 
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_0_Vertex", CVoxelBuffer::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Weapon/Bow/bow.png"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_1_Vertex", CVoxelBuffer::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Weapon/Bow/bow_pulling_0.png"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_2_Vertex", CVoxelBuffer::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Weapon/Bow/bow_pulling_1.png"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_3_Vertex", CVoxelBuffer::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Weapon/Bow/bow_pulling_2.png"))))
+        return E_FAIL;
+
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Gun_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/Gun_Diffuse_%d.png", 2))))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_0_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Bow/bow.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_1_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Bow/bow_pulling_0.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_2_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Bow/bow_pulling_1.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_3_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Bow/bow_pulling_2.png", 1))))
         return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bullet_Default_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Projectile/bigbullet_%d.png", 2))))
@@ -162,6 +182,14 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Laser_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Projectile/laserbullet.png", 1))))
         return E_FAIL;
 
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Laser_Corner_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Projectile/laserbullet_corner.png", 1))))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Cross_Buffer", CCrossBuffer::Create(m_pGraphicDev))))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Arrow_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Projectile/arrow.png", 1))))
+        return E_FAIL;
 
     lstrcpy(m_szLoading, L"Etc Loading............................");
 
@@ -189,6 +217,10 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ExplosiveFrustum_Top_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/ExplosiveFrustum2_Top.ply"))))
         return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemContainer_Plate_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/ItemContainer_Plate.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemContainer_Side_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/ItemContainer_Side.ply"))))
+        return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrayFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/GrayFrustum_Diffuse.png", 1))))
         return E_FAIL;
@@ -202,6 +234,12 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ExplodeYellow_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/Yellow_Opacity_50.png", 1))))
         return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Ddokddak_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/slider.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Gray_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/Gray.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemContainer_Side_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/container_%d.png", 6))))
+        return E_FAIL;
     
     /* 벽 */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_EW_NoDoor_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Wall_EW_NoDoor.ply"))))
@@ -213,13 +251,7 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_NS_Door_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Wall_NS_Door.ply"))))
         return E_FAIL;
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_EW_NoDoor_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/WallShort.png", 1))))
-        return E_FAIL;
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_NS_NoDoor_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/WallLong.png", 1))))
-        return E_FAIL;
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_EW_Door_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/WallShortDoor.png", 1))))
-        return E_FAIL;
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_NS_Door_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/WallLongDoor.png", 1))))
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Roomprop/wall/Wall_%d.png", 200))))
         return E_FAIL;
 
     /* 타일 */
@@ -336,9 +368,9 @@ HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
     try {
         json data = json::parse(f);
         string str = data.at("roomName").get<string>();
-        wstring wstr = Utils::Utf8ToWide(str);
-        t.wstrRoomName = wstr;
-        data.at("defaultTile").get_to(t.iDefaultTileIdx);
+        t.wstrRoomName = Utils::Utf8ToWide(str);
+        data.at("biome").get_to(t.iBiome);
+        data.at("bossRoom").get_to(t.bBossRoom);
         data.at("tileList").get_to(t.vecTile);
         data.at("resistContaminationList").get_to(t.vecResistContamination);
         data.at("objectTilingList").get_to(t.vecObjectTilingInfo);
@@ -353,6 +385,7 @@ HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
             t.vecClearCondition.push_back(Utils::Utf8ToWide(str));
         }
         data.at("dark").get_to(t.bDark);
+        data.at("clearReward").get_to(t.iClearReward);
 
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);
@@ -379,15 +412,15 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
     try {
         json data = json::parse(f);
         string str = data.at("roomName").get<string>();
-        wstring wstr = Utils::Utf8ToWide(str);
-        t.wstrRoomName = wstr;
-        data.at("defaultTile").get_to(t.iDefaultTileIdx);
+        t.wstrRoomName = Utils::Utf8ToWide(str);
+        data.at("biome").get_to(t.iBiome);
+        data.at("bossRoom").get_to(t.bBossRoom);
         data.at("tileList").get_to(t.vecTile);
         data.at("resistContaminationList").get_to(t.vecResistContamination);
         data.at("objectTilingList").get_to(t.vecObjectTilingInfo);
         data.at("objectList").get_to(t.vecObjectInfo);
         data.at("door").get_to(t.vecDoorInfo);
-        data.at("doorTile").get_to(t.vecDoorTile);       
+        data.at("doorTile").get_to(t.vecDoorTile);
         vector<string> vecClearRaw;
         data.at("clear").get_to(vecClearRaw);
         t.vecClearCondition.reserve(vecClearRaw.size());
@@ -396,6 +429,7 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
             t.vecClearCondition.push_back(Utils::Utf8ToWide(str));
         }
         data.at("dark").get_to(t.bDark);
+        data.at("clearReward").get_to(t.iClearReward);
 
         // 매니저 클래스에 데이터 등록
         CRoomLoadingMgr::GetInstance()->RegisterRoomData(iRoomIdx, t);

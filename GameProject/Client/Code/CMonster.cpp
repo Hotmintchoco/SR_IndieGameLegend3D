@@ -8,18 +8,16 @@
 #include "CCollisionMgr.h"
 #include "CTimerMgr.h"
 #include "CTerrain.h"
-#include "CGameStatusMgr.h"
 #include "CRoomLayer.h"
 #include "Client_Struct.h"
 #include "CSoundMgr.h"
+#include "CStage.h"
+#include "CLayerContext.h"
 
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
 {
-    /* 성철 */
-    if (!m_pOwner) m_pOwner = CGameStatusMgr::GetInstance()->GetCurrentRoomLayer();
-    /* --- */
 }
 
 
@@ -37,8 +35,25 @@ HRESULT CMonster::Ready_GameObject()
     Set_IsActive(false);
     m_pColliderCom->Set_IsActive(false);
 
-    static_cast<CRoomLayer*>(m_pOwner)->IncreaseEntityCount();
-    static_cast<CRoomLayer*>(m_pOwner)->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t); });
+    /* 성철 */
+    /* 시작 시 부터 맵에 배치되는 경우 : 현재 씬에 대한 정보가 없어 Layercontext 이용 */
+    CLayer* pLayer = CLayerContext::GetLayer();
+    if (CRoomLayer* pRoomLayer = dynamic_cast<CRoomLayer*>(pLayer))
+    {
+       pRoomLayer->IncreaseEntityCount();
+       pRoomLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t); });
+    }
+    /* 스테이지 도중 소환되는 경우 : 씬을 통해 레이어 정보 얻기 */
+    else
+    {
+        CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+        if (pStage)
+        {
+            pStage->GetCurrentRoomLayer()->IncreaseEntityCount();
+            pStage->GetCurrentRoomLayer()->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t); });
+        }
+    }
+    /* --- */
 
     __super::Ready_GameObject();
     return S_OK;
@@ -63,9 +78,10 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
     if (m_bDelete == true)
     {
         /* 성철 */
-        if (CRoomLayer* pLayer = dynamic_cast<CRoomLayer*>(m_pOwner))
+        CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+        if (pStage)
         {
-            pLayer->DecreaseEntityCount();
+            pStage->GetCurrentRoomLayer()->DecreaseEntityCount();
         }
         /* ---- */
         Set_Dead(true);
