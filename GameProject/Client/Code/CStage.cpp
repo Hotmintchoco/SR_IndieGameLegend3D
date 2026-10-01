@@ -86,6 +86,7 @@ HRESULT CStage::Ready_Scene()
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODE, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODE, COLL_PLAYER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MONSTER, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MONSTER, COLL_MONSTER);
 
 	/* 방 로직 */
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_ROOMLOGIC, COLL_PLAYER);
@@ -497,6 +498,18 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	CUIMgr::GetInstance()->Add_UI(UI_SPECIAL, pUI);
 
 	if (FAILED(pLayer->Add_GameObject(L"AmmoInfo", pUI)))
+		return E_FAIL;
+
+	// Hud Attack Info Ult
+	pUI = CGaugeUI::Create(m_pGraphicDev, L"Proto_UltTexture", false);
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(21.f, WINCY - 58.5f, 0.4f);
+	pUI->Set_Size({ 6.5f, 32.f });
+	CUIMgr::GetInstance()->Add_UI(UI_ULTIMATE, pUI);
+
+	if (FAILED(pLayer->Add_GameObject(L"UltInfo", pUI)))
 		return E_FAIL;
 
 	// Hud Attack Info Skill

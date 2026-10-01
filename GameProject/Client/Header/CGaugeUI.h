@@ -15,9 +15,15 @@ public:
 protected:
 	HRESULT			Add_Component();
 
+	void			Render_HorizontalGauge();
+	void			Render_VerticalGauge();
+
+private:
+	_bool			m_bHorizontal = true; // true면 수평 게이지, false면 수직 게이지
+
 public:
 	static CGaugeUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	static CGaugeUI* Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& wstrTextureTag);
+	static CGaugeUI* Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& wstrTextureTag, _bool bHorizontal = true);
 
 protected:
 	virtual void		Free();

@@ -123,6 +123,11 @@ void CMonster::OnCollisionEnter(COLLINFO eCollInfo)
     }
 }
 
+void CMonster::OnCollisionStay(COLLINFO eCollInfo)
+{
+	// CollisionWithMonster(eCollInfo);
+}
+
 void CMonster::Update_HitState(const _float& fTimeDelta)
 {
     if (m_bHitState == true && m_fHitEffectElapsedTime < m_fHitEffectTime)
@@ -151,6 +156,49 @@ void CMonster::Disable_HitRenderState()
 {
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+}
+
+void CMonster::CollisionWithMonster(COLLINFO eCollInfo)
+{
+    if (eCollInfo.iMyID != eCollInfo.iOtherID)
+        return;
+
+    // 나와 상대방의 위치 및 반지름 가져오기
+    _vec3 vMyPos, vOtherPos;
+    Get_Pos(&vMyPos);
+
+    auto pOther = static_cast<CMonster*>(eCollInfo.pOtherCollider->Get_Owner());
+    pOther->Get_Pos(&vOtherPos);
+
+    float fMyRadius = eCollInfo.pMyCollider->Get_Radius(); // 내 콜라이더 반경
+    float fOtherRadius = eCollInfo.pOtherCollider->Get_Radius();
+
+    // 방향 벡터 및 거리 계산
+    _vec3 vDir = vMyPos - vOtherPos;
+    vDir.y = 0.f; // 수직 방향은 무시 (지면에서만 밀어내기)
+
+    float fDist = D3DXVec3Length(&vDir);
+    float fMinDist = fMyRadius + fOtherRadius;
+
+    // 겹침(충돌) 처리
+    if (fDist < fMinDist)
+    {
+        if (fDist == 0.f) // 완전히 똑같은 위치일 경우 방어 코드
+        {
+            vDir = _vec3(1.f, 0.f, 0.f);
+            fDist = 0.001f;
+        }
+        D3DXVec3Normalize(&vDir, &vDir);
+
+        // 겹친 거리 계산
+        float fOverlap = fMinDist - fDist;
+
+        // 내 위치만 반대 방향으로 밀어냄 (상대방 위치는 건드리지 않음)
+        vMyPos += vDir * (fOverlap * 0.5f);
+
+        // 내 트랜스폼에 새로운 위치 적용
+        Set_Pos(vMyPos);
+    }
 }
 
 HRESULT CMonster::Add_Component()
