@@ -28,7 +28,7 @@ public:
 	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
 	virtual 		void		OnCollisionStay(COLLINFO eCollInfo) override;
 
-	_bool Get_Collision_Monster() { return m_bCollision_Monster; }
+	_bool Get_Collision_WithMonster() { return m_bCollision_WithMonster; }
 
 
 
@@ -39,6 +39,7 @@ protected:
 	void Update_HitState(const _float& fTimeDelta);
 	void Enable_HitRenderState();
 	void Disable_HitRenderState();
+	void LookAtPlayer();
 
 	// 정민 : OnCollisionStay에서 호출 (몬스터끼리 뭉침 방지 용)
 	void CollisionWithMonster(COLLINFO eCollInfo);
@@ -62,7 +63,7 @@ protected:
 	GENERAL_MONSTER_STATE m_eMonsterState = IDLE;
 	_float m_fElapsedTime = 0.f;
 
-	_bool m_bCollision_Monster = true;
+	_bool m_bCollision_WithMonster = true;
 private:
 	/* 성철 */
 	void OnRoomEvent(const TRoomEventCtx& t);
