@@ -26,7 +26,7 @@ HRESULT CSprnub2::Ready_GameObject()
         return E_FAIL;
     CMonster::Ready_GameObject();
 
-    m_pTransformCom->Set_Scale(0.5f, 0.5f, 0.5f);
+    m_pTransformCom->Set_Scale(0.35f, 0.35f, 0.35f);
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
     m_iMaxHp = 2;
     m_iHp = m_iMaxHp;
