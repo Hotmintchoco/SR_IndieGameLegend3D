@@ -21,7 +21,7 @@ HRESULT CFog::Ready_GameObject()
     return S_OK;
 }
 
-_int CFog::Update_GameObject(const _float& fTimeDelta)
+_int CFog::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -34,7 +34,7 @@ _int CFog::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CFog::LateUpdate_GameObject(const _float& fTimeDelta)
+void CFog::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }

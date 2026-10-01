@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CDynamicCamera.h"
 #include "CDInputMgr.h"
 
@@ -42,14 +42,14 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	return S_OK;
 }
 
-_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
+_int CDynamicCamera::Update_GameObject(_float fTimeDelta)
 {
 	_int iExit = CCamera::Update_GameObject(fTimeDelta);
 
 	return iExit;
 }
 
-void CDynamicCamera::LateUpdate_GameObject(const _float& fTimeDelta)
+void CDynamicCamera::LateUpdate_GameObject(_float fTimeDelta)
 {
 	Key_Input(fTimeDelta);
 

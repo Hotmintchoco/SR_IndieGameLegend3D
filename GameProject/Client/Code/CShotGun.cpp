@@ -34,7 +34,7 @@ HRESULT CShotGun::Ready_GameObject()
     return S_OK;
 }
 
-_int CShotGun::Update_GameObject(const _float& fTimeDelta)
+_int CShotGun::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
@@ -43,7 +43,7 @@ _int CShotGun::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CShotGun::LateUpdate_GameObject(const _float& fTimeDelta)
+void CShotGun::LateUpdate_GameObject(_float fTimeDelta)
 {
     CWeapon::LateUpdate_GameObject(fTimeDelta);
 

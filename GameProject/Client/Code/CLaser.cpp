@@ -45,7 +45,7 @@ HRESULT CLaser::Ready_GameObject()
     return S_OK;
 }
 
-_int CLaser::Update_GameObject(const _float& fTimeDelta)
+_int CLaser::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CProjectile::Update_GameObject(fTimeDelta);
 
@@ -90,7 +90,7 @@ void CLaser::CalculateLength(const _float& fTimeDelta)
     }
 }
 
-void CLaser::LateUpdate_GameObject(const _float& fTimeDelta)
+void CLaser::LateUpdate_GameObject(_float fTimeDelta)
 {
     CProjectile::LateUpdate_GameObject(fTimeDelta);
 

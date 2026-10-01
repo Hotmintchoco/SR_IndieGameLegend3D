@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CCollider.h"
 
 BEGIN(Engine)
@@ -15,7 +15,7 @@ protected:
 	virtual ~CBoxCollider();
 
 public:
-	virtual _int	Update_Component(const _float& fTimeDelta);
+	virtual _int	Update_Component(_float fTimeDelta);
 	virtual void	LateUpdate_Component();
 
 	_bool			Intersect(CCollider* pOther) override;

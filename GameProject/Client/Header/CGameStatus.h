@@ -14,9 +14,9 @@ protected:
 
 public:
 	virtual	HRESULT	Ready_GameObject() override;
-	virtual	_int Update_GameObject(const _float& fTimeDelta) override;
+	virtual	_int Update_GameObject(_float fTimeDelta) override;
 	void DebugRayTest();
-	virtual	void LateUpdate_GameObject(const _float& fTimeDelta) override;
+	virtual	void LateUpdate_GameObject(_float fTimeDelta) override;
 	virtual	void Render_GameObject() override;
 
 public:
@@ -58,6 +58,9 @@ public:
 private:
 	void UpdateCameraInfo();
 
+	/* CStage */
+	CStage* m_pStage = nullptr;
+
 	/* Minimap */
 	int m_iCurrentRoomIndex = -1;
 	bool m_bVisitTable[25] = { false };
@@ -94,6 +97,10 @@ private:
 	float m_fSFXVolume = 1.f;
 	bool m_bBGMMute = true;
 	bool m_bSFXMute = true;
+
+	/* Time Scale */
+	float m_fTimeScale = 1.f;
+	bool m_bExcludePlayer = false;
 
 public:
 	static CGameStatus* Create(LPDIRECT3DDEVICE9 pGraphicDev);

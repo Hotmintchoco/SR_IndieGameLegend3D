@@ -24,7 +24,7 @@ HRESULT CTrail::Ready_GameObject()
     return S_OK;
 }
 
-_int CTrail::Update_GameObject(const _float& fTimeDelta)
+_int CTrail::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CParticle::Update_GameObject(fTimeDelta);
 
@@ -38,7 +38,7 @@ _int CTrail::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CTrail::LateUpdate_GameObject(const _float& fTimeDelta)
+void CTrail::LateUpdate_GameObject(_float fTimeDelta)
 {
     CParticle::LateUpdate_GameObject(fTimeDelta);
 

@@ -62,7 +62,7 @@ HRESULT CMonster::Ready_GameObject()
     return S_OK;
 }
 
-_int CMonster::Update_GameObject(const _float& fTimeDelta)
+_int CMonster::Update_GameObject(_float fTimeDelta)
 {
     if (!Get_IsActive()) return S_OK;
     m_fElapsedTime += fTimeDelta;
@@ -97,7 +97,7 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
+void CMonster::LateUpdate_GameObject(_float fTimeDelta)
 {
     if (!Get_IsActive()) return;
 

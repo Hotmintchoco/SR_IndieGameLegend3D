@@ -27,7 +27,7 @@ HRESULT CFloor::Ready_GameObject()
     return S_OK;
 }
 
-_int CFloor::Update_GameObject(const _float& fTimeDelta)
+_int CFloor::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -36,7 +36,7 @@ _int CFloor::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CFloor::LateUpdate_GameObject(const _float& fTimeDelta)
+void CFloor::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }

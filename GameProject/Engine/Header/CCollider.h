@@ -41,7 +41,7 @@ public:
 	virtual void SyncPositionToOwner() PURE;
 
 public:
-	virtual _int	Update_Component(const _float& fTimeDelta) { return 0; };
+	virtual _int	Update_Component(_float fTimeDelta) { return 0; };
 	virtual void	LateUpdate_Component() {}
 
 	/* Interface IRenderable */

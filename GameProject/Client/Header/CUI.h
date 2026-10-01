@@ -16,8 +16,8 @@ protected:
 
 public:
 	virtual			HRESULT		Ready_GameObject();
-	virtual			_int		Update_GameObject(const _float& fTimeDelta);
-	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual			_int		Update_GameObject(_float fTimeDelta);
+	virtual			void		LateUpdate_GameObject(_float fTimeDelta);
 	virtual			void		Render_GameObject();
 
 public:

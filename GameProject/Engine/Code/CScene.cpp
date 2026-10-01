@@ -45,7 +45,7 @@ HRESULT CScene::Ready_Scene()
     return S_OK;
 }
 
-_int CScene::Update_Scene(const _float& fTimeDelta)
+_int CScene::Update_Scene(_float fTimeDelta)
 {
     for (auto& pLayer : m_mapLayer)
         pLayer.second->Update_Layer(fTimeDelta);
@@ -53,7 +53,7 @@ _int CScene::Update_Scene(const _float& fTimeDelta)
     return 0;
 }
 
-void CScene::LateUpdate_Scene(const _float& fTimeDelta)
+void CScene::LateUpdate_Scene(_float fTimeDelta)
 {
     for (auto& pLayer : m_mapLayer)
         pLayer.second->LateUpdate_Layer(fTimeDelta);

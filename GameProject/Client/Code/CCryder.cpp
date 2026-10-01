@@ -34,7 +34,7 @@ HRESULT CCryder::Ready_GameObject()
     return S_OK;
 }
 
-_int CCryder::Update_GameObject(const _float& fTimeDelta)
+_int CCryder::Update_GameObject(_float fTimeDelta)
 {
     if (m_iHp <= 0)
     {
@@ -79,7 +79,7 @@ _int CCryder::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CCryder::LateUpdate_GameObject(const _float& fTimeDelta)
+void CCryder::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 

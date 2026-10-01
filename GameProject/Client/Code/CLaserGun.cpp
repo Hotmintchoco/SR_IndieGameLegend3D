@@ -33,7 +33,7 @@ HRESULT CLaserGun::Ready_GameObject()
     return S_OK;
 }
 
-_int CLaserGun::Update_GameObject(const _float& fTimeDelta)
+_int CLaserGun::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
@@ -42,7 +42,7 @@ _int CLaserGun::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CLaserGun::LateUpdate_GameObject(const _float& fTimeDelta)
+void CLaserGun::LateUpdate_GameObject(_float fTimeDelta)
 {
     CWeapon::LateUpdate_GameObject(fTimeDelta);
 }

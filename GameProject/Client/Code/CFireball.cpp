@@ -37,7 +37,7 @@ HRESULT CFireball::Ready_GameObject()
     return S_OK;
 }
 
-_int CFireball::Update_GameObject(const _float& fTimeDelta)
+_int CFireball::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
@@ -90,7 +90,7 @@ void CFireball::CheckDeadCondition()
     }
 }
 
-void CFireball::LateUpdate_GameObject(const _float& fTimeDelta)
+void CFireball::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 

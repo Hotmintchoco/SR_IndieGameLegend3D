@@ -31,7 +31,7 @@ HRESULT CMiniGame::Ready_Scene()
     return S_OK;
 }
 
-_int CMiniGame::Update_Scene(const _float& fTimeDelta)
+_int CMiniGame::Update_Scene(_float fTimeDelta)
 {
 	_int iExit = CScene::Update_Scene(fTimeDelta);
 
@@ -45,7 +45,7 @@ _int CMiniGame::Update_Scene(const _float& fTimeDelta)
     return iExit;
 }
 
-void CMiniGame::LateUpdate_Scene(const _float& fTimeDelta)
+void CMiniGame::LateUpdate_Scene(_float fTimeDelta)
 {
     CScene::LateUpdate_Scene(fTimeDelta);
 }

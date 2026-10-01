@@ -38,7 +38,7 @@ HRESULT CBow::Ready_GameObject()
     return S_OK;
 }
 
-_int CBow::Update_GameObject(const _float& fTimeDelta)
+_int CBow::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
@@ -59,7 +59,7 @@ _int CBow::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CBow::LateUpdate_GameObject(const _float& fTimeDelta)
+void CBow::LateUpdate_GameObject(_float fTimeDelta)
 {
     CWeapon::LateUpdate_GameObject(fTimeDelta);
 }

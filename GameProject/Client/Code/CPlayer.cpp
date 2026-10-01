@@ -45,7 +45,7 @@ HRESULT CPlayer::Ready_GameObject()
     return S_OK;
 }
 
-_int CPlayer::Update_GameObject(const _float& fTimeDelta)
+_int CPlayer::Update_GameObject(_float fTimeDelta)
 {
     _vec3   vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -84,7 +84,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
+void CPlayer::LateUpdate_GameObject(_float fTimeDelta)
 {
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
     CGameObject::LateUpdate_GameObject(fTimeDelta);

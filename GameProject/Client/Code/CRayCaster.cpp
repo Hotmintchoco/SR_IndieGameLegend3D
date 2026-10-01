@@ -19,14 +19,14 @@ HRESULT CRayCaster::Ready_GameObject()
     return S_OK;
 }
 
-_int CRayCaster::Update_GameObject(const _float& fTimeDelta)
+_int CRayCaster::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
     return iExit;
 }
 
-void CRayCaster::LateUpdate_GameObject(const _float& fTimeDelta)
+void CRayCaster::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }

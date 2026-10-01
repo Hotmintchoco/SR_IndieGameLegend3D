@@ -42,7 +42,7 @@ HRESULT CBoss1::Ready_GameObject()
     return S_OK;
 }
 
-_int CBoss1::Update_GameObject(const _float& fTimeDelta)
+_int CBoss1::Update_GameObject(_float fTimeDelta)
 {
     _float _fTimeDelta = fTimeDelta;
     if (m_iHp <= 0)
@@ -95,7 +95,7 @@ _int CBoss1::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CBoss1::LateUpdate_GameObject(const _float& fTimeDelta)
+void CBoss1::LateUpdate_GameObject(_float fTimeDelta)
 {
     
 

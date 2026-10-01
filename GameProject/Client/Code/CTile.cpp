@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CTile.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -33,7 +33,7 @@ HRESULT CTile::Ready_GameObject()
     return S_OK;
 }
 
-_int CTile::Update_GameObject(const _float& fTimeDelta)
+_int CTile::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -42,7 +42,7 @@ _int CTile::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CTile::LateUpdate_GameObject(const _float& fTimeDelta)
+void CTile::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }

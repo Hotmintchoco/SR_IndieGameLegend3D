@@ -22,7 +22,7 @@ HRESULT CUI::Ready_GameObject()
     return S_OK;
 }
 
-_int CUI::Update_GameObject(const _float& fTimeDelta)
+_int CUI::Update_GameObject(_float fTimeDelta)
 {
     if (m_bSyncSwitchToActive && !m_bOnSwitch)
         m_bIsActive = false;
@@ -37,7 +37,7 @@ _int CUI::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CUI::LateUpdate_GameObject(const _float& fTimeDelta)
+void CUI::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }

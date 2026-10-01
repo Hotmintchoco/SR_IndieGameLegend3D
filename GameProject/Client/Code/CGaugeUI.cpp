@@ -28,7 +28,7 @@ HRESULT CGaugeUI::Ready_GameObject()
     return S_OK;
 }
 
-_int CGaugeUI::Update_GameObject(const _float& fTimeDelta)
+_int CGaugeUI::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -37,7 +37,7 @@ _int CGaugeUI::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CGaugeUI::LateUpdate_GameObject(const _float& fTimeDelta)
+void CGaugeUI::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 

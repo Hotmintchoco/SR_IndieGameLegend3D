@@ -22,7 +22,7 @@ HRESULT CTerrain::Ready_GameObject()
     return S_OK;
 }
 
-_int CTerrain::Update_GameObject(const _float& fTimeDelta)
+_int CTerrain::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -32,7 +32,7 @@ _int CTerrain::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CTerrain::LateUpdate_GameObject(const _float& fTimeDelta)
+void CTerrain::LateUpdate_GameObject(_float fTimeDelta)
 {
 
     CGameObject::LateUpdate_GameObject(fTimeDelta);

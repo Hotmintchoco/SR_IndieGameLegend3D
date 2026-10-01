@@ -28,7 +28,7 @@ HRESULT CGameStatus::Ready_GameObject()
     return S_OK;
 }
 
-_int CGameStatus::Update_GameObject(const _float& fTimeDelta)
+_int CGameStatus::Update_GameObject(_float fTimeDelta)
 {
     UpdateCameraInfo();
 
@@ -41,7 +41,7 @@ _int CGameStatus::Update_GameObject(const _float& fTimeDelta)
     return S_OK;
 }
 
-void CGameStatus::LateUpdate_GameObject(const _float& fTimeDelta)
+void CGameStatus::LateUpdate_GameObject(_float fTimeDelta)
 {
 }
 

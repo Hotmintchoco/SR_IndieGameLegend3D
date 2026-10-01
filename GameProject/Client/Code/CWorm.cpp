@@ -66,7 +66,7 @@ HRESULT CWorm::Ready_GameObject()
     return S_OK;
 }
 
-_int CWorm::Update_GameObject(const _float& fTimeDelta)
+_int CWorm::Update_GameObject(_float fTimeDelta)
 {
     if (m_iHp <= 0)
     {
@@ -109,7 +109,7 @@ _int CWorm::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CWorm::LateUpdate_GameObject(const _float& fTimeDelta)
+void CWorm::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 

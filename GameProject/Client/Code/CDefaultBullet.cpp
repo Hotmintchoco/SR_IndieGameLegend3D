@@ -35,7 +35,7 @@ HRESULT CDefaultBullet::Ready_GameObject()
     return S_OK;
 }
 
-_int CDefaultBullet::Update_GameObject(const _float& fTimeDelta)
+_int CDefaultBullet::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CProjectile::Update_GameObject(fTimeDelta);
 
@@ -49,7 +49,7 @@ _int CDefaultBullet::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CDefaultBullet::LateUpdate_GameObject(const _float& fTimeDelta)
+void CDefaultBullet::LateUpdate_GameObject(_float fTimeDelta)
 {
     CProjectile::LateUpdate_GameObject(fTimeDelta);
 

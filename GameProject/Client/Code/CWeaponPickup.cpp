@@ -34,14 +34,14 @@ HRESULT CWeaponPickup::Ready_GameObject()
     return S_OK;
 }
 
-_int CWeaponPickup::Update_GameObject(const _float& fTimeDelta)
+_int CWeaponPickup::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CItem::Update_GameObject(fTimeDelta);
 
     return iExit;
 }
 
-void CWeaponPickup::LateUpdate_GameObject(const _float& fTimeDelta)
+void CWeaponPickup::LateUpdate_GameObject(_float fTimeDelta)
 {
     CItem::LateUpdate_GameObject(fTimeDelta);
 }

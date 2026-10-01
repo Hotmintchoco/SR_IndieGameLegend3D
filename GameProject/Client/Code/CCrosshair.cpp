@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CCrosshair.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -26,7 +26,7 @@ HRESULT CCrosshair::Ready_GameObject()
     return S_OK;
 }
 
-_int CCrosshair::Update_GameObject(const _float& fTimeDelta)
+_int CCrosshair::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -40,7 +40,7 @@ _int CCrosshair::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CCrosshair::LateUpdate_GameObject(const _float& fTimeDelta)
+void CCrosshair::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 

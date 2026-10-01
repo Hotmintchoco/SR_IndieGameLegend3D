@@ -27,7 +27,7 @@ HRESULT CUnbreakableFrustum::Ready_GameObject()
     return S_OK;
 }
 
-_int CUnbreakableFrustum::Update_GameObject(const _float& fTimeDelta)
+_int CUnbreakableFrustum::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CFrustum::Update_GameObject(fTimeDelta);
 
@@ -36,7 +36,7 @@ _int CUnbreakableFrustum::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CUnbreakableFrustum::LateUpdate_GameObject(const _float& fTimeDelta)
+void CUnbreakableFrustum::LateUpdate_GameObject(_float fTimeDelta)
 {
     CFrustum::LateUpdate_GameObject(fTimeDelta);
 }

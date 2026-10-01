@@ -33,7 +33,7 @@ HRESULT CSprnub2::Ready_GameObject()
     return S_OK;
 }
 
-_int CSprnub2::Update_GameObject(const _float& fTimeDelta)
+_int CSprnub2::Update_GameObject(_float fTimeDelta)
 {
     if (m_iHp <= 0)
     {
@@ -133,7 +133,7 @@ _int CSprnub2::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CSprnub2::LateUpdate_GameObject(const _float& fTimeDelta)
+void CSprnub2::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 }

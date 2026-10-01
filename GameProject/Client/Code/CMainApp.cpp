@@ -45,7 +45,7 @@ HRESULT CMainApp::Ready_MainApp()
 	return S_OK;
 }
 
-int CMainApp::Update_MainApp(const _float& fTimeDelta)
+int CMainApp::Update_MainApp(_float fTimeDelta)
 {
 	CDInputMgr::GetInstance()->Update_InputDev();
 
@@ -56,7 +56,7 @@ int CMainApp::Update_MainApp(const _float& fTimeDelta)
 	return 0;
 }
 
-void CMainApp::LateUpdate_MainApp(const _float& fTimeDelta)
+void CMainApp::LateUpdate_MainApp(_float fTimeDelta)
 {
 	m_pManagementClass->LateUpdate_Scene(fTimeDelta);
 }

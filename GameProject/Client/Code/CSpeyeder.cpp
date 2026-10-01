@@ -34,7 +34,7 @@ HRESULT CSpeyeder::Ready_GameObject()
     return S_OK;
 }
 
-_int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
+_int CSpeyeder::Update_GameObject(_float fTimeDelta)
 {
     if (m_iHp <= 0)
     {
@@ -79,7 +79,7 @@ _int CSpeyeder::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CSpeyeder::LateUpdate_GameObject(const _float& fTimeDelta)
+void CSpeyeder::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 

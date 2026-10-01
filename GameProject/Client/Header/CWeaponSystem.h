@@ -13,8 +13,8 @@ protected:
 
 public:
 	virtual	HRESULT Ready_GameObject() override;
-	virtual	_int Update_GameObject(const _float& fTimeDelta) override;
-	virtual	void LateUpdate_GameObject(const _float& fTimeDelta) override;
+	virtual	_int Update_GameObject(_float fTimeDelta) override;
+	virtual	void LateUpdate_GameObject(_float fTimeDelta) override;
 	virtual	void Render_GameObject() override;
 
 	/* 에너지 아이템 획득 */

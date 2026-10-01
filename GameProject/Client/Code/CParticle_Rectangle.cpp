@@ -41,7 +41,7 @@ HRESULT CParticle_Rectangle::Ready_GameObject()
     return S_OK;
 }
 
-_int CParticle_Rectangle::Update_GameObject(const _float& fTimeDelta)
+_int CParticle_Rectangle::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CParticle::Update_GameObject(fTimeDelta);
     
@@ -81,7 +81,7 @@ _int CParticle_Rectangle::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CParticle_Rectangle::LateUpdate_GameObject(const _float& fTimeDelta)
+void CParticle_Rectangle::LateUpdate_GameObject(_float fTimeDelta)
 {
     CParticle::LateUpdate_GameObject(fTimeDelta);
 }

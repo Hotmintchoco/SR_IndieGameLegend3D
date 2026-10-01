@@ -41,7 +41,7 @@ HRESULT CRoomLayer::Ready_Layer()
 	return S_OK;
 }
 
-_int CRoomLayer::Update_Layer(const _float& fTimeDelta)
+_int CRoomLayer::Update_Layer(_float fTimeDelta)
 {
 	if (!IsValidUpdateTarget()) return S_OK;
 
@@ -118,7 +118,7 @@ bool CRoomLayer::IsValidUpdateTarget()
 	return false;
 }
 
-void CRoomLayer::LateUpdate_Layer(const _float& fTimeDelta)
+void CRoomLayer::LateUpdate_Layer(_float fTimeDelta)
 {
 	if (!IsValidUpdateTarget()) return;
 

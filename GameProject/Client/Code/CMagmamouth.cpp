@@ -57,7 +57,7 @@ HRESULT CMagmamouth::Ready_GameObject()
     return S_OK;
 }
     
-_int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
+_int CMagmamouth::Update_GameObject(_float fTimeDelta)
 {
 
     _float _fTimeDelta = fTimeDelta;
@@ -107,7 +107,7 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CMagmamouth::LateUpdate_GameObject(const _float& fTimeDelta)
+void CMagmamouth::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
     Set_Motion();

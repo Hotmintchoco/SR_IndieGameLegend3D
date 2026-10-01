@@ -98,7 +98,7 @@ void CArrow::SyncTransformToVelocity()
     m_pTransformCom->WorldMatrixDecompose();
 }
 
-_int CArrow::Update_GameObject(const _float& fTimeDelta)
+_int CArrow::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CProjectile::Update_GameObject(fTimeDelta);
 
@@ -146,7 +146,7 @@ void CArrow::PreciseHitTest(CGameObject* pTarget, const float fTimeDelta)
     }
 }
 
-void CArrow::LateUpdate_GameObject(const _float& fTimeDelta)
+void CArrow::LateUpdate_GameObject(_float fTimeDelta)
 {
     CProjectile::LateUpdate_GameObject(fTimeDelta);
 }

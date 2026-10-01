@@ -28,7 +28,7 @@ HRESULT CWeapon::Ready_GameObject()
     return S_OK;
 }
 
-_int CWeapon::Update_GameObject(const _float& fTimeDelta)
+_int CWeapon::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
     
@@ -53,7 +53,7 @@ void CWeapon::CheckCoolTime(const _float& fTimeDelta)
     }
 }
 
-void CWeapon::LateUpdate_GameObject(const _float& fTimeDelta)
+void CWeapon::LateUpdate_GameObject(_float fTimeDelta)
 {
     SyncTransformToCamera();
 

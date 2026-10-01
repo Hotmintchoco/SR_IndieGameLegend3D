@@ -104,7 +104,7 @@ HRESULT CStage::Ready_Scene()
 	return S_OK;
 }
 
-_int CStage::Update_Scene(const _float& fTimeDelta)
+_int CStage::Update_Scene(_float fTimeDelta)
 {
 	_int iExit = CScene::Update_Scene(fTimeDelta);
 	CUIMgr::GetInstance()->Update_UI();
@@ -165,7 +165,7 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CStage::LateUpdate_Scene(const _float& fTimeDelta)
+void CStage::LateUpdate_Scene(_float fTimeDelta)
 {
 	CScene::LateUpdate_Scene(fTimeDelta);
 

@@ -39,7 +39,7 @@ HRESULT CGem::Ready_GameObject()
     return S_OK;
 }
 
-_int CGem::Update_GameObject(const _float& fTimeDelta)
+_int CGem::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CItem::Update_GameObject(fTimeDelta);
 
@@ -50,7 +50,7 @@ _int CGem::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CGem::LateUpdate_GameObject(const _float& fTimeDelta)
+void CGem::LateUpdate_GameObject(_float fTimeDelta)
 {
     CItem::LateUpdate_GameObject(fTimeDelta);
 }
