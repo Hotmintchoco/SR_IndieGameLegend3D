@@ -7,6 +7,7 @@ class CUI;
 enum UI_TYPE
 {
     UI_SPECIAL,
+	UI_ULTIMATE,
 
     UI_END
 };
@@ -27,6 +28,7 @@ public:
 
 private:
     void            SpecialAtkCheck();
+	void			UltimateCheck();
 
 private:
     // UI list

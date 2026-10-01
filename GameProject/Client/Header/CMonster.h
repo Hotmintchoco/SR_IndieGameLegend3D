@@ -25,11 +25,8 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
-
 	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
-
-
-
+	virtual 		void		OnCollisionStay(COLLINFO eCollInfo) override;
 
 protected:
 	HRESULT			Add_Component();
@@ -38,6 +35,9 @@ protected:
 	void Update_HitState(const _float& fTimeDelta);
 	void Enable_HitRenderState();
 	void Disable_HitRenderState();
+
+	// 정민 : OnCollisionStay에서 호출 (몬스터끼리 뭉침 방지 용)
+	void CollisionWithMonster(COLLINFO eCollInfo);
 
 	enum GENERAL_MONSTER_STATE { MOVE, JUMP, IDLE };
 protected:
