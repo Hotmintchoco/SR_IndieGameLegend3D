@@ -3,6 +3,12 @@
 {
 
 }
+
+CBase::CBase(const CBase& rhs)
+	: m_dwRefCnt(0)
+{
+}
+
 CBase::~CBase()
 {
 
