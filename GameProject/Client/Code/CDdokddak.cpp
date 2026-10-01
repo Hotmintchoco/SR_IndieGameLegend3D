@@ -10,6 +10,7 @@
 #include "CCollider.h"
 #include "CSoundMgr.h"
 #include "CManagement.h"
+#include "CStage.h"
 
 CDdokddak::CDdokddak(LPDIRECT3DDEVICE9 pGraphicDev, EDirection eDir)
     :CGameObject(pGraphicDev), m_eInitDir(eDir)
@@ -93,7 +94,11 @@ void CDdokddak::OnCollisionEnter(COLLINFO eCollInfo)
     {
         if (m_bSkipCurrentFrameCollision) return;
         m_vDir = -m_vDir;
-        CSoundMgr::GetInstance()->PlaySFX(L"sfxslider.wav");
+        CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+        if (pStage->GetCurrentRoomIndex() == static_cast<CRoomLayer*>(m_pOwner)->GetIndexFlat())
+        {
+            CSoundMgr::GetInstance()->PlaySFX(L"sfxslider.wav");
+        }
         m_bSkipCurrentFrameCollision = true;
 
         break;
