@@ -32,10 +32,11 @@ public:
 			m_eColor[i] = eColor[i];
 		}
 	}
-private:
+	void Set_Velocity(const _vec3& vVelocity) { m_vVelocity = vVelocity; }
+protected:
 	HRESULT			Add_Component();
 
-private:
+protected:
 	Engine::CRcColCustom* m_pBufferCom = nullptr;
 
 public:
@@ -43,13 +44,12 @@ public:
 	static CTrail* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const _float& fLifeTime);
 	static CTrail* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3(&vTrailPoint)[4], const D3DXCOLOR(&eColor)[4], const _float& fLifeTime);
 
-private:
+protected:
 	_vec3 m_vTrailPoint[4] = {};
 	D3DXCOLOR m_eColor[4] = {};
-	//_float m_fLifeTime = 0.f;
-	//_float m_fElapsedLifeTime = 0.f;
+	_vec3 m_vVelocity = {};
 
-private:
+protected:
 	virtual void		Free();
 };
 

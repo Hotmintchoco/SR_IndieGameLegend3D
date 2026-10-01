@@ -49,8 +49,8 @@ private:
 	Engine::CSphereCollider* m_pColliderComReflection = nullptr;
 
 	/* 초기값 */
-	_vec3 m_vStart{ 0.f, 0.f, 0.f };
-	_vec3 m_vDir{ 0.f, 0.f, 0.f };
+	//_vec3 m_vStart{ 0.f, 0.f, 0.f };
+	//_vec3 m_vDir{ 0.f, 0.f, 0.f };
 
 	inline static TLaserData s_tData = []()->TLaserData {
 		TLaserData t;

@@ -280,6 +280,9 @@
     <Filter Include="02. GameObject\02. Monster\Cryder">
       <UniqueIdentifier>{6710e0ba-2e64-4032-ae33-fb5134fb11fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. Effect\Trail\Bullet_Trail">
+      <UniqueIdentifier>{fcbec6d8-3853-43e7-8bc0-7b038cf0f4f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -582,6 +585,9 @@
     <ClInclude Include="..\Header\CCryder.h">
       <Filter>02. GameObject\02. Monster\Cryder</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBullet_Trail.h">
+      <Filter>02. GameObject\06. Effect\Trail\Bullet_Trail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -856,6 +862,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCryder.cpp">
       <Filter>02. GameObject\02. Monster\Cryder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBullet_Trail.cpp">
+      <Filter>02. GameObject\06. Effect\Trail\Bullet_Trail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
