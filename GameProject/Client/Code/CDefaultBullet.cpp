@@ -35,12 +35,12 @@ HRESULT CDefaultBullet::Ready_GameObject()
     m_iTotalFrameCount = m_pTextureCom->GetCount();
 
     //261001 재현 총알트레일
-    CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-    CGameObject* pGameObject = nullptr;
+    //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+    //CGameObject* pGameObject = nullptr;
 
-    pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BULLET_TRAIL, this);
-    if (nullptr == pGameObject) return E_FAIL;
-    if (FAILED(pLayer->Add_GameObject(L"Effect_Bullet_Trail", pGameObject))) return E_FAIL;
+    //pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BULLET_TRAIL, this);
+    //if (nullptr == pGameObject) return E_FAIL;
+    //if (FAILED(pLayer->Add_GameObject(L"Effect_Bullet_Trail", pGameObject))) return E_FAIL;
 
     return S_OK;
 }

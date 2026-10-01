@@ -72,6 +72,7 @@ enum class EObjectType
 	Sprnub2 = 17,
 	Sprnub3 = 18,
 	Cryder = 19,
+	Glubba = 20,
 
 
 	ITEM_NONE = 31,

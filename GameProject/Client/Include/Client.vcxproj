@@ -152,6 +152,7 @@
     <ClInclude Include="..\Header\CCryder.h" />
     <ClInclude Include="..\Header\CDefaultBullet.h" />
     <ClInclude Include="..\Header\CFloor.h" />
+    <ClInclude Include="..\Header\CGlubba.h" />
     <ClInclude Include="..\Header\CHitCreenUI.h" />
     <ClInclude Include="..\Header\CLaser.h" />
     <ClInclude Include="..\Header\CLaserBuffer.h" />
@@ -255,6 +256,7 @@
     <ClCompile Include="..\Code\CCryder.cpp" />
     <ClCompile Include="..\Code\CDefaultBullet.cpp" />
     <ClCompile Include="..\Code\CFloor.cpp" />
+    <ClCompile Include="..\Code\CGlubba.cpp" />
     <ClCompile Include="..\Code\CHitCreenUI.cpp" />
     <ClCompile Include="..\Code\CLaser.cpp" />
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />

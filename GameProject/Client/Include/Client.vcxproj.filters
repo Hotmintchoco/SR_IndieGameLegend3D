@@ -283,6 +283,9 @@
     <Filter Include="02. GameObject\06. Effect\Trail\Bullet_Trail">
       <UniqueIdentifier>{fcbec6d8-3853-43e7-8bc0-7b038cf0f4f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Glubba">
+      <UniqueIdentifier>{b8d75b4c-2a17-49be-8913-a428d8256e67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -588,6 +591,9 @@
     <ClInclude Include="..\Header\CBullet_Trail.h">
       <Filter>02. GameObject\06. Effect\Trail\Bullet_Trail</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGlubba.h">
+      <Filter>02. GameObject\02. Monster\Glubba</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -865,6 +871,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBullet_Trail.cpp">
       <Filter>02. GameObject\06. Effect\Trail\Bullet_Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGlubba.cpp">
+      <Filter>02. GameObject\02. Monster\Glubba</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
