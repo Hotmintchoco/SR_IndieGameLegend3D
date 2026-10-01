@@ -49,7 +49,7 @@ int CMainApp::Update_MainApp(const _float& fTimeDelta)
 {
 	CDInputMgr::GetInstance()->Update_InputDev();
 
-	m_pManagementClass->Update_Scene(fTimeDelta);
+	m_pManagementClass->Update_Scene(min(fTimeDelta, 0.01f));
 
 	CSoundMgr::GetInstance()->Update();
 
@@ -58,7 +58,7 @@ int CMainApp::Update_MainApp(const _float& fTimeDelta)
 
 void CMainApp::LateUpdate_MainApp(const _float& fTimeDelta)
 {
-	m_pManagementClass->LateUpdate_Scene(fTimeDelta);
+	m_pManagementClass->LateUpdate_Scene(min(fTimeDelta, 0.01f));
 }
 
 void CMainApp::Render_MainApp()
