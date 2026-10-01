@@ -34,6 +34,7 @@ HRESULT CFireball::Ready_GameObject()
     m_pTransformCom->Set_Scale(0.25f, 0.25f, 0.25f);
     m_pColliderCom->Set_Radius(0.25f);
     m_iHp = 100;
+    m_bCollision_Monster = false;
     return S_OK;
 }
 

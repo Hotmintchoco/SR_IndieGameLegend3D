@@ -28,6 +28,7 @@ public:
 
 	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
 
+	_bool Get_Collision_Monster() { return m_bCollision_Monster; }
 
 
 
@@ -47,16 +48,18 @@ protected:
 	Engine::CCalculator* m_pCalculatorCom = nullptr;
 	Engine::CCollider* m_pColliderCom = nullptr;
 
-	_int m_iHp;
 	_int m_iMaxHp = 10;
-	_float m_fFrame;
-	_float m_fHitEffectTime;
-	_float m_fHitEffectElapsedTime;
-	_bool m_bHitState;
+	_int m_iHp = m_iMaxHp;
+	_float m_fFrame = 0.f;
+	_float m_fHitEffectTime = 0.1f;
+	_float m_fHitEffectElapsedTime = 0.f;
+	_bool m_bHitState = false;
 
 	_bool m_bDelete = false;
 	GENERAL_MONSTER_STATE m_eMonsterState = IDLE;
 	_float m_fElapsedTime = 0.f;
+
+	_bool m_bCollision_Monster = true;
 private:
 	/* 성철 */
 	void OnRoomEvent(const TRoomEventCtx& t);

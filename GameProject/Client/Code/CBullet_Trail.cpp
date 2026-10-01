@@ -16,6 +16,7 @@ CBullet_Trail::~CBullet_Trail()
 
 HRESULT CBullet_Trail::Ready_GameObject()
 {
+    //if (Is_Dead())return S_OK;
     m_fLifeTime = 10.f;
 
     m_vTrailPoint[0] = { 0.f,0.f,0.f };
@@ -51,12 +52,6 @@ HRESULT CBullet_Trail::Ready_GameObject()
 
 _int CBullet_Trail::Update_GameObject(const _float& fTimeDelta)
 {
-    //if (m_pBullet == nullptr)
-    if(m_pBullet->Is_Dead()==true)
-    {
-        Set_Dead(true);
-        return S_OK;
-    }
     _int    iExit = CTrail::Update_GameObject(fTimeDelta);
 
     _vec3 vLook = m_pBullet->Get_Projectile_Dir();

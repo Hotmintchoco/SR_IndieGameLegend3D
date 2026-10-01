@@ -40,6 +40,7 @@ HRESULT CBoss1::Ready_GameObject()
 
     m_iMaxHp = 10;
     m_iHp = m_iMaxHp;
+    m_bCollision_Monster = false;
     return S_OK;
 }
 

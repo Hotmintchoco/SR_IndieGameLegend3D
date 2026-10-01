@@ -34,13 +34,8 @@ HRESULT CDefaultBullet::Ready_GameObject()
     m_pColliderCom->Set_Radius(0.3f);
     m_iTotalFrameCount = m_pTextureCom->GetCount();
 
-    //261001 재현 총알트레일
-    //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-    //CGameObject* pGameObject = nullptr;
-
-    //pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BULLET_TRAIL, this);
-    //if (nullptr == pGameObject) return E_FAIL;
-    //if (FAILED(pLayer->Add_GameObject(L"Effect_Bullet_Trail", pGameObject))) return E_FAIL;
+    //261001 재현
+    Create_Trail();
 
     return S_OK;
 }
@@ -81,15 +76,8 @@ void CDefaultBullet::OnCollisionEnter(COLLINFO eCollInfo)
     Set_Dead(true);
 
     //260929 재현
-    _vec3 vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
-    CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-    CGameObject* pGameObject = nullptr;
-
-    pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BULLET_EFFECT, vPos);
-    if (nullptr == pGameObject) return;
-    if (FAILED(pLayer->Add_GameObject(L"Effect_Bullet_Dead", pGameObject))) return;
+    Create_BulletDead_Effect();
+    Set_TrailDead();
 }
 
 HRESULT CDefaultBullet::Add_Component()

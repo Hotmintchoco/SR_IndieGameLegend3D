@@ -54,6 +54,7 @@ HRESULT CMagmamouth::Ready_GameObject()
     m_iHp = m_iMaxHp;
 
     m_fFrame = 3.f;
+    m_bCollision_Monster = false;
     return S_OK;
 }
     

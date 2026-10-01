@@ -166,8 +166,17 @@ void CEffect::Ready_Effect()
         m_fLifeTime = 1.f;
         break;
     case BULLET_TRAIL:
-        m_fLifeTime = 10.f;
-        //static_cast<CProjectile*>(m_pEffect_Owner)->Get_Transform();
+        m_fLifeTime = 100.f;
+
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        CGameObject* pGameObject = nullptr;
+
+        pGameObject = CBullet_Trail::Create(m_pGraphicDev, static_cast<CProjectile*>(m_pEffect_Owner));
+
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Bullet_Trail", pGameObject))) return;
+
+        static_cast<CProjectile*>(m_pEffect_Owner)->Set_TrailPointer(pGameObject);
         break;
     }
 }
@@ -391,13 +400,8 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         break;
     }
 	case BULLET_TRAIL:
-		pGameObject = CBullet_Trail::Create(m_pGraphicDev, static_cast<CProjectile*>(m_pEffect_Owner));
-
-		if (nullptr == pGameObject) return;
-		if (FAILED(pLayer->Add_GameObject(L"Bullet_Trail", pGameObject))) return;
 
 		Set_Dead(true);
-
 		break;
     }
 

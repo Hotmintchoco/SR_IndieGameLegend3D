@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CGameObject.h"
+class CBullet_Trail;
 
 namespace Engine
 {
@@ -31,6 +32,10 @@ public:
 public:
 	CTransform* Get_Transform() { return m_pTransformCom; }
 	const _vec3 Get_Projectile_Dir() { return m_vDir; }
+	void Set_TrailPointer(CGameObject* pTrail) { m_pTrail = pTrail; }
+	void Create_Trail();
+	void Create_BulletDead_Effect();
+	void Set_TrailDead();
 	//261001
 
 protected:
@@ -50,6 +55,9 @@ protected:
 	/* 이름 구분용 ID */
 	static _uint g_iProjectileID;
 	_uint m_iID = -1;
+
+
+	CGameObject* m_pTrail = nullptr;
 
 protected:
 	virtual void Free() override;
