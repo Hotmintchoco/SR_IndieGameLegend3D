@@ -103,9 +103,7 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
     // 충돌 처리 여부를 위해 충돌 매니저에 몬스터의 콜라이더를 등록
 	CCollisionMgr::GetInstance()->Add_Collider(COLL_MONSTER, m_pColliderCom);
 
-    //_vec3 vPos;
-    //m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    //CGameObject::Compute_ViewZ(&vPos);
+
 }
 
 void CMonster::Render_GameObject()

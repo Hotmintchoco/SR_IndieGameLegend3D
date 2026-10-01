@@ -153,13 +153,10 @@
     <ClInclude Include="..\Header\CBullet_Trail.h" />
     <ClInclude Include="..\Header\CCryder.h" />
     <ClInclude Include="..\Header\CDefaultBullet.h" />
-    <ClInclude Include="..\Header\CFloor.h" />
-    <ClInclude Include="..\Header\CGlubba.h" />
+	<ClInclude Include="..\Header\CFloor.h" />
+	<ClInclude Include="..\Header\CGlubba.h" />
     <ClInclude Include="..\Header\CCrossBuffer.h" />
     <ClInclude Include="..\Header\CDdokddak.h" />
-    <ClInclude Include="..\Header\CCryder.h" />
-    <ClInclude Include="..\Header\CDefaultBullet.h" />
-    <ClInclude Include="..\Header\CFloor.h" />
     <ClInclude Include="..\Header\CItemContainer.h" />
     <ClInclude Include="..\Header\CHitCreenUI.h" />
     <ClInclude Include="..\Header\CLaser.h" />

@@ -101,7 +101,6 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
         break;
     case OPENING:
         Opening_MagmaMouth(_fTimeDelta);
-        //MagmaMouth_Trail(fTimeDelta);
         break;
     }
 
@@ -490,7 +489,7 @@ void CMagmamouth::Update_Motion(const _float& fTimeDelta)
 			}
 			ZeroMemory(m_bFireballFinish, sizeof(m_bFireballFinish));
 			m_fSpawnTime = 0.f;
-			m_fStateUpdateDuration = 2.f;
+			m_fStateUpdateDuration = 3.f;
 			m_fSpawn_CoolDown = 0.5f;
         }
         else if (m_eMagmaMouthState == MOVE)
