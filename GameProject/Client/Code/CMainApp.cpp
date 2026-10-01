@@ -17,6 +17,7 @@
 #include "CDebugMgr.h"
 #include "CSoundMgr.h"
 #include "CUIMgr.h"
+#include "CRenderer.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -48,6 +49,13 @@ HRESULT CMainApp::Ready_MainApp()
 int CMainApp::Update_MainApp(const _float& fTimeDelta)
 {
 	CDInputMgr::GetInstance()->Update_InputDev();
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F6))
+	{
+		CRenderer::GetInstance()->Set_PulseEnabled(!CRenderer::GetInstance()->Get_PulseEnabled());
+		// 확대/축소 강도, 반복 속도
+		CRenderer::GetInstance()->Set_PulseParameters(0.18f, 2.5f);
+	}
+	CRenderer::GetInstance()->Update_PulseEffect(fTimeDelta);
 
 	m_pManagementClass->Update_Scene(min(fTimeDelta, 0.01f));
 
@@ -63,11 +71,16 @@ void CMainApp::LateUpdate_MainApp(const _float& fTimeDelta)
 
 void CMainApp::Render_MainApp()
 {
+	// Capture before Render_Begin so its clear also clears the offscreen target.
+	const bool bPulse = dynamic_cast<CStage*>(m_pManagementClass->GetCurrentScene()) &&
+		CRenderer::GetInstance()->Begin_PulseEffect(m_pGraphicDev);
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
 
 	CImGuiTool::BeginFrame();
 
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
+	if (bPulse)
+		CRenderer::GetInstance()->End_PulseEffect(m_pGraphicDev);
 
 	CImGuiTool::EndFrame();
 

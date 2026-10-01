@@ -3,6 +3,18 @@
 #include "IRenderable.h"
 #include "CGameObject.h"
 
+namespace
+{
+	// 실제 객체는 모든 소유자가 참조를 반납하여 COM 참조 수가 0이 될 때 삭제된다
+	template<typename T>
+	void Release_PulseResource(T*& resource)
+	{
+		T* owned = resource;
+		resource = nullptr;
+		if (owned) owned->Release();
+	}
+}
+
 IMPLEMENT_SINGLETON(CRenderer)
 
 CRenderer::CRenderer()
@@ -294,7 +306,163 @@ void CRenderer::Add_DebugTriangle(const std::array<_vec3, 3>& vTri, const _vec3&
 	m_vecDebugTri.push_back({ vTri, vNormal, dwColor });
 }
 
+void CRenderer::Update_PulseEffect(_float fTimeDelta)
+{
+	if (m_bPulseEnabled && fTimeDelta > 0.f)
+		m_fPulseTime = fmodf(m_fPulseTime + fTimeDelta * m_fPulseSpeed, D3DX_PI * 2.f);
+}
+
+void CRenderer::Set_PulseParameters(_float fStrength, _float fSpeed)
+{
+	m_fPulseAmplitude = max(0.f, min(fStrength, 0.25f));
+	m_fPulseSpeed = max(0.f, fSpeed);
+}
+
+HRESULT CRenderer::Ready_PulseEffect(LPDIRECT3DDEVICE9 pDevice, const D3DSURFACE_DESC& desc)
+{
+	if (!m_pPulseShader)
+	{
+		// Compile once; embedded source needs no runtime shader-file path.
+		static const char shader[] =
+			"sampler2D scene : register(s0);"
+			"float4 pulse : register(c0);" // strength, phase, unused, unused
+			"float4 texel : register(c1);"
+			"float4 main(float2 uv : TEXCOORD0) : COLOR0 {"
+			"float2 cell = min(floor(uv * 4.0), 3.0);"
+			"float2 local = uv * 4.0 - cell;"
+			"float2 center = (cell + 0.5) * 0.25;"
+			"float direction = 1.0 - 4.0 * frac((cell.x + cell.y) * 0.5);"
+			// A smooth envelope pins cell borders, avoiding gaps and seams.
+			"float2 edge = 4.0 * local * (1.0 - local);"
+			"float envelope = edge.x * edge.x * edge.y * edge.y;"
+			// Keep the original UV as the base. The legacy compiler misallocates
+			// registers for center + (uv - center) * scale in this ps_2_0 shader.
+			"float amount = sin(pulse.y) * direction * pulse.x * envelope;"
+			"float2 sampleUV = uv - (uv - center) * amount;"
+			"sampleUV = clamp(sampleUV, texel.xy, 1.0 - texel.xy);"
+			"return tex2D(scene, sampleUV); }";
+		LPD3DXBUFFER code = nullptr;
+		LPD3DXBUFFER errors = nullptr;
+		HRESULT hr = D3DXCompileShader(shader, sizeof(shader) - 1, nullptr, nullptr,
+			"main", "ps_2_0", 0, &code, &errors, nullptr);
+		if (errors)
+			OutputDebugStringA(static_cast<const char*>(errors->GetBufferPointer()));
+		Release_PulseResource(errors);
+		if (SUCCEEDED(hr))
+			hr = pDevice->CreatePixelShader(static_cast<const DWORD*>(code->GetBufferPointer()), &m_pPulseShader);
+		Release_PulseResource(code);
+		if (FAILED(hr)) return hr;
+	}
+
+	D3DSURFACE_DESC current{};
+	if (m_pPulseSurface) m_pPulseSurface->GetDesc(&current);
+	if (current.Width != desc.Width || current.Height != desc.Height || current.Format != desc.Format)
+	{
+		Release_PulseResource(m_pPulseSurface);
+		Release_PulseResource(m_pPulseTexture);
+		HRESULT hr = pDevice->CreateTexture(desc.Width, desc.Height, 1, D3DUSAGE_RENDERTARGET,
+			desc.Format, D3DPOOL_DEFAULT, &m_pPulseTexture, nullptr);
+		if (FAILED(hr)) return hr;
+		return m_pPulseTexture->GetSurfaceLevel(0, &m_pPulseSurface);
+	}
+	return S_OK;
+}
+
+_bool CRenderer::Begin_PulseEffect(LPDIRECT3DDEVICE9 pDevice)
+{
+	if (!m_bPulseEnabled || m_bPulseFailed || m_pPulseOutput) return false;
+	if (FAILED(pDevice->TestCooperativeLevel()))
+	{
+		Release_PulseEffect();
+		return false;
+	}
+	LPDIRECT3DSURFACE9 output = nullptr;
+	if (FAILED(pDevice->GetRenderTarget(0, &output))) return false;
+	D3DSURFACE_DESC desc{};
+	output->GetDesc(&desc);
+	// The current device uses a non-MSAA depth buffer, shared by this target.
+	if (desc.MultiSampleType != D3DMULTISAMPLE_NONE ||
+		FAILED(Ready_PulseEffect(pDevice, desc)))
+	{
+		OutputDebugStringA("Pulse effect unavailable; using normal rendering.\n");
+		m_bPulseFailed = true;
+		Release_PulseResource(output);
+		Release_PulseEffect();
+		return false;
+	}
+	pDevice->GetViewport(&m_tPulseViewport);
+	if (FAILED(pDevice->SetRenderTarget(0, m_pPulseSurface)))
+	{
+		Release_PulseResource(output);
+		return false;
+	}
+	pDevice->SetViewport(&m_tPulseViewport);
+	m_pPulseOutput = output;
+	return true;
+}
+
+void CRenderer::End_PulseEffect(LPDIRECT3DDEVICE9 pDevice)
+{
+	if (!m_pPulseOutput) return;
+	pDevice->SetRenderTarget(0, m_pPulseOutput);
+	pDevice->SetViewport(&m_tPulseViewport);
+	LPDIRECT3DSTATEBLOCK9 state = nullptr;
+	if (SUCCEEDED(pDevice->CreateStateBlock(D3DSBT_ALL, &state)))
+	{
+		D3DSURFACE_DESC desc{};
+		m_pPulseSurface->GetDesc(&desc);
+		const float w = static_cast<float>(desc.Width), h = static_cast<float>(desc.Height);
+		const float constants[] = { m_fPulseAmplitude, m_fPulseTime, 0.f, 0.f,
+			0.5f / w, 0.5f / h, 0.f, 0.f };
+		struct SCREENVERTEX { float x, y, z, rhw, u, v; };
+		// D3D9 half-pixel correction, matching texel centers to screen pixels.
+		const SCREENVERTEX quad[] = {
+			{ -0.5f, -0.5f, 0.f, 1.f, 0.f, 0.f },
+			{ w - 0.5f, -0.5f, 0.f, 1.f, 1.f, 0.f },
+			{ -0.5f, h - 0.5f, 0.f, 1.f, 0.f, 1.f },
+			{ w - 0.5f, h - 0.5f, 0.f, 1.f, 1.f, 1.f } };
+		pDevice->SetVertexShader(nullptr);
+		pDevice->SetFVF(D3DFVF_XYZRHW | D3DFVF_TEX1);
+		pDevice->SetPixelShader(m_pPulseShader);
+		pDevice->SetPixelShaderConstantF(0, constants, 2);
+		pDevice->SetTexture(0, m_pPulseTexture);
+		pDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
+		pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+		pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+		pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+		pDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
+		pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
+		pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+		pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		pDevice->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
+		pDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+		pDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+		pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+		pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+		pDevice->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+		pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, quad, sizeof(SCREENVERTEX));
+		state->Apply();
+		Release_PulseResource(state);
+	}
+	else
+	{
+		// Preserve the rendered frame if state capture fails.
+		pDevice->StretchRect(m_pPulseSurface, nullptr, m_pPulseOutput, nullptr, D3DTEXF_NONE);
+	}
+	Release_PulseResource(m_pPulseOutput);
+}
+
+void CRenderer::Release_PulseEffect()
+{
+	Release_PulseResource(m_pPulseOutput);
+	Release_PulseResource(m_pPulseSurface);
+	Release_PulseResource(m_pPulseTexture);
+	Release_PulseResource(m_pPulseShader);
+}
+
 void CRenderer::Free()
 {
+	Release_PulseEffect();
 	Clear_RenderGroup();
 }

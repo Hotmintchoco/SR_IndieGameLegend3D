@@ -234,8 +234,6 @@ CBoss1* CBoss1::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CBoss1::Free()
 {
-    CUIMgr::GetInstance()->Active_Boss(false);
-
     CMonster::Free();
 }
 
@@ -796,6 +794,7 @@ void CBoss1::Boss1_Dead(const _float& fTimeDelta)
 
     if (m_fElapsedDeadTime > m_fDeadTime)
     {
+        CUIMgr::GetInstance()->Active_Boss(false);
         m_bDelete = true;
     }
     if (m_fElapsedDeadTime2 > 0.5f)
