@@ -180,7 +180,8 @@ void CMonster::CollisionWithMonster(COLLINFO eCollInfo)
     if (eCollInfo.iMyID != eCollInfo.iOtherID)
         return;
     // 재현 / 충돌시 안 밀려나는 몬스터로 설정했으면 함수 종료
-    if (static_cast<CMonster*>(eCollInfo.pOtherCollider->Get_Owner())->Get_Collision_WithMonster() == false)return;
+    if (static_cast<CMonster*>(eCollInfo.pOtherCollider->Get_Owner())->Get_Collision_WithMonster() == false ||
+        Get_Collision_WithMonster() == false)return;
 
     // 나와 상대방의 위치 및 반지름 가져오기
     _vec3 vMyPos, vOtherPos;
