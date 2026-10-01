@@ -298,6 +298,12 @@
     <Filter Include="02. GameObject\02. Monster\Cryder">
       <UniqueIdentifier>{6710e0ba-2e64-4032-ae33-fb5134fb11fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. Effect\Trail\Bullet_Trail">
+      <UniqueIdentifier>{fcbec6d8-3853-43e7-8bc0-7b038cf0f4f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Glubba">
+      <UniqueIdentifier>{b8d75b4c-2a17-49be-8913-a428d8256e67}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\12. Logic">
       <UniqueIdentifier>{520c1d37-777a-469e-8694-86462aad2999}</UniqueIdentifier>
     </Filter>
@@ -630,6 +636,12 @@
     <ClInclude Include="..\Header\CCryder.h">
       <Filter>02. GameObject\02. Monster\Cryder</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBullet_Trail.h">
+      <Filter>02. GameObject\06. Effect\Trail\Bullet_Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGlubba.h">
+      <Filter>02. GameObject\02. Monster\Glubba</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CRayCaster.h">
       <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
     </ClInclude>
@@ -913,6 +925,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCryder.cpp">
       <Filter>02. GameObject\02. Monster\Cryder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBullet_Trail.cpp">
+      <Filter>02. GameObject\06. Effect\Trail\Bullet_Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGlubba.cpp">
+      <Filter>02. GameObject\02. Monster\Glubba</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CVoxelBuffer.cpp">
       <Filter>02. GameObject\08. Combat\00. Weapon\04. Bow\VoxelBuffer</Filter>

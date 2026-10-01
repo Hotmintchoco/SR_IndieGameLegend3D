@@ -39,6 +39,7 @@ HRESULT CBoss1::Ready_GameObject()
 
     m_iMaxHp = 10;
     m_iHp = m_iMaxHp;
+    m_bCollision_WithMonster = false;
     return S_OK;
 }
 
@@ -619,14 +620,13 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
             if (m_iPhase == 0)
             {
                 if (iFlag == 1 || iFlag == 2)vScale = { 0.25f,0.25f, 0.25f };
-                else if (iFlag == 3)vScale = { 0.5f,0.5f, 0.5f };
-                else vScale = { 0.75f,0.75f, 0.75f };
+                else if (iFlag == 3)vScale = { 0.35f,0.35f, 0.35f };
+                else vScale = { 0.45f,0.45f, 0.45f };
             }
             else
             {
-                if (iFlag == 1 || iFlag == 2)vScale = { 0.5f,0.5f, 0.5f };
-                else if (iFlag == 3)vScale = { 0.75f,0.75f, 0.75f };
-                else vScale = { 0.75f,0.75f, 0.75f };
+                if (iFlag == 1 || iFlag == 2)vScale = { 0.35f,0.35f, 0.35f };
+                else vScale = { 0.45f,0.45f, 0.45f };
             }
             vScale *= 1.25f;
             vPos.y = vScale.y;

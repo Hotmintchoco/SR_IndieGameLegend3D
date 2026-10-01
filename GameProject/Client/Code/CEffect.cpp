@@ -6,6 +6,8 @@
 #include "CParticle_Sphere.h"
 #include "CParticle_Rectangle.h"
 #include <ctime>
+#include "CTrail.h"
+#include "CBullet_Trail.h"
 
 CEffect::CEffect(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_fFrame(0.f)
@@ -97,6 +99,23 @@ CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type
     return pEffect;
 }
 
+CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, CGameObject* pEffect_Owner)
+{
+    CEffect* pEffect = new CEffect(pGraphicDev);
+    pEffect->Set_Effect_Type(eEffect_Type);
+    pEffect->Set_Effect_Owner(pEffect_Owner);
+
+    if (FAILED(pEffect->Ready_GameObject()))
+    {
+        Safe_Release(pEffect);
+        MSG_BOX("CEffect Create Failed");
+        return nullptr;
+    }
+
+
+    return pEffect;
+}
+
 void CEffect::Free()
 {
     CGameObject::Free();
@@ -146,6 +165,19 @@ void CEffect::Ready_Effect()
     case BULLET_EFFECT:
         m_fLifeTime = 1.f;
         break;
+    case BULLET_TRAIL:
+        m_fLifeTime = 100.f;
+
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        CGameObject* pGameObject = nullptr;
+
+        pGameObject = CBullet_Trail::Create(m_pGraphicDev, static_cast<CProjectile*>(m_pEffect_Owner));
+
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Bullet_Trail", pGameObject))) return;
+
+        static_cast<CProjectile*>(m_pEffect_Owner)->Set_TrailPointer(pGameObject);
+        break;
     }
 }
 
@@ -163,11 +195,11 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
         //CGameObject* pGameObject = nullptr;
 
-        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::ORANGE, 45, 5.f, 0.16f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
+        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::ORANGE, 45, 7.f, 0.16f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
 
-        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::ORANGE, 45, 3.f, 0.16f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
+        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::ORANGE, 45, 5.f, 0.16f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
 
@@ -243,8 +275,8 @@ void CEffect::Update_Effect(const _float fTimeDelta)
                 vVelocity *= 2;
 
                 int iRand = rand() % 3;
-				if (iRand == 0) eColor.g = 245.f / 256.f;
-				else if (iRand == 1) eColor.g = 235.f / 256.f;
+                if (iRand == 0) eColor.g = 245.f / 256.f;
+                else if (iRand == 1) eColor.g = 235.f / 256.f;
 
                 pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, eColor, 0.5f);
                 if (nullptr == pGameObject) return;
@@ -260,11 +292,6 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         if (m_fElapsedTime3 > 0.125f && m_fElapsedTime < m_fLifeTime - 0.5f)
         {
             m_fElapsedTime3 = 0.f;
-
-            //_vec3 vPos, vVelocity;
-            //m_pTransformCom->Get_Info(INFO_POS, &vPos);
-            //CGameObject* pGameObject = nullptr;
-            //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
 
             _vec3 vVelocity;
 
@@ -295,10 +322,10 @@ void CEffect::Update_Effect(const _float fTimeDelta)
             Set_Dead(true);
         break;
     case MAGMA_EXPLOSION2:
-		pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::RED, 50, 3.f, 1.f, { 1.f,1.f,1.f }, CParticle_Sphere::DOWN);
-		if (nullptr == pGameObject) return;
-		if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
-        
+        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::RED, 50, 3.f, 1.f, { 1.f,1.f,1.f }, CParticle_Sphere::DOWN);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
+
         Set_Dead(true);
 
         break;
@@ -313,11 +340,11 @@ void CEffect::Update_Effect(const _float fTimeDelta)
 
         break;
     case BULLET_EFFECT:
+    {
+        _vec3 vVelocity;
 
-		_vec3 vVelocity;
-
-		_float fRand1 = 0;
-		_float fRand2 = 0;
+        _float fRand1 = 0;
+        _float fRand2 = 0;
         _float fRand3 = 0;
 
         _float fRandRed = 0;
@@ -326,8 +353,8 @@ void CEffect::Update_Effect(const _float fTimeDelta)
 
 
         D3DXCOLOR eColor = {};
-        for (int i = 0; i < 3; ++i)
-		{
+        for (int i = 0; i < 5; ++i)
+        {
             _float fRandColor = (rand() % 101) / 100.f;
 
             fRandRed = 1.0f - 0.2f * fRandColor;
@@ -356,7 +383,7 @@ void CEffect::Update_Effect(const _float fTimeDelta)
             vVelocity = { fRand1,fRand2,fRand3 };
 
             D3DXVec3Cross(&vVelocity, &vPlayerLook, &vVelocity);
-
+            vVelocity = vVelocity * 1.5f;
             _float fRandScale = _float(rand() % 128 - 64) / (64.f * 64.f);
 
             _float fScale = 0.25f * 0.25f * 0.75f;
@@ -364,13 +391,18 @@ void CEffect::Update_Effect(const _float fTimeDelta)
             _vec3 vRandScale = { fRandScale ,fRandScale ,fRandScale };
             vScale += vRandScale;
 
-			pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, vScale, eColor, 0.25f, CParticle_Rectangle::BULLET);
-			if (nullptr == pGameObject) return;
-			if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
-		}
-        
+            pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, vScale, eColor, 0.125f, CParticle_Rectangle::BULLET);
+            if (nullptr == pGameObject) return;
+            if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
+        }
+
         Set_Dead(true);
         break;
+    }
+	case BULLET_TRAIL:
+
+		Set_Dead(true);
+		break;
     }
 
 }

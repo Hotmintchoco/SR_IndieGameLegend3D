@@ -23,7 +23,8 @@ HRESULT CSkull::Ready_GameObject()
 
     m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
-    m_iHp = 3;
+    m_iMaxHp = 3;
+    m_iHp = m_iMaxHp;
     return S_OK;
 }
 

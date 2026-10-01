@@ -26,9 +26,10 @@ HRESULT CSprnub3::Ready_GameObject()
         return E_FAIL;
     CMonster::Ready_GameObject();
 
-    m_pTransformCom->Set_Scale(0.75f, 0.75f, 0.75f);
+    m_pTransformCom->Set_Scale(0.45f, 0.45f, 0.45f);
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
-    m_iHp = 2;
+    m_iMaxHp = 2;
+    m_iHp = m_iMaxHp;
     m_eMonsterState = MOVE;
     return S_OK;
 }

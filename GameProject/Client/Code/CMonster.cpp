@@ -7,7 +7,6 @@
 #include "CCollider.h"
 #include "CCollisionMgr.h"
 #include "CTimerMgr.h"
-//#include "CDInputMgr.h"
 #include "CTerrain.h"
 #include "CRoomLayer.h"
 #include "Client_Struct.h"
@@ -15,12 +14,10 @@
 #include "CStage.h"
 #include "CLayerContext.h"
 
-_uint CMonster::iMonsterIdx=0;
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_iHp(0), m_fFrame(0.f), m_fHitEffectTime(0.1f), m_fHitEffectElapsedTime(0.f), m_bHitState(false)
+    : CGameObject(pGraphicDev)
 {
-    ++iMonsterIdx;
 }
 
 
@@ -106,9 +103,7 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
     // 충돌 처리 여부를 위해 충돌 매니저에 몬스터의 콜라이더를 등록
 	CCollisionMgr::GetInstance()->Add_Collider(COLL_MONSTER, m_pColliderCom);
 
-    //_vec3 vPos;
-    //m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    //CGameObject::Compute_ViewZ(&vPos);
+
 }
 
 void CMonster::Render_GameObject()
@@ -130,7 +125,7 @@ void CMonster::OnCollisionEnter(COLLINFO eCollInfo)
 
 void CMonster::OnCollisionStay(COLLINFO eCollInfo)
 {
-	// CollisionWithMonster(eCollInfo);
+	CollisionWithMonster(eCollInfo);
 }
 
 void CMonster::Update_HitState(const _float& fTimeDelta)
@@ -163,10 +158,30 @@ void CMonster::Disable_HitRenderState()
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 }
 
+void CMonster::LookAtPlayer()
+{
+    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+
+    if (nullptr == pPlayerTransformCom)
+        return ;
+
+    _vec3   vPlayerPos;
+    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+
+    _vec3   vPlayerLook;
+    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+
+    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+}
+
 void CMonster::CollisionWithMonster(COLLINFO eCollInfo)
 {
     if (eCollInfo.iMyID != eCollInfo.iOtherID)
         return;
+    // 재현 / 충돌시 안 밀려나는 몬스터로 설정했으면 함수 종료
+    if (static_cast<CMonster*>(eCollInfo.pOtherCollider->Get_Owner())->Get_Collision_WithMonster() == false ||
+        Get_Collision_WithMonster() == false)return;
 
     // 나와 상대방의 위치 및 반지름 가져오기
     _vec3 vMyPos, vOtherPos;
@@ -203,6 +218,7 @@ void CMonster::CollisionWithMonster(COLLINFO eCollInfo)
 
         // 내 트랜스폼에 새로운 위치 적용
         Set_Pos(vMyPos);
+        LookAtPlayer();
     }
 }
 

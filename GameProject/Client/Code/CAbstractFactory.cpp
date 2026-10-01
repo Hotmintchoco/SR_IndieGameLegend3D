@@ -20,6 +20,7 @@
 #include "CSprnub2.h"
 #include "CSprnub3.h"
 #include "CCryder.h"
+#include "CGlubba.h"
 #include "CDdokddak.h"
 #include "CBow.h"
 
@@ -42,6 +43,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::Sprnub2,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub2::Create(t.pDevice); } },
         {EObjectType::Sprnub3,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub3::Create(t.pDevice); } },
         {EObjectType::Cryder,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CCryder::Create(t.pDevice); } },
+        {EObjectType::Glubba,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGlubba::Create(t.pDevice); } },
 
         {EObjectType::ITEM_HEART,               [](const TCreateDesc& t) -> Engine::CGameObject* { return CHeart::Create(t.pDevice, t.pSpawner); } },
         {EObjectType::ITEM_ENERGY,              [](const TCreateDesc& t) -> Engine::CGameObject* { return CEnergy::Create(t.pDevice, t.pSpawner); } },

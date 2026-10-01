@@ -28,8 +28,6 @@ _int CTrail::Update_GameObject(const _float& fTimeDelta)
 {
     _int    iExit = CParticle::Update_GameObject(fTimeDelta);
 
-    //m_fElapsedTime += fTimeDelta;
-
     if (m_fLifeTime <= m_fElapsedTime)
         Set_Dead(true);
 
