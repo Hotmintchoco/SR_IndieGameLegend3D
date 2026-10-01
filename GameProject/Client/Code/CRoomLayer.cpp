@@ -21,6 +21,7 @@
 #include "CBoxCollider.h"
 #include "CFloor.h"
 #include "CItemContainer.h"
+#include "CRandomMgr.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -249,7 +250,13 @@ HRESULT CRoomLayer::SpawnRoom()
 	/* 벽 : 동남서북 순 */
 	for (size_t i = 0; i < t->vecDoorInfo.size(); ++i)
 	{
-		pGameObject = CWall::Create(pDevice, (EWallDir)(i + 1), t->vecDoorInfo.at(i));
+		int iRandomOffset = CRandomMgr::GetInstance()->GetRandomValue<int>(0, 9);
+		int iBiomeOffset = t->iBiome * 10;
+		int iDoorOffset = (t->vecDoorInfo.at(i)) ? 50 : 0;
+		int iDirOffset = ((i % 2) == 0) ? 100 : 0;
+
+
+		pGameObject = CWall::Create(pDevice, (EWallDir)(i + 1), t->vecDoorInfo.at(i), iDirOffset + iDoorOffset + iBiomeOffset + iRandomOffset);
 		if (nullptr == pGameObject)
 			return E_FAIL;
 

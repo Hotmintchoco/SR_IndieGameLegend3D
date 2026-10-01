@@ -36,11 +36,11 @@ private:
 
 	unordered_map<int, TBiomeInfo> m_mapBiomeInfo =
 	{
-		{1, {EBiomeType::CYBER, 50}},
-		{2, {EBiomeType::DESERT, 44}},
-		{3, {EBiomeType::AQUA, 51}},
-		{4, {EBiomeType::SNOW, 47}},
-		{5, {EBiomeType::LAVA, 6}},
+		{0, {EBiomeType::CYBER, 50}},
+		{1, {EBiomeType::DESERT, 44}},
+		{2, {EBiomeType::AQUA, 51}},
+		{3, {EBiomeType::SNOW, 47}},
+		{4, {EBiomeType::LAVA, 6}},
 	};
 
 private:

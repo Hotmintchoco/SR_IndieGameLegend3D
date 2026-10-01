@@ -20,7 +20,7 @@ class CWall : public CGameObject, public IReflectable, public IRayTestable
 {
 protected:
 	explicit CWall(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CWall(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor);
+	explicit CWall(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor, int iTextureIdx);
 	virtual ~CWall();
 
 public:
@@ -53,9 +53,10 @@ private:
 
 	EWallDir m_eDir = EWallDir::NONE;
 	bool m_bHasDoor = false;
+	int m_iTextureIdx = -1;
 
 public:
-	static CWall* Create(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor);
+	static CWall* Create(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor, int iTextureIdx);
 
 private:
 	virtual void		Free();
