@@ -252,7 +252,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
         /* 메가마우스 추적 */
         
-        CCameraMgr::GetInstance()->SetCameraTrace(L"Room_10_Layer", L"Room_10_MegaMouth_1", 2.f);
+        CCameraMgr::GetInstance()->SetCameraTrace(L"Room_6_Layer", L"Room_6_Boss_1", 2.f);
         
         Freeze(2.f);
         GiveInvTime(2.f);

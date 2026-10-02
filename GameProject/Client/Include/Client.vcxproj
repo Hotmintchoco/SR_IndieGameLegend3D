@@ -153,8 +153,8 @@
     <ClInclude Include="..\Header\CBullet_Trail.h" />
     <ClInclude Include="..\Header\CCryder.h" />
     <ClInclude Include="..\Header\CDefaultBullet.h" />
-	<ClInclude Include="..\Header\CFloor.h" />
-	<ClInclude Include="..\Header\CGlubba.h" />
+    <ClInclude Include="..\Header\CFloor.h" />
+    <ClInclude Include="..\Header\CGlubba.h" />
     <ClInclude Include="..\Header\CCrossBuffer.h" />
     <ClInclude Include="..\Header\CDdokddak.h" />
     <ClInclude Include="..\Header\CItemContainer.h" />
@@ -231,9 +231,6 @@
     <ClInclude Include="..\Header\CWeaponPickup.h" />
     <ClInclude Include="..\Header\CWeaponSystem.h" />
     <ClInclude Include="..\Header\CWorm.h" />
-    <ClInclude Include="..\Header\CWorm_Tail.h" />
-    <ClInclude Include="..\Header\CWorm_Boby.h" />
-    <ClInclude Include="..\Header\CWorm_Face.h" />
     <ClInclude Include="..\Header\Client_Struct.h" />
     <ClInclude Include="..\Header\imconfig.h" />
     <ClInclude Include="..\Header\imgui.h" />
@@ -364,9 +361,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Code\CWorm.cpp" />
-    <ClCompile Include="..\Code\CWorm_Tail.cpp" />
-    <ClCompile Include="..\Code\CWorm_Boby.cpp" />
-    <ClCompile Include="..\Code\CWorm_Face.cpp" />
     <ClCompile Include="..\Code\CUnbreakableFrustum.cpp" />
     <ClCompile Include="..\Code\IRayTestable.cpp" />
     <ClCompile Include="..\Code\IReflectable.cpp" />
