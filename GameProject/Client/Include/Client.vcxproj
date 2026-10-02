@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="..\Header\CAbstractFactory.h" />
     <ClInclude Include="..\Header\CArrow.h" />
+    <ClInclude Include="..\Header\CArrow_Effect.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
     <ClInclude Include="..\Header\CBow.h" />
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
@@ -256,6 +257,7 @@
   <ItemGroup>
     <ClCompile Include="..\Code\CAbstractFactory.cpp" />
     <ClCompile Include="..\Code\CArrow.cpp" />
+    <ClCompile Include="..\Code\CArrow_Effect.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
     <ClCompile Include="..\Code\CBow.cpp" />
     <ClCompile Include="..\Code\CBreakableFrustum.cpp" />

@@ -304,6 +304,9 @@
     <Filter Include="02. GameObject\12. Logic\01. RayCaster">
       <UniqueIdentifier>{5466cbee-4409-45a6-b69b-bf80fe1cd263}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. Effect\Arrow_Effect">
+      <UniqueIdentifier>{2c6927cc-9292-403e-91ea-f06959311ff5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -630,6 +633,9 @@
     <ClInclude Include="..\Header\IRayTestable.h">
       <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CArrow_Effect.h">
+      <Filter>02. GameObject\06. Effect\Arrow_Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -928,6 +934,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\IRayTestable.cpp">
       <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CArrow_Effect.cpp">
+      <Filter>02. GameObject\06. Effect\Arrow_Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

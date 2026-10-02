@@ -37,7 +37,7 @@ void CProjectile::LateUpdate_GameObject(const _float& fTimeDelta)
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
-void CProjectile::Create_Trail()
+void CProjectile::Create_Bullet_Trail()
 {
     CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
     CGameObject* pGameObject = nullptr;
@@ -62,9 +62,11 @@ void CProjectile::Create_BulletDead_Effect()
 
 void CProjectile::Set_TrailDead()
 {
+    if (m_bTrailDead == true)return;
     if (Is_Dead() == true && m_pTrail != nullptr)
     {
         m_pTrail->Set_Dead(true);
+        m_bTrailDead = true;
     }
 }
 

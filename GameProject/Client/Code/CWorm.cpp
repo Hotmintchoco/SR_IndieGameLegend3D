@@ -25,7 +25,7 @@ HRESULT CWorm::Ready_GameObject()
         return E_FAIL;
     CMonster::Ready_GameObject();
 
-    if (m_iWormIndex < 9)
+    if (m_iWormIndex < 10)
     {
         CGameObject* pGameObject;
         CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
@@ -36,6 +36,10 @@ HRESULT CWorm::Ready_GameObject()
 		TCHAR		szFileName[128] = L"";
 		wsprintf(szFileName, L"Worm_%d", m_iWormIndex + 1);
 		if (FAILED(pScene->Add_GameObject(szFileName, pGameObject))) return E_FAIL;
+
+        _vec3 vPos;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
     }
     else
     {
@@ -49,7 +53,7 @@ HRESULT CWorm::Ready_GameObject()
 
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
 
-    m_iMaxHp = 10;
+    m_iMaxHp = 1;
     m_iHp = m_iMaxHp;
     m_bCollision_WithMonster = false;
     return S_OK;
@@ -142,11 +146,11 @@ void CWorm::OnCollisionEnter(COLLINFO eCollInfo)
 HRESULT CWorm::Add_Component()
 {
 	CComponent* pComponent = nullptr;
-    if (m_iWormIndex == 0)
+    if (m_iWormIndex == 1)
     {
         pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_worm_drillTexture"));
     }
-    else if (m_iWormIndex == 9)
+    else if (m_iWormIndex == 10)
     {
         pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_worm_tailTexture"));
     }

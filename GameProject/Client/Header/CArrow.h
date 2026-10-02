@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CProjectile.h"
+#include "CEffect.h"
 
 namespace Engine
 {
@@ -31,6 +32,14 @@ public:
 
 	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
 	virtual void OnCollisionExit(COLLINFO eCollInfo) override;
+
+	///// 261002 재현 
+	virtual const _vec3 Get_Projectile_Dir() { return m_vVelocity; }
+	void Create_Arrow_Trail();
+	virtual void Set_TrailDead();
+private:
+	CEffect* m_pEffect_Trail = nullptr;
+	////////////
 
 private:
 	HRESULT	Add_Component();

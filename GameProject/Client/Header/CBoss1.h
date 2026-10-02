@@ -101,8 +101,8 @@ private:
 	_bool m_DeadExplosion = false;
 
 	_bool m_bOpeningMoveFlag = false;
-	_bool m_bOpeningMoveFlag2 = false;
-	_float m_bElapsedOpeningTime = 0.f;
+	_bool m_bInit_YPos = false;
+	_float m_fElapsedOpeningTime = 0.f;
 
 	_vec3 m_vOpeningMoveDirection[6] =
 	{

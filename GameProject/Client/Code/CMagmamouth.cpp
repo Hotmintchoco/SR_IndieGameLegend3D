@@ -259,20 +259,23 @@ void CMagmamouth::Shuffle_Array(_uint N)
 void CMagmamouth::Opening_MagmaMouth(const _float& fTimeDelta)
 {
     m_bElapsedOpeningTime += fTimeDelta;
-    if (m_bElapsedOpeningTime > 15.f)
+    //오프닝 15초 넘거나 오프닝무브끝나면 오프닝 종료
+    if (m_bElapsedOpeningTime > 15.f || (m_bOpeningMoveFlag == true && m_fFrame<=0.f))
     {
         m_bOpening = false;
     }
-
-    if (m_bElapsedOpeningTime<3.f)
+    //3초까지 입벌렸다 닫기
+    if (m_bElapsedOpeningTime < 3.f)
     {
         Set_Motion_CloseOpenMouth(fTimeDelta);
     }
+    //3초부터 입벌리기
     else if (m_bElapsedOpeningTime < 4.f)
     {
         //Set_Motion_CloseMouth(fTimeDelta);
         Set_Motion_OpenMouth(fTimeDelta);
     }
+    //12초까지 정해진 경로 이동
     else if (m_bElapsedOpeningTime < 12.f)
     {
         _vec3 vPos, vDir;
@@ -282,22 +285,17 @@ void CMagmamouth::Opening_MagmaMouth(const _float& fTimeDelta)
         if (m_bOpeningMoveFlag == true)
         {
             Set_Motion_CloseMouth(fTimeDelta);
-            if (m_fFrame <= 0.f)
-            {
-                m_bOpening = false;
-            }
         }
         else
         {
             _vec3 vDist = vPos - m_vMovePosition;
+            //정해진 목적지 도착하면 다음목적지로 설정
             if (D3DXVec3Length(&vDist) < 0.1f)
             {
-                m_vMovePosition += m_vOpeningMoveDirection[++m_iOpeningMoveIndex];
-                
-                ////////
+                m_vMovePosition += m_vOpeningMoveDirection[++m_iOpeningMoveIndex];         
                 //m_fTrailTime2 = 1.25f;
-                ////////
-
+                
+                //다음목적지 없으면 오프닝 무브 종료
                 if (m_iOpeningMoveIndex == sizeof(m_vOpeningMoveDirection) / sizeof(m_vOpeningMoveDirection[0]))
                 {
                     m_bOpeningMoveFlag = true;

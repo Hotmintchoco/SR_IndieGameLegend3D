@@ -10,6 +10,7 @@
 #include "CStage.h"
 #include "IRayTestable.h"
 #include "CRoomLayer.h"
+#include "CEffect.h"
 
 CArrow::CArrow(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower)
     : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir), m_fSpeed(fShotPower * s_tData.fMaxSpeed)
@@ -38,6 +39,11 @@ HRESULT CArrow::Ready_GameObject()
 
     m_pColliderCom->Set_Owner(this);
     m_pColliderCom->Set_Radius(0.1f);
+
+    //261002 재현
+    if (m_fSpeed > 0.f)
+        Create_Arrow_Trail();
+    
 
     return S_OK;
 }
@@ -143,6 +149,7 @@ void CArrow::PreciseHitTest(CGameObject* pTarget, const float fTimeDelta)
     {
         m_pTransformCom->Set_Pos(t.fHitPoint);
         m_bStopped = true;
+        Set_TrailDead();
     }
 }
 
@@ -178,6 +185,7 @@ void CArrow::OnCollisionEnter(COLLINFO eCollInfo)
         break;
     case COLLISIONID::COLL_MONSTER:
         Set_Dead(true);
+        Set_TrailDead();
         break;
     default:
         break;
@@ -186,6 +194,27 @@ void CArrow::OnCollisionEnter(COLLINFO eCollInfo)
 
 void CArrow::OnCollisionExit(COLLINFO eCollInfo)
 {
+}
+
+void CArrow::Set_TrailDead()
+{
+    if (m_bTrailDead == true)return;
+    if ((Is_Dead() == true && m_pEffect_Trail != nullptr) || (m_bStopped == true && m_pEffect_Trail != nullptr))
+    {
+        m_pEffect_Trail->Set_Dead(true);
+        m_bTrailDead = true;
+    }
+}
+
+void CArrow::Create_Arrow_Trail()
+{
+    CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+    CGameObject* pGameObject = nullptr;
+
+    pGameObject = CEffect::Create(m_pGraphicDev, CEffect::ARROW_TRAIL, this, m_pData->fLifeTime);
+    if (nullptr == pGameObject) return;
+    if (FAILED(pLayer->Add_GameObject(L"Effect_Arrow_Trail", pGameObject))) return;
+    m_pEffect_Trail = static_cast<CEffect*>(pGameObject);
 }
 
 HRESULT CArrow::Add_Component()

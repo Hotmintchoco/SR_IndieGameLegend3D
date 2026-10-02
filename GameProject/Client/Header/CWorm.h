@@ -73,7 +73,7 @@ private:
 	_bool m_bOpening = true;
 
 	_vec3 m_fAngle_FromPlayer = {};
-	_uint m_iWormIndex = 0;
+	_uint m_iWormIndex = 1;
 	CMonster* m_pFrontWorm = nullptr;
 	CMonster* m_pHeadWorm = nullptr;
 
