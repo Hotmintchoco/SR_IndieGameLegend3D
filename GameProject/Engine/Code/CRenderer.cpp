@@ -309,7 +309,10 @@ void CRenderer::Add_DebugTriangle(const std::array<_vec3, 3>& vTri, const _vec3&
 void CRenderer::Update_PulseEffect(_float fTimeDelta)
 {
 	if (m_bPulseEnabled && fTimeDelta > 0.f)
+	{
 		m_fPulseTime = fmodf(m_fPulseTime + fTimeDelta * m_fPulseSpeed, D3DX_PI * 2.f);
+		m_fWaterDropTime = fmodf(m_fWaterDropTime + fTimeDelta * m_fWaterDropSpeed, D3DX_PI * 2.f);
+	}
 }
 
 void CRenderer::Set_PulseParameters(_float fStrength, _float fSpeed)
@@ -318,33 +321,27 @@ void CRenderer::Set_PulseParameters(_float fStrength, _float fSpeed)
 	m_fPulseSpeed = max(0.f, fSpeed);
 }
 
+void CRenderer::Set_WaterDropParameters(_float fStrength, _float fSpeed)
+{
+	m_fWaterDropAmplitude = max(0.f, min(fStrength, 0.25f));
+	m_fWaterDropSpeed = max(0.f, fSpeed);
+}
+
 HRESULT CRenderer::Ready_PulseEffect(LPDIRECT3DDEVICE9 pDevice, const D3DSURFACE_DESC& desc)
 {
 	if (!m_pPulseShader)
 	{
-		// Compile once; embedded source needs no runtime shader-file path.
-		static const char shader[] =
-			"sampler2D scene : register(s0);"
-			"float4 pulse : register(c0);" // strength, phase, unused, unused
-			"float4 texel : register(c1);"
-			"float4 main(float2 uv : TEXCOORD0) : COLOR0 {"
-			"float2 cell = min(floor(uv * 4.0), 3.0);"
-			"float2 local = uv * 4.0 - cell;"
-			"float2 center = (cell + 0.5) * 0.25;"
-			"float direction = 1.0 - 4.0 * frac((cell.x + cell.y) * 0.5);"
-			// A smooth envelope pins cell borders, avoiding gaps and seams.
-			"float2 edge = 4.0 * local * (1.0 - local);"
-			"float envelope = edge.x * edge.x * edge.y * edge.y;"
-			// Keep the original UV as the base. The legacy compiler misallocates
-			// registers for center + (uv - center) * scale in this ps_2_0 shader.
-			"float amount = sin(pulse.y) * direction * pulse.x * envelope;"
-			"float2 sampleUV = uv - (uv - center) * amount;"
-			"sampleUV = clamp(sampleUV, texel.xy, 1.0 - texel.xy);"
-			"return tex2D(scene, sampleUV); }";
-		LPD3DXBUFFER code = nullptr;
-		LPD3DXBUFFER errors = nullptr;
-		HRESULT hr = D3DXCompileShader(shader, sizeof(shader) - 1, nullptr, nullptr,
-			"main", "ps_2_0", 0, &code, &errors, nullptr);
+        // Resolve resources beside the executable, independent of VS working directory.
+        wchar_t exePath[MAX_PATH] = {};
+        const DWORD length = GetModuleFileNameW(nullptr, exePath, MAX_PATH);
+        if (!length || length >= MAX_PATH) return E_FAIL;
+        std::wstring directory(exePath);
+        directory = directory.substr(0, directory.find_last_of(L"\\/") + 1);
+        const std::wstring shaderPath = directory + L"Resource\\Shader\\WaterDrop.hlsl";
+        LPD3DXBUFFER code = nullptr;
+        LPD3DXBUFFER errors = nullptr;
+        HRESULT hr = D3DXCompileShaderFromFileW(shaderPath.c_str(), nullptr, nullptr,
+            "main", "ps_2_0", 0, &code, &errors, nullptr);
 		if (errors)
 			OutputDebugStringA(static_cast<const char*>(errors->GetBufferPointer()));
 		Release_PulseResource(errors);
@@ -354,6 +351,20 @@ HRESULT CRenderer::Ready_PulseEffect(LPDIRECT3DDEVICE9 pDevice, const D3DSURFACE
 		if (FAILED(hr)) return hr;
 	}
 
+    if (!m_pWaterDropTexture)
+    {
+        wchar_t exePath[MAX_PATH] = {};
+        const DWORD length = GetModuleFileNameW(nullptr, exePath, MAX_PATH);
+        if (!length || length >= MAX_PATH) return E_FAIL;
+        std::wstring directory(exePath);
+        directory = directory.substr(0, directory.find_last_of(L"\\/") + 1);
+        const std::wstring texturePath = directory + L"Resource\\Shader\\CameraFilterPack_WaterDrop.png";
+        HRESULT hr = D3DXCreateTextureFromFileExW(pDevice, texturePath.c_str(),
+            D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2, 1, 0, D3DFMT_A8R8G8B8,
+            D3DPOOL_MANAGED, D3DX_FILTER_LINEAR, D3DX_FILTER_NONE, 0,
+            nullptr, nullptr, &m_pWaterDropTexture);
+        if (FAILED(hr)) return hr;
+    }
 	D3DSURFACE_DESC current{};
 	if (m_pPulseSurface) m_pPulseSurface->GetDesc(&current);
 	if (current.Width != desc.Width || current.Height != desc.Height || current.Format != desc.Format)
@@ -384,7 +395,7 @@ _bool CRenderer::Begin_PulseEffect(LPDIRECT3DDEVICE9 pDevice)
 	if (desc.MultiSampleType != D3DMULTISAMPLE_NONE ||
 		FAILED(Ready_PulseEffect(pDevice, desc)))
 	{
-		OutputDebugStringA("Pulse effect unavailable; using normal rendering.\n");
+		OutputDebugStringA("Water-drop effect unavailable; check Resource/Shader/WaterDrop.hlsl and CameraFilterPack_WaterDrop.png beside Client.exe. Using normal rendering.\n");
 		m_bPulseFailed = true;
 		Release_PulseResource(output);
 		Release_PulseEffect();
@@ -412,8 +423,10 @@ void CRenderer::End_PulseEffect(LPDIRECT3DDEVICE9 pDevice)
 		D3DSURFACE_DESC desc{};
 		m_pPulseSurface->GetDesc(&desc);
 		const float w = static_cast<float>(desc.Width), h = static_cast<float>(desc.Height);
-		const float constants[] = { m_fPulseAmplitude, m_fPulseTime, 0.f, 0.f,
-			0.5f / w, 0.5f / h, 0.f, 0.f };
+		D3DSURFACE_DESC dropDesc{};
+		m_pWaterDropTexture->GetLevelDesc(0, &dropDesc);
+		const float constants[] = { m_fPulseAmplitude, sinf(m_fPulseTime), m_fWaterDropAmplitude, sinf(m_fWaterDropTime),
+			0.5f / w, 0.5f / h, 1.f / dropDesc.Width, 1.f / dropDesc.Height };
 		struct SCREENVERTEX { float x, y, z, rhw, u, v; };
 		// D3D9 half-pixel correction, matching texel centers to screen pixels.
 		const SCREENVERTEX quad[] = {
@@ -426,6 +439,16 @@ void CRenderer::End_PulseEffect(LPDIRECT3DDEVICE9 pDevice)
 		pDevice->SetPixelShader(m_pPulseShader);
 		pDevice->SetPixelShaderConstantF(0, constants, 2);
 		pDevice->SetTexture(0, m_pPulseTexture);
+		pDevice->SetTexture(1, m_pWaterDropTexture);
+		for (DWORD sampler = 0; sampler < 2; ++sampler)
+		{
+			pDevice->SetSamplerState(sampler, D3DSAMP_SRGBTEXTURE, FALSE);
+			pDevice->SetSamplerState(sampler, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+			pDevice->SetSamplerState(sampler, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+			pDevice->SetSamplerState(sampler, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+			pDevice->SetSamplerState(sampler, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+			pDevice->SetSamplerState(sampler, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+		}
 		pDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
 		pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 		pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
@@ -436,11 +459,6 @@ void CRenderer::End_PulseEffect(LPDIRECT3DDEVICE9 pDevice)
 		pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 		pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 		pDevice->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
-		pDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
-		pDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
-		pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-		pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-		pDevice->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 		pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, quad, sizeof(SCREENVERTEX));
 		state->Apply();
 		Release_PulseResource(state);
@@ -459,6 +477,7 @@ void CRenderer::Release_PulseEffect()
 	Release_PulseResource(m_pPulseSurface);
 	Release_PulseResource(m_pPulseTexture);
 	Release_PulseResource(m_pPulseShader);
+	Release_PulseResource(m_pWaterDropTexture);
 }
 
 void CRenderer::Free()

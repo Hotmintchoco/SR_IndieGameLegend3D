@@ -52,8 +52,10 @@ int CMainApp::Update_MainApp(const _float& fTimeDelta)
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_F6))
 	{
 		CRenderer::GetInstance()->Set_PulseEnabled(!CRenderer::GetInstance()->Get_PulseEnabled());
-		// 확대/축소 강도, 반복 속도
-		CRenderer::GetInstance()->Set_PulseParameters(0.18f, 2.5f);
+		// 기존 4x4 확대/축소 + 물방울 굴절을 함께 적용
+		CRenderer::GetInstance()->Set_PulseParameters(0.12f, 2.5f);
+		// 물방울 굴절 강도, 움직임 속도
+		CRenderer::GetInstance()->Set_WaterDropParameters(0.04f, 2.f);
 	}
 	CRenderer::GetInstance()->Update_PulseEffect(fTimeDelta);
 
