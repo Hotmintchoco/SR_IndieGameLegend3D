@@ -307,6 +307,18 @@
     <Filter Include="02. GameObject\12. Logic\01. RayCaster">
       <UniqueIdentifier>{5466cbee-4409-45a6-b69b-bf80fe1cd263}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. Character">
+      <UniqueIdentifier>{c6e9ff9b-cbc7-4950-913e-0337acfbb0d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player">
+      <UniqueIdentifier>{32e7a207-3007-495a-b2df-52e5aa94c7b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player\00. Animator">
+      <UniqueIdentifier>{aef0f9a1-e99b-42c4-a4cb-280d6537e431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player\00. Animator\00. PlayerPartTex">
+      <UniqueIdentifier>{c753b743-d9ed-4876-82cd-bf2f267b84c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -636,6 +648,12 @@
     <ClInclude Include="..\Header\IRayTestable.h">
       <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPlayerAnimator.h">
+      <Filter>02. GameObject\01. Character\00. Player\00. Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayerPartTex.h">
+      <Filter>02. GameObject\01. Character\00. Player\00. Animator\00. PlayerPartTex</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -937,6 +955,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\IRayTestable.cpp">
       <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerAnimator.cpp">
+      <Filter>02. GameObject\01. Character\00. Player\00. Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerPartTex.cpp">
+      <Filter>02. GameObject\01. Character\00. Player\00. Animator\00. PlayerPartTex</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

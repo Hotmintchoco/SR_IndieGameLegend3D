@@ -14,6 +14,8 @@
 #include "CStage.h"
 #include "CHitCreenUI.h"
 #include "CTimerMgr.h"
+#include "CPlayerPartTex.h"
+#include "CPlayerAnimator.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_bFix(true), m_bCheck(true), m_iHP(12), m_iMaxHP(12), m_fInvTime(2.f)
@@ -40,7 +42,7 @@ HRESULT CPlayer::Ready_GameObject()
 	m_pColliderCom->Set_CollisionID(COLL_PLAYER);
 
 
-	m_pTransformCom->Set_Pos({ 60.f, 1.f, 60.f });
+	m_pTransformCom->Set_Pos({ 60.f, 0.f, 60.f });
 
     return S_OK;
 }
@@ -75,7 +77,7 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
 
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
     /* 성철 : 매니저 객체로 게임 상태를 관리하기 위해 추가. 문제 발생 시 말해줘 */
     CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
@@ -84,6 +86,8 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
         pStage->UpdatePlayerPosition(vPos);
     }
     /* ---------------------------------------------------------------- */
+
+    m_pAnimator->TransformPropagation(*m_pTransformCom->Get_World());
 
     return iExit;
 }
@@ -101,14 +105,13 @@ void CPlayer::LateUpdate_GameObject(_float fTimeDelta)
 
 void CPlayer::Render_GameObject()
 {
-    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-
-    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
    
     m_pTextureCom->Set_Texture(0);
-    m_pBufferCom->Render_Buffer();
-
-    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+    for (int i = 0; i < PP_END; ++i)
+    {
+        m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pBufferTransformCom[i]->Get_World());
+        m_pBufferCom[i]->Render_Buffer();
+    }
 
 #ifdef _DEBUG
      //RenderImGui();
@@ -197,18 +200,6 @@ HRESULT CPlayer::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
-    // RcCol
-    pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
-    if (nullptr == pComponent)
-        return E_FAIL;
-    m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
-
-    // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTexture"));
-    if (nullptr == pComponent)
-        return E_FAIL;
-    m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
-    
     // Transform
     pComponent = m_pTransformCom = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
     if (nullptr == pComponent)
@@ -226,6 +217,66 @@ HRESULT CPlayer::Add_Component()
     if (nullptr == pComponent)
         return E_FAIL;
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });
+
+    // Texture
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Player_Texture"));
+    if (nullptr == pComponent)
+        return E_FAIL;
+    m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+
+    array<TPlayerBuffer, PP_END> arrBuffer;
+
+    for (int i = 0; i < PP_END; ++i)
+    {
+        wstring wstrBodyPart;
+        switch (i)
+        {
+        case PP_HEAD:
+            wstrBodyPart = L"Head";
+            break;
+        case PP_BODY:
+            wstrBodyPart = L"Body";
+            break;
+        case PP_LARM:
+            wstrBodyPart = L"LArm";
+            break;
+        case PP_RARM:
+            wstrBodyPart = L"RArm";
+            break;
+        case PP_LLEG:
+            wstrBodyPart = L"LLeg";
+            break;
+        case PP_RLEG:
+            wstrBodyPart = L"RLeg";
+            break;
+        default:
+            assert(0);
+            break;
+        }
+        wstring wstrName = L"Proto_Player_" + wstrBodyPart + L"_Vertex";
+        CPlayerPartTex* pBuffer = m_pBufferCom[i] = dynamic_cast<CPlayerPartTex*>(CProtoMgr::GetInstance()->Clone_Prototype(wstrName.c_str()));
+        
+        if (nullptr == pBuffer)
+            return E_FAIL;
+
+        wstrName = L"Com_Buffer_" + wstrBodyPart;
+        m_mapComponent[ID_STATIC].insert({ wstrName.c_str(), pBuffer });
+
+        CTransform* pTransform = m_pBufferTransformCom[i] = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
+        
+        if (nullptr == pTransform)
+            return E_FAIL;
+
+        wstrName = L"Com_BufferTransform_" + wstrBodyPart;
+        m_mapComponent[ID_DYNAMIC].insert({ wstrName.c_str(), pTransform });
+
+        arrBuffer[i] = TPlayerBuffer{pBuffer, pTransform};
+    }
+
+    m_pAnimator = CPlayerAnimator::Create(m_pGraphicDev);
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_PlayerAnimator", m_pAnimator });
+
+    m_pAnimator->SetBuffer(arrBuffer);
 
     return S_OK;
 }

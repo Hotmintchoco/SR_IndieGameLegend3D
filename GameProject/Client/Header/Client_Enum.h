@@ -151,3 +151,5 @@ enum class EBiomeType
 
 	MAX,
 };
+
+enum PLAYERPART { PP_BODY, PP_HEAD, PP_LARM, PP_RARM, PP_LLEG, PP_RLEG, PP_END };

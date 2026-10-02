@@ -11,7 +11,11 @@ namespace Engine
 	class CCalculator;
 	class CCollider;
 	class CSphereCollider;
+	class CPlyTex;
 }
+
+class CPlayerAnimator;
+class CPlayerPartTex;
 
 class CPlayer : public CGameObject
 {
@@ -52,11 +56,15 @@ private:
 
 
 private:
-	Engine::CRcTex*				m_pBufferCom;
 	Engine::CTransform*			m_pTransformCom;
-	Engine::CTexture*			m_pTextureCom;
 	Engine::CCalculator*		m_pCalculatorCom;
 	Engine::CCollider*			m_pColliderCom;
+
+	CPlayerPartTex* m_pBufferCom[PP_END] = { nullptr };
+	CTransform* m_pBufferTransformCom[PP_END] = { nullptr };
+	Engine::CTexture* m_pTextureCom = nullptr;
+
+	CPlayerAnimator* m_pAnimator = nullptr;
 
 private:
 

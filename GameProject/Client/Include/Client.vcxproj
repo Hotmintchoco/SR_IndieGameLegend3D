@@ -161,6 +161,8 @@
     <ClInclude Include="..\Header\CLaserBuffer.h" />
     <ClInclude Include="..\Header\CLaserGun.h" />
     <ClInclude Include="..\Header\CMiniGame.h" />
+    <ClInclude Include="..\Header\CPlayerAnimator.h" />
+    <ClInclude Include="..\Header\CPlayerPartTex.h" />
     <ClInclude Include="..\Header\CRapidGun.h" />
     <ClInclude Include="..\Header\CProjectile.h" />
     <ClInclude Include="..\Header\CButtonTile.h" />
@@ -272,6 +274,8 @@
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />
     <ClCompile Include="..\Code\CLaserGun.cpp" />
     <ClCompile Include="..\Code\CMiniGame.cpp" />
+    <ClCompile Include="..\Code\CPlayerAnimator.cpp" />
+    <ClCompile Include="..\Code\CPlayerPartTex.cpp" />
     <ClCompile Include="..\Code\CRapidGun.cpp" />
     <ClCompile Include="..\Code\CProjectile.cpp" />
     <ClCompile Include="..\Code\CButtonTile.cpp" />
