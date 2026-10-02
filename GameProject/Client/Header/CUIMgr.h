@@ -8,6 +8,7 @@ enum UI_TYPE
 {
     UI_SPECIAL,
 	UI_ULTIMATE,
+    UI_BOSS,
 
     UI_END
 };
@@ -25,6 +26,8 @@ public:
 
 public:
     void            Add_UI(UI_TYPE eType, CUI* pUI) { m_UIList[eType].push_back(pUI); }
+    void            Active_Boss(_bool isFlag);
+    void            Set_BossHp(_float fHp);
 
 private:
     void            SpecialAtkCheck();

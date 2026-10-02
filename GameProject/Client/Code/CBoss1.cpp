@@ -10,6 +10,7 @@
 #include "CSprnub2.h"
 #include "CSprnub3.h"
 #include "CShockwave.h"
+#include "CUIMgr.h"
 
 CBoss1::CBoss1(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -91,7 +92,8 @@ _int CBoss1::Update_GameObject(const _float& fTimeDelta)
         break;
     }
 
-
+    // 정민 : Boss HP 처리
+    CUIMgr::GetInstance()->Set_BossHp(m_iHp / _float(m_iMaxHp));
 
     return iExit;
 }
@@ -232,6 +234,8 @@ CBoss1* CBoss1::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CBoss1::Free()
 {
+    CUIMgr::GetInstance()->Active_Boss(false);
+
     CMonster::Free();
 }
 
@@ -697,6 +701,9 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
         m_pTransformCom->Move_Pos(&vDir, 2.f, fTimeDelta);
     }
     Look_AtPlayer();
+
+    // 정민 : Boss Hp UI 처리
+    CUIMgr::GetInstance()->Active_Boss(true);
 }
 
 void CBoss1::Set_Stand(const _float& fTimeDelta)
