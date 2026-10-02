@@ -128,6 +128,23 @@ HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 	return S_OK;
 }
 
+void CMainApp::KeyInput()
+{
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_TAB))
+	{
+		m_bCursorFixed = !m_bCursorFixed;
+
+		if(m_bCursorFixed)
+        {
+            while (ShowCursor(FALSE) >= 0) {}
+        }
+        else
+        {
+            while (ShowCursor(TRUE) < 0) {}
+        }
+	}
+}
+
 CMainApp* CMainApp::Create()
 {
 	CMainApp* pMainApp = new CMainApp;

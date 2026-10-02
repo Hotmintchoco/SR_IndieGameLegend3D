@@ -9,7 +9,7 @@ namespace Engine
 
 class CGameStatus;
 class CRoomLayer;
-class CPlayer;
+class CPlayerTmp;
 
 class CStage : public CScene
 {
@@ -32,7 +32,7 @@ public:
 	void OnPlayerDead();
 	void UpdatePlayerPosition(const _vec3& vPos);
 	inline _vec3 GetPlayerPosition() { return m_vPlayerPos; }
-	inline CPlayer* GetPlayer() { return m_pPlayer; }
+	inline CPlayerTmp* GetPlayer() { return m_pPlayer; }
 
 	/* 방 관련 */
 	inline CRoomLayer* GetCurrentRoomLayer() { return m_pCurrentRoomLayer; }
@@ -59,7 +59,7 @@ private:
 	
 	/* 자주 쓰는 게임오브젝트 */
 	CGameStatus* m_pStatus = nullptr;
-	CPlayer* m_pPlayer = nullptr;
+	CPlayerTmp* m_pPlayer = nullptr;
 
 public:
 	static CStage* Create(LPDIRECT3DDEVICE9 pGraphicDev);

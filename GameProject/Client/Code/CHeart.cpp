@@ -74,7 +74,7 @@ HRESULT CHeart::Add_Component()
 
 void CHeart::Consume()
 {
-    CPlayer* pPlayer = static_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
+    CPlayerTmp* pPlayer = static_cast<CPlayerTmp*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
     pPlayer->GetItem(ITEMID::ITEM_HEAL);
 
     Set_Dead(true);

@@ -122,7 +122,7 @@ _int CStage::Update_Scene(_float fTimeDelta)
 
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_V))
 	{
-		CPlayer* pPlayer = nullptr;
+		CPlayerTmp* pPlayer = nullptr;
 		switch (m_CurCamera)
 		{
 		case CAMERA_FPV_PERSPECTIVE : 
@@ -131,13 +131,13 @@ _int CStage::Update_Scene(_float fTimeDelta)
 			break;
 		case CAMERA_TPV_PERSPECTIVE : 
 			CCameraMgr::GetInstance()->Select_Camera(L"Camera_Free");
-			pPlayer = dynamic_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
+			pPlayer = dynamic_cast<CPlayerTmp*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
 			if (pPlayer != nullptr) pPlayer->Freeze();
 			m_CurCamera = CAMERA_FREE_PERSPECTIVE;
 			break;
 		case CAMERA_FREE_PERSPECTIVE : 
 			CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_FPV");
-			pPlayer = dynamic_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
+			pPlayer = dynamic_cast<CPlayerTmp*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
 			if (pPlayer != nullptr) pPlayer->Unfreeze();
 			m_CurCamera = CAMERA_FPV_PERSPECTIVE;
 			break;
@@ -274,14 +274,17 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	// Player
-	pGameObject = CPlayer::Create(m_pGraphicDev);
+	pGameObject = CPlayerTmp::Create(m_pGraphicDev);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 		return E_FAIL;
 
-	m_pPlayer = static_cast<CPlayer*>(pGameObject);
+	m_pPlayer = static_cast<CPlayerTmp*>(pGameObject);
+	CTransform* pTransform = static_cast<CTransform*>(m_pPlayer->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+	pTransform->Set_Pos({ 60.f, 0.f, 60.f });
+
 
 	// Weapon System
 	pGameObject = CWeaponSystem::Create(m_pGraphicDev);

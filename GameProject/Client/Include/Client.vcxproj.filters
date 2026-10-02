@@ -319,6 +319,12 @@
     <Filter Include="02. GameObject\01. Character\00. Player\00. Animator\00. PlayerPartTex">
       <UniqueIdentifier>{c753b743-d9ed-4876-82cd-bf2f267b84c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player\01. Movement">
+      <UniqueIdentifier>{1bd20612-fa33-4947-bedf-37727e024351}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player\01. Movement\00. PlayerMovement">
+      <UniqueIdentifier>{f1a34ff3-b99a-443c-945c-6a1c00752057}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -351,7 +357,7 @@
     <ClInclude Include="..\Header\CMonster.h">
       <Filter>02. GameObject\02. Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CPlayer.h">
+    <ClInclude Include="..\Header\CPlayerTmp.h">
       <Filter>02. GameObject\01. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoading.h">
@@ -654,6 +660,15 @@
     <ClInclude Include="..\Header\CPlayerPartTex.h">
       <Filter>02. GameObject\01. Character\00. Player\00. Animator\00. PlayerPartTex</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPlayer.h">
+      <Filter>02. GameObject\01. Character\00. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMovement.h">
+      <Filter>02. GameObject\01. Character\00. Player\01. Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayerMovement.h">
+      <Filter>02. GameObject\01. Character\00. Player\01. Movement\00. PlayerMovement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -677,7 +692,7 @@
     <ClCompile Include="..\Code\CMonster.cpp">
       <Filter>02. GameObject\02. Monster</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CPlayer.cpp">
+    <ClCompile Include="..\Code\CPlayerTmp.cpp">
       <Filter>02. GameObject\01. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoading.cpp">
@@ -961,6 +976,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPlayerPartTex.cpp">
       <Filter>02. GameObject\01. Character\00. Player\00. Animator\00. PlayerPartTex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer.cpp">
+      <Filter>02. GameObject\01. Character\00. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMovement.cpp">
+      <Filter>02. GameObject\01. Character\00. Player\01. Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerMovement.cpp">
+      <Filter>02. GameObject\01. Character\00. Player\01. Movement\00. PlayerMovement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

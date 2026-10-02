@@ -19,11 +19,14 @@ public:
 private:
 	HRESULT		Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev);
 	HRESULT		Ready_Scene(LPDIRECT3DDEVICE9 pGraphicDev);
+	void KeyInput();
 
 private:
 	Engine::CGraphicDev* m_pDeviceClass;
 	Engine::CManagement* m_pManagementClass;
 	LPDIRECT3DDEVICE9	 m_pGraphicDev;
+
+	bool m_bCursorFixed = true;
 
 public:
 	static CMainApp* Create();

@@ -14,6 +14,9 @@ struct TPlayerBuffer
 {
 	CPlayerPartTex* pBuffer = nullptr;
 	CTransform* pTransform = nullptr;
+
+	_vec3 vInitPos{};
+	_vec3 vInitRot{};
 };
 
 enum class EPlayerLocomotionState
@@ -53,8 +56,11 @@ public:
 	void TransformPropagation(const _matrix& matRootWorld);
 
 	void SetBuffer(const array<TPlayerBuffer, PP_END>& tBuffer);
+	void SetInitialTransform();
 
 	constexpr static int PP_ROOT = -1;
+
+	void RenderDebugTransform();
 
 private:
 	// Root
@@ -67,7 +73,11 @@ private:
 
 	const static array<int, PP_END> s_arrParent;
 	const static array<PLAYERPART, PP_END> s_arrUpdateOrder;
+	static const char* s_szPartName[PP_END];
 	array<TPlayerBuffer, PP_END> m_arrBuffer = {};
+
+	/* 애니메이션 디버그용 */
+	bool m_bAnimPause = false;
 
 public:
 	static CPlayerAnimator* Create(LPDIRECT3DDEVICE9 pGraphicDev);
