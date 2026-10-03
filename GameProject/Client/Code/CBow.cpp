@@ -9,6 +9,7 @@
 #include "CVoxelBuffer.h"
 #include "CRenderer.h"
 #include "CArrow.h"
+#include "CBombardArrowSpawner.h"
 
 CBow::CBow(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -120,6 +121,10 @@ void CBow::SpecialAttack()
 
 void CBow::UltimateAttack()
 {
+    CBombardArrowSpawner* pSpawner = CBombardArrowSpawner::Create(m_pGraphicDev);
+    if (!pSpawner) return;
+
+    CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"BombardArrowSpawner", pSpawner);
 }
 
 void CBow::ShootArrow()

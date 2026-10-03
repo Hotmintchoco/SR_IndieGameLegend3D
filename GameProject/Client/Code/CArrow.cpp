@@ -13,12 +13,18 @@
 #include "CTimerMgr.h"
 
 CArrow::CArrow(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower)
-    : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir), m_fSpeed(fShotPower * s_tData.fMaxSpeed)
+    : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir), m_fSpeed(fShotPower * m_tData.fMaxSpeed)
 {
 }
 
-CArrow::~CArrow()
+CArrow::CArrow(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower, const TArrowData& t)
+    : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir), m_tData(t)
 {
+    m_fSpeed = fShotPower * t.fMaxSpeed;
+}
+
+CArrow::~CArrow()
+{   
 }
 
 HRESULT CArrow::Ready_GameObject()
@@ -29,7 +35,7 @@ HRESULT CArrow::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    m_pData = &s_tData;
+    m_pData = &m_tData;
 
     InitTransform();
     
@@ -47,7 +53,7 @@ HRESULT CArrow::Ready_GameObject()
 void CArrow::InitTransform()
 {
     m_pTransformCom->Set_Pos(m_vStart);
-    m_pTransformCom->Set_Scale(s_tData.vInitScale);
+    m_pTransformCom->Set_Scale(m_tData.vInitScale);
 
     _vec3 vLook, vUp, vRight;
     D3DXVec3Normalize(&vLook, &m_vDir);
@@ -71,7 +77,7 @@ void CArrow::InitTransform()
 
 void CArrow::ExertGravity(const float fTimeDelta)
 {
-    m_vVelocity.y -= s_tData.fGravityCoef * fTimeDelta;
+    m_vVelocity.y -= m_tData.fGravityCoef * fTimeDelta;
     _vec3 vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     vPos += m_vVelocity * fTimeDelta;
@@ -88,7 +94,7 @@ void CArrow::SyncTransformToVelocity()
     D3DXVec3Cross(&vUp, &vLook, &vRight);
 
     _matrix* pWorld = m_pTransformCom->Get_World();
-    _vec3 vScale = s_tData.vInitScale;
+    _vec3 vScale = m_tData.vInitScale;
     vRight = vScale.x * vRight;
     vUp = vScale.y * vUp;
     vLook = vScale.z * vLook;
@@ -120,6 +126,8 @@ _int CArrow::Update_GameObject(_float fTimeDelta)
         if (PreciseHitTest(pObj))
             break;
     }
+
+    if (m_pTransformCom->Get_Info_Value(INFO_POS).y < -10.f) Set_Dead(true);
 
     return iExit;
 }
@@ -232,6 +240,20 @@ HRESULT CArrow::Add_Component()
 CArrow* CArrow::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower)
 {
     CArrow* pBullet = new CArrow(pGraphicDev, vStart, vDir, fShotPower);
+
+    if (FAILED(pBullet->Ready_GameObject()))
+    {
+        Safe_Release(pBullet);
+        MSG_BOX("CArrow Create Failed");
+        return nullptr;
+    }
+
+    return pBullet;
+}
+
+CArrow* CArrow::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower, const TArrowData& t)
+{
+    CArrow* pBullet = new CArrow(pGraphicDev, vStart, vDir, fShotPower, t);
 
     if (FAILED(pBullet->Ready_GameObject()))
     {

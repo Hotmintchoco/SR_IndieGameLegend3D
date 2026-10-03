@@ -147,14 +147,15 @@
     <ClInclude Include="..\Header\CAbstractFactory.h" />
     <ClInclude Include="..\Header\CArrow.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
+    <ClInclude Include="..\Header\CBombardArrowSpawner.h" />
     <ClInclude Include="..\Header\CBow.h" />
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
     <ClInclude Include="..\Header\CBoss1.h" />
     <ClInclude Include="..\Header\CBullet_Trail.h" />
     <ClInclude Include="..\Header\CCryder.h" />
     <ClInclude Include="..\Header\CDefaultBullet.h" />
-	<ClInclude Include="..\Header\CFloor.h" />
-	<ClInclude Include="..\Header\CGlubba.h" />
+    <ClInclude Include="..\Header\CFloor.h" />
+    <ClInclude Include="..\Header\CGlubba.h" />
     <ClInclude Include="..\Header\CCrossBuffer.h" />
     <ClInclude Include="..\Header\CDdokddak.h" />
     <ClInclude Include="..\Header\CCursorPolicyMgr.h" />
@@ -265,6 +266,7 @@
     <ClCompile Include="..\Code\CAbstractFactory.cpp" />
     <ClCompile Include="..\Code\CArrow.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
+    <ClCompile Include="..\Code\CBombardArrowSpawner.cpp" />
     <ClCompile Include="..\Code\CBow.cpp" />
     <ClCompile Include="..\Code\CBreakableFrustum.cpp" />
     <ClCompile Include="..\Code\CBoss1.cpp" />

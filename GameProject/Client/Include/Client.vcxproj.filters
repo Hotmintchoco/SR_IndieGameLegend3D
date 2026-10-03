@@ -681,6 +681,9 @@
     <ClInclude Include="..\Header\CCursorPolicyMgr.h">
       <Filter>04. Manager\01. CursorPolicy</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBombardArrowSpawner.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1003,6 +1006,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCursorPolicyMgr.cpp">
       <Filter>04. Manager\01. CursorPolicy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBombardArrowSpawner.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
