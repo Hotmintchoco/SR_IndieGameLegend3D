@@ -10,9 +10,9 @@ namespace Engine
 
 struct TArrowData : public TProjectileData
 {
-	float fMaxSpeed = 20.f;
+	float fMaxSpeed = 25.f;
 	float fGravityCoef = 6.f;
-	_vec3 vInitScale = _vec3{0.66f, 0.66f, 1.f};
+	_vec3 vInitScale = _vec3{0.5f, 0.5f, 0.75f};
 };
 
 class CCrossBuffer;
@@ -21,6 +21,7 @@ class CArrow : public CProjectile
 {
 protected:
 	explicit CArrow(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower);
+	explicit CArrow(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower, const TArrowData& t);
 	virtual ~CArrow();
 
 public:
@@ -47,12 +48,7 @@ private:
 	_vec3 m_vStart{ 0.f, 0.f, 0.f };
 	_vec3 m_vDir{ 0.f, 0.f, 0.f };
 
-	inline static TArrowData s_tData = []()-> TArrowData {
-		TArrowData t;
-		t.fLifeTime = 10.f;
-		t.fSpeed = 0.f; /* 안씀 */
-		return t;
-		}();
+	TArrowData m_tData;
 
 	float m_fSpeed = 0.f;
 
@@ -65,7 +61,8 @@ private:
 	bool m_bStopped = false;
 
 public:
-	static CArrow* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float ShotPower);
+	static CArrow* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower);
+	static CArrow* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower, const TArrowData& t);
 
 protected:
 	virtual void Free() override;
