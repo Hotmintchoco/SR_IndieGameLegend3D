@@ -39,6 +39,7 @@ public:
 
 private:
 	void            Key_Input(_float fTimeDelta);
+    void            CinematicToPlayer();
 
 private:
     map<CLIENT_CAMERA_TYPE, CCamera*>   m_mapCamera;

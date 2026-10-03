@@ -4,11 +4,11 @@
 
 struct CINEMATIC_DESC
 {
-    _vec3 vEyeFrom{ 0.f, 2.f, -5.f };
-    _vec3 vEyeTo{ 0.f, 2.f, -2.f };
-    _vec3 vLookAt{ 0.f, 1.f, 0.f };
+	_vec3 vEyeFrom{ 0.f, 0.f, 0.f };    // 시작 위치
+	_vec3 vEyeTo{ 0.f, 0.f, 0.f };      // 종료 위치
+	_vec3 vLookAt{ 0.f, 0.f, 1.f };     // 시선 위치 (대상의 위치)
 
-    _float fDuration = 2.f;
+    _float fDuration = 2.f;             // 연출 지속 시간
 
     // 라디안 단위
     _float fFovFrom = D3DXToRadian(60.f);

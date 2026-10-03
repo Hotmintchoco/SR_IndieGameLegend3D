@@ -2,6 +2,7 @@
 #include "CClientCameraMgr.h"
 #include "CCamera.h"
 #include "CDInputMgr.h"
+#include "CCinematicCamera.h"
 
 IMPLEMENT_SINGLETON(CClientCameraMgr)
 
@@ -71,6 +72,9 @@ void CClientCameraMgr::Update_Camera(_float fTimeDelta)
 
     // CDynamicCamera라면 여기서 키보드·마우스 입력 처리
     m_pActiveCamera->Update_GameObject(fTimeDelta);
+
+    // 연출 카메라가 종료되면 플레이어 카메라로 전환
+    CinematicToPlayer();
 }
 
 void CClientCameraMgr::LateUpdate_Camera(_float fTimeDelta)
@@ -113,4 +117,14 @@ void CClientCameraMgr::Key_Input(_float fTimeDelta)
     {
         Select_Camera(CLIENT_CAMERA_TYPE::FREE);
 	}
+}
+
+void CClientCameraMgr::CinematicToPlayer()
+{
+    if (m_pActiveCamera != Find_Camera(CLIENT_CAMERA_TYPE::CINEMATIC))
+        return;
+
+	auto pCinematicCamera = static_cast<CCinematicCamera*>(m_pActiveCamera);
+    if (pCinematicCamera->Is_Finished())
+        Select_Camera(CLIENT_CAMERA_TYPE::PLAYER);
 }

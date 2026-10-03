@@ -688,12 +688,12 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
             CINEMATIC_DESC desc;
 
             desc.vEyeFrom = { vBossPos.x, 3.f, vBossPos.z - 6.f };
-            desc.vEyeTo = { vBossPos.x, 1.f, vBossPos.z - 2.f };
+            desc.vEyeTo = { vBossPos.x, 2.f, vBossPos.z - 2.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
             desc.fDuration = 2.f;
             desc.fFovFrom = D3DXToRadian(60.f);
-            desc.fFovTo = D3DXToRadian(40.f);
+            desc.fFovTo = D3DXToRadian(47.5f);
 
             if (SUCCEEDED(pCinematic->Play(desc)))
             {
