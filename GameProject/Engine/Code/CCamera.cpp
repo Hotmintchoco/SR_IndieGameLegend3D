@@ -1,11 +1,11 @@
-#include "CCamera.h"
+﻿#include "CCamera.h"
 
 CCamera::CCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
 	, m_fAspect(0.f), m_fFov(0.f), m_fNear(0.f), m_fFar(0.f)
-	, m_vEye({0.f, 0.f, 0.f})
-	, m_vAt ({0.f, 0.f, 0.f})
-	, m_vUp ({0.f, 0.f, 0.f})	
+	, m_vEye({ 0.f, 0.f, 0.f })
+	, m_vAt({ 0.f, 0.f, 0.f })
+	, m_vUp({ 0.f, 0.f, 0.f })
 {
 	D3DXMatrixIdentity(&m_matView);
 	D3DXMatrixIdentity(&m_matProj);
@@ -31,22 +31,26 @@ CCamera::~CCamera()
 
 HRESULT CCamera::Ready_GameObject()
 {
-	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
-	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
-
-	
-	D3DXMatrixPerspectiveFovLH(&m_matProj, m_fFov, m_fAspect, m_fNear, m_fFar);
-	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &m_matProj);
-
+	Update_Matrices();
 	return S_OK;
 }
 
 _int CCamera::Update_GameObject(const _float& fTimeDelta)
 {
-	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
-	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
-
+	Update_Matrices();
 	return 0;
+}
+
+void CCamera::Update_Matrices()
+{
+	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
+	D3DXMatrixPerspectiveFovLH(&m_matProj, m_fFov, m_fAspect, m_fNear, m_fFar);
+}
+
+void CCamera::Apply_Transform()
+{
+	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
+	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &m_matProj);
 }
 
 void CCamera::LateUpdate_GameObject(const _float& fTimeDelta)
