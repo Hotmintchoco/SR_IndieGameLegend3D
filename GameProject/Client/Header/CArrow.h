@@ -37,7 +37,7 @@ private:
 	void InitTransform();
 	void ExertGravity(const float fTimeDelta);
 	void SyncTransformToVelocity();
-	void PreciseHitTest(CGameObject* pTarget, const float fTimeDelta);
+	bool PreciseHitTest(CGameObject* pTarget);
 
 	CCrossBuffer* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
@@ -60,6 +60,7 @@ private:
 	_vec3 m_vVelocity{0.f, 0.f, 0.f};
 
 	/* 박혔을 때 정보 */
+	_vec3 m_vPrevPos{ 0.f, 0.f, 0.f };
 	vector<CGameObject*> m_vecRayTestTarget;
 	bool m_bStopped = false;
 

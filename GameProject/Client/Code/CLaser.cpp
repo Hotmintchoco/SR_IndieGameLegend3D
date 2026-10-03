@@ -52,6 +52,8 @@ HRESULT CLaser::Ready_GameObject()
 
 _int CLaser::Update_GameObject(_float fTimeDelta)
 {
+    m_vPrevPos = m_pTransformCom->Get_Info_Value(INFO_POS);
+
     _int iExit = CProjectile::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
@@ -63,7 +65,7 @@ _int CLaser::Update_GameObject(_float fTimeDelta)
     {
         for (auto p : m_vecRayTestTarget)
         {
-            PreciseHitTest(p, fTimeDelta);
+            PreciseHitTest(p);
             if (m_bReflected) break;
         }
     }
@@ -129,9 +131,10 @@ void CLaser::OnCollisionEnter(COLLINFO eCollInfo)
     {
         if (dynamic_cast<IRayTestable*>(pObject))
         {
-            // if (m_pPrevGenerationCollidedObject == pObject) break;
+            if (m_pPrevGenerationCollidedObject == pObject) break;
 
             m_vecRayTestTarget.push_back(pObject);
+            PreciseHitTest(pObject);
         }
         break;
     }
@@ -147,11 +150,16 @@ void CLaser::OnCollisionExit(COLLINFO eCollInfo)
 {
 }
 
-void CLaser::PreciseHitTest(CGameObject* pTarget, const float fTimeDelta)
+bool CLaser::PreciseHitTest(CGameObject* pTarget)
 {
-    CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
     _vec3 vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vDir = vPos - m_vPrevPos;
+    float fLen = D3DXVec3Length(&vDir);
+    if (fLen < 1e-6f) return false;
+    vDir /= fLen;
+
+    CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
 
     THitInfo t{};
 
@@ -160,13 +168,11 @@ void CLaser::PreciseHitTest(CGameObject* pTarget, const float fTimeDelta)
         vector<pair<CVIBuffer*, CTransform*>> vecInfo = pRayTestable->GetRayTestTargetInfo();
         for (auto& [pBuffer, pTransform] : vecInfo)
         {
-            pRayCaster->RayTest(t, vPos, m_vDir, pBuffer, pTransform->Get_World());
+            pRayCaster->RayTest(t, m_vPrevPos, vDir, pBuffer, pTransform->Get_World());
         }
     }
 
-    const float fThreshold = s_tData.fSpeed * fTimeDelta * 2.f; /* 2는 여유분 */
-
-    if (t.bHit && t.fDist < fThreshold)
+    if (t.bHit && t.fDist < fLen)
     {
         m_pPrevGenerationCollidedObject = pTarget;
 
@@ -182,7 +188,11 @@ void CLaser::PreciseHitTest(CGameObject* pTarget, const float fTimeDelta)
 
         /* 더 이상 충돌 처리를 하지 않음 */
         m_pColliderCom->Set_IsActive(false);
+
+        return true;
     }
+
+    return false;
 }
 
 void CLaser::Reflect(const _vec3& vNormal)
