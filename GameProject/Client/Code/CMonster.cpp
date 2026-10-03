@@ -128,6 +128,23 @@ void CMonster::OnCollisionEnter(COLLINFO eCollInfo)
     }
 }
 
+void CMonster::OnCollisionStay(COLLINFO eCollInfo)
+{
+    auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
+
+    switch (iOtherID)
+    {
+    case COLLISIONID::COLL_PLAYER:
+    {
+        static_cast<CPlayer*>(pOtherCol->Get_Owner())->OnHit(this);
+        break;
+    }
+    default:
+        break;
+    }
+
+}
+
 void CMonster::Update_HitState(const _float& fTimeDelta)
 {
     if (m_bHitState == true && m_fHitEffectElapsedTime < m_fHitEffectTime)

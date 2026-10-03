@@ -155,6 +155,7 @@
     <ClInclude Include="..\Header\CCryder.h" />
     <ClInclude Include="..\Header\CDefaultBullet.h" />
     <ClInclude Include="..\Header\CFloor.h" />
+    <ClInclude Include="..\Header\CCursorPolicyMgr.h" />
     <ClInclude Include="..\Header\CItemContainer.h" />
     <ClInclude Include="..\Header\CHitCreenUI.h" />
     <ClInclude Include="..\Header\CLaser.h" />
@@ -218,7 +219,6 @@
     <ClInclude Include="..\Header\CRoomLayer.h" />
     <ClInclude Include="..\Header\CRoomLoadingMgr.h" />
     <ClInclude Include="..\Header\CMonster.h" />
-    <ClInclude Include="..\Header\CPlayerTmp.h" />
     <ClInclude Include="..\Header\CSkull.h" />
     <ClInclude Include="..\Header\CSkyBox.h" />
     <ClInclude Include="..\Header\CSmallExplode.h" />
@@ -272,6 +272,7 @@
     <ClCompile Include="..\Code\CDefaultBullet.cpp" />
     <ClCompile Include="..\Code\CFloor.cpp" />
     <ClCompile Include="..\Code\CHitCreenUI.cpp" />
+    <ClCompile Include="..\Code\CCursorPolicyMgr.cpp" />
     <ClCompile Include="..\Code\CItemContainer.cpp" />
     <ClCompile Include="..\Code\CLaser.cpp" />
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />
@@ -333,7 +334,6 @@
     <ClCompile Include="..\Code\CRoomLayer.cpp" />
     <ClCompile Include="..\Code\CRoomLoadingMgr.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
-    <ClCompile Include="..\Code\CPlayerTmp.cpp" />
     <ClCompile Include="..\Code\CSkull.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CSmallExplode.cpp" />

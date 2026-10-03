@@ -14,8 +14,11 @@ private:
 public:
 	void		Move_Pos(const _vec3* pDir, const _float& fSpeed, const _float& fTimeDelta)
 	{
-		m_vInfo[INFO_POS] += *pDir * fSpeed * fTimeDelta;
-		
+		m_vInfo[INFO_POS] += *pDir * fSpeed * fTimeDelta;	
+	}
+	void		Move_Pos(const _vec3& vVelocity, const _float& fTimeDelta)
+	{
+		m_vInfo[INFO_POS] += vVelocity * fTimeDelta;
 	}
 
 	void		Rotation(ROTATION eType, const _float& fAngle)

@@ -37,8 +37,8 @@ _int CLogo::Update_Scene(_float fTimeDelta)
 
 	if (m_pLoading->Get_Finish())
 	{
-		if (GetAsyncKeyState(VK_RETURN))
-		{
+		//if (GetAsyncKeyState(VK_RETURN))
+		//{
 			CScene* pStage = CStage::Create(m_pGraphicDev);
 
 			if (nullptr == pStage)
@@ -53,7 +53,7 @@ _int CLogo::Update_Scene(_float fTimeDelta)
 
 			/* Stage 씬에 처음 들어가는 경우 바로 LateUpdate로 이어져 Transform이 업데이트 되지 않는 현상 */
 			pStage->Update_Scene(fTimeDelta);
-		}
+		//}
 	}
 
 	return iExit;

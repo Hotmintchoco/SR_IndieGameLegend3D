@@ -27,6 +27,7 @@ public:
 
 
 	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
+	virtual			void		OnCollisionStay(COLLINFO eCollInfo) override;
 
 
 

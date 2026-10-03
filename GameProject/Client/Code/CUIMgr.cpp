@@ -4,6 +4,7 @@
 #include "CGameStatus.h"
 #include "CManagement.h"
 #include "CStage.h"
+#include "CHitCreenUI.h"
 
 IMPLEMENT_SINGLETON(CUIMgr)
 
@@ -29,6 +30,40 @@ void CUIMgr::Update_UI()
         default:
             break;
         }
+    }
+}
+
+void CUIMgr::Update_HPUI(int iHP)
+{
+    const _int iSlotCount = 3;
+    const _int iHpPerSlot = 4;
+
+    for (_int i = 0; i < iSlotCount; ++i)
+    {
+        wstring wstrTag = L"PlayerHp_" + to_wstring(i);
+
+        CUI* pUI = static_cast<CUI*>(CManagement::GetInstance()->Get_GameObject(L"UI_Layer", wstrTag.c_str()));
+        if (nullptr == pUI)
+            continue;
+
+        _int iSlotHP = iHP - (i * iHpPerSlot);
+        if (iSlotHP < 0)
+            iSlotHP = 0;
+        else if (iSlotHP > iHpPerSlot)
+            iSlotHP = iHpPerSlot;
+
+        pUI->Set_Texture((_uint)iSlotHP);
+    }
+}
+
+void CUIMgr::RequestHitEffect()
+{
+    CGameObject* pHitUI = CManagement::GetInstance()->Get_GameObject(L"UI_Layer", L"HitScreen");
+    if (nullptr != pHitUI)
+    {
+        CHitCreenUI* pHitScreen = dynamic_cast<CHitCreenUI*>(pHitUI);
+        if (nullptr != pHitScreen)
+            pHitScreen->Hit();
     }
 }
 

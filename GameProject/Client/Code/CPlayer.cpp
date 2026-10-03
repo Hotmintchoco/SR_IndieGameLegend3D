@@ -8,8 +8,13 @@
 #include "CMovement.h"
 #include "CPlayerPartTex.h"
 #include "CDInputMgr.h"
+#include "CPlayerMovement.h"
+#include "CCursorPolicyMgr.h"
+#include "CUIMgr.h"
+#include "CCollisionMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
+    :CGameObject(pGraphicDev)
 {
 }
 
@@ -25,7 +30,7 @@ HRESULT CPlayer::Ready_GameObject()
 	if (FAILED(CGameObject::Ready_GameObject()))
 		return E_FAIL;
 
-	m_pColliderCom->Set_Scale(m_fColliderScale);
+	m_pColliderCom->Set_Radius(m_fColliderScale);
 	m_pColliderCom->Set_CollisionID(COLL_PLAYER);
 
 	return S_OK;
@@ -36,7 +41,12 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
 	/* 캐릭터 타임스케일 */
 	fTimeDelta *= CTimerMgr::GetInstance()->GetGroupTimeScale(TG_PLAYER);
 
-	KeyInput();
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
+
+    if (m_bInputEnabled)
+    {
+	    KeyInput();
+    }
 
 	CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
 	if (CStage* pStage = dynamic_cast<CStage*>(pScene))
@@ -44,15 +54,48 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
 		pStage->UpdatePlayerPosition(m_pTransformCom->Get_Info_Value(INFO_POS));
 	}
 
-	return S_OK;
+    if (m_bInvincible)
+    {
+        m_fLeftInvincibleTime -= fTimeDelta;
+        if (m_fLeftInvincibleTime <= 0.f)
+        {
+            m_bInvincible = false;
+        }
+    }
+
+    if (m_fLeftInputDisabledTime > 0.f)
+    {
+        m_fLeftInputDisabledTime -= fTimeDelta;
+        if (m_fLeftInputDisabledTime <= 0.f)
+        {
+            m_bInputEnabled = true;
+            m_fLeftInputDisabledTime = 0.f;
+        }
+    }
+
+    int iExit = CGameObject::Update_GameObject(fTimeDelta);
+
+	return iExit;
 }
 
 void CPlayer::LateUpdate_GameObject(_float fTimeDelta)
 {
+    fTimeDelta *= CTimerMgr::GetInstance()->GetGroupTimeScale(TG_PLAYER);
+
+    CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CPlayer::Render_GameObject()
 {
+    m_pTextureCom->Set_Texture(0);
+
+    for (int i = 0; i < PP_END; ++i)
+    {
+        m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pBufferTransformCom[i]->Get_World());
+        m_pBufferCom[i]->Render_Buffer();
+    }
+
+    m_pAnimator->RenderDebugTransform();
 }
 
 HRESULT CPlayer::Add_Component()
@@ -77,42 +120,19 @@ HRESULT CPlayer::Add_Component()
         return E_FAIL;
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
+    /* Animator */
     array<TPlayerBuffer, PP_END> arrBuffer;
+    array<wstring, PP_END> arrPartName = { L"Head", L"Body", L"LArm", L"RArm", L"LLeg", L"RLeg" };
 
     for (int i = 0; i < PP_END; ++i)
     {
-        wstring wstrBodyPart;
-        switch (i)
-        {
-        case PP_HEAD:
-            wstrBodyPart = L"Head";
-            break;
-        case PP_BODY:
-            wstrBodyPart = L"Body";
-            break;
-        case PP_LARM:
-            wstrBodyPart = L"LArm";
-            break;
-        case PP_RARM:
-            wstrBodyPart = L"RArm";
-            break;
-        case PP_LLEG:
-            wstrBodyPart = L"LLeg";
-            break;
-        case PP_RLEG:
-            wstrBodyPart = L"RLeg";
-            break;
-        default:
-            assert(0);
-            break;
-        }
-        wstring wstrName = L"Proto_Player_" + wstrBodyPart + L"_Vertex";
+        wstring wstrName = L"Proto_Player_" + arrPartName[i] + L"_Vertex";
         CPlayerPartTex* pBuffer = m_pBufferCom[i] = dynamic_cast<CPlayerPartTex*>(CProtoMgr::GetInstance()->Clone_Prototype(wstrName.c_str()));
 
         if (nullptr == pBuffer)
             return E_FAIL;
 
-        wstrName = L"Com_Buffer_" + wstrBodyPart;
+        wstrName = L"Com_Buffer_" + arrPartName[i];
         m_mapComponent[ID_STATIC].insert({ wstrName.c_str(), pBuffer });
 
         CTransform* pTransform = m_pBufferTransformCom[i] = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
@@ -121,7 +141,7 @@ HRESULT CPlayer::Add_Component()
         if (nullptr == pTransform)
             return E_FAIL;
 
-        wstrName = L"Com_BufferTransform_" + wstrBodyPart;
+        wstrName = L"Com_BufferTransform_" + arrPartName[i];
         m_mapComponent[ID_DYNAMIC].insert({ wstrName.c_str(), pTransform });
 
         arrBuffer[i] = TPlayerBuffer{ pBuffer, pTransform };
@@ -132,30 +152,57 @@ HRESULT CPlayer::Add_Component()
 
     m_pAnimator->SetBuffer(arrBuffer);
 
+    /* Movement */
+    m_pMovement = CPlayerMovement::Create(m_pGraphicDev);
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_PlayerMovement", m_pMovement });
+    m_pMovement->AttachTransform(m_pTransformCom);
+
     return S_OK;
 }
 
 void CPlayer::KeyInput()
 {
-    /* 이동 */
+    if (CDInputMgr::GetInstance()->Key_Down(DIK_LSHIFT))
+    {
+        m_pMovement->SetMaxGroundSpeed(m_pMovement->GetMaxGroundSpeed() * m_pMovement->GetSprintCoef());
+    }
+    if (CDInputMgr::GetInstance()->Key_Up(DIK_LSHIFT))
+    {
+        m_pMovement->SetMaxGroundSpeed(m_pMovement->GetMaxGroundSpeed() / m_pMovement->GetSprintCoef());
+    }
+
+    _vec2 vCommand{ 0.f, 0.f }; // (x, z)
     if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
     {
-        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vLook, &vLook), fSpeed, fTimeDelta);
+        vCommand += _vec2{ 0.f, 1.f };
     }
-
     if (CDInputMgr::GetInstance()->Key_Press(DIK_S))
     {
-        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vLook, &vLook), -fSpeed, fTimeDelta);
+        vCommand += _vec2{ 0.f, -1.f };
     }
-
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
-    {
-        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vRight, &vRight), -fSpeed, fTimeDelta);
-    }
-
     if (CDInputMgr::GetInstance()->Key_Press(DIK_D))
     {
-        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vRight, &vRight), fSpeed, fTimeDelta);
+        vCommand += _vec2{ 1.f, 0.f };
+    }
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
+    {
+        vCommand += _vec2{ -1.f, 0.f };
+    }
+    m_pMovement->Walk(vCommand);
+
+    if (CCursorPolicyMgr::GetInstance()->IsCursorFixed())
+    {
+        CursorHandling();
+    }
+}
+
+void CPlayer::CursorHandling()
+{
+    _long dwMouseMove(0);
+
+    if (dwMouseMove = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_X))
+    {
+        m_pTransformCom->Rotation(ROT_Y, dwMouseMove / 10.f);
     }
 }
 
@@ -168,27 +215,87 @@ void CPlayer::OnCollisionStay(COLLINFO eCollInfo)
 {
 }
 
-void CPlayer::OnHit()
+void CPlayer::OnHit(CGameObject* pSrcObj)
 {
+    if (m_bInvincible) return;
+
+    --m_iHP;
+    CUIMgr::GetInstance()->Update_HPUI(m_iHP);
+    CUIMgr::GetInstance()->RequestHitEffect();
+
+    /* 사망 시 빠지기 */
+    if (m_iHP <= 0)
+    {
+        OnDead();
+        return;
+    }
+
+    m_bInvincible = true;
+    m_fLeftInvincibleTime = m_fInvincibleTime;
+
+    if (!pSrcObj) return;
+
+    CTransform* pSrcTransform = dynamic_cast<CTransform*>(pSrcObj->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+    if (!pSrcTransform) return;
+
+    _vec3 vDist = m_pTransformCom->Get_Info_Value(INFO_POS) - pSrcTransform->Get_Info_Value(INFO_POS);
+    m_pMovement->Knockback(vDist, 3.f);
+    SetInputEnabled(false, 0.5f);
 }
 
-void CPlayer::Respawn()
+void CPlayer::Revive()
 {
+    RestoreHP(m_iMaxHP);
+    SetInputEnabled(true);
+    m_pColliderCom->Set_IsActive(true);
 }
 
 void CPlayer::OnDead()
 {
+    m_pMovement->Stop();
+    SetInputEnabled(false);
+    m_pColliderCom->Set_IsActive(false);
+    /* 나중에 무기류도 비활성화 */
+
+    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+    if (pStage)
+    {
+        pStage->OnPlayerDead();
+    }
 }
 
 void CPlayer::RestoreHP(int iAmount)
 {
+    m_iHP += iAmount;
+    m_iHP = clamp(m_iHP, 0, m_iMaxHP);
+    
+    CUIMgr::GetInstance()->Update_HPUI(m_iHP);
+}
+
+void CPlayer::SetInputEnabled(bool bFlag, float fDisabledTime)
+{
+    m_bInputEnabled = bFlag;
+    if (bFlag == false && fDisabledTime >= 0.f)
+    {
+        m_fLeftInputDisabledTime = fDisabledTime;
+    }
 }
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	return nullptr;
+    CPlayer* pObject = new CPlayer(pGraphicDev);
+
+    if (FAILED(pObject->Ready_GameObject()))
+    {
+        Safe_Release(pObject);
+        MSG_BOX("CPlayer Create Failed");
+        return nullptr;
+    }
+
+    return pObject;
 }
 
 void CPlayer::Free()
 {
+    CGameObject::Free();
 }

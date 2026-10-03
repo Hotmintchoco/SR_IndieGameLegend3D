@@ -17,6 +17,7 @@
 #include "CDebugMgr.h"
 #include "CSoundMgr.h"
 #include "CUIMgr.h"
+#include "CCursorPolicyMgr.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -48,6 +49,8 @@ HRESULT CMainApp::Ready_MainApp()
 int CMainApp::Update_MainApp(_float fTimeDelta)
 {
 	CDInputMgr::GetInstance()->Update_InputDev();
+
+	CCursorPolicyMgr::GetInstance()->Update();
 
 	m_pManagementClass->Update_Scene(fTimeDelta);
 
@@ -128,23 +131,6 @@ HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 	return S_OK;
 }
 
-void CMainApp::KeyInput()
-{
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_TAB))
-	{
-		m_bCursorFixed = !m_bCursorFixed;
-
-		if(m_bCursorFixed)
-        {
-            while (ShowCursor(FALSE) >= 0) {}
-        }
-        else
-        {
-            while (ShowCursor(TRUE) < 0) {}
-        }
-	}
-}
-
 CMainApp* CMainApp::Create()
 {
 	CMainApp* pMainApp = new CMainApp;
@@ -179,6 +165,7 @@ void CMainApp::Free()
 	CDebugMgr::DestroyInstance();
 	CSoundMgr::DestroyInstance();
 	CUIMgr::DestroyInstance();
+	CCursorPolicyMgr::DestroyInstance();
 
 	m_pManagementClass->DestroyInstance();
 	m_pDeviceClass->DestroyInstance();

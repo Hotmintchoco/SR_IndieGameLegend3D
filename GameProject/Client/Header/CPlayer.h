@@ -30,14 +30,20 @@ public:
 	virtual	void OnCollisionStay(COLLINFO eCollInfo) override;
 
 	/* HP 관련 */
-	void OnHit();
-	void Respawn();
+	void OnHit(CGameObject* pSrcObj);
+	void Revive();
 	void OnDead();
 	void RestoreHP(int iAmount);
+
+	/* 입력 관련 */
+	void SetInputEnabled(bool bFlag, float fFixedTime = -1.f);
+
+	inline CTransform* GetTransform() { return m_pTransformCom; }
 
 private:
 	HRESULT	Add_Component();
 	void KeyInput();
+	void CursorHandling();
 
 	/* 기본 컴포넌트 */
 	Engine::CTransform* m_pTransformCom = nullptr;
@@ -62,8 +68,12 @@ private:
 	
 	/* 피격 관련 */
 	bool m_bInvincible = false;
-	float m_bInvincibleTime = 1.f;
-	float m_bLeftInvincibleTime = 1.f;
+	float m_fInvincibleTime = 1.f;
+	float m_fLeftInvincibleTime = 1.f;
+
+	/* 입력 막기 */
+	bool m_bInputEnabled = true;
+	float m_fLeftInputDisabledTime = 0.f;
 	
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
