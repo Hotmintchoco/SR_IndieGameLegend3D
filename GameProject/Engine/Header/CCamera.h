@@ -4,7 +4,7 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CCamera :  public CGameObject
+class ENGINE_DLL CCamera : public CGameObject
 {
 protected:
 	explicit CCamera(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -15,6 +15,9 @@ public:
 	virtual			HRESULT		Ready_GameObject();
 	virtual			_int		Update_GameObject(_float fTimeDelta);
 	virtual			void		LateUpdate_GameObject(_float fTimeDelta);
+
+	void			Update_Matrices();
+	void			Apply_Transform();
 
 protected:
 	_matrix		m_matView, m_matProj;

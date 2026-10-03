@@ -26,6 +26,7 @@ public:
 	void			Set_Size(const _vec2& vSize);
 	void            Set_Texture(const _uint& iIndex);
 	void			Set_OnSwitch(_bool bFlag) { m_bOnSwitch = bFlag; }
+	void			Set_Percent(_float fPercent) { m_fPercent = fPercent; }
 
 	void			Set_SyncSwitchToActive(_bool bFlag) { m_bSyncSwitchToActive = bFlag; }
 	_bool			Get_SyncSwitchToActive() { return m_bSyncSwitchToActive; }
@@ -41,6 +42,7 @@ protected:
 	_vec3				m_vPos;
 	_vec2				m_vSize;
 	_float				m_fFrame;
+	_float				m_fPercent;
 	_bool				m_bOnSwitch;
 	_bool				m_bSyncSwitchToActive; // true이면 m_bOnSwitch와 m_bIsActive를 동기화함
 

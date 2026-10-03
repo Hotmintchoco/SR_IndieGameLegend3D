@@ -103,8 +103,10 @@ void CSphereCollider::SyncPositionToOwner()
 	if (!m_pOwner) return;
 	CTransform* pOwnerTransformCom = dynamic_cast<CTransform*>(m_pOwner->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 
-	_vec3   vOwnerPos;
+	_vec3 vOwnerPos;
 	pOwnerTransformCom->Get_Info(INFO_POS, &vOwnerPos);
+	vOwnerPos += m_vDiffPos;
+
 	m_tSphere.Center = { vOwnerPos.x, vOwnerPos.y, vOwnerPos.z };
 }
 

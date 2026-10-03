@@ -13,6 +13,7 @@
 #include "CEffect.h"
 #include "CParticle_Sphere.h"
 #include "CRoomLayer.h"
+#include "CUIMgr.h"
 
 CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(0.f), m_fStateUpdateDuration(2.f), 
@@ -54,6 +55,7 @@ HRESULT CMagmamouth::Ready_GameObject()
     m_iHp = m_iMaxHp;
 
     m_fFrame = 3.f;
+    m_bCollision_WithMonster = false;
     return S_OK;
 }
     
@@ -100,9 +102,11 @@ _int CMagmamouth::Update_GameObject(_float fTimeDelta)
         break;
     case OPENING:
         Opening_MagmaMouth(_fTimeDelta);
-        //MagmaMouth_Trail(fTimeDelta);
         break;
     }
+
+    // 정민 : Boss HP 처리
+    CUIMgr::GetInstance()->Set_BossHp(m_iHp / _float(m_iMaxHp));
 
     return iExit;
 }
@@ -305,6 +309,9 @@ void CMagmamouth::Opening_MagmaMouth(const _float& fTimeDelta)
         }
 
     }
+
+    // 정민 : Boss Hp UI 처리
+    CUIMgr::GetInstance()->Active_Boss(true);
 }
 
 void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
@@ -489,7 +496,7 @@ void CMagmamouth::Update_Motion(const _float& fTimeDelta)
 			}
 			ZeroMemory(m_bFireballFinish, sizeof(m_bFireballFinish));
 			m_fSpawnTime = 0.f;
-			m_fStateUpdateDuration = 2.f;
+			m_fStateUpdateDuration = 3.f;
 			m_fSpawn_CoolDown = 0.5f;
         }
         else if (m_eMagmaMouthState == MOVE)
@@ -924,6 +931,7 @@ void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
 
     if (m_fElapsedDeadTime > m_fDeadTime)
     {
+        CUIMgr::GetInstance()->Active_Boss(false);
         m_bDelete = true;
     }
     if (m_fElapsedDeadTime2 > 0.5f)

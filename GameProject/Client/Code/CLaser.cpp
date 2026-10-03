@@ -14,14 +14,19 @@
 #include "CRayCaster.h"
 
 CLaser::CLaser(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir)
-    : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir)
+    : CProjectile(pGraphicDev)
 {
+    m_vStart = vStart;
+    m_vDir = vDir;
 }
 
 CLaser::CLaser(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, const float fTimeAfterBirth, CGameObject* pIgnoreCollision)
-    : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir), m_pPrevGenerationCollidedObject(pIgnoreCollision), m_fBirthTime(fTimeAfterBirth)
+    : CProjectile(pGraphicDev), m_pPrevGenerationCollidedObject(pIgnoreCollision), m_fBirthTime(fTimeAfterBirth)
 {
     m_fTimeAfterBirth = fTimeAfterBirth;
+
+    m_vStart = vStart;
+    m_vDir = vDir;
 }
 
 CLaser::~CLaser()

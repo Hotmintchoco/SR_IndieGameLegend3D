@@ -10,6 +10,7 @@
 #include "CSprnub2.h"
 #include "CSprnub3.h"
 #include "CShockwave.h"
+#include "CUIMgr.h"
 
 CBoss1::CBoss1(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -39,6 +40,7 @@ HRESULT CBoss1::Ready_GameObject()
 
     m_iMaxHp = 10;
     m_iHp = m_iMaxHp;
+    m_bCollision_WithMonster = false;
     return S_OK;
 }
 
@@ -90,7 +92,8 @@ _int CBoss1::Update_GameObject(_float fTimeDelta)
         break;
     }
 
-
+    // 정민 : Boss HP 처리
+    CUIMgr::GetInstance()->Set_BossHp(m_iHp / _float(m_iMaxHp));
 
     return iExit;
 }
@@ -619,14 +622,13 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
             if (m_iPhase == 0)
             {
                 if (iFlag == 1 || iFlag == 2)vScale = { 0.25f,0.25f, 0.25f };
-                else if (iFlag == 3)vScale = { 0.5f,0.5f, 0.5f };
-                else vScale = { 0.75f,0.75f, 0.75f };
+                else if (iFlag == 3)vScale = { 0.35f,0.35f, 0.35f };
+                else vScale = { 0.45f,0.45f, 0.45f };
             }
             else
             {
-                if (iFlag == 1 || iFlag == 2)vScale = { 0.5f,0.5f, 0.5f };
-                else if (iFlag == 3)vScale = { 0.75f,0.75f, 0.75f };
-                else vScale = { 0.75f,0.75f, 0.75f };
+                if (iFlag == 1 || iFlag == 2)vScale = { 0.35f,0.35f, 0.35f };
+                else vScale = { 0.45f,0.45f, 0.45f };
             }
             vScale *= 1.25f;
             vPos.y = vScale.y;
@@ -697,6 +699,9 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
         m_pTransformCom->Move_Pos(&vDir, 2.f, fTimeDelta);
     }
     Look_AtPlayer();
+
+    // 정민 : Boss Hp UI 처리
+    CUIMgr::GetInstance()->Active_Boss(true);
 }
 
 void CBoss1::Set_Stand(const _float& fTimeDelta)
@@ -789,6 +794,7 @@ void CBoss1::Boss1_Dead(const _float& fTimeDelta)
 
     if (m_fElapsedDeadTime > m_fDeadTime)
     {
+        CUIMgr::GetInstance()->Active_Boss(false);
         m_bDelete = true;
     }
     if (m_fElapsedDeadTime2 > 0.5f)

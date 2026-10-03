@@ -40,8 +40,8 @@ private:
 	Engine::CSphereCollider* m_pColliderCom = nullptr;
 
 	/* 초기값 */
-	_vec3 m_vStart{ 0.f, 0.f, 0.f };
-	_vec3 m_vDir{ 0.f, 0.f, 0.f };
+	//_vec3 m_vStart{ 0.f, 0.f, 0.f };
+	//_vec3 m_vDir{ 0.f, 0.f, 0.f };
 	float m_fScaleCoef = 1.f;
 	float m_fCurrentScale = 1.f;
 	float m_fInitScale = 1.f;

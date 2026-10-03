@@ -6,7 +6,7 @@
 #include "CProtoMgr.h"
 #include "CDInputMgr.h"
 #include "CManagement.h"
-#include "CStage.h"
+#include "CSkyBox.h"
 
 CMiniGame::CMiniGame(LPDIRECT3DDEVICE9 pGraphicDev)
     : CScene(pGraphicDev)
@@ -59,7 +59,23 @@ void CMiniGame::Render_Scene()
 
 HRESULT CMiniGame::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
-    
+    CLayer* pLayer = CLayer::Create();
+    if (nullptr == pLayer)
+        return E_FAIL;
+
+    // 오브젝트 추가
+    CGameObject* pGameObject = nullptr;
+
+    // SkyBox
+    pGameObject = CSkyBox::Create(m_pGraphicDev);
+    if (nullptr == pGameObject)
+        return E_FAIL;
+
+    if (FAILED(pLayer->Add_GameObject(L"SkyBox", pGameObject)))
+        return E_FAIL;
+
+    m_mapLayer.insert({ pLayerTag ,pLayer });
+
     return S_OK;
 }
 

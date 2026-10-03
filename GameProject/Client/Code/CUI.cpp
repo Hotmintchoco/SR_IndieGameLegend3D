@@ -5,7 +5,7 @@
 #include "CRenderer.h"
 
 CUI::CUI(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CGameObject(pGraphicDev), m_fFrame(0.f), m_bOnSwitch(true), m_bSyncSwitchToActive(false)
+	: CGameObject(pGraphicDev), m_fFrame(0.f), m_fPercent(0.f), m_bOnSwitch(true), m_bSyncSwitchToActive(false)
 {
 }
 

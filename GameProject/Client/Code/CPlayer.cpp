@@ -38,7 +38,7 @@ HRESULT CPlayer::Ready_GameObject()
 
     m_pColliderCom->Set_Radius(0.5f);
 	m_pColliderCom->Set_CollisionID(COLL_PLAYER);
-
+    //m_pColliderCom->Set_DiffPos({ 0.f, -1.f, 0.f });
 
 	m_pTransformCom->Set_Pos({ 60.f, 1.f, 60.f });
 
@@ -84,6 +84,9 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
         pStage->UpdatePlayerPosition(vPos);
     }
     /* ---------------------------------------------------------------- */
+
+    // 정민 : HP가 감소하면 UI 적용
+    Update_HPUI();
 
     return iExit;
 }
@@ -174,9 +177,7 @@ void CPlayer::OnCollisionStay(COLLINFO eCollInfo)
     CCollider* pOtherCollider = Find_OtherCollider(pOther);
 
     MonsterCollision(pOther, pOtherCollider);
-
-    if (pOtherCollider && pOtherCollider->Get_CollisionID() == COLL_OBSTACLE)
-        m_fFrictionForce = 0.75f; // 마찰력 적용
+    
 }
 
 CCollider* CPlayer::Find_OtherCollider(CGameObject* pOther)
@@ -425,9 +426,7 @@ void CPlayer::UpdateHP(_int iAmount)
             m_iHP += iAmount;
         }
     }
-
-    // 정민 : HP가 감소하면 UI 적용
-    Update_HPUI();
+   
 }
 
 void CPlayer::Die()
@@ -486,8 +485,6 @@ void CPlayer::Respawn()
     CGameObject* pGun = CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun");
     if (nullptr != pGun)
         pGun->Set_IsActive(true);
-
-    Update_HPUI();
 }
 
 void CPlayer::Free()
@@ -558,6 +555,7 @@ void CPlayer::Update_HPUI()
 {
     const _int iSlotCount = 3;
     const _int iHpPerSlot = 4;
+    const _int iDamagedHpSlot = m_iHP / iHpPerSlot;
 
     for (_int i = 0; i < iSlotCount; ++i)
     {
@@ -573,7 +571,12 @@ void CPlayer::Update_HPUI()
         else if (iSlotHP > iHpPerSlot)
             iSlotHP = iHpPerSlot;
 
-        pUI->Set_Texture((_uint)iSlotHP);
+        _uint iTexture = static_cast<_uint>(iSlotHP);
+
+        if (m_fInvTime > 0.f && i == iDamagedHpSlot)
+            iTexture += 5;
+
+        pUI->Set_Texture(iTexture);
     }
 }
 

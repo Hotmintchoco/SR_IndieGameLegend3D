@@ -30,7 +30,8 @@ HRESULT CCryder::Ready_GameObject()
     m_pTransformCom->Set_Scale(0.35f, 0.35f, 0.35f);
     //m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
     m_pColliderCom->Set_Radius(0.5f);
-    m_iHp = 4;
+    m_iMaxHp = 4;
+    m_iHp = m_iMaxHp;
     return S_OK;
 }
 
