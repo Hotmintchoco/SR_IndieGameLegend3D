@@ -291,12 +291,13 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	m_pPlayer->GetTransform()->Set_Pos(GetRoomLayerFromIndex(m_iStartRoomIndex)->GetCenterPos());
 
 	// Weapon System
-	pGameObject = CWeaponSystem::Create(m_pGraphicDev);
-	if (nullptr == pGameObject)
+	CWeaponSystem* pWeaponSystem = CWeaponSystem::Create(m_pGraphicDev);
+	if (nullptr == pWeaponSystem)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"WeaponSystem", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"WeaponSystem", pWeaponSystem)))
 		return E_FAIL;
+	m_pPlayer->SetWeaponSystem(pWeaponSystem);
 
 	// Ray Caster
 	pGameObject = CRayCaster::Create(m_pGraphicDev);

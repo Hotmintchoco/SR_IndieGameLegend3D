@@ -42,8 +42,6 @@ _int CWeaponSystem::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    GetKeyInput();
-
     return iExit;
 }
 
@@ -56,32 +54,19 @@ void CWeaponSystem::Render_GameObject()
 {
 }
 
-
-HRESULT CWeaponSystem::AddWeapon(EObjectType eType, const wstring& wstrName)
+TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
 {
-    CWeapon* pWeapon = CAbstractFactory::GetInstance()->CraeteWeapon(eType);
+    TWeaponSystemOutput t;
 
-    if (pWeapon)
+    if (tInput.bSpecialSwitchPressed)
     {
-        m_pOwner->Add_GameObject(wstrName, pWeapon);
-        m_vecWeapon.push_back(pWeapon);
-        SwitchWeaponTo((int)m_vecWeapon.size() - 1);
-        return S_OK;
-    }
-    else
-    {
-        return E_FAIL;
-    }
-}
-
-void CWeaponSystem::GetKeyInput()
-{
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_Q))
-    {
-        SwitchWeaponTo((m_iCurrentIndex + 1) % (int)m_vecWeapon.size());
+        if (m_fSpecialAtkGauge > 0.f)
+        {
+            m_bSpecialAttackSwitchOn = !m_bSpecialAttackSwitchOn;
+        }
     }
 
-    if (CDInputMgr::GetInstance()->Mouse_Press(DIM_LB) && !GetCurrentWeapon()->IsOnCoolTime())
+    if (t.bAttacked = tInput.bAttack && !GetCurrentWeapon()->IsOnCoolTime())
     {
         if (m_bSpecialAttackSwitchOn)
         {
@@ -105,70 +90,54 @@ void CWeaponSystem::GetKeyInput()
         }
     }
 
-    if (CDInputMgr::GetInstance()->Mouse_Down(DIM_RB))
+    if (tInput.bUltAttack && m_bIsUltimateAttackReady)
     {
-        GetCurrentWeapon()->ChargeStart();
-    }
-    if (CDInputMgr::GetInstance()->Mouse_Up(DIM_RB))
-    {
-        GetCurrentWeapon()->ChargeEnd();
-    }
+        GetCurrentWeapon()->UltimateAttack();
+        // m_fUltimateAtkGauge = 0.f;
+        // m_bIsUltimateAttackReady = false;
 
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_C))
-    {
-        if (m_bIsUltimateAttackReady)
+        CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+        if (pStage)
         {
-            GetCurrentWeapon()->UltimateAttack();    
-            m_fUltimateAtkGauge = 0.f;
-            m_bIsUltimateAttackReady = false;
-
-            CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-            if (pStage)
-            {
-                pStage->GetStatus()->SetUltimateGauge(m_fUltimateAtkGauge);
-            }
+            pStage->GetStatus()->SetUltimateGauge(m_fUltimateAtkGauge);
         }
     }
 
-    TWeaponAnimArgs t;
+    if (CWeapon* pWeapon = GetCurrentWeapon())
+    {
+        if (tInput.bChargeBegin) pWeapon->ChargeStart();
+        if (tInput.bChargeEnd) pWeapon->ChargeEnd();
 
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_F))
-    {
-        if (m_fSpecialAtkGauge > 0.f)
-        {
-            m_bSpecialAttackSwitchOn = !m_bSpecialAttackSwitchOn;
-        }
-    }
-    t.bSpecialAtk = m_bSpecialAttackSwitchOn;
-    
-    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-    if (pStage)
-    {
-        pStage->GetStatus()->SetSpecialAttackSwtich(m_bSpecialAttackSwitchOn);
+        TWeaponAnimArgs t;
+        t.bSpecialAtk = m_bSpecialAttackSwitchOn;
+        t.bSprint = tInput.bSprint;
+        t.bMove = tInput.bMove;
+        pWeapon->UpdateAnimationArgs(t);
     }
 
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
+    if (tInput.bSwitchWeapon)
     {
-        t.bSprint = true;
+        SwitchWeaponTo((m_iCurrentIndex + 1) % (int)m_vecWeapon.size());
+    }
+
+    return t;
+}
+
+HRESULT CWeaponSystem::AddWeapon(EObjectType eType, const wstring& wstrName)
+{
+    CWeapon* pWeapon = CAbstractFactory::GetInstance()->CraeteWeapon(eType);
+
+    if (pWeapon)
+    {
+        m_pOwner->Add_GameObject(wstrName, pWeapon);
+        m_vecWeapon.push_back(pWeapon);
+        SwitchWeaponTo((int)m_vecWeapon.size() - 1);
+        return S_OK;
     }
     else
     {
-        t.bSprint = false;
+        return E_FAIL;
     }
-
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_W)
-        || CDInputMgr::GetInstance()->Key_Press(DIK_A)
-        || CDInputMgr::GetInstance()->Key_Press(DIK_S)
-        || CDInputMgr::GetInstance()->Key_Press(DIK_D))
-    {
-        t.bMove = true;
-    }
-    else
-    {
-        t.bMove = false;
-    }
-
-    GetCurrentWeapon()->UpdateAnimationArgs(t);
 }
 
 void CWeaponSystem::SwitchWeaponTo(int iIndex)

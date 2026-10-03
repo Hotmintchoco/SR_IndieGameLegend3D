@@ -55,3 +55,23 @@ struct TBiomeInfo
 	EBiomeType eType;
 	int iDefaultTileIndex;
 };
+
+struct TWeaponSystemInput
+{
+	/* 공격 관련 */
+	bool bAttack = false;
+	bool bUltAttack = false;
+	bool bChargeBegin = false;
+	bool bChargeEnd = false;
+	bool bSpecialSwitchPressed = false;
+	bool bSwitchWeapon = false;
+
+	/* 무기 애니메이션 관련 */
+	bool bMove = false;
+	bool bSprint = false;
+};
+
+struct TWeaponSystemOutput
+{
+	bool bAttacked = false;
+};

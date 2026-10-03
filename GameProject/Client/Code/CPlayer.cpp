@@ -12,6 +12,8 @@
 #include "CCursorPolicyMgr.h"
 #include "CUIMgr.h"
 #include "CCollisionMgr.h"
+#include "CWeaponSystem.h"
+#include "Client_Struct.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
     :CGameObject(pGraphicDev)
@@ -189,15 +191,29 @@ void CPlayer::KeyInput()
     if (D3DXVec2Length(&vCommand) > 1e-6) m_pAnimator->PlayLocomotion((m_pMovement->GetSprint()) ? EPlayerLocomotionState::SPRINT : EPlayerLocomotionState::WALK);
     else m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
 
+    /* 무기 입력 처리 */
+    TWeaponSystemInput tInput;
+    bool bCursorFixed = CCursorPolicyMgr::GetInstance()->IsCursorFixed();
+    tInput.bAttack = CDInputMgr::GetInstance()->Mouse_Press(DIM_LB) && bCursorFixed;
+    tInput.bUltAttack = CDInputMgr::GetInstance()->Key_Down(DIK_C);
+    tInput.bChargeBegin = CDInputMgr::GetInstance()->Mouse_Down(DIM_RB) && bCursorFixed;
+    tInput.bChargeEnd = CDInputMgr::GetInstance()->Mouse_Up(DIM_RB) && bCursorFixed;
+    tInput.bMove = CDInputMgr::GetInstance()->Key_Press(DIK_W)
+                || CDInputMgr::GetInstance()->Key_Press(DIK_A)
+                || CDInputMgr::GetInstance()->Key_Press(DIK_S)
+                || CDInputMgr::GetInstance()->Key_Press(DIK_D);
+    tInput.bSpecialSwitchPressed = CDInputMgr::GetInstance()->Key_Down(DIK_F);
+    tInput.bSprint = CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT);
+    tInput.bSwitchWeapon = CDInputMgr::GetInstance()->Key_Down(DIK_Q);
+    TWeaponSystemOutput tOutput = m_pWeaponSystem->UpdateInput(tInput);
+
+    if (tOutput.bAttacked) m_pAnimator->PlayAction(EPlayerActionState::GUN_SHOOT);
+
     /* 여기 아래는 마우스 처리 */
     if (!CCursorPolicyMgr::GetInstance()->IsCursorFixed()) return;
     
     CursorHandling();
 
-    if (CDInputMgr::GetInstance()->Mouse_Down(DIM_LB))
-    {
-        m_pAnimator->PlayAction(EPlayerActionState::GUN_SHOOT);
-    }
 }
 
 void CPlayer::CursorHandling()
@@ -209,7 +225,6 @@ void CPlayer::CursorHandling()
         m_pTransformCom->Rotation(ROT_Y, dwMouseMove / 10.f);
     }
 }
-
 
 void CPlayer::OnCollisionEnter(COLLINFO eCollInfo)
 {

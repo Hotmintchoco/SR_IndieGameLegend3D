@@ -13,6 +13,7 @@ namespace Engine
 class CPlayerAnimator;
 class CPlayerPartTex;
 class CPlayerMovement;
+class CWeaponSystem;
 
 class CPlayer : public CGameObject
 {
@@ -39,6 +40,7 @@ public:
 	void SetInputEnabled(bool bFlag, float fFixedTime = -1.f);
 
 	inline CTransform* GetTransform() { return m_pTransformCom; }
+	inline void SetWeaponSystem(CWeaponSystem* pSystem) { m_pWeaponSystem = pSystem; }
 
 private:
 	HRESULT	Add_Component();
@@ -74,6 +76,9 @@ private:
 	/* 입력 막기 */
 	bool m_bInputEnabled = true;
 	float m_fLeftInputDisabledTime = 0.f;
+
+	/* 무기 */
+	CWeaponSystem* m_pWeaponSystem = nullptr;
 	
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
