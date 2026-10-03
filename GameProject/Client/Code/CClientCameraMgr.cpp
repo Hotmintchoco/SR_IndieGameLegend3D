@@ -36,7 +36,7 @@ HRESULT CClientCameraMgr::Add_Camera(CLIENT_CAMERA_TYPE eType, CCamera* pCamera)
 
 HRESULT CClientCameraMgr::Select_Camera(CLIENT_CAMERA_TYPE eType)
 {
-    Engine::CCamera* pCamera = Find_Camera(eType);
+    CCamera* pCamera = Find_Camera(eType);
 
     if (nullptr == pCamera)
         return E_FAIL;
@@ -45,7 +45,7 @@ HRESULT CClientCameraMgr::Select_Camera(CLIENT_CAMERA_TYPE eType)
     return S_OK;
 }
 
-Engine::CCamera* CClientCameraMgr::Find_Camera(
+CCamera* CClientCameraMgr::Find_Camera(
     CLIENT_CAMERA_TYPE eType) const
 {
     auto iter = m_mapCamera.find(eType);
@@ -56,7 +56,7 @@ Engine::CCamera* CClientCameraMgr::Find_Camera(
     return iter->second;
 }
 
-Engine::CCamera* CClientCameraMgr::Get_ActiveCamera() const
+CCamera* CClientCameraMgr::Get_ActiveCamera() const
 {
     return m_pActiveCamera;
 }

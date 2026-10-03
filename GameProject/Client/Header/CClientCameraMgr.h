@@ -23,8 +23,6 @@ private:
     ~CClientCameraMgr();
 
 public:
-    // 성공하면 매니저가 카메라의 소유권을 넘겨받습니다.
-    // 실패하면 호출자가 카메라를 해제해야 합니다.
     HRESULT         Add_Camera(CLIENT_CAMERA_TYPE eType, Engine::CCamera* pCamera);
 
     HRESULT         Select_Camera(CLIENT_CAMERA_TYPE eType);
