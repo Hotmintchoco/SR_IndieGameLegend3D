@@ -25,9 +25,9 @@ public:
 	HRESULT			Set_PitchLimits(_float fMinPitch, _float fMaxPitch);
 
 protected:
-	void Sync_AnglesFromLook();
-	void Rotate(_float fDeltaYaw, _float fDeltaPitch);
-	void Update_LookFromAngles();
+	void			Sync_AnglesFromLook();
+	void			Rotate(_float fDeltaYaw, _float fDeltaPitch);
+	void			Update_LookFromAngles();
 
 protected:
 	_matrix		m_matView, m_matProj;

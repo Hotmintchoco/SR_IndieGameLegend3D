@@ -654,6 +654,9 @@
     <ClInclude Include="..\Header\CClientCameraMgr.h">
       <Filter>04. Manager\01. Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPlayerCamera.h">
+      <Filter>02. GameObject\04. ClientCamera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -964,6 +967,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CClientCameraMgr.cpp">
       <Filter>04. Manager\01. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerCamera.cpp">
+      <Filter>02. GameObject\04. ClientCamera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

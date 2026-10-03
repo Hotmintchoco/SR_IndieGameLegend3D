@@ -1,7 +1,5 @@
 ﻿#include "CCamera.h"
 
-#include <cmath>
-
 CCamera::CCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
 	, m_fAspect(0.f), m_fFov(0.f), m_fNear(0.f), m_fFar(0.f)

@@ -34,6 +34,7 @@
 #include "CUIMgr.h"
 #include "CHitCreenUI.h"
 #include "CRayCaster.h"
+#include "CPlayerCamera.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -99,9 +100,7 @@ HRESULT CStage::Ready_Scene()
 
 _int CStage::Update_Scene(const _float& fTimeDelta)
 {
-	// Free camera is independent of the player; publish its pose before consumers update.
 	CClientCameraMgr::GetInstance()->Update_Camera(fTimeDelta);
-	CClientCameraMgr::GetInstance()->LateUpdate_Camera(fTimeDelta);
 	_int iExit = CScene::Update_Scene(fTimeDelta);
 	CUIMgr::GetInstance()->Update_UI();
 
@@ -127,6 +126,7 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	CScene::LateUpdate_Scene(fTimeDelta);
+	CClientCameraMgr::GetInstance()->LateUpdate_Camera(fTimeDelta);
 
 	Engine::CCollisionMgr::GetInstance()->Update_Collision();
 	Engine::CCollisionMgr::GetInstance()->Clear_ColliderList();
@@ -136,29 +136,60 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 
 HRESULT CStage::Ready_Camera()
 {
+	// 플레이어 정보
+	CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, 
+										L"GameLogic_Layer", L"Player", L"Com_Transform"));
+
 	auto* pCameraMgr = CClientCameraMgr::GetInstance();
 	pCameraMgr->Free();
-	_vec3 vEye{ 60.f, 2.f, 56.f };
-	_vec3 vAt{ 60.f, 2.f, 60.f };
+
+	CCamera* pCamera = nullptr;
+
+	_vec3 vEye, vAt;
 	_vec3 vUp{ 0.f, 1.f, 0.f };
-	auto* pCamera = CDynamicCamera::Create(m_pGraphicDev, &vEye, &vAt, &vUp);
-	if (!pCamera) return E_FAIL;
+
+	pPlayerTransformCom->Get_Info(INFO_POS, &vEye);
+	pPlayerTransformCom->Get_Info(INFO_LOOK, &vAt);
+
+	pCamera = CDynamicCamera::Create(m_pGraphicDev, &vEye, &vAt, &vUp);
+	if (!pCamera) 
+		return E_FAIL;
+
 	if (FAILED(pCameraMgr->Add_Camera(CLIENT_CAMERA_TYPE::FREE, pCamera)))
 	{
 		pCamera->Release();
 		return E_FAIL;
 	}
-	if (FAILED(pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::FREE))) return E_FAIL;
+
+	pCamera = CPlayerCamera::Create(m_pGraphicDev, pPlayerTransformCom);
+
+	if (!pCamera)
+		return E_FAIL;
+
+	if (FAILED(pCameraMgr->Add_Camera(CLIENT_CAMERA_TYPE::PLAYER, pCamera)))
+	{
+		pCamera->Release();
+		return E_FAIL;
+	}
+
+	if (FAILED(pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::PLAYER)))
+		return E_FAIL;
+
 	pCameraMgr->LateUpdate_Camera(0.f);
+
 	return S_OK;
 }
 
 void CStage::OnEnter()
 {
-	// The stage is cached while the mini-game is open. Restore its camera on return.
-	auto* pCameraMgr = CClientCameraMgr::GetInstance();
-	if (SUCCEEDED(pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::FREE)))
-		pCameraMgr->LateUpdate_Camera(0.f);
+	if (SUCCEEDED(CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::PLAYER)))
+		CClientCameraMgr::GetInstance()->LateUpdate_Camera(0.f);
+}
+
+void CStage::OnExit()
+{
+	CSoundMgr::GetInstance()->StopBGM();
+
 }
 
 void CStage::Render_Scene()

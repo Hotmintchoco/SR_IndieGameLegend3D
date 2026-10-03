@@ -21,7 +21,9 @@ public:
 	virtual			_int		Update_Scene(const _float& fTimeDelta);
 	virtual			void		LateUpdate_Scene(const _float& fTimeDelta);
 	virtual			void		Render_Scene();
-	void OnEnter() override;
+
+	virtual			void		OnEnter() override;
+	virtual			void		OnExit() override;
 
 	virtual HRESULT Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject) override;
 
@@ -43,7 +45,7 @@ private:
 	HRESULT			Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx);
 	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
 	HRESULT			Ready_Light();
-	HRESULT Ready_Camera();
+	HRESULT			Ready_Camera();
 
 	void CheckRoomChanged();
 	int CalculateRoomIndexFromPlayerPosition();

@@ -3,7 +3,7 @@
 #include "CDInputMgr.h"
 
 CDynamicCamera::CDynamicCamera(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CCamera(pGraphicDev) , m_bFix(true), m_bCheck(true), m_fSpeed(0.f)
+	: CCamera(pGraphicDev), m_bFix(true), m_bCheck(true), m_fSpeed(0.f)
 {
 }
 
@@ -61,7 +61,6 @@ _int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 
 void CDynamicCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	
 }
 
 void CDynamicCamera::Key_Input(const _float& fTimeDelta)
@@ -143,6 +142,7 @@ void CDynamicCamera::Mouse_Move()
     Rotate(D3DXToRadian(mouseX / 10.f), D3DXToRadian(mouseY / 10.f));
     Update_LookFromAngles();
 }
+
 void CDynamicCamera::Mouse_Fix()
 {
 	POINT			ptMouseCenter{ WINCX >> 1, WINCY >> 1 };
