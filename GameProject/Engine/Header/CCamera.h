@@ -16,8 +16,11 @@ public:
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 
+	// Manager order: Update -> optional LateUpdate -> matrices -> active camera apply.
 	void			Update_Matrices();
 	void			Apply_Transform();
+	void GetWorld(_matrix* pWorld) const { D3DXMatrixInverse(pWorld, nullptr, &m_matView); }
+	_float Get_Yaw() const { return atan2f(m_vAt.x - m_vEye.x, m_vAt.z - m_vEye.z); }
 
 protected:
 	_matrix		m_matView, m_matProj;

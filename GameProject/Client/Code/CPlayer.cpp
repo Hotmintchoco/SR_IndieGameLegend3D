@@ -7,7 +7,8 @@
 #include "CSphereCollider.h"
 #include "CCollisionMgr.h"
 #include "CImGuiTool.h"
-#include "CCameraMgr.h"
+#include "CClientCameraMgr.h"
+#include "CCamera.h"
 #include "CGameStatus.h"
 #include "CRoomLayer.h"
 #include "CUI.h"
@@ -147,8 +148,8 @@ void CPlayer::RenderImGui()
 
 
     /* 카메라 */
-    _float fAngle;
-    CCameraMgr::GetInstance()->Get_CameraAngle(&fAngle);
+    auto* pCamera = CClientCameraMgr::GetInstance()->Get_ActiveCamera();
+    _float fAngle = pCamera ? D3DXToDegree(pCamera->Get_Yaw()) : 0.f;
     ImGui::Text("Camera Angle : %.2f", fAngle);
 
     ImGui::End();
@@ -226,39 +227,10 @@ HRESULT CPlayer::Add_Component()
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
 
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_B)) // 카메라워크 테스트용
-    {
-        /* 구조체를 통한 워킹구현 */
-        
-        /*
-        CAMERA_MOVE camMove;
-
-        camMove.eyeMoveAttr = EYE_LINEAR;
-        camMove.atMoveAttr = AT_POINT_LINEAR;
-        camMove.vEyeInfo[EYE_FROM] = { 50.f, 2.f, 50.f };
-        camMove.vEyeInfo[EYE_TO] = { 70.f, 3.f, 70.f };
-        camMove.vAtInfo[AT_FROM] = { 55.f, 2.f, 55.f };
-        camMove.vAtInfo[AT_TO] = { 70.f, 10.f, 70.f };
-        camMove.fTime = 2.f;
-        CCameraMgr::GetInstance()->SetCameraMove(camMove);
-        */
-        
-        /* 벡터 주시 선형이동 */
-
-        //CCameraMgr::GetInstance()->SetCameraMove({ 55.f, 3.f, 55.f }, { 65.f, 3.f, 65.f }, { 0.f, 0.2f, 1.f }, 2.f);
-
-        /* 점 주시 선형이동 */
-
-        //CCameraMgr::GetInstance()->SetCameraMoveAt({ 55.f, 3.f, 55.f }, { 65.f, 1.5f, 65.f }, { 55.f, 2.f, 60.f }, 2.f);
-
-        /* 메가마우스 추적 */
-        
-        CCameraMgr::GetInstance()->SetCameraTrace(L"Room_10_Layer", L"Room_10_MegaMouth_1", 2.f);
-        
-        Freeze(2.f);
-        GiveInvTime(2.f);
-    }
-
+    auto* pCameraMgr = CClientCameraMgr::GetInstance();
+    auto* pActiveCamera = pCameraMgr->Get_ActiveCamera();
+    if (pActiveCamera && pActiveCamera == pCameraMgr->Find_Camera(CLIENT_CAMERA_TYPE::FREE))
+        return; // The free camera owns movement and cursor input.
     _vec3	vLook;
     _vec3   vRight;
     _float fSpeed = 5.f * m_fFrictionForce;

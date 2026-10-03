@@ -37,7 +37,6 @@ HRESULT CCamera::Ready_GameObject()
 
 _int CCamera::Update_GameObject(const _float& fTimeDelta)
 {
-	Update_Matrices();
 	return 0;
 }
 

@@ -6,7 +6,8 @@
 #include "CCollisionMgr.h"
 #include "Client_Enum.h"
 #include "CManagement.h"
-#include "CCameraMgr.h"
+#include "CClientCameraMgr.h"
+#include "CCamera.h"
 #include "CImGuiTool.h"
 #include "CRoomLayer.h"
 #include "IReflectable.h"
@@ -287,7 +288,8 @@ HRESULT CLaser::Add_Component()
 
 void CLaser::BillBoardRoll()
 {
-    CCameraObj* pCamera = CCameraMgr::GetInstance()->GetCamera(L"Camera_Player_FPV");
+    CCamera* pCamera = CClientCameraMgr::GetInstance()->Get_ActiveCamera();
+    if (!pCamera) return;
     _matrix matCamWorld;
     pCamera->GetWorld(&matCamWorld);
 

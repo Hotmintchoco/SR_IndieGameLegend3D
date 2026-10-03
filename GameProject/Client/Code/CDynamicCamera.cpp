@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CDynamicCamera.h"
 #include "CDInputMgr.h"
 
@@ -44,13 +44,6 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 
 _int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 {
-	_int iExit = CCamera::Update_GameObject(fTimeDelta);
-
-	return iExit;
-}
-
-void CDynamicCamera::LateUpdate_GameObject(const _float& fTimeDelta)
-{
 	Key_Input(fTimeDelta);
 
 	if (m_bFix)
@@ -60,52 +53,49 @@ void CDynamicCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 	}
 
 
-	CCamera::LateUpdate_GameObject(fTimeDelta);
+	return 0;
+}
+
+void CDynamicCamera::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+	// Input is processed once in Update; matrix updates belong to the manager.
 }
 
 void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 {
-	_matrix		matCamWorld;
-	D3DXMatrixInverse(&matCamWorld, 0, &m_matView);
+	// Use camera state directly; the manager has not rebuilt this frame's View yet.
+	_vec3 vLook = m_vAt - m_vEye;
+	D3DXVec3Normalize(&vLook, &vLook);
+	_vec3 vRight;
+	D3DXVec3Cross(&vRight, &m_vUp, &vLook);
+	D3DXVec3Normalize(&vRight, &vRight);
 
-	if (CDInputMgr::GetInstance()->Key_Press(DIK_D))
+	if (CDInputMgr::GetInstance()->Key_Press(DIK_RIGHT))
 	{
-		_vec3 vRight;
-		memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
-
 		_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * m_fSpeed;
 
 		m_vEye += vLength;
 		m_vAt  += vLength;
 	}
 
-	if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
+	if (CDInputMgr::GetInstance()->Key_Press(DIK_LEFT))
 	{
-		_vec3 vRight;
-		memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
-
 		_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * m_fSpeed;
 
 		m_vEye -= vLength;
 		m_vAt  -= vLength;
 	}
 
-	if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
+	if (CDInputMgr::GetInstance()->Key_Press(DIK_UP))
 	{
-		_vec3 vLook;
-		memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
-
 		_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed;
 
 		m_vEye += vLength;
 		m_vAt  += vLength;
 	}
 
-	if (CDInputMgr::GetInstance()->Key_Press(DIK_S))
+	if (CDInputMgr::GetInstance()->Key_Press(DIK_DOWN))
 	{
-		_vec3 vLook;
-		memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
-
 		_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed;
 
 		m_vEye -= vLength;
@@ -125,6 +115,11 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		else
 			m_bFix = true;
 
+		if (m_bFix)
+			while (::ShowCursor(FALSE) >= 0) {}
+		else
+			while (::ShowCursor(TRUE) < 0) {}
+
 	}
 	
 	else
@@ -141,16 +136,15 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 
 void CDynamicCamera::Mouse_Move()
 {
-	_matrix		matCamWorld;
-	D3DXMatrixInverse(&matCamWorld, 0, &m_matView);
+	_vec3 vLookDirection = m_vAt - m_vEye;
+	_vec3 vRight;
+	D3DXVec3Cross(&vRight, &m_vUp, &vLookDirection);
+	D3DXVec3Normalize(&vRight, &vRight);
 
 	_long dwMouseMove(0);
 
 	if (dwMouseMove = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Y))
 	{
-		_vec3 vRight;
-		memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
-
 		_vec3 vLook = m_vAt - m_vEye;
 
 		_matrix	matRot;

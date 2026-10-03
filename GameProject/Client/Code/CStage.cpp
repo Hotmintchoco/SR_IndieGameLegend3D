@@ -5,7 +5,8 @@
 #include "CPlayer.h"
 #include "CTerrain.h"
 #include "CDynamicCamera.h"
-#include "CCameraMgr.h"
+#include "CClientCameraMgr.h"
+#include "CCamera.h"
 #include "CSkyBox.h"
 #include "CLightMgr.h"
 #include "CWeaponSystem.h"
@@ -36,7 +37,7 @@
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
-	, m_CurCamera(CAMERA_FPV_PERSPECTIVE)
+
 {
 }
 
@@ -66,16 +67,7 @@ HRESULT CStage::Ready_Scene()
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
 		return E_FAIL;
 
-	if (FAILED(CCameraMgr::GetInstance()->Ready_Camera(L"Camera_Player_FPV", CAMERA_FPV_PERSPECTIVE, m_pGraphicDev)))
-		return E_FAIL;
-
-	if (FAILED(CCameraMgr::GetInstance()->Ready_Camera(L"Camera_Player_TPV", CAMERA_TPV_PERSPECTIVE, m_pGraphicDev)))
-		return E_FAIL;
-
-	if (FAILED(CCameraMgr::GetInstance()->Ready_Camera(L"Camera_Free", CAMERA_FREE_PERSPECTIVE, m_pGraphicDev)))
-		return E_FAIL;
-
-	if (FAILED(CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_FPV")))
+	if (FAILED(Ready_Camera()))
 		return E_FAIL;
 
 	// 충돌 그룹 설정
@@ -107,45 +99,11 @@ HRESULT CStage::Ready_Scene()
 
 _int CStage::Update_Scene(const _float& fTimeDelta)
 {
+	// Free camera is independent of the player; publish its pose before consumers update.
+	CClientCameraMgr::GetInstance()->Update_Camera(fTimeDelta);
+	CClientCameraMgr::GetInstance()->LateUpdate_Camera(fTimeDelta);
 	_int iExit = CScene::Update_Scene(fTimeDelta);
 	CUIMgr::GetInstance()->Update_UI();
-
-	//Camera Update
-
-	CTransform* pPlayerTrans = static_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-	_vec3 vPlayerLook;
-	_vec3 vPlayerPos;
-	_vec3 vPlayerRight;
-	pPlayerTrans->Get_Info(INFO_LOOK, &vPlayerLook);
-	pPlayerTrans->Get_Info(INFO_POS, &vPlayerPos);
-	pPlayerTrans->Get_Info(INFO_RIGHT, &vPlayerRight);
-
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_V))
-	{
-		CPlayer* pPlayer = nullptr;
-		switch (m_CurCamera)
-		{
-		case CAMERA_FPV_PERSPECTIVE : 
-			CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_TPV");
-			m_CurCamera = CAMERA_TPV_PERSPECTIVE;
-			break;
-		case CAMERA_TPV_PERSPECTIVE : 
-			CCameraMgr::GetInstance()->Select_Camera(L"Camera_Free");
-			pPlayer = dynamic_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
-			if (pPlayer != nullptr) pPlayer->Freeze();
-			m_CurCamera = CAMERA_FREE_PERSPECTIVE;
-			break;
-		case CAMERA_FREE_PERSPECTIVE : 
-			CCameraMgr::GetInstance()->Select_Camera(L"Camera_Player_FPV");
-			pPlayer = dynamic_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
-			if (pPlayer != nullptr) pPlayer->Unfreeze();
-			m_CurCamera = CAMERA_FPV_PERSPECTIVE;
-			break;
-		}
-	}
-
-	CCameraMgr::GetInstance()->Update_Camera(fTimeDelta, vPlayerLook, vPlayerPos, vPlayerRight);
 
 	// Scene Change
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
@@ -173,7 +131,34 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 	Engine::CCollisionMgr::GetInstance()->Update_Collision();
 	Engine::CCollisionMgr::GetInstance()->Clear_ColliderList();
 
-	CCameraMgr::GetInstance()->LateUpdate_Camera(fTimeDelta);
+
+}
+
+HRESULT CStage::Ready_Camera()
+{
+	auto* pCameraMgr = CClientCameraMgr::GetInstance();
+	pCameraMgr->Free();
+	_vec3 vEye{ 60.f, 2.f, 56.f };
+	_vec3 vAt{ 60.f, 2.f, 60.f };
+	_vec3 vUp{ 0.f, 1.f, 0.f };
+	auto* pCamera = CDynamicCamera::Create(m_pGraphicDev, &vEye, &vAt, &vUp);
+	if (!pCamera) return E_FAIL;
+	if (FAILED(pCameraMgr->Add_Camera(CLIENT_CAMERA_TYPE::FREE, pCamera)))
+	{
+		pCamera->Release();
+		return E_FAIL;
+	}
+	if (FAILED(pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::FREE))) return E_FAIL;
+	pCameraMgr->LateUpdate_Camera(0.f);
+	return S_OK;
+}
+
+void CStage::OnEnter()
+{
+	// The stage is cached while the mini-game is open. Restore its camera on return.
+	auto* pCameraMgr = CClientCameraMgr::GetInstance();
+	if (SUCCEEDED(pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::FREE)))
+		pCameraMgr->LateUpdate_Camera(0.f);
 }
 
 void CStage::Render_Scene()
