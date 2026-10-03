@@ -310,10 +310,6 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Button_Down_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/ButtonDown_Diffuse.png", 1))))
         return E_FAIL;
 
-    /* 안개 */
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Fog_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/fog.png", 1))))
-        return E_FAIL;
-
     /* 문 */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Door_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/door_%d.png", 5))))
         return E_FAIL;

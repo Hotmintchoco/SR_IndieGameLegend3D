@@ -21,6 +21,8 @@ public:
 	virtual			void		LateUpdate_GameObject(_float fTimeDelta);
 	virtual			void		Render_GameObject();
 
+	inline void SetOpacity(int iOpacity) { m_iTextureIdx = iOpacity; }
+
 private:
 	HRESULT			Add_Component();
 
@@ -28,6 +30,8 @@ private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
+
+	float m_iTextureIdx = -1;
 
 public:
 	static CFog* Create(LPDIRECT3DDEVICE9 pGraphicDev);

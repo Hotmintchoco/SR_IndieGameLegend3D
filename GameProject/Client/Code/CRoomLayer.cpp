@@ -98,24 +98,29 @@ void CRoomLayer::PlayerTileInteraction()
 bool CRoomLayer::IsValidUpdateTarget()
 {
 	CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-	if (pStage->GetCurrentRoomLayer() == this) return true;
+	return pStage->GetCurrentRoomLayer() == this;
 
-	const pair<int, int> CurrentRoomIndex = pStage->GetCurrentRoomLayer()->GetIndex2D();
-	const auto [iCurRow, iCurCol] = CurrentRoomIndex;
-	
-	const pair<int, int> RoomIndex = GetIndex2D();
-	const auto [iTargetRow, iTargetCol] = RoomIndex;
+	//////////////////////////////////////////////////////////////////////////////////
 
-	static const vector<pair<int, int>> Dir = { { 0, -1 }, {1, 0}, {0, 1}, {-1, 0} };
-	for (const auto& [dr, dc] : Dir)
-	{
-		if ((iCurRow + dr == iTargetRow) && (iCurCol + dc == iTargetCol))
-		{
-			return true;
-		}
-	}
-
-	return false;
+	// CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+	// if (pStage->GetCurrentRoomLayer() == this) return true;
+	// 
+	// const pair<int, int> CurrentRoomIndex = pStage->GetCurrentRoomLayer()->GetIndex2D();
+	// const auto [iCurRow, iCurCol] = CurrentRoomIndex;
+	// 
+	// const pair<int, int> RoomIndex = GetIndex2D();
+	// const auto [iTargetRow, iTargetCol] = RoomIndex;
+	// 
+	// static const vector<pair<int, int>> Dir = { { 0, -1 }, {1, 0}, {0, 1}, {-1, 0} };
+	// for (const auto& [dr, dc] : Dir)
+	// {
+	// 	if ((iCurRow + dr == iTargetRow) && (iCurCol + dc == iTargetCol))
+	// 	{
+	// 		return true;
+	// 	}
+	// }
+	// 
+	// return false;
 }
 
 void CRoomLayer::LateUpdate_Layer(_float fTimeDelta)
@@ -291,13 +296,16 @@ HRESULT CRoomLayer::SpawnRoom()
 				if (FAILED(Add_GameObject(wstrDoorName, pGameObject)))
 					return E_FAIL;
 
+				if (i == 4) static_cast<CFog*>(pGameObject)->SetOpacity(100);
+				else static_cast<CFog*>(pGameObject)->SetOpacity(40);
+
 				CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
 
 				pTransformCom->Set_Scale(_vec3{ 0.5f, 0.75f, 1.f });
 				pTransformCom->Set_Pos(vRoomCenterPos.x, 0.75f, vRoomCenterPos.z);
 				pTransformCom->Rotation(ROT_Y, 90.f * iDir);
 
-				pTransformCom->Move_Pos(&vDir, 5.7f + (iDir % 2) * 1.f + 0.2f * i, 1.f);
+				pTransformCom->Move_Pos(&vDir, 5.7f + (iDir % 2) * 1.f + 0.22f * i, 1.f);
 			}
 
 			/* 문 쪽 타일 */
