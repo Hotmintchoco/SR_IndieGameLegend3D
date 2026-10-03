@@ -38,18 +38,21 @@ public:
 	virtual void	OnCollisionStay(COLLINFO eCollInfo);
 	virtual void	OnCollisionExit(COLLINFO eCollInfo);
 
-	virtual void SyncPositionToOwner() PURE;
+	virtual void	SyncPositionToOwner() PURE;
 
 public:
 	virtual _int	Update_Component(const _float& fTimeDelta) { return 0; };
 	virtual void	LateUpdate_Component() {}
 
 	/* Interface IRenderable */
-	virtual void Render(LPDIRECT3DDEVICE9& pGraphicDev) {}
-	virtual _float Get_ViewZ() override;
-	virtual _float Get_Z() { return 0.f; }
-	virtual CBase* GetBase() { return static_cast<CBase*>(this); }
+	virtual void	Render(LPDIRECT3DDEVICE9& pGraphicDev) {}
+	virtual _float	Get_ViewZ() override;
+	virtual _float	Get_Z() { return 0.f; }
+	virtual CBase*	GetBase() { return static_cast<CBase*>(this); }
 	/* ---------------------- */
+
+	void			Set_DiffPos(const _vec3& vDiffPos) { m_vDiffPos = vDiffPos; }
+	_vec3			Get_DiffPos() { return m_vDiffPos; }
 
 public:
 	virtual CComponent* Clone() PURE;
@@ -64,6 +67,8 @@ protected:
 
 	COLLIDER_TYPE	m_eColliderType = CT_NONE;
 	_int			m_iCollisionID = COLL_END;
+
+	_vec3 			m_vDiffPos = _vec3{ 0.f, 0.f, 0.f };
 
 private:
 	static _uint	s_iNextColliderId;

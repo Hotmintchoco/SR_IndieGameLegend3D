@@ -38,7 +38,7 @@ HRESULT CPlayer::Ready_GameObject()
 
     m_pColliderCom->Set_Radius(0.5f);
 	m_pColliderCom->Set_CollisionID(COLL_PLAYER);
-
+    //m_pColliderCom->Set_DiffPos({ 0.f, -1.f, 0.f });
 
 	m_pTransformCom->Set_Pos({ 60.f, 1.f, 60.f });
 

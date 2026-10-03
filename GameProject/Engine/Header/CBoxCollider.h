@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CCollider.h"
 
 BEGIN(Engine)
@@ -25,9 +25,6 @@ public:
 	void			Set_Extents(const _float& fX, const _float& fY, const _float& fZ);
 	void			Set_Radius(const _float& fRadius) override;
 
-	void			Set_DiffPos(const _vec3& vDiffPos) { m_vDiffPos = vDiffPos; }
-	_vec3			Get_DiffPos() { return m_vDiffPos; }
-
 	void			Render_DebugCube();
 
 	/* Interface IRenderable */
@@ -41,7 +38,6 @@ private:
 	virtual void SyncPositionToOwner() override;
 
 	CCubeTex*		m_pDebugCubeTex = nullptr;
-	_vec3 			m_vDiffPos = _vec3{ 0.f, 0.f, 0.f };
 
 public:
 	static CCollider* Create(LPDIRECT3DDEVICE9 pGraphicDev);
