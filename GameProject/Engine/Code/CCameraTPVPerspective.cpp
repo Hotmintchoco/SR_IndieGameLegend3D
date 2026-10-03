@@ -32,7 +32,7 @@ HRESULT CCameraTPVPerspective::Ready_Camera()
 void CCameraTPVPerspective::Update_Camera(const _float& fTimeDelta, const _vec3& vTargetLook, const _vec3& vTargetPos, const _vec3& vTargetRight)
 {
 	_vec3   vLook = vTargetLook;
-	_vec3   vPos = vTargetPos;
+	_vec3   vPos = vTargetPos + _vec3{ 0.f, 1.f, 0.f };
 	_vec3	vRight = vTargetRight;
 	_matrix matAxis;
 

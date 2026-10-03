@@ -75,7 +75,7 @@ HRESULT CHeart::Add_Component()
 void CHeart::Consume()
 {
     CPlayer* pPlayer = static_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
-    pPlayer->GetItem(ITEMID::ITEM_HEAL);
+    pPlayer->RestoreHP(1);
 
     Set_Dead(true);
 

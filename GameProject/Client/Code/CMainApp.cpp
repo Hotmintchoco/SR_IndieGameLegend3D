@@ -17,6 +17,7 @@
 #include "CDebugMgr.h"
 #include "CSoundMgr.h"
 #include "CUIMgr.h"
+#include "CCursorPolicyMgr.h"
 #include "CRenderer.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
@@ -60,6 +61,7 @@ int CMainApp::Update_MainApp(_float fTimeDelta)
 		CRenderer::GetInstance()->Set_WaterDropParameters(0.04f, 2.f);
 	}
 	CRenderer::GetInstance()->Update_PulseEffect(fTimeDelta);
+	CCursorPolicyMgr::GetInstance()->Update();
 
 	m_pManagementClass->Update_Scene(min(fTimeDelta, 0.01f));
 
@@ -179,6 +181,7 @@ void CMainApp::Free()
 	CDebugMgr::DestroyInstance();
 	CSoundMgr::DestroyInstance();
 	CUIMgr::DestroyInstance();
+	CCursorPolicyMgr::DestroyInstance();
 
 	m_pManagementClass->DestroyInstance();
 	m_pDeviceClass->DestroyInstance();

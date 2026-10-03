@@ -1,27 +1,22 @@
 ﻿#include "pch.h"
 #include "CPlayer.h"
 #include "CProtoMgr.h"
-#include "CManagement.h"
-#include "CDInputMgr.h"
-#include "CTerrain.h"
-#include "CSphereCollider.h"
-#include "CCollisionMgr.h"
-#include "CImGuiTool.h"
-#include "CCameraMgr.h"
-#include "CGameStatus.h"
-#include "CRoomLayer.h"
-#include "CUI.h"
-#include "CStage.h"
-#include "CHitCreenUI.h"
 #include "CTimerMgr.h"
+#include "CStage.h"
+#include "CManagement.h"
+#include "CPlayerAnimator.h"
+#include "CMovement.h"
+#include "CPlayerPartTex.h"
+#include "CDInputMgr.h"
+#include "CPlayerMovement.h"
+#include "CCursorPolicyMgr.h"
+#include "CUIMgr.h"
+#include "CCollisionMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_bFix(true), m_bCheck(true), m_iHP(12), m_iMaxHP(12), m_fInvTime(2.f)
-    , m_bDeathState(false), m_fRespawnTimer(0.f)
-    , m_vKnockbackDir(0.f, 0.f, 0.f), m_fKnockbackSpeed(0.f), m_fFreezeTimer(0.f)
+    :CGameObject(pGraphicDev)
 {
 }
-
 
 CPlayer::~CPlayer()
 {
@@ -29,198 +24,93 @@ CPlayer::~CPlayer()
 
 HRESULT CPlayer::Ready_GameObject()
 {
-    if (FAILED(Add_Component()))
-        return E_FAIL;
+	if (FAILED(Add_Component()))
+		return E_FAIL;
 
-    ::ShowCursor(FALSE);
+	if (FAILED(CGameObject::Ready_GameObject()))
+		return E_FAIL;
 
-	__super::Ready_GameObject();
-
-    m_pColliderCom->Set_Radius(0.5f);
+	m_pColliderCom->Set_Radius(m_fColliderScale);
+    m_pColliderCom->Set_DiffPos(_vec3{0.f, 0.5f, 0.f});
 	m_pColliderCom->Set_CollisionID(COLL_PLAYER);
-    //m_pColliderCom->Set_DiffPos({ 0.f, -1.f, 0.f });
 
-	m_pTransformCom->Set_Pos({ 60.f, 1.f, 60.f });
-
-    return S_OK;
+	return S_OK;
 }
 
 _int CPlayer::Update_GameObject(_float fTimeDelta)
 {
-    /* 성철 : 커스텀 시간 스케일 적용을 위함 */
-    fTimeDelta *= CTimerMgr::GetInstance()->GetGroupTimeScale(TG_PLAYER);
-    /* --------------------------------- */
+	/* 캐릭터 타임스케일 */
+	fTimeDelta *= CTimerMgr::GetInstance()->GetGroupTimeScale(TG_PLAYER);
 
-    _vec3   vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    Compute_ViewZ(&vPos);
+    int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-    if (m_bDeathState)
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+
+    if (m_bInputEnabled)
     {
-        m_fRespawnTimer -= fTimeDelta;
-        if (m_fRespawnTimer <= 0.f)
-            Respawn();
-    }
-    else
-    {
-        Key_Input(fTimeDelta);
-        Update_Knockback(fTimeDelta);
+	    KeyInput();
     }
 
-    m_fFreezeTimer -= fTimeDelta;
-    if (m_fFreezeTimer < 0.f) m_fFreezeTimer = 0.f;
+	CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+	if (CStage* pStage = dynamic_cast<CStage*>(pScene))
+	{
+		pStage->UpdatePlayerPosition(m_pTransformCom->Get_Info_Value(INFO_POS));
+	}
 
-    m_fInvTime -= fTimeDelta;
-    if (m_fInvTime < 0.f) m_fInvTime = 0.f;
-
-    _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
-
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
-
-    /* 성철 : 매니저 객체로 게임 상태를 관리하기 위해 추가. 문제 발생 시 말해줘 */
-    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
-    if (CStage* pStage = dynamic_cast<CStage*>(pScene))
+    if (m_bInvincible)
     {
-        pStage->UpdatePlayerPosition(vPos);
+        m_fLeftInvincibleTime -= fTimeDelta;
+        if (m_fLeftInvincibleTime <= 0.f)
+        {
+            m_bInvincible = false;
+        }
     }
-    /* ---------------------------------------------------------------- */
 
-    // 정민 : HP가 감소하면 UI 적용
-    Update_HPUI();
+    if (m_fLeftInputDisabledTime > 0.f)
+    {
+        m_fLeftInputDisabledTime -= fTimeDelta;
+        if (m_fLeftInputDisabledTime <= 0.f)
+        {
+            m_bInputEnabled = true;
+            m_fLeftInputDisabledTime = 0.f;
+        }
+    }
 
-    return iExit;
+    m_pAnimator->TransformPropagation(*m_pTransformCom->Get_World());
+
+	return iExit;
 }
 
 void CPlayer::LateUpdate_GameObject(_float fTimeDelta)
 {
-    /* 성철 : 커스텀 시간 스케일 적용을 위함 */
     fTimeDelta *= CTimerMgr::GetInstance()->GetGroupTimeScale(TG_PLAYER);
-    /* --------------------------------- */
 
-    CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
     CGameObject::LateUpdate_GameObject(fTimeDelta);
-
 }
 
 void CPlayer::Render_GameObject()
 {
-    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-
-    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-   
     m_pTextureCom->Set_Texture(0);
-    m_pBufferCom->Render_Buffer();
 
-    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+    for (int i = 0; i < PP_END; ++i)
+    {
+        m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pBufferTransformCom[i]->Get_World());
+        m_pBufferCom[i]->Render_Buffer();
+    }
 
-#ifdef _DEBUG
-     //RenderImGui();
-#endif
-}
-
-void CPlayer::RenderImGui()
-{
-    /* ImGui */
-    ImGui::Begin("Player Debug Information");
-
-    /* 위치 */
-    _vec3 vPlayerPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-    ImGui::Text("Pos : %.2f, %.2f, %.2f", vPlayerPos.x, vPlayerPos.y, vPlayerPos.z);
-
-    /* 상하좌우 키 입력 */
-
-    char cKeyStateQ = ' ';
-    char cKeyStateW = ' ';
-    char cKeyStateA = ' ';
-    char cKeyStateS = ' ';
-    char cKeyStateD = ' ';
-    char cKeyStateF = ' ';
-    char cKeyStateC = ' ';
-    const char* cKeyStateShift = "     ";
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_Q)) cKeyStateQ = 'Q';
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_W)) cKeyStateW = 'W';
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_A)) cKeyStateA = 'A';
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_S)) cKeyStateS = 'S';
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_D)) cKeyStateD = 'D';
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_F)) cKeyStateF = 'F';
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT)) cKeyStateShift = "SHIFT";
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_C)) cKeyStateC = 'C';
-
-
-    ImGui::Text("KEY INPUT STATE");
-    ImGui::Text("       [%c][%c]", cKeyStateQ, cKeyStateW);
-    ImGui::Text("       [%c][%c][%c][%c]", cKeyStateA, cKeyStateS, cKeyStateD, cKeyStateF);
-    ImGui::Text("[%s]            [%c]", cKeyStateShift, cKeyStateC);
-
-
-    /* 카메라 */
-    _float fAngle;
-    CCameraMgr::GetInstance()->Get_CameraAngle(&fAngle);
-    ImGui::Text("Camera Angle : %.2f", fAngle);
-
-    ImGui::End();
-}
-
-void CPlayer::OnCollisionEnter(COLLINFO eCollInfo)
-{
-    auto pOther = eCollInfo.pOtherCollider->Get_Owner();
-
-    MonsterCollision(pOther, Find_OtherCollider(pOther));
-}
-
-void CPlayer::OnCollisionStay(COLLINFO eCollInfo)
-{
-    auto pOther = eCollInfo.pOtherCollider->Get_Owner();
-
-    // 장애물과 충돌 시에 마찰력 적용
-    CCollider* pOtherCollider = Find_OtherCollider(pOther);
-
-    MonsterCollision(pOther, pOtherCollider);
-    
-}
-
-CCollider* CPlayer::Find_OtherCollider(CGameObject* pOther)
-{
-    if (nullptr == pOther)
-        return nullptr;
-
-    CCollider* pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider"));
-    if (nullptr == pOtherCollider)
-        pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider0"));
-    if (nullptr == pOtherCollider)
-        pOtherCollider = dynamic_cast<CCollider*>(pOther->Get_Component(ID_DYNAMIC, L"Com_Collider1"));
-
-    return pOtherCollider;
+     //m_pAnimator->RenderDebugTransform();
 }
 
 HRESULT CPlayer::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
-    // RcCol
-    pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
-    if (nullptr == pComponent)
-        return E_FAIL;
-    m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
-
-    // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTexture"));
-    if (nullptr == pComponent)
-        return E_FAIL;
-    m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
-    
     // Transform
     pComponent = m_pTransformCom = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
     if (nullptr == pComponent)
         return E_FAIL;
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
-
-    // Calculator
-    pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Calculator"));
-    if (nullptr == pComponent)
-        return E_FAIL;
-    m_mapComponent[ID_STATIC].insert({ L"Com_Calculator", pComponent });
 
     // Collider
     pComponent = m_pColliderCom = dynamic_cast<CCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SphereCollider"));
@@ -228,374 +118,188 @@ HRESULT CPlayer::Add_Component()
         return E_FAIL;
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });
 
+    // Texture
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Player_Texture"));
+    if (nullptr == pComponent)
+        return E_FAIL;
+    m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+
+    /* Animator */
+    array<TPlayerBuffer, PP_END> arrBuffer;
+    array<wstring, PP_END> arrPartName = { L"Head", L"Body", L"LArm", L"RArm", L"LLeg", L"RLeg" };
+
+    for (int i = 0; i < PP_END; ++i)
+    {
+        wstring wstrName = L"Proto_Player_" + arrPartName[i] + L"_Vertex";
+        CPlayerPartTex* pBuffer = m_pBufferCom[i] = dynamic_cast<CPlayerPartTex*>(CProtoMgr::GetInstance()->Clone_Prototype(wstrName.c_str()));
+
+        if (nullptr == pBuffer)
+            return E_FAIL;
+
+        wstrName = L"Com_Buffer_" + arrPartName[i];
+        m_mapComponent[ID_STATIC].insert({ wstrName.c_str(), pBuffer });
+
+        CTransform* pTransform = m_pBufferTransformCom[i] = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
+        pTransform->SetUseLocal(true);
+
+        if (nullptr == pTransform)
+            return E_FAIL;
+
+        wstrName = L"Com_BufferTransform_" + arrPartName[i];
+        m_mapComponent[ID_DYNAMIC].insert({ wstrName.c_str(), pTransform });
+
+        arrBuffer[i] = TPlayerBuffer{ pBuffer, pTransform };
+    }
+
+    m_pAnimator = CPlayerAnimator::Create(m_pGraphicDev);
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_PlayerAnimator", m_pAnimator });
+
+    m_pAnimator->SetBuffer(arrBuffer);
+
+    /* Movement */
+    m_pMovement = CPlayerMovement::Create(m_pGraphicDev);
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_PlayerMovement", m_pMovement });
+    m_pMovement->AttachTransform(m_pTransformCom);
+
     return S_OK;
 }
 
-void CPlayer::Key_Input(const _float& fTimeDelta)
+void CPlayer::KeyInput()
 {
+    m_pMovement->SetSprint(CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT));
 
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_B)) // 카메라워크 테스트용
-    {
-        /* 구조체를 통한 워킹구현 */
-        
-        /*
-        CAMERA_MOVE camMove;
-
-        camMove.eyeMoveAttr = EYE_LINEAR;
-        camMove.atMoveAttr = AT_POINT_LINEAR;
-        camMove.vEyeInfo[EYE_FROM] = { 50.f, 2.f, 50.f };
-        camMove.vEyeInfo[EYE_TO] = { 70.f, 3.f, 70.f };
-        camMove.vAtInfo[AT_FROM] = { 55.f, 2.f, 55.f };
-        camMove.vAtInfo[AT_TO] = { 70.f, 10.f, 70.f };
-        camMove.fTime = 2.f;
-        CCameraMgr::GetInstance()->SetCameraMove(camMove);
-        */
-        
-        /* 벡터 주시 선형이동 */
-
-        //CCameraMgr::GetInstance()->SetCameraMove({ 55.f, 3.f, 55.f }, { 65.f, 3.f, 65.f }, { 0.f, 0.2f, 1.f }, 2.f);
-
-        /* 점 주시 선형이동 */
-
-        //CCameraMgr::GetInstance()->SetCameraMoveAt({ 55.f, 3.f, 55.f }, { 65.f, 1.5f, 65.f }, { 55.f, 2.f, 60.f }, 2.f);
-
-        /* 메가마우스 추적 */
-        
-        CCameraMgr::GetInstance()->SetCameraTrace(L"Room_10_Layer", L"Room_10_MegaMouth_1", 2.f);
-        
-        Freeze(2.f);
-        GiveInvTime(2.f);
-    }
-
-    _vec3	vLook;
-    _vec3   vRight;
-    _float fSpeed = 5.f * m_fFrictionForce;
-
-    if (m_fFreezeTimer > 0.f) goto FREEZE;
-
-
-    m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
-    m_pTransformCom->Get_Info(INFO_RIGHT, &vRight);
-
-
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
-    {
-        fSpeed *= 2;
-    }
-
-
+    _vec2 vCommand{ 0.f, 0.f }; // (x, z)
     if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
     {
-        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vLook, &vLook), fSpeed, fTimeDelta);
+        vCommand += _vec2{ 0.f, 1.f };
     }
-
     if (CDInputMgr::GetInstance()->Key_Press(DIK_S))
     {
-        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vLook, &vLook), -fSpeed, fTimeDelta);
+        vCommand += _vec2{ 0.f, -1.f };
     }
-
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
-    {
-        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vRight, &vRight), -fSpeed, fTimeDelta);
-    }
-
     if (CDInputMgr::GetInstance()->Key_Press(DIK_D))
     {
-        m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vRight, &vRight), fSpeed, fTimeDelta);
+        vCommand += _vec2{ 1.f, 0.f };
     }
-
-    FREEZE:
-
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_TAB))
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
     {
-        m_bFix = !m_bFix;
-
-        if (m_bFix)
-        {
-            while (::ShowCursor(FALSE) >= 0) {}
-        }
-        else
-        {
-            while (::ShowCursor(TRUE) < 0) {}
-        }
+        vCommand += _vec2{ -1.f, 0.f };
     }
+    m_pMovement->Walk(vCommand);
+    if (D3DXVec2Length(&vCommand) > 1e-6) m_pAnimator->PlayLocomotion((m_pMovement->GetSprint()) ? EPlayerLocomotionState::SPRINT : EPlayerLocomotionState::WALK);
+    else m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
 
-    if (false == m_bFix)
-        return;
+    /* 여기 아래는 마우스 처리 */
+    if (!CCursorPolicyMgr::GetInstance()->IsCursorFixed()) return;
+    
+    CursorHandling();
 
-    Mouse_Move();
-
-    Mouse_Fix();
+    if (CDInputMgr::GetInstance()->Mouse_Down(DIM_LB))
+    {
+        m_pAnimator->PlayAction(EPlayerActionState::GUN_SHOOT);
+    }
 }
 
-void CPlayer::Mouse_Move()
+void CPlayer::CursorHandling()
 {
     _long dwMouseMove(0);
 
     if (dwMouseMove = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_X))
     {
-        if (m_fFreezeTimer == 0.f) m_pTransformCom->Rotation(ROT_Y, dwMouseMove / 10.f);
-
+        m_pTransformCom->Rotation(ROT_Y, dwMouseMove / 10.f);
     }
-
 }
 
 
-void CPlayer::Mouse_Fix()
+void CPlayer::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    POINT			ptMouseCenter{ WINCX >> 1, WINCY >> 1 };
-
-    ClientToScreen(g_hWnd, &ptMouseCenter);
-    SetCursorPos(ptMouseCenter.x, ptMouseCenter.y);
 }
 
-
-_vec3 CPlayer::Picking_OnTerrain()
+void CPlayer::OnCollisionStay(COLLINFO eCollInfo)
 {
-    CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>
-        (CManagement::GetInstance()->Get_Component(ID_STATIC, L"GameLogic_Layer", L"Terrain", L"Com_Buffer"));
-
-    if (nullptr == pTerrainBufferCom)
-        return _vec3(0.f, 0.f, 0.f);
-
-    CTransform* pTerrainTransformCom = dynamic_cast<CTransform*>
-        (CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Terrain", L"Com_Transform"));
-
-    if (nullptr == pTerrainTransformCom)
-        return _vec3(0.f, 0.f, 0.f);
-
-    return m_pCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainBufferCom, pTerrainTransformCom);
 }
 
-CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+void CPlayer::OnHit(CGameObject* pSrcObj)
 {
-    CPlayer* pPlayer = new CPlayer(pGraphicDev);
+    if (m_bInvincible) return;
 
-    if (FAILED(pPlayer->Ready_GameObject()))
+    // --m_iHP;
+    CUIMgr::GetInstance()->Update_HPUI(m_iHP);
+    CUIMgr::GetInstance()->RequestHitEffect();
+
+    /* 사망 시 빠지기 */
+    if (m_iHP <= 0)
     {
-        Safe_Release(pPlayer);
-        MSG_BOX("CPlayer Create Failed");
-        return nullptr;
-    }
-
-    return pPlayer;
-}
-
-void CPlayer::GetItem(ITEMID iItemID)
-{
-    switch (iItemID)
-    {
-    case ITEM_HEAL : 
-        UpdateHP(1);
-        break;
-    }
-}
-
-void CPlayer::UpdateHP(_int iAmount)
-{
-    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
-    if (iAmount > 0)
-    {
-        if (m_iHP + iAmount > m_iMaxHP)
-        {
-            if (CStage* pStage = dynamic_cast<CStage*>(pScene))
-                pStage->GetStatus()->UpdatePlayerHp(m_iMaxHP - m_iHP);
-            m_iHP = m_iMaxHP;
-
-        }
-        else
-        {
-            if (CStage* pStage = dynamic_cast<CStage*>(pScene))
-                pStage->GetStatus()->UpdatePlayerHp(iAmount);
-            m_iHP += iAmount;
-        }
-    }
-    else if (iAmount < 0)
-    {
-        if (m_iHP + iAmount <= 0)
-        {
-            if (CStage* pStage = dynamic_cast<CStage*>(pScene))
-                pStage->GetStatus()->UpdatePlayerHp(-m_iHP);
-            m_iHP = 0;
-            Die();
-        }
-        else
-        {
-            if (CStage* pStage = dynamic_cast<CStage*>(pScene))
-                pStage->GetStatus()->UpdatePlayerHp(iAmount);
-            m_iHP += iAmount;
-        }
-    }
-   
-}
-
-void CPlayer::Die()
-{
-    if (m_bDeathState)
+        OnDead();
         return;
+    }
 
-    m_iHP = 0;
+    m_bInvincible = true;
+    m_fLeftInvincibleTime = m_fInvincibleTime;
+
+    if (!pSrcObj) return;
+
+    CTransform* pSrcTransform = dynamic_cast<CTransform*>(pSrcObj->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+    if (!pSrcTransform) return;
+
+    _vec3 vDist = m_pTransformCom->Get_Info_Value(INFO_POS) - pSrcTransform->Get_Info_Value(INFO_POS);
+    m_pMovement->Knockback(vDist, 3.f);
+    SetInputEnabled(false, 0.5f);
+}
+
+void CPlayer::Revive()
+{
+    RestoreHP(m_iMaxHP);
+    SetInputEnabled(true);
+    m_pColliderCom->Set_IsActive(true);
+}
+
+void CPlayer::OnDead()
+{
+    m_pMovement->Stop();
+    SetInputEnabled(false);
+    m_pColliderCom->Set_IsActive(false);
+    /* 나중에 무기류도 비활성화 */
 
     CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-    if (pStage)
-    {
-        pStage->GetStatus()->SetPlayerHp(0);
-    }
-
-    m_bDeathState = true;
-    m_fRespawnTimer = 1.5f;
-    m_fKnockbackSpeed = 0.f;
-
-    if (nullptr != m_pColliderCom)
-        m_pColliderCom->Set_IsActive(false);
-
-    CGameObject* pGun = CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun");
-    if (nullptr != pGun)
-        pGun->Set_IsActive(false);
-
-    /* 성철 */
     if (pStage)
     {
         pStage->OnPlayerDead();
     }
-    /* ---- */
 }
 
-void CPlayer::Respawn()
+void CPlayer::RestoreHP(int iAmount)
 {
-    m_pTransformCom->Set_Pos({ 60.f, 1.f, 60.f });
-    m_pTransformCom->Set_Rotation_Raw(_vec3(0.f, 0.f, 0.f));
+    m_iHP += iAmount;
+    m_iHP = clamp(m_iHP, 0, m_iMaxHP);
+    
+    CUIMgr::GetInstance()->Update_HPUI(m_iHP);
+}
 
-    m_iHP = m_iMaxHP;
-    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-    if (pStage)
+void CPlayer::SetInputEnabled(bool bFlag, float fDisabledTime)
+{
+    m_bInputEnabled = bFlag;
+    if (bFlag == false && fDisabledTime >= 0.f)
     {
-        pStage->GetStatus()->SetPlayerHp(m_iMaxHP);
+        m_fLeftInputDisabledTime = fDisabledTime;
+    }
+}
+
+CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+{
+    CPlayer* pObject = new CPlayer(pGraphicDev);
+
+    if (FAILED(pObject->Ready_GameObject()))
+    {
+        Safe_Release(pObject);
+        MSG_BOX("CPlayer Create Failed");
+        return nullptr;
     }
 
-    if (nullptr != m_pColliderCom)
-        m_pColliderCom->Set_IsActive(true);
-
-    m_fInvTime = 2.f;
-    m_fRespawnTimer = 0.f;
-    m_fKnockbackSpeed = 0.f;
-    m_bDeathState = false;
-    m_bFix = true;
-
-    CGameObject* pGun = CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Gun");
-    if (nullptr != pGun)
-        pGun->Set_IsActive(true);
+    return pObject;
 }
 
 void CPlayer::Free()
 {
     CGameObject::Free();
-}
-
-
-
-void CPlayer::MonsterCollision(CGameObject* pOther, CCollider* pOtherCollider)
-{
-    if (m_bDeathState || m_fInvTime > 0.f)
-        return;
-
-    if (nullptr == pOtherCollider)
-        return;
-
-    const _int iColliderID = pOtherCollider->Get_CollisionID();
-
-    if (iColliderID != COLL_MONSTER && iColliderID != COLL_MBULLET)
-        return;
-
-
-    Hit(pOther);
-}
-
-void CPlayer::Apply_Knockback(CGameObject* pAttacker)
-{
-    if (m_bDeathState || nullptr == pAttacker)
-        return;
-
-    CTransform* pAttackerTransformCom =
-        dynamic_cast<CTransform*>(pAttacker->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-    if (nullptr == pAttackerTransformCom)
-        return;
-
-    _vec3   vPlayerPos, vAttackerPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-    pAttackerTransformCom->Get_Info(INFO_POS, &vAttackerPos);
-
-    _vec3   vDir = vPlayerPos - vAttackerPos;   
-    vDir.y = 0.f;                             
-
-    if (D3DXVec3Length(&vDir) < FLT_EPSILON)   
-    {
-        m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
-        vDir.y = 0.f;
-        vDir *= -1.f;
-    }
-
-    D3DXVec3Normalize(&m_vKnockbackDir, &vDir);
-    m_fKnockbackSpeed = 14.f;
-}
-
-void CPlayer::Update_Knockback(const _float& fTimeDelta)
-{
-    if (m_fKnockbackSpeed <= 0.f)
-        return;
-
-    m_pTransformCom->Move_Pos(&m_vKnockbackDir, m_fKnockbackSpeed * m_fFrictionForce, fTimeDelta);
-
-    m_fKnockbackSpeed -= 60.f * fTimeDelta;
-    if (m_fKnockbackSpeed < 0.f)
-        m_fKnockbackSpeed = 0.f;
-}
-
-void CPlayer::Update_HPUI()
-{
-    const _int iSlotCount = 3;
-    const _int iHpPerSlot = 4;
-    const _int iDamagedHpSlot = m_iHP / iHpPerSlot;
-
-    for (_int i = 0; i < iSlotCount; ++i)
-    {
-        wstring wstrTag = L"PlayerHp_" + to_wstring(i);
-
-        CUI* pUI = static_cast<CUI*>(CManagement::GetInstance()->Get_GameObject(L"UI_Layer", wstrTag.c_str()));
-        if (nullptr == pUI)
-            continue;
-
-        _int iSlotHP = m_iHP - (i * iHpPerSlot);
-        if (iSlotHP < 0)
-            iSlotHP = 0;
-        else if (iSlotHP > iHpPerSlot)
-            iSlotHP = iHpPerSlot;
-
-        _uint iTexture = static_cast<_uint>(iSlotHP);
-
-        if (m_fInvTime > 0.f && i == iDamagedHpSlot)
-            iTexture += 5;
-
-        pUI->Set_Texture(iTexture);
-    }
-}
-
-void CPlayer::Hit(CGameObject* pAttacker) // 히트백 적용 안할 시 nullptr 넣어주세요
-{
-    if (m_fInvTime > 0.f) return;
-
-    UpdateHP(-1);
-    _float fInvTime = 1.f;
-
-    m_fInvTime = fInvTime;
-    if (pAttacker != nullptr) Apply_Knockback(pAttacker);
-
-	// 정민 : 피격 시 화면 UI 적용
-    CGameObject* pHitUI = CManagement::GetInstance()->Get_GameObject(L"UI_Layer", L"HitScreen");
-    if (nullptr != pHitUI)
-    {
-        CHitCreenUI* pHitScreen = dynamic_cast<CHitCreenUI*>(pHitUI);
-        if (nullptr != pHitScreen)
-            pHitScreen->Hit();
-	}
 }

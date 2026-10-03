@@ -88,7 +88,7 @@ void CRoomLayer::PlayerTileInteraction()
 	switch (eType)
 	{
 	case EContaminateType::LAVA:
-		pPlayer->Hit(nullptr);
+		pPlayer->OnHit(nullptr);
 		break;
 	default:
 		break;
@@ -414,7 +414,7 @@ pair<int, int> CRoomLayer::GetIndex2D()
 	int iRoomCountRow = CRoomLoadingMgr::GetInstance()->GetRoomRowCount();
 	int iRoomCountCol = CRoomLoadingMgr::GetInstance()->GetRoomColCount();
 
-		int iRow = m_iRoomIndex / iRoomCountCol;
+	int iRow = m_iRoomIndex / iRoomCountCol;
 	int iCol = m_iRoomIndex % iRoomCountCol;
 
 	return pair<int, int>{iRow, iCol};

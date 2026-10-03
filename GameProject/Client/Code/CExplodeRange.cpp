@@ -107,7 +107,7 @@ void CExplodeRange::OnCollisionEnter(COLLINFO eCollInfo)
     {
     case COLLISIONID::COLL_PLAYER:
     {
-        static_cast<CPlayer*>(pOtherCol->Get_Owner())->Hit(this);
+        static_cast<CPlayer*>(pOtherCol->Get_Owner())->OnHit(this);
         break;
     }
     default:

@@ -5,6 +5,7 @@ CTransform::CTransform()
 {
 	ZeroMemory(m_vInfo, sizeof(_vec3) * INFO_END);
 	D3DXMatrixIdentity(&m_matWorld);
+	D3DXMatrixIdentity(&m_matLocal);
 }
 
 CTransform::CTransform(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -13,6 +14,7 @@ CTransform::CTransform(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	ZeroMemory(m_vInfo, sizeof(_vec3) * INFO_END);
 	D3DXMatrixIdentity(&m_matWorld);
+	D3DXMatrixIdentity(&m_matLocal);
 }
 
 CTransform::CTransform(const CTransform& rhs)
@@ -23,6 +25,7 @@ CTransform::CTransform(const CTransform& rhs)
 		m_vInfo[i] = rhs.m_vInfo[i];
 
 	m_matWorld = rhs.m_matWorld;
+	m_matLocal = rhs.m_matLocal;
 }
 
 CTransform::~CTransform()
@@ -66,6 +69,48 @@ void CTransform::UpdateWorldMatrix()
 	{
 		memcpy(&m_matWorld.m[i][0], &m_vInfo[i], sizeof(_vec3));
 	}
+}
+
+void CTransform::UpdateLocalMatrix()
+{
+	D3DXMatrixIdentity(&m_matLocal);
+
+	// 크기
+	for (_uint i = 0; i < INFO_POS; ++i)
+	{
+		memcpy(&m_vInfo[i], &m_matLocal.m[i][0], sizeof(_vec3));
+	}
+
+	for (_uint i = 0; i < INFO_POS; ++i)
+	{
+		D3DXVec3Normalize(&m_vInfo[i], &m_vInfo[i]);
+		m_vInfo[i] *= *(((_float*)&m_vScale) + i);
+	}
+
+	// 회전
+	_matrix		matRot[ROT_END];
+
+	D3DXMatrixRotationX(&matRot[ROT_X], D3DXToRadian(m_vAngle.x));
+	D3DXMatrixRotationY(&matRot[ROT_Y], D3DXToRadian(m_vAngle.y));
+	D3DXMatrixRotationZ(&matRot[ROT_Z], D3DXToRadian(m_vAngle.z));
+
+	for (_uint i = 0; i < INFO_POS; ++i)
+	{
+		for (_uint j = 0; j < ROT_END; ++j)
+		{
+			D3DXVec3TransformNormal(&m_vInfo[i], &m_vInfo[i], &matRot[j]);
+		}
+	}
+
+	for (_uint i = 0; i < INFO_END; ++i)
+	{
+		memcpy(&m_matLocal.m[i][0], &m_vInfo[i], sizeof(_vec3));
+	}
+}
+
+void CTransform::WorldMatrixPropagation(const _matrix& matParentWorld)
+{
+	m_matWorld = m_matLocal * matParentWorld;
 }
 
 void CTransform::WorldMatrixDecompose()

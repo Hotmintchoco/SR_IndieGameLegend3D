@@ -31,9 +31,6 @@
     <Filter Include="02. GameObject\00. BackGround">
       <UniqueIdentifier>{f0d0e5b3-59c7-41fb-92cf-59c72845b18e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\01. Player">
-      <UniqueIdentifier>{b296e5ab-9980-4835-b577-7885d1efc319}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Monster">
       <UniqueIdentifier>{ea1699e6-0c35-4928-a891-19e37d243279}</UniqueIdentifier>
     </Filter>
@@ -313,6 +310,27 @@
     <Filter Include="02. GameObject\12. Logic\01. RayCaster">
       <UniqueIdentifier>{5466cbee-4409-45a6-b69b-bf80fe1cd263}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. Character">
+      <UniqueIdentifier>{c6e9ff9b-cbc7-4950-913e-0337acfbb0d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player">
+      <UniqueIdentifier>{32e7a207-3007-495a-b2df-52e5aa94c7b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player\00. Animator">
+      <UniqueIdentifier>{aef0f9a1-e99b-42c4-a4cb-280d6537e431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player\00. Animator\00. PlayerPartTex">
+      <UniqueIdentifier>{c753b743-d9ed-4876-82cd-bf2f267b84c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player\01. Movement">
+      <UniqueIdentifier>{1bd20612-fa33-4947-bedf-37727e024351}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player\01. Movement\00. PlayerMovement">
+      <UniqueIdentifier>{f1a34ff3-b99a-443c-945c-6a1c00752057}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Manager\01. CursorPolicy">
+      <UniqueIdentifier>{c315cdf6-72d0-49e1-a439-a07c17892f99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -344,9 +362,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CMonster.h">
       <Filter>02. GameObject\02. Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CPlayer.h">
-      <Filter>02. GameObject\01. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoading.h">
       <Filter>01. Scene\Loading</Filter>
@@ -648,6 +663,24 @@
     <ClInclude Include="..\Header\IRayTestable.h">
       <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPlayerAnimator.h">
+      <Filter>02. GameObject\01. Character\00. Player\00. Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayerPartTex.h">
+      <Filter>02. GameObject\01. Character\00. Player\00. Animator\00. PlayerPartTex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayer.h">
+      <Filter>02. GameObject\01. Character\00. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMovement.h">
+      <Filter>02. GameObject\01. Character\00. Player\01. Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayerMovement.h">
+      <Filter>02. GameObject\01. Character\00. Player\01. Movement\00. PlayerMovement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCursorPolicyMgr.h">
+      <Filter>04. Manager\01. CursorPolicy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -670,9 +703,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMonster.cpp">
       <Filter>02. GameObject\02. Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CPlayer.cpp">
-      <Filter>02. GameObject\01. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoading.cpp">
       <Filter>01. Scene\Loading</Filter>
@@ -955,6 +985,24 @@
     </ClCompile>
     <ClCompile Include="..\Code\IRayTestable.cpp">
       <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerAnimator.cpp">
+      <Filter>02. GameObject\01. Character\00. Player\00. Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerPartTex.cpp">
+      <Filter>02. GameObject\01. Character\00. Player\00. Animator\00. PlayerPartTex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer.cpp">
+      <Filter>02. GameObject\01. Character\00. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMovement.cpp">
+      <Filter>02. GameObject\01. Character\00. Player\01. Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerMovement.cpp">
+      <Filter>02. GameObject\01. Character\00. Player\01. Movement\00. PlayerMovement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCursorPolicyMgr.cpp">
+      <Filter>04. Manager\01. CursorPolicy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

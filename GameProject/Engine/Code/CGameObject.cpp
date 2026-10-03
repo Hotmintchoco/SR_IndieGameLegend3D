@@ -188,11 +188,9 @@ void CGameObject::Obstacle_Collision(CCollider* pOtherCollider, CCollider* pObst
 }
 
 
-CComponent* CGameObject::Find_Component(COMPONENTID eID, const _tchar* pComponentTag)
+CComponent* CGameObject::Find_Component(COMPONENTID eID, const wstring& pComponentTag)
 {
-    auto        iter = find_if(m_mapComponent[eID].begin(),
-                                m_mapComponent[eID].end(), 
-                                 CTag_Finder(pComponentTag));
+    auto iter = m_mapComponent[eID].find(pComponentTag);
 
     if (iter == m_mapComponent[eID].end())
         return nullptr;

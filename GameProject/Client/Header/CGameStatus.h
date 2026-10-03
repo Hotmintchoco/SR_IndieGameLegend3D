@@ -29,12 +29,6 @@ public:
 	inline void UpdateClearTable(int iIndex) { m_bClearTable[iIndex] = true; }
 	inline bool IsVisited(int iIndex) const { return m_bVisitTable[iIndex]; }
 
-	/* 플레이어 관련 정보 */
-	inline void UpdatePlayerHp(int iAmount) { m_iPlayerHp += iAmount; }
-	inline void SetPlayerHp(int iHp) { m_iPlayerHp = iHp; }
-	inline int GetPlayerHp() const { return m_iPlayerHp; }
-	inline void UpdatePlayerMaxHp(int iAmount) { m_iPlayerMaxHp += iAmount; }
-
 	/* 무기류 관련 정보 */
 	inline void SetUltimateGauge(float fAmount) { m_fUltGauge = fAmount; }
 	inline void SetSpecialAttackGauge(float fAmount) { m_fSpecialAtkGauge = fAmount; }
@@ -70,10 +64,6 @@ private:
 	bool m_bVisitTable[25] = { false };
 	bool m_bClearTable[25] = { false };
 	_vec3 m_vPlayerPos{0.f, 0.f, 0.f};
-
-	/* Player */
-	int m_iPlayerHp = 12;
-	int m_iPlayerMaxHp = 12;
 
 	/* Weapon */
 	float m_fUltGauge = 0.f;

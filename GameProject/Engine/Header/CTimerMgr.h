@@ -40,7 +40,7 @@ private:
 	map<const _tchar*, CTimer*>			m_mapTimer;
 
 	float m_fGlobalTimeScale = 1.f;
-	float m_fGroupTimeScale[TG_END] = { 1.f };
+	float m_fGroupTimeScale[TG_END] = { 1.f, 1.f };
 
 private:
 	virtual void Free();
