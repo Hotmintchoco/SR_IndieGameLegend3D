@@ -63,6 +63,7 @@ _int CPlayerCamera::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayerCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	// 플레이어 Transform을 따라가도록 Eye 위치 갱신
 	Follow_Target();
 }
 

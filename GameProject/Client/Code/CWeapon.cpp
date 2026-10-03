@@ -65,7 +65,7 @@ void CWeapon::SyncTransformToCamera()
 {
     /* 카메라 위치를 받아 위치값 조정*/
     _matrix matCamera, matWorld;
-    auto* pCamera = CClientCameraMgr::GetInstance()->Get_ActiveCamera();
+    auto* pCamera = CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER);
     if (!pCamera) return;
     pCamera->GetWorld(&matCamera);
     D3DXMatrixMultiply(&matWorld, m_pTransformCom->Get_World(), &matCamera);

@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "CClientCameraMgr.h"
 #include "CCamera.h"
+#include "CDInputMgr.h"
 
 IMPLEMENT_SINGLETON(CClientCameraMgr)
 
@@ -66,6 +67,9 @@ void CClientCameraMgr::Update_Camera(
     if (nullptr == m_pActiveCamera)
         return;
 
+    // 카메라 설정
+	Key_Input(fTimeDelta);
+
     // CDynamicCamera라면 여기서 키보드·마우스 입력 처리
     m_pActiveCamera->Update_GameObject(fTimeDelta);
 }
@@ -99,4 +103,16 @@ void CClientCameraMgr::Free()
     }
 
     m_mapCamera.clear();
+}
+
+void CClientCameraMgr::Key_Input(const _float& fTimeDelta)
+{
+    if (CDInputMgr::GetInstance()->Key_Down(DIK_1))
+    {
+        Select_Camera(CLIENT_CAMERA_TYPE::PLAYER);
+    }
+    else if (CDInputMgr::GetInstance()->Key_Down(DIK_2))
+    {
+        Select_Camera(CLIENT_CAMERA_TYPE::FREE);
+	}
 }
