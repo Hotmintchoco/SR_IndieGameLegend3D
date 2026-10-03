@@ -31,7 +31,7 @@ private:
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
 
-	float m_iTextureIdx = -1;
+	int m_iTextureIdx = -1;
 
 public:
 	static CFog* Create(LPDIRECT3DDEVICE9 pGraphicDev);
