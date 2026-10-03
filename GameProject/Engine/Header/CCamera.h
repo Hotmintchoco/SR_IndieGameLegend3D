@@ -13,8 +13,8 @@ protected:
 
 public:
 	virtual			HRESULT		Ready_GameObject();
-	virtual			_int		Update_GameObject(const _float& fTimeDelta);
-	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual			_int		Update_GameObject(_float fTimeDelta);
+	virtual			void		LateUpdate_GameObject(_float fTimeDelta);
 
 	// Manager order: Update -> optional LateUpdate -> matrices -> active camera apply.
 	void			Update_Matrices();

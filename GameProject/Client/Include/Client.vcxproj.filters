@@ -316,6 +316,15 @@
     <Filter Include="02. GameObject\04. ClientCamera">
       <UniqueIdentifier>{cdd6e53a-fa5b-4c49-a8c4-f0b652689629}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\04. ClientCamera\Player">
+      <UniqueIdentifier>{d5fe8be7-bb9e-425d-8c1e-1db40c8721c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. ClientCamera\Cinematic">
+      <UniqueIdentifier>{496eeab5-9cbf-4043-9a05-83860b5b0c62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. ClientCamera\Dynamic">
+      <UniqueIdentifier>{ee5fc2b0-79b0-4bd1-80cd-3d0ed858e2b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -356,9 +365,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CTerrain.h">
       <Filter>02. GameObject\03. Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CDynamicCamera.h">
-      <Filter>02. GameObject\04. ClientCamera</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CSkyBox.h">
       <Filter>02. GameObject\05. SkyBox</Filter>
@@ -655,7 +661,13 @@
       <Filter>04. Manager\01. Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CPlayerCamera.h">
-      <Filter>02. GameObject\04. ClientCamera</Filter>
+      <Filter>02. GameObject\04. ClientCamera\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCinematicCamera.h">
+      <Filter>02. GameObject\04. ClientCamera\Cinematic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CDynamicCamera.h">
+      <Filter>02. GameObject\04. ClientCamera\Dynamic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -688,9 +700,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTerrain.cpp">
       <Filter>02. GameObject\03. Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CDynamicCamera.cpp">
-      <Filter>02. GameObject\04. ClientCamera</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CSkyBox.cpp">
       <Filter>02. GameObject\05. SkyBox</Filter>
@@ -969,7 +978,13 @@
       <Filter>04. Manager\01. Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CPlayerCamera.cpp">
-      <Filter>02. GameObject\04. ClientCamera</Filter>
+      <Filter>02. GameObject\04. ClientCamera\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCinematicCamera.cpp">
+      <Filter>02. GameObject\04. ClientCamera\Cinematic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDynamicCamera.cpp">
+      <Filter>02. GameObject\04. ClientCamera\Dynamic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

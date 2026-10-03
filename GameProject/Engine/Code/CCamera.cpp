@@ -37,7 +37,7 @@ HRESULT CCamera::Ready_GameObject()
 	return S_OK;
 }
 
-_int CCamera::Update_GameObject(const _float& fTimeDelta)
+_int CCamera::Update_GameObject(_float fTimeDelta)
 {
 	return 0;
 }
@@ -99,7 +99,7 @@ void CCamera::Apply_Transform()
 	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &m_matProj);
 }
 
-void CCamera::LateUpdate_GameObject(const _float& fTimeDelta)
+void CCamera::LateUpdate_GameObject(_float fTimeDelta)
 {
 }
 

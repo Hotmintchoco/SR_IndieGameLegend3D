@@ -151,6 +151,7 @@
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
     <ClInclude Include="..\Header\CBoss1.h" />
     <ClInclude Include="..\Header\CBullet_Trail.h" />
+    <ClInclude Include="..\Header\CCinematicCamera.h" />
     <ClInclude Include="..\Header\CClientCameraMgr.h" />
     <ClInclude Include="..\Header\CCryder.h" />
     <ClInclude Include="..\Header\CDefaultBullet.h" />
@@ -266,6 +267,7 @@
     <ClCompile Include="..\Code\CBreakableFrustum.cpp" />
     <ClCompile Include="..\Code\CBoss1.cpp" />
     <ClCompile Include="..\Code\CBullet_Trail.cpp" />
+    <ClCompile Include="..\Code\CCinematicCamera.cpp" />
     <ClCompile Include="..\Code\CClientCameraMgr.cpp" />
     <ClCompile Include="..\Code\CCrossBuffer.cpp" />
     <ClCompile Include="..\Code\CDdokddak.cpp" />

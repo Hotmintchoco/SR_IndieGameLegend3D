@@ -45,7 +45,7 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	return S_OK;
 }
 
-_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
+_int CDynamicCamera::Update_GameObject(_float& fTimeDelta)
 {
 	Key_Input(fTimeDelta);
 
@@ -59,7 +59,7 @@ _int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 	return 0;
 }
 
-void CDynamicCamera::LateUpdate_GameObject(const _float& fTimeDelta)
+void CDynamicCamera::LateUpdate_GameObject(_float& fTimeDelta)
 {
 }
 

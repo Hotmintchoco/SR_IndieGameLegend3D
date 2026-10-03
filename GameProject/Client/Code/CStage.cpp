@@ -35,6 +35,7 @@
 #include "CHitCreenUI.h"
 #include "CRayCaster.h"
 #include "CPlayerCamera.h"
+#include "CCinematicCamera.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -171,6 +172,17 @@ HRESULT CStage::Ready_Camera()
 		return E_FAIL;
 	}
 
+	pCamera = CCinematicCamera::Create(m_pGraphicDev);
+
+	if (!pCamera)
+		return E_FAIL;
+
+	if (FAILED(pCameraMgr->Add_Camera(CLIENT_CAMERA_TYPE::CINEMATIC, pCamera)))
+	{
+		pCamera->Release();
+		return E_FAIL;
+	}
+
 	if (FAILED(pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::PLAYER)))
 		return E_FAIL;
 
@@ -227,23 +239,6 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 	// 오브젝트 추가
 	CGameObject* pGameObject = nullptr;
-
-	/*
-	// DynamicCamera
-	_vec3   vEye{ 60.f, 10.f, 50.f };
-	_vec3   vAt{ 60.f, 0.f, 61.f };
-	_vec3   vUp{ 0.f, 1.f, 0.f };
-
-	pGameObject = CDynamicCamera::Create(m_pGraphicDev, 
-										&vEye, &vAt,&vUp);
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"DynamicCamera", pGameObject)))
-		return E_FAIL;
-
-	*/
-
 
 	// SkyBox
 	pGameObject = CSkyBox::Create(m_pGraphicDev);
@@ -336,30 +331,6 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 		pGameObject->Set_IsActive(false);
 	}
-
-	// Monster
-	// 
-	//pGameObject = CSkull::Create(m_pGraphicDev);
-	//static_cast<CMonster*>(pGameObject)->Set_Pos(55, 0, 55);
-	//if (nullptr == pGameObject)
-	//	return E_FAIL;
-	//if (FAILED(pLayer->Add_GameObject(L"Skull", pGameObject)))
-	//	return E_FAIL;
-
-	//pGameObject = CBoss1::Create(m_pGraphicDev);
-	//static_cast<CMonster*>(pGameObject)->Set_Pos(65, 0, 55);
-	//if (nullptr == pGameObject)
-	//	return E_FAIL;
-	//if (FAILED(pLayer->Add_GameObject(L"Boss1", pGameObject)))
-	//	return E_FAIL;
-
-
-	//pGameObject = CMagmamouth::Create(m_pGraphicDev);
-	//static_cast<CMonster*>(pGameObject)->Set_Pos(64, 2.f, 63);
-	//if (nullptr == pGameObject)
-	//	return E_FAIL;
-	//if (FAILED(pLayer->Add_GameObject(L"Magmamouth", pGameObject)))
-	//	return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag ,pLayer });
 

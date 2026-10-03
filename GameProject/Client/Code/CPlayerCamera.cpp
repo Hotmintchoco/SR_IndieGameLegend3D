@@ -50,7 +50,7 @@ HRESULT CPlayerCamera::Ready_GameObject(Engine::CTransform* pTarget)
 	return CCamera::Ready_GameObject();
 }
 
-_int CPlayerCamera::Update_GameObject(const _float& fTimeDelta)
+_int CPlayerCamera::Update_GameObject(_float fTimeDelta)
 {
 	// 마우스 이동량을 읽어 공통 Rotate() 호출
 	Mouse_Move();
@@ -61,7 +61,7 @@ _int CPlayerCamera::Update_GameObject(const _float& fTimeDelta)
 	return 0;
 }
 
-void CPlayerCamera::LateUpdate_GameObject(const _float& fTimeDelta)
+void CPlayerCamera::LateUpdate_GameObject(_float fTimeDelta)
 {
 	// 플레이어 Transform을 따라가도록 Eye 위치 갱신
 	Follow_Target();

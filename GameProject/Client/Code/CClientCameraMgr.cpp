@@ -61,8 +61,7 @@ Engine::CCamera* CClientCameraMgr::Get_ActiveCamera() const
     return m_pActiveCamera;
 }
 
-void CClientCameraMgr::Update_Camera(
-    const _float& fTimeDelta)
+void CClientCameraMgr::Update_Camera(_float fTimeDelta)
 {
     if (nullptr == m_pActiveCamera)
         return;
@@ -74,8 +73,7 @@ void CClientCameraMgr::Update_Camera(
     m_pActiveCamera->Update_GameObject(fTimeDelta);
 }
 
-void CClientCameraMgr::LateUpdate_Camera(
-    const _float& fTimeDelta)
+void CClientCameraMgr::LateUpdate_Camera(_float fTimeDelta)
 {
     if (nullptr == m_pActiveCamera)
         return;
@@ -105,7 +103,7 @@ void CClientCameraMgr::Free()
     m_mapCamera.clear();
 }
 
-void CClientCameraMgr::Key_Input(const _float& fTimeDelta)
+void CClientCameraMgr::Key_Input(_float fTimeDelta)
 {
     if (CDInputMgr::GetInstance()->Key_Down(DIK_1))
     {

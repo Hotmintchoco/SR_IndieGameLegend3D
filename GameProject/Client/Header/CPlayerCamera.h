@@ -16,8 +16,8 @@ protected:
 public:
     HRESULT		    Ready_GameObject(CTransform* pTarget);
 
-    _int            Update_GameObject(const _float& fTimeDelta) override;
-    void            LateUpdate_GameObject(const _float& fTimeDelta) override;
+    _int            Update_GameObject(_float fTimeDelta) override;
+    void            LateUpdate_GameObject(_float fTimeDelta) override;
     void            Render_GameObject() {}
 
 public:
@@ -35,9 +35,7 @@ private:
     _vec3           m_vEyeOffset;
 
 public:
-    static CPlayerCamera* Create(
-        LPDIRECT3DDEVICE9 pGraphicDev,
-        Engine::CTransform* pTarget);
+    static CPlayerCamera* Create(LPDIRECT3DDEVICE9 pGraphicDev, CTransform* pTarget);
 
 private:
     virtual void		Free() override;

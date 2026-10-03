@@ -33,14 +33,14 @@ public:
     CCamera*        Get_ActiveCamera() const;
 
 public:
-    void            Update_Camera(const _float& fTimeDelta);
-    void            LateUpdate_Camera(const _float& fTimeDelta);
+    void            Update_Camera(_float fTimeDelta);
+    void            LateUpdate_Camera(_float fTimeDelta);
 
     // 씬 종료·재시작 시 카메라들을 정리합니다.
     void            Free();
 
 private:
-	void            Key_Input(const _float& fTimeDelta);
+	void            Key_Input(_float fTimeDelta);
 
 private:
     map<CLIENT_CAMERA_TYPE, CCamera*>   m_mapCamera;
