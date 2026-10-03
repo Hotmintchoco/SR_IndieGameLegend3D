@@ -186,10 +186,17 @@ void CPlayer::KeyInput()
         vCommand += _vec2{ -1.f, 0.f };
     }
     m_pMovement->Walk(vCommand);
+    if (D3DXVec2Length(&vCommand) > 1e-6) m_pAnimator->PlayLocomotion((m_pMovement->GetSprint()) ? EPlayerLocomotionState::SPRINT : EPlayerLocomotionState::WALK);
+    else m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
 
-    if (CCursorPolicyMgr::GetInstance()->IsCursorFixed())
+    /* 여기 아래는 마우스 처리 */
+    if (!CCursorPolicyMgr::GetInstance()->IsCursorFixed()) return;
+    
+    CursorHandling();
+
+    if (CDInputMgr::GetInstance()->Mouse_Down(DIM_LB))
     {
-        CursorHandling();
+        m_pAnimator->PlayAction(EPlayerActionState::GUN_SHOOT);
     }
 }
 

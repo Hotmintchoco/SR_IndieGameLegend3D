@@ -14,6 +14,7 @@ public:
 	virtual void LateUpdate_Component() override;
 
 	inline void SetSprint(bool bFlag) { m_bSprinting = bFlag; }
+	inline bool GetSprint() { return m_bSprinting; }
 
 	void Knockback(const _vec3& vDir, float fIntensity);
 	void Walk(const _vec2& vCommand);

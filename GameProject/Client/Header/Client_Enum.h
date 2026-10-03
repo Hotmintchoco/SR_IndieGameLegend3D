@@ -153,3 +153,27 @@ enum class EBiomeType
 };
 
 enum PLAYERPART { PP_BODY, PP_HEAD, PP_LARM, PP_RARM, PP_LLEG, PP_RLEG, PP_END };
+
+enum class EPlayerLocomotionState
+{
+	NONE,
+
+	IDLE,
+	WALK,
+	SPRINT,
+	JUMP,
+
+	MAX,
+};
+
+enum class EPlayerActionState
+{
+	NONE,
+
+	GUN_SHOOT,
+	BOW_HOLD,
+	BOW_SHOOT,
+	DIE,
+
+	MAX,
+};
