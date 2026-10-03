@@ -125,12 +125,11 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 
 void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 {
-	CScene::LateUpdate_Scene(fTimeDelta);
 	CClientCameraMgr::GetInstance()->LateUpdate_Camera(fTimeDelta);
+	CScene::LateUpdate_Scene(fTimeDelta);
 
 	Engine::CCollisionMgr::GetInstance()->Update_Collision();
 	Engine::CCollisionMgr::GetInstance()->Clear_ColliderList();
-
 
 }
 
