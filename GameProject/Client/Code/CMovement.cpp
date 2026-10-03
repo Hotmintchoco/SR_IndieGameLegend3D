@@ -110,19 +110,22 @@ void CMovement::TryExertGravity(const float fTimeDelta)
 
 void CMovement::ExertFriction(float fTimeDelta)
 {
-    _vec3 vFrictionDir;
-    D3DXVec3Normalize(&vFrictionDir, &m_vVelocity);
+    float fFriction = (m_bOnGround) ? m_fGroundFriction : m_fAirFriction ;
+    
+    _vec3 vH = _vec3{ m_vVelocity.x, 0.f, m_vVelocity.z };
+    float fSpeedBefore = D3DXVec3Length(&vH);
+    if (fSpeedBefore < 1e-6)
+    {
+        m_vVelocity.x = 0.f;
+        m_vVelocity.z = 0.f;
+        return;
+    }
 
-    if (m_bOnGround)
-    {
-        _vec3 vDirFlat = _vec3{vFrictionDir.x, 0.f, vFrictionDir.z};
-        D3DXVec3Normalize(&vDirFlat, &vDirFlat);
-        m_vVelocity -= vDirFlat * m_fGroundFriction * fTimeDelta;
-    }
-    else
-    {
-        m_vVelocity -= vFrictionDir * m_fAirFriction * fTimeDelta;
-    }
+    float fSpeedAfter = std::max(0.f, fSpeedBefore - fFriction * fTimeDelta );
+    vH *= fSpeedAfter / fSpeedBefore;
+    
+    m_vVelocity.x = vH.x;
+    m_vVelocity.z = vH.z;
 }
 
 void CMovement::AddImpulse(const _vec3& vDir, float fMagnitude)
@@ -135,11 +138,11 @@ void CMovement::AddImpulse(const _vec3& vDir, float fMagnitude)
 void CMovement::ClampVelocity()
 {
     float fLength = D3DXVec3Length(&m_vVelocity);
-    if (fLength > ((m_bOnGround ? m_fMaxGroundSpeed : m_fMaxAirSpeed)))
+    if (fLength > ((m_bOnGround ? GetCurMaxGroundSpeed() : m_fMaxAirSpeed)))
     {
         _vec3 vVelNorm;
         D3DXVec3Normalize(&vVelNorm, &m_vVelocity);
-        m_vVelocity = vVelNorm * (m_bOnGround ? m_fMaxGroundSpeed : m_fMaxAirSpeed);
+        m_vVelocity = vVelNorm * (m_bOnGround ? GetCurMaxGroundSpeed() : m_fMaxAirSpeed);
     }
 }
 

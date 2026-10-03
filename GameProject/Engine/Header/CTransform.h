@@ -46,6 +46,12 @@ public:
 		return _vec3{ m_matWorld.m[eType][0], m_matWorld.m[eType][1], m_matWorld.m[eType][2] };
 	}
 
+	_vec3 Get_Info_Local(INFO eType)
+	{
+		if (!m_bUseLocal) assert(0);
+		return _vec3{ m_matLocal.m[eType][0], m_matLocal.m[eType][1], m_matLocal.m[eType][2] };
+	}
+
 	void		Set_Pos(_float fX, _float fY, _float fZ)
 	{
 		m_vInfo[INFO_POS] = { fX, fY, fZ };

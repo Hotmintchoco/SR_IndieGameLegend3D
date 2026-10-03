@@ -13,13 +13,16 @@ public:
 	virtual _int Update_Component(_float fTimeDelta) override;
 	virtual void LateUpdate_Component() override;
 
-	inline float GetSprintCoef() { return m_fSprintCoef; }
+	inline void SetSprint(bool bFlag) { m_bSprinting = bFlag; }
 
 	void Knockback(const _vec3& vDir, float fIntensity);
 	void Walk(const _vec2& vCommand);
 	void Stop();
 
 private:
+	virtual float GetCurMaxGroundSpeed() const override;
+
+	bool m_bSprinting = false;
 	float m_fSprintCoef = 2.f;
 	float m_fKnockbackAngle = D3DXToRadian(30.f);
 

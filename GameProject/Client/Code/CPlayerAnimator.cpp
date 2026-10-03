@@ -16,6 +16,7 @@ const char* CPlayerAnimator::s_szPartName[PP_END] =
 { "Body", "Head", "L Arm", "R Arm", "L Leg", "R Leg" };
 
 CPlayerAnimator::CPlayerAnimator(LPDIRECT3DDEVICE9 pGraphicDev)
+    : CComponent(pGraphicDev)
 {
 }
 
@@ -47,7 +48,7 @@ void CPlayerAnimator::TransformPropagation(const _matrix& matRootWorld)
 			_matrix matParentWorld = *m_arrBuffer[ppParent].pTransform->Get_World();
 			m_arrBuffer[pp].pTransform->WorldMatrixPropagation(matParentWorld);
 		}
-	}
+    }
 }
 
 void CPlayerAnimator::SetBuffer(const array<TPlayerBuffer, PP_END>& tBuffer)
@@ -66,13 +67,15 @@ void CPlayerAnimator::SetBuffer(const array<TPlayerBuffer, PP_END>& tBuffer)
 
 		m_arrBuffer[i].pTransform->Set_Pos(vPivot);
 	}
+
+    SetInitialTransform();
 }
 
 void CPlayerAnimator::SetInitialTransform()
 {
     for (auto& tPart : m_arrBuffer)
     {
-        tPart.pTransform->Get_Info(INFO_POS, &tPart.vInitPos);
+        tPart.vInitPos = tPart.pTransform->Get_Info_Local(INFO_POS);
         tPart.vInitRot = tPart.pTransform->Get_Rotation();
     }
 }

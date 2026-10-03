@@ -48,8 +48,8 @@ void CGameStatus::LateUpdate_GameObject(_float fTimeDelta)
 
 void CGameStatus::Render_GameObject()
 {
-    RenderImGui();
-    DebugPanelForRendering();
+    // RenderImGui();
+    // DebugPanelForRendering();
 }
 
 void CGameStatus::DebugRayTest()

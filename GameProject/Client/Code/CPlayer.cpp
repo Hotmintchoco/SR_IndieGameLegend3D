@@ -31,6 +31,7 @@ HRESULT CPlayer::Ready_GameObject()
 		return E_FAIL;
 
 	m_pColliderCom->Set_Radius(m_fColliderScale);
+    // m_pColliderCom->Set_DiffPos(_vec3{0.f, 0.5f, 0.f});
 	m_pColliderCom->Set_CollisionID(COLL_PLAYER);
 
 	return S_OK;
@@ -41,7 +42,10 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
 	/* 캐릭터 타임스케일 */
 	fTimeDelta *= CTimerMgr::GetInstance()->GetGroupTimeScale(TG_PLAYER);
 
+    int iExit = CGameObject::Update_GameObject(fTimeDelta);
+
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
     if (m_bInputEnabled)
     {
@@ -73,7 +77,7 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
         }
     }
 
-    int iExit = CGameObject::Update_GameObject(fTimeDelta);
+    m_pAnimator->TransformPropagation(*m_pTransformCom->Get_World());
 
 	return iExit;
 }
@@ -95,7 +99,7 @@ void CPlayer::Render_GameObject()
         m_pBufferCom[i]->Render_Buffer();
     }
 
-    m_pAnimator->RenderDebugTransform();
+     //m_pAnimator->RenderDebugTransform();
 }
 
 HRESULT CPlayer::Add_Component()
@@ -162,14 +166,7 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::KeyInput()
 {
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_LSHIFT))
-    {
-        m_pMovement->SetMaxGroundSpeed(m_pMovement->GetMaxGroundSpeed() * m_pMovement->GetSprintCoef());
-    }
-    if (CDInputMgr::GetInstance()->Key_Up(DIK_LSHIFT))
-    {
-        m_pMovement->SetMaxGroundSpeed(m_pMovement->GetMaxGroundSpeed() / m_pMovement->GetSprintCoef());
-    }
+    m_pMovement->SetSprint(CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT));
 
     _vec2 vCommand{ 0.f, 0.f }; // (x, z)
     if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
@@ -219,7 +216,7 @@ void CPlayer::OnHit(CGameObject* pSrcObj)
 {
     if (m_bInvincible) return;
 
-    --m_iHP;
+    // --m_iHP;
     CUIMgr::GetInstance()->Update_HPUI(m_iHP);
     CUIMgr::GetInstance()->RequestHitEffect();
 

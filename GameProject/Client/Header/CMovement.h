@@ -28,9 +28,6 @@ public:
 
 	void AttachTransform(CTransform* pTransform);
 
-	inline void SetMaxGroundSpeed(const float fSpeed) { m_fMaxGroundSpeed = fSpeed; }
-	inline float GetMaxGroundSpeed() { return m_fMaxGroundSpeed; }
-
 protected:
 	void PerformMovement(float fTimeDelta);
 	void TryExertGravity(float fTimeDelta);
@@ -39,6 +36,7 @@ protected:
 	void ClampVelocity();
 	void ClearFrameVariables();
 	void Launch(const TLaunchRequest& tReq);
+	virtual float GetCurMaxGroundSpeed() const { return m_fMaxGroundSpeed; }
 
 	/* 부모 객체의 트랜스폼 */
 	CTransform* m_pTransform = nullptr;

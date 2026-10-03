@@ -25,6 +25,8 @@ void CPlayerMovement::LateUpdate_Component()
 
 void CPlayerMovement::Knockback(const _vec3& vDir, float fIntensity)
 {
+    SetSprint(false);
+
     _vec3 vNormDirFlat = {vDir.x, 0.f, vDir.z};
     D3DXVec3Normalize(&vNormDirFlat, &vNormDirFlat);
     _vec3 vWorldUp{ 0.f, 1.f, 0.f };
@@ -63,6 +65,12 @@ void CPlayerMovement::Walk(const _vec2& vCommand)
 void CPlayerMovement::Stop()
 {
     m_vVelocity = _vec3{ 0.f, 0.f, 0.f };
+}
+
+float CPlayerMovement::GetCurMaxGroundSpeed() const
+{
+    return m_fMaxGroundSpeed * (m_bSprinting ? m_fSprintCoef : 1.f);
+
 }
 
 CPlayerMovement* CPlayerMovement::Create(LPDIRECT3DDEVICE9 pGraphicDev)
