@@ -111,10 +111,6 @@ void CBow::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CBow::DefaultAttack()
-{
-}
-
 void CBow::SpecialAttack()
 {
 }

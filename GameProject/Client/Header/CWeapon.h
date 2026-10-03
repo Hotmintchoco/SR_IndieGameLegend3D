@@ -22,7 +22,7 @@ public:
 	virtual	void LateUpdate_GameObject(_float fTimeDelta);
 	virtual	void Render_GameObject() PURE;
 
-	virtual void DefaultAttack() PURE;
+	void DefaultAttack();
 	virtual void SpecialAttack() PURE;
 	virtual void UltimateAttack() PURE;
 

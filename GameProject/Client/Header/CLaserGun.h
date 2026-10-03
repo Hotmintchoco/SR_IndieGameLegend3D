@@ -22,7 +22,6 @@ public:
 private:
 	HRESULT	Add_Component();
 	void RenderEditorPanel();
-	virtual void DefaultAttack() override;
 	virtual void SpecialAttack() override;
 	virtual void UltimateAttack() override;
 

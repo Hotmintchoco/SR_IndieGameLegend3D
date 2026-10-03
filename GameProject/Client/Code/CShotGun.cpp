@@ -89,7 +89,7 @@ void CShotGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CShotGun::DefaultAttack()
+void CShotGun::SpecialAttack()
 {
     for (int i = 0; i < m_iBulletPerSpecialAtk; ++i)
     {
@@ -118,10 +118,6 @@ void CShotGun::DefaultAttack()
     m_bIsCoolTime = true;
     m_fCoolTimeLeft = m_fSpecialAtkInterval;
     StartShotAnimation();
-}
-
-void CShotGun::SpecialAttack()
-{
 }
 
 void CShotGun::UltimateAttack()
