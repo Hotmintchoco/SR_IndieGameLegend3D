@@ -33,6 +33,9 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	m_fNear = fNear;
 	m_fFar = fFar;
 
+	Sync_AnglesFromLook();
+	Update_LookFromAngles();
+
 	if (FAILED(CCamera::Ready_GameObject()))
 		return E_FAIL;
 
@@ -58,12 +61,11 @@ _int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 
 void CDynamicCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	// Input is processed once in Update; matrix updates belong to the manager.
+	
 }
 
 void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 {
-	// Use camera state directly; the manager has not rebuilt this frame's View yet.
 	_vec3 vLook = m_vAt - m_vEye;
 	D3DXVec3Normalize(&vLook, &vLook);
 	_vec3 vRight;
@@ -136,42 +138,11 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 
 void CDynamicCamera::Mouse_Move()
 {
-	_vec3 vLookDirection = m_vAt - m_vEye;
-	_vec3 vRight;
-	D3DXVec3Cross(&vRight, &m_vUp, &vLookDirection);
-	D3DXVec3Normalize(&vRight, &vRight);
-
-	_long dwMouseMove(0);
-
-	if (dwMouseMove = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Y))
-	{
-		_vec3 vLook = m_vAt - m_vEye;
-
-		_matrix	matRot;
-		D3DXMatrixRotationAxis(&matRot, &vRight, D3DXToRadian(dwMouseMove / 10.f));
-
-		D3DXVec3TransformNormal(&vLook, &vLook, &matRot);
-
-		m_vAt = m_vEye + vLook;
-	}
-
-	if (dwMouseMove = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_X))
-	{
-		_vec3 vUp{ 0.f, 1.f, 0.f };
-		
-		_vec3 vLook = m_vAt - m_vEye;
-
-		_matrix	matRot;
-		D3DXMatrixRotationAxis(&matRot, &vUp, D3DXToRadian(dwMouseMove / 10.f));
-
-		D3DXVec3TransformNormal(&vLook, &vLook, &matRot);
-
-		m_vAt = m_vEye + vLook;
-	}
-
-
+    const _long mouseX = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_X);
+    const _long mouseY = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Y);
+    Rotate(D3DXToRadian(mouseX / 10.f), D3DXToRadian(mouseY / 10.f));
+    Update_LookFromAngles();
 }
-
 void CDynamicCamera::Mouse_Fix()
 {
 	POINT			ptMouseCenter{ WINCX >> 1, WINCY >> 1 };
