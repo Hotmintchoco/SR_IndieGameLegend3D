@@ -86,6 +86,7 @@ enum class EObjectType
 	WEAPON_SHOTGUN,
 	WEAPON_LASERGUN,
 	WEAPON_BOW,
+	WEAPON_LIMINAL,
 	WEAPON_MAX,
 
 
@@ -175,6 +176,25 @@ enum class EPlayerActionState
 	BOW_HOLD,
 	BOW_SHOOT,
 	DIE,
+
+	MAX,
+};
+
+enum class EWeaponAction
+{
+	Primary,
+	Secondary,
+
+	MAX,
+};
+
+enum class EInputState
+{
+	NONE,
+
+	Pressed,
+	Held,
+	Released,
 
 	MAX,
 };

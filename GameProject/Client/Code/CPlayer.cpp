@@ -51,7 +51,7 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
 
     if (m_bInputEnabled)
     {
-	    KeyInput();
+	    UpdateInput();
     }
 
 	CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
@@ -166,7 +166,7 @@ HRESULT CPlayer::Add_Component()
     return S_OK;
 }
 
-void CPlayer::KeyInput()
+void CPlayer::UpdateInput()
 {
     m_pMovement->SetSprint(CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT));
 
@@ -191,33 +191,56 @@ void CPlayer::KeyInput()
     if (D3DXVec2Length(&vCommand) > 1e-6) m_pAnimator->PlayLocomotion((m_pMovement->GetSprint()) ? EPlayerLocomotionState::SPRINT : EPlayerLocomotionState::WALK);
     else m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
 
-    /* 무기 입력 처리 */
-    TWeaponSystemInput tInput;
-    bool bCursorFixed = CCursorPolicyMgr::GetInstance()->IsCursorFixed();
-    tInput.bAttack = CDInputMgr::GetInstance()->Mouse_Press(DIM_LB) && bCursorFixed;
-    tInput.bUltAttack = CDInputMgr::GetInstance()->Key_Down(DIK_C);
-    tInput.bChargeBegin = CDInputMgr::GetInstance()->Mouse_Down(DIM_RB) && bCursorFixed;
-    tInput.bChargeEnd = CDInputMgr::GetInstance()->Mouse_Up(DIM_RB) && bCursorFixed;
-    tInput.bMove = CDInputMgr::GetInstance()->Key_Press(DIK_W)
-                || CDInputMgr::GetInstance()->Key_Press(DIK_A)
-                || CDInputMgr::GetInstance()->Key_Press(DIK_S)
-                || CDInputMgr::GetInstance()->Key_Press(DIK_D);
-    tInput.bSpecialSwitchPressed = CDInputMgr::GetInstance()->Key_Down(DIK_F);
-    tInput.bSprint = CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT);
-    tInput.bSwitchWeapon = CDInputMgr::GetInstance()->Key_Down(DIK_Q);
-    TWeaponSystemOutput tOutput = m_pWeaponSystem->UpdateInput(tInput);
-
-    if (tOutput.bAttacked) m_pAnimator->PlayAction(EPlayerActionState::GUN_SHOOT);
-
-    /* 여기 아래는 마우스 처리 */
-    if (!CCursorPolicyMgr::GetInstance()->IsCursorFixed()) return;
+    UpdateWeaponInput();
     
-    CursorHandling();
+    UpdateCursorInput();
 
 }
 
-void CPlayer::CursorHandling()
+void CPlayer::UpdateWeaponInput()
 {
+    /* 무기 입력 처리 */
+    auto* pInput = CDInputMgr::GetInstance();
+    bool bCursorFixed = CCursorPolicyMgr::GetInstance()->IsCursorFixed();
+    const pair<EWeaponAction, MOUSEKEYSTATE> WeaponActionMapping[] = {
+        { EWeaponAction::Primary, DIM_LB },
+        { EWeaponAction::Secondary, DIM_RB },
+    };
+
+    TWeaponSystemInput tSysInput{};
+
+    for (auto& [eAction, eKey] : WeaponActionMapping)
+    {
+        TWeaponInput tWpInput{};
+
+        tWpInput.eAction = eAction;
+
+        if (!bCursorFixed)                  tWpInput.eState = EInputState::NONE;
+        else if (pInput->Mouse_Down(eKey))  tWpInput.eState = EInputState::Pressed;
+        else if (pInput->Mouse_Press(eKey)) tWpInput.eState = EInputState::Held;
+        else if (pInput->Mouse_Up(eKey))    tWpInput.eState = EInputState::Released;
+
+        tSysInput.tWeaponInput[(int)eAction] = tWpInput;
+    }
+
+    tSysInput.bUltAttack = CDInputMgr::GetInstance()->Key_Down(DIK_C);
+    tSysInput.bMove = pInput->Key_Press(DIK_W)
+        || pInput->Key_Press(DIK_A)
+        || pInput->Key_Press(DIK_S)
+        || pInput->Key_Press(DIK_D);
+    tSysInput.bSpecialSwitchPressed = pInput->Key_Down(DIK_F);
+    tSysInput.bSprint = pInput->Key_Press(DIK_LSHIFT);
+    tSysInput.bSwitchWeapon = pInput->Key_Down(DIK_Q);
+
+    TWeaponSystemOutput tOutput = m_pWeaponSystem->UpdateInput(tSysInput);
+
+    if (tOutput.bAttacked) m_pAnimator->PlayAction(EPlayerActionState::GUN_SHOOT);
+}
+
+void CPlayer::UpdateCursorInput()
+{
+    if (!CCursorPolicyMgr::GetInstance()->IsCursorFixed()) return;
+
     _long dwMouseMove(0);
 
     if (dwMouseMove = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_X))

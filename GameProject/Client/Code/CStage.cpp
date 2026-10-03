@@ -57,8 +57,7 @@ HRESULT CStage::Ready_Scene()
 			return E_FAIL;
 	}
 
-	/* 방 레이어 포인터 초기화 */
-	CheckRoomChanged();
+	m_pCurrentRoomLayer = GetRoomLayerFromIndex(m_iStartRoomIndex);
 
 	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
 		return E_FAIL;

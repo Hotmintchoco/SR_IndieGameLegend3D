@@ -88,7 +88,23 @@ void CLaserGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CLaserGun::SpecialAttack()
+void CLaserGun::SpecialAttack(EInputState ePri, EInputState eSec)
+{
+    switch (ePri)
+    {
+    case EInputState::Held:
+    {
+        ShotLaser();
+        m_bIsCoolTime = true;
+        m_fCoolTimeLeft = m_fSpecialAtkInterval;
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void CLaserGun::ShotLaser()
 {
     _vec3 vDir = m_vBulletTo - m_vBulletFrom;
     D3DXVec3Normalize(&vDir, &vDir);
@@ -100,12 +116,10 @@ void CLaserGun::SpecialAttack()
 
     CSoundMgr::GetInstance()->PlaySFX(L"sfxLaser.wav");
 
-    m_bIsCoolTime = true;
-    m_fCoolTimeLeft = m_fSpecialAtkInterval;
     StartShotAnimation();
 }
 
-void CLaserGun::UltimateAttack()
+void CLaserGun::UltimateAttack(EInputState ePri, EInputState eSec)
 {
 }
 

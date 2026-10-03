@@ -56,13 +56,17 @@ struct TBiomeInfo
 	int iDefaultTileIndex;
 };
 
+struct TWeaponInput
+{
+	EWeaponAction eAction = EWeaponAction::MAX;
+	EInputState eState = EInputState::NONE;
+};
+
 struct TWeaponSystemInput
 {
 	/* 공격 관련 */
-	bool bAttack = false;
+	TWeaponInput tWeaponInput[(int)EWeaponAction::MAX];
 	bool bUltAttack = false;
-	bool bChargeBegin = false;
-	bool bChargeEnd = false;
 	bool bSpecialSwitchPressed = false;
 	bool bSwitchWeapon = false;
 

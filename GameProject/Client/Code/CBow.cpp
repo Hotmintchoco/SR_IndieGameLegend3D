@@ -10,6 +10,8 @@
 #include "CRenderer.h"
 #include "CArrow.h"
 #include "CBombardArrowSpawner.h"
+#include "Client_Enum.h"
+#include "Client_Struct.h"
 
 CBow::CBow(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -76,20 +78,6 @@ void CBow::Render_GameObject()
     // RenderEditorPanel();
 }
 
-void CBow::ChargeStart()
-{
-    m_bOnCharging = true;
-}
-
-void CBow::ChargeEnd()
-{
-    if (!m_bSpecialAttackSwitchOn)
-    {
-        ShootArrow();
-    }
-
-}
-
 void CBow::RenderEditorPanel()
 {
     ImGui::Begin("Bow");
@@ -111,11 +99,33 @@ void CBow::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CBow::SpecialAttack()
+void CBow::DefaultAttack(EInputState ePri, EInputState eSec)
+{
+    switch (eSec)
+    {
+    case EInputState::Pressed:
+    {
+        m_bOnCharging = true;
+        break;
+    }
+    case EInputState::Released:
+    {
+        ShootArrow();
+
+        m_bOnCharging = false;
+        m_fChargeTime = 0.f;
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void CBow::SpecialAttack(EInputState ePri, EInputState eSec)
 {
 }
 
-void CBow::UltimateAttack()
+void CBow::UltimateAttack(EInputState ePri, EInputState eSec)
 {
     CBombardArrowSpawner* pSpawner = CBombardArrowSpawner::Create(m_pGraphicDev);
     if (!pSpawner) return;
@@ -130,9 +140,6 @@ void CBow::ShootArrow()
 
     CProjectile* pProjectile = CArrow::Create(m_pGraphicDev, m_vBulletFrom, vDir, m_fChargeTime / m_fFullChargeTime);
     CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
-
-    m_bOnCharging = false;
-    m_fChargeTime = 0.f;
 }
 
 HRESULT CBow::Add_Component()

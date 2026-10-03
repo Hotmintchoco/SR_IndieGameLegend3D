@@ -85,23 +85,23 @@ void CRapidGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CRapidGun::SpecialAttack()
+void CRapidGun::SpecialAttack(EInputState ePri, EInputState eSec)
 {
-    _vec3 vDir = m_vBulletTo - m_vBulletFrom;
-    D3DXVec3Normalize(&vDir, &vDir);
-
-    CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
-    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
-    pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
-
-    CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
-
-    m_bIsCoolTime = true;
-    m_fCoolTimeLeft = m_fSpecialAtkInterval;
-    StartShotAnimation();
+    switch (ePri)
+    {
+    case EInputState::Held:
+    {
+        ShotSingleBullet();
+        m_bIsCoolTime = true;
+        m_fCoolTimeLeft = m_fSpecialAtkInterval;
+        break;
+    }
+    default:
+        break;
+    }
 }
 
-void CRapidGun::UltimateAttack()
+void CRapidGun::UltimateAttack(EInputState ePri, EInputState eSec)
 {
 }
 

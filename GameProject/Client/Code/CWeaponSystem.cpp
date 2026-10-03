@@ -33,6 +33,9 @@ HRESULT CWeaponSystem::Ready_GameObject()
     if (FAILED(AddWeapon(EObjectType::WEAPON_BOW, L"Bow")))
         return E_FAIL;
 
+    if (FAILED(AddWeapon(EObjectType::WEAPON_LIMINAL, L"LiminalGun")))
+        return E_FAIL;
+
     SwitchWeaponTo(0);
 
 	return S_OK;
@@ -56,7 +59,7 @@ void CWeaponSystem::Render_GameObject()
 
 TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
 {
-    TWeaponSystemOutput t;
+    TWeaponSystemOutput tOut;
 
     if (tInput.bSpecialSwitchPressed)
     {
@@ -66,11 +69,12 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
         }
     }
 
-    if (t.bAttacked = tInput.bAttack && !GetCurrentWeapon()->IsOnCoolTime())
+    if (!GetCurrentWeapon()->IsOnCoolTime())
     {
         if (m_bSpecialAttackSwitchOn)
         {
-            GetCurrentWeapon()->SpecialAttack();
+            GetCurrentWeapon()->SpecialAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
+                                              tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
             // m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
             m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
             if (m_fSpecialAtkGauge <= 0.f)
@@ -86,13 +90,18 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
         }
         else
         {
-            GetCurrentWeapon()->DefaultAttack();
+            GetCurrentWeapon()->DefaultAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
+                                              tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
         }
+        tOut.bAttacked = true;
     }
 
     if (tInput.bUltAttack && m_bIsUltimateAttackReady)
     {
-        GetCurrentWeapon()->UltimateAttack();
+        GetCurrentWeapon()->UltimateAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
+                                           tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
+        
+
         // m_fUltimateAtkGauge = 0.f;
         // m_bIsUltimateAttackReady = false;
 
@@ -102,25 +111,19 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
             pStage->GetStatus()->SetUltimateGauge(m_fUltimateAtkGauge);
         }
     }
-
-    if (CWeapon* pWeapon = GetCurrentWeapon())
-    {
-        if (tInput.bChargeBegin) pWeapon->ChargeStart();
-        if (tInput.bChargeEnd) pWeapon->ChargeEnd();
-
-        TWeaponAnimArgs t;
-        t.bSpecialAtk = m_bSpecialAttackSwitchOn;
-        t.bSprint = tInput.bSprint;
-        t.bMove = tInput.bMove;
-        pWeapon->UpdateAnimationArgs(t);
-    }
+    
+    TWeaponAnimArgs tArgs;
+    tArgs.bSpecialAtk = m_bSpecialAttackSwitchOn;
+    tArgs.bSprint = tInput.bSprint;
+    tArgs.bMove = tInput.bMove;
+    GetCurrentWeapon()->UpdateAnimationArgs(tArgs);
 
     if (tInput.bSwitchWeapon)
     {
         SwitchWeaponTo((m_iCurrentIndex + 1) % (int)m_vecWeapon.size());
     }
 
-    return t;
+    return tOut;
 }
 
 HRESULT CWeaponSystem::AddWeapon(EObjectType eType, const wstring& wstrName)

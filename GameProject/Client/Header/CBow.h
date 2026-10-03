@@ -21,14 +21,12 @@ public:
 	virtual	void LateUpdate_GameObject(_float fTimeDelta) override;
 	virtual	void Render_GameObject() override;
 
-	virtual void ChargeStart() override;
-	virtual void ChargeEnd() override;
-
 private:
 	HRESULT	Add_Component();
 	void RenderEditorPanel();
-	virtual void SpecialAttack() override;
-	virtual void UltimateAttack() override;
+	virtual void DefaultAttack(EInputState ePri, EInputState eSec) override;
+	virtual void SpecialAttack(EInputState ePri, EInputState eSec) override;
+	virtual void UltimateAttack(EInputState ePri, EInputState eSec) override;
 	void ShootArrow();
 
 	CVoxelBuffer* m_pBufferCom[4] = { nullptr };

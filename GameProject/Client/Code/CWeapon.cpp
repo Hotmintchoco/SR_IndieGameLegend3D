@@ -131,7 +131,25 @@ void CWeapon::StartShotAnimation()
     m_fTimeAfterShot = 0.f;
 }
 
-void CWeapon::DefaultAttack()
+void CWeapon::DefaultAttack(EInputState ePri, EInputState eSec)
+{
+    switch (ePri)
+    {
+    case EInputState::Held:
+    {
+        ShotSingleBullet();
+
+        m_bIsCoolTime = true;
+        m_fCoolTimeLeft = m_fShootInterval;
+        break;
+    }
+    default:
+        break;
+    }
+
+}
+
+void CWeapon::ShotSingleBullet()
 {
     _vec3 vDir = m_vBulletTo - m_vBulletFrom;
     D3DXVec3Normalize(&vDir, &vDir);
@@ -142,17 +160,7 @@ void CWeapon::DefaultAttack()
 
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
 
-    m_bIsCoolTime = true;
-    m_fCoolTimeLeft = m_fShootInterval;
     StartShotAnimation();
-}
-
-void CWeapon::ChargeStart()
-{
-}
-
-void CWeapon::ChargeEnd()
-{
 }
 
 HRESULT CWeapon::Add_Component()
