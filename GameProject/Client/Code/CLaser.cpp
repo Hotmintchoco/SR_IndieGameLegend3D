@@ -164,7 +164,7 @@ void CLaser::PreciseHitTest(CGameObject* pTarget, const float fTimeDelta)
         }
     }
 
-    const float fThreshold = s_tData.fSpeed * fTimeDelta;
+    const float fThreshold = s_tData.fSpeed * fTimeDelta * 2.f; /* 2는 여유분 */
 
     if (t.bHit && t.fDist < fThreshold)
     {

@@ -137,7 +137,7 @@ void CArrow::PreciseHitTest(CGameObject* pTarget, const float fTimeDelta)
         }
     }
 
-    const float fThreshold = m_fSpeed * fTimeDelta;
+    const float fThreshold = m_fSpeed * fTimeDelta * 2.f; /* 2는 여유분 */
 
     if (t.bHit && t.fDist < fThreshold)
     {
