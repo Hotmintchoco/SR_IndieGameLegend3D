@@ -77,5 +77,5 @@ struct TWeaponSystemInput
 
 struct TWeaponSystemOutput
 {
-	bool bAttacked = false;
+	EWeaponEvent eWpEvent = EWeaponEvent::NONE;
 };

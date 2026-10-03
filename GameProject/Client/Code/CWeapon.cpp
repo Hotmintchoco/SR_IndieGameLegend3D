@@ -131,7 +131,7 @@ void CWeapon::StartShotAnimation()
     m_fTimeAfterShot = 0.f;
 }
 
-void CWeapon::DefaultAttack(EInputState ePri, EInputState eSec)
+EWeaponEvent CWeapon::DefaultAttack(EInputState ePri, EInputState eSec)
 {
     switch (ePri)
     {
@@ -141,12 +141,14 @@ void CWeapon::DefaultAttack(EInputState ePri, EInputState eSec)
 
         m_bIsCoolTime = true;
         m_fCoolTimeLeft = m_fShootInterval;
+        return EWeaponEvent::GUN_SHOT;
         break;
     }
     default:
         break;
     }
 
+    return EWeaponEvent::NONE;
 }
 
 void CWeapon::ShotSingleBullet()

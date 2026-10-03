@@ -24,8 +24,8 @@ private:
 	HRESULT	Add_Component();
 	void RenderEditorPanel();
 	void ShotSGBullet();
-	virtual void SpecialAttack(EInputState ePri, EInputState eSec) override;
-	virtual void UltimateAttack(EInputState ePri, EInputState eSec) override;
+	virtual EWeaponEvent SpecialAttack(EInputState ePri, EInputState eSec) override;
+	virtual EWeaponEvent UltimateAttack(EInputState ePri, EInputState eSec) override;
 
 	Engine::CPlyTex* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;

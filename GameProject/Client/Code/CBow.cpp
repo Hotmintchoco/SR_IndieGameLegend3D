@@ -99,13 +99,14 @@ void CBow::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CBow::DefaultAttack(EInputState ePri, EInputState eSec)
+EWeaponEvent CBow::DefaultAttack(EInputState ePri, EInputState eSec)
 {
     switch (eSec)
     {
     case EInputState::Pressed:
     {
         m_bOnCharging = true;
+        return EWeaponEvent::BOW_CHARGE_START;
         break;
     }
     case EInputState::Released:
@@ -114,23 +115,29 @@ void CBow::DefaultAttack(EInputState ePri, EInputState eSec)
 
         m_bOnCharging = false;
         m_fChargeTime = 0.f;
+        return EWeaponEvent::BOW_CHARGE_END;
         break;
     }
     default:
         break;
     }
+
+    return EWeaponEvent::NONE;
 }
 
-void CBow::SpecialAttack(EInputState ePri, EInputState eSec)
+EWeaponEvent CBow::SpecialAttack(EInputState ePri, EInputState eSec)
 {
+    return EWeaponEvent::NONE;
 }
 
-void CBow::UltimateAttack(EInputState ePri, EInputState eSec)
+EWeaponEvent CBow::UltimateAttack(EInputState ePri, EInputState eSec)
 {
     CBombardArrowSpawner* pSpawner = CBombardArrowSpawner::Create(m_pGraphicDev);
-    if (!pSpawner) return;
+    if (!pSpawner) return EWeaponEvent::NONE;
 
     CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"BombardArrowSpawner", pSpawner);
+
+    return EWeaponEvent::NONE;
 }
 
 void CBow::ShootArrow()

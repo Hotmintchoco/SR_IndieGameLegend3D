@@ -73,7 +73,7 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
     {
         if (m_bSpecialAttackSwitchOn)
         {
-            GetCurrentWeapon()->SpecialAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
+            tOut.eWpEvent = GetCurrentWeapon()->SpecialAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
                                               tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
             // m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
             m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
@@ -90,15 +90,14 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
         }
         else
         {
-            GetCurrentWeapon()->DefaultAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
+            tOut.eWpEvent = GetCurrentWeapon()->DefaultAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
                                               tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
         }
-        tOut.bAttacked = true;
     }
 
     if (tInput.bUltAttack && m_bIsUltimateAttackReady)
     {
-        GetCurrentWeapon()->UltimateAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
+        tOut.eWpEvent = GetCurrentWeapon()->UltimateAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
                                            tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
         
 

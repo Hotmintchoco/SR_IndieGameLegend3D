@@ -24,9 +24,9 @@ public:
 private:
 	HRESULT	Add_Component();
 	void RenderEditorPanel();
-	virtual void DefaultAttack(EInputState ePri, EInputState eSec) override;
-	virtual void SpecialAttack(EInputState ePri, EInputState eSec) override;
-	virtual void UltimateAttack(EInputState ePri, EInputState eSec) override;
+	virtual EWeaponEvent DefaultAttack(EInputState ePri, EInputState eSec) override;
+	virtual EWeaponEvent SpecialAttack(EInputState ePri, EInputState eSec) override;
+	virtual EWeaponEvent UltimateAttack(EInputState ePri, EInputState eSec) override;
 	void ShootArrow();
 
 	CVoxelBuffer* m_pBufferCom[4] = { nullptr };

@@ -85,7 +85,7 @@ void CRapidGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CRapidGun::SpecialAttack(EInputState ePri, EInputState eSec)
+EWeaponEvent CRapidGun::SpecialAttack(EInputState ePri, EInputState eSec)
 {
     switch (ePri)
     {
@@ -94,15 +94,19 @@ void CRapidGun::SpecialAttack(EInputState ePri, EInputState eSec)
         ShotSingleBullet();
         m_bIsCoolTime = true;
         m_fCoolTimeLeft = m_fSpecialAtkInterval;
+        return EWeaponEvent::GUN_SHOT;
         break;
     }
     default:
         break;
     }
+
+    return EWeaponEvent::NONE;
 }
 
-void CRapidGun::UltimateAttack(EInputState ePri, EInputState eSec)
+EWeaponEvent CRapidGun::UltimateAttack(EInputState ePri, EInputState eSec)
 {
+    return EWeaponEvent::NONE;
 }
 
 HRESULT CRapidGun::Add_Component()

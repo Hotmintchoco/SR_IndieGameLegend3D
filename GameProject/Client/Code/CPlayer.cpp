@@ -24,6 +24,7 @@ CPlayer::~CPlayer()
 {
 }
 
+#include "CLiminalObject.h"
 HRESULT CPlayer::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
@@ -35,6 +36,18 @@ HRESULT CPlayer::Ready_GameObject()
 	m_pColliderCom->Set_Radius(m_fColliderScale);
     m_pColliderCom->Set_DiffPos(_vec3{0.f, 0.5f, 0.f});
 	m_pColliderCom->Set_CollisionID(COLL_PLAYER);
+
+
+    // Ray Caster
+    CLiminalObject* pGameObject = CLiminalObject::Create(m_pGraphicDev);
+    if (nullptr == pGameObject)
+        return E_FAIL;
+
+    if (FAILED(CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"CLiminalObject", pGameObject)))
+        return E_FAIL;
+
+    CTransform* pTransform = static_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+    pTransform->Set_Pos(_vec3{ 60.f, 0.f, 60.f });
 
 	return S_OK;
 }
@@ -234,7 +247,12 @@ void CPlayer::UpdateWeaponInput()
 
     TWeaponSystemOutput tOutput = m_pWeaponSystem->UpdateInput(tSysInput);
 
-    if (tOutput.bAttacked) m_pAnimator->PlayAction(EPlayerActionState::GUN_SHOOT);
+    switch (tOutput.eWpEvent)
+    {
+    case EWeaponEvent::GUN_SHOT:
+        m_pAnimator->PlayAction(EPlayerActionState::GUN_SHOOT);
+        break;
+    }
 }
 
 void CPlayer::UpdateCursorInput()

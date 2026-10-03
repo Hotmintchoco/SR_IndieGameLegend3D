@@ -23,9 +23,9 @@ public:
 	virtual	void LateUpdate_GameObject(_float fTimeDelta);
 	virtual	void Render_GameObject() PURE;
 
-	virtual void DefaultAttack(EInputState ePri, EInputState eSec);
-	virtual void SpecialAttack(EInputState ePri, EInputState eSec) PURE;
-	virtual void UltimateAttack(EInputState ePri, EInputState eSec) PURE;
+	virtual EWeaponEvent DefaultAttack(EInputState ePri, EInputState eSec);
+	virtual EWeaponEvent SpecialAttack(EInputState ePri, EInputState eSec) PURE;
+	virtual EWeaponEvent UltimateAttack(EInputState ePri, EInputState eSec) PURE;
 
 	void UpdateAnimationArgs(const TWeaponAnimArgs& t);
 

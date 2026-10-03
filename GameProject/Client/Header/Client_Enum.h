@@ -198,3 +198,14 @@ enum class EInputState
 
 	MAX,
 };
+
+enum class EWeaponEvent
+{
+	NONE,
+
+	GUN_SHOT,
+	BOW_CHARGE_START,
+	BOW_CHARGE_END,
+
+	MAX,
+};

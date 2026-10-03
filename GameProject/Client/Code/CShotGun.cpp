@@ -89,7 +89,7 @@ void CShotGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CShotGun::SpecialAttack(EInputState ePri, EInputState eSec)
+EWeaponEvent CShotGun::SpecialAttack(EInputState ePri, EInputState eSec)
 {
     switch (ePri)
     {
@@ -98,11 +98,14 @@ void CShotGun::SpecialAttack(EInputState ePri, EInputState eSec)
         ShotSGBullet();
         m_bIsCoolTime = true;
         m_fCoolTimeLeft = m_fSpecialAtkInterval;
+        return EWeaponEvent::GUN_SHOT;
         break;
     }
     default:
         break;
     }
+
+    return EWeaponEvent::NONE;
 }
 
 void CShotGun::ShotSGBullet()
@@ -134,8 +137,9 @@ void CShotGun::ShotSGBullet()
     StartShotAnimation();
 }
 
-void CShotGun::UltimateAttack(EInputState ePri, EInputState eSec)
+EWeaponEvent CShotGun::UltimateAttack(EInputState ePri, EInputState eSec)
 {
+    return EWeaponEvent::NONE;
 }
 
 HRESULT CShotGun::Add_Component()
