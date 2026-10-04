@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "CCinematicCamera.h"
+#include "CManagement.h"
 
 CCinematicCamera::CCinematicCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCamera(pGraphicDev), m_bFinished(false), m_bPlaying(false), m_fElapsedTime(0.f)
@@ -29,6 +30,11 @@ HRESULT CCinematicCamera::Play(const CINEMATIC_DESC& tDesc)
     m_bPlaying = true;
     m_bFinished = false;
 
+    // UI Layer 및 Player 비활성화
+	CLayer* pUILayer = CManagement::GetInstance()->Get_Layer(L"UI_Layer");
+    if (pUILayer)
+        pUILayer->Set_IsActive(false);
+
     // 이전 연출의 마지막 자세가 남지 않도록 초기 상태 설정
     Evaluate(0.f);
     Update_Matrices();
@@ -52,6 +58,11 @@ _int CCinematicCamera::Update_GameObject(_float fTimeDelta)
     {
         m_bPlaying = false;
         m_bFinished = true;
+
+		// UI Layer 및 Player 활성화
+        CLayer* pUILayer = CManagement::GetInstance()->Get_Layer(L"UI_Layer");
+        if (pUILayer)
+            pUILayer->Set_IsActive(true);
     }
 
     return 0;
