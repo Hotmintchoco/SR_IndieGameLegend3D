@@ -735,7 +735,7 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
             desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
-            desc.fDuration = 1.f;
+            desc.fDuration = 1.5f;
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
