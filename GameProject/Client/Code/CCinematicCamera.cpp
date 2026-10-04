@@ -3,7 +3,7 @@
 #include "CManagement.h"
 
 CCinematicCamera::CCinematicCamera(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CCamera(pGraphicDev), m_bFinished(false), m_bPlaying(false), m_fElapsedTime(0.f)
+	: CCamera(pGraphicDev), m_bFinished(false), m_bPlaying(false), m_fElapsedTime(0.f), m_bStartFromCurrent(false)
 {
 }
 
@@ -23,9 +23,14 @@ HRESULT CCinematicCamera::Ready_GameObject()
     return CCamera::Ready_GameObject();
 }
 
-HRESULT CCinematicCamera::Play(const CINEMATIC_DESC& tDesc)
+HRESULT CCinematicCamera::Play()
 {
-    m_tDesc = tDesc;
+    if (m_queueDesc.empty())
+		return E_FAIL;
+
+    m_tCurrentDesc = m_queueDesc.front();
+    m_queueDesc.pop();
+
     m_fElapsedTime = 0.f;
     m_bPlaying = true;
     m_bFinished = false;
@@ -50,20 +55,20 @@ _int CCinematicCamera::Update_GameObject(_float fTimeDelta)
     m_fElapsedTime += max(0.f, fTimeDelta);
 
     const _float fRatio = min(
-        m_fElapsedTime / m_tDesc.fDuration, 1.f);
+        m_fElapsedTime / m_tCurrentDesc.fDuration, 1.f);
 
     Evaluate(fRatio);
 
     if (fRatio >= 1.f)
-    {
-        m_bPlaying = false;
-        m_bFinished = true;
+        Start_NextShot();
 
-		// UI Layer 및 Player 활성화
+    if (m_bFinished)
+    {
+        // UI Layer 및 Player 활성화
         CLayer* pUILayer = CManagement::GetInstance()->Get_Layer(L"UI_Layer");
         if (pUILayer)
             pUILayer->Set_IsActive(true);
-    }
+	}
 
     return 0;
 }
@@ -82,14 +87,14 @@ void CCinematicCamera::Evaluate(_float fRatio)
 
     D3DXVec3Lerp(
         &m_vEye,
-        &m_tDesc.vEyeFrom,
-        &m_tDesc.vEyeTo,
+        &m_tCurrentDesc.vEyeFrom,
+        &m_tCurrentDesc.vEyeTo,
         u);
 
-    m_vAt = m_tDesc.vLookAt;
+    m_vAt = m_tCurrentDesc.vLookAt;
 
-    m_fFov = m_tDesc.fFovFrom
-        + (m_tDesc.fFovTo - m_tDesc.fFovFrom) * u;
+    m_fFov = m_tCurrentDesc.fFovFrom
+        + (m_tCurrentDesc.fFovTo - m_tCurrentDesc.fFovFrom) * u;
 
     // Eye와 At이 일치하면 View 행렬을 만들 수 없으므로 보정
     _vec3 vLook = m_vAt - m_vEye;
@@ -106,6 +111,23 @@ void CCinematicCamera::Evaluate(_float fRatio)
     m_vUp = fabsf(vLook.y) > 0.999f ? _vec3{ 0.f, 0.f, 1.f } : _vec3{ 0.f, 1.f, 0.f };
 }
 
+void CCinematicCamera::Start_NextShot()
+{
+    if (m_queueDesc.empty())
+    {
+        m_bPlaying = false;
+        m_bFinished = true;
+        return;
+    }
+
+    m_tCurrentDesc = m_queueDesc.front();
+    m_queueDesc.pop();
+
+    m_fElapsedTime = 0.f;
+
+    Evaluate(0.f);
+}
+
 void CCinematicCamera::Stop()
 {
     // 현재 위치에서 재생 취소
@@ -118,11 +140,16 @@ void CCinematicCamera::Skip()
     if (!m_bPlaying)
         return;
 
-    m_fElapsedTime = m_tDesc.fDuration;
+    m_fElapsedTime = m_tCurrentDesc.fDuration;
     Evaluate(1.f);
 
     m_bPlaying = false;
     m_bFinished = true;
+}
+
+void CCinematicCamera::Add_Shot(const CINEMATIC_DESC& tDesc)
+{
+	m_queueDesc.push(tDesc);
 }
 
 CCinematicCamera* CCinematicCamera::Create(

@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CCamera.h"
+#include <queue>
 
 struct CINEMATIC_DESC
 {
@@ -29,22 +30,27 @@ public:
     void Render_GameObject() override {}
 
 public:
-    HRESULT Play(const CINEMATIC_DESC& tDesc);
-    void Stop();
-    void Skip();
+    HRESULT     Play();
+    void        Stop();
+    void        Skip();
 
-    _bool Is_Playing() const { return m_bPlaying; }
-    _bool Is_Finished() const { return m_bFinished; }
+	void        Add_Shot(const CINEMATIC_DESC& tDesc);
+
+    _bool       Is_Playing() const { return m_bPlaying; }
+    _bool       Is_Finished() const { return m_bFinished; }
 
 private:
-    void Evaluate(_float fRatio);
+    void        Evaluate(_float fRatio);
+	void	    Start_NextShot();
 
 private:
-    CINEMATIC_DESC  m_tDesc{};
+    CINEMATIC_DESC          m_tCurrentDesc{};   // 현재 구간
+    queue<CINEMATIC_DESC>   m_queueDesc;        // 다음 구간들
 
-    _float          m_fElapsedTime;
-    _bool           m_bPlaying;
-    _bool           m_bFinished;
+    _float                  m_fElapsedTime;
+    _bool                   m_bPlaying;
+    _bool                   m_bFinished;
+	_bool                   m_bStartFromCurrent;    // 현재 위치에서 시작할지 여부
 
 public:
     static CCinematicCamera* Create(

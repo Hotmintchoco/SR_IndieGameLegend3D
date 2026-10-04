@@ -685,6 +685,7 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
 
         if (pCinematic)
         {
+            // 연출 1
             CINEMATIC_DESC desc;
 
             desc.vEyeFrom = { vBossPos.x, 3.f, vBossPos.z - 6.f };
@@ -694,11 +695,39 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
             desc.fDuration = 2.f;
             desc.fFovFrom = D3DXToRadian(60.f);
             desc.fFovTo = D3DXToRadian(47.5f);
+            pCinematic->Add_Shot(desc);
 
-            if (SUCCEEDED(pCinematic->Play(desc)))
-            {
-                pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
-            }
+            // 연출 2
+            desc.vEyeFrom = { vBossPos.x, 2.f, vBossPos.z - 2.f };
+            desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
+            desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 0.25f;
+            desc.fFovFrom = D3DXToRadian(47.5f);
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 3
+            desc.vEyeFrom = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
+            desc.vEyeTo = { vBossPos.x + 3.f, 4.5f, vBossPos.z - 7.f };
+            desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 0.5f;
+            desc.fFovFrom = D3DXToRadian(60.f);
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 4
+            desc.vEyeFrom = { vBossPos.x + 3.f, 4.5f, vBossPos.z - 7.f };
+            desc.vEyeTo = { vBossPos.x - 3.f, 4.5f, vBossPos.z - 7.f };
+            desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 0.5f;
+            desc.fFovFrom = D3DXToRadian(60.f);
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
         }
     }
 

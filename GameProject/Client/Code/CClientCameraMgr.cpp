@@ -43,6 +43,15 @@ HRESULT CClientCameraMgr::Select_Camera(CLIENT_CAMERA_TYPE eType)
         return E_FAIL;
 
     m_pActiveCamera = pCamera;
+
+    if (eType == CLIENT_CAMERA_TYPE::CINEMATIC)
+    {
+        auto pCinematicCamera = static_cast<CCinematicCamera*>(pCamera);
+
+        if (FAILED(pCinematicCamera->Play()))
+            return E_FAIL;
+	}
+
     return S_OK;
 }
 
