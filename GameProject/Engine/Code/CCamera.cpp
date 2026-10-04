@@ -20,6 +20,8 @@ CCamera::CCamera(const CCamera& rhs)
 	, m_vEye(rhs.m_vEye)
 	, m_vAt(rhs.m_vAt)
 	, m_vUp(rhs.m_vUp)
+	, m_fYaw(rhs.m_fYaw), m_fPitch(rhs.m_fPitch)
+	, m_fMinPitch(rhs.m_fMinPitch), m_fMaxPitch(rhs.m_fMaxPitch)
 {
 	m_matView = rhs.m_matView;
 	m_matProj = rhs.m_matProj;
@@ -37,8 +39,52 @@ HRESULT CCamera::Ready_GameObject()
 
 _int CCamera::Update_GameObject(_float fTimeDelta)
 {
-	Update_Matrices();
 	return 0;
+}
+
+HRESULT CCamera::Set_PitchLimits(_float fMinPitch, _float fMaxPitch)
+{
+	const _float fSafeLimit = D3DXToRadian(89.9f);
+	if (!std::isfinite(fMinPitch) || !std::isfinite(fMaxPitch) ||
+		fMinPitch > fMaxPitch || fMinPitch < -fSafeLimit || fMaxPitch > fSafeLimit)
+		return E_INVALIDARG;
+	m_fMinPitch = fMinPitch;
+	m_fMaxPitch = fMaxPitch;
+	Sync_AnglesFromLook();
+	Update_LookFromAngles();
+	return S_OK;
+}
+
+void CCamera::Sync_AnglesFromLook()
+{
+	const _vec3 vLook = m_vAt - m_vEye;
+	const _float fHorizontal = sqrtf(vLook.x * vLook.x + vLook.z * vLook.z);
+	if (D3DXVec3LengthSq(&vLook) < 1.e-8f)
+	{
+		m_fYaw = 0.f;
+		m_fPitch = 0.f;
+	}
+	else
+	{
+		if (fHorizontal > 1.e-6f) m_fYaw = atan2f(vLook.x, vLook.z);
+		m_fPitch = atan2f(-vLook.y, fHorizontal);
+	}
+	m_fPitch = max(m_fMinPitch, min(m_fPitch, m_fMaxPitch));
+}
+
+void CCamera::Rotate(_float fDeltaYaw, _float fDeltaPitch)
+{
+	if (!std::isfinite(fDeltaYaw) || !std::isfinite(fDeltaPitch)) return;
+	m_fYaw = fmodf(m_fYaw + fDeltaYaw, 2.f * D3DX_PI);
+	m_fPitch = max(m_fMinPitch, min(m_fPitch + fDeltaPitch, m_fMaxPitch));
+}
+
+void CCamera::Update_LookFromAngles()
+{
+	const _float fCosPitch = cosf(m_fPitch);
+	const _vec3 vLook{ sinf(m_fYaw) * fCosPitch, -sinf(m_fPitch), cosf(m_fYaw) * fCosPitch };
+	m_vAt = m_vEye + vLook;
+	m_vUp = { 0.f, 1.f, 0.f };
 }
 
 void CCamera::Update_Matrices()

@@ -3,7 +3,9 @@
 #include "CManagement.h"
 #include "CRoomLayer.h"
 #include "CImGuiTool.h"
-#include "CCameraMgr.h"
+#include "CClientCameraMgr.h"
+#include "CCamera.h"
+#include "CTransform.h"
 #include "CDebugMgr.h"
 #include "CRoomLoadingMgr.h"
 #include "CSoundMgr.h"
@@ -80,7 +82,7 @@ void CGameStatus::DebugRayTest()
 
 void CGameStatus::UpdateCameraInfo()
 {
-    CCameraObj* pCamera = CCameraMgr::GetInstance()->GetCamera(L"Camera_Player_FPV");
+    CCamera* pCamera = CClientCameraMgr::GetInstance()->Get_ActiveCamera();
     if (!pCamera) return;
 
     _matrix matCamWorld;

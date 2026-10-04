@@ -40,9 +40,6 @@
     <Filter Include="02. GameObject\03. Terrain">
       <UniqueIdentifier>{4b423757-2c5b-4e4e-9268-5f613c9c8f2f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\04. DynamicCamera">
-      <UniqueIdentifier>{cdd6e53a-fa5b-4c49-a8c4-f0b652689629}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\05. SkyBox">
       <UniqueIdentifier>{3cee2e7b-a2d0-4be9-9ae5-6f08fc300e79}</UniqueIdentifier>
     </Filter>
@@ -343,6 +340,21 @@
     <Filter Include="01. Scene\Stage\Layer\Liminal\Slope">
       <UniqueIdentifier>{b095e27f-ea10-454a-bb4f-fe6ce8e56688}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Manager\01. Camera">
+      <UniqueIdentifier>{3ec8c192-44f1-4350-a6d8-cef25d959a74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. ClientCamera">
+      <UniqueIdentifier>{cdd6e53a-fa5b-4c49-a8c4-f0b652689629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. ClientCamera\Player">
+      <UniqueIdentifier>{d5fe8be7-bb9e-425d-8c1e-1db40c8721c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. ClientCamera\Cinematic">
+      <UniqueIdentifier>{496eeab5-9cbf-4043-9a05-83860b5b0c62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. ClientCamera\Dynamic">
+      <UniqueIdentifier>{ee5fc2b0-79b0-4bd1-80cd-3d0ed858e2b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -380,9 +392,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CTerrain.h">
       <Filter>02. GameObject\03. Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CDynamicCamera.h">
-      <Filter>02. GameObject\04. DynamicCamera</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CSkyBox.h">
       <Filter>02. GameObject\05. SkyBox</Filter>
@@ -708,6 +717,18 @@
     <ClInclude Include="..\Header\CLiminalSlope.h">
       <Filter>01. Scene\Stage\Layer\Liminal\Slope</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CClientCameraMgr.h">
+      <Filter>04. Manager\01. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayerCamera.h">
+      <Filter>02. GameObject\04. ClientCamera\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCinematicCamera.h">
+      <Filter>02. GameObject\04. ClientCamera\Cinematic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CDynamicCamera.h">
+      <Filter>02. GameObject\04. ClientCamera\Dynamic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -736,9 +757,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTerrain.cpp">
       <Filter>02. GameObject\03. Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CDynamicCamera.cpp">
-      <Filter>02. GameObject\04. DynamicCamera</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CSkyBox.cpp">
       <Filter>02. GameObject\05. SkyBox</Filter>
@@ -1045,6 +1063,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLiminalSlope.cpp">
       <Filter>01. Scene\Stage\Layer\Liminal\Slope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CClientCameraMgr.cpp">
+      <Filter>04. Manager\01. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerCamera.cpp">
+      <Filter>02. GameObject\04. ClientCamera\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCinematicCamera.cpp">
+      <Filter>02. GameObject\04. ClientCamera\Cinematic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDynamicCamera.cpp">
+      <Filter>02. GameObject\04. ClientCamera\Dynamic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

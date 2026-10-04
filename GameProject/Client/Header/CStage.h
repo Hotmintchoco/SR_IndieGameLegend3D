@@ -23,6 +23,9 @@ public:
 	virtual	void LateUpdate_Scene(_float fTimeDelta) override;
 	virtual	void Render_Scene() override {}
 
+	virtual			void		OnEnter() override;
+	virtual			void		OnExit() override;
+
 	virtual HRESULT Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject) override;
 
 	/* 게임 상태관리 오브젝트 직통 부르기 */
@@ -40,18 +43,17 @@ public:
 	CRoomLayer* GetRoomLayerFromIndex(int iIndex);
 
 private:
-	HRESULT	Ready_Environment_Layer(const _tchar* pLayerTag);
-	HRESULT	Ready_GameLogic_Layer(const _tchar* pLayerTag);
-	HRESULT	Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx);
-	HRESULT	Ready_UI_Layer(const _tchar* pLayerTag);
+	HRESULT Ready_Environment_Layer(const _tchar* pLayerTag);
+	HRESULT Ready_GameLogic_Layer(const _tchar* pLayerTag);
+	HRESULT Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx);
+	HRESULT Ready_UI_Layer(const _tchar* pLayerTag);
+	HRESULT Ready_Camera();
 
 	void CheckRoomChanged();
 	int CalculateRoomIndexFromPlayerPosition();
 
-	CAMERAID			m_CurCamera; // TODO
 
 	/* 방 관련 */
-	CRoomLayer* m_pCurrentRoomLayer = nullptr;
 	int m_iStartRoomIndex = 12;
 	int m_iCurrentRoomIndex = m_iStartRoomIndex;
 	int m_iPrevRoomIndex = m_iStartRoomIndex;

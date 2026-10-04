@@ -9,7 +9,8 @@
 #include "CDInputMgr.h"
 #include "CLightMgr.h"
 #include "CCollisionMgr.h"
-#include "CCameraMgr.h"
+#include "CClientCameraMgr.h"
+#include "CCamera.h"
 #include "CImGuiTool.h"
 #include "CRoomLoadingMgr.h"
 #include "CAbstractFactory.h"
@@ -174,7 +175,7 @@ void CMainApp::Free()
 	CFontMgr::DestroyInstance();
 	CFrameMgr::DestroyInstance();
 	CTimerMgr::DestroyInstance();
-	CCameraMgr::DestroyInstance();
+	CClientCameraMgr::DestroyInstance();
 	CRoomLoadingMgr::DestroyInstance();
 	CAbstractFactory::DestroyInstance();
 	CRandomMgr::DestroyInstance();

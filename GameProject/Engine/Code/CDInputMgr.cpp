@@ -1,4 +1,4 @@
-#include "CDInputMgr.h"
+ï»¿#include "CDInputMgr.h"
 
 IMPLEMENT_SINGLETON(CDInputMgr)
 
@@ -13,17 +13,17 @@ Engine::CDInputMgr::~CDInputMgr(void)
 	Free();
 }
 
-bool CDInputMgr::Key_Press(_byte byKeyID)
+bool CDInputMgr::Key_Press(_ubyte byKeyID)
 {
 	return (m_byKeyState[byKeyID] & 0x80) != 0;
 }
 
-bool CDInputMgr::Key_Down(_byte byKeyID)
+bool CDInputMgr::Key_Down(_ubyte byKeyID)
 {
 	return !(m_byPrevKeyState[byKeyID] & 0x80) && (m_byKeyState[byKeyID] & 0x80);
 }
 
-bool CDInputMgr::Key_Up(_byte byKeyID)
+bool CDInputMgr::Key_Up(_ubyte byKeyID)
 {
 	return (m_byPrevKeyState[byKeyID] & 0x80) && !(m_byKeyState[byKeyID] & 0x80);
 }
@@ -46,7 +46,7 @@ bool CDInputMgr::Mouse_Up(MOUSEKEYSTATE eMouse)
 HRESULT Engine::CDInputMgr::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 {
 
-	// DInput ÄÄ°´Ã¼¸¦ »ı¼ºÇÏ´Â ÇÔ¼ö
+	// DInput ì»´ê°ì²´ë¥¼ ìƒì„±í•˜ëŠ” í•¨ìˆ˜
 	if (FAILED(DirectInput8Create(hInst,
 								DIRECTINPUT_VERSION,
 								IID_IDirectInput8,
@@ -54,31 +54,31 @@ HRESULT Engine::CDInputMgr::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 								NULL)))
 								return E_FAIL;
 
-	// Å°º¸µå °´Ã¼ »ı¼º
+	// í‚¤ë³´ë“œ ê°ì²´ ìƒì„±
 	if (FAILED(m_pInputSDK->CreateDevice(GUID_SysKeyboard, &m_pKeyBoard, nullptr)))
 		return E_FAIL;
 
-	// »ı¼ºµÈ Å°º¸µå °´Ã¼ÀÇ ´ëÇÑ Á¤º¸¸¦ ÄÄ °´Ã¼¿¡°Ô Àü´ŞÇÏ´Â ÇÔ¼ö
+	// ìƒì„±ëœ í‚¤ë³´ë“œ ê°ì²´ì˜ ëŒ€í•œ ì •ë³´ë¥¼ ì»´ ê°ì²´ì—ê²Œ ì „ë‹¬í•˜ëŠ” í•¨ìˆ˜
 	m_pKeyBoard->SetDataFormat(&c_dfDIKeyboard);
 
-	// ÀåÄ¡¿¡ ´ëÇÑ µ¶Á¡±ÇÀ» ¼³Á¤ÇØÁÖ´Â ÇÔ¼ö, (Å¬¶óÀÌ¾ğÆ®°¡ ¶°ÀÖ´Â »óÅÂ¿¡¼­ Å° ÀÔ·ÂÀ» ¹ŞÀ»Áö ¸»Áö¸¦ °áÁ¤ÇÏ´Â ÇÔ¼ö)
+	// ì¥ì¹˜ì— ëŒ€í•œ ë…ì ê¶Œì„ ì„¤ì •í•´ì£¼ëŠ” í•¨ìˆ˜, (í´ë¼ì´ì–¸íŠ¸ê°€ ë– ìˆëŠ” ìƒíƒœì—ì„œ í‚¤ ì…ë ¥ì„ ë°›ì„ì§€ ë§ì§€ë¥¼ ê²°ì •í•˜ëŠ” í•¨ìˆ˜)
 	m_pKeyBoard->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
 
-	// ÀåÄ¡¿¡ ´ëÇÑ access ¹öÀüÀ» ¹Ş¾Æ¿À´Â ÇÔ¼ö
+	// ì¥ì¹˜ì— ëŒ€í•œ access ë²„ì „ì„ ë°›ì•„ì˜¤ëŠ” í•¨ìˆ˜
 	m_pKeyBoard->Acquire();
 
 
-	// ¸¶¿ì½º °´Ã¼ »ı¼º
+	// ë§ˆìš°ìŠ¤ ê°ì²´ ìƒì„±
 	if (FAILED(m_pInputSDK->CreateDevice(GUID_SysMouse, &m_pMouse, nullptr)))
 		return E_FAIL;
 
-	// »ı¼ºµÈ ¸¶¿ì½º °´Ã¼ÀÇ ´ëÇÑ Á¤º¸¸¦ ÄÄ °´Ã¼¿¡°Ô Àü´ŞÇÏ´Â ÇÔ¼ö
+	// ìƒì„±ëœ ë§ˆìš°ìŠ¤ ê°ì²´ì˜ ëŒ€í•œ ì •ë³´ë¥¼ ì»´ ê°ì²´ì—ê²Œ ì „ë‹¬í•˜ëŠ” í•¨ìˆ˜
 	m_pMouse->SetDataFormat(&c_dfDIMouse);
 
-	// ÀåÄ¡¿¡ ´ëÇÑ µ¶Á¡±ÇÀ» ¼³Á¤ÇØÁÖ´Â ÇÔ¼ö, Å¬¶óÀÌ¾ğÆ®°¡ ¶°ÀÖ´Â »óÅÂ¿¡¼­ Å° ÀÔ·ÂÀ» ¹ŞÀ»Áö ¸»Áö¸¦ °áÁ¤ÇÏ´Â ÇÔ¼ö
+	// ì¥ì¹˜ì— ëŒ€í•œ ë…ì ê¶Œì„ ì„¤ì •í•´ì£¼ëŠ” í•¨ìˆ˜, í´ë¼ì´ì–¸íŠ¸ê°€ ë– ìˆëŠ” ìƒíƒœì—ì„œ í‚¤ ì…ë ¥ì„ ë°›ì„ì§€ ë§ì§€ë¥¼ ê²°ì •í•˜ëŠ” í•¨ìˆ˜
 	m_pMouse->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
 
-	// ÀåÄ¡¿¡ ´ëÇÑ access ¹öÀüÀ» ¹Ş¾Æ¿À´Â ÇÔ¼ö
+	// ì¥ì¹˜ì— ëŒ€í•œ access ë²„ì „ì„ ë°›ì•„ì˜¤ëŠ” í•¨ìˆ˜
 	m_pMouse->Acquire();
 
 	return S_OK;

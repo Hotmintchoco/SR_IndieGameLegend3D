@@ -48,7 +48,12 @@ HRESULT CScene::Ready_Scene()
 _int CScene::Update_Scene(_float fTimeDelta)
 {
     for (auto& pLayer : m_mapLayer)
+    {
+        if (!pLayer.second->Get_IsActive())
+			continue;
+
         pLayer.second->Update_Layer(fTimeDelta);
+    }
 
     return 0;
 }
@@ -56,7 +61,12 @@ _int CScene::Update_Scene(_float fTimeDelta)
 void CScene::LateUpdate_Scene(_float fTimeDelta)
 {
     for (auto& pLayer : m_mapLayer)
+    {
+        if (!pLayer.second->Get_IsActive())
+            continue;
+
         pLayer.second->LateUpdate_Layer(fTimeDelta);
+    }
 }
 
 
