@@ -164,8 +164,10 @@
     <ClInclude Include="..\Header\CLaser.h" />
     <ClInclude Include="..\Header\CLaserBuffer.h" />
     <ClInclude Include="..\Header\CLaserGun.h" />
+    <ClInclude Include="..\Header\CLiminalCube.h" />
     <ClInclude Include="..\Header\CLiminalGun.h" />
     <ClInclude Include="..\Header\CLiminalObject.h" />
+    <ClInclude Include="..\Header\CLiminalSlope.h" />
     <ClInclude Include="..\Header\CMiniGame.h" />
     <ClInclude Include="..\Header\CMovement.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
@@ -252,7 +254,7 @@
     <ClInclude Include="..\Header\imstb_textedit.h" />
     <ClInclude Include="..\Header\imstb_truetype.h" />
     <ClInclude Include="..\Header\IRayTestable.h" />
-    <ClInclude Include="..\Header\IReflectable.h" />
+    <ClInclude Include="..\Header\ITerrain.h" />
     <ClInclude Include="..\Header\json.hpp" />
     <ClInclude Include="..\Header\JsonAdapter.h" />
     <ClInclude Include="..\Header\json_fwd.hpp" />
@@ -285,8 +287,10 @@
     <ClCompile Include="..\Code\CLaser.cpp" />
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />
     <ClCompile Include="..\Code\CLaserGun.cpp" />
+    <ClCompile Include="..\Code\CLiminalCube.cpp" />
     <ClCompile Include="..\Code\CLiminalGun.cpp" />
     <ClCompile Include="..\Code\CLiminalObject.cpp" />
+    <ClCompile Include="..\Code\CLiminalSlope.cpp" />
     <ClCompile Include="..\Code\CMiniGame.cpp" />
     <ClCompile Include="..\Code\CMovement.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />
@@ -385,8 +389,8 @@
     <ClCompile Include="..\Code\CWorm_Face.cpp" />
     <ClCompile Include="..\Code\CUnbreakableFrustum.cpp" />
     <ClCompile Include="..\Code\IRayTestable.cpp" />
-    <ClCompile Include="..\Code\IReflectable.cpp" />
     <ClCompile Include="..\Code\CSprnub1.cpp" />
+    <ClCompile Include="..\Code\ITerrain.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

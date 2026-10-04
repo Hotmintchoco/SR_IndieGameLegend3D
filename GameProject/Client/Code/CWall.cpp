@@ -256,28 +256,6 @@ void CWall::OnCollisionStay(COLLINFO eCollInfo)
 
 }
 
-const _vec3 CWall::GetNormal()
-{
-    switch (m_eDir)
-    {
-    case EWallDir::EAST:
-        return _vec3{ -1.f, 0.f, 0.f };
-        break;
-    case EWallDir::SOUTH:
-        return _vec3{ 0.f, 0.f, 1.f };
-        break;
-    case EWallDir::WEST:
-        return _vec3{ 1.f, 0.f, 0.f };
-        break;
-    case EWallDir::NORTH:
-        return _vec3{ 0.f, 0.f, -1.f };
-        break;
-    default:
-        assert(0);
-        return _vec3{ 0.f, 1.f, 0.f };
-    }
-}
-
 vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> CWall::GetRayTestTargetInfo()
 {
     return vector<pair<Engine::CVIBuffer*, Engine::CTransform*>>{{ m_pBufferCom, m_pTransformCom }};

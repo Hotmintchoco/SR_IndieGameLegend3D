@@ -96,6 +96,18 @@ EWeaponEvent CLiminalGun::SpecialAttack(EInputState ePri, EInputState eSec)
         break;
     }
 
+    switch (eSec)
+    {
+    case EInputState::Pressed:
+        if (m_pHolingObject)
+        {
+            AdjustRotation(m_pHolingObject);
+        }
+        break;
+    default:
+        break;
+    }
+
     return EWeaponEvent::NONE;
 }
 
@@ -118,20 +130,17 @@ void CLiminalGun::RayCastToLiminalObject()
     memcpy(&vCamPos, &matCamWorld.m[3][0], sizeof(_vec3));
     /* */
 
-    const multimap<wstring, CGameObject*>& mapObject = pStage->GetCurrentRoomLayer()->Get_ObjMap();
+    const vector<IRayTestable*>& mapObject = pStage->GetCurrentRoomLayer()->GetRayTestableList();
     CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
 
     THitInfo tHit{};
 
-    for (auto& [wstrName, pObject] : mapObject)
+    for (auto& pObj : mapObject)
     {
-        if (IRayTestable* pRayTestable = dynamic_cast<IRayTestable*>(pObject))
+        const vector<pair<CVIBuffer*, CTransform*>>& vecInfo = pObj->GetRayTestTargetInfo();
+        for (auto& [pBuffer, pTransform] : vecInfo)
         {
-            const vector<pair<CVIBuffer*, CTransform*>>& vecInfo = pRayTestable->GetRayTestTargetInfo();
-            for (auto& [pBuffer, pTransform] : vecInfo)
-            {
-                pRayCaster->RayTest(tHit, vCamPos, vCamLook, pBuffer, pTransform->Get_World());
-            }
+            pRayCaster->RayTest(tHit, vCamPos, vCamLook, pBuffer, pTransform->Get_World());
         }
     }
 
@@ -142,17 +151,30 @@ void CLiminalGun::RayCastToLiminalObject()
         {
             m_pHolingObject->SetGrabbed(true);
             
-            /* 파지 시점의 변환 캡쳐 */
-            CTransform* pTransform = m_pHolingObject->GetTransform();
-            _matrix matCamInv;
-            D3DXMatrixInverse(&matCamInv, nullptr, &matCamWorld);
-            m_matCapture = (*pTransform->Get_World()) * matCamInv;
-            memcpy(&m_vCaptureDisplacement, &m_matCapture.m[3][0], sizeof(_vec3));
-            m_fCaptureDist = D3DXVec3Length(&m_vCaptureDisplacement);
-            _vec3 vLook = pTransform->Get_Info_Value(INFO_LOOK);
-            m_fCaptureScale = D3DXVec3Length(&vLook); /* 균등 스케일 가정 */
+            CaptureTransform(m_pHolingObject);
         }
     }
+}
+
+void CLiminalGun::CaptureTransform(CLiminalObject* pObject)
+{
+    /* 파지 시점의 변환 캡쳐 */
+    CCameraObj* pCamera = CCameraMgr::GetInstance()->GetCamera(L"Camera_Player_FPV");
+    if (!pCamera) return;
+    _vec3 vCamLook, vCamPos;
+    _matrix matCamWorld;
+    pCamera->GetWorld(&matCamWorld);
+    memcpy(&vCamLook, &matCamWorld.m[2][0], sizeof(_vec3));
+    memcpy(&vCamPos, &matCamWorld.m[3][0], sizeof(_vec3));
+
+    CTransform* pTransform = pObject->GetTransform();
+    _matrix matCamInv;
+    D3DXMatrixInverse(&matCamInv, nullptr, &matCamWorld);
+    m_matCapture = (*pTransform->Get_World()) * matCamInv;
+    memcpy(&m_vCaptureDisplacement, &m_matCapture.m[3][0], sizeof(_vec3));
+    m_fCaptureDist = D3DXVec3Length(&m_vCaptureDisplacement);
+    _vec3 vLook = pTransform->Get_Info_Value(INFO_LOOK);
+    m_fCaptureScale = D3DXVec3Length(&vLook); /* 균등 스케일 가정 */
 }
 
 void CLiminalGun::CalculateView(CLiminalObject* pObject)
@@ -194,20 +216,17 @@ void CLiminalGun::CalculateView(CLiminalObject* pObject)
                 D3DXVec3Normalize(&vDir, &vDir);
 
                 CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-                const multimap<wstring, CGameObject*>& mapObject = pStage->GetCurrentRoomLayer()->Get_ObjMap();
+                const vector<IRayTestable*> mapObject = pStage->GetCurrentRoomLayer()->GetRayTestableList();
                 CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
 
-                for (auto& [wstrName, pObject] : mapObject)
+                for (auto& pObj : mapObject)
                 {
-                    if (IRayTestable* pRayTestable = dynamic_cast<IRayTestable*>(pObject))
-                    {
-                        if (pRayTestable == m_pHolingObject) continue; /* 본인은 통과 */
+                    if (pObj == m_pHolingObject) continue; /* 본인은 통과 */
                          
-                        const vector<pair<CVIBuffer*, CTransform*>>& vecInfoDst = pRayTestable->GetRayTestTargetInfo();
-                        for (auto& [pBufferDst, pTransformDst] : vecInfoDst)
-                        {
-                            pRayCaster->RayTest(tHit, vCamPos, vDir, pBufferDst, pTransformDst->Get_World());
-                        }
+                    const vector<pair<CVIBuffer*, CTransform*>>& vecInfoDst = pObj->GetRayTestTargetInfo();
+                    for (auto& [pBufferDst, pTransformDst] : vecInfoDst)
+                    {
+                        pRayCaster->RayTest(tHit, vCamPos, vDir, pBufferDst, pTransformDst->Get_World());
                     }
                 }
             }
@@ -219,8 +238,8 @@ void CLiminalGun::CalculateView(CLiminalObject* pObject)
         float fDist = tHit.fDist;
 
         float fCurScale = pObject->GetTransform()->Get_Scale().x; /* 균등이니깐 그냥 x만 */
-        //float fMargin = fCurScale * sqrtf(3.f) / 2.f;
-        float fMargin = 0;
+        float fMargin = fCurScale * sqrtf(3.f) / 2.f / 5.f; /* 명확한 기준을 잡기 어려워서 휴리스틱하게 */
+        //float fMargin = 0;
 
         pObject->GetTransform()->Set_Pos(vCamPos + vDisplacementNorm * (fDist - fMargin));
         float fNewScale = m_fCaptureScale * (fDist - fMargin) / m_fCaptureDist;
@@ -231,6 +250,15 @@ void CLiminalGun::CalculateView(CLiminalObject* pObject)
         /* 충돌이 없다면 (아마 하늘을 바라보면) 캡쳐 시점으로 유지 */
         pObject->GetTransform()->Set_Pos(vCamPos + vDisplacement);
     }
+}
+
+void CLiminalGun::AdjustRotation(CLiminalObject* pObject)
+{
+    _vec3 vRot = pObject->GetTransform()->Get_Rotation();
+    pObject->GetTransform()->Set_Rotation_Raw(_vec3{ 0.f, vRot.y, 0.f });
+
+    /* 캡쳐 당시의 트랜스폼도 변경 */
+    CaptureTransform(m_pHolingObject);
 }
 
 HRESULT CLiminalGun::Add_Component()

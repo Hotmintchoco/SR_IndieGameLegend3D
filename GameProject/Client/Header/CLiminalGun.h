@@ -27,7 +27,9 @@ private:
 	virtual EWeaponEvent SpecialAttack(EInputState ePri, EInputState eSec) override;
 	virtual EWeaponEvent UltimateAttack(EInputState ePri, EInputState eSec) override;
 	void RayCastToLiminalObject();
+	void CaptureTransform(CLiminalObject* pObject);
 	void CalculateView(CLiminalObject* pObject);
+	void AdjustRotation(CLiminalObject* pObject);
 
 	Engine::CPlyTex* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;

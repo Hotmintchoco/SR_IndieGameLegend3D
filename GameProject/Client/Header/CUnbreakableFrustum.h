@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "CFrustum.h"
-#include "IReflectable.h"
 #include "IRayTestable.h"
 
 namespace Engine
@@ -11,7 +10,7 @@ namespace Engine
 	class CGameObject;
 }
 
-class CUnbreakableFrustum : public CFrustum, public IReflectable, public IRayTestable
+class CUnbreakableFrustum : public CFrustum, public IRayTestable
 {
 protected:
 	explicit CUnbreakableFrustum(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -22,9 +21,6 @@ public:
 	virtual			_int		Update_GameObject(_float fTimeDelta);
 	virtual			void		LateUpdate_GameObject(_float fTimeDelta);
 	virtual			void		Render_GameObject();
-
-	/* IReflectable */
-	virtual const _vec3 GetNormal() override;
 
 	/* IRayTestable */
 	virtual vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> GetRayTestTargetInfo() override;

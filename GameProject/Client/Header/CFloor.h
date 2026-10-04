@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 #include "CGameObject.h"
-#include "IReflectable.h"
 #include "IRayTestable.h"
+#include "ITerrain.h"
 
 namespace Engine
 {
@@ -11,7 +11,7 @@ namespace Engine
 	class CTransform;
 }
 
-class CFloor : public CGameObject, public IReflectable, public IRayTestable
+class CFloor : public CGameObject, public IRayTestable, public ITerrain
 {
 protected:
 	explicit CFloor(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -22,9 +22,6 @@ public:
 	virtual	_int Update_GameObject(_float fTimeDelta) override;
 	virtual	void LateUpdate_GameObject(_float fTimeDelta) override;
 	virtual	void Render_GameObject() override;
-
-	/* IReflectable */
-	virtual const _vec3 GetNormal() override;
 
 	/* IRayTestable */
 	virtual vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> GetRayTestTargetInfo() override;

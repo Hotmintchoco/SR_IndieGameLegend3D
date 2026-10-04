@@ -6,6 +6,8 @@
 #include "Client_Struct.h"
 
 class CTile;
+class IRayTestable;
+class ITerrain;
 
 class CRoomLayer : public CLayer
 {
@@ -47,7 +49,11 @@ public:
 	/* 방 초기화 */
 	void ResetState();
 
-	inline bool IsBossRoom() { return m_bBossRoom;; }
+	inline bool IsBossRoom() { return m_bBossRoom; }
+
+	/* 레이 테스트용 객체 리스트 */
+	vector<IRayTestable*> GetRayTestableList() { return m_vecRayTestable; }
+	vector<ITerrain*> GetTerrainList() { return m_vecTerrain; }
 
 private:
 	/* 어둠 스위치 */
@@ -84,6 +90,10 @@ private:
 
 	/* 보스 룸 여부 */
 	bool m_bBossRoom = false;
+
+	/* 레이 테스트 컨테이너 */
+	vector<IRayTestable*> m_vecRayTestable;
+	vector<ITerrain*> m_vecTerrain;
 
 public:
 	static CRoomLayer* Create(int iRoomIndex);

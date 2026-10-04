@@ -80,11 +80,6 @@ void CFloor::OnCollisionEnter(COLLINFO eCollInfo)
 {
 }
 
-const _vec3 CFloor::GetNormal()
-{
-    return _vec3{ 0.f, 1.f, 0.f };
-}
-
 vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> CFloor::GetRayTestTargetInfo()
 {
     return vector <pair<Engine::CVIBuffer*, Engine::CTransform*>>{ { m_pBufferCom, m_pTransformCom } };

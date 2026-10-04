@@ -58,20 +58,17 @@ void CGameStatus::DebugRayTest()
     
     CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
 
-    const multimap<wstring, CGameObject*>& mapObject = pStage->GetCurrentRoomLayer()->Get_ObjMap();
+    const vector<IRayTestable*>& mapObject = pStage->GetCurrentRoomLayer()->GetRayTestableList();
     CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
 
     THitInfo t{};
 
-    for (auto& [wstrName, pObject] : mapObject)
+    for (auto& pObj : mapObject)
     {
-        if (IRayTestable* pRayTestable = dynamic_cast<IRayTestable*>(pObject))
+        vector<pair<CVIBuffer*, CTransform*>> vecInfo = pObj->GetRayTestTargetInfo();
+        for (auto& [pBuffer, pTransform] : vecInfo)
         {
-            vector<pair<CVIBuffer*, CTransform*>> vecInfo = pRayTestable->GetRayTestTargetInfo();
-            for (auto& [pBuffer, pTransform] : vecInfo)
-            {
-                pRayCaster->RayTest(t, m_vCamPos, m_vCamLook, pBuffer, pTransform->Get_World());
-            }
+            pRayCaster->RayTest(t, m_vCamPos, m_vCamLook, pBuffer, pTransform->Get_World());
         }
     }
     

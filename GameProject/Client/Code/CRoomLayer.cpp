@@ -194,9 +194,9 @@ HRESULT CRoomLayer::SpawnRoom()
 
 	/* 바닥 충돌체 */
 	wstring wstrName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Floor";
-	pGameObject = CFloor::Create(pDevice);
+	CFloor* pFloor = CFloor::Create(pDevice);
 
-	if (FAILED(Add_GameObject(wstrName, pGameObject)))
+	if (FAILED(Add_GameObject(wstrName, pFloor)))
 		return E_FAIL;
 
 	CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrName, L"Com_Transform"));
@@ -206,7 +206,9 @@ HRESULT CRoomLayer::SpawnRoom()
 	CBoxCollider* pColliderCom = dynamic_cast<CBoxCollider*>(Get_Component(ID_DYNAMIC, wstrName, L"Com_BoxCollider"));
 	pColliderCom->Set_Extents(vOuterRoomSize.x / 2.f, 0.5f, vOuterRoomSize.z / 2.f);
 	pColliderCom->Set_DiffPos(_vec3{ 0.f, -0.5f, 0.f });
-
+	
+	m_vecRayTestable.push_back(pFloor);
+	m_vecTerrain.push_back(pFloor);
 
 	/* 타일 */
 	for (size_t i = 0; i < t->vecTile.size(); ++i)
@@ -261,20 +263,21 @@ HRESULT CRoomLayer::SpawnRoom()
 		int iDirOffset = ((i % 2) == 0) ? 100 : 0;
 
 
-		pGameObject = CWall::Create(pDevice, (EWallDir)(i + 1), t->vecDoorInfo.at(i), iDirOffset + iDoorOffset + iBiomeOffset + iRandomOffset);
-		if (nullptr == pGameObject)
+		CWall* pWall = CWall::Create(pDevice, (EWallDir)(i + 1), t->vecDoorInfo.at(i), iDirOffset + iDoorOffset + iBiomeOffset + iRandomOffset);
+		if (nullptr == pWall)
 			return E_FAIL;
 
 		wstring wstrWallName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Wall_" + to_wstring(i);
 
-		if (FAILED(Add_GameObject(wstrWallName, pGameObject)))
+		if (FAILED(Add_GameObject(wstrWallName, pWall)))
 			return E_FAIL;
 
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrWallName, L"Com_Transform"));
 
 		pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
 
-		CWall* pWall = static_cast<CWall*>(pGameObject);
+		m_vecRayTestable.push_back(pWall);
+
 		if (pWall->HasDoor())
 		{
 			/* 안개 */
@@ -391,6 +394,16 @@ HRESULT CRoomLayer::SpawnRoom()
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrTileName, L"Com_Transform"));
 
 		pTransformCom->Set_Pos(vRoomCenterPos.x + vTileOffset.x, 0.f, vRoomCenterPos.z + vTileOffset.z);
+
+		if (IRayTestable* pObj = dynamic_cast<IRayTestable*>(pGameObject))
+		{
+			m_vecRayTestable.push_back(pObj);
+		}
+
+		if (ITerrain* pObj = dynamic_cast<ITerrain*>(pGameObject))
+		{
+			m_vecTerrain.push_back(pObj);
+		}
 	}
 
 	for (auto& tMapEntity : t->vecObjectInfo)
@@ -412,6 +425,16 @@ HRESULT CRoomLayer::SpawnRoom()
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrMonsterName, L"Com_Transform"));
 
 		pTransformCom->Set_Pos(vRoomCenterPos.x + tMapEntity.vPos.x, vRoomCenterPos.y + tMapEntity.vPos.y, vRoomCenterPos.z + tMapEntity.vPos.z);
+
+		if (IRayTestable* pObj = dynamic_cast<IRayTestable*>(pGameObject))
+		{
+			m_vecRayTestable.push_back(pObj);
+		}		
+		
+		if (ITerrain* pObj = dynamic_cast<ITerrain*>(pGameObject))
+		{
+			m_vecTerrain.push_back(pObj);
+		}
 	}
 
 	return S_OK;

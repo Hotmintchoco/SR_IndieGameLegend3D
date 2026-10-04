@@ -9,7 +9,6 @@
 #include "CCameraMgr.h"
 #include "CImGuiTool.h"
 #include "CRoomLayer.h"
-#include "IReflectable.h"
 #include "IRayTestable.h"
 #include "CRayCaster.h"
 
