@@ -59,7 +59,7 @@ _int CDynamicCamera::Update_GameObject(_float fTimeDelta)
 	return 0;
 }
 
-void CDynamicCamera::LateUpdate_GameObject(_float& fTimeDelta)
+void CDynamicCamera::LateUpdate_GameObject(_float fTimeDelta)
 {
 }
 
