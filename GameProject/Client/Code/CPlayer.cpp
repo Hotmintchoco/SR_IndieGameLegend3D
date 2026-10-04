@@ -191,6 +191,11 @@ void CPlayer::UpdateInput()
     if (D3DXVec2Length(&vCommand) > 1e-6) m_pAnimator->PlayLocomotion((m_pMovement->GetSprint()) ? EPlayerLocomotionState::SPRINT : EPlayerLocomotionState::WALK);
     else m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
 
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_SPACE))
+    {
+        m_pMovement->Jump();
+    }
+
     UpdateWeaponInput();
     
     UpdateCursorInput();

@@ -33,6 +33,7 @@ _int CLiminalSlope::Update_GameObject(_float fTimeDelta)
     _int    iExit = CLiminalObject::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom);
 
     return iExit;
 }

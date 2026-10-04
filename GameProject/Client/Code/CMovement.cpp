@@ -137,12 +137,24 @@ void CMovement::AddImpulse(const _vec3& vDir, float fMagnitude)
 
 void CMovement::ClampVelocity()
 {
-    float fLength = D3DXVec3Length(&m_vVelocity);
-    if (fLength > ((m_bOnGround ? GetCurMaxGroundSpeed() : m_fMaxAirSpeed)))
+    /* 수평 성분 */
+    _vec3 vVelH{m_vVelocity.x, 0.f, m_vVelocity.z};
+    float fVelSpeedH = D3DXVec3Length(&vVelH);
+    float fVelLimitH = (m_bOnGround ? GetCurMaxGroundSpeed() : m_fMaxAirSpeedH);
+    if (fVelSpeedH > fVelLimitH)
     {
         _vec3 vVelNorm;
-        D3DXVec3Normalize(&vVelNorm, &m_vVelocity);
-        m_vVelocity = vVelNorm * (m_bOnGround ? GetCurMaxGroundSpeed() : m_fMaxAirSpeed);
+        D3DXVec3Normalize(&vVelNorm, &vVelH);
+        m_vVelocity.x = vVelNorm.x * fVelLimitH;
+        m_vVelocity.z = vVelNorm.z * fVelLimitH;
+    }
+
+    /* 수직 성분 */
+    float fVelSpeedV = fabs(m_vVelocity.y);
+    float fVelLimitV = (m_bOnGround ? FLT_MAX : m_fMaxAirSpeedV);
+    if (fVelSpeedV > fVelLimitV)
+    {
+        m_vVelocity.y = fVelLimitV;
     }
 }
 

@@ -46,10 +46,11 @@ protected:
 	/* 특성 */
 	float m_fInputAcc = 100.f;
 	float m_fMaxGroundSpeed = 5.f;
-	float m_fMaxAirSpeed = 10.f;
+	float m_fMaxAirSpeedH = 5.f;
+	float m_fMaxAirSpeedV = 10.f;
 	float m_fGroundFriction = 30.f;
 	float m_fAirFriction = 0.1f;
-	float m_fAirInputCoef = 0.1f;
+	float m_fAirInputCoef = 0.2f;
 
 	/* 공중 처리 */
 	bool m_bOnGround = true;

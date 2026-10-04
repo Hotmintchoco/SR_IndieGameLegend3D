@@ -19,6 +19,7 @@ public:
 	void Knockback(const _vec3& vDir, float fIntensity);
 	void Walk(const _vec2& vCommand);
 	void Stop();
+	void Jump();
 
 private:
 	virtual float GetCurMaxGroundSpeed() const override;
@@ -26,6 +27,7 @@ private:
 	bool m_bSprinting = false;
 	float m_fSprintCoef = 2.f;
 	float m_fKnockbackAngle = D3DXToRadian(30.f);
+	float m_fJumpSpeed = 3.5f;
 
 public:
 	static CPlayerMovement* Create(LPDIRECT3DDEVICE9 pGraphicDev);

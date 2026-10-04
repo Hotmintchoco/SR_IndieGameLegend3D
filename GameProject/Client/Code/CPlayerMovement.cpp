@@ -67,6 +67,14 @@ void CPlayerMovement::Stop()
     m_vVelocity = _vec3{ 0.f, 0.f, 0.f };
 }
 
+void CPlayerMovement::Jump()
+{
+    if (!m_bOnGround) return;
+
+    m_bOnGround = false;
+    AddImpulse(_vec3{0.f, 1.f, 0.f}, m_fJumpSpeed);
+}
+
 float CPlayerMovement::GetCurMaxGroundSpeed() const
 {
     return m_fMaxGroundSpeed * (m_bSprinting ? m_fSprintCoef : 1.f);
