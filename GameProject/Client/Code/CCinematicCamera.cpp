@@ -159,9 +159,6 @@ void CCinematicCamera::Skip()
 
     m_fElapsedTime = m_tCurrentDesc.fDuration;
     Evaluate(1.f);
-
-    m_bPlaying = false;
-    m_bFinished = true;
 }
 
 void CCinematicCamera::Add_Shot(const CINEMATIC_DESC& tDesc)

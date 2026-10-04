@@ -118,14 +118,26 @@ void CClientCameraMgr::Free()
 
 void CClientCameraMgr::Key_Input(_float fTimeDelta)
 {
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_1))
+    // 일반 카메라 일 때만 카메라 전환 키 허용
+    if (m_pActiveCamera != Find_Camera(CLIENT_CAMERA_TYPE::CINEMATIC))
     {
-        Select_Camera(CLIENT_CAMERA_TYPE::PLAYER);
+        if (CDInputMgr::GetInstance()->Key_Down(DIK_1))
+        {
+            Select_Camera(CLIENT_CAMERA_TYPE::PLAYER);
+        }
+        else if (CDInputMgr::GetInstance()->Key_Down(DIK_2))
+        {
+            Select_Camera(CLIENT_CAMERA_TYPE::FREE);
+        }
     }
-    else if (CDInputMgr::GetInstance()->Key_Down(DIK_2))
+    else
     {
-        Select_Camera(CLIENT_CAMERA_TYPE::FREE);
-	}
+        if (CDInputMgr::GetInstance()->Key_Down(DIK_RETURN))
+        {
+            auto pCinematicCamera = static_cast<CCinematicCamera*>(m_pActiveCamera);
+            pCinematicCamera->Skip();
+        }
+    }
 }
 
 void CClientCameraMgr::CinematicToPlayer()

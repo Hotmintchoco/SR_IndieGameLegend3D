@@ -301,7 +301,6 @@ void CMagmamouth::Opening_MagmaMouth(const _float& fTimeDelta)
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
-
             pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
         }
     }
