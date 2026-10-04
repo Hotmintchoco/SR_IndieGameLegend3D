@@ -3,6 +3,7 @@
 #include "CCamera.h"
 #include "CDInputMgr.h"
 #include "CCinematicCamera.h"
+#include "CPlayerCamera.h"
 
 IMPLEMENT_SINGLETON(CClientCameraMgr)
 
@@ -43,6 +44,7 @@ HRESULT CClientCameraMgr::Select_Camera(CLIENT_CAMERA_TYPE eType)
         return E_FAIL;
 
     m_pActiveCamera = pCamera;
+    m_eCurrentType = eType;
 
     if (eType == CLIENT_CAMERA_TYPE::CINEMATIC)
     {
@@ -55,8 +57,7 @@ HRESULT CClientCameraMgr::Select_Camera(CLIENT_CAMERA_TYPE eType)
     return S_OK;
 }
 
-CCamera* CClientCameraMgr::Find_Camera(
-    CLIENT_CAMERA_TYPE eType) const
+CCamera* CClientCameraMgr::Find_Camera(CLIENT_CAMERA_TYPE eType) const
 {
     auto iter = m_mapCamera.find(eType);
 
@@ -119,15 +120,21 @@ void CClientCameraMgr::Free()
 void CClientCameraMgr::Key_Input(_float fTimeDelta)
 {
     // 일반 카메라 일 때만 카메라 전환 키 허용
-    if (m_pActiveCamera != Find_Camera(CLIENT_CAMERA_TYPE::CINEMATIC))
+    if (m_eCurrentType != CLIENT_CAMERA_TYPE::CINEMATIC)
     {
         if (CDInputMgr::GetInstance()->Key_Down(DIK_1))
         {
             Select_Camera(CLIENT_CAMERA_TYPE::PLAYER);
+            static_cast<CPlayerCamera*>(m_pActiveCamera)->Set_CameraMode(CAMERA_MODE::FIRST_PERSON);
         }
         else if (CDInputMgr::GetInstance()->Key_Down(DIK_2))
         {
             Select_Camera(CLIENT_CAMERA_TYPE::FREE);
+        }
+        else if (CDInputMgr::GetInstance()->Key_Down(DIK_3))
+        {
+            Select_Camera(CLIENT_CAMERA_TYPE::PLAYER);
+            static_cast<CPlayerCamera*>(m_pActiveCamera)->Set_CameraMode(CAMERA_MODE::THIRD_PERSON);
         }
     }
     else
