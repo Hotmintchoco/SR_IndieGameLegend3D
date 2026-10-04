@@ -685,6 +685,8 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
 
         if (pCinematic)
         {
+            pCinematic->Set_StartFromCurrent(true); // 연속적 동작 설정
+
             // 연출 1
             CINEMATIC_DESC desc;
 
@@ -698,32 +700,42 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
             pCinematic->Add_Shot(desc);
 
             // 연출 2
-            desc.vEyeFrom = { vBossPos.x, 2.f, vBossPos.z - 2.f };
             desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
-            desc.fDuration = 0.25f;
-            desc.fFovFrom = D3DXToRadian(47.5f);
+            desc.fDuration = 0.2f;
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
             // 연출 3
-            desc.vEyeFrom = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
             desc.vEyeTo = { vBossPos.x + 3.f, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
             desc.fDuration = 0.5f;
-            desc.fFovFrom = D3DXToRadian(60.f);
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
             // 연출 4
-            desc.vEyeFrom = { vBossPos.x + 3.f, 4.5f, vBossPos.z - 7.f };
             desc.vEyeTo = { vBossPos.x - 3.f, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
             desc.fDuration = 0.5f;
-            desc.fFovFrom = D3DXToRadian(60.f);
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 5
+            desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
+            desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 0.25f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 6
+            desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
+            desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 1.f;
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 

@@ -35,6 +35,7 @@ public:
     void        Skip();
 
 	void        Add_Shot(const CINEMATIC_DESC& tDesc);
+	void        Set_StartFromCurrent(_bool bStartFromCurrent) { m_bStartFromCurrent = bStartFromCurrent; }
 
     _bool       Is_Playing() const { return m_bPlaying; }
     _bool       Is_Finished() const { return m_bFinished; }

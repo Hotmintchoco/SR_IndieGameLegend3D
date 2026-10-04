@@ -123,6 +123,12 @@ void CCinematicCamera::Start_NextShot()
     m_tCurrentDesc = m_queueDesc.front();
     m_queueDesc.pop();
 
+    if (m_bStartFromCurrent)
+    {
+        m_tCurrentDesc.vEyeFrom = m_vEye;
+        m_tCurrentDesc.fFovFrom = m_fFov;
+	}
+
     m_fElapsedTime = 0.f;
 
     Evaluate(0.f);
@@ -152,8 +158,7 @@ void CCinematicCamera::Add_Shot(const CINEMATIC_DESC& tDesc)
 	m_queueDesc.push(tDesc);
 }
 
-CCinematicCamera* CCinematicCamera::Create(
-    LPDIRECT3DDEVICE9 pGraphicDev)
+CCinematicCamera* CCinematicCamera::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
     if (!pGraphicDev)
         return nullptr;
