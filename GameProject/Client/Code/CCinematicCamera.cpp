@@ -1,9 +1,10 @@
 ﻿#include "pch.h"
 #include "CCinematicCamera.h"
 #include "CManagement.h"
+#include "CTransform.h"
 
 CCinematicCamera::CCinematicCamera(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CCamera(pGraphicDev), m_bFinished(false), m_bPlaying(false), m_fElapsedTime(0.f), m_bStartFromCurrent(false)
+	: CCamera(pGraphicDev), m_bFinished(false), m_bPlaying(false), m_fElapsedTime(0.f), m_bStartFromCurrent(false), m_pTarget(nullptr)
 {
 }
 
@@ -68,6 +69,8 @@ _int CCinematicCamera::Update_GameObject(_float fTimeDelta)
         CLayer* pUILayer = CManagement::GetInstance()->Get_Layer(L"UI_Layer");
         if (pUILayer)
             pUILayer->Set_IsActive(true);
+
+        m_pTarget = nullptr;
 	}
 
     return 0;
@@ -80,6 +83,14 @@ void CCinematicCamera::LateUpdate_GameObject(_float fTimeDelta)
 
 void CCinematicCamera::Evaluate(_float fRatio)
 {
+    if (m_pTarget)
+    {
+        _vec3 vTargetPos;
+
+        m_pTarget->Get_Info(INFO_POS, &vTargetPos);
+        m_tCurrentDesc.vLookAt = vTargetPos;
+    }
+
     const _float t = max(0.f, min(fRatio, 1.f));
 
     // Smoothstep: 부드럽게 출발하고 멈춤

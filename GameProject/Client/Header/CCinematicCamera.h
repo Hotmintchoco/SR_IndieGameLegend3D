@@ -3,6 +3,11 @@
 #include "CCamera.h"
 #include <queue>
 
+namespace Engine
+{
+    class CTransform;
+}
+
 struct CINEMATIC_DESC
 {
 	_vec3 vEyeFrom{ 0.f, 0.f, 0.f };    // 시작 위치
@@ -36,6 +41,7 @@ public:
 
 	void        Add_Shot(const CINEMATIC_DESC& tDesc);
 	void        Set_StartFromCurrent(_bool bStartFromCurrent) { m_bStartFromCurrent = bStartFromCurrent; }
+    void        Set_Target(CTransform* pTarget) { m_pTarget = pTarget; }
 
     _bool       Is_Playing() const { return m_bPlaying; }
     _bool       Is_Finished() const { return m_bFinished; }
@@ -45,6 +51,8 @@ private:
 	void	    Start_NextShot();
 
 private:
+    CTransform*             m_pTarget;          // 대상이 존재하면 vLookAt과 맞춰줌
+
     CINEMATIC_DESC          m_tCurrentDesc{};   // 현재 구간
     queue<CINEMATIC_DESC>   m_queueDesc;        // 다음 구간들
 
