@@ -8,7 +8,8 @@
 #include "IRayTestable.h"
 #include "CStage.h"
 #include "CRoomLayer.h"
-#include "CCameraMgr.h"
+#include "CClientCameraMgr.h"
+#include "CCamera.h"
 
 CLiminalGun::CLiminalGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -120,15 +121,13 @@ void CLiminalGun::RayCastToLiminalObject()
 {
     CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
 
-    /* TODO */
-    CCameraObj* pCamera = CCameraMgr::GetInstance()->GetCamera(L"Camera_Player_FPV");
+    CCamera* pCamera = CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER);
     if (!pCamera) return;
     _vec3 vCamLook, vCamPos;
     _matrix matCamWorld;
     pCamera->GetWorld(&matCamWorld);
     memcpy(&vCamLook, &matCamWorld.m[2][0], sizeof(_vec3));
     memcpy(&vCamPos, &matCamWorld.m[3][0], sizeof(_vec3));
-    /* */
 
     const vector<IRayTestable*>& mapObject = pStage->GetCurrentRoomLayer()->GetRayTestableList();
     CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
@@ -159,7 +158,7 @@ void CLiminalGun::RayCastToLiminalObject()
 void CLiminalGun::CaptureTransform(CLiminalObject* pObject)
 {
     /* 파지 시점의 변환 캡쳐 */
-    CCameraObj* pCamera = CCameraMgr::GetInstance()->GetCamera(L"Camera_Player_FPV");
+    CCamera* pCamera = CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER);
     if (!pCamera) return;
     _vec3 vCamLook, vCamPos;
     _matrix matCamWorld;
@@ -179,8 +178,7 @@ void CLiminalGun::CaptureTransform(CLiminalObject* pObject)
 
 void CLiminalGun::CalculateView(CLiminalObject* pObject)
 {
-    /* */
-    CCameraObj* pCamera = CCameraMgr::GetInstance()->GetCamera(L"Camera_Player_FPV");
+    CCamera* pCamera = CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER);
     if (!pCamera) return;
     _vec3 vCamLook, vCamPos;
     _matrix matCamWorld;
