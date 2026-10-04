@@ -4,6 +4,8 @@
 #include "CRenderer.h"
 #include "CCollisionMgr.h"
 #include "Client_Enum.h"
+#include "CRayCaster.h"
+#include "CManagement.h"
 
 CLiminalSlope::CLiminalSlope(LPDIRECT3DDEVICE9 pGraphicDev)
     :CLiminalObject(pGraphicDev)
@@ -69,6 +71,29 @@ void CLiminalSlope::OnCollisionEnter(COLLINFO eCollInfo)
     {
     default:
         break;
+    }
+}
+
+float CLiminalSlope::SampleTerrainHeight(const _vec3& vRayStart)
+{
+    CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
+
+    THitInfo tHit{};
+    _vec3 vDir{ 0.f, -1.f, 0.f };
+
+    const vector<pair<CVIBuffer*, CTransform*>>& vecInfo = GetRayTestTargetInfo();
+    for (auto& [pBuffer, pTransform] : vecInfo)
+    {
+        pRayCaster->RayTest(tHit, vRayStart, vDir, pBuffer, pTransform->Get_World());
+    }
+
+    if (tHit.bHit)
+    {
+        return tHit.fHitPoint.y;
+    }
+    else
+    {
+        return -FLT_MAX;
     }
 }
 

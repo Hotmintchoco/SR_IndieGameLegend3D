@@ -2,6 +2,10 @@
 #include "CMovement.h"
 #include "CGameObject.h"
 #include "CTransform.h"
+#include "CManagement.h"
+#include "CStage.h"
+#include "ITerrain.h"
+#include "CRoomLayer.h"
 
 CMovement::CMovement(LPDIRECT3DDEVICE9 pGraphicDev)
     : CComponent(pGraphicDev)
@@ -89,16 +93,26 @@ void CMovement::PerformMovement(float fTimeDelta)
     ExertFriction(fTimeDelta);
     ClampVelocity();
 
-    _vec3 vPos = m_pTransform->Get_Info_Value(INFO_POS);
-    vPos += m_vVelocity * fTimeDelta;
-    /* TODO 실제 지형과 상호작용하도록 */
-    if (!m_bOnGround && vPos.y <= 0.f)
+    _vec3 vPrevPos = m_pTransform->Get_Info_Value(INFO_POS);
+    _vec3 vDesiredPos = vPrevPos + m_vVelocity * fTimeDelta;
+
+    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+    if (pStage)
     {
-        vPos.y = 0;
-        m_vVelocity.y = 0;
-        m_bOnGround = true;
+        const vector<ITerrain*> vecTerrain = pStage->GetCurrentRoomLayer()->GetTerrainList();
+        TerrainResolver(vecTerrain, vDesiredPos);
     }
-    m_pTransform->Set_Pos(vPos);
+    else
+    {
+        if (!m_bOnGround && vDesiredPos.y <= 0.f)
+        {
+            vDesiredPos.y = 0;
+            m_vVelocity.y = 0;
+            m_bOnGround = true;
+        }
+    }
+
+    m_pTransform->Set_Pos(vDesiredPos);
 }
 
 void CMovement::TryExertGravity(const float fTimeDelta)
@@ -168,6 +182,28 @@ void CMovement::Launch(const TLaunchRequest& tReq)
 {
     m_tLaunchRequest = tReq;
     m_bPendingLaunch = true;
+}
+
+void CMovement::TerrainResolver(const vector<ITerrain*>& vecTerrain, _vec3& vDesired)
+{
+    float fHeight = -FLT_MAX;
+    float fSkin = 0.03f;
+    _vec3 vRayStart = vDesired + _vec3{0.f, fSkin, 0.f};
+    for (auto pTerrain : vecTerrain)
+    {
+        fHeight = max(fHeight, pTerrain->SampleTerrainHeight(vRayStart));
+    }
+
+    if (fHeight + fSkin >= vDesired.y && m_vVelocity.y <= 0.f)
+    {
+        vDesired.y = fHeight;
+        m_vVelocity.y = 0.f;
+        m_bOnGround = true;
+    }
+    else
+    {
+        m_bOnGround = false;
+    }
 }
 
 CMovement* CMovement::Create(LPDIRECT3DDEVICE9 pGraphicDev)

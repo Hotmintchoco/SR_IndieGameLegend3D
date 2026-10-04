@@ -18,6 +18,9 @@ public:
 
 	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
 
+	/* ITerrain */
+	virtual float SampleTerrainHeight(const _vec3& vRayStart) override;
+
 protected:
 	HRESULT Add_Component();
 

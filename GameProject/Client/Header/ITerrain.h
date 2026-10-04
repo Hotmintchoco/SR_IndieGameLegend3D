@@ -1,8 +1,10 @@
 ﻿#pragma once
 
+#include "Engine_Define.h"
+
 class ITerrain
 {
-private:
-	void Foo() {}
+public:
+	virtual float SampleTerrainHeight(const _vec3& vRayStart) PURE;
 };
 

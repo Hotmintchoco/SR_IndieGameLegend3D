@@ -238,8 +238,8 @@ void CLiminalGun::CalculateView(CLiminalObject* pObject)
         float fDist = tHit.fDist;
 
         float fCurScale = pObject->GetTransform()->Get_Scale().x; /* 균등이니깐 그냥 x만 */
-        float fMargin = fCurScale * sqrtf(3.f) / 2.f / 5.f; /* 명확한 기준을 잡기 어려워서 휴리스틱하게 */
-        //float fMargin = 0;
+        //float fMargin = fCurScale * sqrtf(3.f) / 2.f / 5.f; /* 명확한 기준을 잡기 어려워서 휴리스틱하게 */
+        float fMargin = 0;
 
         pObject->GetTransform()->Set_Pos(vCamPos + vDisplacementNorm * (fDist - fMargin));
         float fNewScale = m_fCaptureScale * (fDist - fMargin) / m_fCaptureDist;

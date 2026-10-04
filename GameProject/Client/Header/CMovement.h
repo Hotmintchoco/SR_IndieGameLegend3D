@@ -15,6 +15,8 @@ struct TLaunchRequest
 	float fAlpha = 0.f;
 };
 
+class ITerrain;
+
 class CMovement : public CComponent
 {
 protected:
@@ -37,6 +39,7 @@ protected:
 	void ClearFrameVariables();
 	void Launch(const TLaunchRequest& tReq);
 	virtual float GetCurMaxGroundSpeed() const { return m_fMaxGroundSpeed; }
+	void TerrainResolver(const vector<ITerrain*>& vecTerrain, _vec3& vDesired);
 
 	/* 부모 객체의 트랜스폼 */
 	CTransform* m_pTransform = nullptr;

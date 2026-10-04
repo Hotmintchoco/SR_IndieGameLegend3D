@@ -85,6 +85,11 @@ vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> CFloor::GetRayTestTargetIn
     return vector <pair<Engine::CVIBuffer*, Engine::CTransform*>>{ { m_pBufferCom, m_pTransformCom } };
 }
 
+float CFloor::SampleTerrainHeight(const _vec3& vRayStart)
+{
+    return 0.f;
+}
+
 CFloor* CFloor::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
     CFloor* pTriggerBox = new CFloor(pGraphicDev);

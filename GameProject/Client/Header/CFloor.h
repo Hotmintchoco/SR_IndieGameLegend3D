@@ -26,6 +26,9 @@ public:
 	/* IRayTestable */
 	virtual vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> GetRayTestTargetInfo() override;
 
+	/* ITerrain */
+	virtual float SampleTerrainHeight(const _vec3& vRayStart) override;
+
 private:
 	HRESULT	Add_Component();
 	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
