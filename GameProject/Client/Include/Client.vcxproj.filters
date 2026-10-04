@@ -331,6 +331,12 @@
     <Filter Include="04. Manager\01. CursorPolicy">
       <UniqueIdentifier>{c315cdf6-72d0-49e1-a439-a07c17892f99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal">
+      <UniqueIdentifier>{a9e7f3a5-293b-4e22-873b-39dc839eb33c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\00. Weapon\05. Liminal">
+      <UniqueIdentifier>{9fd36b58-9936-4820-bcdb-24b265fc4d23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -684,6 +690,12 @@
     <ClInclude Include="..\Header\CBombardArrowSpawner.h">
       <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CLiminalObject.h">
+      <Filter>01. Scene\Stage\Layer\Liminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalGun.h">
+      <Filter>02. GameObject\08. Combat\00. Weapon\05. Liminal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1009,6 +1021,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBombardArrowSpawner.cpp">
       <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalObject.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalGun.cpp">
+      <Filter>02. GameObject\08. Combat\00. Weapon\05. Liminal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

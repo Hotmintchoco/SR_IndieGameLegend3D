@@ -6,6 +6,8 @@
 
 namespace Engine
 {
+	class CGameObject;
+
 	typedef struct tagVertexColor
 	{
 		_vec3		vPosition;			
@@ -76,6 +78,7 @@ namespace Engine
 	{
 		bool bHit = false;
 		float fDist = FLT_MAX;
+		CGameObject* pObject = nullptr;
 		std::array<_vec3, 3> vTriVtx = { _vec3{0.f, 0.f, 0.f}, _vec3{0.f, 0.f, 0.f}, _vec3{0.f, 0.f, 0.f} };
 		_vec3 fHitPoint{ 0.f, 0.f, 0.f };
 		_vec3 fTriNormal{ 0.f, 0.f, 0.f };

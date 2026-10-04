@@ -62,6 +62,9 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Sphere_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Sphere.ply"))))
         return E_FAIL;
 
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Cube_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Cube.ply"))))
+        return E_FAIL;
+
     lstrcpy(m_szLoading, L"Monster Texture Loading............................");
     //skull
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_skull3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/skull/skull3.png", 1))))return E_FAIL;
