@@ -4,8 +4,7 @@
 #include "CProtoMgr.h"
 
 CPlayerCamera::CPlayerCamera(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CCamera(pGraphicDev), m_pTarget(nullptr),
-	m_vEyeOffset({ 0.f, 1.f, 0.f })
+	: CCamera(pGraphicDev)
 {
 }
 
@@ -17,7 +16,6 @@ CPlayerCamera::CPlayerCamera(const CPlayerCamera& rhs)
 
 CPlayerCamera::~CPlayerCamera()
 {
-	Free();
 }
 
 HRESULT CPlayerCamera::Ready_GameObject(Engine::CTransform* pTarget)
@@ -73,6 +71,8 @@ void CPlayerCamera::Mouse_Move()
 	const _long mouseY = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Y);
 	Rotate(D3DXToRadian(mouseX / 10.f), D3DXToRadian(mouseY / 10.f));
 	Update_LookFromAngles();
+
+	m_pTarget->Rotation(ROT_Y, mouseX / 10.f); /* 플레이어 회전 */
 }
 
 void CPlayerCamera::Follow_Target()

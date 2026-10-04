@@ -29,10 +29,10 @@ private:
     void            Follow_Target();
 
 private:
-    CTransform*     m_pTarget;
+    CTransform*     m_pTarget = nullptr;
 
     // 실제 플레이어 Transform의 기준점에 맞춰 설정
-    _vec3           m_vEyeOffset;
+    _vec3           m_vEyeOffset = _vec3{0.f, 1.f, 0.f};
 
 public:
     static CPlayerCamera* Create(LPDIRECT3DDEVICE9 pGraphicDev, CTransform* pTarget);

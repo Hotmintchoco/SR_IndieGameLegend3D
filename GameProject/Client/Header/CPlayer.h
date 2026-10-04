@@ -46,7 +46,6 @@ private:
 	HRESULT	Add_Component();
 	void UpdateInput();
 	void UpdateWeaponInput();
-	void UpdateCursorInput();
 
 	/* 기본 컴포넌트 */
 	Engine::CTransform* m_pTransformCom = nullptr;

@@ -93,15 +93,21 @@ void CPlayer::LateUpdate_GameObject(_float fTimeDelta)
 
 void CPlayer::Render_GameObject()
 {
-    m_pTextureCom->Set_Texture(0);
+    /* 1인칭 시점일 때 */
 
-    for (int i = 0; i < PP_END; ++i)
+    /* 3인칭 시점일 때 */
+    if (0)
     {
-        m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pBufferTransformCom[i]->Get_World());
-        m_pBufferCom[i]->Render_Buffer();
+        m_pTextureCom->Set_Texture(0);
+
+        for (int i = 0; i < PP_END; ++i)
+        {
+            m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pBufferTransformCom[i]->Get_World());
+            m_pBufferCom[i]->Render_Buffer();
+        }
     }
 
-     //m_pAnimator->RenderDebugTransform();
+    //m_pAnimator->RenderDebugTransform();
 }
 
 HRESULT CPlayer::Add_Component()
@@ -197,9 +203,6 @@ void CPlayer::UpdateInput()
     }
 
     UpdateWeaponInput();
-    
-    UpdateCursorInput();
-
 }
 
 void CPlayer::UpdateWeaponInput()
@@ -244,18 +247,6 @@ void CPlayer::UpdateWeaponInput()
     case EWeaponEvent::GUN_SHOT:
         m_pAnimator->PlayAction(EPlayerActionState::GUN_SHOOT);
         break;
-    }
-}
-
-void CPlayer::UpdateCursorInput()
-{
-    if (!CCursorPolicyMgr::GetInstance()->IsCursorFixed()) return;
-
-    _long dwMouseMove(0);
-
-    if (dwMouseMove = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_X))
-    {
-        m_pTransformCom->Rotation(ROT_Y, dwMouseMove / 10.f);
     }
 }
 
