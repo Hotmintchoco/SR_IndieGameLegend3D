@@ -97,18 +97,6 @@
     <ClCompile Include="..\Code\CLight.cpp">
       <Filter>09. LightMgr\Light</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CCameraMgr.cpp">
-      <Filter>11. CameraMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CCameraFPVPerspective.cpp">
-      <Filter>11. CameraMgr\CameraObj\Camera_FPV_Perspective</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CCameraTPVPerspective.cpp">
-      <Filter>11. CameraMgr\CameraObj\Camera_TPV_Perspective</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CCameraObj.cpp">
-      <Filter>11. CameraMgr\CameraObj</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CBoxCollider.cpp">
       <Filter>05. Component\04. Collider\BoxCollider</Filter>
     </ClCompile>
@@ -132,12 +120,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSoundMgr.cpp">
       <Filter>15. Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CCameraFreePerspective.cpp">
-      <Filter>11. CameraMgr\CameraObj\Camera_Free_Perspective</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CCameraWorking.cpp">
-      <Filter>11. CameraMgr\CameraObj\Camera_Working</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -261,18 +243,6 @@
     <ClInclude Include="..\Header\CLight.h">
       <Filter>09. LightMgr\Light</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CCameraMgr.h">
-      <Filter>11. CameraMgr</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CCameraFPVPerspective.h">
-      <Filter>11. CameraMgr\CameraObj\Camera_FPV_Perspective</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CCameraTPVPerspective.h">
-      <Filter>11. CameraMgr\CameraObj\Camera_TPV_Perspective</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CCameraObj.h">
-      <Filter>11. CameraMgr\CameraObj</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CBoxCollider.h">
       <Filter>05. Component\04. Collider\BoxCollider</Filter>
     </ClInclude>
@@ -296,12 +266,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CSoundMgr.h">
       <Filter>15. Sound</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CCameraFreePerspective.h">
-      <Filter>11. CameraMgr\CameraObj\Camera_Free_Perspective</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CCameraWorking.h">
-      <Filter>11. CameraMgr\CameraObj\Camera_Working</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -401,18 +365,6 @@
     <Filter Include="09. LightMgr\Light">
       <UniqueIdentifier>{c480bb77-e74a-44ab-a2fb-585ee51f9dc3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="11. CameraMgr">
-      <UniqueIdentifier>{8369d5b9-9834-4406-93b7-1528a73ecc80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="11. CameraMgr\CameraObj">
-      <UniqueIdentifier>{b64342d8-e70c-4e17-924c-68cdde29c37d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="11. CameraMgr\CameraObj\Camera_FPV_Perspective">
-      <UniqueIdentifier>{02857908-3a33-459c-a703-0ce0e3c67a0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="11. CameraMgr\CameraObj\Camera_TPV_Perspective">
-      <UniqueIdentifier>{5b7e2c41-9d3a-4f6e-8a12-c4d7e9f03b18}</UniqueIdentifier>
-    </Filter>
     <Filter Include="11. CameraMgr\CameraObj\Camera_TPV_Perspective">
       <UniqueIdentifier>{92de3bac-9e8d-49da-84ff-a0e99cbd9d54}</UniqueIdentifier>
     </Filter>
@@ -433,12 +385,6 @@
     </Filter>
     <Filter Include="15. Sound">
       <UniqueIdentifier>{541ae4de-6182-4806-b205-f090097c1e66}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="11. CameraMgr\CameraObj\Camera_Free_Perspective">
-      <UniqueIdentifier>{f4a170d6-6702-482a-b1a1-5a24bc740e86}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="11. CameraMgr\CameraObj\Camera_Working">
-      <UniqueIdentifier>{daa0aa16-9bf9-4c3b-8ef9-76ebbf9c8581}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

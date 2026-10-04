@@ -65,11 +65,11 @@ void CLiminalCube::OnCollisionEnter(COLLINFO eCollInfo)
 {
     auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
 
-    switch (iOtherID)
-    {
-    default:
-        break;
-    }
+    // switch (iOtherID)
+    // {
+    // default:
+    //     break;
+    // }
 }
 
 

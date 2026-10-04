@@ -271,7 +271,7 @@ void CPlayer::OnHit(CGameObject* pSrcObj)
 {
     if (m_bInvincible) return;
 
-    // --m_iHP;
+    --m_iHP;
     CUIMgr::GetInstance()->Update_HPUI(m_iHP);
     CUIMgr::GetInstance()->RequestHitEffect();
 

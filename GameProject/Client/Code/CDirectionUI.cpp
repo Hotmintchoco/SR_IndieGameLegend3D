@@ -3,7 +3,6 @@
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CRenderer.h"
-#include "CCameraMgr.h"
 #include "CStage.h"
 #include "CGameStatus.h"
 

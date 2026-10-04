@@ -7,7 +7,6 @@
 #include "CCollisionMgr.h"
 #include "CRoomLayer.h"
 #include "CRcTex.h"
-#include "CCameraMgr.h"
 #include "CManagement.h"
 
 CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev)

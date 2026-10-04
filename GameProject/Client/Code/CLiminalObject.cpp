@@ -51,11 +51,11 @@ void CLiminalObject::OnCollisionEnter(COLLINFO eCollInfo)
 {
     auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
 
-    switch (iOtherID)
-    {
-    default:
-        break;
-    }
+    // switch (iOtherID)
+    // {
+    // default:
+    //     break;
+    // }
 }
 
 HRESULT CLiminalObject::Add_Component()

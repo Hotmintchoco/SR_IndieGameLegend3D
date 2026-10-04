@@ -67,11 +67,11 @@ void CLiminalSlope::OnCollisionEnter(COLLINFO eCollInfo)
 {
     auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
 
-    switch (iOtherID)
-    {
-    default:
-        break;
-    }
+    // switch (iOtherID)
+    // {
+    // default:
+    //     break;
+    // }
 }
 
 float CLiminalSlope::SampleTerrainHeight(const _vec3& vRayStart)

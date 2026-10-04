@@ -1,40 +1,44 @@
 ﻿#include "pch.h"
 #include "CStage.h"
-#include "CBackGround.h"
-#include "CProtoMgr.h"
-#include "CPlayer.h"
-#include "CTerrain.h"
-#include "CDynamicCamera.h"
-#include "CClientCameraMgr.h"
-#include "CCamera.h"
-#include "CSkyBox.h"
-#include "CLightMgr.h"
-#include "CWeaponSystem.h"
-#include "CParticle.h"
+
+/* 매니저 */
 #include "CManagement.h"
-#include "CFontMgr.h"
+#include "CProtoMgr.h"
 #include "CDInputMgr.h"
 #include "CCollisionMgr.h"
-#include "CWorm.h"
+#include "CSoundMgr.h"
+
+/* 기본 지형 */
+#include "CBackGround.h"
+#include "CTerrain.h"
+#include "CSkyBox.h"
+
+/* 방 레이어*/
 #include "CRoomLoadingMgr.h"
 #include "CRoomLayer.h"
 #include "CLayerContext.h"
-#include "CCrosshair.h"
-#include "CSkull.h"
-#include "CBoss1.h"
-#include "CSpeyeder.h"
-#include "CDirectionUI.h"
-#include "CMagmamouth.h"
-#include "CPseudoDark.h"
+
+/* 오브젝트 */
+#include "CPlayer.h"
+#include "CWeaponSystem.h"
+#include "CRayCaster.h"
 #include "CGameStatus.h"
+#include "CPseudoDark.h"
+
+/* UI */
+#include "CUIMgr.h"
+#include "CCrosshair.h"
+#include "CDirectionUI.h"
 #include "CMinimapUI.h"
 #include "CGaugeUI.h"
-#include "CSoundMgr.h"
 #include "CMiniGame.h"
-#include "CUIMgr.h"
 #include "CHitCreenUI.h"
-#include "CRayCaster.h"
+
+/* 카메라 */
+#include "CCamera.h"
+#include "CClientCameraMgr.h"
 #include "CPlayerCamera.h"
+#include "CDynamicCamera.h"
 #include "CCinematicCamera.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
