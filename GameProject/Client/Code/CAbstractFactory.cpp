@@ -23,6 +23,7 @@
 #include "CGlubba.h"
 #include "CDdokddak.h"
 #include "CBow.h"
+#include "CWorm.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -44,6 +45,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::Sprnub3,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub3::Create(t.pDevice); } },
         {EObjectType::Cryder,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CCryder::Create(t.pDevice); } },
         {EObjectType::Glubba,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGlubba::Create(t.pDevice); } },
+        {EObjectType::Worm,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CWorm::Create(t.pDevice); } },
 
         {EObjectType::ITEM_HEART,               [](const TCreateDesc& t) -> Engine::CGameObject* { return CHeart::Create(t.pDevice, t.pSpawner); } },
         {EObjectType::ITEM_ENERGY,              [](const TCreateDesc& t) -> Engine::CGameObject* { return CEnergy::Create(t.pDevice, t.pSpawner); } },

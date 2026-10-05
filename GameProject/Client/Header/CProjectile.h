@@ -2,6 +2,7 @@
 
 #include "CGameObject.h"
 class CBullet_Trail;
+class CEffect;
 
 namespace Engine
 {
@@ -31,11 +32,11 @@ public:
 	//261001 재현
 public:
 	CTransform* Get_Transform() { return m_pTransformCom; }
-	const _vec3 Get_Projectile_Dir() { return m_vDir; }
+	virtual const _vec3 Get_Projectile_Dir() { return m_vDir; }
 	void Set_TrailPointer(CGameObject* pTrail) { m_pTrail = pTrail; }
-	void Create_Trail();
+	void Create_Bullet_Trail();
 	void Create_BulletDead_Effect();
-	void Set_TrailDead();
+	virtual void Set_TrailDead();
 	//261001
 
 protected:
@@ -56,8 +57,10 @@ protected:
 	static _uint g_iProjectileID;
 	_uint m_iID = -1;
 
-
+	//261002 재현
+protected:
 	CGameObject* m_pTrail = nullptr;
+	_bool m_bTrailDead = false;
 
 protected:
 	virtual void Free() override;

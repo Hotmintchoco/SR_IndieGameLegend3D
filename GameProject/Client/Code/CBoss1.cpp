@@ -43,6 +43,7 @@ HRESULT CBoss1::Ready_GameObject()
     m_iMaxHp = 10;
     m_iHp = m_iMaxHp;
     m_bCollision_WithMonster = false;
+
     return S_OK;
 }
 
@@ -60,6 +61,14 @@ _int CBoss1::Update_GameObject(const _float& fTimeDelta)
         {
             m_bDeadStart = true;
             m_bStand = false;
+        }
+
+        for (int i = 0; i < 4; ++i)
+        {
+            if (m_bSpawnFinish[i] == true && m_bSpawnFinish2[i] == false)
+            {
+				m_pSpawnMonster[i]->Set_Dead(true);
+            }
         }
     }
     else if (m_iHp <= m_iMaxHp / 2)
@@ -84,7 +93,6 @@ _int CBoss1::Update_GameObject(const _float& fTimeDelta)
         break;
     case MOVE:
         Move_Boss1(_fTimeDelta);
-        //Trail(fTimeDelta);
         break;
     case DEAD:
         Boss1_Dead(_fTimeDelta);
@@ -660,18 +668,21 @@ void CBoss1::IDLE_Boss1(const _float& fTimeDelta)
 
 void CBoss1::Opening_Boss1(const _float& fTimeDelta)
 {
-	m_bElapsedOpeningTime += fTimeDelta;
+	m_fElapsedOpeningTime += fTimeDelta;
 
+    //오프닝 무브 끝
     if (m_bOpeningMoveFlag == true)
 	{
+        //오프닝 종료
 		m_bOpening = false;
 		Look_AtPlayer();
 		return;
     }
-    if (m_bOpeningMoveFlag2 == false)
+    //Y값 최초 조정
+    if (m_bInit_YPos == false)
     {
-        m_bOpeningMoveFlag2 = true;
-        _vec3 vPos{ 0.f, m_pTransformCom->m_vScale.y, 0.f };
+        m_bInit_YPos = true;
+        _vec3 vPos{ 0.f,m_pTransformCom->m_vScale.y,0.f };
         m_pTransformCom->Move_Pos(&vPos, 1.f, 1.f);
 
 		_vec3 vBossPos;
@@ -743,7 +754,8 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
         }
     }
 
-    if (m_bElapsedOpeningTime > 2.f)
+    //뛰어다니기
+    if (m_fElapsedOpeningTime > 2.f)
     {
         _vec3 vPos, vDir;
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -753,16 +765,17 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
         m_fLandingTime += fTimeDelta;
         vDir.y -= m_fLandingTime * 9.8f;
 
+        //착지했을때, 다음 착지위치 설정
         if (vPos.y <= m_pTransformCom->m_vScale.y && m_fLandingTime > 0.5f)
         {
             m_fLandingTime = 0.f;
 
             ++m_iOpeningMoveIndex;
 
+            //다음 착지위치가 없을때, 오프닝 무브 종료
             if (m_iOpeningMoveIndex == sizeof(m_vOpeningMoveDirection) / sizeof(m_vOpeningMoveDirection[0]))
             {
                 m_bOpeningMoveFlag = true;
-                //m_eBoss1State = IDLE;
                 return;
             }
         }

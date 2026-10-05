@@ -1,4 +1,4 @@
-#include "CTransform.h"
+Ôªø#include "CTransform.h"
 
 CTransform::CTransform()
 	: m_vScale(1.f, 1.f, 1.f), m_vAngle(0.f, 0.f, 0.f), m_fAccumulatedTime(0.f)
@@ -34,7 +34,7 @@ void CTransform::UpdateWorldMatrix()
 {
 	D3DXMatrixIdentity(&m_matWorld);
 
-	// ≈©±‚
+	// ÌÅ¨Í∏∞
 	for (_uint i = 0; i < INFO_POS; ++i)
 	{
 		memcpy(&m_vInfo[i], &m_matWorld.m[i][0], sizeof(_vec3));
@@ -46,7 +46,7 @@ void CTransform::UpdateWorldMatrix()
 		m_vInfo[i] *= *(((_float*)&m_vScale) + i);
 	}
 
-	// »∏¿¸
+	// ÌöåÏ†Ñ
 	_matrix		matRot[ROT_END];
 
 	D3DXMatrixRotationX(&matRot[ROT_X], D3DXToRadian(m_vAngle.x));
@@ -61,7 +61,7 @@ void CTransform::UpdateWorldMatrix()
 		}
 	}
 
-	// ø˘µÂ «‡∑ƒ ±∏º∫
+	// ÏõîÎìú ÌñâÎ†¨ Íµ¨ÏÑ±
 	for (_uint i = 0; i < INFO_END; ++i)
 	{
 		memcpy(&m_matWorld.m[i][0], &m_vInfo[i], sizeof(_vec3));
@@ -70,41 +70,41 @@ void CTransform::UpdateWorldMatrix()
 
 void CTransform::WorldMatrixDecompose()
 {
-	/* Ω«∆–«“ ºˆ ¿÷¥¬ ∞ÊøÏ
-	* Ω∫ƒ…¿œ¿Ã 0¿Œ √‡ ¡∏¿Á
-	* Ω∫ƒ…¿œ¿Ã ¿Ωºˆ
+	/* Ïã§Ìå®Ìï† Ïàò ÏûàÎäî Í≤ΩÏö∞
+	* Ïä§ÏºÄÏùºÏù¥ 0Ïù∏ Ï∂ï Ï°¥Ïû¨
+	* Ïä§ÏºÄÏùºÏù¥ ÏùåÏàò
 	*/
 
-	// 1. ¿ßƒ° & √‡ ∫§≈Õ («‡ ∫§≈Õ ±‚¡ÿ: ∞¢ «‡¿Ã Right / Up / Look / Pos)
+	// 1. ÏúÑÏπò & Ï∂ï Î≤°ÌÑ∞ (Ìñâ Î≤°ÌÑ∞ Í∏∞Ï§Ä: Í∞Å ÌñâÏù¥ Right / Up / Look / Pos)
 	for (_uint i = 0; i < INFO_END; ++i)
 		memcpy(&m_vInfo[i], &m_matWorld.m[i][0], sizeof(_vec3));
 
-	// 2. Ω∫ƒ…¿œ = ∞¢ √‡¿« ±Ê¿Ã
+	// 2. Ïä§ÏºÄÏùº = Í∞Å Ï∂ïÏùò Í∏∏Ïù¥
 	m_vScale.x = D3DXVec3Length(&m_vInfo[INFO_RIGHT]);
 	m_vScale.y = D3DXVec3Length(&m_vInfo[INFO_UP]);
 	m_vScale.z = D3DXVec3Length(&m_vInfo[INFO_LOOK]);
 
 	const _float fEpsilon = 1e-6f;
 	if (m_vScale.x < fEpsilon || m_vScale.y < fEpsilon || m_vScale.z < fEpsilon)
-		return; // Ω∫ƒ…¿œ 0¿Œ √‡¿Ã ¿÷¿∏∏È »∏¿¸¿ª ±∏«“ ºˆ æ¯¿Ω
+		return; // Ïä§ÏºÄÏùº 0Ïù∏ Ï∂ïÏù¥ ÏûàÏúºÎ©¥ ÌöåÏ†ÑÏùÑ Íµ¨Ìï† Ïàò ÏóÜÏùå
 
-	// ¿Ωºˆ Ω∫ƒ…¿œ(π›¿¸) √≥∏Æ: ¡¬«•∞Ë∞° µ⁄¡˝«˚¿∏∏È x Ω∫ƒ…¿œø° ∫Œ»£∏¶ ¡‹
+	// ÏùåÏàò Ïä§ÏºÄÏùº(Î∞òÏ†Ñ) Ï≤òÎ¶¨: Ï¢åÌëúÍ≥ÑÍ∞Ä Îí§ÏßëÌòîÏúºÎ©¥ x Ïä§ÏºÄÏùºÏóê Î∂ÄÌò∏Î•º Ï§å
 	_vec3 vCross;
 	D3DXVec3Cross(&vCross, &m_vInfo[INFO_RIGHT], &m_vInfo[INFO_UP]);
 	if (D3DXVec3Dot(&vCross, &m_vInfo[INFO_LOOK]) < 0.f)
 		m_vScale.x = -m_vScale.x;
 
-	// 3. º¯ºˆ »∏¿¸ √‡ (Ω∫ƒ…¿œ ¡¶∞≈)
+	// 3. ÏàúÏàò ÌöåÏ†Ñ Ï∂ï (Ïä§ÏºÄÏùº Ï†úÍ±∞)
 	_vec3 vRight = m_vInfo[INFO_RIGHT] / m_vScale.x;
 	_vec3 vUp = m_vInfo[INFO_UP] / m_vScale.y;
 	_vec3 vLook = m_vInfo[INFO_LOOK] / m_vScale.z;
 
-	// 4. ø¿¿œ∑Ø ∞¢ √ﬂ√‚ (R = Rx * Ry * Rz, UpdateWorldMatrixøÕ ∞∞¿∫ º¯º≠)
+	// 4. Ïò§ÏùºÎü¨ Í∞Å Ï∂îÏ∂ú (R = Rx * Ry * Rz, UpdateWorldMatrixÏôÄ Í∞ôÏùÄ ÏàúÏÑú)
 	//    R._13 = -sin(y)
 	//    R._23 = sin(x)cos(y), R._33 = cos(x)cos(y)
 	//    R._12 = cos(y)sin(z), R._11 = cos(y)cos(z)
 	_float fSinY = -vRight.z;
-	fSinY = max(-1.f, min(1.f, fSinY)); // asinf π¸¿ß ∫∏»£
+	fSinY = max(-1.f, min(1.f, fSinY)); // asinf Î≤îÏúÑ Î≥¥Ìò∏
 
 	_float fX, fY, fZ;
 	fY = asinf(fSinY);
@@ -116,12 +116,12 @@ void CTransform::WorldMatrixDecompose()
 	}
 	else
 	{
-		// ¡¸π˙∂Ù (y = °æ90µµ): xøÕ z∞° ∞„ƒ°π«∑Œ z∏¶ 0¿∏∑Œ ∞Ì¡§
+		// ÏßêÎ≤åÎùΩ (y = ¬±90ÎèÑ): xÏôÄ zÍ∞Ä Í≤πÏπòÎØÄÎ°ú zÎ•º 0ÏúºÎ°ú Í≥†Ï†ï
 		fX = atan2f(-vLook.y, vUp.y);
 		fZ = 0.f;
 	}
 
-	// UpdateWorldMatrix∞° D3DXToRadian¿ª æ≤π«∑Œ µµ(degree) ¥‹¿ß∑Œ ¿˙¿Â
+	// UpdateWorldMatrixÍ∞Ä D3DXToRadianÏùÑ Ïì∞ÎØÄÎ°ú ÎèÑ(degree) Îã®ÏúÑÎ°ú Ï†ÄÏû•
 	m_vAngle = _vec3(D3DXToDegree(fX), D3DXToDegree(fY), D3DXToDegree(fZ));
 }
 
@@ -223,8 +223,8 @@ void CTransform::LookAt_Player(const _vec3* pPos, const _vec3* pLook)
 _matrix* CTransform::Compute_LookAtTarget(const _vec3* pPos, const _vec3* pLook)
 {
 	_vec3 vSrc = m_vInfo[INFO_LOOK];
-	_vec3 vDst = -(*pLook); //«√∑π¿ÃæÓ∂˚ ∆Ú«‡«œ∞‘ ¡§∑ƒ
-	//_vec3 vDst = (*pPos) - m_vInfo[INFO_POS]; //«√∑π¿ÃæÓ Ω√º± ±‚¡ÿ ¡§∑ƒ
+	_vec3 vDst = -(*pLook); //ÌîåÎ†àÏù¥Ïñ¥Îûë ÌèâÌñâÌïòÍ≤å Ï†ïÎ†¨
+	//_vec3 vDst = (*pPos) - m_vInfo[INFO_POS]; //ÌîåÎ†àÏù¥Ïñ¥ ÏãúÏÑ† Í∏∞Ï§Ä Ï†ïÎ†¨
 
 	D3DXMATRIX	matRot;
 	_vec3 vAxis = { 0.f, 1.f, 0.f };

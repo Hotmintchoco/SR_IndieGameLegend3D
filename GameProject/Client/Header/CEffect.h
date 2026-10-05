@@ -11,7 +11,7 @@ class CEffect : public CGameObject
 {
 public:
 	enum EFFECT_TYPE {MAGMA_FIREBALL, MAGMA_TRAIL, MAGMA_DEAD_EFFECT, MAGMA_EXPLOSION1, MAGMA_EXPLOSION2, BOSS1_DEAD_EFFECT, BOSS1_EXPLOSION1, BOSS1_EXPLOSION2,
-		BOSS1_SPAWN, BULLET_EFFECT, BULLET_TRAIL, IDLE};
+		BOSS1_SPAWN, BULLET_EFFECT, BULLET_TRAIL, ARROW_TRAIL, IDLE};
 protected:
 	explicit CEffect(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CEffect();
@@ -29,6 +29,7 @@ public:
 	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, const _vec3& vPos);
 	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, CGameObject* pOwenr);
+	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, CGameObject* pOwenr, _float fLifeTime);
 	//static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, CGameObject* pEffect_Owner);
 	void Set_Pos(const _vec3& vPos);
 	void Set_Scale(const _vec3& vScale);
