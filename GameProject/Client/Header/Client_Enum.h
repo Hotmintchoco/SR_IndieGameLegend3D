@@ -211,3 +211,18 @@ enum class EWeaponEvent
 
 	MAX,
 };
+
+enum class EColorTexture
+{
+	NONE,
+
+	BLACK,
+	ORANGE,
+	PINK,
+	RED,
+	YELLOW,
+	WHITE,
+	SAND,
+
+	MAX,
+};

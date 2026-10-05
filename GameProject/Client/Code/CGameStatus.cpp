@@ -16,6 +16,7 @@
 #include "CStage.h"
 #include "CRenderer.h"
 #include "CPlayer.h"
+#include "CPlayerCamera.h"
 
 CGameStatus::CGameStatus(LPDIRECT3DDEVICE9 pGraphicDev)
     :CGameObject(pGraphicDev)
@@ -138,6 +139,16 @@ void CGameStatus::RenderImGui()
         ImGui::Text("Pos : %.2f, %.2f, %.2f", m_vPlayerPos.x, m_vPlayerPos.y, m_vPlayerPos.z);
 
         ImGui::Text("Yaw : %.1f deg", XMConvertToDegrees(m_fYaw)); 
+
+        if(ImGui::SliderFloat("Player Scale", &m_fPseudoPlayerScale, 0.01f, 1.f, "%.2f"))
+        {
+            m_pStage->GetPlayer()->SetPseudoScale(m_fPseudoPlayerScale);
+            CPlayerCamera* pCamera = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
+            if (pCamera)
+            {
+                pCamera->SetPseudoScale(m_fPseudoPlayerScale);
+            }
+        }
     }
 
     // --- Gauge ---
