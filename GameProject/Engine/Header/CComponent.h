@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CBase.h"
 #include "Engine_Define.h"
@@ -23,13 +23,13 @@ public:
 	_bool			Get_IsActive() { return m_bIsActive; }
 
 public:
-	virtual _int Update_Component(const _float& fTimeDelta) { return 0; }
+	virtual _int Update_Component(_float fTimeDelta) { return 0; }
 	virtual void LateUpdate_Component() {}
 
 protected:
 	LPDIRECT3DDEVICE9			m_pGraphicDev;
 	_bool						m_bClone;
-	_bool						m_bIsActive;	// È°¼ºÈ­ ¿©ºÎ¸¦ ³ªÅ¸³»´Â º¯¼ö
+	_bool						m_bIsActive;	// í™œì„±í™” ì—¬ë¶€ë¥¼ ë‚˜íƒ€ë‚´ëŠ” ë³€ìˆ˜
 
 	CGameObject*				m_pOwner;
 

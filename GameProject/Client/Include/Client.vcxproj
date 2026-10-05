@@ -148,6 +148,7 @@
     <ClInclude Include="..\Header\CArrow.h" />
     <ClInclude Include="..\Header\CArrow_Effect.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
+    <ClInclude Include="..\Header\CBombardArrowSpawner.h" />
     <ClInclude Include="..\Header\CBow.h" />
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
     <ClInclude Include="..\Header\CBoss1.h" />
@@ -160,12 +161,22 @@
     <ClInclude Include="..\Header\CGlubba.h" />
     <ClInclude Include="..\Header\CCrossBuffer.h" />
     <ClInclude Include="..\Header\CDdokddak.h" />
+    <ClInclude Include="..\Header\CCursorPolicyMgr.h" />
     <ClInclude Include="..\Header\CItemContainer.h" />
     <ClInclude Include="..\Header\CHitCreenUI.h" />
     <ClInclude Include="..\Header\CLaser.h" />
     <ClInclude Include="..\Header\CLaserBuffer.h" />
     <ClInclude Include="..\Header\CLaserGun.h" />
+    <ClInclude Include="..\Header\CLiminalCube.h" />
+    <ClInclude Include="..\Header\CLiminalGun.h" />
+    <ClInclude Include="..\Header\CLiminalObject.h" />
+    <ClInclude Include="..\Header\CLiminalSlope.h" />
     <ClInclude Include="..\Header\CMiniGame.h" />
+    <ClInclude Include="..\Header\CMovement.h" />
+    <ClInclude Include="..\Header\CPlayer.h" />
+    <ClInclude Include="..\Header\CPlayerAnimator.h" />
+    <ClInclude Include="..\Header\CPlayerMovement.h" />
+    <ClInclude Include="..\Header\CPlayerPartTex.h" />
     <ClInclude Include="..\Header\CPlayerCamera.h" />
     <ClInclude Include="..\Header\CRapidGun.h" />
     <ClInclude Include="..\Header\CProjectile.h" />
@@ -219,7 +230,6 @@
     <ClInclude Include="..\Header\CRoomLayer.h" />
     <ClInclude Include="..\Header\CRoomLoadingMgr.h" />
     <ClInclude Include="..\Header\CMonster.h" />
-    <ClInclude Include="..\Header\CPlayer.h" />
     <ClInclude Include="..\Header\CSkull.h" />
     <ClInclude Include="..\Header\CSkyBox.h" />
     <ClInclude Include="..\Header\CSmallExplode.h" />
@@ -245,7 +255,7 @@
     <ClInclude Include="..\Header\imstb_textedit.h" />
     <ClInclude Include="..\Header\imstb_truetype.h" />
     <ClInclude Include="..\Header\IRayTestable.h" />
-    <ClInclude Include="..\Header\IReflectable.h" />
+    <ClInclude Include="..\Header\ITerrain.h" />
     <ClInclude Include="..\Header\json.hpp" />
     <ClInclude Include="..\Header\JsonAdapter.h" />
     <ClInclude Include="..\Header\json_fwd.hpp" />
@@ -262,6 +272,7 @@
     <ClCompile Include="..\Code\CArrow.cpp" />
     <ClCompile Include="..\Code\CArrow_Effect.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
+    <ClCompile Include="..\Code\CBombardArrowSpawner.cpp" />
     <ClCompile Include="..\Code\CBow.cpp" />
     <ClCompile Include="..\Code\CBreakableFrustum.cpp" />
     <ClCompile Include="..\Code\CBoss1.cpp" />
@@ -275,11 +286,21 @@
     <ClCompile Include="..\Code\CFloor.cpp" />
     <ClCompile Include="..\Code\CGlubba.cpp" />
     <ClCompile Include="..\Code\CHitCreenUI.cpp" />
+    <ClCompile Include="..\Code\CCursorPolicyMgr.cpp" />
     <ClCompile Include="..\Code\CItemContainer.cpp" />
     <ClCompile Include="..\Code\CLaser.cpp" />
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />
     <ClCompile Include="..\Code\CLaserGun.cpp" />
+    <ClCompile Include="..\Code\CLiminalCube.cpp" />
+    <ClCompile Include="..\Code\CLiminalGun.cpp" />
+    <ClCompile Include="..\Code\CLiminalObject.cpp" />
+    <ClCompile Include="..\Code\CLiminalSlope.cpp" />
     <ClCompile Include="..\Code\CMiniGame.cpp" />
+    <ClCompile Include="..\Code\CMovement.cpp" />
+    <ClCompile Include="..\Code\CPlayer.cpp" />
+    <ClCompile Include="..\Code\CPlayerAnimator.cpp" />
+    <ClCompile Include="..\Code\CPlayerMovement.cpp" />
+    <ClCompile Include="..\Code\CPlayerPartTex.cpp" />
     <ClCompile Include="..\Code\CPlayerCamera.cpp" />
     <ClCompile Include="..\Code\CRapidGun.cpp" />
     <ClCompile Include="..\Code\CProjectile.cpp" />
@@ -332,7 +353,6 @@
     <ClCompile Include="..\Code\CRoomLayer.cpp" />
     <ClCompile Include="..\Code\CRoomLoadingMgr.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
-    <ClCompile Include="..\Code\CPlayer.cpp" />
     <ClCompile Include="..\Code\CSkull.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CSmallExplode.cpp" />
@@ -371,8 +391,8 @@
     <ClCompile Include="..\Code\CWorm.cpp" />
     <ClCompile Include="..\Code\CUnbreakableFrustum.cpp" />
     <ClCompile Include="..\Code\IRayTestable.cpp" />
-    <ClCompile Include="..\Code\IReflectable.cpp" />
     <ClCompile Include="..\Code\CSprnub1.cpp" />
+    <ClCompile Include="..\Code\ITerrain.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

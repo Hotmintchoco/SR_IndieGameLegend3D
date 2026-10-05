@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CWorm_Boby.h"
 #include "CWorm_Boby.h"
 #include "CProtoMgr.h"
@@ -30,14 +30,14 @@ HRESULT CWorm_Boby::Ready_GameObject()
     return S_OK;
 }
 
-_int CWorm_Boby::Update_GameObject(const _float& fTimeDelta)
+_int CWorm_Boby::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
     Set_OnTerrain();
     return iExit;
 }
 
-void CWorm_Boby::LateUpdate_GameObject(const _float& fTimeDelta)
+void CWorm_Boby::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 

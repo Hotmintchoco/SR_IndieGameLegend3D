@@ -32,7 +32,7 @@ HRESULT CRapidGun::Ready_GameObject()
     return S_OK;
 }
 
-_int CRapidGun::Update_GameObject(const _float& fTimeDelta)
+_int CRapidGun::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
@@ -41,7 +41,7 @@ _int CRapidGun::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CRapidGun::LateUpdate_GameObject(const _float& fTimeDelta)
+void CRapidGun::LateUpdate_GameObject(_float fTimeDelta)
 {
     CWeapon::LateUpdate_GameObject(fTimeDelta);
 }
@@ -85,40 +85,28 @@ void CRapidGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CRapidGun::DefaultAttack()
+EWeaponEvent CRapidGun::SpecialAttack(EInputState ePri, EInputState eSec)
 {
-    _vec3 vDir = m_vBulletTo - m_vBulletFrom;
-    D3DXVec3Normalize(&vDir, &vDir);
+    switch (ePri)
+    {
+    case EInputState::Held:
+    {
+        ShotSingleBullet();
+        m_bIsCoolTime = true;
+        m_fCoolTimeLeft = m_fSpecialAtkInterval;
+        return EWeaponEvent::GUN_SHOT;
+        break;
+    }
+    default:
+        break;
+    }
 
-    CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
-    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
-    pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
-
-    CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
-
-    m_bIsCoolTime = true;
-    m_fCoolTimeLeft = m_fShootInterval;
-    StartShotAnimation();
+    return EWeaponEvent::NONE;
 }
 
-void CRapidGun::SpecialAttack()
+EWeaponEvent CRapidGun::UltimateAttack(EInputState ePri, EInputState eSec)
 {
-    _vec3 vDir = m_vBulletTo - m_vBulletFrom;
-    D3DXVec3Normalize(&vDir, &vDir);
-
-    CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
-    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
-    pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
-
-    CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
-
-    m_bIsCoolTime = true;
-    m_fCoolTimeLeft = m_fSpecialAtkInterval;
-    StartShotAnimation();
-}
-
-void CRapidGun::UltimateAttack()
-{
+    return EWeaponEvent::NONE;
 }
 
 HRESULT CRapidGun::Add_Component()

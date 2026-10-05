@@ -38,7 +38,7 @@ HRESULT CButtonTile::Ready_GameObject()
     return S_OK;
 }
 
-_int CButtonTile::Update_GameObject(const _float& fTimeDelta)
+_int CButtonTile::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CTile::Update_GameObject(fTimeDelta);
 
@@ -47,7 +47,7 @@ _int CButtonTile::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CButtonTile::LateUpdate_GameObject(const _float& fTimeDelta)
+void CButtonTile::LateUpdate_GameObject(_float fTimeDelta)
 {
     CTile::LateUpdate_GameObject(fTimeDelta);
 }

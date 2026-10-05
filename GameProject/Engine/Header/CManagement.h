@@ -29,8 +29,8 @@ public:
 public:
 	// 씬 전환 (이전 씬을 삭제하거나 유지할 수 있음)
 	HRESULT			Change_Scene(_int iSceneIdx, CScene* pScene = nullptr, bool bDestoryOld = false);
-	_int			Update_Scene(const _float& fTimeDelta);
-	void			LateUpdate_Scene(const _float& fTimeDelta);
+	_int			Update_Scene(_float fTimeDelta);
+	void			LateUpdate_Scene(_float fTimeDelta);
 	void			Render_Scene(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:

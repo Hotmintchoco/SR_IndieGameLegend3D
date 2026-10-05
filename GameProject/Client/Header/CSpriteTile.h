@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CTile.h"
 #include "Client_Enum.h"
@@ -20,8 +20,8 @@ protected:
 
 public:
 	virtual			HRESULT		Ready_GameObject();
-	virtual			_int		Update_GameObject(const _float& fTimeDelta);
-	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual			_int		Update_GameObject(_float fTimeDelta);
+	virtual			void		LateUpdate_GameObject(_float fTimeDelta);
 	virtual			void		Render_GameObject();
 
 	void Contaminate(EContaminateType eType, float fDuration);
@@ -37,10 +37,10 @@ protected:
 	Engine::CPlaneTex* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
 
-	/* ÅØ½ºÃÄ °ü·Ã */
+	/* í…ìŠ¤ì³ ê´€ë ¨ */
 	int m_iTextureIdx = -1;
 
-	/* ¿À¿° Å¸ÀÏ °ü·Ã */
+	/* ì˜¤ì—¼ íƒ€ì¼ ê´€ë ¨ */
 	EContaminateType m_eContaminationType = EContaminateType::NONE;
 	bool m_bResistContamination = false;
 	Engine::CTexture* m_pAnimTextureCom = nullptr;

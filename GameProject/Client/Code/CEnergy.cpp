@@ -37,7 +37,7 @@ HRESULT CEnergy::Ready_GameObject()
     return S_OK;
 }
 
-_int CEnergy::Update_GameObject(const _float& fTimeDelta)
+_int CEnergy::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CItem::Update_GameObject(fTimeDelta);
 
@@ -48,7 +48,7 @@ _int CEnergy::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CEnergy::LateUpdate_GameObject(const _float& fTimeDelta)
+void CEnergy::LateUpdate_GameObject(_float fTimeDelta)
 {
     CItem::LateUpdate_GameObject(fTimeDelta);
 }

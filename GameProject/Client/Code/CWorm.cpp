@@ -62,7 +62,7 @@ HRESULT CWorm::Ready_GameObject()
     return S_OK;
 }
 
-_int CWorm::Update_GameObject(const _float& fTimeDelta)
+_int CWorm::Update_GameObject(_float fTimeDelta)
 {
     Set_Init_Worm();
     m_iWormIndex;
@@ -139,7 +139,7 @@ _int CWorm::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CWorm::LateUpdate_GameObject(const _float& fTimeDelta)
+void CWorm::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 }

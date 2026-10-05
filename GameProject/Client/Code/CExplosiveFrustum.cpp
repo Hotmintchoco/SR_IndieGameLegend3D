@@ -38,7 +38,7 @@ HRESULT CExplosiveFrustum::Ready_GameObject()
     return S_OK;
 }
 
-_int CExplosiveFrustum::Update_GameObject(const _float& fTimeDelta)
+_int CExplosiveFrustum::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CFrustum::Update_GameObject(fTimeDelta);
 
@@ -51,7 +51,7 @@ _int CExplosiveFrustum::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CExplosiveFrustum::LateUpdate_GameObject(const _float& fTimeDelta)
+void CExplosiveFrustum::LateUpdate_GameObject(_float fTimeDelta)
 {
     m_pLight->PropagateTransform(m_pTransformCom);
     m_pGlass->PropagateTransform(m_pTransformCom);

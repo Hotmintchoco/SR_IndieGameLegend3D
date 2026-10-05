@@ -23,6 +23,9 @@
 #include "CGlubba.h"
 #include "CDdokddak.h"
 #include "CBow.h"
+#include "CLiminalGun.h"
+#include "CLiminalCube.h"
+#include "CLiminalSlope.h"
 #include "CWorm.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
@@ -35,6 +38,8 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::EXPLOSIVE_FRUSTUM,        [](const TCreateDesc& t) -> Engine::CGameObject* { return CExplosiveFrustum::Create(t.pDevice); } },
         {EObjectType::GAME_MACHINE,             [](const TCreateDesc& t) -> Engine::CGameObject* { return CGameMachine::Create(t.pDevice); } },
         {EObjectType::DDOKDDAK,                 [](const TCreateDesc& t) -> Engine::CGameObject* { return CDdokddak::Create(t.pDevice, EDirection::NORTH); } },
+        {EObjectType::LIMINAL_CUBE,             [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalCube::Create(t.pDevice); } },
+        {EObjectType::LIMINAL_SLOPE,            [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalSlope::Create(t.pDevice); } },
 
         {EObjectType::Skull,                    [](const TCreateDesc& t) -> Engine::CGameObject* { return CSkull::Create(t.pDevice); } },
         {EObjectType::Boss1,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CBoss1::Create(t.pDevice); } },
@@ -55,6 +60,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::WEAPON_SHOTGUN,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CShotGun::Create(t.pDevice); } },
         {EObjectType::WEAPON_LASERGUN,          [](const TCreateDesc& t) -> Engine::CGameObject* { return CLaserGun::Create(t.pDevice); } },
         {EObjectType::WEAPON_BOW,               [](const TCreateDesc& t) -> Engine::CGameObject* { return CBow::Create(t.pDevice); } },
+        {EObjectType::WEAPON_LIMINAL,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalGun::Create(t.pDevice); } },
     };
 }
 

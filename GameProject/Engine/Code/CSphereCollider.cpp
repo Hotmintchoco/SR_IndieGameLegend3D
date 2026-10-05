@@ -67,7 +67,7 @@ void CSphereCollider::Render(LPDIRECT3DDEVICE9& pGraphicDev)
 	m_pDebugSphereTex->Render_Buffer();
 }
 
-_int CSphereCollider::Update_Component(const _float& fTimeDelta)
+_int CSphereCollider::Update_Component(_float fTimeDelta)
 {
 	if (CDebugMgr::GetInstance()->GetShowCollider())
 	{

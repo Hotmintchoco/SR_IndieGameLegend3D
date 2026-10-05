@@ -28,7 +28,7 @@ HRESULT CSkull::Ready_GameObject()
     return S_OK;
 }
 
-_int CSkull::Update_GameObject(const _float& fTimeDelta)
+_int CSkull::Update_GameObject(_float fTimeDelta)
 {
     if (m_iHp <= 0)
     {
@@ -43,7 +43,7 @@ _int CSkull::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CSkull::LateUpdate_GameObject(const _float& fTimeDelta)
+void CSkull::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 

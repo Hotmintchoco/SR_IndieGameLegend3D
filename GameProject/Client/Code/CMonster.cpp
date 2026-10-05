@@ -59,7 +59,7 @@ HRESULT CMonster::Ready_GameObject()
     return S_OK;
 }
 
-_int CMonster::Update_GameObject(const _float& fTimeDelta)
+_int CMonster::Update_GameObject(_float fTimeDelta)
 {
     if (!Get_IsActive()) return S_OK;
     m_fElapsedTime += fTimeDelta;
@@ -94,7 +94,7 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
+void CMonster::LateUpdate_GameObject(_float fTimeDelta)
 {
     if (!Get_IsActive()) return;
 
@@ -125,7 +125,20 @@ void CMonster::OnCollisionEnter(COLLINFO eCollInfo)
 
 void CMonster::OnCollisionStay(COLLINFO eCollInfo)
 {
-	CollisionWithMonster(eCollInfo);
+    auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
+
+    switch (iOtherID)
+    {
+    case COLLISIONID::COLL_PLAYER:
+    {
+        static_cast<CPlayer*>(pOtherCol->Get_Owner())->OnHit(this);
+        break;
+    }
+    default:
+        break;
+    }
+    
+    CollisionWithMonster(eCollInfo);
 }
 
 void CMonster::Update_HitState(const _float& fTimeDelta)

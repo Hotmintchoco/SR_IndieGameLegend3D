@@ -29,7 +29,7 @@ HRESULT CWeapon::Ready_GameObject()
     return S_OK;
 }
 
-_int CWeapon::Update_GameObject(const _float& fTimeDelta)
+_int CWeapon::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
     
@@ -54,7 +54,7 @@ void CWeapon::CheckCoolTime(const _float& fTimeDelta)
     }
 }
 
-void CWeapon::LateUpdate_GameObject(const _float& fTimeDelta)
+void CWeapon::LateUpdate_GameObject(_float fTimeDelta)
 {
     SyncTransformToCamera();
 
@@ -134,12 +134,38 @@ void CWeapon::StartShotAnimation()
     m_fTimeAfterShot = 0.f;
 }
 
-void CWeapon::ChargeStart()
+EWeaponEvent CWeapon::DefaultAttack(EInputState ePri, EInputState eSec)
 {
+    switch (ePri)
+    {
+    case EInputState::Held:
+    {
+        ShotSingleBullet();
+
+        m_bIsCoolTime = true;
+        m_fCoolTimeLeft = m_fShootInterval;
+        return EWeaponEvent::GUN_SHOT;
+        break;
+    }
+    default:
+        break;
+    }
+
+    return EWeaponEvent::NONE;
 }
 
-void CWeapon::ChargeEnd()
+void CWeapon::ShotSingleBullet()
 {
+    _vec3 vDir = m_vBulletTo - m_vBulletFrom;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+    pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+
+    CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
+
+    StartShotAnimation();
 }
 
 HRESULT CWeapon::Add_Component()

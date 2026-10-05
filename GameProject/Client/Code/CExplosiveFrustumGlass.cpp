@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "CExplosiveFrustumGlass.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -18,14 +18,14 @@ HRESULT CExplosiveFrustumGlass::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    // Note : º¯º≠ø° ¡÷¿«
+    // Note : ÏàúÏÑúÏóê Ï£ºÏùò
     if (FAILED(CGameObject::Ready_GameObject()))
         return E_FAIL;
 
     return S_OK;
 }
 
-_int CExplosiveFrustumGlass::Update_GameObject(const _float& fTimeDelta)
+_int CExplosiveFrustumGlass::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -34,7 +34,7 @@ _int CExplosiveFrustumGlass::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CExplosiveFrustumGlass::LateUpdate_GameObject(const _float& fTimeDelta)
+void CExplosiveFrustumGlass::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }

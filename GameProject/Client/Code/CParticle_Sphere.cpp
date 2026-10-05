@@ -26,7 +26,7 @@ HRESULT CParticle_Sphere::Ready_GameObject()
     return S_OK;
 }
 
-_int CParticle_Sphere::Update_GameObject(const _float& fTimeDelta)
+_int CParticle_Sphere::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CParticle::Update_GameObject(fTimeDelta);
     
@@ -60,7 +60,7 @@ _int CParticle_Sphere::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CParticle_Sphere::LateUpdate_GameObject(const _float& fTimeDelta)
+void CParticle_Sphere::LateUpdate_GameObject(_float fTimeDelta)
 {
     CParticle::LateUpdate_GameObject(fTimeDelta);
 

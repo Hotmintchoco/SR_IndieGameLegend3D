@@ -21,8 +21,8 @@ public:
 
 public:
 	virtual			HRESULT		Ready_GameObject();
-	virtual			_int		Update_GameObject(const _float& fTimeDelta);
-	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual			_int		Update_GameObject(_float fTimeDelta);
+	virtual			void		LateUpdate_GameObject(_float fTimeDelta);
 	virtual			void		Render_GameObject()PURE;
 
 	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) {}
@@ -53,7 +53,7 @@ protected:
 	void			Obstacle_Collision(CCollider* pOtherCollider, CCollider* pObstacleCollider);
 
 protected:
-	map<const _tchar*, CComponent*>			m_mapComponent[ID_END];
+	map<wstring, CComponent*>			m_mapComponent[ID_END];
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	_float									m_fViewZ;
 	_float 									m_fFrictionForce; // 마찰력 추가 (Speed에 곱해줌)
@@ -64,7 +64,7 @@ protected:
 	CLayer* m_pOwner = nullptr;
 
 private:
-	CComponent* Find_Component(COMPONENTID eID, const _tchar* pComponentTag);
+	CComponent* Find_Component(COMPONENTID eID, const wstring& pComponentTag);
 
 protected:
 	virtual		void		Free();

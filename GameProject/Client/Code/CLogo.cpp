@@ -31,14 +31,14 @@ HRESULT CLogo::Ready_Scene()
 	return S_OK;
 }
 
-_int CLogo::Update_Scene(const _float& fTimeDelta)
+_int CLogo::Update_Scene(_float fTimeDelta)
 {
 	_int iExit = CScene::Update_Scene(fTimeDelta);
 
 	if (m_pLoading->Get_Finish())
 	{
-		if (GetAsyncKeyState(VK_RETURN))
-		{
+		//if (GetAsyncKeyState(VK_RETURN))
+		//{
 			CScene* pStage = CStage::Create(m_pGraphicDev);
 
 			if (nullptr == pStage)
@@ -53,13 +53,13 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 
 			/* Stage 씬에 처음 들어가는 경우 바로 LateUpdate로 이어져 Transform이 업데이트 되지 않는 현상 */
 			pStage->Update_Scene(fTimeDelta);
-		}
+		//}
 	}
 
 	return iExit;
 }
 
-void CLogo::LateUpdate_Scene(const _float& fTimeDelta)
+void CLogo::LateUpdate_Scene(_float fTimeDelta)
 {
 	CScene::LateUpdate_Scene(fTimeDelta);
 }

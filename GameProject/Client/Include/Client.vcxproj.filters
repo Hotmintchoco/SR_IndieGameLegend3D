@@ -31,9 +31,6 @@
     <Filter Include="02. GameObject\00. BackGround">
       <UniqueIdentifier>{f0d0e5b3-59c7-41fb-92cf-59c72845b18e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\01. Player">
-      <UniqueIdentifier>{b296e5ab-9980-4835-b577-7885d1efc319}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Monster">
       <UniqueIdentifier>{ea1699e6-0c35-4928-a891-19e37d243279}</UniqueIdentifier>
     </Filter>
@@ -244,9 +241,6 @@
     <Filter Include="02. GameObject\07. Room\BaseProp\FLoor">
       <UniqueIdentifier>{07bae97f-417b-4eab-8517-c3328d71d1f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. Room\BaseProp\Reflectable">
-      <UniqueIdentifier>{ef527500-86bd-4cb7-82d2-54f5e51a4862}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Monster\Sprnub">
       <UniqueIdentifier>{7a47d356-d425-4c6b-a048-ba98ba2e0613}</UniqueIdentifier>
     </Filter>
@@ -301,6 +295,42 @@
     <Filter Include="02. GameObject\12. Logic\01. RayCaster">
       <UniqueIdentifier>{5466cbee-4409-45a6-b69b-bf80fe1cd263}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. Character">
+      <UniqueIdentifier>{c6e9ff9b-cbc7-4950-913e-0337acfbb0d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player">
+      <UniqueIdentifier>{32e7a207-3007-495a-b2df-52e5aa94c7b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player\00. Animator">
+      <UniqueIdentifier>{aef0f9a1-e99b-42c4-a4cb-280d6537e431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player\00. Animator\00. PlayerPartTex">
+      <UniqueIdentifier>{c753b743-d9ed-4876-82cd-bf2f267b84c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player\01. Movement">
+      <UniqueIdentifier>{1bd20612-fa33-4947-bedf-37727e024351}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player\01. Movement\00. PlayerMovement">
+      <UniqueIdentifier>{f1a34ff3-b99a-443c-945c-6a1c00752057}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Manager\01. CursorPolicy">
+      <UniqueIdentifier>{c315cdf6-72d0-49e1-a439-a07c17892f99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal">
+      <UniqueIdentifier>{a9e7f3a5-293b-4e22-873b-39dc839eb33c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\00. Weapon\05. Liminal">
+      <UniqueIdentifier>{9fd36b58-9936-4820-bcdb-24b265fc4d23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Interface">
+      <UniqueIdentifier>{65b3c197-e64f-4b58-a0f3-a48b85810a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Cube">
+      <UniqueIdentifier>{b677509c-03fa-48e6-9e70-3247a12a8f29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Slope">
+      <UniqueIdentifier>{b095e27f-ea10-454a-bb4f-fe6ce8e56688}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\06. Effect\Arrow_Effect">
       <UniqueIdentifier>{2c6927cc-9292-403e-91ea-f06959311ff5}</UniqueIdentifier>
     </Filter>  
@@ -350,9 +380,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CMonster.h">
       <Filter>02. GameObject\02. Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CPlayer.h">
-      <Filter>02. GameObject\01. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoading.h">
       <Filter>01. Scene\Loading</Filter>
@@ -582,9 +609,6 @@
     <ClInclude Include="..\Header\CFloor.h">
       <Filter>02. GameObject\07. Room\BaseProp\FLoor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\IReflectable.h">
-      <Filter>02. GameObject\07. Room\BaseProp\Reflectable</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CDdokddak.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Ddokddak</Filter>
     </ClInclude>
@@ -642,6 +666,42 @@
     <ClInclude Include="..\Header\IRayTestable.h">
       <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPlayerAnimator.h">
+      <Filter>02. GameObject\01. Character\00. Player\00. Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayerPartTex.h">
+      <Filter>02. GameObject\01. Character\00. Player\00. Animator\00. PlayerPartTex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayer.h">
+      <Filter>02. GameObject\01. Character\00. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMovement.h">
+      <Filter>02. GameObject\01. Character\00. Player\01. Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayerMovement.h">
+      <Filter>02. GameObject\01. Character\00. Player\01. Movement\00. PlayerMovement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCursorPolicyMgr.h">
+      <Filter>04. Manager\01. CursorPolicy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBombardArrowSpawner.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalObject.h">
+      <Filter>01. Scene\Stage\Layer\Liminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalGun.h">
+      <Filter>02. GameObject\08. Combat\00. Weapon\05. Liminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\ITerrain.h">
+      <Filter>01. Scene\Stage\Layer\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalCube.h">
+      <Filter>01. Scene\Stage\Layer\Liminal\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalSlope.h">
+      <Filter>01. Scene\Stage\Layer\Liminal\Slope</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CArrow_Effect.h">
       <Filter>02. GameObject\06. Effect\Arrow_Effect</Filter>
     </ClInclude>
@@ -679,9 +739,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMonster.cpp">
       <Filter>02. GameObject\02. Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CPlayer.cpp">
-      <Filter>02. GameObject\01. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoading.cpp">
       <Filter>01. Scene\Loading</Filter>
@@ -893,9 +950,6 @@
     <ClCompile Include="..\Code\CFloor.cpp">
       <Filter>02. GameObject\07. Room\BaseProp\FLoor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\IReflectable.cpp">
-      <Filter>02. GameObject\07. Room\BaseProp\Reflectable</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CDdokddak.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Ddokddak</Filter>
     </ClCompile>
@@ -952,6 +1006,42 @@
     </ClCompile>
     <ClCompile Include="..\Code\IRayTestable.cpp">
       <Filter>02. GameObject\12. Logic\01. RayCaster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerAnimator.cpp">
+      <Filter>02. GameObject\01. Character\00. Player\00. Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerPartTex.cpp">
+      <Filter>02. GameObject\01. Character\00. Player\00. Animator\00. PlayerPartTex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer.cpp">
+      <Filter>02. GameObject\01. Character\00. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMovement.cpp">
+      <Filter>02. GameObject\01. Character\00. Player\01. Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerMovement.cpp">
+      <Filter>02. GameObject\01. Character\00. Player\01. Movement\00. PlayerMovement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCursorPolicyMgr.cpp">
+      <Filter>04. Manager\01. CursorPolicy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBombardArrowSpawner.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalObject.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalGun.cpp">
+      <Filter>02. GameObject\08. Combat\00. Weapon\05. Liminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ITerrain.cpp">
+      <Filter>01. Scene\Stage\Layer\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalCube.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalSlope.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal\Slope</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CArrow_Effect.cpp">
       <Filter>02. GameObject\06. Effect\Arrow_Effect</Filter>

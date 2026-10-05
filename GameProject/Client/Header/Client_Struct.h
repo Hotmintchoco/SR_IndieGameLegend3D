@@ -55,3 +55,27 @@ struct TBiomeInfo
 	EBiomeType eType;
 	int iDefaultTileIndex;
 };
+
+struct TWeaponInput
+{
+	EWeaponAction eAction = EWeaponAction::MAX;
+	EInputState eState = EInputState::NONE;
+};
+
+struct TWeaponSystemInput
+{
+	/* 공격 관련 */
+	TWeaponInput tWeaponInput[(int)EWeaponAction::MAX];
+	bool bUltAttack = false;
+	bool bSpecialSwitchPressed = false;
+	bool bSwitchWeapon = false;
+
+	/* 무기 애니메이션 관련 */
+	bool bMove = false;
+	bool bSprint = false;
+};
+
+struct TWeaponSystemOutput
+{
+	EWeaponEvent eWpEvent = EWeaponEvent::NONE;
+};

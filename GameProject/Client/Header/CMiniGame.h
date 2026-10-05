@@ -10,8 +10,8 @@ private:
 
 public:
 	virtual			HRESULT		Ready_Scene();
-	virtual			_int		Update_Scene(const _float& fTimeDelta);
-	virtual			void		LateUpdate_Scene(const _float& fTimeDelta);
+	virtual			_int		Update_Scene(_float fTimeDelta);
+	virtual			void		LateUpdate_Scene(_float fTimeDelta);
 	virtual			void		Render_Scene();
 
 	virtual HRESULT Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject) override { return S_OK; }

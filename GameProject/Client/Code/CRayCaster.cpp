@@ -19,14 +19,14 @@ HRESULT CRayCaster::Ready_GameObject()
     return S_OK;
 }
 
-_int CRayCaster::Update_GameObject(const _float& fTimeDelta)
+_int CRayCaster::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
     return iExit;
 }
 
-void CRayCaster::LateUpdate_GameObject(const _float& fTimeDelta)
+void CRayCaster::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -68,6 +68,7 @@ void CRayCaster::RayTest(THitInfo& tHitInfo, const _vec3& vRayStart, const _vec3
 		{
 			tHitInfo.bHit = true;
 			tHitInfo.fDist = fDist;
+			tHitInfo.pObject = pBuffer->Get_Owner();
 			tHitInfo.fHitPoint = vPos0 + fU * (vPos1 - vPos0) + fV * (vPos2 - vPos0);
 			_vec3 v1, v2, vNorm;
 			v1 = vPos1 - vPos0;

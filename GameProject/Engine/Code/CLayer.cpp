@@ -1,4 +1,4 @@
-#include "CLayer.h"
+﻿#include "CLayer.h"
 
 CLayer::CLayer()
 {
@@ -45,7 +45,7 @@ HRESULT CLayer::Ready_Layer()
 	return S_OK;
 }
 
-_int CLayer::Update_Layer(const _float& fTimeDelta)
+_int CLayer::Update_Layer(_float fTimeDelta)
 {
 	_int iResult(0);
 
@@ -71,7 +71,7 @@ _int CLayer::Update_Layer(const _float& fTimeDelta)
 	return iResult;
 }
 
-void CLayer::LateUpdate_Layer(const _float& fTimeDelta)
+void CLayer::LateUpdate_Layer(_float fTimeDelta)
 {
 	for (auto& pObj : m_mapObject)
 	{

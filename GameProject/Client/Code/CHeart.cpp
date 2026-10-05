@@ -38,14 +38,14 @@ HRESULT CHeart::Ready_GameObject()
     return S_OK;
 }
 
-_int CHeart::Update_GameObject(const _float& fTimeDelta)
+_int CHeart::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CItem::Update_GameObject(fTimeDelta);
 
     return iExit;
 }
 
-void CHeart::LateUpdate_GameObject(const _float& fTimeDelta)
+void CHeart::LateUpdate_GameObject(_float fTimeDelta)
 {
     CItem::LateUpdate_GameObject(fTimeDelta);
 }
@@ -75,7 +75,7 @@ HRESULT CHeart::Add_Component()
 void CHeart::Consume()
 {
     CPlayer* pPlayer = static_cast<CPlayer*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
-    pPlayer->GetItem(ITEMID::ITEM_HEAL);
+    pPlayer->RestoreHP(1);
 
     Set_Dead(true);
 

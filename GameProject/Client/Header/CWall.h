@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "CGameObject.h"
-#include "IReflectable.h"
 #include "IRayTestable.h"
 #include "Client_Enum.h"
 
@@ -16,7 +15,7 @@ namespace Engine
 	class CBoxCollider;
 }
 
-class CWall : public CGameObject, public IReflectable, public IRayTestable
+class CWall : public CGameObject, public IRayTestable
 {
 protected:
 	explicit CWall(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -25,17 +24,14 @@ protected:
 
 public:
 	virtual			HRESULT		Ready_GameObject();
-	virtual			_int		Update_GameObject(const _float& fTimeDelta);
-	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual			_int		Update_GameObject(_float fTimeDelta);
+	virtual			void		LateUpdate_GameObject(_float fTimeDelta);
 	virtual			void		Render_GameObject();
 
 	virtual			void		OnCollisionStay(COLLINFO eCollInfo) override;
 
 	inline EWallDir GetDir() { return m_eDir; };
 	inline bool HasDoor() { return m_bHasDoor; };
-
-	/* IReflectable */
-	virtual const _vec3 GetNormal() override;
 
 	/* IRayTestable */
 	virtual vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> GetRayTestTargetInfo() override;

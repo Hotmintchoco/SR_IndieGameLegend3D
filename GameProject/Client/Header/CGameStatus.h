@@ -4,6 +4,7 @@
 #include "Engine_Define.h"
 
 class CRoomLayer;
+class CStage;
 
 class CGameStatus : public CGameObject
 {
@@ -14,9 +15,8 @@ protected:
 
 public:
 	virtual	HRESULT	Ready_GameObject() override;
-	virtual	_int Update_GameObject(const _float& fTimeDelta) override;
-	void DebugRayTest();
-	virtual	void LateUpdate_GameObject(const _float& fTimeDelta) override;
+	virtual	_int Update_GameObject(_float fTimeDelta) override;
+	virtual	void LateUpdate_GameObject(_float fTimeDelta) override;
 	virtual	void Render_GameObject() override;
 
 public:
@@ -28,12 +28,6 @@ public:
 	inline void UpdateVisitTable(int iIndex) { m_bVisitTable[iIndex] = true; }
 	inline void UpdateClearTable(int iIndex) { m_bClearTable[iIndex] = true; }
 	inline bool IsVisited(int iIndex) const { return m_bVisitTable[iIndex]; }
-
-	/* 플레이어 관련 정보 */
-	inline void UpdatePlayerHp(int iAmount) { m_iPlayerHp += iAmount; }
-	inline void SetPlayerHp(int iHp) { m_iPlayerHp = iHp; }
-	inline int GetPlayerHp() const { return m_iPlayerHp; }
-	inline void UpdatePlayerMaxHp(int iAmount) { m_iPlayerMaxHp += iAmount; }
 
 	/* 무기류 관련 정보 */
 	inline void SetUltimateGauge(float fAmount) { m_fUltGauge = fAmount; }
@@ -55,18 +49,21 @@ public:
 	inline void UpdateFPS(float fDT) { m_fDT = fDT; }
 	inline void RegisterPseudoDark(CGameObject* pObject) { m_vecPseudoDark.push_back(pObject); }
 
+	/* 스테이지 링크 */
+	inline void SetStage(CStage* pStage) { m_pStage = pStage; }
+
 private:
 	void UpdateCameraInfo();
+	void DebugRayTest();
+
+	/* CStage */
+	CStage* m_pStage = nullptr;
 
 	/* Minimap */
 	int m_iCurrentRoomIndex = -1;
 	bool m_bVisitTable[25] = { false };
 	bool m_bClearTable[25] = { false };
 	_vec3 m_vPlayerPos{0.f, 0.f, 0.f};
-
-	/* Player */
-	int m_iPlayerHp = 12;
-	int m_iPlayerMaxHp = 12;
 
 	/* Weapon */
 	float m_fUltGauge = 0.f;
@@ -94,6 +91,10 @@ private:
 	float m_fSFXVolume = 1.f;
 	bool m_bBGMMute = true;
 	bool m_bSFXMute = true;
+
+	/* Time Scale */
+	float m_fTimeScale = 1.f;
+	bool m_bExcludePlayer = false;
 
 public:
 	static CGameStatus* Create(LPDIRECT3DDEVICE9 pGraphicDev);

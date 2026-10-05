@@ -1,4 +1,4 @@
-#include "CBoxCollider.h"
+﻿#include "CBoxCollider.h"
 #include "CGameObject.h"
 #include "CTransform.h"
 #include "CSphereCollider.h"
@@ -50,7 +50,7 @@ _bool CBoxCollider::Intersect(CCollider* pOther)
     return false;
 }
 
-_int CBoxCollider::Update_Component(const _float& fTimeDelta)
+_int CBoxCollider::Update_Component(_float fTimeDelta)
 {
     if (nullptr == m_pOwner)
         return 0;

@@ -25,7 +25,7 @@ HRESULT CSmallExplode::Ready_GameObject()
     return S_OK;
 }
 
-_int CSmallExplode::Update_GameObject(const _float& fTimeDelta)
+_int CSmallExplode::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CParticle::Update_GameObject(fTimeDelta);
 
@@ -39,7 +39,7 @@ _int CSmallExplode::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CSmallExplode::LateUpdate_GameObject(const _float& fTimeDelta)
+void CSmallExplode::LateUpdate_GameObject(_float fTimeDelta)
 {
     CParticle::LateUpdate_GameObject(fTimeDelta);
 

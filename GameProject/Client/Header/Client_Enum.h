@@ -62,6 +62,8 @@ enum class EObjectType
 	EXPLOSIVE_FRUSTUM,
 	GAME_MACHINE,
 	DDOKDDAK,
+	LIMINAL_CUBE,
+	LIMINAL_SLOPE,
 
 	Skull = 11,
 	Boss1 = 12,
@@ -86,6 +88,7 @@ enum class EObjectType
 	WEAPON_SHOTGUN,
 	WEAPON_LASERGUN,
 	WEAPON_BOW,
+	WEAPON_LIMINAL,
 	WEAPON_MAX,
 
 
@@ -149,6 +152,62 @@ enum class EBiomeType
 	AQUA,
 	SNOW,
 	LAVA,
+
+	MAX,
+};
+
+enum PLAYERPART { PP_BODY, PP_HEAD, PP_LARM, PP_RARM, PP_LLEG, PP_RLEG, PP_END };
+
+enum class EPlayerLocomotionState
+{
+	NONE,
+
+	IDLE,
+	WALK,
+	SPRINT,
+	JUMP,
+
+	MAX,
+};
+
+enum class EPlayerActionState
+{
+	NONE,
+
+	GUN_SHOOT,
+	BOW_HOLD,
+	BOW_SHOOT,
+	DIE,
+
+	MAX,
+};
+
+enum class EWeaponAction
+{
+	Primary,
+	Secondary,
+
+	MAX,
+};
+
+enum class EInputState
+{
+	NONE,
+
+	Pressed,
+	Held,
+	Released,
+
+	MAX,
+};
+
+enum class EWeaponEvent
+{
+	NONE,
+
+	GUN_SHOT,
+	BOW_CHARGE_START,
+	BOW_CHARGE_END,
 
 	MAX,
 };

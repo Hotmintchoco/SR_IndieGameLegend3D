@@ -1,4 +1,5 @@
-#include "CTimerMgr.h"
+﻿#include "CTimerMgr.h"
+#include "CGameObject.h"
 
 IMPLEMENT_SINGLETON(CTimerMgr)
 
@@ -30,6 +31,28 @@ void CTimerMgr::Set_TimeDelta(const _tchar* pTimerTag)
 		return;
 
 	pTimer->Update_Timer();
+}
+
+void CTimerMgr::ResetGroupTimeScale()
+{
+	for (int i = 0; i < TG_END; ++i)
+	{
+		m_fGroupTimeScale[i] = 1.f;
+	}
+}
+
+void CTimerMgr::SetGroupTimeScale(TIME_GROUP eGroup, float fScale)
+{
+	if (eGroup <= TG_NONE || eGroup >= TG_END) return;
+
+	m_fGroupTimeScale[eGroup] = fScale;
+}
+
+float CTimerMgr::GetGroupTimeScale(TIME_GROUP eGroup)
+{
+	if (eGroup <= TG_NONE || eGroup >= TG_END) return 1.f;
+
+	return m_fGroupTimeScale[eGroup];
 }
 
 HRESULT CTimerMgr::Ready_Timer(const _tchar* pTimerTag)

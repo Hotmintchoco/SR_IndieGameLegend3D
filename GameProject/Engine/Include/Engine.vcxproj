@@ -147,12 +147,6 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CBoxCollider.h" />
     <ClInclude Include="..\Header\CCalculator.h" />
     <ClInclude Include="..\Header\CCamera.h" />
-    <ClInclude Include="..\Header\CCameraFPVPerspective.h" />
-    <ClInclude Include="..\Header\CCameraFreePerspective.h" />
-    <ClInclude Include="..\Header\CCameraTPVPerspective.h" />
-    <ClInclude Include="..\Header\CCameraMgr.h" />
-    <ClInclude Include="..\Header\CCameraObj.h" />
-    <ClInclude Include="..\Header\CCameraWorking.h" />
     <ClInclude Include="..\Header\CCollider.h" />
     <ClInclude Include="..\Header\CCollisionMgr.h" />
     <ClInclude Include="..\Header\CComponent.h" />
@@ -203,12 +197,6 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CBoxCollider.cpp" />
     <ClCompile Include="..\Code\CCalculator.cpp" />
     <ClCompile Include="..\Code\CCamera.cpp" />
-    <ClCompile Include="..\Code\CCameraFPVPerspective.cpp" />
-    <ClCompile Include="..\Code\CCameraFreePerspective.cpp" />
-    <ClCompile Include="..\Code\CCameraTPVPerspective.cpp" />
-    <ClCompile Include="..\Code\CCameraMgr.cpp" />
-    <ClCompile Include="..\Code\CCameraObj.cpp" />
-    <ClCompile Include="..\Code\CCameraWorking.cpp" />
     <ClCompile Include="..\Code\CCollider.cpp" />
     <ClCompile Include="..\Code\CCollisionMgr.cpp" />
     <ClCompile Include="..\Code\CComponent.cpp" />

@@ -33,7 +33,7 @@ HRESULT CLaserGun::Ready_GameObject()
     return S_OK;
 }
 
-_int CLaserGun::Update_GameObject(const _float& fTimeDelta)
+_int CLaserGun::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
@@ -42,7 +42,7 @@ _int CLaserGun::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CLaserGun::LateUpdate_GameObject(const _float& fTimeDelta)
+void CLaserGun::LateUpdate_GameObject(_float fTimeDelta)
 {
     CWeapon::LateUpdate_GameObject(fTimeDelta);
 }
@@ -88,7 +88,26 @@ void CLaserGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CLaserGun::DefaultAttack()
+EWeaponEvent CLaserGun::SpecialAttack(EInputState ePri, EInputState eSec)
+{
+    switch (ePri)
+    {
+    case EInputState::Held:
+    {
+        ShotLaser();
+        m_bIsCoolTime = true;
+        m_fCoolTimeLeft = m_fSpecialAtkInterval;
+        return EWeaponEvent::GUN_SHOT;
+        break;
+    }
+    default:
+        break;
+    }
+
+    return EWeaponEvent::NONE;
+}
+
+void CLaserGun::ShotLaser()
 {
     _vec3 vDir = m_vBulletTo - m_vBulletFrom;
     D3DXVec3Normalize(&vDir, &vDir);
@@ -100,17 +119,12 @@ void CLaserGun::DefaultAttack()
 
     CSoundMgr::GetInstance()->PlaySFX(L"sfxLaser.wav");
 
-    m_bIsCoolTime = true;
-    m_fCoolTimeLeft = m_fSpecialAtkInterval;
     StartShotAnimation();
 }
 
-void CLaserGun::SpecialAttack()
+EWeaponEvent CLaserGun::UltimateAttack(EInputState ePri, EInputState eSec)
 {
-}
-
-void CLaserGun::UltimateAttack()
-{
+    return EWeaponEvent::NONE;
 }
 
 HRESULT CLaserGun::Add_Component()

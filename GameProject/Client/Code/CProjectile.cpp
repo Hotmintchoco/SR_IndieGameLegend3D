@@ -23,7 +23,7 @@ HRESULT CProjectile::Ready_GameObject()
     return S_OK;
 }
 
-_int CProjectile::Update_GameObject(const _float& fTimeDelta)
+_int CProjectile::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -32,7 +32,7 @@ _int CProjectile::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CProjectile::LateUpdate_GameObject(const _float& fTimeDelta)
+void CProjectile::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }

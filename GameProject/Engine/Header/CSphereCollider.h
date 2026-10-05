@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CCollider.h"
 
 BEGIN(Engine)
@@ -14,7 +14,7 @@ protected:
 	virtual ~CSphereCollider();
 
 public:
-	virtual _int	Update_Component(const _float& fTimeDelta);
+	virtual _int	Update_Component(_float fTimeDelta);
 	virtual void	LateUpdate_Component();
 
 	_bool Intersect(CCollider* pOther) override;
@@ -30,7 +30,7 @@ public:
 	static CCollider* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	CComponent* Clone() override;
 
-	// CColliderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+	// CColliderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 	void Set_Radius(const _float& fRadius) override;
 
 private:

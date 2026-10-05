@@ -46,7 +46,7 @@ HRESULT CGameObject::Ready_GameObject()
     return S_OK;
 }
 
-_int CGameObject::Update_GameObject(const _float& fTimeDelta)
+_int CGameObject::Update_GameObject(_float fTimeDelta)
 {
     for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
         pComponent.second->Update_Component(fTimeDelta);
@@ -57,7 +57,7 @@ _int CGameObject::Update_GameObject(const _float& fTimeDelta)
     return 0;
 }
 
-void CGameObject::LateUpdate_GameObject(const _float& fTimeDelta)
+void CGameObject::LateUpdate_GameObject(_float fTimeDelta)
 {
     for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
         pComponent.second->LateUpdate_Component();
@@ -188,11 +188,9 @@ void CGameObject::Obstacle_Collision(CCollider* pOtherCollider, CCollider* pObst
 }
 
 
-CComponent* CGameObject::Find_Component(COMPONENTID eID, const _tchar* pComponentTag)
+CComponent* CGameObject::Find_Component(COMPONENTID eID, const wstring& pComponentTag)
 {
-    auto        iter = find_if(m_mapComponent[eID].begin(),
-                                m_mapComponent[eID].end(), 
-                                 CTag_Finder(pComponentTag));
+    auto iter = m_mapComponent[eID].find(pComponentTag);
 
     if (iter == m_mapComponent[eID].end())
         return nullptr;

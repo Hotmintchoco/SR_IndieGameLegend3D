@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "CExplosiveFrustumLight.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -18,7 +18,7 @@ HRESULT CExplosiveFrustumLight::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    // Note : º¯º≠ø° ¡÷¿«
+    // Note : ÏàúÏÑúÏóê Ï£ºÏùò
     if (FAILED(CGameObject::Ready_GameObject()))
         return E_FAIL;
 
@@ -29,7 +29,7 @@ HRESULT CExplosiveFrustumLight::Ready_GameObject()
     return S_OK;
 }
 
-_int CExplosiveFrustumLight::Update_GameObject(const _float& fTimeDelta)
+_int CExplosiveFrustumLight::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -45,7 +45,7 @@ _int CExplosiveFrustumLight::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CExplosiveFrustumLight::LateUpdate_GameObject(const _float& fTimeDelta)
+void CExplosiveFrustumLight::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -61,7 +61,7 @@ void CExplosiveFrustumLight::Render_GameObject()
 
 void CExplosiveFrustumLight::PropagateTransform(CTransform* pParentTransform)
 {
-    /* ∫Ù∫∏µÂ */
+    /* ÎπåÎ≥¥Îìú */
     _vec3 vPlayerPos, vItemPos;
     CTransform* pPlayerTransform = static_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
     pPlayerTransform->Get_Info(INFO_POS, &vPlayerPos);

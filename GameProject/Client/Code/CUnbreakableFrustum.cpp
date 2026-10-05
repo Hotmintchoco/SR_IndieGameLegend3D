@@ -27,7 +27,7 @@ HRESULT CUnbreakableFrustum::Ready_GameObject()
     return S_OK;
 }
 
-_int CUnbreakableFrustum::Update_GameObject(const _float& fTimeDelta)
+_int CUnbreakableFrustum::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CFrustum::Update_GameObject(fTimeDelta);
 
@@ -36,7 +36,7 @@ _int CUnbreakableFrustum::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CUnbreakableFrustum::LateUpdate_GameObject(const _float& fTimeDelta)
+void CUnbreakableFrustum::LateUpdate_GameObject(_float fTimeDelta)
 {
     CFrustum::LateUpdate_GameObject(fTimeDelta);
 }
@@ -48,18 +48,6 @@ void CUnbreakableFrustum::Render_GameObject()
     m_pTextureCom->Set_Texture(0);
 
     m_pBufferCom->Render_Buffer();
-}
-
-const _vec3 CUnbreakableFrustum::GetNormal()
-{
-    float fX = CRandomMgr::GetInstance()->GetRandomValue<float>(-1.f, 1.f);
-    float fY = CRandomMgr::GetInstance()->GetRandomValue<float>(0.f, 1.f);
-    float fZ = CRandomMgr::GetInstance()->GetRandomValue<float>(-1.f, 1.f);
-
-    _vec3 vNormal{fX, fY, fZ};
-    D3DXVec3Normalize(&vNormal, &vNormal);
-
-    return vNormal;
 }
 
 vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> CUnbreakableFrustum::GetRayTestTargetInfo()
