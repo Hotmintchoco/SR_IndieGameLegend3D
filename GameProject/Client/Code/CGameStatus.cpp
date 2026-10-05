@@ -219,11 +219,6 @@ void CGameStatus::RenderImGui()
             {
                 pPlayerCamera->Set_Distance(fDistance);
             }
-            ImGui::TextDisabled("Applied in third-person mode.");
-        }
-        else
-        {
-            ImGui::TextDisabled("Player camera is unavailable.");
         }
     }
 
