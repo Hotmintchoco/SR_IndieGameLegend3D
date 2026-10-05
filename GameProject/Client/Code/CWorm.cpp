@@ -132,6 +132,8 @@ _int CWorm::Update_GameObject(const _float& fTimeDelta)
     {
         if (m_pHeadWorm != nullptr && static_cast<CWorm*>(m_pHeadWorm)->Get_WormState() != DEAD)
             Update_WormBoby(_fTimeDelta);
+        else
+            Worm_Dead(_fTimeDelta);
     }
 
     return iExit;
