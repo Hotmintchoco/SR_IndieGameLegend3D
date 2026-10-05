@@ -21,6 +21,7 @@ public:
 		SIDE45,
 		CONNECTOR
 	};
+	enum WORMSTATE { SPAWN, MOVE, IDLE, DEAD, OPENING };
 
 protected:
 	explicit CWorm(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -46,36 +47,45 @@ private:
 	void Spawn_Monster(const _float& fTimeDelta);
 	void IDLE_Worm(const _float& fTimeDelta);
 
-	void Look_AtPlayer();
-	void Look_AtDestination();
-	void Chase_Player_Worm(const _float& fTimeDelta);
-
 	void Worm_Dead(const _float& fTimeDelta);
 	void Worm_Dead_Effect();
-	void Set_Front_Worm(CWorm* pFrontWorm) { m_pFrontWorm = pFrontWorm; }
-	CGameObject* Get_Front_Worm() { return m_pFrontWorm; }
-	void Set_Head_Worm(CWorm* pHeadWorm) { m_pHeadWorm = pHeadWorm; }
-	CGameObject* Get_Head_Worm() { return m_pHeadWorm; }
+
+	void Set_Prev_Worm(CMonster* pPrevWorm) { m_pPrevWorm = pPrevWorm; }
+	CMonster* Get_Prev_Worm() { return m_pPrevWorm; }
+	void Set_Next_Worm(CMonster* pNextWorm) { m_pNextWorm = pNextWorm; }
+	CMonster* Get_Next_Worm() { return m_pNextWorm; }
+	void Set_Head_Worm(CMonster* pHeadWorm) { m_pHeadWorm = pHeadWorm; }
+	CMonster* Get_Head_Worm() { return m_pHeadWorm; }
 	void Set_WormIndex (_uint iIndex) { m_iWormIndex = iIndex; }
 
+	void Set_Init_Worm();
+public:
 	void Set_Angle();
+	//void Set_Pos_Worm(_vec3& vPos);
+	void Update_WormHead(const _float& fTimeDelta);
+	void Update_WormBoby(const _float& fTimeDelta);
+	virtual void Set_Damage(_int iDamage) { m_iHp -= iDamage; }
+	virtual _int Get_Hp() { return m_iHp; }
+	WORMSTATE Get_WormState() { return m_eWormState; }
+	
+public:
 
 public:
 	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex);
+	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex, CWorm* Front);
 
 protected:
 	virtual void		Free();
 
 private:
-	enum WormSTATE { SPAWN, MOVE, IDLE, DEAD, OPENING };
-	WormSTATE m_eWormState = OPENING;
+	WORMSTATE m_eWormState = MOVE;
 	_bool m_bOpening = true;
 
 	_vec3 m_fAngle_FromPlayer = {};
 	_uint m_iWormIndex = 1;
-	CMonster* m_pFrontWorm = nullptr;
-	CMonster* m_pHeadWorm = nullptr;
+	CMonster* m_pPrevWorm = nullptr;
+	CMonster* m_pNextWorm = nullptr;
+	CMonster* m_pHeadWorm = this;
 
 	_int m_iPhase = 0;
 
@@ -110,16 +120,15 @@ private:
 	_bool m_bDeadStart = false;
 	_bool m_DeadExplosion = false;
 
+	_bool m_bOpeningStart = false;
 	_bool m_bOpeningMoveFlag = false;
 	_bool m_bOpeningMoveFlag2 = false;
 	_float m_bElapsedOpeningTime = 0.f;
 
 	_vec3 m_vOpeningMoveDirection[6] =
 	{
-		{2.5f,0,0}, {-5,0,0},
-		{5,0,0}, {-5,0,0},
-		{2.5f,0,0},
-		{0,0,+2.0f}
 	};
 	_int m_iOpeningMoveIndex = 0;
+
+	_bool m_bSet_InitPos = false;
 };

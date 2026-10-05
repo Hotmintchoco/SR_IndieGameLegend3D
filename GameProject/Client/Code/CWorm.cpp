@@ -24,55 +24,69 @@ HRESULT CWorm::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
     CMonster::Ready_GameObject();
-
-    if (m_iWormIndex < 10)
-    {
-        CGameObject* pGameObject;
-        CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
-
-        pGameObject = CWorm::Create(m_pGraphicDev, m_iWormIndex + 1);
-        if (nullptr == pGameObject) return E_FAIL;
-
-		TCHAR		szFileName[128] = L"";
-		wsprintf(szFileName, L"Worm_%d", m_iWormIndex + 1);
-		if (FAILED(pScene->Add_GameObject(szFileName, pGameObject))) return E_FAIL;
-
-        _vec3 vPos;
-        m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
-    }
-    else
-    {
-        return S_OK;
-    }
+    m_fDeadTime = 0.5f;
+  //  if (m_iWormIndex < 10)
+  //  {
+  //      CMonster* pGameObject;
+  //      CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+  //      //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
 
 
-    m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
-    m_vRoomCenterLocation = static_cast<CRoomLayer*>(m_pOwner)->GetCenterPos();
+  //      pGameObject = CWorm::Create(m_pGraphicDev, m_iWormIndex + 1, this);
+  //      if (nullptr == pGameObject) return E_FAIL;
+  //      Set_Next_Worm(pGameObject);
+
+		//TCHAR		szFileName[128] = L"";
+		//wsprintf(szFileName, L"Worm_%d", m_iWormIndex + 1);
+		//if (FAILED(pScene->Add_GameObject(szFileName, pGameObject))) return E_FAIL;
+  //      //if (FAILED(pLayer->Add_GameObject(szFileName, pGameObject)))return E_FAIL;
+  //  }
+  //  else
+  //  {
+  //      return S_OK;
+  //  }
+
+
+    m_pTransformCom->Set_Scale(0.5f, 0.5f, 0.5f);
+
+    if (m_iWormIndex == 1)
+        m_vRoomCenterLocation = static_cast<CRoomLayer*>(m_pOwner)->GetCenterPos();
 
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
 
-    m_iMaxHp = 1;
+    m_iMaxHp = 5;
     m_iHp = m_iMaxHp;
     m_bCollision_WithMonster = false;
+
     return S_OK;
 }
 
 _int CWorm::Update_GameObject(const _float& fTimeDelta)
 {
+    Set_Init_Worm();
+    m_iWormIndex;
+    m_pNextWorm;
     _float _fTimeDelta = fTimeDelta;
     if (m_iHp <= 0)
-    {
-        m_eWormState = DEAD;
+	{
 
-        m_bMoveFlag = false;
-        m_bMoveFlag2 = false;
-        m_pColliderCom->Set_IsActive(false);
-        if (m_bDeadStart == false)
-        {
-            m_bDeadStart = true;
-        }
+		if (m_bDeadStart == false)
+		{
+			m_bDeadStart = true;
+
+            m_eWormState = DEAD;
+
+            m_bMoveFlag = false;
+            m_bMoveFlag2 = false;
+            m_pColliderCom->Set_IsActive(false);
+
+			if (m_pNextWorm != nullptr)
+			{
+				static_cast<CWorm*>(m_pNextWorm)->Set_Damage(static_cast<CWorm*>(m_pNextWorm)->Get_Hp());
+				m_pHeadWorm = nullptr;
+			}
+		}
     }
     else if (m_iHp <= m_iMaxHp / 2)
     {
@@ -91,26 +105,34 @@ _int CWorm::Update_GameObject(const _float& fTimeDelta)
 
     Update_Motion(_fTimeDelta);
 
-    switch (m_eWormState)
+    if (m_iWormIndex == 1)
     {
-    case IDLE:
-        IDLE_Worm(_fTimeDelta);
-        break;
-    case SPAWN:
-        Spawn_Monster(_fTimeDelta);
-        break;
-    case MOVE:
-        Move_Worm(_fTimeDelta);
-        break;
-    case DEAD:
-        Worm_Dead(_fTimeDelta);
-        break;
-    case OPENING:
-        Opening_Worm(_fTimeDelta);
-        break;
+        switch (m_eWormState)
+        {
+        case IDLE:
+            IDLE_Worm(_fTimeDelta);
+            break;
+        case SPAWN:
+            Spawn_Monster(_fTimeDelta);
+            break;
+        case MOVE:
+            //Move_Worm(_fTimeDelta);
+            Update_WormHead(_fTimeDelta);
+            break;
+        case DEAD:
+            Worm_Dead(_fTimeDelta);
+            break;
+        case OPENING:
+            Opening_Worm(_fTimeDelta);
+            break;
+	    }
+
     }
-
-
+    else
+    {
+        if (m_pHeadWorm != nullptr && static_cast<CWorm*>(m_pHeadWorm)->Get_WormState() != DEAD)
+            Update_WormBoby(_fTimeDelta);
+    }
 
     return iExit;
 }
@@ -140,7 +162,22 @@ void CWorm::Render_GameObject()
 
 void CWorm::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    CMonster::OnCollisionEnter(eCollInfo);
+    //CMonster::OnCollisionEnter(eCollInfo);
+    CCollider* pCollider = eCollInfo.pOtherCollider;
+
+    if (pCollider && pCollider->Get_CollisionID() == COLL_PROJECTILE)
+    {
+        m_bHitState = true;
+        m_fHitEffectElapsedTime = 0.f;
+
+        if (m_pHeadWorm == nullptr)return;
+        if (static_cast<CWorm*>(m_pHeadWorm)->Get_Hp() <= 0) return;
+        static_cast<CWorm*>(m_pHeadWorm)->Set_Damage(1);
+
+        //if (static_cast<CWorm*>(m_pHeadWorm)->Get_Hp() <= 0)
+        //    m_pHeadWorm = nullptr;
+
+    }
 }
 
 HRESULT CWorm::Add_Component()
@@ -182,18 +219,23 @@ CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pMonster;
 }
 
-CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex)
+CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iIndex, CWorm* pFront)
 {
 	CWorm* pMonster = new CWorm(pGraphicDev);
 	pMonster->Set_WormIndex(iIndex);
-
+    pMonster->Set_Prev_Worm(pFront);
+    pMonster->Set_Head_Worm(static_cast<CWorm*>(pFront->Get_Head_Worm()));
+    pFront->Set_Next_Worm(pMonster);
 	if (FAILED(pMonster->Ready_GameObject()))
 	{
 		Safe_Release(pMonster);
 		MSG_BOX("CWorm Create Failed");
 		return nullptr;
 	}
-
+    _vec3 vPos;
+    pFront->Get_Pos(&vPos);
+    vPos.y -= 1.f;
+    pMonster->Set_Pos(vPos);
 	return pMonster;
 }
 
@@ -214,7 +256,7 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
 
         if (m_iPhase == 0)
         {
-            m_eWormState = static_cast<WormSTATE>(rand() % 2);
+            m_eWormState = static_cast<WORMSTATE>(rand() % 2);
             if (m_bMoveState == true)
             {
                 m_eWormState = MOVE;
@@ -223,7 +265,7 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
         }
         else
         {
-            m_eWormState = static_cast<WormSTATE>(rand() % 2);
+            m_eWormState = static_cast<WORMSTATE>(rand() % 2);
         }
         //m_eWormState = SPAWN;
         m_eWormState = MOVE;
@@ -262,110 +304,17 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
 
 void CWorm::Move_Worm(const _float& fTimeDelta)
 {
-
-    _vec3 vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
     CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
         ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+    if (nullptr == pPlayerTransformCom) return;
+    _vec3 vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    _vec3 vPlayerLook; pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-    if (nullptr == pPlayerTransformCom)
-        return;
+    //_vec3 vDir;
+    //m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
+    //m_pTransformCom->Move_Pos(&vDir, 1.2f, fTimeDelta);
 
-    _vec3   vPlayerPos;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-
-    _vec3   vPlayerLook;
-    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
-
-
-
-    if (m_bMoveFlag == false)
-    {
-        if (m_iLandingCount == 0 || m_iLandingCount == 1)
-        {
-
-            vPlayerLook.y = 0;
-            D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
-            m_vLandingDirection = vPlayerLook;
-            m_vLandingDirection.y = 3.f;
-            m_vLandingDirection.x /= 2.f;
-            m_vLandingDirection.z /= 2.f;
-            m_fLandingTime += fTimeDelta;
-            m_vLandingDirection.y -= m_fLandingTime * 9.8f;
-
-            _vec3 vDest = vPos + m_vLandingDirection * 3.f * 0.7f;
-            _float fBlank = m_pTransformCom->m_vScale.y;
-            if (vDest.x > m_vRoomCenterLocation.x + 6.5f - fBlank ||
-                vDest.x < m_vRoomCenterLocation.x - 6.5f + fBlank ||
-                vDest.z > m_vRoomCenterLocation.z + 5.0f - fBlank ||
-                vDest.z < m_vRoomCenterLocation.z - 5.0f + fBlank)
-            {
-                _vec3 vVerticalDirection = { 0.f,m_vLandingDirection.y,0.f };
-                m_pTransformCom->Move_Pos(&vVerticalDirection, 3.f, fTimeDelta);
-            }
-            else
-            {
-                m_pTransformCom->Move_Pos(&m_vLandingDirection, 3.f, fTimeDelta);
-            }
-
-
-            if (vPos.y <= m_pTransformCom->m_vScale.y && m_fLandingTime > 0.5f)
-            {
-                m_fLandingTime = 0.f;
-                ++m_iLandingCount;
-
-                //_vec3 vPlayerPos;
-                pPlayerTransformCom->Get_Info(INFO_POS, &m_vMovePosition);
-
-                _float fBlank = m_pTransformCom->m_vScale.y;
-                if (m_vMovePosition.x > m_vRoomCenterLocation.x + 6.5f - fBlank)
-                {
-                    m_vMovePosition.x = m_vRoomCenterLocation.x + 6.5f - fBlank;
-                }
-                if (m_vMovePosition.x < m_vRoomCenterLocation.x - 6.5f + fBlank)
-                {
-                    m_vMovePosition.x = m_vRoomCenterLocation.x - 6.5f + fBlank;
-                }
-                if (m_vMovePosition.z > m_vRoomCenterLocation.z + 5.0f - fBlank)
-                {
-                    m_vMovePosition.z = m_vRoomCenterLocation.z + 5.0f - fBlank;
-                }
-                if (m_vMovePosition.z < m_vRoomCenterLocation.z - 5.0f + fBlank)
-                {
-                    m_vMovePosition.z = m_vRoomCenterLocation.z - 5.0f + fBlank;
-                }
-
-
-                m_vMovePosition.y = m_pTransformCom->m_vScale.y;
-            }
-            Look_AtPlayer();
-        }
-        else
-        {
-            Set_OnTerrain();
-
-
-            _vec3 vec3 = vPos - m_vMovePosition;
-
-            if (D3DXVec3Length(&vec3) < 0.1f)
-            {
-                m_bMoveFlag = true;
-            }
-            else
-            {
-                _vec3 vDir = m_vMovePosition - vPos;
-                D3DXVec3Normalize(&vDir, &vDir);
-                m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
-            }
-            Look_AtPlayer();
-        }
-    }
-    else
-    {
-        Set_OnTerrain();
-        Chase_Player_Worm(fTimeDelta);
-    }
 
 
 
@@ -421,7 +370,6 @@ void CWorm::Spawn_Monster(const _float& fTimeDelta)
                 if (m_iLandingCount == 2)
                     m_bMoveFlag = true;
             }
-            Look_AtPlayer();
         }
     }
 
@@ -593,102 +541,81 @@ void CWorm::Spawn_Monster(const _float& fTimeDelta)
             if (FAILED(pGameLogicLayer->Add_GameObject(L"Shockwave", pGameObject))) return;
 
         }
-        Look_AtPlayer();
     }
 }
 
 void CWorm::IDLE_Worm(const _float& fTimeDelta)
 {
-    Set_OnTerrain();
-    Chase_Player_Worm(fTimeDelta);
 }
 
 void CWorm::Opening_Worm(const _float& fTimeDelta)
 {
-    m_bElapsedOpeningTime += fTimeDelta;
-
-    if (m_bOpeningMoveFlag == true)
+    if (m_iWormIndex == 1)
     {
-        m_bOpening = false;
-        Look_AtPlayer();
-        return;
-    }
-    if (m_bOpeningMoveFlag2 == false)
-    {
-        m_bOpeningMoveFlag2 = true;
-        _vec3 vPos{ 0.f,m_pTransformCom->m_vScale.y,0.f };
-        m_pTransformCom->Move_Pos(&vPos, 1.f, 1.f);
-    }
+        m_bElapsedOpeningTime += fTimeDelta;
 
-    if (m_bElapsedOpeningTime > 2.f)
-    {
-        _vec3 vPos, vDir;
-        m_pTransformCom->Get_Info(INFO_POS, &vPos);
-        vDir = m_vOpeningMoveDirection[m_iOpeningMoveIndex];
-
-        vDir.y = 3.f;
-        m_fLandingTime += fTimeDelta;
-        vDir.y -= m_fLandingTime * 9.8f;
-
-        if (vPos.y <= m_pTransformCom->m_vScale.y && m_fLandingTime > 0.5f)
+        if (m_bOpeningStart == false)
         {
-            m_fLandingTime = 0.f;
+            m_bOpeningStart = true;
 
-            ++m_iOpeningMoveIndex;
 
-            if (m_iOpeningMoveIndex == sizeof(m_vOpeningMoveDirection) / sizeof(m_vOpeningMoveDirection[0]))
-            {
-                m_bOpeningMoveFlag = true;
-                //m_eWormState = IDLE;
-                return;
-            }
+            CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+                ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+            if (nullptr == pPlayerTransformCom) return;
+            _vec3 vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+            _vec3 vPlayerLook; pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+            _vec3 vDir0 = m_vRoomCenterLocation - vPlayerPos;
+            vDir0.y = 0;
+            D3DXVec3Normalize(&vDir0, &vDir0);
+            vDir0.y = 0.5f;
+            //vDir0 *= 2.f;
+            m_vOpeningMoveDirection[0] = vDir0;
+            vDir0.y = 0;
+            m_vOpeningMoveDirection[1] = vDir0;
+            vDir0.y = -0.5;
+            m_vOpeningMoveDirection[2] = vDir0;
+            m_vOpeningMoveDirection[3] = _vec3{ 0.f,-5.f,0.f };
         }
-        m_pTransformCom->Move_Pos(&vDir, 2.f, fTimeDelta);
+        if (m_bElapsedOpeningTime > 2.f)
+        {
+            _vec3 vPos, vDir;
+            m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            vDir = m_vOpeningMoveDirection[m_iOpeningMoveIndex];
+
+            vDir.y = 3.f;
+            m_fLandingTime += fTimeDelta;
+            vDir.y -= m_fLandingTime * 9.8f;
+
+            if (vPos.y <= m_pTransformCom->m_vScale.y && m_fLandingTime > 0.5f)
+            {
+                m_fLandingTime = 0.f;
+
+                ++m_iOpeningMoveIndex;
+
+                if (m_iOpeningMoveIndex == sizeof(m_vOpeningMoveDirection) / sizeof(m_vOpeningMoveDirection[0]))
+                {
+                    m_bOpeningMoveFlag = true;
+                    //m_eWormState = IDLE;
+                    return;
+                }
+            }
+            m_pTransformCom->Move_Pos(&vDir, 2.f, fTimeDelta);
+        }
     }
-    Look_AtPlayer();
-}
+    //if (m_bOpeningMoveFlag == true)
+    //{
+    //    m_bOpening = false;
+    //    Look_AtPlayer();
+    //    return;
+    //}
+    //if (m_bOpeningMoveFlag2 == false)
+    //{
+    //    m_bOpeningMoveFlag2 = true;
+    //    _vec3 vPos{ 0.f,m_pTransformCom->m_vScale.y,0.f };
+    //    m_pTransformCom->Move_Pos(&vPos, 1.f, 1.f);
+    //}
 
-void CWorm::Look_AtPlayer()
-{
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-    if (nullptr == pPlayerTransformCom)
-        return;
-
-    _vec3   vPlayerPos;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-
-    _vec3   vPlayerLook;
-    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
-
-    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
-}
-
-void CWorm::Look_AtDestination()
-{
-    _vec3 vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    _vec3 vecLook = vPos - m_vMovePosition;
-    m_pTransformCom->LookAt_Player(&m_vMovePosition, &vecLook);
-
-}
-
-void CWorm::Chase_Player_Worm(const _float& fTimeDelta)
-{
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-    if (nullptr == pPlayerTransformCom)
-        return;
-
-    _vec3   vPlayerPos;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-
-    _vec3   vPlayerLook;
-    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
-
-    m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 2.f, fTimeDelta);
+    //Look_AtPlayer();
 }
 
 void CWorm::Shuffle_Array(_uint N)
@@ -710,7 +637,6 @@ void CWorm::Shuffle_Array(_uint N)
 void CWorm::Worm_Dead(const _float& fTimeDelta)
 {
     Worm_Dead_Effect();
-    Look_AtPlayer();
 
     m_fElapsedDeadTime += fTimeDelta;
     m_fElapsedDeadTime2 += fTimeDelta;
@@ -770,6 +696,96 @@ void CWorm::Worm_Dead_Effect()
     }
 }
 
+void CWorm::Set_Init_Worm()
+{
+
+    if (/*m_pHeadWorm == this && *//*m_pNextWorm != nullptr && */m_bSet_InitPos == false)
+    {
+        m_bSet_InitPos = true;
+        if (m_iWormIndex == 1)
+        {
+            _vec3 vPos = m_vRoomCenterLocation;
+            vPos.y = 3.f;
+            Set_Pos(vPos);
+        }
+
+        if (m_iWormIndex < 10)
+        {
+            CMonster* pMonster;
+            CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+            //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+
+
+            pMonster = CWorm::Create(m_pGraphicDev, m_iWormIndex + 1, this);
+            pMonster->Set_IsActive(true);
+            //_vec3 vPos;
+            //m_pTransformCom->
+            //pMonster->Set_Pos()
+            if (nullptr == pMonster) return;
+            //Set_Next_Worm(pMonster);
+
+            TCHAR		szFileName[128] = L"";
+            wsprintf(szFileName, L"Worm_%d", m_iWormIndex + 1);
+            if (FAILED(pScene->Add_GameObject(szFileName, pMonster))) return;
+            //if (FAILED(pLayer->Add_Monster(szFileName, pMonster)))return E_FAIL;
+        }
+        else
+        {
+            return;
+        }
+
+        //m_pNextWorm->Set_IsActive(true);
+
+    }
+}
+
 void CWorm::Set_Angle()
 {
+}
+
+//void CWorm::Set_Pos_Worm(_vec3& vPos)
+//{
+//    m_pTransformCom->Set_Pos(vPos);
+//}
+
+void CWorm::Update_WormHead(const _float& fTimeDelta)
+{
+	_vec3 vDir, vPos, vAngle, vDest;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	vDest = m_vRoomCenterLocation + _vec3{ -5, 3, 0 };
+	vDir = vDest - vPos;
+	if (D3DXVec3Length(&vDir) > 0.125f)
+	{
+		D3DXVec3Normalize(&vDir, &vDir);
+		m_pTransformCom->Move_Pos(&vDir, 1.f, fTimeDelta);
+
+		D3DXVec3Normalize(&vDir, &vDir);
+		vAngle.x = D3DXToDegree(-asinf(vDir.y));
+		vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+		vAngle.z = 0.f;
+		m_pTransformCom->Set_Angle(vAngle);
+	}
+	else
+	{
+		Set_Pos(vDest);
+	}
+}
+
+
+void CWorm::Update_WormBoby(const _float& fTimeDelta)
+{
+	_vec3 vDir, vPrevWormPos, vPos, vAngle;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	m_pPrevWorm->Get_Pos(&vPrevWormPos);
+	vDir = vPrevWormPos - vPos;
+	if (D3DXVec3Length(&vDir) > 1.f)
+	{
+		m_pTransformCom->Move_Pos(&vDir, 1.f, fTimeDelta);
+	}
+	D3DXVec3Normalize(&vDir, &vDir);
+	vAngle.x = D3DXToDegree(-asinf(vDir.y));
+	vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+	vAngle.z = 0.f;
+	m_pTransformCom->Set_Angle(vAngle);
 }
