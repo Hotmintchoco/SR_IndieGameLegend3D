@@ -16,6 +16,7 @@
 #include "CStage.h"
 #include "CRenderer.h"
 #include "CPlayer.h"
+#include "CPlayerCamera.h"
 
 CGameStatus::CGameStatus(LPDIRECT3DDEVICE9 pGraphicDev)
     :CGameObject(pGraphicDev)
@@ -203,6 +204,26 @@ void CGameStatus::RenderImGui()
             {
                 CTimerMgr::GetInstance()->SetGroupTimeScale(TG_PLAYER, 1.f);
             }
+        }
+    }
+
+    /* Camera Distance */
+    ImGui::SeparatorText("Camera Distance");
+    {
+        auto* pPlayerCamera = static_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
+
+        if (pPlayerCamera)
+        {
+            _float fDistance = pPlayerCamera->Get_Distance();
+            if (ImGui::SliderFloat("Distance", &fDistance, 0.1f, 20.f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+            {
+                pPlayerCamera->Set_Distance(fDistance);
+            }
+            ImGui::TextDisabled("Applied in third-person mode.");
+        }
+        else
+        {
+            ImGui::TextDisabled("Player camera is unavailable.");
         }
     }
 
