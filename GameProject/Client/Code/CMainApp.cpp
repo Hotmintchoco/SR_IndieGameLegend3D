@@ -9,7 +9,8 @@
 #include "CDInputMgr.h"
 #include "CLightMgr.h"
 #include "CCollisionMgr.h"
-#include "CCameraMgr.h"
+#include "CClientCameraMgr.h"
+#include "CCamera.h"
 #include "CImGuiTool.h"
 #include "CRoomLoadingMgr.h"
 #include "CAbstractFactory.h"
@@ -17,6 +18,7 @@
 #include "CDebugMgr.h"
 #include "CSoundMgr.h"
 #include "CUIMgr.h"
+#include "CRenderer.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -49,6 +51,17 @@ int CMainApp::Update_MainApp(const _float& fTimeDelta)
 {
 	CDInputMgr::GetInstance()->Update_InputDev();
 
+	// 정민 : 쉐이더 왜곡 효과 테스트용
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F6))
+	{
+		CRenderer::GetInstance()->Set_PulseEnabled(!CRenderer::GetInstance()->Get_PulseEnabled());
+		// 기존 4x4 확대/축소, 움직임 속도
+		CRenderer::GetInstance()->Set_PulseParameters(0.12f, 2.5f);
+		// 물방울 굴절 강도, 움직임 속도
+		CRenderer::GetInstance()->Set_WaterDropParameters(0.04f, 2.f);
+	}
+	CRenderer::GetInstance()->Update_PulseEffect(fTimeDelta);
+
 	m_pManagementClass->Update_Scene(min(fTimeDelta, 0.01f));
 
 	CSoundMgr::GetInstance()->Update();
@@ -63,11 +76,16 @@ void CMainApp::LateUpdate_MainApp(const _float& fTimeDelta)
 
 void CMainApp::Render_MainApp()
 {
+	// Capture before Render_Begin so its clear also clears the offscreen target.
+	const bool bPulse = dynamic_cast<CStage*>(m_pManagementClass->GetCurrentScene()) &&
+		CRenderer::GetInstance()->Begin_PulseEffect(m_pGraphicDev);
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
 
 	CImGuiTool::BeginFrame();
 
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
+	if (bPulse)
+		CRenderer::GetInstance()->End_PulseEffect(m_pGraphicDev);
 
 	CImGuiTool::EndFrame();
 
@@ -155,7 +173,7 @@ void CMainApp::Free()
 	CFontMgr::DestroyInstance();
 	CFrameMgr::DestroyInstance();
 	CTimerMgr::DestroyInstance();
-	CCameraMgr::DestroyInstance();
+	CClientCameraMgr::DestroyInstance();
 	CRoomLoadingMgr::DestroyInstance();
 	CAbstractFactory::DestroyInstance();
 	CRandomMgr::DestroyInstance();

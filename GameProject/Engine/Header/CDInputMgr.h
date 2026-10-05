@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Engine_Define.h"
 #include "CBase.h"
@@ -14,26 +14,26 @@ private:
 	virtual ~CDInputMgr(void);
 
 public:
-	_byte	Get_DIKeyState(_byte byKeyID)
+	_ubyte	Get_DIKeyState(_ubyte byKeyID)
 	{
 		return m_byKeyState[byKeyID];
 	}
 
-	_byte	Get_DIMouseState(MOUSEKEYSTATE eMouse)
+	_ubyte	Get_DIMouseState(MOUSEKEYSTATE eMouse)
 	{
 		return m_tMouseState.rgbButtons[eMouse];
 	}
 
-	// ÇöÀç ¸¶¿ì½ºÀÇ Æ¯Á¤ Ãà ÁÂÇ¥¸¦ ¹İÈ¯(X, Y, Z)
+	// í˜„ì¬ ë§ˆìš°ìŠ¤ì˜ íŠ¹ì • ì¶• ì¢Œí‘œë¥¼ ë°˜í™˜(X, Y, Z)
 	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseState)
 	{
 		return *(((_long*)&m_tMouseState) + eMouseState);
 	}
 
 public:
-	bool	Key_Press(_byte byKeyID); 
-	bool	Key_Down(_byte byKeyID);  
-	bool	Key_Up(_byte byKeyID);
+	bool	Key_Press(_ubyte byKeyID); 
+	bool	Key_Down(_ubyte byKeyID);  
+	bool	Key_Up(_ubyte byKeyID);
 
 	bool	Mouse_Press(MOUSEKEYSTATE eMouse);
 	bool	Mouse_Down(MOUSEKEYSTATE eMouse);
@@ -51,8 +51,8 @@ private:
 	LPDIRECTINPUTDEVICE8	m_pMouse = nullptr;
 
 private:
-	_byte					m_byKeyState[256];		// Å°º¸µå¿¡ ÀÖ´Â ¸ğµç Å°°ªÀ» ÀúÀåÇÏ±â À§ÇÑ º¯¼ö
-	_byte					m_byPrevKeyState[256];	// ÀÌÀü ÇÁ·¹ÀÓÀÇ Å°º¸µå »óÅÂ
+	_ubyte					m_byKeyState[256];		// í‚¤ë³´ë“œì— ìˆëŠ” ëª¨ë“  í‚¤ê°’ì„ ì €ì¥í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
+	_ubyte					m_byPrevKeyState[256];	// ì´ì „ í”„ë ˆì„ì˜ í‚¤ë³´ë“œ ìƒíƒœ
 
 	DIMOUSESTATE			m_tMouseState;
 	DIMOUSESTATE			m_tPrevMouseState;

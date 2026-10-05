@@ -3,7 +3,8 @@
 #include "CRenderer.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
-#include "CCameraMgr.h"
+#include "CClientCameraMgr.h"
+#include "CCamera.h"
 #include "CImGuiTool.h"
 #include "CDefaultBullet.h"
 #include "CDInputMgr.h"
@@ -64,7 +65,9 @@ void CWeapon::SyncTransformToCamera()
 {
     /* 카메라 위치를 받아 위치값 조정*/
     _matrix matCamera, matWorld;
-    CCameraMgr::GetInstance()->GetCamera(L"Camera_Player_FPV")->GetWorld(&matCamera);
+    auto* pCamera = CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER);
+    if (!pCamera) return;
+    pCamera->GetWorld(&matCamera);
     D3DXMatrixMultiply(&matWorld, m_pTransformCom->Get_World(), &matCamera);
     m_pTransformCom->Set_World(&matWorld);
     

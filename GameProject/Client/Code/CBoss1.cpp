@@ -11,6 +11,8 @@
 #include "CSprnub3.h"
 #include "CShockwave.h"
 #include "CUIMgr.h"
+#include "CClientCameraMgr.h"
+#include "CCinematicCamera.h"
 
 CBoss1::CBoss1(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -242,8 +244,6 @@ CBoss1* CBoss1::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CBoss1::Free()
 {
-    CUIMgr::GetInstance()->Active_Boss(false);
-
     CMonster::Free();
 }
 
@@ -684,6 +684,74 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
         m_bInit_YPos = true;
         _vec3 vPos{ 0.f,m_pTransformCom->m_vScale.y,0.f };
         m_pTransformCom->Move_Pos(&vPos, 1.f, 1.f);
+
+		_vec3 vBossPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vBossPos);
+
+        // 정민 : 컷신 테스트 용
+        auto* pCameraMgr = CClientCameraMgr::GetInstance();
+
+        auto* pCinematic = dynamic_cast<CCinematicCamera*>(
+            pCameraMgr->Find_Camera(CLIENT_CAMERA_TYPE::CINEMATIC));
+
+        if (pCinematic)
+        {
+            pCinematic->Set_StartFromCurrent(true); // 연속적 동작 설정
+
+            // 연출 1
+            CINEMATIC_DESC desc;
+
+            desc.vEyeFrom = { vBossPos.x, 3.f, vBossPos.z - 6.f };
+            desc.vEyeTo = { vBossPos.x, 2.f, vBossPos.z - 2.f };
+            desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 2.f;
+            desc.fFovFrom = D3DXToRadian(60.f);
+            desc.fFovTo = D3DXToRadian(47.5f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 2
+            desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
+            desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 0.2f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 3
+            desc.vEyeTo = { vBossPos.x + 3.f, 4.5f, vBossPos.z - 7.f };
+            desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 0.5f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 4
+            desc.vEyeTo = { vBossPos.x - 3.f, 4.5f, vBossPos.z - 7.f };
+            desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 0.5f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 5
+            desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
+            desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 0.25f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 6
+            desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
+            desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 1.5f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
+        }
     }
 
     //뛰어다니기
@@ -809,6 +877,7 @@ void CBoss1::Boss1_Dead(const _float& fTimeDelta)
 
     if (m_fElapsedDeadTime > m_fDeadTime)
     {
+        CUIMgr::GetInstance()->Active_Boss(false);
         m_bDelete = true;
     }
     if (m_fElapsedDeadTime2 > 0.5f)

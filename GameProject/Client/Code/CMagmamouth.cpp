@@ -929,6 +929,7 @@ void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
 
     if (m_fElapsedDeadTime > m_fDeadTime)
     {
+        CUIMgr::GetInstance()->Active_Boss(false);
         m_bDelete = true;
     }
     if (m_fElapsedDeadTime2 > 0.5f)
@@ -1033,7 +1034,5 @@ void CMagmamouth::MagmaMouth_Dead_Effect()
 
 void CMagmamouth::Free()
 {
-    CUIMgr::GetInstance()->Active_Boss(false);
-
     CMonster::Free();
 }

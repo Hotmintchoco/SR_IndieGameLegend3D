@@ -1,4 +1,4 @@
-#include "CSphereCollider.h"
+ï»¿#include "CSphereCollider.h"
 #include "CBoxCollider.h"
 #include "CGameObject.h"
 #include "CTransform.h"
@@ -15,7 +15,7 @@ CSphereCollider::CSphereCollider(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCollider(pGraphicDev)
 {
 	m_eColliderType = CT_SPHERE;
-	/* µð¹ö±× ¿ëÀÌ´Ï±ñ ±×³É Å¬¶ó¿¡¼­ ¶â±â... */
+	/* ë””ë²„ê·¸ ìš©ì´ë‹ˆê¹ ê·¸ëƒ¥ í´ë¼ì—ì„œ ëœ¯ê¸°... */
 	CComponent* pComp = CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Sphere_Vertex");
 	m_pDebugSphereTex = dynamic_cast<CPlyTex*>(pComp);
 }
@@ -37,7 +37,7 @@ _bool CSphereCollider::Intersect(CCollider* pOther)
 	{
 		CSphereCollider* pTargetSphere = static_cast<CSphereCollider*>(pOther);
 
-		// ³» ±¸(Sphere)¿Í »ó´ë¹æ ±¸(Sphere)ÀÇ Ãæµ¹ °Ë»ç
+		// ë‚´ êµ¬(Sphere)ì™€ ìƒëŒ€ë°© êµ¬(Sphere)ì˜ ì¶©ëŒ ê²€ì‚¬
 		return m_tSphere.Intersects(pTargetSphere->m_tSphere);
 	}
 
@@ -103,8 +103,10 @@ void CSphereCollider::SyncPositionToOwner()
 	if (!m_pOwner) return;
 	CTransform* pOwnerTransformCom = dynamic_cast<CTransform*>(m_pOwner->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 
-	_vec3   vOwnerPos;
+	_vec3 vOwnerPos;
 	pOwnerTransformCom->Get_Info(INFO_POS, &vOwnerPos);
+	vOwnerPos += m_vDiffPos;
+
 	m_tSphere.Center = { vOwnerPos.x, vOwnerPos.y, vOwnerPos.z };
 }
 

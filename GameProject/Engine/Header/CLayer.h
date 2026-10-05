@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CBase.h"
 #include "CGameObject.h"
 
@@ -19,6 +19,9 @@ public:
 
 	const multimap<wstring, CGameObject*>& Get_ObjMap() { return m_mapObject; }
 
+	void			Set_IsActive(_bool bIsActive) { m_bIsActive = bIsActive; }
+	_bool			Get_IsActive() const { return m_bIsActive; }
+
 public:
 	virtual HRESULT			Ready_Layer();
 	virtual _int			Update_Layer(const _float& fTimeDelta);
@@ -27,6 +30,7 @@ public:
 
 protected:
 	multimap<wstring, CGameObject*>			m_mapObject;
+	_bool									m_bIsActive;	// 활성화 여부를 나타내는 변수	
 
 public:
 	static CLayer* Create();

@@ -22,6 +22,9 @@ public:
 	virtual			void		LateUpdate_Scene(const _float& fTimeDelta);
 	virtual			void		Render_Scene();
 
+	virtual			void		OnEnter() override;
+	virtual			void		OnExit() override;
+
 	virtual HRESULT Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject) override;
 
 	/* 게임 상태관리 오브젝트 직통 부르기 */
@@ -42,12 +45,12 @@ private:
 	HRESULT			Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx);
 	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
 	HRESULT			Ready_Light();
+	HRESULT			Ready_Camera();
 
 	void CheckRoomChanged();
 	int CalculateRoomIndexFromPlayerPosition();
 
 private:
-	CAMERAID			m_CurCamera;
 
 	/* 방 관련 */
 	CRoomLayer* m_pCurrentRoomLayer = nullptr;

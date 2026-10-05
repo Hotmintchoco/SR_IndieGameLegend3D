@@ -152,6 +152,8 @@
     <ClInclude Include="..\Header\CBreakableFrustum.h" />
     <ClInclude Include="..\Header\CBoss1.h" />
     <ClInclude Include="..\Header\CBullet_Trail.h" />
+    <ClInclude Include="..\Header\CCinematicCamera.h" />
+    <ClInclude Include="..\Header\CClientCameraMgr.h" />
     <ClInclude Include="..\Header\CCryder.h" />
     <ClInclude Include="..\Header\CDefaultBullet.h" />
     <ClInclude Include="..\Header\CFloor.h" />
@@ -164,6 +166,7 @@
     <ClInclude Include="..\Header\CLaserBuffer.h" />
     <ClInclude Include="..\Header\CLaserGun.h" />
     <ClInclude Include="..\Header\CMiniGame.h" />
+    <ClInclude Include="..\Header\CPlayerCamera.h" />
     <ClInclude Include="..\Header\CRapidGun.h" />
     <ClInclude Include="..\Header\CProjectile.h" />
     <ClInclude Include="..\Header\CButtonTile.h" />
@@ -263,6 +266,8 @@
     <ClCompile Include="..\Code\CBreakableFrustum.cpp" />
     <ClCompile Include="..\Code\CBoss1.cpp" />
     <ClCompile Include="..\Code\CBullet_Trail.cpp" />
+    <ClCompile Include="..\Code\CCinematicCamera.cpp" />
+    <ClCompile Include="..\Code\CClientCameraMgr.cpp" />
     <ClCompile Include="..\Code\CCrossBuffer.cpp" />
     <ClCompile Include="..\Code\CDdokddak.cpp" />
     <ClCompile Include="..\Code\CCryder.cpp" />
@@ -275,6 +280,7 @@
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />
     <ClCompile Include="..\Code\CLaserGun.cpp" />
     <ClCompile Include="..\Code\CMiniGame.cpp" />
+    <ClCompile Include="..\Code\CPlayerCamera.cpp" />
     <ClCompile Include="..\Code\CRapidGun.cpp" />
     <ClCompile Include="..\Code\CProjectile.cpp" />
     <ClCompile Include="..\Code\CButtonTile.cpp" />
