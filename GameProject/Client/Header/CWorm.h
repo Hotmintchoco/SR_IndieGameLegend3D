@@ -50,6 +50,9 @@ private:
 
 	void Set_MoveDest();
 	void Set_Pos_Worm(_vec3 vPos);
+	void Set_Speed_Worm(_float fSpeed);
+	void Push_Back_MoveDest(const _vec3& vDest);
+	void Clear_MoveDest();
 
 	void Worm_Dead(const _float& fTimeDelta);
 	void Worm_Dead_Effect();

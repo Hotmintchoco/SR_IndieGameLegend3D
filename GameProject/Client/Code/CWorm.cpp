@@ -35,6 +35,14 @@ HRESULT CWorm::Ready_GameObject()
     m_iHp = m_iMaxHp;
     m_bCollision_WithMonster = false;
 
+    _vec3 vLook = { 0.f,1.f,0.f };
+    _vec3 vAngle;
+    vAngle.x = D3DXToDegree(-asinf(vLook.y));
+    vAngle.y = D3DXToDegree(atan2f(vLook.x, vLook.z));
+    vAngle.z = 0.f;
+    //vAngle.z = 90.f;
+    m_pTransformCom->Set_Angle(vAngle);
+
     return S_OK;
 }
 
@@ -234,7 +242,6 @@ void CWorm::Free()
 
 void CWorm::Update_Motion(const _float& fTimeDelta)
 {
-    //m_bOpening = false;
     if (m_eWormState == DEAD || m_bOpening == true)return;
 
     m_fStateUpdateTime += fTimeDelta;
@@ -243,7 +250,7 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
     {
         m_fStateUpdateTime = 0.f;
 
-        m_vMoveDest.clear();
+        Clear_MoveDest();
 
         if (m_iPhase == 0)
         {
@@ -271,7 +278,8 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
             m_fSpawn_CoolDown = 1.f;
 
             m_bMoveFlag = false;
-            m_fSpeed = 5.f;
+            //m_fSpeed = 5.f;
+            Set_Speed_Worm(5.f);
 
             //m_bMoveFlag2 = false;
         }
@@ -281,7 +289,8 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
             m_fStateUpdateDuration = 4.f;
             m_bMoveFlag = false;
             //m_bMoveFlag2 = false;
-            m_fSpeed = 7.f;
+            //m_fSpeed = 7.f;
+            Set_Speed_Worm(7.f);
         }
         else if (m_eWormState == IDLE)
         {
@@ -320,9 +329,9 @@ void CWorm::Set_MoveDest()
     D3DXVec3Normalize(&vDir, &vDir);
     //vDir *= 2.f;
     //vDir *= 5.f;
-    vDir.y = 2.5f + m_MoveHeight;
+    vDir.y = 1.5f + m_MoveHeight;
     _vec3 vDest = vInitPos + vDir;
-    m_vMoveDest.push_back(vDest);
+    Push_Back_MoveDest(vDest);
     m_pNextWorm;
     //vDest = m_vRoomCenterLocation;
     //vDest.y = 1.5f;
@@ -338,6 +347,33 @@ void CWorm::Set_Pos_Worm(_vec3 vPos)
     if (m_pNextWorm != nullptr)
     {
         static_cast<CWorm*>(m_pNextWorm)->Set_Pos_Worm(vPos);
+    }
+}
+
+void CWorm::Set_Speed_Worm(_float fSpeed)
+{
+    m_fSpeed = fSpeed;
+    if (m_pNextWorm != nullptr)
+    {
+        static_cast<CWorm*>(m_pNextWorm)->Set_Speed_Worm(fSpeed);
+    }
+}
+
+void CWorm::Push_Back_MoveDest(const _vec3& vDest)
+{
+    m_vMoveDest.push_back(vDest);
+    if (m_pNextWorm != nullptr)
+    {
+        static_cast<CWorm*>(m_pNextWorm)->Push_Back_MoveDest(vDest);
+    }
+}
+
+void CWorm::Clear_MoveDest()
+{
+    m_vMoveDest.clear();
+    if (m_pNextWorm != nullptr)
+    {
+        static_cast<CWorm*>(m_pNextWorm)->Clear_MoveDest();
     }
 }
 
@@ -568,55 +604,62 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
 {
 	m_bElapsedOpeningTime += fTimeDelta;
 
-    //오프닝 도착지점 세팅
-	if (m_bOpeningStart == false)
-	{
-        m_fSpeed = 5.f;
-		m_bOpeningStart = true;
-
-		CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-			->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-		if (nullptr == pPlayerTransformCom) return;
-		_vec3 vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-        _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
-        _vec3 vDest;
-        //_vec3 vDir = vPlayerPos - vPos;
-
-
-        _vec3 vLook = { 0.f,1.f,0.f };
-		_vec3 vAngle;
-        vAngle.x = D3DXToDegree(-asinf(vLook.y));
-        vAngle.y = D3DXToDegree(atan2f(vLook.x, vLook.z));
-        vAngle.z = 0.f;
-        //vAngle.z = 90.f;
-        m_pTransformCom->Set_Angle(vAngle);
-
-        _vec3 vUp; m_pTransformCom->Get_Info(INFO_UP, &vUp);
-        _vec3 vDir = -vUp;
-
-        vDir.y = 0;
-		D3DXVec3Normalize(&vDir, &vDir);
-        vDir *= 1.f;
-        vDir.y = 0.5f;
-        vDest = vPos + vDir;
-        m_vMoveDest.push_back(vDest);
-
-        vDir.y = 0;
-        vDest = vDest + vDir;
-        m_vMoveDest.push_back(vDest);
-
-        vDir.y = -0.5;
-        vDest = vDest + vDir;
-        m_vMoveDest.push_back(vDest);
-
-        vDir = { 0.f, -13.f, 0.f };
-        vDest = vDest + vDir;
-        m_vMoveDest.push_back(vDest);
-	}
-    //2초뒤 움직임
-    if (m_bElapsedOpeningTime > 4.f)
+    if (m_bElapsedOpeningTime > 1.f && m_bElapsedOpeningTime<=3.f)
     {
-        m_pNextWorm;
+        //오프닝 도착지점 세팅
+        if (m_bOpeningStart == false)
+        {
+            //m_fSpeed = 5.f;
+            Set_Speed_Worm(5.f);
+            m_bOpeningStart = true;
+
+            CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+                ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+            if (nullptr == pPlayerTransformCom) return;
+            _vec3 vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            _vec3 vDest;
+            //_vec3 vDir = vPlayerPos - vPos;
+
+
+            _vec3 vLook = { 0.f,1.f,0.f };
+            _vec3 vAngle;
+            vAngle.x = D3DXToDegree(-asinf(vLook.y));
+            vAngle.y = D3DXToDegree(atan2f(vLook.x, vLook.z));
+            vAngle.z = 0.f;
+            //vAngle.z = 90.f;
+            m_pTransformCom->Set_Angle(vAngle);
+
+            _vec3 vUp; m_pTransformCom->Get_Info(INFO_UP, &vUp);
+            _vec3 vDir = -vUp;
+
+            vDir.y = 0;
+            D3DXVec3Normalize(&vDir, &vDir);
+            vDir *= 1.f;
+            vDir.y = 0.5f;
+            vDest = vPos + vDir;
+            //m_vMoveDest.push_back(vDest);
+            Push_Back_MoveDest(vDest);
+
+            vDir.y = 0;
+            vDest = vDest + vDir;
+            //m_vMoveDest.push_back(vDest);
+            Push_Back_MoveDest(vDest);
+
+            vDir.y = -0.5;
+            vDest = vDest + vDir;
+            //m_vMoveDest.push_back(vDest);
+            Push_Back_MoveDest(vDest);
+
+            vDir = { 0.f, -20.f, 0.f };
+            vDest = vDest + vDir;
+            //m_vMoveDest.push_back(vDest);
+            Push_Back_MoveDest(vDest);
+        }
+    }
+    //3초뒤 움직임
+    else if (m_bElapsedOpeningTime > 3.f)
+    {
         if (!m_vMoveDest.empty())
         {
             _vec3 vPos, vDir;
@@ -990,11 +1033,13 @@ void CWorm::Move_WormHead(const _float& fTimeDelta)
 
                     vDir.y = 0.f;
                     _vec3 vDest = vPos + vDir;
-                    m_vMoveDest.push_back(vDest);
+                    //m_vMoveDest.push_back(vDest);
+                    Push_Back_MoveDest(vDest);
 
                     vDirN.y = -1.f;
                     vDest = vDest + vDirN * 15.f;
-                    m_vMoveDest.push_back(vDest);
+                    //m_vMoveDest.push_back(vDest);
+                    Push_Back_MoveDest(vDest);
 
                 }
                 else
@@ -1002,7 +1047,8 @@ void CWorm::Move_WormHead(const _float& fTimeDelta)
                     D3DXVec3Normalize(&vDir, &vDir);
                     vDir.y = -1.f;
                     _vec3 vDest = vPos + vDir * 15.f;
-                    m_vMoveDest.push_back(vDest);
+                    //m_vMoveDest.push_back(vDest);
+                    Push_Back_MoveDest(vDest);
                 }
 
             }
@@ -1013,18 +1059,49 @@ void CWorm::Move_WormHead(const _float& fTimeDelta)
 
 void CWorm::Update_WormBoby(const _float& fTimeDelta)
 {
-	_vec3 vDir, vPrevWormPos, vPos, vAngle;
+    if (m_vMoveDest.empty())return;
+	_vec3 vDir, vDist, vPrevWormPos, vPos, vAngle;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
 	m_pPrevWorm->Get_Pos(&vPrevWormPos);
-	vDir = vPrevWormPos - vPos;
-	if (D3DXVec3Length(&vDir) > 1.5f)
+    vDist = vPrevWormPos - vPos;
+    vDir = m_vMoveDest.front() - vPos;
+
+	if (D3DXVec3Length(&vDist) > 1.5f && D3DXVec3Length(&vDir)>0.125f)
 	{
-		m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+        _vec3 vDirN;
+		D3DXVec3Normalize(&vDirN, &vDir);
+		m_pTransformCom->Move_Pos(&vDirN, m_fSpeed, fTimeDelta);
+        D3DXVec3Normalize(&vDir, &vDir);
+        vAngle.x = D3DXToDegree(-asinf(vDir.y));
+        vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+        vAngle.z = 0.f;
+        m_pTransformCom->Set_Angle(vAngle);
 	}
-	D3DXVec3Normalize(&vDir, &vDir);
-	vAngle.x = D3DXToDegree(-asinf(vDir.y));
-	vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
-	vAngle.z = 0.f;
-	m_pTransformCom->Set_Angle(vAngle);
+    if (D3DXVec3Length(&vDir) <= 0.125f)
+    {
+        Set_Pos(m_vMoveDest.front());
+        m_vMoveDest.erase(m_vMoveDest.begin());
+    }
+
 }
+
+//기존
+//void CWorm::Update_WormBoby(const _float& fTimeDelta)
+//{
+//    _vec3 vDir, vPrevWormPos, vPos, vAngle;
+//    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+//
+//    m_pPrevWorm->Get_Pos(&vPrevWormPos);
+//    vDir = vPrevWormPos - vPos;
+//
+//    if (D3DXVec3Length(&vDir) > 1.5f)
+//    {
+//        m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+//    }
+//    D3DXVec3Normalize(&vDir, &vDir);
+//    vAngle.x = D3DXToDegree(-asinf(vDir.y));
+//    vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+//    vAngle.z = 0.f;
+//    m_pTransformCom->Set_Angle(vAngle);
+//}
