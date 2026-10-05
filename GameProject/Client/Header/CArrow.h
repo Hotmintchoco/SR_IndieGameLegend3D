@@ -11,9 +11,9 @@ namespace Engine
 
 struct TArrowData : public TProjectileData
 {
-	float fMaxSpeed = 20.f;
+	float fMaxSpeed = 25.f;
 	float fGravityCoef = 6.f;
-	_vec3 vInitScale = _vec3{0.66f, 0.66f, 1.f};
+	_vec3 vInitScale = _vec3{0.5f, 0.5f, 0.75f};
 };
 
 class CCrossBuffer;
@@ -22,12 +22,13 @@ class CArrow : public CProjectile
 {
 protected:
 	explicit CArrow(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower);
+	explicit CArrow(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower, const TArrowData& t);
 	virtual ~CArrow();
 
 public:
 	virtual	HRESULT Ready_GameObject();
-	virtual	_int Update_GameObject(const _float& fTimeDelta);
-	virtual	void LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual	_int Update_GameObject(_float fTimeDelta);
+	virtual	void LateUpdate_GameObject(_float fTimeDelta);
 	virtual	void Render_GameObject();
 
 	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
@@ -46,7 +47,7 @@ private:
 	void InitTransform();
 	void ExertGravity(const float fTimeDelta);
 	void SyncTransformToVelocity();
-	void PreciseHitTest(CGameObject* pTarget, const float fTimeDelta);
+	bool PreciseHitTest(CGameObject* pTarget);
 
 	CCrossBuffer* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
@@ -56,12 +57,7 @@ private:
 	_vec3 m_vStart{ 0.f, 0.f, 0.f };
 	_vec3 m_vDir{ 0.f, 0.f, 0.f };
 
-	inline static TArrowData s_tData = []()-> TArrowData {
-		TArrowData t;
-		t.fLifeTime = 10.f;
-		t.fSpeed = 0.f; /* 안씀 */
-		return t;
-		}();
+	TArrowData m_tData;
 
 	float m_fSpeed = 0.f;
 
@@ -69,11 +65,13 @@ private:
 	_vec3 m_vVelocity{0.f, 0.f, 0.f};
 
 	/* 박혔을 때 정보 */
+	_vec3 m_vPrevPos{ 0.f, 0.f, 0.f };
 	vector<CGameObject*> m_vecRayTestTarget;
 	bool m_bStopped = false;
 
 public:
-	static CArrow* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float ShotPower);
+	static CArrow* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower);
+	static CArrow* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower, const TArrowData& t);
 
 protected:
 	virtual void Free() override;

@@ -21,7 +21,7 @@ HRESULT CFog::Ready_GameObject()
     return S_OK;
 }
 
-_int CFog::Update_GameObject(const _float& fTimeDelta)
+_int CFog::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -34,7 +34,7 @@ _int CFog::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CFog::LateUpdate_GameObject(const _float& fTimeDelta)
+void CFog::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -45,7 +45,7 @@ void CFog::Render_GameObject()
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-    m_pTextureCom->Set_Texture(0);
+    m_pTextureCom->Set_Texture(m_iTextureIdx);
     m_pBufferCom->Render_Buffer();
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
@@ -66,7 +66,7 @@ HRESULT CFog::Add_Component()
     m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
 
     // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Fog_Texture"));
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Black_Texture"));
 
     if (nullptr == pComponent)
         return E_FAIL;

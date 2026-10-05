@@ -14,6 +14,8 @@
 #include "CParticle_Sphere.h"
 #include "CRoomLayer.h"
 #include "CUIMgr.h"
+#include "CClientCameraMgr.h"
+#include "CCinematicCamera.h"
 
 CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(0.f), m_fStateUpdateDuration(2.f), 
@@ -59,7 +61,7 @@ HRESULT CMagmamouth::Ready_GameObject()
     return S_OK;
 }
     
-_int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
+_int CMagmamouth::Update_GameObject(_float fTimeDelta)
 {
 
     _float _fTimeDelta = fTimeDelta;
@@ -111,7 +113,7 @@ _int CMagmamouth::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CMagmamouth::LateUpdate_GameObject(const _float& fTimeDelta)
+void CMagmamouth::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
     Set_Motion();
@@ -258,6 +260,52 @@ void CMagmamouth::Shuffle_Array(_uint N)
 
 void CMagmamouth::Opening_MagmaMouth(const _float& fTimeDelta)
 {
+    if (m_bElapsedOpeningTime == 0.f)
+    {
+        // 정민 : 컷신 테스트 용
+        auto* pCameraMgr = CClientCameraMgr::GetInstance();
+
+        auto* pCinematic = dynamic_cast<CCinematicCamera*>(
+            pCameraMgr->Find_Camera(CLIENT_CAMERA_TYPE::CINEMATIC));
+
+        _vec3 vBossPos;
+        m_pTransformCom->Get_Info(INFO_POS, &vBossPos);
+
+        if (pCinematic)
+        {
+            pCinematic->Set_StartFromCurrent(true); // 연속적 동작 설정
+			pCinematic->Set_Target(m_pTransformCom); // 보스 위치를 시선으로 설정
+
+            // 연출 1
+            CINEMATIC_DESC desc;
+
+            desc.vEyeFrom = { vBossPos.x - 6.f, 3.f, vBossPos.z };
+            desc.vEyeTo = { vBossPos.x - 2.f, 2.f, vBossPos.z };
+
+            desc.fDuration = 2.f;
+            desc.fFovFrom = D3DXToRadian(60.f);
+            desc.fFovTo = D3DXToRadian(47.5f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 2
+            desc.vEyeTo = { vBossPos.x - 7.f, 4.5f, vBossPos.z };
+
+            desc.fDuration = 1.f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 3
+            desc.vEyeTo = { vBossPos.x - 7.f, 4.5f, vBossPos.z };
+
+            desc.fDuration = 4.5f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
+        }
+    }
+
+
     m_bElapsedOpeningTime += fTimeDelta;
     //오프닝 15초 넘거나 오프닝무브끝나면 오프닝 종료
     if (m_bElapsedOpeningTime > 15.f || (m_bOpeningMoveFlag == true && m_fFrame<=0.f))
@@ -310,6 +358,9 @@ void CMagmamouth::Opening_MagmaMouth(const _float& fTimeDelta)
 
     // 정민 : Boss Hp UI 처리
     CUIMgr::GetInstance()->Active_Boss(true);
+
+    
+    
 }
 
 void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)

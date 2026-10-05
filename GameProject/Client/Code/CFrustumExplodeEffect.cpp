@@ -26,7 +26,7 @@ HRESULT CFrustumExplodeEffect::Ready_GameObject()
     return S_OK;
 }
 
-_int CFrustumExplodeEffect::Update_GameObject(const _float& fTimeDelta)
+_int CFrustumExplodeEffect::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CParticle::Update_GameObject(fTimeDelta);
 
@@ -46,7 +46,7 @@ _int CFrustumExplodeEffect::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CFrustumExplodeEffect::LateUpdate_GameObject(const _float& fTimeDelta)
+void CFrustumExplodeEffect::LateUpdate_GameObject(_float fTimeDelta)
 {
     CParticle::LateUpdate_GameObject(fTimeDelta);
 

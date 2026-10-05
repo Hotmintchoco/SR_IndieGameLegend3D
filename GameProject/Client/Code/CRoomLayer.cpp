@@ -41,7 +41,7 @@ HRESULT CRoomLayer::Ready_Layer()
 	return S_OK;
 }
 
-_int CRoomLayer::Update_Layer(const _float& fTimeDelta)
+_int CRoomLayer::Update_Layer(_float fTimeDelta)
 {
 	if (!IsValidUpdateTarget()) return S_OK;
 
@@ -88,7 +88,7 @@ void CRoomLayer::PlayerTileInteraction()
 	switch (eType)
 	{
 	case EContaminateType::LAVA:
-		pPlayer->Hit(nullptr);
+		pPlayer->OnHit(nullptr);
 		break;
 	default:
 		break;
@@ -98,27 +98,32 @@ void CRoomLayer::PlayerTileInteraction()
 bool CRoomLayer::IsValidUpdateTarget()
 {
 	CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-	if (pStage->GetCurrentRoomLayer() == this) return true;
+	return pStage->GetCurrentRoomLayer() == this;
 
-	const pair<int, int> CurrentRoomIndex = pStage->GetCurrentRoomLayer()->GetIndex2D();
-	const auto [iCurRow, iCurCol] = CurrentRoomIndex;
-	
-	const pair<int, int> RoomIndex = GetIndex2D();
-	const auto [iTargetRow, iTargetCol] = RoomIndex;
+	//////////////////////////////////////////////////////////////////////////////////
 
-	static const vector<pair<int, int>> Dir = { { 0, -1 }, {1, 0}, {0, 1}, {-1, 0} };
-	for (const auto& [dr, dc] : Dir)
-	{
-		if ((iCurRow + dr == iTargetRow) && (iCurCol + dc == iTargetCol))
-		{
-			return true;
-		}
-	}
-
-	return false;
+	// CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+	// if (pStage->GetCurrentRoomLayer() == this) return true;
+	// 
+	// const pair<int, int> CurrentRoomIndex = pStage->GetCurrentRoomLayer()->GetIndex2D();
+	// const auto [iCurRow, iCurCol] = CurrentRoomIndex;
+	// 
+	// const pair<int, int> RoomIndex = GetIndex2D();
+	// const auto [iTargetRow, iTargetCol] = RoomIndex;
+	// 
+	// static const vector<pair<int, int>> Dir = { { 0, -1 }, {1, 0}, {0, 1}, {-1, 0} };
+	// for (const auto& [dr, dc] : Dir)
+	// {
+	// 	if ((iCurRow + dr == iTargetRow) && (iCurCol + dc == iTargetCol))
+	// 	{
+	// 		return true;
+	// 	}
+	// }
+	// 
+	// return false;
 }
 
-void CRoomLayer::LateUpdate_Layer(const _float& fTimeDelta)
+void CRoomLayer::LateUpdate_Layer(_float fTimeDelta)
 {
 	if (!IsValidUpdateTarget()) return;
 
@@ -189,9 +194,9 @@ HRESULT CRoomLayer::SpawnRoom()
 
 	/* 바닥 충돌체 */
 	wstring wstrName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Floor";
-	pGameObject = CFloor::Create(pDevice);
+	CFloor* pFloor = CFloor::Create(pDevice);
 
-	if (FAILED(Add_GameObject(wstrName, pGameObject)))
+	if (FAILED(Add_GameObject(wstrName, pFloor)))
 		return E_FAIL;
 
 	CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrName, L"Com_Transform"));
@@ -201,7 +206,9 @@ HRESULT CRoomLayer::SpawnRoom()
 	CBoxCollider* pColliderCom = dynamic_cast<CBoxCollider*>(Get_Component(ID_DYNAMIC, wstrName, L"Com_BoxCollider"));
 	pColliderCom->Set_Extents(vOuterRoomSize.x / 2.f, 0.5f, vOuterRoomSize.z / 2.f);
 	pColliderCom->Set_DiffPos(_vec3{ 0.f, -0.5f, 0.f });
-
+	
+	m_vecRayTestable.push_back(pFloor);
+	m_vecTerrain.push_back(pFloor);
 
 	/* 타일 */
 	for (size_t i = 0; i < t->vecTile.size(); ++i)
@@ -256,20 +263,21 @@ HRESULT CRoomLayer::SpawnRoom()
 		int iDirOffset = ((i % 2) == 0) ? 100 : 0;
 
 
-		pGameObject = CWall::Create(pDevice, (EWallDir)(i + 1), t->vecDoorInfo.at(i), iDirOffset + iDoorOffset + iBiomeOffset + iRandomOffset);
-		if (nullptr == pGameObject)
+		CWall* pWall = CWall::Create(pDevice, (EWallDir)(i + 1), t->vecDoorInfo.at(i), iDirOffset + iDoorOffset + iBiomeOffset + iRandomOffset);
+		if (nullptr == pWall)
 			return E_FAIL;
 
 		wstring wstrWallName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Wall_" + to_wstring(i);
 
-		if (FAILED(Add_GameObject(wstrWallName, pGameObject)))
+		if (FAILED(Add_GameObject(wstrWallName, pWall)))
 			return E_FAIL;
 
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrWallName, L"Com_Transform"));
 
 		pTransformCom->Set_Pos(vRoomCenterPos.x, 0.f, vRoomCenterPos.z);
 
-		CWall* pWall = static_cast<CWall*>(pGameObject);
+		m_vecRayTestable.push_back(pWall);
+
 		if (pWall->HasDoor())
 		{
 			/* 안개 */
@@ -291,13 +299,16 @@ HRESULT CRoomLayer::SpawnRoom()
 				if (FAILED(Add_GameObject(wstrDoorName, pGameObject)))
 					return E_FAIL;
 
+				if (i == 4) static_cast<CFog*>(pGameObject)->SetOpacity(100);
+				else static_cast<CFog*>(pGameObject)->SetOpacity(40);
+
 				CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrDoorName, L"Com_Transform"));
 
 				pTransformCom->Set_Scale(_vec3{ 0.5f, 0.75f, 1.f });
 				pTransformCom->Set_Pos(vRoomCenterPos.x, 0.75f, vRoomCenterPos.z);
 				pTransformCom->Rotation(ROT_Y, 90.f * iDir);
 
-				pTransformCom->Move_Pos(&vDir, 5.7f + (iDir % 2) * 1.f + 0.2f * i, 1.f);
+				pTransformCom->Move_Pos(&vDir, 5.7f + (iDir % 2) * 1.f + 0.22f * i, 1.f);
 			}
 
 			/* 문 쪽 타일 */
@@ -383,6 +394,16 @@ HRESULT CRoomLayer::SpawnRoom()
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrTileName, L"Com_Transform"));
 
 		pTransformCom->Set_Pos(vRoomCenterPos.x + vTileOffset.x, 0.f, vRoomCenterPos.z + vTileOffset.z);
+
+		if (IRayTestable* pObj = dynamic_cast<IRayTestable*>(pGameObject))
+		{
+			m_vecRayTestable.push_back(pObj);
+		}
+
+		if (ITerrain* pObj = dynamic_cast<ITerrain*>(pGameObject))
+		{
+			m_vecTerrain.push_back(pObj);
+		}
 	}
 
 	for (auto& tMapEntity : t->vecObjectInfo)
@@ -404,6 +425,16 @@ HRESULT CRoomLayer::SpawnRoom()
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, wstrMonsterName, L"Com_Transform"));
 
 		pTransformCom->Set_Pos(vRoomCenterPos.x + tMapEntity.vPos.x, vRoomCenterPos.y + tMapEntity.vPos.y, vRoomCenterPos.z + tMapEntity.vPos.z);
+
+		if (IRayTestable* pObj = dynamic_cast<IRayTestable*>(pGameObject))
+		{
+			m_vecRayTestable.push_back(pObj);
+		}		
+		
+		if (ITerrain* pObj = dynamic_cast<ITerrain*>(pGameObject))
+		{
+			m_vecTerrain.push_back(pObj);
+		}
 	}
 
 	return S_OK;
@@ -414,7 +445,7 @@ pair<int, int> CRoomLayer::GetIndex2D()
 	int iRoomCountRow = CRoomLoadingMgr::GetInstance()->GetRoomRowCount();
 	int iRoomCountCol = CRoomLoadingMgr::GetInstance()->GetRoomColCount();
 
-		int iRow = m_iRoomIndex / iRoomCountCol;
+	int iRow = m_iRoomIndex / iRoomCountCol;
 	int iCol = m_iRoomIndex % iRoomCountCol;
 
 	return pair<int, int>{iRow, iCol};

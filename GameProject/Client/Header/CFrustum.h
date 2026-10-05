@@ -18,8 +18,8 @@ protected:
 
 public:
 	virtual			HRESULT		Ready_GameObject();
-	virtual			_int		Update_GameObject(const _float& fTimeDelta);
-	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual			_int		Update_GameObject(_float fTimeDelta);
+	virtual			void		LateUpdate_GameObject(_float fTimeDelta);
 	virtual			void		Render_GameObject();
 
 	// 충돌	이벤트 처리 함수 (기본적으로 Obstacle_Collision 처리)

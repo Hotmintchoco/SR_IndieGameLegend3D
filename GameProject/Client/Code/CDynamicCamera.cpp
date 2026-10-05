@@ -45,7 +45,7 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	return S_OK;
 }
 
-_int CDynamicCamera::Update_GameObject(_float& fTimeDelta)
+_int CDynamicCamera::Update_GameObject(_float fTimeDelta)
 {
 	Key_Input(fTimeDelta);
 
@@ -59,11 +59,11 @@ _int CDynamicCamera::Update_GameObject(_float& fTimeDelta)
 	return 0;
 }
 
-void CDynamicCamera::LateUpdate_GameObject(_float& fTimeDelta)
+void CDynamicCamera::LateUpdate_GameObject(_float fTimeDelta)
 {
 }
 
-void CDynamicCamera::Key_Input(const _float& fTimeDelta)
+void CDynamicCamera::Key_Input(const _float fTimeDelta)
 {
 	_vec3 vLook = m_vAt - m_vEye;
 	D3DXVec3Normalize(&vLook, &vLook);

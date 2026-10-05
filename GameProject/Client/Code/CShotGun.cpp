@@ -34,7 +34,7 @@ HRESULT CShotGun::Ready_GameObject()
     return S_OK;
 }
 
-_int CShotGun::Update_GameObject(const _float& fTimeDelta)
+_int CShotGun::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
@@ -43,7 +43,7 @@ _int CShotGun::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CShotGun::LateUpdate_GameObject(const _float& fTimeDelta)
+void CShotGun::LateUpdate_GameObject(_float fTimeDelta)
 {
     CWeapon::LateUpdate_GameObject(fTimeDelta);
 
@@ -89,7 +89,26 @@ void CShotGun::RenderEditorPanel()
     UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
-void CShotGun::DefaultAttack()
+EWeaponEvent CShotGun::SpecialAttack(EInputState ePri, EInputState eSec)
+{
+    switch (ePri)
+    {
+    case EInputState::Held:
+    {
+        ShotSGBullet();
+        m_bIsCoolTime = true;
+        m_fCoolTimeLeft = m_fSpecialAtkInterval;
+        return EWeaponEvent::GUN_SHOT;
+        break;
+    }
+    default:
+        break;
+    }
+
+    return EWeaponEvent::NONE;
+}
+
+void CShotGun::ShotSGBullet()
 {
     for (int i = 0; i < m_iBulletPerSpecialAtk; ++i)
     {
@@ -115,17 +134,12 @@ void CShotGun::DefaultAttack()
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
 
-    m_bIsCoolTime = true;
-    m_fCoolTimeLeft = m_fSpecialAtkInterval;
     StartShotAnimation();
 }
 
-void CShotGun::SpecialAttack()
+EWeaponEvent CShotGun::UltimateAttack(EInputState ePri, EInputState eSec)
 {
-}
-
-void CShotGun::UltimateAttack()
-{
+    return EWeaponEvent::NONE;
 }
 
 HRESULT CShotGun::Add_Component()

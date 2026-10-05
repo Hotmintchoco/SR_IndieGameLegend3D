@@ -10,6 +10,7 @@
 #include "CCollider.h"
 #include "CSoundMgr.h"
 #include "CManagement.h"
+#include "CStage.h"
 
 CDdokddak::CDdokddak(LPDIRECT3DDEVICE9 pGraphicDev, EDirection eDir)
     :CGameObject(pGraphicDev), m_eInitDir(eDir)
@@ -54,7 +55,7 @@ HRESULT CDdokddak::Ready_GameObject()
     return S_OK;
 }
 
-_int CDdokddak::Update_GameObject(const _float& fTimeDelta)
+_int CDdokddak::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -67,7 +68,7 @@ _int CDdokddak::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CDdokddak::LateUpdate_GameObject(const _float& fTimeDelta)
+void CDdokddak::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 
@@ -93,14 +94,18 @@ void CDdokddak::OnCollisionEnter(COLLINFO eCollInfo)
     {
         if (m_bSkipCurrentFrameCollision) return;
         m_vDir = -m_vDir;
-        CSoundMgr::GetInstance()->PlaySFX(L"sfxslider.wav");
+        CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+        if (pStage->GetCurrentRoomIndex() == static_cast<CRoomLayer*>(m_pOwner)->GetIndexFlat())
+        {
+            CSoundMgr::GetInstance()->PlaySFX(L"sfxslider.wav");
+        }
         m_bSkipCurrentFrameCollision = true;
 
         break;
     }
     case COLLISIONID::COLL_PLAYER:
     {
-        static_cast<CPlayer*>(pOtherCol->Get_Owner())->Hit(nullptr);
+        static_cast<CPlayer*>(pOtherCol->Get_Owner())->OnHit(nullptr);
         break;
     }
     default:

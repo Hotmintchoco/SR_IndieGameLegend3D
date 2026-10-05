@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CVIBuffer.h"
 
 BEGIN(Engine)
@@ -13,21 +13,21 @@ protected:
 
 public:
 	virtual HRESULT		Ready_Buffer();
-	/* ÆÄÀÏ °æ·Î°¡ ÇÊ¿äÇÏ´Ù º¸´Ï ºÒ°¡ÇÇÇÏ°Ô ÇÔ¼ö¸¦ ºĞ¸® */
-	HRESULT	Ready_Buffer(const _tchar* szFilePath);
+	/* íŒŒì¼ ê²½ë¡œê°€ í•„ìš”í•˜ë‹¤ ë³´ë‹ˆ ë¶ˆê°€í”¼í•˜ê²Œ í•¨ìˆ˜ë¥¼ ë¶„ë¦¬ */
+	virtual HRESULT	Ready_Buffer(const _tchar* szFilePath);
 	virtual void		Render_Buffer();
 
 public:
 	static CPlyTex* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* szFilePath);
 	virtual CComponent* Clone();
 
-private:
+protected:
 	HRESULT Parse_Ply(const _tchar* szFilePath);
 
 	vector<VTXTEX> m_vecVtx;
 	vector<unsigned long> m_vecIdx;
 
-private:
+protected:
 	virtual void Free();
 };
 

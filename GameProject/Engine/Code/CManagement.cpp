@@ -79,7 +79,7 @@ HRESULT CManagement::Change_Scene(_int iSceneIdx, CScene* pNewScene, bool bDesto
     return S_OK;
 }
 
-_int CManagement::Update_Scene(const _float& fTimeDelta)
+_int CManagement::Update_Scene(_float fTimeDelta)
 {
     if (nullptr == m_pScene)
         return -1;
@@ -87,7 +87,7 @@ _int CManagement::Update_Scene(const _float& fTimeDelta)
     return m_pScene->Update_Scene(fTimeDelta);
 }
 
-void CManagement::LateUpdate_Scene(const _float& fTimeDelta)
+void CManagement::LateUpdate_Scene(_float fTimeDelta)
 {
     m_pScene->LateUpdate_Scene(fTimeDelta);
 }

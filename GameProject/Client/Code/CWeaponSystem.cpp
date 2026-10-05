@@ -33,21 +33,22 @@ HRESULT CWeaponSystem::Ready_GameObject()
     if (FAILED(AddWeapon(EObjectType::WEAPON_BOW, L"Bow")))
         return E_FAIL;
 
+    if (FAILED(AddWeapon(EObjectType::WEAPON_LIMINAL, L"LiminalGun")))
+        return E_FAIL;
+
     SwitchWeaponTo(0);
 
 	return S_OK;
 }
 
-_int CWeaponSystem::Update_GameObject(const _float& fTimeDelta)
+_int CWeaponSystem::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
-
-    GetKeyInput();
 
     return iExit;
 }
 
-void CWeaponSystem::LateUpdate_GameObject(const _float& fTimeDelta)
+void CWeaponSystem::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -56,6 +57,73 @@ void CWeaponSystem::Render_GameObject()
 {
 }
 
+TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
+{
+    TWeaponSystemOutput tOut;
+
+    if (tInput.bSpecialSwitchPressed)
+    {
+        if (m_fSpecialAtkGauge > 0.f)
+        {
+            m_bSpecialAttackSwitchOn = !m_bSpecialAttackSwitchOn;
+        }
+    }
+
+    if (!GetCurrentWeapon()->IsOnCoolTime())
+    {
+        if (m_bSpecialAttackSwitchOn)
+        {
+            tOut.eWpEvent = GetCurrentWeapon()->SpecialAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
+                                              tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
+            // m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
+            m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
+            if (m_fSpecialAtkGauge <= 0.f)
+            {
+                m_bSpecialAttackSwitchOn = false;
+            }
+
+            CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+            if (pStage)
+            {
+                pStage->GetStatus()->SetSpecialAttackGauge(m_fSpecialAtkGauge);
+            }
+        }
+        else
+        {
+            tOut.eWpEvent = GetCurrentWeapon()->DefaultAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
+                                              tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
+        }
+    }
+
+    if (tInput.bUltAttack && m_bIsUltimateAttackReady)
+    {
+        tOut.eWpEvent = GetCurrentWeapon()->UltimateAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
+                                           tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
+        
+
+        // m_fUltimateAtkGauge = 0.f;
+        // m_bIsUltimateAttackReady = false;
+
+        CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+        if (pStage)
+        {
+            pStage->GetStatus()->SetUltimateGauge(m_fUltimateAtkGauge);
+        }
+    }
+    
+    TWeaponAnimArgs tArgs;
+    tArgs.bSpecialAtk = m_bSpecialAttackSwitchOn;
+    tArgs.bSprint = tInput.bSprint;
+    tArgs.bMove = tInput.bMove;
+    GetCurrentWeapon()->UpdateAnimationArgs(tArgs);
+
+    if (tInput.bSwitchWeapon)
+    {
+        SwitchWeaponTo((m_iCurrentIndex + 1) % (int)m_vecWeapon.size());
+    }
+
+    return tOut;
+}
 
 HRESULT CWeaponSystem::AddWeapon(EObjectType eType, const wstring& wstrName)
 {
@@ -72,103 +140,6 @@ HRESULT CWeaponSystem::AddWeapon(EObjectType eType, const wstring& wstrName)
     {
         return E_FAIL;
     }
-}
-
-void CWeaponSystem::GetKeyInput()
-{
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_Q))
-    {
-        SwitchWeaponTo((m_iCurrentIndex + 1) % (int)m_vecWeapon.size());
-    }
-
-    if (CDInputMgr::GetInstance()->Mouse_Press(DIM_LB) && !GetCurrentWeapon()->IsOnCoolTime())
-    {
-        if (m_bSpecialAttackSwitchOn)
-        {
-            GetCurrentWeapon()->SpecialAttack();
-            // m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
-            m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
-            if (m_fSpecialAtkGauge <= 0.f)
-            {
-                m_bSpecialAttackSwitchOn = false;
-            }
-
-            CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-            if (pStage)
-            {
-                pStage->GetStatus()->SetSpecialAttackGauge(m_fSpecialAtkGauge);
-            }
-        }
-        else
-        {
-            GetCurrentWeapon()->DefaultAttack();
-        }
-    }
-
-    if (CDInputMgr::GetInstance()->Mouse_Down(DIM_RB))
-    {
-        GetCurrentWeapon()->ChargeStart();
-    }
-    if (CDInputMgr::GetInstance()->Mouse_Up(DIM_RB))
-    {
-        GetCurrentWeapon()->ChargeEnd();
-    }
-
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_C))
-    {
-        if (m_bIsUltimateAttackReady)
-        {
-            GetCurrentWeapon()->UltimateAttack();    
-            m_fUltimateAtkGauge = 0.f;
-            m_bIsUltimateAttackReady = false;
-
-            CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-            if (pStage)
-            {
-                pStage->GetStatus()->SetUltimateGauge(m_fUltimateAtkGauge);
-            }
-        }
-    }
-
-    TWeaponAnimArgs t;
-
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_F))
-    {
-        if (m_fSpecialAtkGauge > 0.f)
-        {
-            m_bSpecialAttackSwitchOn = !m_bSpecialAttackSwitchOn;
-        }
-    }
-    t.bSpecialAtk = m_bSpecialAttackSwitchOn;
-    
-    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-    if (pStage)
-    {
-        pStage->GetStatus()->SetSpecialAttackSwtich(m_bSpecialAttackSwitchOn);
-    }
-
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT))
-    {
-        t.bSprint = true;
-    }
-    else
-    {
-        t.bSprint = false;
-    }
-
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_W)
-        || CDInputMgr::GetInstance()->Key_Press(DIK_A)
-        || CDInputMgr::GetInstance()->Key_Press(DIK_S)
-        || CDInputMgr::GetInstance()->Key_Press(DIK_D))
-    {
-        t.bMove = true;
-    }
-    else
-    {
-        t.bMove = false;
-    }
-
-    GetCurrentWeapon()->UpdateAnimationArgs(t);
 }
 
 void CWeaponSystem::SwitchWeaponTo(int iIndex)

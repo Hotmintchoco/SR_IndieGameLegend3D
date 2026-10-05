@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CPseudoDark.h"
 #include "CTransform.h"
 #include "CRenderer.h"
@@ -22,7 +22,7 @@ HRESULT CPseudoDark::Ready_GameObject()
     return S_OK;
 }
 
-_int CPseudoDark::Update_GameObject(const _float& fTimeDelta)
+_int CPseudoDark::Update_GameObject(_float fTimeDelta)
 {
     if (!Get_IsActive()) return S_OK;
 
@@ -33,7 +33,7 @@ _int CPseudoDark::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CPseudoDark::LateUpdate_GameObject(const _float& fTimeDelta)
+void CPseudoDark::LateUpdate_GameObject(_float fTimeDelta)
 {
     if (!Get_IsActive()) return;
 
@@ -45,7 +45,7 @@ void CPseudoDark::LateUpdate_GameObject(const _float& fTimeDelta)
     pTransform->Get_Info(INFO_LOOK, &vLook);
     m_pTransformCom->Set_Pos(vPos);
 
-    /* °¡»óÀÇ À§Ä¡·Î ¾ËÆÄ ¼ÒÆÃ */
+    /* ê°€ìƒì˜ ìœ„ì¹˜ë¡œ ì•ŒíŒŒ ì†ŒíŒ… */
     vAlphaZ = vPos + vLook * m_fScale;
     Compute_ViewZ(&vAlphaZ);
 }

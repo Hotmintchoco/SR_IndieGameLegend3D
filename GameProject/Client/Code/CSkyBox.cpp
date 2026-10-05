@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CSkyBox.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -23,7 +23,7 @@ HRESULT CSkyBox::Ready_GameObject()
     return S_OK;
 }
 
-_int CSkyBox::Update_GameObject(const _float& fTimeDelta)
+_int CSkyBox::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -32,7 +32,7 @@ _int CSkyBox::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CSkyBox::LateUpdate_GameObject(const _float& fTimeDelta)
+void CSkyBox::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 
@@ -49,8 +49,8 @@ void CSkyBox::Render_GameObject()
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-   // m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);        // Z ¹öÆÛ¿¡ Z °ªÀ» ±â·Ï, Z ¹öÆÛ Á¤·ÄÀ» ÇÒÁö¸¦ ¹°À½
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);   // Z ¹öÆÛ¿¡ Z °ªÀ» ÀúÀå ÇÒ Áö ¹¯´Â ¿É¼Ç
+   // m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);        // Z ë²„í¼ì— Z ê°’ì„ ê¸°ë¡, Z ë²„í¼ ì •ë ¬ì„ í• ì§€ë¥¼ ë¬¼ìŒ
+    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);   // Z ë²„í¼ì— Z ê°’ì„ ì €ìž¥ í•  ì§€ ë¬»ëŠ” ì˜µì…˜
 
     m_pTextureCom->Set_Texture(0);
     m_pBufferCom->Render_Buffer();

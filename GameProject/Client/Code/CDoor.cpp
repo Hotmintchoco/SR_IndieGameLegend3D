@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CDoor.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -33,7 +33,7 @@ HRESULT CDoor::Ready_GameObject()
     return S_OK;
 }
 
-_int CDoor::Update_GameObject(const _float& fTimeDelta)
+_int CDoor::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -63,7 +63,7 @@ _int CDoor::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CDoor::LateUpdate_GameObject(const _float& fTimeDelta)
+void CDoor::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }

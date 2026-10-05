@@ -6,6 +6,8 @@
 
 namespace Engine
 {
+	class CGameObject;
+
 	typedef struct tagVertexColor
 	{
 		_vec3		vPosition;			
@@ -60,22 +62,12 @@ namespace Engine
 		_int iMyID = -1;
 		_int iOtherID = -1;
 	}COLLINFO;
-	typedef struct tagCameraMove
-	{
-		EYE_MOVE								eyeMoveAttr;
-		AT_MOVE									atMoveAttr;
-		_vec3									vEyeInfo[EYE_PARAM_END];
-		_vec3									vAtInfo[AT_PARAM_END];
-		std::pair<const _tchar*, const _tchar*>	pEyeTraceTarget;
-		std::pair<const _tchar*, const _tchar*>	pAtTraceTarget;
-		_float									fTime;
-
-	}CAMERA_MOVE;
 
 	struct THitInfo
 	{
 		bool bHit = false;
 		float fDist = FLT_MAX;
+		CGameObject* pObject = nullptr;
 		std::array<_vec3, 3> vTriVtx = { _vec3{0.f, 0.f, 0.f}, _vec3{0.f, 0.f, 0.f}, _vec3{0.f, 0.f, 0.f} };
 		_vec3 fHitPoint{ 0.f, 0.f, 0.f };
 		_vec3 fTriNormal{ 0.f, 0.f, 0.f };

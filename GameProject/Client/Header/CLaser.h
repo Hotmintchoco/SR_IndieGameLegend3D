@@ -29,8 +29,8 @@ protected:
 
 public:
 	virtual	HRESULT Ready_GameObject();
-	virtual	_int Update_GameObject(const _float& fTimeDelta);
-	virtual	void LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual	_int Update_GameObject(_float fTimeDelta);
+	virtual	void LateUpdate_GameObject(_float fTimeDelta);
 	virtual	void Render_GameObject();
 
 	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
@@ -45,7 +45,7 @@ private:
 	void BillBoardRoll();
 	void CalculateLength(const _float& fTimeDelta);
 	bool ComputeFacingUp(const _vec3& vCamPos, const _vec3& vPos, const _vec3& vDir, _vec3* pOutUp = nullptr);
-	void PreciseHitTest(CGameObject* pTarget, const float fTimeDelta);
+	bool PreciseHitTest(CGameObject* pTarget);
 
 	CLaserBuffer* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
@@ -55,7 +55,7 @@ private:
 	Engine::CTransform* m_pTransformCorner = nullptr;
 	Engine::CPlaneTex* m_pBufferComCorner = nullptr;
 	Engine::CTexture* m_pTextureComCorner = nullptr;
-	
+
 	/* 초기값 */
 	//_vec3 m_vStart{ 0.f, 0.f, 0.f };
 	//_vec3 m_vDir{ 0.f, 0.f, 0.f };
@@ -65,7 +65,7 @@ private:
 		t.fLifeTime = 5.f;
 		t.fSpeed = 10.f;
 		return t;
-	}();
+		}();
 
 	float m_fCurrentLength = 0.f;
 	bool m_bCollided = false;
@@ -77,6 +77,7 @@ private:
 	float m_fBirthTime = 0.f;
 	bool m_bReflected = false; // 반사 이후에는 시각적 요소만 살려둠
 	int m_iLeftReflection = s_tData.iMaxReflection;
+	_vec3 m_vPrevPos{ 0.f, 0.f, 0.f };
 
 public:
 	static CLaser* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir);

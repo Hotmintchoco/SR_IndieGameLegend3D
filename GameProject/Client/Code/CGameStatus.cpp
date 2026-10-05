@@ -15,6 +15,7 @@
 #include "CTimerMgr.h"
 #include "CStage.h"
 #include "CRenderer.h"
+#include "CPlayer.h"
 
 CGameStatus::CGameStatus(LPDIRECT3DDEVICE9 pGraphicDev)
     :CGameObject(pGraphicDev)
@@ -30,7 +31,7 @@ HRESULT CGameStatus::Ready_GameObject()
     return S_OK;
 }
 
-_int CGameStatus::Update_GameObject(const _float& fTimeDelta)
+_int CGameStatus::Update_GameObject(_float fTimeDelta)
 {
     UpdateCameraInfo();
 
@@ -43,7 +44,7 @@ _int CGameStatus::Update_GameObject(const _float& fTimeDelta)
     return S_OK;
 }
 
-void CGameStatus::LateUpdate_GameObject(const _float& fTimeDelta)
+void CGameStatus::LateUpdate_GameObject(_float fTimeDelta)
 {
 }
 
@@ -59,20 +60,17 @@ void CGameStatus::DebugRayTest()
     
     CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
 
-    const multimap<wstring, CGameObject*>& mapObject = pStage->GetCurrentRoomLayer()->Get_ObjMap();
+    const vector<IRayTestable*>& mapObject = pStage->GetCurrentRoomLayer()->GetRayTestableList();
     CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
 
     THitInfo t{};
 
-    for (auto& [wstrName, pObject] : mapObject)
+    for (auto& pObj : mapObject)
     {
-        if (IRayTestable* pRayTestable = dynamic_cast<IRayTestable*>(pObject))
+        vector<pair<CVIBuffer*, CTransform*>> vecInfo = pObj->GetRayTestTargetInfo();
+        for (auto& [pBuffer, pTransform] : vecInfo)
         {
-            vector<pair<CVIBuffer*, CTransform*>> vecInfo = pRayTestable->GetRayTestTargetInfo();
-            for (auto& [pBuffer, pTransform] : vecInfo)
-            {
-                pRayCaster->RayTest(t, m_vCamPos, m_vCamLook, pBuffer, pTransform->Get_World());
-            }
+            pRayCaster->RayTest(t, m_vCamPos, m_vCamLook, pBuffer, pTransform->Get_World());
         }
     }
     
@@ -143,9 +141,6 @@ void CGameStatus::RenderImGui()
         _vec3 vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
         ImGui::Text("Pos : %.2f, %.2f, %.2f", vPlayerPos.x, vPlayerPos.y, vPlayerPos.z);
 
-        // HP
-        ImGui::Text("Hp : %d / %d", m_iPlayerHp, m_iPlayerMaxHp);
-
         ImGui::Text("Yaw : %.1f deg", XMConvertToDegrees(m_fYaw)); 
     }
 
@@ -190,6 +185,29 @@ void CGameStatus::RenderImGui()
 
         if (VolumeRow("SFX", m_fSFXVolume, m_bSFXMute))
             pSound->SetSFXVolume(m_bSFXMute ? 0.f : m_fSFXVolume);
+    }
+
+    /* TimeScale */
+
+    ImGui::SeparatorText("Time Scale");
+    {
+        _bool bChanged = false;
+
+        bChanged |= ImGui::SliderFloat("Scale", &m_fTimeScale, 0.1f, 10.f, "%.2f", ImGuiSliderFlags_Logarithmic);
+        bChanged |= ImGui::Checkbox("Exclude Player", &m_bExcludePlayer);
+
+        if (bChanged)
+        {
+            CTimerMgr::GetInstance()->SetGlobalTimeScale(m_fTimeScale);
+            if (m_bExcludePlayer)
+            {
+                CTimerMgr::GetInstance()->SetGroupTimeScale(TG_PLAYER, 1.f / CTimerMgr::GetInstance()->GetGlobalTimeScale());
+            }
+            else
+            {
+                CTimerMgr::GetInstance()->SetGroupTimeScale(TG_PLAYER, 1.f);
+            }
+        }
     }
 
     ImGui::End();

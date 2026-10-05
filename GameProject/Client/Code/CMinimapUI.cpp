@@ -3,7 +3,6 @@
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CRenderer.h"
-#include "CCameraMgr.h"
 #include "CStage.h"
 #include "CGameStatus.h"
 #include "CRoomLoadingMgr.h"
@@ -28,7 +27,7 @@ HRESULT CMinimapUI::Ready_GameObject()
     return S_OK;
 }
 
-_int CMinimapUI::Update_GameObject(const _float& fTimeDelta)
+_int CMinimapUI::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -38,7 +37,7 @@ _int CMinimapUI::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CMinimapUI::LateUpdate_GameObject(const _float& fTimeDelta)
+void CMinimapUI::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 

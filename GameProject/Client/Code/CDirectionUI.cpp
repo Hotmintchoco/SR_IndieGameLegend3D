@@ -3,7 +3,6 @@
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CRenderer.h"
-#include "CCameraMgr.h"
 #include "CStage.h"
 #include "CGameStatus.h"
 
@@ -30,7 +29,7 @@ HRESULT CDirectionUI::Ready_GameObject()
     return S_OK;
 }
 
-_int CDirectionUI::Update_GameObject(const _float& fTimeDelta)
+_int CDirectionUI::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -51,7 +50,7 @@ _int CDirectionUI::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CDirectionUI::LateUpdate_GameObject(const _float& fTimeDelta)
+void CDirectionUI::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 

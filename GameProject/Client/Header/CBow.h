@@ -17,19 +17,16 @@ protected:
 
 public:
 	virtual	HRESULT Ready_GameObject() override;
-	virtual	_int Update_GameObject(const _float& fTimeDelta) override;
-	virtual	void LateUpdate_GameObject(const _float& fTimeDelta) override;
+	virtual	_int Update_GameObject(_float fTimeDelta) override;
+	virtual	void LateUpdate_GameObject(_float fTimeDelta) override;
 	virtual	void Render_GameObject() override;
-
-	virtual void ChargeStart() override;
-	virtual void ChargeEnd() override;
 
 private:
 	HRESULT	Add_Component();
 	void RenderEditorPanel();
-	virtual void DefaultAttack() override;
-	virtual void SpecialAttack() override;
-	virtual void UltimateAttack() override;
+	virtual EWeaponEvent DefaultAttack(EInputState ePri, EInputState eSec) override;
+	virtual EWeaponEvent SpecialAttack(EInputState ePri, EInputState eSec) override;
+	virtual EWeaponEvent UltimateAttack(EInputState ePri, EInputState eSec) override;
 	void ShootArrow();
 
 	CVoxelBuffer* m_pBufferCom[4] = { nullptr };

@@ -1,40 +1,44 @@
 ﻿#include "pch.h"
 #include "CStage.h"
-#include "CBackGround.h"
-#include "CProtoMgr.h"
-#include "CPlayer.h"
-#include "CTerrain.h"
-#include "CDynamicCamera.h"
-#include "CClientCameraMgr.h"
-#include "CCamera.h"
-#include "CSkyBox.h"
-#include "CLightMgr.h"
-#include "CWeaponSystem.h"
-#include "CParticle.h"
+
+/* 매니저 */
 #include "CManagement.h"
-#include "CFontMgr.h"
+#include "CProtoMgr.h"
 #include "CDInputMgr.h"
 #include "CCollisionMgr.h"
-#include "CWorm.h"
+#include "CSoundMgr.h"
+
+/* 기본 지형 */
+#include "CBackGround.h"
+#include "CTerrain.h"
+#include "CSkyBox.h"
+
+/* 방 레이어*/
 #include "CRoomLoadingMgr.h"
 #include "CRoomLayer.h"
 #include "CLayerContext.h"
-#include "CCrosshair.h"
-#include "CSkull.h"
-#include "CBoss1.h"
-#include "CSpeyeder.h"
-#include "CDirectionUI.h"
-#include "CMagmamouth.h"
-#include "CPseudoDark.h"
+
+/* 오브젝트 */
+#include "CPlayer.h"
+#include "CWeaponSystem.h"
+#include "CRayCaster.h"
 #include "CGameStatus.h"
+#include "CPseudoDark.h"
+
+/* UI */
+#include "CUIMgr.h"
+#include "CCrosshair.h"
+#include "CDirectionUI.h"
 #include "CMinimapUI.h"
 #include "CGaugeUI.h"
-#include "CSoundMgr.h"
 #include "CMiniGame.h"
-#include "CUIMgr.h"
 #include "CHitCreenUI.h"
-#include "CRayCaster.h"
+
+/* 카메라 */
+#include "CCamera.h"
+#include "CClientCameraMgr.h"
 #include "CPlayerCamera.h"
+#include "CDynamicCamera.h"
 #include "CCinematicCamera.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -49,13 +53,7 @@ CStage::~CStage()
 
 HRESULT CStage::Ready_Scene()
 {
-	if (FAILED(Ready_Light()))
-		return E_FAIL;
-
 	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
-		return E_FAIL;
-
-	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
 		return E_FAIL;
 
 	int iRoomCnt = CRoomLoadingMgr::GetInstance()->GetRoomTotalCount();
@@ -65,6 +63,11 @@ HRESULT CStage::Ready_Scene()
 		if (FAILED(Ready_Room_Layer(wstrLayerTag, i)))
 			return E_FAIL;
 	}
+
+	m_pCurrentRoomLayer = GetRoomLayerFromIndex(m_iStartRoomIndex);
+
+	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
+		return E_FAIL;
 
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
 		return E_FAIL;
@@ -93,16 +96,14 @@ HRESULT CStage::Ready_Scene()
 	CSoundMgr::GetInstance()->SetBGMVolume(0.f);
 	CSoundMgr::GetInstance()->SetSFXVolume(0.f);
 
-	/* 방 레이어 포인터 초기화 */
-	CheckRoomChanged();
-
 	return S_OK;
 }
 
-_int CStage::Update_Scene(const _float& fTimeDelta)
+_int CStage::Update_Scene(_float fTimeDelta)
 {
 	CClientCameraMgr::GetInstance()->Update_Camera(fTimeDelta);
 	_int iExit = CScene::Update_Scene(fTimeDelta);
+
 	CUIMgr::GetInstance()->Update_UI();
 
 	// Scene Change
@@ -121,10 +122,22 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 		pMiniGame->Update_Scene(fTimeDelta);
 	}
 
+	if (m_bOnPlayerDead)
+	{
+		m_fLeftReviveTime -= fTimeDelta;
+		if (m_fLeftReviveTime <= 0.f)
+		{
+			m_bOnPlayerDead = false;
+			_vec3 vRevivePos = GetRoomLayerFromIndex(m_iPrevRoomIndex)->GetCenterPos();
+			m_pPlayer->GetTransform()->Set_Pos(vRevivePos);
+			m_pPlayer->Revive();
+		}
+	}
+
 	return iExit;
 }
 
-void CStage::LateUpdate_Scene(const _float& fTimeDelta)
+void CStage::LateUpdate_Scene(_float fTimeDelta)
 {
 	CClientCameraMgr::GetInstance()->LateUpdate_Camera(fTimeDelta);
 	CScene::LateUpdate_Scene(fTimeDelta);
@@ -203,11 +216,6 @@ void CStage::OnExit()
 
 }
 
-void CStage::Render_Scene()
-{
-
-}
-
 HRESULT CStage::Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject)
 {
 	/* 현재 위치한 방에 오브젝트를 소환 */
@@ -220,12 +228,31 @@ HRESULT CStage::Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject)
 void CStage::OnPlayerDead()
 {
 	m_pCurrentRoomLayer->ResetState();
+
+	/* 부활 타이머 */
+	m_bOnPlayerDead = true;
+	m_fLeftReviveTime = m_fReviveTime;
 }
 
 void CStage::UpdatePlayerPosition(const _vec3& vPos)
 {
 	m_vPlayerPos = vPos;
 	CheckRoomChanged();
+}
+
+CRoomLayer* CStage::GetRoomLayerFromIndex(int iIndex)
+{
+	wstring wstrRoomLayerKey = L"Room_" + to_wstring(iIndex) + L"_Layer";
+	CRoomLayer* pLayer = static_cast<CRoomLayer*>(Get_Layer(wstrRoomLayerKey));
+	if (pLayer)
+	{
+		return pLayer;
+	}
+	else
+	{
+		assert(0);
+		return nullptr;
+	}
 }
 
 HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
@@ -266,14 +293,14 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	CGameObject* pGameObject = nullptr;
 
 	// Game Status
-	pGameObject = CGameStatus::Create(m_pGraphicDev);
-	if (nullptr == pGameObject)
+	m_pStatus = CGameStatus::Create(m_pGraphicDev);
+	if (nullptr == m_pStatus)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"GameStatus", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"GameStatus", m_pStatus)))
 		return E_FAIL;
 
-	m_pStatus = static_cast<CGameStatus*>(pGameObject);
+	m_pStatus->SetStage(this);
 
 	// Terrain
 	pGameObject = CTerrain::Create(m_pGraphicDev);
@@ -284,20 +311,23 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	// Player
-	pGameObject = CPlayer::Create(m_pGraphicDev);
-	if (nullptr == pGameObject)
+	m_pPlayer = CPlayer::Create(m_pGraphicDev);
+	if (nullptr == m_pPlayer)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"Player", m_pPlayer)))
 		return E_FAIL;
+
+	m_pPlayer->GetTransform()->Set_Pos(GetRoomLayerFromIndex(m_iStartRoomIndex)->GetCenterPos());
 
 	// Weapon System
-	pGameObject = CWeaponSystem::Create(m_pGraphicDev);
-	if (nullptr == pGameObject)
+	CWeaponSystem* pWeaponSystem = CWeaponSystem::Create(m_pGraphicDev);
+	if (nullptr == pWeaponSystem)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"WeaponSystem", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"WeaponSystem", pWeaponSystem)))
 		return E_FAIL;
+	m_pPlayer->SetWeaponSystem(pWeaponSystem);
 
 	// Ray Caster
 	pGameObject = CRayCaster::Create(m_pGraphicDev);
@@ -584,45 +614,15 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CStage::Ready_Light()
-{
-	D3DLIGHT9	tLight;
-	ZeroMemory(&tLight, sizeof(D3DLIGHT9));
-
-	tLight.Type = D3DLIGHT_DIRECTIONAL;
-	
-	tLight.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLight.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLight.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	
-	tLight.Direction = { 1.f, -1.f, 1.f };
-	
-	if (FAILED(CLightMgr::GetInstance()->Ready_Light(m_pGraphicDev, &tLight, 0)))
-		return E_FAIL;
-
-	//tLight.Type = D3DLIGHT_POINT;
-	//
-	//tLight.Diffuse = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	//tLight.Specular = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	//tLight.Ambient = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	//
-	//tLight.Position = { 1.f, 1.f, 1.f };
-	//tLight.Range = 5.f;
-	//
-	//if (FAILED(CLightMgr::GetInstance()->Ready_Light(m_pGraphicDev, &tLight, 1)))
-	//	return E_FAIL;
-	
-	return S_OK;
-}
-
 void CStage::CheckRoomChanged()
 {
 	int m_iRoomIndex = CalculateRoomIndexFromPlayerPosition();
 
 	if (m_iRoomIndex != m_iCurrentRoomIndex)
 	{
+		m_iPrevRoomIndex = m_iCurrentRoomIndex;
 		m_iCurrentRoomIndex = m_iRoomIndex;
-		m_pStatus->UpdateCurrentRoomIndex(m_iCurrentRoomIndex);
+		if(m_pStatus) m_pStatus->UpdateCurrentRoomIndex(m_iCurrentRoomIndex);
 		wstring wstrRoomLayerKey = L"Room_" + to_wstring(m_iCurrentRoomIndex) + L"_Layer";
 		CRoomLayer* pLayer = static_cast<CRoomLayer*>(CManagement::GetInstance()->Get_Layer(wstrRoomLayerKey.c_str()));
 		m_pCurrentRoomLayer = pLayer;
@@ -650,7 +650,6 @@ int CStage::CalculateRoomIndexFromPlayerPosition()
 
 	return iRow * iColCount + iCol;
 }
-
 
 CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {

@@ -30,7 +30,7 @@ HRESULT CExplodeRange::Ready_GameObject()
     return S_OK;
 }
 
-_int CExplodeRange::Update_GameObject(const _float& fTimeDelta)
+_int CExplodeRange::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -47,7 +47,7 @@ _int CExplodeRange::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CExplodeRange::LateUpdate_GameObject(const _float& fTimeDelta)
+void CExplodeRange::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -107,7 +107,7 @@ void CExplodeRange::OnCollisionEnter(COLLINFO eCollInfo)
     {
     case COLLISIONID::COLL_PLAYER:
     {
-        static_cast<CPlayer*>(pOtherCol->Get_Owner())->Hit(this);
+        static_cast<CPlayer*>(pOtherCol->Get_Owner())->OnHit(this);
         break;
     }
     default:

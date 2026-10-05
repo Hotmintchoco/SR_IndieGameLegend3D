@@ -27,7 +27,7 @@ HRESULT CFloor::Ready_GameObject()
     return S_OK;
 }
 
-_int CFloor::Update_GameObject(const _float& fTimeDelta)
+_int CFloor::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -36,7 +36,7 @@ _int CFloor::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CFloor::LateUpdate_GameObject(const _float& fTimeDelta)
+void CFloor::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -80,14 +80,14 @@ void CFloor::OnCollisionEnter(COLLINFO eCollInfo)
 {
 }
 
-const _vec3 CFloor::GetNormal()
-{
-    return _vec3{ 0.f, 1.f, 0.f };
-}
-
 vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> CFloor::GetRayTestTargetInfo()
 {
     return vector <pair<Engine::CVIBuffer*, Engine::CTransform*>>{ { m_pBufferCom, m_pTransformCom } };
+}
+
+float CFloor::SampleTerrainHeight(const _vec3& vRayStart)
+{
+    return 0.f;
 }
 
 CFloor* CFloor::Create(LPDIRECT3DDEVICE9 pGraphicDev)

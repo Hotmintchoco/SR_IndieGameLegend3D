@@ -25,8 +25,8 @@ public:
 
 public:
 	virtual			HRESULT		Ready_Scene();
-	virtual			_int		Update_Scene(const _float& fTimeDelta);
-	virtual			void		LateUpdate_Scene(const _float& fTimeDelta);
+	virtual			_int		Update_Scene(_float fTimeDelta);
+	virtual			void		LateUpdate_Scene(_float fTimeDelta);
 	virtual			void		Render_Scene() PURE;
 
 	// 씬이 CurrentScene으로 지정	될 때 호출되는 함수

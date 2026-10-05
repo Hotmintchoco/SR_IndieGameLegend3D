@@ -10,15 +10,22 @@
 #include "CStage.h"
 #include "IRayTestable.h"
 #include "CRoomLayer.h"
+#include "CTimerMgr.h"
 #include "CEffect.h"
 
 CArrow::CArrow(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower)
-    : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir), m_fSpeed(fShotPower * s_tData.fMaxSpeed)
+    : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir), m_fSpeed(fShotPower * m_tData.fMaxSpeed)
 {
 }
 
-CArrow::~CArrow()
+CArrow::CArrow(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower, const TArrowData& t)
+    : CProjectile(pGraphicDev), m_vStart(vStart), m_vDir(vDir), m_tData(t)
 {
+    m_fSpeed = fShotPower * t.fMaxSpeed;
+}
+
+CArrow::~CArrow()
+{   
 }
 
 HRESULT CArrow::Ready_GameObject()
@@ -29,12 +36,13 @@ HRESULT CArrow::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    m_pData = &s_tData;
+    m_pData = &m_tData;
 
     InitTransform();
     
     _vec3 vLook;
     m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
+    D3DXVec3Normalize(&vLook, &vLook);
     m_vVelocity = vLook * m_fSpeed;
 
     m_pColliderCom->Set_Owner(this);
@@ -51,7 +59,7 @@ HRESULT CArrow::Ready_GameObject()
 void CArrow::InitTransform()
 {
     m_pTransformCom->Set_Pos(m_vStart);
-    m_pTransformCom->Set_Scale(s_tData.vInitScale);
+    m_pTransformCom->Set_Scale(m_tData.vInitScale);
 
     _vec3 vLook, vUp, vRight;
     D3DXVec3Normalize(&vLook, &m_vDir);
@@ -75,7 +83,7 @@ void CArrow::InitTransform()
 
 void CArrow::ExertGravity(const float fTimeDelta)
 {
-    m_vVelocity.y -= s_tData.fGravityCoef * fTimeDelta;
+    m_vVelocity.y -= m_tData.fGravityCoef * fTimeDelta;
     _vec3 vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     vPos += m_vVelocity * fTimeDelta;
@@ -92,7 +100,7 @@ void CArrow::SyncTransformToVelocity()
     D3DXVec3Cross(&vUp, &vLook, &vRight);
 
     _matrix* pWorld = m_pTransformCom->Get_World();
-    _vec3 vScale = s_tData.vInitScale;
+    _vec3 vScale = m_tData.vInitScale;
     vRight = vScale.x * vRight;
     vUp = vScale.y * vUp;
     vLook = vScale.z * vLook;
@@ -104,8 +112,10 @@ void CArrow::SyncTransformToVelocity()
     m_pTransformCom->WorldMatrixDecompose();
 }
 
-_int CArrow::Update_GameObject(const _float& fTimeDelta)
+_int CArrow::Update_GameObject(_float fTimeDelta)
 {
+    m_vPrevPos = m_pTransformCom->Get_Info_Value(INFO_POS);
+
     _int iExit = CProjectile::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
@@ -119,19 +129,25 @@ _int CArrow::Update_GameObject(const _float& fTimeDelta)
 
     for (auto pObj : m_vecRayTestTarget)
     {
-        PreciseHitTest(pObj, fTimeDelta);
+        if (PreciseHitTest(pObj))
+            break;
     }
+
+    if (m_pTransformCom->Get_Info_Value(INFO_POS).y < -10.f) Set_Dead(true);
 
     return iExit;
 }
 
-void CArrow::PreciseHitTest(CGameObject* pTarget, const float fTimeDelta)
+bool CArrow::PreciseHitTest(CGameObject* pTarget)
 {
-    CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
-    _vec3 vPos, vLook;
+    _vec3 vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
+    _vec3 vDir = vPos - m_vPrevPos;
+    float fLen = D3DXVec3Length(&vDir);
+    if (fLen < 1e-6f) return false;
+    vDir /= fLen;
 
+    CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
     THitInfo t{};
 
     if (IRayTestable* pRayTestable = dynamic_cast<IRayTestable*>(pTarget))
@@ -139,21 +155,22 @@ void CArrow::PreciseHitTest(CGameObject* pTarget, const float fTimeDelta)
         vector<pair<CVIBuffer*, CTransform*>> vecInfo = pRayTestable->GetRayTestTargetInfo();
         for (auto& [pBuffer, pTransform] : vecInfo)
         {
-            pRayCaster->RayTest(t, vPos, vLook, pBuffer, pTransform->Get_World());
+            pRayCaster->RayTest(t, m_vPrevPos, vDir, pBuffer, pTransform->Get_World());
         }
     }
 
-    const float fThreshold = m_fSpeed * fTimeDelta;
-
-    if (t.bHit && t.fDist < fThreshold)
+    if (t.bHit && t.fDist < fLen)
     {
         m_pTransformCom->Set_Pos(t.fHitPoint);
         m_bStopped = true;
         Set_TrailDead();
+        return true;
     }
+
+    return false;
 }
 
-void CArrow::LateUpdate_GameObject(const _float& fTimeDelta)
+void CArrow::LateUpdate_GameObject(_float fTimeDelta)
 {
     CProjectile::LateUpdate_GameObject(fTimeDelta);
 }
@@ -181,6 +198,7 @@ void CArrow::OnCollisionEnter(COLLINFO eCollInfo)
         if (IRayTestable* pRayTestable = dynamic_cast<IRayTestable*>(pOtherCol->Get_Owner()))
         {
             m_vecRayTestTarget.push_back(pOtherCol->Get_Owner());
+            PreciseHitTest(pOtherCol->Get_Owner());
         }
         break;
     case COLLISIONID::COLL_MONSTER:
@@ -251,6 +269,20 @@ HRESULT CArrow::Add_Component()
 CArrow* CArrow::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower)
 {
     CArrow* pBullet = new CArrow(pGraphicDev, vStart, vDir, fShotPower);
+
+    if (FAILED(pBullet->Ready_GameObject()))
+    {
+        Safe_Release(pBullet);
+        MSG_BOX("CArrow Create Failed");
+        return nullptr;
+    }
+
+    return pBullet;
+}
+
+CArrow* CArrow::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir, float fShotPower, const TArrowData& t)
+{
+    CArrow* pBullet = new CArrow(pGraphicDev, vStart, vDir, fShotPower, t);
 
     if (FAILED(pBullet->Ready_GameObject()))
     {

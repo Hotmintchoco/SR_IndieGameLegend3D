@@ -5,19 +5,18 @@
 
 CPlayerCamera::CPlayerCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCamera(pGraphicDev), m_pTarget(nullptr),
-	m_vEyeOffset({ 0.f, 0.f, 0.f })
+	m_vEyeOffset({ 0.f, 1.f, 0.f }), m_fDistance(3.5f)
 {
 }
 
 CPlayerCamera::CPlayerCamera(const CPlayerCamera& rhs)
 	: CCamera(rhs), m_pTarget(rhs.m_pTarget),
-	m_vEyeOffset(rhs.m_vEyeOffset)
+	m_vEyeOffset(rhs.m_vEyeOffset), m_fDistance(rhs.m_fDistance)
 {
 }
 
 CPlayerCamera::~CPlayerCamera()
 {
-	Free();
 }
 
 HRESULT CPlayerCamera::Ready_GameObject(Engine::CTransform* pTarget)
@@ -73,6 +72,8 @@ void CPlayerCamera::Mouse_Move()
 	const _long mouseY = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Y);
 	Rotate(D3DXToRadian(mouseX / 10.f), D3DXToRadian(mouseY / 10.f));
 	Update_LookFromAngles();
+
+	m_pTarget->Rotation(ROT_Y, mouseX / 10.f); /* 플레이어 회전 */
 }
 
 void CPlayerCamera::Follow_Target()
@@ -83,15 +84,31 @@ void CPlayerCamera::Follow_Target()
 	_vec3 vPlayerPos;
 	m_pTarget->Get_Info(INFO_POS, &vPlayerPos);
 
-	m_vEye = vPlayerPos + m_vEyeOffset;
+	_vec3 vPivot = vPlayerPos + m_vEyeOffset;
 
 	// Eye가 바뀌었으므로 At도 새 Eye 기준으로 다시 계산
 	Update_LookFromAngles();
+
+	_vec3 vLook = m_vAt - m_vEye;
+	D3DXVec3Normalize(&vLook, &vLook);
+
+	if (m_eCameraMode == CAMERA_MODE::THIRD_PERSON)
+	{
+		// 시선 방향의 반대쪽으로 물러나서 플레이어를 바라봄 (3인칭)
+		m_vEye = vPivot - vLook * m_fDistance;
+		m_vAt = vPivot;
+	}
+	else
+	{
+		// 플레이어 눈 위치에서 정면을 바라봄 (1인칭)
+		m_vEye = vPivot;
+		m_vAt = m_vEye + vLook;
+	}
+
+	m_vUp = { 0.f, 1.f, 0.f };
 }
 
-CPlayerCamera* CPlayerCamera::Create(
-	LPDIRECT3DDEVICE9 pGraphicDev,
-	Engine::CTransform* pTarget)
+CPlayerCamera* CPlayerCamera::Create(LPDIRECT3DDEVICE9 pGraphicDev, CTransform* pTarget)
 {
 	if (!pGraphicDev || !pTarget)
 		return nullptr;

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../../Base/CBase.h"
 #include "CGraphicDev.h"
@@ -12,8 +12,8 @@ private:
 
 public:
 	HRESULT		Ready_MainApp();
-	int			Update_MainApp(const _float& fTimeDelta);
-	void		LateUpdate_MainApp(const _float& fTimeDelta);
+	int			Update_MainApp(_float fTimeDelta);
+	void		LateUpdate_MainApp(_float fTimeDelta);
 	void		Render_MainApp();
 
 private:
@@ -35,7 +35,7 @@ private:
 
 };
 
-// 1. Æò¸éÀÇ ¹æÁ¤½ÄÀ» ÀÌ¿ëÇÏ¿© ÁöÇüÀ» Å¸´Â ÇÃ·¹ÀÌ¾î »óÅÂ¸¦ ¸¸µé¾î¶ó.
+// 1. í‰ë©´ì˜ ë°©ì •ì‹ì„ ì´ìš©í•˜ì—¬ ì§€í˜•ì„ íƒ€ëŠ” í”Œë ˆì´ì–´ ìƒíƒœë¥¼ ë§Œë“¤ì–´ë¼.
 // ax + by + cz + d = 0
 
 // D3DXPLANE	Plane;

@@ -8,6 +8,7 @@
 #include "CLaserBuffer.h"
 #include "CVoxelBuffer.h"
 #include "CCrossBuffer.h"
+#include "CPlayerPartTex.h"
 
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoadingID(LOADING_END)
@@ -61,6 +62,9 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Sphere_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Sphere.ply"))))
         return E_FAIL;
 
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Cube_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Cube.ply"))))
+        return E_FAIL;
+
     lstrcpy(m_szLoading, L"Monster Texture Loading............................");
     //skull
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_skull3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/skull/skull3.png", 1))))return E_FAIL;
@@ -108,6 +112,33 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SkyBoxTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/SkyBox/SkyboxStars.dds", 1))))
         return E_FAIL;
 
+    lstrcpy(m_szLoading, L"Player Data Loading............................");
+
+    struct TPlayerBufferPivot
+    {
+        _vec3 vHead = _vec3(0.f, 0.9f, 0.f);
+        _vec3 vBody = _vec3(0.f, 0.45f, 0.f);
+        _vec3 vLArm = _vec3(-0.225f, 0.825f, 0.f);
+        _vec3 vRArm = _vec3(0.225f, 0.825f, 0.f);
+        _vec3 vLLeg = _vec3(-0.075f, 0.45f, 0.f);
+        _vec3 vRLeg = _vec3(0.075f, 0.45f, 0.f);
+    } t;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Player_Head_Vertex", CPlayerPartTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Player_Head.ply", t.vHead))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Player_Body_Vertex", CPlayerPartTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Player_Body.ply", t.vBody))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Player_LArm_Vertex", CPlayerPartTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Player_LArm.ply", t.vLArm))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Player_RArm_Vertex", CPlayerPartTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Player_RArm.ply", t.vRArm))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Player_LLeg_Vertex", CPlayerPartTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Player_LLeg.ply", t.vLLeg))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Player_RLeg_Vertex", CPlayerPartTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Player_RLeg.ply", t.vRLeg))))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Player_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/Player.png", 1))))
+        return E_FAIL;
 
     lstrcpy(m_szLoading, L"UI Data Loading............................");
 
@@ -234,6 +265,8 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemContainer_Side_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/ItemContainer_Side.ply"))))
         return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Slope_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/SlopeCube.ply"))))
+        return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrayFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/GrayFrustum_Diffuse.png", 1))))
         return E_FAIL;
@@ -252,6 +285,8 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Gray_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/Gray.png", 1))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemContainer_Side_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/container_%d.png", 6))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Slope_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/SlopeCube.png", 1))))
         return E_FAIL;
     
     /* 벽 */
@@ -281,10 +316,6 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Button_Up_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/ButtonUp_Diffuse.png", 1))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Button_Down_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/ButtonDown_Diffuse.png", 1))))
-        return E_FAIL;
-
-    /* 안개 */
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Fog_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/fog.png", 1))))
         return E_FAIL;
 
     /* 문 */

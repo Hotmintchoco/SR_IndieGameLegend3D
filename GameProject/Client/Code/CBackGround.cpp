@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -22,7 +22,7 @@ HRESULT CBackGround::Ready_GameObject()
     return S_OK;
 }
 
-_int CBackGround::Update_GameObject(const _float& fTimeDelta)
+_int CBackGround::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -32,7 +32,7 @@ _int CBackGround::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CBackGround::LateUpdate_GameObject(const _float& fTimeDelta)
+void CBackGround::LateUpdate_GameObject(_float fTimeDelta)
 {
 
     CGameObject::LateUpdate_GameObject(fTimeDelta);

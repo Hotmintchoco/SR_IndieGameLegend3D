@@ -28,9 +28,9 @@ HRESULT CArrow_Effect::Ready_GameObject()
 
 
 
-    _float iRand1 = rand() % 128 - 64;
-    _float iRand2 = rand() % 128 - 64;
-    _float iRand3 = rand() % 128 - 64;
+    _float iRand1 = _float(rand() % 128) - 64.f;
+    _float iRand2 = _float(rand() % 128) - 64.f;
+    _float iRand3 = _float(rand() % 128) - 64.f;
 
     m_vRandDir = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
     m_vRandDir = m_vRandDir / 10.f;
