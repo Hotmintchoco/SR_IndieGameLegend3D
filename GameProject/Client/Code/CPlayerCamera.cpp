@@ -5,7 +5,7 @@
 
 CPlayerCamera::CPlayerCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCamera(pGraphicDev), m_pTarget(nullptr),
-	m_vEyeOffset({ 0.f, 0.f, 0.f }), m_fDistance(3.5f)
+	m_vEyeOffset({ 0.f, 1.f, 0.f }), m_fDistance(3.5f)
 {
 }
 
