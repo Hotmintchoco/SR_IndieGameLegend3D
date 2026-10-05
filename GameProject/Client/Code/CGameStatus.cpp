@@ -137,7 +137,11 @@ void CGameStatus::RenderImGui()
     // --- Player ---
     if (ImGui::CollapsingHeader("Player", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        ImGui::Text("Pos : %.2f, %.2f, %.2f", m_vPlayerPos.x, m_vPlayerPos.y, m_vPlayerPos.z);
+        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+        if (nullptr == pPlayerTransformCom) return;
+        _vec3 vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+        ImGui::Text("Pos : %.2f, %.2f, %.2f", vPlayerPos.x, vPlayerPos.y, vPlayerPos.z);
 
         // HP
         ImGui::Text("Hp : %d / %d", m_iPlayerHp, m_iPlayerMaxHp);
