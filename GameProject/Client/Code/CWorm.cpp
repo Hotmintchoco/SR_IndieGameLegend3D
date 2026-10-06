@@ -833,10 +833,17 @@ void CWorm::Set_Motion_FromAngle()
             //후면
             else
             {
-                _vec3 vScale = { 0.5f,0.5f,0.5f };
-                m_pTransformCom->Set_Scale(vScale);
+                if (m_iWormIndex == 10)
+                {
+					_vec3 vScale = { 0.5f,0.5f,0.5f };
+					m_pTransformCom->Set_Scale(vScale);
 
-                m_eDir = FRONT;
+					m_eDir = FRONT;
+                }
+                else
+                {
+					m_eDir = SIDE;
+                }
             }
         }
         else

@@ -88,6 +88,10 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_sprnub3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/sprnub/sprnub3_%d.png", 2)))) return E_FAIL;
     //glubba
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_glubbaTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/glubba/glubba_%d.png", 4)))) return E_FAIL;
+    //octo
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_OctoTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/octo/octo_%d.png", 4)))) return E_FAIL;
+    //mine
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MineTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/mine/mine_%d.png", 2)))) return E_FAIL;
 
     lstrcpy(m_szLoading, L"Effect Texture Loading............................");
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_smallexplodeTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/smallexplode/smallExplode_%d.png", 4)))) return E_FAIL;

@@ -358,6 +358,12 @@
     <Filter Include="01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG">
       <UniqueIdentifier>{94ef362d-1db6-45cb-812b-ff21cfdee457}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Octo">
+      <UniqueIdentifier>{c20efa02-3173-4705-a23b-0265460121c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Mine">
+      <UniqueIdentifier>{40bf8d56-80ca-47d4-bebd-0c4610a3b875}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -732,6 +738,12 @@
     <ClInclude Include="..\Header\CMiniGameBG.h">
       <Filter>01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMine.h">
+      <Filter>02. GameObject\02. Monster\Mine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COcto.h">
+      <Filter>02. GameObject\02. Monster\Octo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1078,6 +1090,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMiniGameBG.cpp">
       <Filter>01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMine.cpp">
+      <Filter>02. GameObject\02. Monster\Mine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COcto.cpp">
+      <Filter>02. GameObject\02. Monster\Octo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
