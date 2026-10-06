@@ -183,9 +183,11 @@ void CWorm::LateUpdate_GameObject(_float fTimeDelta)
         }
         vLook *= 0.5f;
         _matrix matTrans;
-        D3DXMatrixTranslation(&matTrans, vLook.x, vLook.y, vLook.z);
-        //vDir *= 0.75f;
-        //D3DXMatrixTranslation(&matTrans, vDir.x, vDir.y, vDir.z);
+        //D3DXMatrixTranslation(&matTrans, vLook.x, vLook.y, vLook.z);
+        vDir *= 0.35f;
+        //vDir *= 0.4f;
+        //vDir *= 0.5f;
+        D3DXMatrixTranslation(&matTrans, vDir.x, vDir.y, vDir.z);
         matWorld = matWorld * matTrans;
 
         m_pTransformCom2->Set_World(&matWorld);
@@ -565,22 +567,58 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
 
             vDir.y = 0;
             D3DXVec3Normalize(&vDir, &vDir);
-            vDir *= 1.f;
-            vDir.y = 0.5f;
-            vDest = vPos + vDir;
-            Push_Back_MoveDest(vDest);
+            vDest = vPos;
+			vDir *= 0.5f;
 
-            vDir.y = 0;
+			vDir.y = 0.75f;
+			vDest = vDest + vDir;
+			Push_Back_MoveDest(vDest);
+
+			vDir.y = 0.5f;
+			vDest = vDest + vDir;
+			Push_Back_MoveDest(vDest);
+
+			vDir.y = 0.25f;
+			vDest = vDest + vDir;
+			Push_Back_MoveDest(vDest);
+
+            vDir.y = 0.f;
             vDest = vDest + vDir;
             Push_Back_MoveDest(vDest);
 
-            vDir.y = -0.5;
+            vDir.y = -0.25f;
+            vDest = vDest + vDir;
+            Push_Back_MoveDest(vDest);
+
+            vDir.y = -0.5f;
+            vDest = vDest + vDir;
+            Push_Back_MoveDest(vDest);
+
+            vDir.y = -0.75f;
             vDest = vDest + vDir;
             Push_Back_MoveDest(vDest);
 
             vDir = { 0.f, -20.f, 0.f };
-            vDest = vDest + vDir;
-            Push_Back_MoveDest(vDest);
+			vDest = vDest + vDir;
+			Push_Back_MoveDest(vDest);
+
+            //버전1
+            //vDir *= 1.f;
+            //vDir.y = 0.5f;
+            //vDest = vPos + vDir;
+            //Push_Back_MoveDest(vDest);
+
+            //vDir.y = 0;
+            //vDest = vDest + vDir;
+            //Push_Back_MoveDest(vDest);
+
+            //vDir.y = -0.5;
+            //vDest = vDest + vDir;
+            //Push_Back_MoveDest(vDest);
+
+            //vDir = { 0.f, -20.f, 0.f };
+            //vDest = vDest + vDir;
+            //Push_Back_MoveDest(vDest);
         }
     }
     //3초뒤 움직임
@@ -689,7 +727,7 @@ void CWorm::Set_Init_Worm()
         if (m_iWormIndex == 1)
         {
             _vec3 vPos = m_vRoomCenterLocation;
-            vPos.y = 3.5f;
+            vPos.y = 2.5f;
             Set_Pos(vPos);
         }
 
@@ -804,9 +842,10 @@ void CWorm::Set_Motion_FromAngle()
         else
         {
             _float fThreshold2 = 15.f;
+            _float fThreshold3 = 10.f;
 
             //정면
-            if (fDegree > 135.f + fThreshold2)
+            if (fDegree > 135.f + fThreshold2 + fThreshold3)
             {
                 _vec3 vScale = { 0.5f,0.5f,0.5f };
                 m_pTransformCom->Set_Scale(vScale);
@@ -819,19 +858,19 @@ void CWorm::Set_Motion_FromAngle()
                 m_eDir = SIDE45;
             }
             //옆면
-            else if (fDegree > 45.f + fThreshold2)
+            else if (fDegree > 45.f + fThreshold2 - fThreshold3)
             {
                 m_eDir = SIDE;
             }
             //45도
-            else if (fDegree > 45.f - fThreshold2)
+            else if (fDegree > 45.f - fThreshold2 - fThreshold3)
             {
                 m_eDir = SIDE45;
             }
             //후면
             else
             {
-                m_eDir = FRONT;
+                m_eDir = SIDE45;
             }
         }
     }
@@ -1467,7 +1506,7 @@ void CWorm::Update_WormBoby(const _float& fTimeDelta)
     vDist = vPrevWormPos - vPos;
     vDir = m_vMoveDest.front() - vPos;
     _float fDist;
-    _float f = +0.1f;
+    _float f = +0.f;
     if (m_iWormIndex == 2 || m_iWormIndex == 10)fDist = 1.25 + f;
     else fDist = 1.f + f;
 
