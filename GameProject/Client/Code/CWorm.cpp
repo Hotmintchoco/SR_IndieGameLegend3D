@@ -133,6 +133,63 @@ void CWorm::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
     Set_Motion_FromAngle();
+
+    //Connector
+    if (m_iWormIndex != 1)
+    {
+        _matrix* matpWorldCurrWorm = m_pTransformCom->Get_World();
+        _matrix matWorld = *matpWorldCurrWorm;
+        _vec3 vPrevWormPos;
+        m_pPrevWorm->Get_Pos(&vPrevWormPos);
+
+        _vec3 vCurrWormPos;
+        memcpy(&vCurrWormPos, &matWorld.m[INFO_POS][0], sizeof(_vec3));
+
+        _vec3 vPos = (vPrevWormPos + vCurrWormPos) / 2.f;
+
+        memcpy(&matWorld.m[INFO_POS][0], &vPos, sizeof(_vec3));
+
+
+        _vec3 vRight(matWorld._11, matWorld._12, matWorld._13);
+        _vec3 vUp(matWorld._21, matWorld._22, matWorld._23);
+        _vec3 vLook(matWorld._31, matWorld._32, matWorld._33);
+
+        vRight *=0.75f;
+        vUp *=   0.75f;   
+        vLook *= 0.75f; 
+        //vRight *= 1.f;
+        //vUp *=    1.f;
+        //vLook *=  1.f;
+
+        memcpy(&matWorld._11, &vRight, sizeof(_vec3));
+        memcpy(&matWorld._21, &vUp, sizeof(_vec3));
+        memcpy(&matWorld._31, &vLook, sizeof(_vec3));
+
+        D3DXVec3Normalize(&vLook, &vLook);
+
+        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+        if (nullptr == pPlayerTransformCom) return;
+        _vec3 vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+        vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        _vec3 vDir = vPos - vPlayerPos;
+        D3DXVec3Normalize(&vDir, &vDir);
+
+        _float fDot = D3DXVec3Dot(&vDir, &vLook);
+
+        if (fDot < 0.f)
+        {
+            vLook *= -1;
+        }
+        vLook *= 0.5f;
+        _matrix matTrans;
+        D3DXMatrixTranslation(&matTrans, vLook.x, vLook.y, vLook.z);
+        //vDir *= 0.75f;
+        //D3DXMatrixTranslation(&matTrans, vDir.x, vDir.y, vDir.z);
+        matWorld = matWorld * matTrans;
+
+        m_pTransformCom2->Set_World(&matWorld);
+    }
 }
 
 void CWorm::Render_GameObject()
@@ -146,12 +203,24 @@ void CWorm::Render_GameObject()
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
     if (m_iWormIndex == 1)
     {
-        m_pTextureCom->Set_Texture((_uint)m_fFrame + (_int)m_eDir * 4);
+        m_pTextureCom->Set_Texture((_int)m_fFrame + (_int)m_eDir * 4);
     }
     else
     {
         m_pTextureCom->Set_Texture((_int)m_eDir);
-        //m_pTextureCom->Set_Texture(0);
+        m_pBufferCom->Render_Buffer();
+
+
+
+            //if (m_eBoss1State != DEAD)
+            //    m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
+		m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
+		m_pTextureCom2->Set_Texture(4);
+
+            //if (m_eBoss1State != DEAD)
+            //    m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
+        
+
     }
     m_pBufferCom->Render_Buffer();
 
@@ -178,7 +247,7 @@ void CWorm::OnCollisionEnter(COLLINFO eCollInfo)
 
 HRESULT CWorm::Add_Component()
 {
-	CComponent* pComponent = nullptr;
+    CComponent* pComponent = nullptr;
     if (m_iWormIndex == 1)
     {
         pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_worm_drillTexture"));
@@ -191,12 +260,28 @@ HRESULT CWorm::Add_Component()
     {
         pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_worm_bobyTexture"));
     }
-
     if (nullptr == pComponent)
         return E_FAIL;
 
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
+    //Connector
+    if (m_iWormIndex != 1)
+    {
+        pComponent = m_pTextureCom2 = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_worm_bobyTexture"));
+    }
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_Texture2", pComponent });
+
+    // Transform
+    pComponent = m_pTransformCom2 = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform2", pComponent });
 
     return S_OK;
 }
@@ -286,9 +371,9 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
         else if (m_eWormState == MOVE)
         {
             Set_MoveDest();
-            m_fStateUpdateDuration = 10.f;
+            m_fStateUpdateDuration = 5.f;
             m_bMoveFlag = false;
-            Set_Speed_Worm(3.f);
+            Set_Speed_Worm(5.f);
         }
         else if (m_eWormState == IDLE)
         {
@@ -363,7 +448,7 @@ void CWorm::Set_Speed_Worm(_float fSpeed)
     m_fSpeed = fSpeed;
     if (m_pNextWorm != nullptr)
     {
-        static_cast<CWorm*>(m_pNextWorm)->Set_Speed_Worm(fSpeed);
+        static_cast<CWorm*>(m_pNextWorm)->Set_Speed_Worm(fSpeed+m_iWormIndex/20.f);
     }
 }
 
@@ -499,8 +584,9 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
         }
     }
     //3초뒤 움직임
-    else if (m_bElapsedOpeningTime > 2.f)
+    else if (m_bElapsedOpeningTime > 3.f)
     {
+        //m_eWormState==MOVE;
         if (!m_vMoveDest.empty())
         {
             _vec3 vPos, vDir;
@@ -794,7 +880,7 @@ void CWorm::Set_Motion_FromAngle()
 	//(*matWorld) = (*matWorld) * matTrans;
 }
 
-///////////////////2
+///////////////////버전2
 //void CWorm::Set_Motion_FromAngle()
 //{
 //
@@ -992,6 +1078,7 @@ void CWorm::Set_Motion_FromAngle()
 //    }
 //}
 
+//버전1
 //void CWorm::Set_Motion_FromAngle()
 //{
 //
@@ -1380,11 +1467,12 @@ void CWorm::Update_WormBoby(const _float& fTimeDelta)
     vDist = vPrevWormPos - vPos;
     vDir = m_vMoveDest.front() - vPos;
     _float fDist;
-    if (m_iWormIndex == 2 || m_iWormIndex == 10)fDist = 1.25f;
-    else fDist = 1.f;
+    _float f = +0.1f;
+    if (m_iWormIndex == 2 || m_iWormIndex == 10)fDist = 1.25 + f;
+    else fDist = 1.f + f;
 
-    if (static_cast<CWorm*>(m_pHeadWorm)->Get_WormState() == MOVE && m_iWormIndex == 2)
-        fDist = 0.75f;
+    //if (static_cast<CWorm*>(m_pHeadWorm)->Get_WormState() == MOVE && m_iWormIndex == 2)
+    //    fDist = 0.5f;
 
 	if (D3DXVec3Length(&vDist) > fDist && D3DXVec3Length(&vDir)>0.125f)
 	{

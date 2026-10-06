@@ -2,14 +2,6 @@
 
 #include "CMonster.h"
 
-namespace Engine
-{
-	class CRcTex;
-	class CTransform;
-	class CTexture;
-	class CCalculator;
-}
-
 class CWorm : public CMonster
 {
 public:
@@ -74,7 +66,9 @@ public:
 	virtual _int Get_Hp() { return m_iHp; }
 	WORMSTATE Get_WormState() { return m_eWormState; }
 	
-public:
+protected:
+	Engine::CTransform* m_pTransformCom2 = nullptr;
+	Engine::CTexture* m_pTextureCom2 = nullptr;
 
 public:
 	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev);
