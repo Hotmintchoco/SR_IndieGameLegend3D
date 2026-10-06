@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CLogo.h"
 #include "CGaugeUI.h"
 #include "CProtoMgr.h"
@@ -142,13 +142,13 @@ HRESULT CLogo::Ready_UI_Layer(const _tchar* pLayerTag)
 
 HRESULT CLogo::Ready_Prototype()
 {
-    // Register before starting the worker; the stage reuses these prototypes.
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BossHpBarTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/BossHpBar.png", 1))))
         return E_FAIL;
+
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RedTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/RedColor.png", 1))))
         return E_FAIL;
 
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LogoTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Logo/sana.jpg", 1))))
+	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LogoTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Logo/SkyboxStars.png", 1))))
 		return E_FAIL;	
 
 	return S_OK;
