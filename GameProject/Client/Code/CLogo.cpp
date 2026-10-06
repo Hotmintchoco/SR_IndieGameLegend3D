@@ -42,7 +42,6 @@ _int CLogo::Update_Scene(_float fTimeDelta)
 
     if (m_pLoading->Get_Finish() && m_fDisplayProgress >= 1.f && !m_bStageFailed)
     {
-        // Keep a full gauge visible before entering the stage.
         m_fCompleteHold += fTimeDelta;
         if (m_fCompleteHold >= 0.2f)
         {
@@ -53,9 +52,7 @@ _int CLogo::Update_Scene(_float fTimeDelta)
                 return CScene::Update_Scene(fTimeDelta);
             }
 
-            // Do not queue the old scene's objects on the transition frame.
-            const HRESULT hr = CManagement::GetInstance()->Change_Scene(0, pStage, true);
-            if (FAILED(hr))
+            if (FAILED(CManagement::GetInstance()->Change_Scene(0, pStage, true)))
             {
                 Safe_Release(pStage);
                 return -1;
@@ -90,7 +87,6 @@ HRESULT CLogo::Ready_Environment_Layer(const _tchar* pLayerTag)
         return E_FAIL;
     m_mapLayer.insert({ pLayerTag, pLayer });
 
-    // Use the same orthographic UI pass so the background stays behind the gauge.
     CUI* pBackground = CUI::Create(m_pGraphicDev, L"Proto_LogoTexture");
     if (!pBackground)
         return E_FAIL;
