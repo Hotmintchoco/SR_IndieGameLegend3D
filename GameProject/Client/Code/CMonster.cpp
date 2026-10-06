@@ -175,17 +175,32 @@ void CMonster::LookAtPlayer()
 {
     CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
         ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+    if (nullptr == pPlayerTransformCom) return ;
 
-    if (nullptr == pPlayerTransformCom)
-        return ;
-
-    _vec3   vPlayerPos;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-
-    _vec3   vPlayerLook;
-    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+    _vec3   vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    _vec3   vPlayerLook; pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
     m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+}
+
+void CMonster::LookAtPlayer2()
+{
+    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+    if (nullptr == pPlayerTransformCom) return;
+
+    _vec3   vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vDir = vPlayerPos - vPos;
+    vDir.y = 0.f;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    _vec3 vAngle;
+    vAngle.x = D3DXToDegree(-asinf(vDir.y));
+    vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+    vAngle.z = 0.f;
+    m_pTransformCom->Set_Angle(vAngle);
 }
 
 void CMonster::CollisionWithMonster(COLLINFO eCollInfo)

@@ -364,6 +364,9 @@
     <Filter Include="02. GameObject\02. Monster\Mine">
       <UniqueIdentifier>{40bf8d56-80ca-47d4-bebd-0c4610a3b875}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Octo\OctoBullet">
+      <UniqueIdentifier>{3b3a93cc-5288-46de-8221-d2aa5321b07a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -744,6 +747,9 @@
     <ClInclude Include="..\Header\COcto.h">
       <Filter>02. GameObject\02. Monster\Octo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\COctoBullet.h">
+      <Filter>02. GameObject\02. Monster\Octo\OctoBullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1096,6 +1102,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\COcto.cpp">
       <Filter>02. GameObject\02. Monster\Octo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COctoBullet.cpp">
+      <Filter>02. GameObject\02. Monster\Octo\OctoBullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

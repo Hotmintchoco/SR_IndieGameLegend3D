@@ -1,14 +1,5 @@
 ﻿#pragma once
-
 #include "CMonster.h"
-
-namespace Engine
-{
-	class CRcTex;
-	class CTransform;
-	class CTexture;
-	class CCalculator;
-}
 
 class CCryder : public CMonster
 {

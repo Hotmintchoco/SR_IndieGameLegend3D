@@ -1,14 +1,5 @@
 ﻿#pragma once
-
 #include "CMonster.h"
-
-namespace Engine
-{
-	class CRcTex;
-	class CTransform;
-	class CTexture;
-	class CCalculator;
-}
 
 #define MAPX 13.f
 #define MAPZ 11.f

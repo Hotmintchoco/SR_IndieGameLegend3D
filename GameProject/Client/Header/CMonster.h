@@ -40,6 +40,7 @@ protected:
 	void Enable_HitRenderState();
 	void Disable_HitRenderState();
 	void LookAtPlayer();
+	void LookAtPlayer2();
 
 	// 정민 : OnCollisionStay에서 호출 (몬스터끼리 뭉침 방지 용)
 	void CollisionWithMonster(COLLINFO eCollInfo);
