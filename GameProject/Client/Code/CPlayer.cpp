@@ -297,7 +297,7 @@ void CPlayer::UpdateWeaponInput()
 
     switch (tOutput.eWpEvent)
     {
-    case EWeaponEvent::GUN_SHOT:
+    case EWeaponAnimEvent::GUN_SHOT:
         m_pAnimator->PlayAction(EPlayerActionState::GUN_SHOOT);
         break;
     }

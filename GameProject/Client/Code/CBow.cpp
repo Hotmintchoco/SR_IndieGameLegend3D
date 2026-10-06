@@ -103,14 +103,14 @@ void CBow::RenderEditorPanel()
     }
 }
 
-EWeaponEvent CBow::DefaultAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CBow::DefaultAttack(EInputState ePri, EInputState eSec)
 {
     switch (eSec)
     {
     case EInputState::Pressed:
     {
         m_bOnCharging = true;
-        return EWeaponEvent::BOW_CHARGE_START;
+        return { false, EWeaponAnimEvent::BOW_CHARGE_START };
         break;
     }
     case EInputState::Released:
@@ -119,29 +119,29 @@ EWeaponEvent CBow::DefaultAttack(EInputState ePri, EInputState eSec)
 
         m_bOnCharging = false;
         m_fChargeTime = 0.f;
-        return EWeaponEvent::BOW_CHARGE_END;
+        return { true, EWeaponAnimEvent::BOW_CHARGE_END };
         break;
     }
     default:
         break;
     }
 
-    return EWeaponEvent::NONE;
+    return { false, EWeaponAnimEvent::NONE };
 }
 
-EWeaponEvent CBow::SpecialAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CBow::SpecialAttack(EInputState ePri, EInputState eSec)
 {
-    return EWeaponEvent::NONE;
+    return { false, EWeaponAnimEvent::NONE };
 }
 
-EWeaponEvent CBow::UltimateAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CBow::UltimateAttack(EInputState ePri, EInputState eSec)
 {
     CBombardArrowSpawner* pSpawner = CBombardArrowSpawner::Create(m_pGraphicDev);
-    if (!pSpawner) return EWeaponEvent::NONE;
+    if (!pSpawner) return { false, EWeaponAnimEvent::NONE };
 
     CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"BombardArrowSpawner", pSpawner);
 
-    return EWeaponEvent::NONE;
+    return { true, EWeaponAnimEvent::NONE };
 }
 
 void CBow::ShootArrow()

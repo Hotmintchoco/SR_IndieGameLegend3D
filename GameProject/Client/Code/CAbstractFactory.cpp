@@ -37,7 +37,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::UNBREAKABLE_FRUSTUM,      [](const TCreateDesc& t) -> Engine::CGameObject* { return CUnbreakableFrustum::Create(t.pDevice); } },
         {EObjectType::EXPLOSIVE_FRUSTUM,        [](const TCreateDesc& t) -> Engine::CGameObject* { return CExplosiveFrustum::Create(t.pDevice); } },
         {EObjectType::GAME_MACHINE,             [](const TCreateDesc& t) -> Engine::CGameObject* { return CGameMachine::Create(t.pDevice); } },
-        {EObjectType::DDOKDDAK,                 [](const TCreateDesc& t) -> Engine::CGameObject* { return CDdokddak::Create(t.pDevice, EDirection::NORTH); } },
+        {EObjectType::DDOKDDAK,                 [](const TCreateDesc& t) -> Engine::CGameObject* { return CDdokddak::Create(t.pDevice, EDirection::EAST); } },
         {EObjectType::LIMINAL_CUBE,             [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalCube::Create(t.pDevice); } },
         {EObjectType::LIMINAL_SLOPE,            [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalSlope::Create(t.pDevice); } },
 

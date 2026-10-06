@@ -27,17 +27,17 @@ HRESULT CWeaponSystem::Ready_GameObject()
     if (FAILED(AddWeapon(EObjectType::WEAPON_DEFAULT, L"RapidGun")))
         return E_FAIL;
 
-    if (FAILED(AddWeapon(EObjectType::WEAPON_SHOTGUN, L"ShotGun")))
-        return E_FAIL;
-    
-    if (FAILED(AddWeapon(EObjectType::WEAPON_LASERGUN, L"LaserGun")))
-        return E_FAIL;
-    
-    if (FAILED(AddWeapon(EObjectType::WEAPON_BOW, L"Bow")))
-        return E_FAIL;
-
-    if (FAILED(AddWeapon(EObjectType::WEAPON_LIMINAL, L"LiminalGun")))
-        return E_FAIL;
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_SHOTGUN, L"ShotGun")))
+    //     return E_FAIL;
+    // 
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_LASERGUN, L"LaserGun")))
+    //     return E_FAIL;
+    // 
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_BOW, L"Bow")))
+    //     return E_FAIL;
+    // 
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_LIMINAL, L"LiminalGun")))
+    //     return E_FAIL;
 
     SwitchWeaponTo(0);
 
@@ -81,41 +81,48 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
     {
         if (m_bSpecialAttackSwitchOn)
         {
-            tOut.eWpEvent = GetCurrentWeapon()->SpecialAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
-                                              tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
-            /* TODO */
-            // m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
-            m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
-            if (m_fSpecialAtkGauge <= 0.f)
+            TWeaponOutput tWpOut = GetCurrentWeapon()->SpecialAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
+                tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
+            tOut.eWpEvent = tWpOut.eWpEvent;
+            if (tWpOut.bAttackExecuted)
             {
-                m_bSpecialAttackSwitchOn = false;
-            }
-
-            if (pStage)
-            {
-                pStage->GetStatus()->SetSpecialAttackGauge(m_fSpecialAtkGauge);
+                m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
+                m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
+                if (m_fSpecialAtkGauge <= 0.f)
+                {
+                    m_bSpecialAttackSwitchOn = false;
+                }
+                if (pStage)
+                {
+                    pStage->GetStatus()->SetSpecialAttackGauge(m_fSpecialAtkGauge);
+                }
             }
         }
         else
         {
-            tOut.eWpEvent = GetCurrentWeapon()->DefaultAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
+            TWeaponOutput tWpOut = GetCurrentWeapon()->DefaultAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
                                               tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
+            tOut.eWpEvent = tWpOut.eWpEvent;
         }
     }
 
     if (tInput.bUltAttack && m_bIsUltimateAttackReady)
     {
-        tOut.eWpEvent = GetCurrentWeapon()->UltimateAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
+        TWeaponOutput tWpOut = GetCurrentWeapon()->UltimateAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
                                            tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
+        tOut.eWpEvent = tWpOut.eWpEvent;
         
-        /* TODO */
-        // m_fUltimateAtkGauge = 0.f;
-        // m_bIsUltimateAttackReady = false;
-
-        if (pStage)
+        if (tWpOut.bAttackExecuted)
         {
-            pStage->GetStatus()->SetUltimateGauge(m_fUltimateAtkGauge);
+            m_fUltimateAtkGauge = 0.f;
+            m_bIsUltimateAttackReady = false;
+
+            if (pStage)
+            {
+                pStage->GetStatus()->SetUltimateGauge(m_fUltimateAtkGauge);
+            }
         }
+        
     }
     
     TWeaponAnimArgs tArgs;

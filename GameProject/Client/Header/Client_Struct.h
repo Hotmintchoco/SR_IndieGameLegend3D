@@ -62,6 +62,12 @@ struct TWeaponInput
 	EInputState eState = EInputState::NONE;
 };
 
+struct TWeaponOutput
+{
+	bool bAttackExecuted = false;	
+	EWeaponAnimEvent eWpEvent = EWeaponAnimEvent::NONE;
+};
+
 struct TWeaponSystemInput
 {
 	/* 공격 관련 */
@@ -77,5 +83,5 @@ struct TWeaponSystemInput
 
 struct TWeaponSystemOutput
 {
-	EWeaponEvent eWpEvent = EWeaponEvent::NONE;
+	EWeaponAnimEvent eWpEvent = EWeaponAnimEvent::NONE;
 };

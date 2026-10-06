@@ -201,7 +201,7 @@ enum class EInputState
 	MAX,
 };
 
-enum class EWeaponEvent
+enum class EWeaponAnimEvent
 {
 	NONE,
 

@@ -63,7 +63,7 @@ void CLaserGun::Render_GameObject()
     // CLaser::RenderEditorPanel();
 }
 
-EWeaponEvent CLaserGun::SpecialAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CLaserGun::SpecialAttack(EInputState ePri, EInputState eSec)
 {
     switch (ePri)
     {
@@ -72,14 +72,14 @@ EWeaponEvent CLaserGun::SpecialAttack(EInputState ePri, EInputState eSec)
         ShotLaser();
         m_bIsCoolTime = true;
         m_fCoolTimeLeft = m_fSpecialAtkInterval;
-        return EWeaponEvent::GUN_SHOT;
+        return { true, EWeaponAnimEvent::GUN_SHOT };
         break;
     }
     default:
         break;
     }
 
-    return EWeaponEvent::NONE;
+    return { false, EWeaponAnimEvent::NONE };
 }
 
 void CLaserGun::ShotLaser()
@@ -97,9 +97,9 @@ void CLaserGun::ShotLaser()
     StartShotAnimation();
 }
 
-EWeaponEvent CLaserGun::UltimateAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CLaserGun::UltimateAttack(EInputState ePri, EInputState eSec)
 {
-    return EWeaponEvent::NONE;
+    return { false, EWeaponAnimEvent::NONE };
 }
 
 HRESULT CLaserGun::Add_Component()
