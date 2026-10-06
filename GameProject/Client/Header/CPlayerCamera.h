@@ -42,7 +42,7 @@ private:
     void            Follow_Target();
 
     /* 스프링 암 관련 */
-    float floatCalculateSpringArmLength();
+    float CalculateSpringArmLength();
 
 private:
     CTransform*     m_pTarget;

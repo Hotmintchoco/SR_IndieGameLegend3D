@@ -108,7 +108,7 @@ void CPlayerCamera::Follow_Target()
 	if (m_eCameraMode == CAMERA_MODE::THIRD_PERSON)
 	{
 		// 시선 방향의 반대쪽으로 물러나서 플레이어를 바라봄 (3인칭)
-		float fSpringArmLength = floatCalculateSpringArmLength();
+		float fSpringArmLength = CalculateSpringArmLength();
 		m_vEye = vPivot - vLook * min(fSpringArmLength - m_fNearPlaneMargin, m_fDistance);
 		m_vAt = vPivot;
 	}
@@ -122,7 +122,7 @@ void CPlayerCamera::Follow_Target()
 	m_vUp = { 0.f, 1.f, 0.f };
 }
 
-float CPlayerCamera::floatCalculateSpringArmLength()
+float CPlayerCamera::CalculateSpringArmLength()
 {
 	CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
 	if (!pStage) return FLT_MAX;
