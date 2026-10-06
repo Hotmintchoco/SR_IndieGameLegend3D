@@ -31,11 +31,12 @@ HRESULT CGlubba::Ready_GameObject()
     m_pColliderCom->Set_Radius(0.5f);
     m_iMaxHp = 2;
     m_iHp = m_iMaxHp;
-    m_eMonsterState = MOVE;
+    m_eMonsterState = JUMP;
+    m_bIsActive;
     return S_OK;
 }
 
-_int CGlubba::Update_GameObject(const _float& fTimeDelta)
+_int CGlubba::Update_GameObject(_float fTimeDelta)
 {
     if (m_iHp <= 0)
     {
@@ -61,14 +62,13 @@ _int CGlubba::Update_GameObject(const _float& fTimeDelta)
             return E_FAIL;
     }
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
-
-    m_eMonsterState = MOVE;
+    m_pTransformCom;
     switch (m_eMonsterState)
     {
     case IDLE:
         break;
     case JUMP:
-        Jump(fTimeDelta);
+        Land(fTimeDelta);
         break;
     case MOVE:
         Set_OnTerrain();
@@ -85,16 +85,9 @@ _int CGlubba::Update_GameObject(const _float& fTimeDelta)
         _vec3   vPlayerLook;
         pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
 
-        if (m_fActiveElapsedTime < m_fActiveTime)
-        {
-            m_fActiveElapsedTime += fTimeDelta;
-            m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
 
-        }
-        else
-        {
-            m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 2.f, fTimeDelta);
-        }
+		m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 0.75f, fTimeDelta);
+        
         break;
     }
     m_fFrame += fTimeDelta * 5.f;
@@ -106,7 +99,7 @@ _int CGlubba::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CGlubba::LateUpdate_GameObject(const _float& fTimeDelta)
+void CGlubba::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 }
@@ -164,22 +157,19 @@ CGlubba* CGlubba::Create(LPDIRECT3DDEVICE9 pGraphicDev)
         MSG_BOX("CGlubba Create Failed");
         return nullptr;
     }
-
     return pMonster;
 }
 
-CGlubba* CGlubba::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fActiveTime)
+CGlubba* CGlubba::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vDir)
 {
     CGlubba* pMonster = new CGlubba(pGraphicDev);
-    pMonster->Set_ActiveTime(fActiveTime);
 
     if (FAILED(pMonster->Ready_GameObject()))
     {
         Safe_Release(pMonster);
-        MSG_BOX("CSprnub3 Create Failed");
+        MSG_BOX("CGlubba Create Failed");
         return nullptr;
     }
-
     return pMonster;
 }
 
@@ -188,13 +178,13 @@ void CGlubba::Free()
     CMonster::Free();
 }
 
-void CGlubba::Jump(const _float& fTimeDelta)
+void CGlubba::Land(const _float& fTimeDelta)
 {
     _vec3 vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    m_vJumpDirection.y -= 9.8f * fTimeDelta;
-    m_fJumpTime += fTimeDelta;
-    if (vPos.y < m_pTransformCom->m_vScale.y && m_fJumpTime>0.25f)
+    m_vLandingDirection.y -= 9.8f * fTimeDelta;
+
+    if (vPos.y < m_pTransformCom->m_vScale.y)
     {
         vPos.y = m_pTransformCom->m_vScale.y;
         m_pTransformCom->Set_Pos(vPos);
@@ -204,7 +194,7 @@ void CGlubba::Jump(const _float& fTimeDelta)
     }
     else
     {
-        m_pTransformCom->Move_Pos(&m_vJumpDirection, 1.f, fTimeDelta);
+        m_pTransformCom->Move_Pos(&m_vLandingDirection, 1.f, fTimeDelta);
     }
 
     CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()

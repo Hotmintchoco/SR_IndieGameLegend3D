@@ -21,7 +21,7 @@ public:
 		SIDE45,
 		CONNECTOR
 	};
-	enum WORMSTATE { SPAWN, MOVE, IDLE, DEAD, OPENING };
+	enum WORMSTATE { SPAWN, MOVE, IDLE, DEAD, ATTACK, OPENING };
 
 protected:
 	explicit CWorm(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -38,8 +38,6 @@ public:
 private:
 	HRESULT			Add_Component();
 
-	void Shuffle_Array(_uint N);
-
 	void Update_Motion(const _float& fTimeDelta);
 
 	void Opening_Worm(const _float& fTimeDelta);
@@ -47,6 +45,8 @@ private:
 	void Update_WormBoby(const _float& fTimeDelta);
 	void Spawn_Monster(const _float& fTimeDelta);
 	void IDLE_Worm(const _float& fTimeDelta);
+
+	void Move_WormHead_BeforeSpawn(const _float& fTimeDelta);
 
 	void Set_MoveDest();
 	void Set_Pos_Worm(_vec3 vPos);
@@ -64,6 +64,7 @@ private:
 	void Set_Head_Worm(CMonster* pHeadWorm) { m_pHeadWorm = pHeadWorm; }
 	CMonster* Get_Head_Worm() { return m_pHeadWorm; }
 	void Set_WormIndex (_uint iIndex) { m_iWormIndex = iIndex; }
+
 
 	void Set_Init_Worm();
 	void Set_Motion_FromAngle();
@@ -95,13 +96,14 @@ private:
 
 	_int m_iPhase = 0;
 
-	_float m_fSpawn_CoolDown = 1.0f;
+	//_float m_fSpawn_CoolDown = 1.0f;
 	_float m_fSpawnTime = 0.f;
-	_bool m_bSpawnFinish[4] = {};
-	_bool m_bSpawnFinish2[4] = {};
-	_float m_fSpawnStartTime[4] = {};
-	_uint m_iSpawnOrderArr[4] = {};
-	CGameObject* m_pSpawnMonster[4] = {};
+	//_bool m_bSpawnFinish[4] = {};
+	//_bool m_bSpawnFinish2[4] = {};
+	//_float m_fSpawnStartTime[4] = {};
+	//_uint m_iSpawnOrderArr[4] = {};
+	//CGameObject* m_pSpawnMonster[4] = {};
+	_bool m_bSpawnStart = false;
 
 	_float m_fStateUpdateTime = 0.f;
 	_float m_fStateUpdateDuration = 2.f;
@@ -131,5 +133,5 @@ private:
 
 	_bool m_bSet_InitPos = false;
 	_float m_fSpeed = 6.f;
-	_float m_MoveHeight = 1.5f;
+	_float m_fMoveHeight = 1.25f;
 };

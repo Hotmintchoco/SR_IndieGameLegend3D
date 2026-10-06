@@ -18,8 +18,8 @@ protected:
 
 public:
 	virtual			HRESULT		Ready_GameObject();
-	virtual			_int		Update_GameObject(const _float& fTimeDelta);
-	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual			_int		Update_GameObject(_float fTimeDelta);
+	virtual			void		LateUpdate_GameObject(_float fTimeDelta);
 	virtual			void		Render_GameObject();
 
 	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
@@ -28,20 +28,18 @@ private:
 	HRESULT			Add_Component();
 
 public:
+	void Set_Velocity(const _vec3& vDirection) { m_vLandingDirection = vDirection; }
+public:
 	static CGlubba* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	static CGlubba* Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fActiveTime);
-	void Set_ActiveTime(_float fActiveTime) { m_fActiveTime = fActiveTime; }
+	static CGlubba* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vDir);
+
 private:
-	void Jump(const _float& fTimeDelta);
+	void Land(const _float& fTimeDelta);
 private:
-	_float m_fActiveTime = 0.f;
-	_float m_fActiveElapsedTime = 0.f;
 
 	_bool m_bLandingState = false;
-	_vec3 m_vJumpDirection = {};
-	_float m_fJumpTime = 0.f;
 	_float m_fVelocityY = 0.f;
-
+	_vec3 m_vLandingDirection = {};
 
 protected:
 	virtual void		Free();
