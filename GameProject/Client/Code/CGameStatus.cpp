@@ -134,22 +134,22 @@ void CGameStatus::RenderImGui()
     }
 
     // --- Player ---
-    //if (ImGui::CollapsingHeader("Player", ImGuiTreeNodeFlags_DefaultOpen))
-    //{
-    //    ImGui::Text("Pos : %.2f, %.2f, %.2f", m_vPlayerPos.x, m_vPlayerPos.y, m_vPlayerPos.z);
-    //
-    //    ImGui::Text("Yaw : %.1f deg", XMConvertToDegrees(m_fYaw)); 
-    //
-    //    if(ImGui::SliderFloat("Player Scale", &m_fPseudoPlayerScale, 0.01f, 1.f, "%.2f"))
-    //    {
-    //        m_pStage->GetPlayer()->SetPseudoScale(m_fPseudoPlayerScale);
-    //        CPlayerCamera* pCamera = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
-    //        if (pCamera)
-    //        {
-    //            pCamera->SetPseudoScale(m_fPseudoPlayerScale);
-    //        }
-    //    }
-    //}
+    if (ImGui::CollapsingHeader("Player", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        ImGui::Text("Pos : %.2f, %.2f, %.2f", m_vPlayerPos.x, m_vPlayerPos.y, m_vPlayerPos.z);
+    
+        ImGui::Text("Yaw : %.1f deg", XMConvertToDegrees(m_fYaw)); 
+    
+        if(ImGui::SliderFloat("Player Scale", &m_fPseudoPlayerScale, 0.01f, 1.f, "%.2f"))
+        {
+            m_pStage->GetPlayer()->SetPseudoScale(m_fPseudoPlayerScale);
+            CPlayerCamera* pCamera = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
+            if (pCamera)
+            {
+                pCamera->SetPseudoScale(m_fPseudoPlayerScale);
+            }
+        }
+    }
 
     // --- Gauge ---
     if (ImGui::CollapsingHeader("Gauge", ImGuiTreeNodeFlags_DefaultOpen))
