@@ -265,7 +265,6 @@ void CPlayer::OnHit(CGameObject* pSrcObj)
     if (m_bInvincible) return;
 
     --m_iHP;
-    CUIMgr::GetInstance()->Update_HPUI(m_iHP);
     CUIMgr::GetInstance()->RequestHitEffect();
 
     /* 사망 시 빠지기 */
@@ -324,6 +323,11 @@ void CPlayer::SetInputEnabled(bool bFlag, float fDisabledTime)
     {
         m_fLeftInputDisabledTime = fDisabledTime;
     }
+}
+
+void CPlayer::SetPseudoScale(float fScale)
+{
+    m_pMovement->SetSpeedScale(fScale);
 }
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -39,8 +39,14 @@ public:
 	/* 입력 관련 */
 	void SetInputEnabled(bool bFlag, float fFixedTime = -1.f);
 
+	/* 가짜 스케일 */
+	void SetPseudoScale(float fScale);
+
 	inline CTransform* GetTransform() { return m_pTransformCom; }
 	inline void SetWeaponSystem(CWeaponSystem* pSystem) { m_pWeaponSystem = pSystem; }
+
+	/* UI 전달 요소 */
+
 
 private:
 	HRESULT	Add_Component();

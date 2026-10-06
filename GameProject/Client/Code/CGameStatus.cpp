@@ -137,9 +137,9 @@ void CGameStatus::RenderImGui()
     if (ImGui::CollapsingHeader("Player", ImGuiTreeNodeFlags_DefaultOpen))
     {
         ImGui::Text("Pos : %.2f, %.2f, %.2f", m_vPlayerPos.x, m_vPlayerPos.y, m_vPlayerPos.z);
-
+    
         ImGui::Text("Yaw : %.1f deg", XMConvertToDegrees(m_fYaw)); 
-
+    
         if(ImGui::SliderFloat("Player Scale", &m_fPseudoPlayerScale, 0.01f, 1.f, "%.2f"))
         {
             m_pStage->GetPlayer()->SetPseudoScale(m_fPseudoPlayerScale);

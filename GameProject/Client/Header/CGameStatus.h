@@ -96,6 +96,9 @@ private:
 	float m_fTimeScale = 1.f;
 	bool m_bExcludePlayer = false;
 
+	/* 가상의 캐릭터 크기 */
+	float m_fPseudoPlayerScale = 1.f;
+
 public:
 	static CGameStatus* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
