@@ -330,7 +330,7 @@
     </Filter>
     <Filter Include="02. GameObject\06. Effect\Arrow_Effect">
       <UniqueIdentifier>{2c6927cc-9292-403e-91ea-f06959311ff5}</UniqueIdentifier>
-    </Filter>  
+    </Filter>
     <Filter Include="04. Manager\01. Camera">
       <UniqueIdentifier>{3ec8c192-44f1-4350-a6d8-cef25d959a74}</UniqueIdentifier>
     </Filter>
@@ -351,6 +351,12 @@
     </Filter>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere">
       <UniqueIdentifier>{19835880-8741-44f1-a903-f8f42f56048c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame\00.MiniGame_Obj">
+      <UniqueIdentifier>{a321e51e-7142-40be-9653-53bf3ae7a2e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG">
+      <UniqueIdentifier>{94ef362d-1db6-45cb-812b-ff21cfdee457}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -723,6 +729,9 @@
     <ClInclude Include="..\Header\CVeilSphere.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMiniGameBG.h">
+      <Filter>01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1066,6 +1075,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CVeilSphere.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMiniGameBG.cpp">
+      <Filter>01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

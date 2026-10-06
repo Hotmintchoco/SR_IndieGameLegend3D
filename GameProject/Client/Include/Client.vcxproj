@@ -172,6 +172,7 @@
     <ClInclude Include="..\Header\CLiminalObject.h" />
     <ClInclude Include="..\Header\CLiminalSlope.h" />
     <ClInclude Include="..\Header\CMiniGame.h" />
+    <ClInclude Include="..\Header\CMiniGameBG.h" />
     <ClInclude Include="..\Header\CMovement.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
     <ClInclude Include="..\Header\CPlayerAnimator.h" />
@@ -297,6 +298,7 @@
     <ClCompile Include="..\Code\CLiminalObject.cpp" />
     <ClCompile Include="..\Code\CLiminalSlope.cpp" />
     <ClCompile Include="..\Code\CMiniGame.cpp" />
+    <ClCompile Include="..\Code\CMiniGameBG.cpp" />
     <ClCompile Include="..\Code\CMovement.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />
     <ClCompile Include="..\Code\CPlayerAnimator.cpp" />
