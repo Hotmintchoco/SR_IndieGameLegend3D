@@ -22,7 +22,6 @@ public:
 	void Set_Velocity(const _vec3& vDirection) { m_vLandingDirection = vDirection; }
 public:
 	static CGlubba* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	static CGlubba* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vDir);
 
 private:
 	void Land(const _float& fTimeDelta);
@@ -30,6 +29,7 @@ private:
 
 	_bool m_bLandingState = false;
 	_float m_fVelocityY = 0.f;
+	//_vec3 m_vLandingDirection = { 0.f, 0.f, 0.f };
 	_vec3 m_vLandingDirection = {};
 
 protected:

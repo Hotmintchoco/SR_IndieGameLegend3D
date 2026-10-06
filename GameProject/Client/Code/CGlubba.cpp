@@ -32,7 +32,6 @@ HRESULT CGlubba::Ready_GameObject()
     m_iMaxHp = 2;
     m_iHp = m_iMaxHp;
     m_eMonsterState = JUMP;
-    m_bIsActive;
     return S_OK;
 }
 
@@ -62,7 +61,7 @@ _int CGlubba::Update_GameObject(_float fTimeDelta)
             return E_FAIL;
     }
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
-    m_pTransformCom;
+
     switch (m_eMonsterState)
     {
     case IDLE:
@@ -148,19 +147,6 @@ HRESULT CGlubba::Add_Component()
 
 
 CGlubba* CGlubba::Create(LPDIRECT3DDEVICE9 pGraphicDev)
-{
-    CGlubba* pMonster = new CGlubba(pGraphicDev);
-
-    if (FAILED(pMonster->Ready_GameObject()))
-    {
-        Safe_Release(pMonster);
-        MSG_BOX("CGlubba Create Failed");
-        return nullptr;
-    }
-    return pMonster;
-}
-
-CGlubba* CGlubba::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vDir)
 {
     CGlubba* pMonster = new CGlubba(pGraphicDev);
 

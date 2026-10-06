@@ -26,8 +26,7 @@ public:
 	void Land(const _float& fTimeDelta);
 private:
 	_bool m_bLandingState = false;
-	_vec3 m_vLandingDirection = {};
-	_float m_fLandingTime = 0.f;
+	_vec3 m_vLandingDirection = { 0.f, 0.f, 0.f };
 	_float m_fVelocityY = 0.f;
 
 protected:
