@@ -211,6 +211,7 @@
     <ClInclude Include="..\Header\CSprnub2.h" />
     <ClInclude Include="..\Header\CSprnub3.h" />
     <ClInclude Include="..\Header\CUIMgr.h" />
+    <ClInclude Include="..\Header\CVeilSphere.h" />
     <ClInclude Include="..\Header\CVoxelBuffer.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
     <ClInclude Include="..\Header\CMagmamouth.h" />
@@ -225,7 +226,7 @@
     <ClInclude Include="..\Header\CLogo.h" />
     <ClInclude Include="..\Header\CMainApp.h" />
     <ClInclude Include="..\Header\CMinimapUI.h" />
-    <ClInclude Include="..\Header\CPseudoDark.h" />
+    <ClInclude Include="..\Header\CAtmosphereVeil.h" />
     <ClInclude Include="..\Header\CPressAllButtonCondition.h" />
     <ClInclude Include="..\Header\CRoomLayer.h" />
     <ClInclude Include="..\Header\CRoomLoadingMgr.h" />
@@ -334,6 +335,7 @@
     <ClCompile Include="..\Code\CSprnub2.cpp" />
     <ClCompile Include="..\Code\CSprnub3.cpp" />
     <ClCompile Include="..\Code\CUIMgr.cpp" />
+    <ClCompile Include="..\Code\CVeilSphere.cpp" />
     <ClCompile Include="..\Code\CVoxelBuffer.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
     <ClCompile Include="..\Code\CGaugeUI.cpp" />
@@ -348,7 +350,7 @@
     <ClCompile Include="..\Code\CLogo.cpp" />
     <ClCompile Include="..\Code\CMainApp.cpp" />
     <ClCompile Include="..\Code\CMinimapUI.cpp" />
-    <ClCompile Include="..\Code\CPseudoDark.cpp" />
+    <ClCompile Include="..\Code\CAtmosphereVeil.cpp" />
     <ClCompile Include="..\Code\CPressAllButtonCondition.cpp" />
     <ClCompile Include="..\Code\CRoomLayer.cpp" />
     <ClCompile Include="..\Code\CRoomLoadingMgr.cpp" />

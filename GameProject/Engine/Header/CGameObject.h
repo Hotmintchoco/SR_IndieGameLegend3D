@@ -44,7 +44,7 @@ public:
 	void			Set_Dead(_bool bDead) { m_bDead = bDead; }
 	_bool			Is_Dead() const { return m_bDead; }
 
-	void			Set_IsActive(_bool bIsActive) { m_bIsActive = bIsActive; }
+	virtual void	Set_IsActive(_bool bIsActive) { m_bIsActive = bIsActive; }
 	_bool			Get_IsActive() const { return m_bIsActive; }
 
 	void			Compute_ViewZ(const _vec3* pPos);
