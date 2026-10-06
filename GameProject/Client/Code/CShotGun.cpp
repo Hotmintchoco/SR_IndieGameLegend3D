@@ -26,9 +26,7 @@ HRESULT CShotGun::Ready_GameObject()
 
     if (FAILED(Add_Component()))
         return E_FAIL;
-
-    UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
-
+    
     m_fSpecialAtkInterval = 0.5f;
 
     return S_OK;
@@ -65,28 +63,6 @@ void CShotGun::Render_GameObject()
 
     m_pBufferCom->Render_Buffer();
 
-    // RenderEditorPanel();
-}
-
-void CShotGun::RenderEditorPanel()
-{
-    ImGui::Begin("Gun");
-
-    ImGui::SeparatorText("Transform");
-    ImGui::DragFloat3("Scale", &m_vScaleLocal.x, 0.01f, 0.001f, 100.f);
-    ImGui::DragFloat3("Position", &m_vPositionLocal.x, 0.01f);
-    ImGui::DragFloat3("Rotation", &m_vRotationLocal.x, 0.5f, -360.f, 360.f);
-
-    ImGui::SeparatorText("Animation");
-    ImGui::DragFloat("Move Cycle", &m_fMoveAnimationFrequency, 0.01f, 0.05f, 5.f, "%.2f s");
-    ImGui::DragFloat("Horizontal Move", &m_fHorizontalMove, 0.001f, 0.f, 1.f);
-    ImGui::DragFloat("Quadratic A", &m_fQuadraticA, 0.001f, 0.f, 1.f);
-    ImGui::DragFloat("Max Recoil Angle", &m_fMaxRecoilAngle, 0.5f, -90.f, 0.f);
-    ImGui::DragFloat("Recoil Damping", &m_fRecoilDamping, 0.05f, 0.f, 20.f);
-
-    ImGui::End();
-
-    UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
 }
 
 EWeaponEvent CShotGun::SpecialAttack(EInputState ePri, EInputState eSec)

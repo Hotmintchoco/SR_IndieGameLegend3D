@@ -22,7 +22,6 @@ public:
 
 private:
 	HRESULT	Add_Component();
-	void RenderEditorPanel();
 	void ShotSGBullet();
 	virtual EWeaponEvent SpecialAttack(EInputState ePri, EInputState eSec) override;
 	virtual EWeaponEvent UltimateAttack(EInputState ePri, EInputState eSec) override;

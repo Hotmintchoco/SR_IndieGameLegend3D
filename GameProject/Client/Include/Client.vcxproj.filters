@@ -330,7 +330,7 @@
     </Filter>
     <Filter Include="02. GameObject\06. Effect\Arrow_Effect">
       <UniqueIdentifier>{2c6927cc-9292-403e-91ea-f06959311ff5}</UniqueIdentifier>
-    </Filter>  
+    </Filter>
     <Filter Include="04. Manager\01. Camera">
       <UniqueIdentifier>{3ec8c192-44f1-4350-a6d8-cef25d959a74}</UniqueIdentifier>
     </Filter>
@@ -351,6 +351,9 @@
     </Filter>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere">
       <UniqueIdentifier>{19835880-8741-44f1-a903-f8f42f56048c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player\02. Socket">
+      <UniqueIdentifier>{a7fa9fbc-8201-4485-92b7-39da87526dff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -723,6 +726,9 @@
     <ClInclude Include="..\Header\CVeilSphere.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CSocket.h">
+      <Filter>02. GameObject\01. Character\00. Player\02. Socket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1066,6 +1072,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CVeilSphere.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSocket.cpp">
+      <Filter>02. GameObject\01. Character\00. Player\02. Socket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

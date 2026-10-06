@@ -32,11 +32,10 @@ HRESULT CBow::Ready_GameObject()
 
     m_fSpecialAtkInterval = 0.1f;
 
-    m_vScaleLocal = _vec3{ 0.05f, 0.05f, 0.05f };
-    m_vPositionLocal = _vec3{ 0.3f, -0.4f, 0.75f };
-    m_vRotationLocal = _vec3{ 35.f, -15.f, -10.f };
+    m_tLocalFView = { {0.05f, 0.05f, 0.05f}, {35.f, -15.f, -10.f}, {0.3f, -0.4f, 0.75f} };
+    m_tLocalTView = { {0.05f, 0.05f, 0.05f}, {0.f, 0.f, 0.f}, {0.f, 0.f, 0.f} };
     m_vMuzzlePositionLocal = _vec3{ 0.0f, 5.f, 5.f };
-    UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
+    UpdateLocalTransform(m_tLocalFView);
 
     return S_OK;
 }
@@ -80,12 +79,14 @@ void CBow::Render_GameObject()
 
 void CBow::RenderEditorPanel()
 {
-    ImGui::Begin("Bow");
+    bool bTransformUpdated = false;
+
+    ImGui::Begin("Gun");
 
     ImGui::SeparatorText("Transform");
-    ImGui::DragFloat3("Scale", &m_vScaleLocal.x, 0.01f, 0.001f, 100.f);
-    ImGui::DragFloat3("Position", &m_vPositionLocal.x, 0.01f);
-    ImGui::DragFloat3("Rotation", &m_vRotationLocal.x, 0.5f, -360.f, 360.f);
+    bTransformUpdated |= ImGui::DragFloat3("Scale", &m_tLocalFView.vPosition.x, 0.01f, 0.001f, 100.f);
+    bTransformUpdated |= ImGui::DragFloat3("Position", &m_tLocalFView.vPosition.x, 0.01f);
+    bTransformUpdated |= ImGui::DragFloat3("Rotation", &m_tLocalFView.vPosition.x, 0.5f, -360.f, 360.f);
 
     ImGui::SeparatorText("Animation");
     ImGui::DragFloat("Move Cycle", &m_fMoveAnimationFrequency, 0.01f, 0.05f, 5.f, "%.2f s");
@@ -96,7 +97,10 @@ void CBow::RenderEditorPanel()
 
     ImGui::End();
 
-    UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
+    if (bTransformUpdated)
+    {
+        UpdateLocalTransform(m_tLocalFView);
+    }
 }
 
 EWeaponEvent CBow::DefaultAttack(EInputState ePri, EInputState eSec)

@@ -9,6 +9,9 @@
 #include "CAbstractFactory.h"
 #include "CManagement.h"
 #include "CUI.h"
+#include "CPlayer.h"
+#include "CSocket.h"
+#include "CClientCameraMgr.h"
 
 CWeaponSystem::CWeaponSystem(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -146,6 +149,14 @@ HRESULT CWeaponSystem::AddWeapon(EObjectType eType, const wstring& wstrName)
     }
 }
 
+void CWeaponSystem::ApplyCameraView(CAMERA_MODE eMode)
+{
+    for (auto p : m_vecWeapon)
+    {
+        p->UpdateLocalTransform(p->GetLocalInfo(eMode));
+    }
+}
+
 void CWeaponSystem::SwitchWeaponTo(int iIndex)
 {
     if (iIndex < 0 || iIndex >= (int)m_vecWeapon.size()) return;
@@ -153,6 +164,17 @@ void CWeaponSystem::SwitchWeaponTo(int iIndex)
     m_vecWeapon.at(m_iCurrentIndex)->Set_IsActive(false);
     m_iCurrentIndex = iIndex;
     m_vecWeapon.at(m_iCurrentIndex)->Set_IsActive(true);
+
+    /* 플레이어 소켓에 있는 무기 transform 변경 */
+    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+    if (pStage)
+    {
+        CSocket* pSocket = pStage->GetPlayer()->GetSocket(L"Com_Socket_RHand");
+        if (pSocket)
+        {
+            pSocket->SetTarget(m_vecWeapon.at(m_iCurrentIndex)->GetTransform());
+        }
+    }
 
     // 정민 : 특수 공격 번호 UI 전달
     auto pUI = dynamic_cast<CUI*>(CManagement::GetInstance()->Get_GameObject(L"UI_Layer", L"SkillInfo"));

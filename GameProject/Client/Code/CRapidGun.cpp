@@ -25,8 +25,6 @@ HRESULT CRapidGun::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
-
     m_fSpecialAtkInterval = 0.1f;
 
     return S_OK;
@@ -66,12 +64,14 @@ void CRapidGun::Render_GameObject()
 
 void CRapidGun::RenderEditorPanel()
 {
+    bool bTransformUpdated = false;
+
     ImGui::Begin("Gun");
 
     ImGui::SeparatorText("Transform");
-    ImGui::DragFloat3("Scale", &m_vScaleLocal.x, 0.01f, 0.001f, 100.f);
-    ImGui::DragFloat3("Position", &m_vPositionLocal.x, 0.01f);
-    ImGui::DragFloat3("Rotation", &m_vRotationLocal.x, 0.5f, -360.f, 360.f);
+    bTransformUpdated |= ImGui::DragFloat3("Scale", &m_tLocalFView.vPosition.x, 0.01f, 0.001f, 100.f);
+    bTransformUpdated |= ImGui::DragFloat3("Position", &m_tLocalFView.vPosition.x, 0.01f);
+    bTransformUpdated |= ImGui::DragFloat3("Rotation", &m_tLocalFView.vPosition.x, 0.5f, -360.f, 360.f);
 
     ImGui::SeparatorText("Animation");
     ImGui::DragFloat("Move Cycle", &m_fMoveAnimationFrequency, 0.01f, 0.05f, 5.f, "%.2f s");
@@ -82,7 +82,10 @@ void CRapidGun::RenderEditorPanel()
 
     ImGui::End();
 
-    UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
+    if (bTransformUpdated)
+    {
+        UpdateLocalTransform(m_tLocalFView);
+    }
 }
 
 EWeaponEvent CRapidGun::SpecialAttack(EInputState ePri, EInputState eSec)

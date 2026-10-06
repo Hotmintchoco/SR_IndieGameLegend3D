@@ -6,6 +6,8 @@
 
 class CWeapon;
 
+enum class CAMERA_MODE;
+
 class CWeaponSystem : public CGameObject
 {
 protected:
@@ -27,6 +29,7 @@ public:
 
 	inline void SetAnimationEnabled(bool bFlag) { m_bAnimationEnabled = bFlag; }
 	inline CWeapon* GetCurrentWeapon() { return m_vecWeapon.at(m_iCurrentIndex); }
+	void ApplyCameraView(CAMERA_MODE eMode);
 
 private:	
 	void SwitchWeaponTo(int iIndex);

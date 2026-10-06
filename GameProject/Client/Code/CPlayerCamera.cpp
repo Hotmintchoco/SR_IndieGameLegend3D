@@ -7,6 +7,7 @@
 #include "CStage.h"
 #include "IRayTestable.h"
 #include "CRoomLayer.h"
+#include "CCursorPolicyMgr.h"
 
 CPlayerCamera::CPlayerCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCamera(pGraphicDev), m_pTarget(nullptr),
@@ -80,6 +81,8 @@ void CPlayerCamera::SetPseudoScale(float fScale)
 
 void CPlayerCamera::Mouse_Move()
 {
+	if (!CCursorPolicyMgr::GetInstance()->IsCursorFixed()) return;
+
 	const _long mouseX = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_X);
 	const _long mouseY = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Y);
 	Rotate(D3DXToRadian(mouseX / 10.f), D3DXToRadian(mouseY / 10.f));

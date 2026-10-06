@@ -126,6 +126,7 @@ void CClientCameraMgr::Key_Input(_float fTimeDelta)
         {
             Select_Camera(CLIENT_CAMERA_TYPE::PLAYER);
             static_cast<CPlayerCamera*>(m_pActiveCamera)->Set_CameraMode(CAMERA_MODE::FIRST_PERSON);
+            m_OnCameraViewChanged.Broadcast(CAMERA_MODE::FIRST_PERSON);
         }
         else if (CDInputMgr::GetInstance()->Key_Down(DIK_2))
         {
@@ -135,6 +136,7 @@ void CClientCameraMgr::Key_Input(_float fTimeDelta)
         {
             Select_Camera(CLIENT_CAMERA_TYPE::PLAYER);
             static_cast<CPlayerCamera*>(m_pActiveCamera)->Set_CameraMode(CAMERA_MODE::THIRD_PERSON);
+            m_OnCameraViewChanged.Broadcast(CAMERA_MODE::THIRD_PERSON);
         }
     }
     else

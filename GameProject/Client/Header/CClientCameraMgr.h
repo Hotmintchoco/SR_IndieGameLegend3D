@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Engine_Define.h"
+#include "CEventDelegate.h"
 
 namespace Engine
 {
@@ -13,6 +14,8 @@ enum class CLIENT_CAMERA_TYPE
     PLAYER,
     CINEMATIC
 };
+
+enum class CAMERA_MODE;
 
 class CClientCameraMgr
 {
@@ -33,6 +36,9 @@ public:
 public:
     void            Update_Camera(_float fTimeDelta);
     void            LateUpdate_Camera(_float fTimeDelta);
+
+    /* 성철 : 뷰 전환 이벤트 처리 */
+    CEventDelegate<CAMERA_MODE> m_OnCameraViewChanged;
 
     // 씬 종료·재시작 시 카메라들을 정리합니다.
     void            Free();

@@ -29,8 +29,6 @@ HRESULT CLiminalGun::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
-
     return S_OK;
 }
 

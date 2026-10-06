@@ -109,6 +109,8 @@ public:
 	/* 부모 오브젝트 없는 오브젝트에 대해서, Set World 이후에 영구적으로 transform을 저장하고 싶을 때 사용하시오 */
 	void WorldMatrixDecompose();
 
+	inline bool IsLocal() { return m_bUseLocal; } // 로컬 위치를 사용하고, 다른 출처로부터 부모 월드 행렬을 받아 업데이트되는 트랜스폼인가?
+
 public:
 	HRESULT			Ready_Transform();
 	virtual _int	Update_Component(_float fTimeDelta);
@@ -127,11 +129,12 @@ public:
 	_vec3		m_vAngle;
 
 	_matrix		m_matWorld;
-	_matrix m_matLocal; // 부모 객체 트랜스폼이 있는 경우 자신의 로컬 위치 캐싱용
-	bool m_bUseLocal = false; // 마찬가지의 이유로 위치 변경 시 local matrix 업데이트 용
 
 	_float m_fAccumulatedTime;
 
+private:
+	_matrix m_matLocal; // 부모 객체 트랜스폼이 있는 경우 자신의 로컬 위치 캐싱용
+	bool m_bUseLocal = false; // 마찬가지의 이유로 위치 변경 시 local matrix 업데이트 용
 
 public:
 	static CTransform* Create(LPDIRECT3DDEVICE9 pGraphicDev);
