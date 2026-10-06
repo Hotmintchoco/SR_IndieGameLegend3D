@@ -28,8 +28,8 @@ public:
     void            Add_UI(UI_TYPE eType, CUI* pUI) { m_UIList[eType].push_back(pUI); }
     void            Active_Boss(_bool isFlag);
     void            Set_BossHp(_float fHp);
-    void Update_HPUI(int iHP);
-    void RequestHitEffect();
+    void            Update_HPUI(int iHP, bool bAddTextureOffset);
+    void            RequestHitEffect();
 
 private:
     void            SpecialAtkCheck();

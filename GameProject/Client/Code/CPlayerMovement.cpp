@@ -5,6 +5,9 @@
 CPlayerMovement::CPlayerMovement(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMovement(pGraphicDev)
 {
+    m_fMaxGroundSpeed = m_fMaxGroundSpeedRaw;
+    m_fMaxAirSpeedH = m_fMaxAirSpeedHRaw;
+    m_fMaxAirSpeedV = m_fMaxAirSpeedVRaw;
 }
 
 CPlayerMovement::~CPlayerMovement()
@@ -21,6 +24,16 @@ _int CPlayerMovement::Update_Component(_float fTimeDelta)
 void CPlayerMovement::LateUpdate_Component()
 {
     CMovement::LateUpdate_Component();
+}
+
+void CPlayerMovement::SetSpeedScale(float fScale)
+{
+    m_fMaxGroundSpeed = m_fMaxGroundSpeedRaw * fScale;
+    m_fMaxAirSpeedH = m_fMaxAirSpeedHRaw * fScale;
+    m_fMaxAirSpeedV = m_fMaxAirSpeedVRaw * fScale;
+    m_fJumpSpeed = m_fJumpSpeedRaw * fScale;
+    m_fGravity = m_fGravityRaw * fScale;
+    m_fSkin = m_fSkinRaw * fScale;
 }
 
 void CPlayerMovement::Knockback(const _vec3& vDir, float fIntensity)

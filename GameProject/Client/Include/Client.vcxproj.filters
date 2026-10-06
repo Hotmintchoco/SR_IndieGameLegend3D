@@ -163,9 +163,6 @@
     <Filter Include="02. GameObject\02. Monster\Magmamouth\Fireball">
       <UniqueIdentifier>{80883398-3d6b-4d52-8f00-a866db1e4a6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. Room\PlaceableProp\PseudoBlack">
-      <UniqueIdentifier>{985083af-b441-4e23-9d55-fe18ceb2ef3c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\06. Effect\FrustumExplodeEffect">
       <UniqueIdentifier>{19f10014-1d8b-44d0-89bb-5e80d8ad51ce}</UniqueIdentifier>
     </Filter>
@@ -333,7 +330,7 @@
     </Filter>
     <Filter Include="02. GameObject\06. Effect\Arrow_Effect">
       <UniqueIdentifier>{2c6927cc-9292-403e-91ea-f06959311ff5}</UniqueIdentifier>
-    </Filter>  
+    </Filter>
     <Filter Include="04. Manager\01. Camera">
       <UniqueIdentifier>{3ec8c192-44f1-4350-a6d8-cef25d959a74}</UniqueIdentifier>
     </Filter>
@@ -348,6 +345,18 @@
     </Filter>
     <Filter Include="02. GameObject\04. ClientCamera\Dynamic">
       <UniqueIdentifier>{ee5fc2b0-79b0-4bd1-80cd-3d0ed858e2b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\AtmosphereVeil">
+      <UniqueIdentifier>{985083af-b441-4e23-9d55-fe18ceb2ef3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere">
+      <UniqueIdentifier>{19835880-8741-44f1-a903-f8f42f56048c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame\00.MiniGame_Obj">
+      <UniqueIdentifier>{a321e51e-7142-40be-9653-53bf3ae7a2e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG">
+      <UniqueIdentifier>{94ef362d-1db6-45cb-812b-ff21cfdee457}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -531,8 +540,8 @@
     <ClInclude Include="..\Header\CFireball.h">
       <Filter>02. GameObject\02. Monster\Magmamouth\Fireball</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CPseudoDark.h">
-      <Filter>02. GameObject\07. Room\PlaceableProp\PseudoBlack</Filter>
+    <ClInclude Include="..\Header\CAtmosphereVeil.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\AtmosphereVeil</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CExplosiveFrustumGlass.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
@@ -717,6 +726,12 @@
     <ClInclude Include="..\Header\CDynamicCamera.h">
       <Filter>02. GameObject\04. ClientCamera\Dynamic</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CVeilSphere.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMiniGameBG.h">
+      <Filter>01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -872,8 +887,8 @@
     <ClCompile Include="..\Code\CFireball.cpp">
       <Filter>02. GameObject\02. Monster\Magmamouth\Fireball</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CPseudoDark.cpp">
-      <Filter>02. GameObject\07. Room\PlaceableProp\PseudoBlack</Filter>
+    <ClCompile Include="..\Code\CAtmosphereVeil.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\AtmosphereVeil</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CExplosiveFrustumGlass.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Explosive</Filter>
@@ -1057,6 +1072,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CDynamicCamera.cpp">
       <Filter>02. GameObject\04. ClientCamera\Dynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CVeilSphere.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMiniGameBG.cpp">
+      <Filter>01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

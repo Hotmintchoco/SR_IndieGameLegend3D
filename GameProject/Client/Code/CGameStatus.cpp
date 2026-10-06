@@ -16,6 +16,7 @@
 #include "CStage.h"
 #include "CRenderer.h"
 #include "CPlayer.h"
+#include "CPlayerCamera.h"
 
 CGameStatus::CGameStatus(LPDIRECT3DDEVICE9 pGraphicDev)
     :CGameObject(pGraphicDev)
@@ -135,13 +136,19 @@ void CGameStatus::RenderImGui()
     // --- Player ---
     if (ImGui::CollapsingHeader("Player", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-        if (nullptr == pPlayerTransformCom) return;
-        _vec3 vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-        ImGui::Text("Pos : %.2f, %.2f, %.2f", vPlayerPos.x, vPlayerPos.y, vPlayerPos.z);
-
+        ImGui::Text("Pos : %.2f, %.2f, %.2f", m_vPlayerPos.x, m_vPlayerPos.y, m_vPlayerPos.z);
+    
         ImGui::Text("Yaw : %.1f deg", XMConvertToDegrees(m_fYaw)); 
+    
+        if(ImGui::SliderFloat("Player Scale", &m_fPseudoPlayerScale, 0.01f, 1.f, "%.2f"))
+        {
+            m_pStage->GetPlayer()->SetPseudoScale(m_fPseudoPlayerScale);
+            CPlayerCamera* pCamera = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
+            if (pCamera)
+            {
+                pCamera->SetPseudoScale(m_fPseudoPlayerScale);
+            }
+        }
     }
 
     // --- Gauge ---
@@ -206,6 +213,21 @@ void CGameStatus::RenderImGui()
             else
             {
                 CTimerMgr::GetInstance()->SetGroupTimeScale(TG_PLAYER, 1.f);
+            }
+        }
+    }
+
+    /* Camera Distance */
+    ImGui::SeparatorText("Camera Distance");
+    {
+        auto* pPlayerCamera = static_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
+
+        if (pPlayerCamera)
+        {
+            _float fDistance = pPlayerCamera->Get_Distance();
+            if (ImGui::SliderFloat("Distance", &fDistance, 0.1f, 20.f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+            {
+                pPlayerCamera->Set_Distance(fDistance);
             }
         }
     }

@@ -60,12 +60,17 @@ void CWeaponSystem::Render_GameObject()
 TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
 {
     TWeaponSystemOutput tOut;
+    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
 
     if (tInput.bSpecialSwitchPressed)
     {
         if (m_fSpecialAtkGauge > 0.f)
         {
             m_bSpecialAttackSwitchOn = !m_bSpecialAttackSwitchOn;
+            if (pStage)
+            {
+                pStage->GetStatus()->SetSpecialAttackSwtich(m_bSpecialAttackSwitchOn);
+            }
         }
     }
 
@@ -75,6 +80,7 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
         {
             tOut.eWpEvent = GetCurrentWeapon()->SpecialAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
                                               tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
+            /* TODO */
             // m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
             m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
             if (m_fSpecialAtkGauge <= 0.f)
@@ -82,7 +88,6 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
                 m_bSpecialAttackSwitchOn = false;
             }
 
-            CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
             if (pStage)
             {
                 pStage->GetStatus()->SetSpecialAttackGauge(m_fSpecialAtkGauge);
@@ -100,11 +105,10 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
         tOut.eWpEvent = GetCurrentWeapon()->UltimateAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
                                            tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
         
-
+        /* TODO */
         // m_fUltimateAtkGauge = 0.f;
         // m_bIsUltimateAttackReady = false;
 
-        CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
         if (pStage)
         {
             pStage->GetStatus()->SetUltimateGauge(m_fUltimateAtkGauge);
