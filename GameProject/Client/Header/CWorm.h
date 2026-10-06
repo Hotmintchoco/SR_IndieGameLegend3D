@@ -123,4 +123,6 @@ private:
 	_bool m_bSet_InitPos = false;
 	_float m_fSpeed = 6.f;
 	_float m_fMoveHeight = 1.25f;
+
+	inline static _vec3 s_vRoomCenter = {};
 };

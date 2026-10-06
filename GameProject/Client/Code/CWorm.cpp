@@ -27,8 +27,17 @@ HRESULT CWorm::Ready_GameObject()
     m_pTransformCom->Set_Scale(0.75f, 0.5f, 0.5f);
 
     if (m_iWormIndex == 1)
-        m_vRoomCenterLocation = static_cast<CRoomLayer*>(m_pOwner)->GetCenterPos();
-
+    {
+        if (m_pOwner == nullptr)
+        {
+            m_vRoomCenterLocation = s_vRoomCenter;
+        }
+        else
+        {
+            m_vRoomCenterLocation = static_cast<CRoomLayer*>(m_pOwner)->GetCenterPos();
+            s_vRoomCenter = m_vRoomCenterLocation;
+        }
+    }
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
 
     m_iMaxHp = 5;

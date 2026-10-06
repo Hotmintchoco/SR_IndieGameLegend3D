@@ -103,4 +103,7 @@ private:
 		{0,0,+2.0f}
 	};
 	_int m_iOpeningMoveIndex = 0;
+
+	inline static _vec3 s_vRoomCenter = {};
+
 };
