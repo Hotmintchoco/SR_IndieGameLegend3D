@@ -300,6 +300,9 @@ void CPlayer::UpdateWeaponInput()
     case EWeaponAnimEvent::GUN_SHOT:
         m_pAnimator->PlayAction(EPlayerActionState::GUN_SHOOT);
         break;
+    case EWeaponAnimEvent::ULT_SHOTGUN:
+        m_pAnimator->PlayAction(EPlayerActionState::STRETCH_ARMS);
+        break;
     }
 }
 

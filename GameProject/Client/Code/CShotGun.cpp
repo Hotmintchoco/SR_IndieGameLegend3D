@@ -115,7 +115,8 @@ void CShotGun::ShotSGBullet()
 
 TWeaponOutput CShotGun::UltimateAttack(EInputState ePri, EInputState eSec)
 {
-    return { false, EWeaponAnimEvent::NONE };
+    
+    return { true, EWeaponAnimEvent::ULT_SHOTGUN };
 }
 
 HRESULT CShotGun::Add_Component()

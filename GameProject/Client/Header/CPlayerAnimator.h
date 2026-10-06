@@ -111,11 +111,17 @@ private:
 	float m_fPhase = 0.f;
 
 	/* 액션 */
-	void SampleFire(float fTime);
 	TActionPose m_tActionPose;
 	float m_fActionTime = 0.f;
 	float m_fActionWeight = 0.f;
+
+	/* 액션 : 사격 */
+	void SampleFire(float fTime);
 	static constexpr TShootParam s_tShootParam{};
+
+	/* 액션 : 팔 들기 */
+	void SampleStretchArms();
+	static constexpr float s_fRipperDuration = 3.f;
 
 	/* 애니메이션 디버그용 */
 	bool m_bAnimPause = false;

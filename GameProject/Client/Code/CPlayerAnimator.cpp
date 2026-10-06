@@ -91,6 +91,11 @@ void CPlayerAnimator::UpdateAction(float fTimeDelta)
             if (m_fActionTime >= s_tShootParam.fHoldTime)
                 m_eAction = EPlayerActionState::NONE;   // 종료. m_tActionPose는 남겨서 페이드아웃에 사용
             break;
+        case EPlayerActionState::STRETCH_ARMS:
+            SampleStretchArms();
+            if (m_fActionTime >= s_fRipperDuration)
+                m_eAction = EPlayerActionState::NONE;
+            break;
         default:
             m_eAction = EPlayerActionState::NONE;
             break;
@@ -124,6 +129,16 @@ void CPlayerAnimator::SampleFire(float fTime)
     m_tActionPose.Reset();
     m_tActionPose.bMask[PP_RARM] = true;
     m_tActionPose.vRot[PP_RARM].x = s_fForward * (90.f + s_tShootParam.fKick * fRecoil);   // 정면 90도 + 위로 반동
+}
+
+void CPlayerAnimator::SampleStretchArms()
+{
+    m_tActionPose.Reset();
+    m_tActionPose.bMask[PP_LARM] = true;
+    m_tActionPose.bMask[PP_RARM] = true;
+
+    m_tActionPose.vRot[PP_LARM].z = -90.f;
+    m_tActionPose.vRot[PP_RARM].z = 90.f;
 }
 
 void CPlayerAnimator::ApplyPose()
