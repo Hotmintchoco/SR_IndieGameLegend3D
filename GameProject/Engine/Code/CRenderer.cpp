@@ -358,7 +358,7 @@ HRESULT CRenderer::Ready_PulseEffect(LPDIRECT3DDEVICE9 pDevice, const D3DSURFACE
         if (!length || length >= MAX_PATH) return E_FAIL;
         std::wstring directory(exePath);
         directory = directory.substr(0, directory.find_last_of(L"\\/") + 1);
-        const std::wstring texturePath = directory + L"Resource\\Shader\\CameraFilterPack_WaterDrop.png";
+        const std::wstring texturePath = directory + L"Resource\\Shader\\CameraFilterPack_RainDrop.png";
         HRESULT hr = D3DXCreateTextureFromFileExW(pDevice, texturePath.c_str(),
             D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2, 1, 0, D3DFMT_A8R8G8B8,
             D3DPOOL_MANAGED, D3DX_FILTER_LINEAR, D3DX_FILTER_NONE, 0,

@@ -3,7 +3,7 @@
 #include "CTimerMgr.h"
 #include "CFrameMgr.h"
 #include "CFontMgr.h"
-#include "CLogo.h"
+#include "CStartScreen.h"
 #include "CProtoMgr.h"
 #include "CStage.h"
 #include "CDInputMgr.h"
@@ -57,9 +57,9 @@ int CMainApp::Update_MainApp(_float fTimeDelta)
 	{
 		CRenderer::GetInstance()->Set_PulseEnabled(!CRenderer::GetInstance()->Get_PulseEnabled());
 		// 기존 4x4 확대/축소, 움직임 속도
-		CRenderer::GetInstance()->Set_PulseParameters(0.12f, 2.5f);
+		CRenderer::GetInstance()->Set_PulseParameters(0.14f, 2.5f);
 		// 물방울 굴절 강도, 움직임 속도
-		CRenderer::GetInstance()->Set_WaterDropParameters(0.04f, 2.f);
+		CRenderer::GetInstance()->Set_WaterDropParameters(0.08f, 2.f);
 	}
 	CRenderer::GetInstance()->Update_PulseEffect(fTimeDelta);
 	CCursorPolicyMgr::GetInstance()->Update();
@@ -109,6 +109,13 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	(*ppGraphicDev) = m_pDeviceClass->Get_GraphicDev();
 
 	// 폰트 추가
+    // Common components are needed by the start screen before loading begins.
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(
+        L"Proto_RcTex", Engine::CRcTex::Create(m_pGraphicDev))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(
+        L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
+        return E_FAIL;
 
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"바탕", 20, 20, FW_HEAVY)))
 		return E_FAIL;
@@ -133,15 +140,15 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 
 HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CScene* pLogo = CLogo::Create(pGraphicDev);
+	CScene* pStartScreen = CStartScreen::Create(pGraphicDev);
 
-	if (nullptr == pLogo)
+	if (nullptr == pStartScreen)
 		return E_FAIL;
 
-	if (FAILED(m_pManagementClass->Change_Scene(0, pLogo, true)))
+	if (FAILED(m_pManagementClass->Change_Scene(0, pStartScreen, true)))
 	{
-		Safe_Release(pLogo);
-		MSG_BOX("Logo Create Failed");
+		Safe_Release(pStartScreen);
+		MSG_BOX("Start Screen Create Failed");
 		return E_FAIL;
 	}
 

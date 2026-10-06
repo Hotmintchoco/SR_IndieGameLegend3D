@@ -15,12 +15,28 @@ CCursorPolicyMgr::~CCursorPolicyMgr()
 
 void CCursorPolicyMgr::Update()
 {
+    if (m_bMenuMode)
+        return;
+
 	KeyInput();
 
 	if (m_bCursorFixed)
 	{
 		FixCursorToWindowCenter();
 	}
+}
+
+void CCursorPolicyMgr::Set_MenuMode(bool bMenuMode)
+{
+    m_bMenuMode = bMenuMode;
+    if (m_bMenuMode || !m_bCursorFixed)
+    {
+        while (ShowCursor(TRUE) < 0) {}
+    }
+    else
+    {
+        while (ShowCursor(FALSE) >= 0) {}
+    }
 }
 
 void CCursorPolicyMgr::KeyInput()

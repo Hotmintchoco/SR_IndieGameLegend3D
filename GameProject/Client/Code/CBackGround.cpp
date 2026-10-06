@@ -40,9 +40,22 @@ void CBackGround::LateUpdate_GameObject(_float fTimeDelta)
 
 void CBackGround::Render_GameObject()
 {
+    _matrix matWorld, matView, matProj, matIdentity;
+    m_pGraphicDev->GetTransform(D3DTS_WORLD, &matWorld);
+    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+    m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
+    D3DXMatrixIdentity(&matIdentity);
+    m_pGraphicDev->SetTransform(D3DTS_WORLD, &matIdentity);
+    m_pGraphicDev->SetTransform(D3DTS_VIEW, &matIdentity);
+    m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &matIdentity);
+
     m_pTextureCom->Set_Texture(0);
 
     m_pBufferCom->Render_Buffer();
+
+    m_pGraphicDev->SetTransform(D3DTS_WORLD, &matWorld);
+    m_pGraphicDev->SetTransform(D3DTS_VIEW, &matView);
+    m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &matProj);
 
 }
 
