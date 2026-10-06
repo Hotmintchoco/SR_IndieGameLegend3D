@@ -30,7 +30,6 @@
 #include "CDirectionUI.h"
 #include "CMinimapUI.h"
 #include "CGaugeUI.h"
-#include "CMiniGame.h"
 #include "CHitCreenUI.h"
 
 /* 카메라 */
@@ -39,6 +38,10 @@
 #include "CPlayerCamera.h"
 #include "CDynamicCamera.h"
 #include "CCinematicCamera.h"
+
+/* 씬 전환 */
+#include "CMiniGame.h"
+#include "CMiniGame1.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -109,6 +112,21 @@ _int CStage::Update_Scene(_float fTimeDelta)
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
 	{
 		CScene* pMiniGame = CMiniGame::Create(m_pGraphicDev);
+		if (nullptr == pMiniGame)
+			return E_FAIL;
+
+		if (FAILED(CManagement::GetInstance()->Change_Scene(1, pMiniGame)))
+		{
+			Safe_Release(pMiniGame);
+			MSG_BOX("MiniGame Create Failed");
+			return -1;
+		}
+		pMiniGame->Update_Scene(fTimeDelta);
+	}
+
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F3))
+	{
+		CScene* pMiniGame = CMiniGame1::Create(m_pGraphicDev);
 		if (nullptr == pMiniGame)
 			return E_FAIL;
 
