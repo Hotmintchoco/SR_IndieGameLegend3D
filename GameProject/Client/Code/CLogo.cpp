@@ -1,6 +1,6 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CLogo.h"
-#include "CBackGround.h"
+#include "CGaugeUI.h"
 #include "CProtoMgr.h"
 #include "CStage.h"
 #include "CManagement.h"
@@ -23,7 +23,10 @@ HRESULT CLogo::Ready_Scene()
 	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
 		return E_FAIL;
 
-	m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE);
+	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
+        return E_FAIL;
+
+    m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE);
 
 	if (nullptr == m_pLoading)
 		return E_FAIL;
@@ -33,30 +36,35 @@ HRESULT CLogo::Ready_Scene()
 
 _int CLogo::Update_Scene(_float fTimeDelta)
 {
-	_int iExit = CScene::Update_Scene(fTimeDelta);
+    const float fTarget = m_pLoading->Get_Progress();
+    m_fDisplayProgress = min(fTarget, m_fDisplayProgress + fTimeDelta * 0.8f);
+    m_pLoadingGauge->Set_Percent(m_fDisplayProgress);
 
-	if (m_pLoading->Get_Finish())
-	{
-		//if (GetAsyncKeyState(VK_RETURN))
-		//{
-			CScene* pStage = CStage::Create(m_pGraphicDev);
+    if (m_pLoading->Get_Finish() && m_fDisplayProgress >= 1.f && !m_bStageFailed)
+    {
+        // Keep a full gauge visible before entering the stage.
+        m_fCompleteHold += fTimeDelta;
+        if (m_fCompleteHold >= 0.2f)
+        {
+            CScene* pStage = CStage::Create(m_pGraphicDev);
+            if (!pStage)
+            {
+                m_bStageFailed = true;
+                return CScene::Update_Scene(fTimeDelta);
+            }
 
-			if (nullptr == pStage)
-				return E_FAIL;
+            // Do not queue the old scene's objects on the transition frame.
+            const HRESULT hr = CManagement::GetInstance()->Change_Scene(0, pStage, true);
+            if (FAILED(hr))
+            {
+                Safe_Release(pStage);
+                return -1;
+            }
+            return pStage->Update_Scene(fTimeDelta);
+        }
+    }
 
-			if (FAILED(CManagement::GetInstance()->Change_Scene(0, pStage, true)))
-			{
-				Safe_Release(pStage);
-				MSG_BOX("Stage Create Failed");
-				return -1;
-			}
-
-			/* Stage 씬에 처음 들어가는 경우 바로 LateUpdate로 이어져 Transform이 업데이트 되지 않는 현상 */
-			pStage->Update_Scene(fTimeDelta);
-		//}
-	}
-
-	return iExit;
+    return CScene::Update_Scene(fTimeDelta);
 }
 
 void CLogo::LateUpdate_Scene(_float fTimeDelta)
@@ -65,37 +73,80 @@ void CLogo::LateUpdate_Scene(_float fTimeDelta)
 }
 
 void CLogo::Render_Scene()
-{	
-
-	_vec2	vPos{ 100.f, 100.f };
-	CFontMgr::GetInstance()->Render_Font(L"Font_Jinji", m_pLoading->Get_String(), &vPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+{
+    if (m_pLoading->Get_Failed() || m_bStageFailed)
+    {
+        _vec2 vPos{ WINCX * 0.5f - 180.f, WINCY * 0.8f - 50.f };
+        CFontMgr::GetInstance()->Render_Font(L"Font_Jinji",
+            L"Loading failed. Please restart the game.", &vPos,
+            D3DXCOLOR(1.f, 0.3f, 0.3f, 1.f));
+    }
 }
 
 HRESULT CLogo::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
-	CLayer* pLayer = CLayer::Create();
-	if (nullptr == pLayer)
-		return E_FAIL;
+    CLayer* pLayer = CLayer::Create();
+    if (!pLayer)
+        return E_FAIL;
+    m_mapLayer.insert({ pLayerTag, pLayer });
 
-	// 오브젝트 추가
-	CGameObject* pGameObject = nullptr;
+    // Use the same orthographic UI pass so the background stays behind the gauge.
+    CUI* pBackground = CUI::Create(m_pGraphicDev, L"Proto_LogoTexture");
+    if (!pBackground)
+        return E_FAIL;
+    pBackground->Set_Pos(WINCX * 0.5f, WINCY * 0.5f, 0.9f);
+    pBackground->Set_Size({ WINCX * 0.5f, WINCY * 0.5f });
+    if (FAILED(pLayer->Add_GameObject(L"BackGround", pBackground)))
+    {
+        Safe_Release(pBackground);
+        return E_FAIL;
+    }
+    return S_OK;
+}
 
-	// BackGround
+HRESULT CLogo::Ready_UI_Layer(const _tchar* pLayerTag)
+{
+    CLayer* pLayer = CLayer::Create();
+    if (!pLayer)
+        return E_FAIL;
+    m_mapLayer.insert({ pLayerTag, pLayer });
 
-	pGameObject = CBackGround::Create(m_pGraphicDev);
-	if (nullptr == pGameObject)
-		return E_FAIL;
+    const float fScale = min(WINCX / 1280.f, WINCY / 720.f);
+    const float fX = WINCX * 0.5f;
+    const float fY = WINCY * 0.8f;
+    CUI* pFrame = CUI::Create(m_pGraphicDev, L"Proto_BossHpBarTexture");
+    if (!pFrame)
+        return E_FAIL;
+    pFrame->Set_Pos(fX, fY, 0.2f);
+    pFrame->Set_Size({ 324.f * fScale, 24.f * fScale });
+    if (FAILED(pLayer->Add_GameObject(L"LoadingFrame", pFrame)))
+    {
+        Safe_Release(pFrame);
+        return E_FAIL;
+    }
 
-	if (FAILED(pLayer->Add_GameObject(L"BackGround", pGameObject)))
-		return E_FAIL;
-
-	m_mapLayer.insert({ pLayerTag ,pLayer });
-
-	return S_OK;
+    CGaugeUI* pGauge = CGaugeUI::Create(m_pGraphicDev, L"Proto_RedTexture", true);
+    if (!pGauge)
+        return E_FAIL;
+    pGauge->Set_Pos(fX, fY, 0.1f);
+    pGauge->Set_Size({ 306.f * fScale, 19.5f * fScale });
+    pGauge->Set_Percent(0.f);
+    if (FAILED(pLayer->Add_GameObject(L"LoadingGauge", pGauge)))
+    {
+        Safe_Release(pGauge);
+        return E_FAIL;
+    }
+    m_pLoadingGauge = pGauge;
+    return S_OK;
 }
 
 HRESULT CLogo::Ready_Prototype()
 {
+    // Register before starting the worker; the stage reuses these prototypes.
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BossHpBarTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/BossHpBar.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RedTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/RedColor.png", 1))))
+        return E_FAIL;
 
 	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LogoTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Logo/sana.jpg", 1))))
 		return E_FAIL;	

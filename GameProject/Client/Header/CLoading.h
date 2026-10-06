@@ -2,6 +2,7 @@
 
 #include "CBase.h"
 #include "Engine_Define.h"
+#include <atomic>
 
 struct TRoomData;
 
@@ -15,9 +16,10 @@ private:
 	virtual ~CLoading();
 
 public:
-	const _tchar* Get_String()			{ return m_szLoading; }
 	LOADINGID	  Get_LoadingID()		{ return m_eLoadingID; }
-	_bool		  Get_Finish()			{ return m_bFinish; }
+    _bool Get_Finish() const { return m_bFinish.load(); }
+    _bool Get_Failed() const { return m_bFailed.load(); }
+    _float Get_Progress() const { return m_fProgress.load(); }
 	CRITICAL_SECTION* Get_Crt()			{ return &m_Crt; }
 
 public:
@@ -34,13 +36,14 @@ private:
 
 private:
 	LPDIRECT3DDEVICE9	m_pGraphicDev;
-	_tchar				m_szLoading[128];
 	
-	HANDLE				m_hThread;
+	HANDLE				m_hThread = nullptr;
 	LOADINGID			m_eLoadingID;
 
 	CRITICAL_SECTION	m_Crt;
-	_bool				m_bFinish;
+    std::atomic_bool m_bFinish{ false };
+    std::atomic_bool m_bFailed{ false };
+    std::atomic<float> m_fProgress{ 0.f };
 
 
 public:

@@ -57,9 +57,9 @@ int CMainApp::Update_MainApp(_float fTimeDelta)
 	{
 		CRenderer::GetInstance()->Set_PulseEnabled(!CRenderer::GetInstance()->Get_PulseEnabled());
 		// 기존 4x4 확대/축소, 움직임 속도
-		CRenderer::GetInstance()->Set_PulseParameters(0.12f, 2.5f);
+		CRenderer::GetInstance()->Set_PulseParameters(0.14f, 2.5f);
 		// 물방울 굴절 강도, 움직임 속도
-		CRenderer::GetInstance()->Set_WaterDropParameters(0.04f, 2.f);
+		CRenderer::GetInstance()->Set_WaterDropParameters(0.08f, 2.f);
 	}
 	CRenderer::GetInstance()->Update_PulseEffect(fTimeDelta);
 	CCursorPolicyMgr::GetInstance()->Update();
