@@ -2,6 +2,11 @@
 #include "CPlayerCamera.h"
 #include "CDInputMgr.h"
 #include "CProtoMgr.h"
+#include "CRayCaster.h"
+#include "CManagement.h"
+#include "CStage.h"
+#include "IRayTestable.h"
+#include "CRoomLayer.h"
 
 CPlayerCamera::CPlayerCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCamera(pGraphicDev), m_pTarget(nullptr),
@@ -66,6 +71,13 @@ void CPlayerCamera::LateUpdate_GameObject(_float fTimeDelta)
 	Follow_Target();
 }
 
+void CPlayerCamera::SetPseudoScale(float fScale)
+{
+	m_vEyeOffset = m_vEyeOffsetRaw * fScale;
+	m_fNear = m_fNearRaw * fScale;
+	m_fFar = m_fFarRaw * fScale;
+}
+
 void CPlayerCamera::Mouse_Move()
 {
 	const _long mouseX = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_X);
@@ -95,7 +107,8 @@ void CPlayerCamera::Follow_Target()
 	if (m_eCameraMode == CAMERA_MODE::THIRD_PERSON)
 	{
 		// 시선 방향의 반대쪽으로 물러나서 플레이어를 바라봄 (3인칭)
-		m_vEye = vPivot - vLook * m_fDistance;
+		float fSpringArmLength = floatCalculateSpringArmLength();
+		m_vEye = vPivot - vLook * min(fSpringArmLength - m_fNearPlaneMargin, m_fDistance);
 		m_vAt = vPivot;
 	}
 	else
@@ -106,6 +119,33 @@ void CPlayerCamera::Follow_Target()
 	}
 
 	m_vUp = { 0.f, 1.f, 0.f };
+}
+
+float CPlayerCamera::floatCalculateSpringArmLength()
+{
+	CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+	if (!pStage) return FLT_MAX;
+
+	const vector<IRayTestable*>& mapObject = pStage->GetCurrentRoomLayer()->GetRayTestableList();
+	CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
+
+	_vec3 vPivot = m_pTarget->Get_Info_Value(INFO_POS) + m_vEyeOffset;
+	_vec3 vDir = m_vEye - m_vAt;
+	D3DXVec3Normalize(&vDir, &vDir);
+
+	THitInfo t{};
+
+	for (auto& pObj : mapObject)
+	{
+		vector<pair<CVIBuffer*, CTransform*>> vecInfo = pObj->GetRayTestTargetInfo();
+		for (auto& [pBuffer, pTransform] : vecInfo)
+		{
+			/* 피벗(캐릭터 눈) - 카메라 방향으로 레이 발사 */
+			pRayCaster->RayTest(t, vPivot, vDir, pBuffer, pTransform->Get_World());
+		}
+	}
+
+	return t.fDist;
 }
 
 CPlayerCamera* CPlayerCamera::Create(LPDIRECT3DDEVICE9 pGraphicDev, CTransform* pTarget)

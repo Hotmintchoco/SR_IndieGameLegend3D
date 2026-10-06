@@ -54,6 +54,8 @@ protected:
 	float m_fGroundFriction = 30.f;
 	float m_fAirFriction = 0.1f;
 	float m_fAirInputCoef = 0.2f;
+	float m_fGravity = 9.8f;
+	float m_fSkin = 0.03f;
 
 	/* 공중 처리 */
 	bool m_bOnGround = true;
@@ -68,7 +70,6 @@ protected:
 	/* Launch */
 	TLaunchRequest m_tLaunchRequest;
 
-	static constexpr float s_fGravity = 9.8f;
 
 public:
 	static CMovement* Create(LPDIRECT3DDEVICE9 pGraphicDev);
