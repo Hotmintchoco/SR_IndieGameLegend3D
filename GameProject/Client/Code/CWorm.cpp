@@ -81,7 +81,7 @@ _int CWorm::Update_GameObject(_float fTimeDelta)
     {
         m_fFrame += fTimeDelta * 8.f;
         if (m_fFrame > 4.f)
-            m_fFrame = 0.f;
+            m_fFrame -= 4.f;
     }
 
     if (m_iWormIndex == 1 || m_iWormIndex == 10)
@@ -875,6 +875,13 @@ void CWorm::Set_Motion_FromAngle()
         }
     }
 
+    if (m_eDir == FRONT)
+    {
+        matWorld->_41 = vPos.x;
+        matWorld->_42 = vPos.y;
+        matWorld->_43 = vPos.z;
+        return;
+    }
     _matrix matRot;
     D3DXMatrixRotationAxis(&matRot, &vUp, D3DXToRadian(-90.f));
     *matWorld = (*matWorld) * matRot;
