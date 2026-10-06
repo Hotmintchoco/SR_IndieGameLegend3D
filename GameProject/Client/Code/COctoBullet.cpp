@@ -82,7 +82,7 @@ void COctoBullet::OnCollisionEnter(COLLINFO eCollInfo)
 		Set_Dead(true);
 		break;
     case COLLISIONID::COLL_PLAYER:
-        static_cast<CPlayer*>(pOtherCol->Get_Owner())->OnHit(nullptr);
+        static_cast<CPlayer*>(pOtherCol->Get_Owner())->OnHit(this);
         m_pColliderCom->Set_IsActive(false);
         Set_Dead(true);
         break;
