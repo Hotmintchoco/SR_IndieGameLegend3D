@@ -367,6 +367,9 @@
     <Filter Include="02. GameObject\02. Monster\Octo\OctoBullet">
       <UniqueIdentifier>{3b3a93cc-5288-46de-8221-d2aa5321b07a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Seaweed">
+      <UniqueIdentifier>{b82a3fc1-9e29-49af-9ac9-f669d58ff8c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -750,6 +753,12 @@
     <ClInclude Include="..\Header\COctoBullet.h">
       <Filter>02. GameObject\02. Monster\Octo\OctoBullet</Filter>
     </ClInclude>
+    <ClInclude Include="CSeaweed2.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSeaweed.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1105,6 +1114,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\COctoBullet.cpp">
       <Filter>02. GameObject\02. Monster\Octo\OctoBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="CSeaweed2.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSeaweed.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

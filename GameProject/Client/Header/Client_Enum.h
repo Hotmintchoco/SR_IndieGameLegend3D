@@ -77,6 +77,8 @@ enum class EObjectType
 	Glubba = 20,
 	Octo = 21,
 	Mine = 22,
+	Seaweed = 23,
+	Seaweed2 = 24,
 
 
 	ITEM_NONE = 31,
