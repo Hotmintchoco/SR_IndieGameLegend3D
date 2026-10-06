@@ -265,7 +265,7 @@ void CPlayer::OnHit(CGameObject* pSrcObj)
     if (m_bInvincible) return;
 
     --m_iHP;
-    CUIMgr::GetInstance()->Update_HPUI(m_iHP);
+    CUIMgr::GetInstance()->Update_HPUI(m_iHP, m_bInvincible);
     CUIMgr::GetInstance()->RequestHitEffect();
 
     /* 사망 시 빠지기 */
