@@ -22,6 +22,7 @@
 #include "CFloor.h"
 #include "CItemContainer.h"
 #include "CRandomMgr.h"
+#include "CAtmosphereVeil.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -191,6 +192,22 @@ HRESULT CRoomLayer::SpawnRoom()
 	LPDIRECT3DDEVICE9 pDevice = CGraphicDev::GetInstance()->GetInstance()->Get_GraphicDev();
 
 	CGameObject* pGameObject = nullptr;
+
+	/* 사막 기후에서 모래 안개 효과 */
+	if (m_tBiomeInfo.eType == EBiomeType::DESERT)
+	{
+		CAtmosphereVeil* pVeil = CAtmosphereVeil::Create(pDevice, TVeilDesc{ EColorTexture::SAND, {2.5f, 3.25f, 4.f, 4.75f}, {40, 40, 40, 40} });
+		if (FAILED(Add_GameObject(L"Veil_Dust", pVeil)))
+			return E_FAIL;
+	}
+
+	/* 어둠 방에서 어둠 효과 */
+	if (t->bDark)
+	{
+		CAtmosphereVeil* pVeil = CAtmosphereVeil::Create(pDevice, TVeilDesc{ EColorTexture::BLACK, {2.5f, 3.25f, 4.f, 4.75f}, {60, 60, 60, 100} });
+		if (FAILED(Add_GameObject(L"Veil_Dark", pVeil)))
+			return E_FAIL;
+	}
 
 	/* 바닥 충돌체 */
 	wstring wstrName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Floor";
@@ -504,10 +521,9 @@ void CRoomLayer::RequestTileContamination(const _vec3& vPos, int iRange, EContam
 
 void CRoomLayer::SetPseudoDark(bool bFlag)
 {
-	for (int i = 0; i < 4; ++i)
+	CAtmosphereVeil* pDark = static_cast<CAtmosphereVeil*>(Get_GameObject(L"Veil_Dark"));
+	if (pDark)
 	{
-		wstring wstrName = L"PseudoDark_" + to_wstring(i);
-		CGameObject* pDark = CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", wstrName.c_str());
 		pDark->Set_IsActive(bFlag);
 	}
 }

@@ -81,6 +81,8 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
 
     m_pAnimator->TransformPropagation(*m_pTransformCom->Get_World());
 
+    CUIMgr::GetInstance()->Update_HPUI(m_iHP, m_bInvincible);
+
 	return iExit;
 }
 
@@ -312,7 +314,7 @@ void CPlayer::RestoreHP(int iAmount)
     m_iHP += iAmount;
     m_iHP = clamp(m_iHP, 0, m_iMaxHP);
     
-    CUIMgr::GetInstance()->Update_HPUI(m_iHP);
+    CUIMgr::GetInstance()->Update_HPUI(m_iHP, false);
 }
 
 void CPlayer::SetInputEnabled(bool bFlag, float fDisabledTime)

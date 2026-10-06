@@ -55,10 +55,11 @@ void CUIMgr::Set_BossHp(_float fHp)
     }
 }
 
-void CUIMgr::Update_HPUI(int iHP)
+void CUIMgr::Update_HPUI(int iHP, bool bAddTextureOffset)
 {
     const _int iSlotCount = 3;
     const _int iHpPerSlot = 4;
+    const _int iDamagedHpSlot = iHP / iHpPerSlot;
 
     for (_int i = 0; i < iSlotCount; ++i)
     {
@@ -74,7 +75,12 @@ void CUIMgr::Update_HPUI(int iHP)
         else if (iSlotHP > iHpPerSlot)
             iSlotHP = iHpPerSlot;
 
-        pUI->Set_Texture((_uint)iSlotHP);
+        _uint iTexture = static_cast<_uint>(iSlotHP);
+
+        if (bAddTextureOffset && i == iDamagedHpSlot)
+            iTexture += 5;
+
+        pUI->Set_Texture(iTexture);
     }
 }
 
