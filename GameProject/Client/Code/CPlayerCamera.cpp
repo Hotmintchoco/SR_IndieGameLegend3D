@@ -65,6 +65,13 @@ void CPlayerCamera::LateUpdate_GameObject(_float fTimeDelta)
 	Follow_Target();
 }
 
+void CPlayerCamera::SetPseudoScale(float fScale)
+{
+	m_vEyeOffset = m_vEyeOffsetRaw * fScale;
+	m_fNear = m_fNearRaw * fScale;
+	m_fFar = m_fFarRaw * fScale;
+}
+
 void CPlayerCamera::Mouse_Move()
 {
 	const _long mouseX = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_X);

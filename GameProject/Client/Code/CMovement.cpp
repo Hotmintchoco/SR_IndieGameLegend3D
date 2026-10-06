@@ -119,7 +119,7 @@ void CMovement::TryExertGravity(const float fTimeDelta)
 {
     if (m_bOnGround) return;
     
-    m_vVelocity.y -= s_fGravity * fTimeDelta;
+    m_vVelocity.y -= m_fGravity * fTimeDelta;
 }
 
 void CMovement::ExertFriction(float fTimeDelta)
@@ -187,14 +187,13 @@ void CMovement::Launch(const TLaunchRequest& tReq)
 void CMovement::TerrainResolver(const vector<ITerrain*>& vecTerrain, _vec3& vDesired)
 {
     float fHeight = -FLT_MAX;
-    float fSkin = 0.03f;
-    _vec3 vRayStart = vDesired + _vec3{0.f, fSkin, 0.f};
+    _vec3 vRayStart = vDesired + _vec3{0.f, m_fSkin, 0.f};
     for (auto pTerrain : vecTerrain)
     {
         fHeight = max(fHeight, pTerrain->SampleTerrainHeight(vRayStart));
     }
 
-    if (fHeight + fSkin >= vDesired.y && m_vVelocity.y <= 0.f)
+    if (fHeight + m_fSkin >= vDesired.y && m_vVelocity.y <= 0.f)
     {
         vDesired.y = fHeight;
         m_vVelocity.y = 0.f;
