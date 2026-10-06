@@ -33,6 +33,8 @@ private:
 	_vec3 m_vJumpDirection = {};
 	_float m_fJumpTime = 0.f;
 	_float m_fVelocityY = 0.f;
+
+	_float m_fJumpInterval = 4.f - _float(rand() % 16) / 16.f;
 protected:
 	virtual void		Free();
 };

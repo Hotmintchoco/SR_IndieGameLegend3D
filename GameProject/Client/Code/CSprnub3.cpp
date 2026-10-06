@@ -62,7 +62,7 @@ _int CSprnub3::Update_GameObject(_float fTimeDelta)
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
 
-    if (m_fElapsedTime > 4.f)
+    if (m_fElapsedTime > m_fJumpInterval)
     {
         _uint iX = rand() % 3;
         m_fElapsedTime = _float(iX) / 8.f * 9.f;
