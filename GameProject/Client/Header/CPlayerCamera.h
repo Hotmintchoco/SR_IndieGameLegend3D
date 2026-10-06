@@ -39,6 +39,9 @@ private:
     void            Mouse_Move();
     void            Follow_Target();
 
+    /* 스프링 암 관련 */
+    float floatCalculateSpringArmLength();
+
 private:
     CTransform*     m_pTarget;
 
@@ -46,6 +49,9 @@ private:
     _vec3 m_vEyeOffsetRaw = _vec3{0.f, 1.f, 0.f};
     float m_fNearRaw = 0.1f;
     float m_fFarRaw = 1000.f;
+
+    /* 스프링 암 관련 */
+    float m_fNearPlaneMargin = 0.1f;
 
     // 실제 플레이어 Transform의 기준점에 맞춰 설정
     _vec3           m_vEyeOffset = m_vEyeOffsetRaw;
