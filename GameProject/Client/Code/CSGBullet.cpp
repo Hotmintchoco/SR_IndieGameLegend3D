@@ -36,7 +36,7 @@ HRESULT CSGBullet::Ready_GameObject()
     m_iTotalFrameCount = m_pTextureCom->GetCount();
 
     //261001 재현
-    Create_Trail();
+    Create_Bullet_Trail();
 
     return S_OK;
 }

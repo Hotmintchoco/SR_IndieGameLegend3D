@@ -8,6 +8,7 @@
 #include <ctime>
 #include "CTrail.h"
 #include "CBullet_Trail.h"
+#include "CArrow_Effect.h"
 
 CEffect::CEffect(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_fFrame(0.f)
@@ -111,8 +112,22 @@ CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type
         MSG_BOX("CEffect Create Failed");
         return nullptr;
     }
+    return pEffect;
+}
 
+CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, CGameObject* pEffect_Owner, _float fLifeTime)
+{
+    CEffect* pEffect = new CEffect(pGraphicDev);
+    pEffect->Set_Effect_Type(eEffect_Type);
+    pEffect->Set_Effect_Owner(pEffect_Owner);
+    pEffect->Set_LifeTime(fLifeTime);
 
+    if (FAILED(pEffect->Ready_GameObject()))
+    {
+        Safe_Release(pEffect);
+        MSG_BOX("CEffect Create Failed");
+        return nullptr;
+    }
     return pEffect;
 }
 
@@ -166,6 +181,7 @@ void CEffect::Ready_Effect()
         m_fLifeTime = 1.f;
         break;
     case BULLET_TRAIL:
+    {
         m_fLifeTime = 100.f;
 
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
@@ -177,6 +193,9 @@ void CEffect::Ready_Effect()
         if (FAILED(pLayer->Add_GameObject(L"Bullet_Trail", pGameObject))) return;
 
         static_cast<CProjectile*>(m_pEffect_Owner)->Set_TrailPointer(pGameObject);
+        break;
+    }
+    case ARROW_TRAIL:
         break;
     }
 }
@@ -400,9 +419,34 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         break;
     }
 	case BULLET_TRAIL:
-
 		Set_Dead(true);
 		break;
+    case ARROW_TRAIL:
+        m_fElapsedTime2 += fTimeDelta;
+        CTransform* pEffectOwnerTransformCom = static_cast<CProjectile*>(m_pEffect_Owner)->Get_Transform();
+        _vec3 vPos, vLook;
+        pEffectOwnerTransformCom->Get_Info(INFO_POS, &vPos);
+        pEffectOwnerTransformCom->Get_Info(INFO_LOOK, &vLook);
+        D3DXVec3Normalize(&vLook, &vLook);
+        vPos = vPos - vLook;
+
+        m_pTransformCom->Set_Pos(vPos);
+
+        if (m_fElapsedTime2 > 0.125f && m_fElapsedTime < m_fLifeTime)
+        {
+            m_fElapsedTime2 = 0.f;
+
+            CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+            CGameObject* pGameObject = nullptr;
+
+            pGameObject = CArrow_Effect::Create(m_pGraphicDev, vPos, vLook);
+
+            if (nullptr == pGameObject) return;
+            if (FAILED(pLayer->Add_GameObject(L"Arrow_Trail", pGameObject))) return;
+        }
+        if (m_fElapsedTime >= m_fLifeTime)
+            Set_Dead(true);
+        break;
     }
 
 }

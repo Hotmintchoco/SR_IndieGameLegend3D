@@ -82,6 +82,12 @@ public:
 
 	inline _vec3 Get_Scale() { return m_vScale; }
 
+	inline void		Set_Angle(const _vec3& vAngle)
+	{
+		m_vAngle = vAngle;
+		UpdateWorldMatrix();
+	}
+
 	inline void UpdateMatrix()
 	{
 		if (m_bUseLocal)

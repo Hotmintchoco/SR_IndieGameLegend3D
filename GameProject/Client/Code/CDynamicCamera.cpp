@@ -63,7 +63,7 @@ void CDynamicCamera::LateUpdate_GameObject(_float fTimeDelta)
 {
 }
 
-void CDynamicCamera::Key_Input(const _float& fTimeDelta)
+void CDynamicCamera::Key_Input(const _float fTimeDelta)
 {
 	_vec3 vLook = m_vAt - m_vEye;
 	D3DXVec3Normalize(&vLook, &vLook);

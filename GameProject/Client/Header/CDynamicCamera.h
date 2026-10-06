@@ -23,7 +23,7 @@ public:
 	virtual			void		Render_GameObject() {}
 
 private:
-	void			Key_Input(const _float& fTimeDelta);
+	void			Key_Input(const _float fTimeDelta);
 	void			Mouse_Move();
 	void			Mouse_Fix();
 

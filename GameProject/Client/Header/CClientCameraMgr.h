@@ -44,5 +44,6 @@ private:
 private:
     map<CLIENT_CAMERA_TYPE, CCamera*>   m_mapCamera;
     CCamera*                            m_pActiveCamera = nullptr;
+    CLIENT_CAMERA_TYPE                  m_eCurrentType = CLIENT_CAMERA_TYPE::PLAYER;
 };
 

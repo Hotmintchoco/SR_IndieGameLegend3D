@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="..\Header\CAbstractFactory.h" />
     <ClInclude Include="..\Header\CArrow.h" />
+    <ClInclude Include="..\Header\CArrow_Effect.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
     <ClInclude Include="..\Header\CBombardArrowSpawner.h" />
     <ClInclude Include="..\Header\CBow.h" />
@@ -245,9 +246,6 @@
     <ClInclude Include="..\Header\CWeaponPickup.h" />
     <ClInclude Include="..\Header\CWeaponSystem.h" />
     <ClInclude Include="..\Header\CWorm.h" />
-    <ClInclude Include="..\Header\CWorm_Tail.h" />
-    <ClInclude Include="..\Header\CWorm_Boby.h" />
-    <ClInclude Include="..\Header\CWorm_Face.h" />
     <ClInclude Include="..\Header\Client_Struct.h" />
     <ClInclude Include="..\Header\imconfig.h" />
     <ClInclude Include="..\Header\imgui.h" />
@@ -273,6 +271,7 @@
   <ItemGroup>
     <ClCompile Include="..\Code\CAbstractFactory.cpp" />
     <ClCompile Include="..\Code\CArrow.cpp" />
+    <ClCompile Include="..\Code\CArrow_Effect.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
     <ClCompile Include="..\Code\CBombardArrowSpawner.cpp" />
     <ClCompile Include="..\Code\CBow.cpp" />
@@ -392,9 +391,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Code\CWorm.cpp" />
-    <ClCompile Include="..\Code\CWorm_Tail.cpp" />
-    <ClCompile Include="..\Code\CWorm_Boby.cpp" />
-    <ClCompile Include="..\Code\CWorm_Face.cpp" />
     <ClCompile Include="..\Code\CUnbreakableFrustum.cpp" />
     <ClCompile Include="..\Code\IRayTestable.cpp" />
     <ClCompile Include="..\Code\CSprnub1.cpp" />
