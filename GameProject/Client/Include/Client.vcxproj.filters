@@ -352,6 +352,12 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere">
       <UniqueIdentifier>{19835880-8741-44f1-a903-f8f42f56048c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\MiniGame\00.MiniGame_Obj">
+      <UniqueIdentifier>{a321e51e-7142-40be-9653-53bf3ae7a2e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG">
+      <UniqueIdentifier>{94ef362d-1db6-45cb-812b-ff21cfdee457}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\01. Character\00. Player\02. Socket">
       <UniqueIdentifier>{a7fa9fbc-8201-4485-92b7-39da87526dff}</UniqueIdentifier>
     </Filter>
@@ -726,6 +732,9 @@
     <ClInclude Include="..\Header\CVeilSphere.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMiniGameBG.h">
+      <Filter>01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CSocket.h">
       <Filter>02. GameObject\01. Character\00. Player\02. Socket</Filter>
     </ClInclude>
@@ -1072,6 +1081,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CVeilSphere.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMiniGameBG.cpp">
+      <Filter>01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CSocket.cpp">
       <Filter>02. GameObject\01. Character\00. Player\02. Socket</Filter>
