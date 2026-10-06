@@ -2,6 +2,7 @@
 
 #include "CScene.h"
 #include "CLoading.h"
+class CGaugeUI;
 
 class CLogo :  public CScene
 {
@@ -20,12 +21,16 @@ public:
 private:
 	HRESULT			Ready_Environment_Layer(const _tchar* pLayerTag);
 	HRESULT			Ready_GameLogic_Layer(const _tchar* pLayerTag)	{ return S_OK; }
-	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag)			{ return S_OK; }
+	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
 
 	HRESULT			Ready_Prototype();
 
 private:
 	CLoading*		m_pLoading;
+    CGaugeUI*		m_pLoadingGauge = nullptr; // Owned by UI_Layer.
+    _float			m_fDisplayProgress = 0.f;
+    _float			m_fCompleteHold = 0.f;
+    _bool			m_bStageFailed = false;
 
 public:
 	static CLogo* Create(LPDIRECT3DDEVICE9 pGraphicDev);

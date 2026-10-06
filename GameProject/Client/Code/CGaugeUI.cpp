@@ -48,6 +48,9 @@ void CGaugeUI::LateUpdate_GameObject(_float fTimeDelta)
 
 void CGaugeUI::Render_GameObject()
 {
+    // A zero-width/height scissor rectangle is invalid on some D3D9 devices.
+    if (m_fPercent <= 0.f)
+        return;
     if (m_bHorizontal)
         Render_HorizontalGauge();
     else
@@ -61,6 +64,8 @@ void CGaugeUI::Render_HorizontalGauge()
     rcClip.top = LONG(m_vPos.y - m_vSize.y);
     rcClip.right = LONG((m_vPos.x - m_vSize.x) + m_vSize.x * 2.f * m_fPercent);
     rcClip.bottom = LONG(m_vPos.y + m_vSize.y);
+    if (rcClip.right <= rcClip.left || rcClip.bottom <= rcClip.top)
+        return;
     m_pGraphicDev->SetScissorRect(&rcClip);
     m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
 
@@ -76,6 +81,8 @@ void CGaugeUI::Render_VerticalGauge()
     rcClip.top = LONG((m_vPos.y + m_vSize.y) - m_vSize.y * 2.f * m_fPercent);
     rcClip.right = LONG(m_vPos.x + m_vSize.x);
     rcClip.bottom = LONG(m_vPos.y + m_vSize.y);
+    if (rcClip.right <= rcClip.left || rcClip.bottom <= rcClip.top)
+        return;
     m_pGraphicDev->SetScissorRect(&rcClip);
     m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
 

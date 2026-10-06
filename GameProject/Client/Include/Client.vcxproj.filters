@@ -244,9 +244,6 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Ddokddak">
       <UniqueIdentifier>{8029e05a-482a-4890-b0ab-89b15aeb1f3a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\MiniGame">
-      <UniqueIdentifier>{c1d0cb1c-a82c-4dd0-ba2e-ba944ff4ecc0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04. Manager\02. UI">
       <UniqueIdentifier>{2af4903b-b465-4105-96d6-0b42d1af34aa}</UniqueIdentifier>
     </Filter>
@@ -352,10 +349,13 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere">
       <UniqueIdentifier>{19835880-8741-44f1-a903-f8f42f56048c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\MiniGame\00.MiniGame_Obj">
+    <Filter Include="01. Scene\MiniGame_0">
+      <UniqueIdentifier>{c1d0cb1c-a82c-4dd0-ba2e-ba944ff4ecc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj">
       <UniqueIdentifier>{a321e51e-7142-40be-9653-53bf3ae7a2e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG">
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\00. MiniGame_BG">
       <UniqueIdentifier>{94ef362d-1db6-45cb-812b-ff21cfdee457}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\02. Monster\Octo">
@@ -372,6 +372,12 @@
     </Filter>
     <Filter Include="02. GameObject\06. Effect\Sandburst">
       <UniqueIdentifier>{69b6c6d4-f00e-47f5-ad25-a665e1e2428b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_1">
+      <UniqueIdentifier>{660a1a37-0d64-4ef5-b6cc-c9ccb58d72f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Start">
+      <UniqueIdentifier>{222d9d69-9432-484e-8bbb-87a6726a3348}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -646,7 +652,7 @@
       <Filter>02. GameObject\02. Monster\Sprnub</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CMiniGame.h">
-      <Filter>01. Scene\MiniGame</Filter>
+      <Filter>01. Scene\MiniGame_0</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CUIMgr.h">
       <Filter>04. Manager\02. UI</Filter>
@@ -745,7 +751,13 @@
       <Filter>02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CMiniGameBG.h">
-      <Filter>01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG</Filter>
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\00. MiniGame_BG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMiniGame1.h">
+      <Filter>01. Scene\MiniGame_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CStartScreen.h">
+      <Filter>01. Scene\Start</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CMine.h">
       <Filter>02. GameObject\02. Monster\Mine</Filter>
@@ -1008,7 +1020,7 @@
       <Filter>02. GameObject\02. Monster\Sprnub</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CMiniGame.cpp">
-      <Filter>01. Scene\MiniGame</Filter>
+      <Filter>01. Scene\MiniGame_0</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CUIMgr.cpp">
       <Filter>04. Manager\02. UI</Filter>
@@ -1107,7 +1119,13 @@
       <Filter>02. GameObject\07. Room\PlaceableProp\AtmosphereVeil\VeilSphere</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CMiniGameBG.cpp">
-      <Filter>01. Scene\MiniGame\00.MiniGame_Obj\00. MiniGame_BG</Filter>
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\00. MiniGame_BG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMiniGame1.cpp">
+      <Filter>01. Scene\MiniGame_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CStartScreen.cpp">
+      <Filter>01. Scene\Start</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CMine.cpp">
       <Filter>02. GameObject\02. Monster\Mine</Filter>

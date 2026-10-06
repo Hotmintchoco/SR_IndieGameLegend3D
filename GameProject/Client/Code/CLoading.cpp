@@ -13,7 +13,7 @@
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoadingID(LOADING_END)
 {
-    ZeroMemory(m_szLoading, sizeof(m_szLoading));
+
     m_pGraphicDev->AddRef();
 }
 
@@ -37,12 +37,12 @@ HRESULT CLoading::Ready_Loading(LOADINGID eID)
 
 
 
-    return S_OK;
+    return m_hThread ? S_OK : E_FAIL;
 }
 
 _uint CLoading::Loading_Stage()
 {
-    lstrcpy(m_szLoading, L"Buffer Loading............................");
+    m_fProgress.store(0.0f); // Buffer
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TriCol", Engine::CTriCol::Create(m_pGraphicDev))))
         return E_FAIL;
@@ -65,7 +65,7 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Cube_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Cube.ply"))))
         return E_FAIL;
 
-    lstrcpy(m_szLoading, L"Monster Texture Loading............................");
+    m_fProgress.store(0.1f); // Monster Texture
     //skull
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_skull3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/skull/skull3.png", 1))))return E_FAIL;
     //worm
@@ -93,7 +93,7 @@ _uint CLoading::Loading_Stage()
     //mine
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MineTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/mine/mine_%d.png", 2)))) return E_FAIL;
 
-    lstrcpy(m_szLoading, L"Effect Texture Loading............................");
+    m_fProgress.store(0.2f); // Effect Texture
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_smallexplodeTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/smallexplode/smallExplode_%d.png", 4)))) return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Black_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/Black/%d.png", 101)))) return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Yellow_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/Yellow/%d.png", 101)))) return E_FAIL;
@@ -107,7 +107,7 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Sandburst_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/sandburst/sandburst_%d.png", 5)))) return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Sandburst2_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/sandburst2/sandburst2_%d.png", 5)))) return E_FAIL;
 
-    lstrcpy(m_szLoading, L"Texture Loading............................");
+    m_fProgress.store(0.3f); // Texture
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/Invisible.png", 1))))
         return E_FAIL;
 
@@ -120,7 +120,7 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SkyBoxTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/SkyBox/SkyboxStars.dds", 1))))
         return E_FAIL;
 
-    lstrcpy(m_szLoading, L"Player Data Loading............................");
+    m_fProgress.store(0.4f); // Player Data
 
     struct TPlayerBufferPivot
     {
@@ -148,7 +148,7 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Player_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/Player.png", 1))))
         return E_FAIL;
 
-    lstrcpy(m_szLoading, L"UI Data Loading............................");
+    m_fProgress.store(0.5f); // UI Data
 
     // UI Texture
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_HpUITexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/hud_Heart%d.png", 9))))
@@ -193,13 +193,8 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BossFontTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/BossFont.png", 1))))
         return E_FAIL;
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BossHpBarTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/BossHpBar.png", 1))))
-        return E_FAIL;
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RedTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/RedColor.png", 1))))
-        return E_FAIL;
-
-    lstrcpy(m_szLoading, L"Weapon Data Loading............................");
+    m_fProgress.store(0.6f); // Weapon Data
     
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Gun_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Gun.ply"))))
         return E_FAIL;
@@ -243,10 +238,8 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Arrow_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Projectile/arrow.png", 1))))
         return E_FAIL;
 
-    lstrcpy(m_szLoading, L"Etc Loading............................");
+    m_fProgress.store(0.7f); // Etc
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
-        return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Calculator", Engine::CCalculator::Create(m_pGraphicDev))))
         return E_FAIL;
@@ -258,7 +251,7 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BoxCollider", Engine::CBoxCollider::Create(m_pGraphicDev))))
         return E_FAIL;
 
-    lstrcpy(m_szLoading, L"Room Data Loading............................");
+    m_fProgress.store(0.8f); // Room Data
 
     /* 맵 오브젝트 */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrayFrustum_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/GrayFrustum.ply"))))
@@ -354,14 +347,14 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Item_Gem_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/sprCoin_strip6_%d.png", 6))))
         return E_FAIL;
 
-    lstrcpy(m_szLoading, L"Sound Data Loading............................");
+    m_fProgress.store(0.9f); // Sound Data
 
     if (FAILED(CSoundMgr::GetInstance()->LoadSound(L"../Bin/Resource/Sound/")))
         return E_FAIL;
 
-    lstrcpy(m_szLoading, L"Loading Complete!!!");
+    m_fProgress.store(1.f);
 
-    m_bFinish = true;
+    m_bFinish.store(true);
     
     return 0;
 }
@@ -370,7 +363,7 @@ unsigned int CLoading::Thread_Main(void* pArg)
 {
     CLoading* pLoading = reinterpret_cast<CLoading*>(pArg);
 
-    int iFlag(0);
+    HRESULT iFlag = E_NOTIMPL;
 
     EnterCriticalSection(pLoading->Get_Crt());
 
@@ -383,6 +376,9 @@ unsigned int CLoading::Thread_Main(void* pArg)
     case LOADING_BOSS:
         break;
     }
+
+    if (FAILED(iFlag))
+        pLoading->m_bFailed.store(true);
 
     LeaveCriticalSection(pLoading->Get_Crt());
 
@@ -513,9 +509,11 @@ CLoading* CLoading::Create(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID eID)
 
 void CLoading::Free()
 {
-    WaitForSingleObject(m_hThread, INFINITE);
+    if (m_hThread)
+        WaitForSingleObject(m_hThread, INFINITE);
 
-    CloseHandle(m_hThread);
+    if (m_hThread)
+        CloseHandle(m_hThread);
 
     DeleteCriticalSection(&m_Crt);
 
