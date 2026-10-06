@@ -359,23 +359,25 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
         {
             m_eWormState = static_cast<WORMSTATE>(rand() % 2);
         }
-        m_eWormState = SPAWN;
-        m_eWormState = MOVE;
+        //m_eWormState = SPAWN;
+        //m_eWormState = MOVE;
         if (m_eWormState == SPAWN)
         {
             Set_MoveDest();
             m_fStateUpdateDuration = 6.f;
             m_bSpawnStart = false;
             m_bMoveFlag = false;
-            Set_Speed_Worm(5.f);
+            m_bMoveFlag2 = false;
+            Set_Speed_Worm(9.f);
             m_fSpawnTime = 0.f;
+            m_fSpawnTime2 = 0.f;
         }
         else if (m_eWormState == MOVE)
         {
             Set_MoveDest();
             m_fStateUpdateDuration = 5.f;
             m_bMoveFlag = false;
-            Set_Speed_Worm(5.f);
+            Set_Speed_Worm(7.f);
         }
         else if (m_eWormState == IDLE)
         {
@@ -504,12 +506,13 @@ void CWorm::Spawn_Monster(const _float& fTimeDelta)
         vVelocity = vPlayerPos - vPos;
         vVelocity.y = 0.f;
         D3DXVec3Normalize(&vVelocity, &vVelocity);
-        vVelocity *= 0.5f;
+        //vVelocity *= 0.5f;
 
         _int iRand = rand()%20 + 20;
         _int iAngle[4] = { -60, -60 + iRand, -60 + iRand * 2, 60 };
 
         _vec3 vOriginVelocity = vVelocity;
+        vPos.y += 0.5f;
         for (int i = 0; i < 4; ++i)
         {
             _matrix matRot;
@@ -519,7 +522,8 @@ void CWorm::Spawn_Monster(const _float& fTimeDelta)
 
             pGameObject = CGlubba::Create(m_pGraphicDev);
             vVelocity.y = 0.f;
-            static_cast<CMonster*>(pGameObject)->Set_Pos(vPos + vVelocity);
+
+            static_cast<CMonster*>(pGameObject)->Set_Pos(vPos + vVelocity * 0.25f);
             vVelocity.y = 4.f;
             static_cast<CGlubba*>(pGameObject)->Set_Velocity(vVelocity);
             vVelocity = vOriginVelocity;
@@ -528,6 +532,10 @@ void CWorm::Spawn_Monster(const _float& fTimeDelta)
             if (FAILED(pScene->Add_GameObject(L"Glubba", pGameObject))) return;
         }
 
+    }
+    else
+    {
+        Move_WormHead_AfterSpawn(fTimeDelta);   
     }
 }
 
@@ -544,7 +552,7 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
         //오프닝 도착지점 세팅
         if (m_bOpeningStart == false)
         {
-            Set_Speed_Worm(5.f);
+            Set_Speed_Worm(7.f);
             m_bOpeningStart = true;
 
             CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
@@ -624,7 +632,6 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
     //3초뒤 움직임
     else if (m_bElapsedOpeningTime > 3.f)
     {
-        //m_eWormState==MOVE;
         if (!m_vMoveDest.empty())
         {
             _vec3 vPos, vDir;
@@ -1505,6 +1512,97 @@ void CWorm::Move_WormHead_BeforeSpawn(const _float& fTimeDelta)
             if (m_vMoveDest.empty())
             {
                 m_bMoveFlag = true;
+            }
+        }
+    }
+}
+
+void CWorm::Move_WormHead_AfterSpawn(const _float& fTimeDelta)
+{
+    if (m_fSpawnTime2 < 1.f)
+    {
+        m_fSpawnTime2 += fTimeDelta;
+    }
+    else
+    {
+        if (m_bMoveFlag2 == false)
+        {
+            m_bMoveFlag2 = true;
+            //_vec3 vUp; m_pTransformCom->Get_Info(INFO_UP, &vUp);
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            //_vec3 vDir = -vUp;
+            _vec3 vDir = m_vRoomCenterLocation - vPos;
+            vDir.y = 0.f;
+            D3DXVec3Normalize(&vDir, &vDir);
+            _vec3 vDest = vPos;
+            vDir *= 0.5f;
+
+            vDir.y = 0;
+            D3DXVec3Normalize(&vDir, &vDir);
+            vDest = vPos;
+            vDir *= 0.5f;
+
+            vDir.y = 0.75f;
+            vDest = vDest + vDir;
+            Push_Back_MoveDest(vDest);
+
+            vDir.y = 0.5f;
+            vDest = vDest + vDir;
+            Push_Back_MoveDest(vDest);
+
+            vDir.y = 0.25f;
+            vDest = vDest + vDir;
+            Push_Back_MoveDest(vDest);
+
+            vDir.y = 0.f;
+            vDest = vDest + vDir;
+            Push_Back_MoveDest(vDest);
+
+            vDir.y = -0.25f;
+            vDest = vDest + vDir;
+            Push_Back_MoveDest(vDest);
+
+            vDir.y = -0.5f;
+            vDest = vDest + vDir;
+            Push_Back_MoveDest(vDest);
+
+            vDir.y = -0.75f;
+            vDest = vDest + vDir;
+            Push_Back_MoveDest(vDest);
+
+            vDir = { 0.f, -20.f, 0.f };
+            vDest = vDest + vDir;
+            Push_Back_MoveDest(vDest);
+        }
+        else
+        {
+            if (!m_vMoveDest.empty())
+            {
+                _vec3 vPos, vDir;
+                m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+                vDir = m_vMoveDest.front() - vPos;
+                if (D3DXVec3Length(&vDir) < 0.125f)
+                {
+                    if (!m_vMoveDest.empty())
+                        m_vMoveDest.erase(m_vMoveDest.begin());
+
+                    if (m_vMoveDest.empty())
+                    {
+                        m_bOpening = false;
+                    }
+                }
+                else
+                {
+                    D3DXVec3Normalize(&vDir, &vDir);
+                    m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+
+                    _vec3 vAngle;
+                    vAngle.x = D3DXToDegree(-asinf(vDir.y));
+                    vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+                    vAngle.z = 0.f;
+                    m_pTransformCom->Set_Angle(vAngle);
+                }
             }
         }
     }

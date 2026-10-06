@@ -39,6 +39,7 @@ private:
 	void IDLE_Worm(const _float& fTimeDelta);
 
 	void Move_WormHead_BeforeSpawn(const _float& fTimeDelta);
+	void Move_WormHead_AfterSpawn(const _float& fTimeDelta);
 
 	void Set_MoveDest();
 	void Set_Pos_Worm(_vec3 vPos);
@@ -90,13 +91,8 @@ private:
 
 	_int m_iPhase = 0;
 
-	//_float m_fSpawn_CoolDown = 1.0f;
 	_float m_fSpawnTime = 0.f;
-	//_bool m_bSpawnFinish[4] = {};
-	//_bool m_bSpawnFinish2[4] = {};
-	//_float m_fSpawnStartTime[4] = {};
-	//_uint m_iSpawnOrderArr[4] = {};
-	//CGameObject* m_pSpawnMonster[4] = {};
+	_float m_fSpawnTime2 = 0.f;
 	_bool m_bSpawnStart = false;
 
 	_float m_fStateUpdateTime = 0.f;
@@ -119,8 +115,7 @@ private:
 	_bool m_DeadExplosion = false;
 
 	_bool m_bOpeningStart = false;
-	//_bool m_bOpeningMoveFlag = false;
-	//_bool m_bOpeningMoveFlag2 = false;
+
 	_float m_bElapsedOpeningTime = 0.f;
 
 	vector<_vec3> m_vMoveDest;

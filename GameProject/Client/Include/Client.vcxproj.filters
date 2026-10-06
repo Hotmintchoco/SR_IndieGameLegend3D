@@ -370,6 +370,9 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Seaweed">
       <UniqueIdentifier>{b82a3fc1-9e29-49af-9ac9-f669d58ff8c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. Effect\Sandburst">
+      <UniqueIdentifier>{69b6c6d4-f00e-47f5-ad25-a665e1e2428b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
