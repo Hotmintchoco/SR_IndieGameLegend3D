@@ -109,5 +109,5 @@ private:
 	_uint m_iPhase = 0;
 	_bool m_bMoveState = true;
 
-	inline static _vec3 s_vRoomCenter = {};
+	inline static _vec3 s_vRoomCenter = { 0.f,0.f,0.f };
 };

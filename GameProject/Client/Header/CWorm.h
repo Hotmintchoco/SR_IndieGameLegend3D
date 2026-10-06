@@ -83,7 +83,6 @@ private:
 	WORMDIR m_eDir = FRONT;
 	_bool m_bOpening = true;
 
-	_vec3 m_fAngle_FromPlayer = {};
 	_uint m_iWormIndex = 1;
 	CMonster* m_pPrevWorm = nullptr;
 	CMonster* m_pNextWorm = nullptr;
@@ -98,13 +97,13 @@ private:
 	_float m_fStateUpdateTime = 0.f;
 	_float m_fStateUpdateDuration = 2.f;
 
-	_vec3 m_vRoomCenterLocation = {};
+	_vec3 m_vRoomCenterLocation = { 0.f,0.f,0.f };
 
 	_bool m_bMoveFlag = false;
 	_bool m_bMoveFlag2 = false;
 	_bool m_bMoveState = true;
 
-	_vec3 m_vSpawnDirection = {};
+	_vec3 m_vSpawnDirection = { 0.f,0.f,0.f };
 
 	_bool m_bDead_Effect1 = false;
 	_bool m_bDead_Effect2 = false;
@@ -124,5 +123,5 @@ private:
 	_float m_fSpeed = 6.f;
 	_float m_fMoveHeight = 1.25f;
 
-	inline static _vec3 s_vRoomCenter = {};
+	inline static _vec3 s_vRoomCenter = { 0.f,0.f,0.f };
 };

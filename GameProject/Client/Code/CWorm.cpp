@@ -913,7 +913,7 @@ void CWorm::Set_Motion_FromAngle()
         D3DXMatrixRotationAxis(&matRot, &vLook, D3DXToRadian(90.f));
         *matWorld = (*matWorld) * matRot;
     }
-    _matrix matTrans = {};
+    _matrix matTrans;
     vRight = { matWorld->_11, matWorld->_12, matWorld->_13 };
     vUp = { matWorld->_21, matWorld->_22, matWorld->_23 };
     vLook = { matWorld->_31, matWorld->_32, matWorld->_33 };
