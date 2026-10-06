@@ -168,7 +168,7 @@ void CMovement::ClampVelocity()
     float fVelLimitV = (m_bOnGround ? FLT_MAX : m_fMaxAirSpeedV);
     if (fVelSpeedV > fVelLimitV)
     {
-        m_vVelocity.y = fVelLimitV;
+        m_vVelocity.y = std::max(m_vVelocity.y, -m_fMaxAirSpeedV);
     }
 }
 
