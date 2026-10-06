@@ -361,6 +361,9 @@
     <Filter Include="01. Scene\MiniGame_1">
       <UniqueIdentifier>{660a1a37-0d64-4ef5-b6cc-c9ccb58d72f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\Start">
+      <UniqueIdentifier>{222d9d69-9432-484e-8bbb-87a6726a3348}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -738,6 +741,9 @@
     <ClInclude Include="..\Header\CMiniGame1.h">
       <Filter>01. Scene\MiniGame_1</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CStartScreen.h">
+      <Filter>01. Scene\Start</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1087,6 +1093,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMiniGame1.cpp">
       <Filter>01. Scene\MiniGame_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CStartScreen.cpp">
+      <Filter>01. Scene\Start</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

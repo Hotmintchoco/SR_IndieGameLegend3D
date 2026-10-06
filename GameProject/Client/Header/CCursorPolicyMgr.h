@@ -13,6 +13,7 @@ private:
 
 public:
 	void Update();
+    void Set_MenuMode(bool bMenuMode);
 
 	inline bool IsCursorFixed() { return m_bCursorFixed; }
 
@@ -21,6 +22,7 @@ private:
 	void FixCursorToWindowCenter();
 
 	bool m_bCursorFixed = true;
+    bool m_bMenuMode = false;
 
 private:
 	virtual void Free() override;
