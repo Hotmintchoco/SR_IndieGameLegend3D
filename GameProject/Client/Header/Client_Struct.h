@@ -83,5 +83,5 @@ struct TWeaponSystemInput
 
 struct TWeaponSystemOutput
 {
-	EWeaponAnimEvent eWpEvent = EWeaponAnimEvent::NONE;
+	TWeaponOutput tWpOut;
 };

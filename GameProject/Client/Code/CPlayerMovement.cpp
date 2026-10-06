@@ -66,10 +66,10 @@ void CPlayerMovement::Walk(const _vec2& vCommand)
 {
     _vec2 vNormCommand;
     D3DXVec2Normalize(&vNormCommand, &vCommand);
-    _vec3 vLook = m_pTransform->Get_Info_Value(INFO_LOOK);
-    D3DXVec3Normalize(&vLook, &vLook);
-    _vec3 vRight = m_pTransform->Get_Info_Value(INFO_RIGHT);
-    D3DXVec3Normalize(&vRight, &vRight);
+
+    _vec3 vLook{ sinf(m_fRefYaw), 0.f, cosf(m_fRefYaw) };
+    _vec3 vRight{ cosf(m_fRefYaw), 0.f, -sinf(m_fRefYaw) };
+
     _vec3 vDir = vNormCommand.x * vRight + vNormCommand.y * vLook;
 
     m_vAccCommand = vDir * ((!m_bOnGround) ? m_fAirInputCoef : 1.f);

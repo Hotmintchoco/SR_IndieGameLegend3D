@@ -57,7 +57,7 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
 
     if (m_bInputEnabled)
     {
-	    UpdateInput();
+	    UpdateInput();        
     }
 
 	CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
@@ -88,13 +88,16 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
     /* 업데이트 순서 : 애니메이션으로 캐릭터 위치 확정 후 소켓에 전달 */
     if (m_ePlayerCamMode == CAMERA_MODE::THIRD_PERSON)
     {
-        m_pAnimator->TransformPropagation(*m_pTransformCom->Get_World());
+        _matrix matVisualWorld = (*m_pVisualRootTransform->Get_World()) * (*m_pTransformCom->Get_World());
+        m_pAnimator->TransformPropagation(matVisualWorld);
         m_pLHandSocket->UpdateSocket();
         m_pRHandSocket->UpdateSocket();
     }
     /* ----------- */
 
     CUIMgr::GetInstance()->Update_HPUI(m_iHP, m_bInvincible);
+    
+    SyncCameraYaw();
 
 	return iExit;
 }
@@ -183,16 +186,22 @@ HRESULT CPlayer::Add_Component()
         m_mapComponent[ID_STATIC].insert({ wstrName.c_str(), pBuffer });
 
         CTransform* pTransform = m_pBufferTransformCom[i] = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
-        pTransform->SetUseLocal(true);
 
         if (nullptr == pTransform)
             return E_FAIL;
+
+        pTransform->SetUseLocal(true);
 
         wstrName = L"Com_BufferTransform_" + arrPartName[i];
         m_mapComponent[ID_DYNAMIC].insert({ wstrName.c_str(), pTransform });
 
         arrBuffer[i] = TPlayerBuffer{ pBuffer, pTransform };
     }
+
+    m_pVisualRootTransform = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
+    if (nullptr == m_pVisualRootTransform)
+        return E_FAIL;
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_VisualRoot", m_pVisualRootTransform });
 
     m_pAnimator = CPlayerAnimator::Create(m_pGraphicDev);
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_PlayerAnimator", m_pAnimator });
@@ -247,8 +256,20 @@ void CPlayer::UpdateInput()
         vCommand += _vec2{ -1.f, 0.f };
     }
     m_pMovement->Walk(vCommand);
-    if (D3DXVec2Length(&vCommand) > 1e-6) m_pAnimator->PlayLocomotion((m_pMovement->GetSprint()) ? EPlayerLocomotionState::SPRINT : EPlayerLocomotionState::WALK);
-    else m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
+    float fInputYaw = 0.f;
+    if (D3DXVec2Length(&vCommand) > 1e-6)
+    {
+        fInputYaw = atan2f(vCommand.x, vCommand.y);
+        m_pAnimator->PlayLocomotion((m_pMovement->GetSprint()) ? EPlayerLocomotionState::SPRINT : EPlayerLocomotionState::WALK);
+    }
+    else
+    {
+        m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
+    }
+
+    /* 입력에 따라 애니메이션 루트 회전 시키기 */
+    float fYaw = m_pCamera->Get_Yaw();
+    m_pVisualRootTransform->Set_Rotation_Raw({ 0.f, D3DXToDegree(fInputYaw + fYaw), 0.f });
 
     if (CDInputMgr::GetInstance()->Key_Press(DIK_SPACE))
     {
@@ -295,7 +316,11 @@ void CPlayer::UpdateWeaponInput()
 
     TWeaponSystemOutput tOutput = m_pWeaponSystem->UpdateInput(tSysInput);
 
-    switch (tOutput.eWpEvent)
+    /* 입력에 따라 애니메이션 루트 회전 시키기 */
+    float fYaw = m_pCamera->Get_Yaw();
+    if(tOutput.tWpOut.bAttackExecuted) m_pVisualRootTransform->Set_Rotation_Raw({ 0.f, D3DXToDegree(fYaw), 0.f });
+
+    switch (tOutput.tWpOut.eWpEvent)
     {
     case EWeaponAnimEvent::GUN_SHOT:
         m_pAnimator->PlayAction(EPlayerActionState::GUN_SHOOT);
@@ -310,6 +335,12 @@ void CPlayer::OnCameraViewChanged(const CAMERA_MODE& Ctx)
 {
     m_ePlayerCamMode = Ctx;
     m_pWeaponSystem->ApplyCameraView(m_ePlayerCamMode);
+}
+
+void CPlayer::SyncCameraYaw()
+{
+    float fYaw = m_pCamera->Get_Yaw();
+    m_pMovement->SetRefYaw(fYaw);
 }
 
 void CPlayer::OnCollisionEnter(COLLINFO eCollInfo)

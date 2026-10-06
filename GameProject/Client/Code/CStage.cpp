@@ -173,16 +173,19 @@ HRESULT CStage::Ready_Camera()
 		return E_FAIL;
 	}
 
-	pCamera = CPlayerCamera::Create(m_pGraphicDev, pPlayerTransformCom);
+	CPlayerCamera* pPlayerCamera = CPlayerCamera::Create(m_pGraphicDev, pPlayerTransformCom);
 
-	if (!pCamera)
+	if (!pPlayerCamera)
 		return E_FAIL;
 
-	if (FAILED(pCameraMgr->Add_Camera(CLIENT_CAMERA_TYPE::PLAYER, pCamera)))
+	if (FAILED(pCameraMgr->Add_Camera(CLIENT_CAMERA_TYPE::PLAYER, pPlayerCamera)))
 	{
 		pCamera->Release();
 		return E_FAIL;
 	}
+
+	GetPlayer()->SetCamera(pPlayerCamera);
+
 
 	pCamera = CCinematicCamera::Create(m_pGraphicDev);
 

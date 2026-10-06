@@ -87,8 +87,6 @@ void CPlayerCamera::Mouse_Move()
 	const _long mouseY = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Y);
 	Rotate(D3DXToRadian(mouseX / 10.f), D3DXToRadian(mouseY / 10.f));
 	Update_LookFromAngles();
-
-	m_pTarget->Rotation(ROT_Y, mouseX / 10.f); /* 플레이어 회전 */
 }
 
 void CPlayerCamera::Follow_Target()

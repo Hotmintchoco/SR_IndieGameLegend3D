@@ -15,6 +15,7 @@ class CPlayerPartTex;
 class CPlayerMovement;
 class CWeaponSystem;
 class CSocket;
+class CPlayerCamera;
 
 enum class CAMERA_MODE;
 
@@ -48,6 +49,7 @@ public:
 	inline CTransform* GetTransform() { return m_pTransformCom; }
 	void SetWeaponSystem(CWeaponSystem* pSystem);
 	CSocket* GetSocket(const wstring& wstrName);
+	inline void SetCamera(CPlayerCamera* pCamera) { m_pCamera = pCamera; }
 
 private:
 	HRESULT	Add_Component();
@@ -55,8 +57,10 @@ private:
 	void UpdateWeaponInput();
 
 	/* 카메라 뷰 */
+	CPlayerCamera* m_pCamera = nullptr;
 	void OnCameraViewChanged(const CAMERA_MODE& Ctx);
 	CAMERA_MODE m_ePlayerCamMode; /* 결국 매 프레임 동작해야 하는 것들이 많아 캐싱... */
+	void SyncCameraYaw();
 
 	/* 기본 컴포넌트 */
 	Engine::CTransform* m_pTransformCom = nullptr;
@@ -66,6 +70,7 @@ private:
 	CPlayerAnimator* m_pAnimator = nullptr;
 	CPlayerPartTex* m_pBufferCom[PP_END] = { nullptr };
 	CTransform* m_pBufferTransformCom[PP_END] = { nullptr };
+	CTransform* m_pVisualRootTransform = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
 
 	/* 1/3인칭에 따른 무기 위치 변경용 소켓 */
