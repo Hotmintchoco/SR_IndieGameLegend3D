@@ -98,6 +98,9 @@ void CClientCameraMgr::LateUpdate_Camera(_float fTimeDelta)
     // 모든 동작을 마친 뒤 행렬 계산 및 화면 적용
     m_pActiveCamera->Update_Matrices();
     m_pActiveCamera->Apply_Transform();
+
+    // 261007 재현 : 플레이어카메라 기준으로 플레이어 각도 업데이트
+    static_cast<CPlayerCamera*>(Find_Camera(CLIENT_CAMERA_TYPE::PLAYER))->Update_PlayerXYZ();
 }
 
 void CClientCameraMgr::SetPlayerCameraMode(CAMERA_MODE eMode)
