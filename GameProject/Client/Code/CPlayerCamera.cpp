@@ -158,6 +158,12 @@ float CPlayerCamera::CalculateSpringArmLength()
 	return t.fDist;
 }
 
+void CPlayerCamera::Update_PlayerXYZ()
+{
+	_vec3 m_vAngle = { D3DXToDegree(m_fPitch), D3DXToDegree(m_fYaw), 0.f };
+	m_pTarget->Set_Angle(m_vAngle);
+}
+
 CPlayerCamera* CPlayerCamera::Create(LPDIRECT3DDEVICE9 pGraphicDev, CTransform* pTarget)
 {
 	if (!pGraphicDev || !pTarget)

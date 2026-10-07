@@ -48,6 +48,10 @@ private:
     /* 스프링 암 관련 */
     float CalculateSpringArmLength();
 
+    // 261007 재현 : 플레이어카메라 기준으로 플레이어 각도 업데이트
+public:
+    void Update_PlayerXYZ();
+
 private:
     CTransform*     m_pTarget;
 
