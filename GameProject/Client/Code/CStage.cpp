@@ -75,6 +75,9 @@ HRESULT CStage::Ready_Scene()
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
 		return E_FAIL;
 
+	if (FAILED(Ready_Screen_Layer(L"Screen_Layer")))
+		return E_FAIL;
+
 	if (FAILED(Ready_Camera()))
 		return E_FAIL;
 
@@ -557,17 +560,6 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"SkillEnableUI", pUI)))
 		return E_FAIL;
 
-	// Hud Hit Effect UI
-	pUI = CHitCreenUI::Create(m_pGraphicDev, L"Proto_HitScreenTexture");
-	if (nullptr == pUI)
-		return E_FAIL;
-
-	pUI->Set_Pos(WINCX >> 1, WINCY >> 1, 0.f);
-	pUI->Set_Size({ WINCX >> 1, WINCY >> 1 });
-
-	if (FAILED(pLayer->Add_GameObject(L"HitScreen", pUI)))
-		return E_FAIL;
-
 	// Boss Font
 	pUI = CUI::Create(m_pGraphicDev, L"Proto_BossFontTexture");
 	if (nullptr == pUI)
@@ -608,6 +600,30 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	CUIMgr::GetInstance()->Add_UI(UI_BOSS, pUI);
 
 	if (FAILED(pLayer->Add_GameObject(L"BossHpUI", pUI)))
+		return E_FAIL;
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
+
+	return S_OK;
+}
+
+HRESULT CStage::Ready_Screen_Layer(const _tchar* pLayerTag)
+{
+	CLayer* pLayer = CLayer::Create();
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	CUI* pUI = nullptr;
+
+	// Hud Hit Effect UI
+	pUI = CHitCreenUI::Create(m_pGraphicDev, L"Proto_HitScreenTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(WINCX >> 1, WINCY >> 1, 0.f);
+	pUI->Set_Size({ WINCX >> 1, WINCY >> 1 });
+
+	if (FAILED(pLayer->Add_GameObject(L"HitScreen", pUI)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag, pLayer });

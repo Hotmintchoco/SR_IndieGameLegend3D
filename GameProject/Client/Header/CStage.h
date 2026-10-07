@@ -48,6 +48,7 @@ private:
 	HRESULT Ready_GameLogic_Layer(const _tchar* pLayerTag);
 	HRESULT Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx);
 	HRESULT Ready_UI_Layer(const _tchar* pLayerTag);
+	HRESULT Ready_Screen_Layer(const _tchar* pLayerTag);
 	HRESULT Ready_Camera();
 
 	void CheckRoomChanged();

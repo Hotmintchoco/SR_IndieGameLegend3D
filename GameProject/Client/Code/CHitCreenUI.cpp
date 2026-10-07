@@ -34,7 +34,7 @@ _int CHitCreenUI::Update_GameObject(_float fTimeDelta)
     {
         fMultTime = 4.f;
         m_fShowTime -= fTimeDelta;
-
+        
         if (m_fShowTime < 0.f)
             Set_Texture(0);
     }
@@ -99,7 +99,8 @@ void CHitCreenUI::Render_GameObject()
 void CHitCreenUI::EnterBossRoom()
 {
     Set_Texture(1);
-    m_fShowTime = 2.5f;
+    m_fAlpha = 255.f;
+    m_fShowTime = 1.5f;
 }
 
 CHitCreenUI* CHitCreenUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)

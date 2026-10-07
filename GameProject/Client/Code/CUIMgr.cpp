@@ -86,7 +86,7 @@ void CUIMgr::Update_HPUI(int iHP, bool bAddTextureOffset)
 
 void CUIMgr::RequestHitEffect()
 {
-    CGameObject* pHitUI = CManagement::GetInstance()->Get_GameObject(L"UI_Layer", L"HitScreen");
+    CGameObject* pHitUI = CManagement::GetInstance()->Get_GameObject(L"Screen_Layer", L"HitScreen");
     if (nullptr != pHitUI)
     {
         CHitCreenUI* pHitScreen = dynamic_cast<CHitCreenUI*>(pHitUI);
@@ -97,7 +97,7 @@ void CUIMgr::RequestHitEffect()
 
 void CUIMgr::EnterBossScreen()
 {
-    CGameObject* pHitUI = CManagement::GetInstance()->Get_GameObject(L"UI_Layer", L"HitScreen");
+    CGameObject* pHitUI = CManagement::GetInstance()->Get_GameObject(L"Screen_Layer", L"HitScreen");
     if (nullptr != pHitUI)
     {
         CHitCreenUI* pHitScreen = dynamic_cast<CHitCreenUI*>(pHitUI);
