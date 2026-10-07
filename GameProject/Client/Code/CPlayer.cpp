@@ -201,7 +201,7 @@ HRESULT CPlayer::Add_Component()
     m_pVisualRootTransform = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
     if (nullptr == m_pVisualRootTransform)
         return E_FAIL;
-    m_mapComponent[ID_DYNAMIC].insert({ L"Com_VisualRoot", m_pVisualRootTransform });
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_VisualRootTransform", m_pVisualRootTransform });
 
     m_pAnimator = CPlayerAnimator::Create(m_pGraphicDev);
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_PlayerAnimator", m_pAnimator });

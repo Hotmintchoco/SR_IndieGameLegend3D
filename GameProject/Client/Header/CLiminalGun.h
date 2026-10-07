@@ -25,7 +25,9 @@ public:
 private:
 	HRESULT	Add_Component();
 	virtual TWeaponOutput SpecialAttack(EInputState ePri, EInputState eSec) override;
-	virtual TWeaponOutput UltimateAttack(EInputState ePri, EInputState eSec) override;
+	virtual TWeaponOutput StartUltimateAttack(EInputState ePri, EInputState eSec) override;
+	virtual TWeaponOutput UpdateUltimateAttack(EInputState ePri, EInputState eSec) override;
+	virtual TWeaponOutput EndUltimateAttack(EInputState ePri, EInputState eSec) override;
 	void RayCastToLiminalObject();
 	void CaptureTransform(CLiminalObject* pObject);
 	void CalculateView(CLiminalObject* pObject);

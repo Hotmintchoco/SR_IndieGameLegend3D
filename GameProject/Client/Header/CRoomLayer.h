@@ -8,6 +8,13 @@
 class CTile;
 class IRayTestable;
 class ITerrain;
+class CMonster;
+
+struct TMonsterHandle
+{
+	CMonster* pMonster = nullptr;
+	weak_ptr<void> pToken;
+};
 
 class CRoomLayer : public CLayer
 {
@@ -55,6 +62,10 @@ public:
 	vector<IRayTestable*> GetRayTestableList() { return m_vecRayTestable; }
 	vector<ITerrain*> GetTerrainList() { return m_vecTerrain; }
 
+	/* Ult 사용 시 몬스터 리스트 획득용 */
+	void AddMonster(CMonster* pMonster);
+	vector<CMonster*> GetMonsterList();
+
 private:
 	/* 어둠 스위치 */
 	void SetPseudoDark(bool bFlag);
@@ -94,6 +105,9 @@ private:
 	/* 레이 테스트 컨테이너 */
 	vector<IRayTestable*> m_vecRayTestable;
 	vector<ITerrain*> m_vecTerrain;
+
+	/* 몬스터 컨테이너 */
+	vector<TMonsterHandle> m_vecMonster;
 
 public:
 	static CRoomLayer* Create(int iRoomIndex);

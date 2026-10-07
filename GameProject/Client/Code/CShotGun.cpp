@@ -8,7 +8,7 @@
 #include "CRoomLayer.h"
 #include "CRandomMgr.h"
 #include "CRenderer.h"
-#include "CRandomMgr.h"
+#include "CWeaponSystem.h"
 
 CShotGun::CShotGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -45,12 +45,12 @@ _int CShotGun::Update_GameObject(_float fTimeDelta)
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
-    UpdateUltimateState(fTimeDelta);
+    UpdateUltimateAttackStatus(fTimeDelta);
 
     return iExit;
 }
 
-void CShotGun::UpdateUltimateState(Engine::_float fTimeDelta)
+void CShotGun::UpdateUltimateAttackStatus(Engine::_float fTimeDelta)
 {
     if (!m_bOnUltimateAttack) return;
 
@@ -122,6 +122,28 @@ TWeaponOutput CShotGun::SpecialAttack(EInputState ePri, EInputState eSec)
     return { false, EWeaponAnimEvent::NONE };
 }
 
+TWeaponOutput CShotGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    m_bOnUltimateAttack = true;
+    m_fLeftUltimateTime = m_fUltimateTime;
+
+    return { true, EWeaponAnimEvent::ULT_SHOTGUN };
+}
+
+TWeaponOutput CShotGun::UpdateUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    return { false, EWeaponAnimEvent::NONE };
+}
+
+TWeaponOutput CShotGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    m_bOnUltimateAttack = false;
+    m_fLeftUltimateTime = 0.f;
+    m_pSystem->SetUltimateAttackOnGoing(false);
+
+    return { false, EWeaponAnimEvent::NONE };
+}
+
 void CShotGun::ShotSGBullet()
 {
     for (int i = 0; i < m_iBulletPerSpecialAtk; ++i)
@@ -166,19 +188,6 @@ void CShotGun::ShotSGBullet()
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
 
     StartShotAnimation();
-}
-
-TWeaponOutput CShotGun::UltimateAttack(EInputState ePri, EInputState eSec)
-{
-    StartShootingSpree();
-
-    return { true, EWeaponAnimEvent::ULT_SHOTGUN };
-}
-
-void CShotGun::StartShootingSpree()
-{
-    m_bOnUltimateAttack = true;
-    m_fLeftUltimateTime = m_fUltimateTime;
 }
 
 HRESULT CShotGun::Add_Component()

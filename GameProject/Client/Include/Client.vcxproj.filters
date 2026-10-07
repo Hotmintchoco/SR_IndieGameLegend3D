@@ -382,6 +382,9 @@
     <Filter Include="02. GameObject\01. Character\00. Player\02. Socket">
       <UniqueIdentifier>{a7fa9fbc-8201-4485-92b7-39da87526dff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Combat\02. HitScan">
+      <UniqueIdentifier>{67889039-9bc9-4c5a-a834-2887b54ddcf0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -780,6 +783,9 @@
     <ClInclude Include="..\Header\CSocket.h">
       <Filter>02. GameObject\01. Character\00. Player\02. Socket</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CHitScan.h">
+      <Filter>02. GameObject\08. Combat\02. HitScan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1150,6 +1156,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSocket.cpp">
       <Filter>02. GameObject\01. Character\00. Player\02. Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CHitScan.cpp">
+      <Filter>02. GameObject\08. Combat\02. HitScan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

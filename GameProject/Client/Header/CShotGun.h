@@ -26,9 +26,10 @@ private:
 	HRESULT	Add_Component();
 	void ShotSGBullet();
 	virtual TWeaponOutput SpecialAttack(EInputState ePri, EInputState eSec) override;
-	virtual TWeaponOutput UltimateAttack(EInputState ePri, EInputState eSec) override;
-	void StartShootingSpree();
-	void UpdateUltimateState(Engine::_float fTimeDelta);
+	virtual TWeaponOutput StartUltimateAttack(EInputState ePri, EInputState eSec) override;
+	virtual TWeaponOutput UpdateUltimateAttack(EInputState ePri, EInputState eSec) override;
+	virtual TWeaponOutput EndUltimateAttack(EInputState ePri, EInputState eSec) override;
+	void UpdateUltimateAttackStatus(Engine::_float fTimeDelta);
 
 	Engine::CPlyTex* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
@@ -43,7 +44,6 @@ private:
 	float m_fTimeAfterSingleShot = 0.0f;
 	float m_fUltimateTime = 3.f;
 	float m_fLeftUltimateTime = 0.f;
-	bool m_bOnUltimateAttack = false;
 	bool m_bRHandShotOrder = false;
 
 	/* 궁극기 연출 시 메쉬 출력용 transform */

@@ -17,6 +17,9 @@ struct TWeaponLocalInfo
 	_vec3 vPosition{ 0.f, 0.f, 0.f };
 };
 
+class CMonster;
+class CWeaponSystem;
+
 struct TWeaponAnimArgs;
 
 enum class CAMERA_MODE;
@@ -35,7 +38,9 @@ public:
 
 	virtual TWeaponOutput DefaultAttack(EInputState ePri, EInputState eSec);
 	virtual TWeaponOutput SpecialAttack(EInputState ePri, EInputState eSec) PURE;
-	virtual TWeaponOutput UltimateAttack(EInputState ePri, EInputState eSec) PURE;
+	virtual TWeaponOutput StartUltimateAttack(EInputState ePri, EInputState eSec) PURE;
+	virtual TWeaponOutput UpdateUltimateAttack(EInputState ePri, EInputState eSec) PURE;
+	virtual TWeaponOutput EndUltimateAttack(EInputState ePri, EInputState eSec) PURE;
 
 	void UpdateAnimationArgs(const TWeaponAnimArgs& t);
 
@@ -44,6 +49,7 @@ public:
 	inline CTransform* GetTransform() { return m_pTransformCom; }
 	TWeaponLocalInfo GetLocalInfo(CAMERA_MODE eMode);
 	void UpdateLocalTransform(const TWeaponLocalInfo& tInfo);
+	inline void SetSystem(CWeaponSystem* pSystem) { m_pSystem = pSystem; }
 
 protected:
 	HRESULT	Add_Component();
@@ -53,6 +59,7 @@ protected:
 	void Animation(const _float fTimeDelta);
 	void StartShotAnimation();
 	void ShotSingleBullet();
+	void ShotSingleBullet(const _vec3& vToward);
 
 	Engine::CTransform* m_pTransformCom = nullptr;
 
@@ -75,6 +82,9 @@ protected:
 	float m_fGaugeConsumePerSpecialAtk = 0.04f;
 	float m_fSpecialAtkInterval = 0.5f;
 
+	/* 궁극기 */
+	bool m_bOnUltimateAttack = false;
+
 	/* 애니메이션 */
 	bool m_bOnMoveAnimation = false;
 	bool m_bOnSprint = false;
@@ -87,6 +97,9 @@ protected:
 	float m_fRecoilDamping = 2.f; // 반동 감쇠. 0으로 갈수록 직선, 값이 커질수록 아래로 굽은 곡선
 	float m_fTimeAfterShot = 0.f;
 	bool m_bSpecialAttackSwitchOn = false;
+
+	/* 정보 전달 */
+	CWeaponSystem* m_pSystem = nullptr;
 
 protected:
 	virtual void Free() override;

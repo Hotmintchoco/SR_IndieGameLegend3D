@@ -162,6 +162,7 @@
     <ClInclude Include="..\Header\CCrossBuffer.h" />
     <ClInclude Include="..\Header\CDdokddak.h" />
     <ClInclude Include="..\Header\CCursorPolicyMgr.h" />
+    <ClInclude Include="..\Header\CHitScan.h" />
     <ClInclude Include="..\Header\CItemContainer.h" />
     <ClInclude Include="..\Header\CHitCreenUI.h" />
     <ClInclude Include="..\Header\CLaser.h" />
@@ -297,6 +298,7 @@
     <ClCompile Include="..\Code\CGlubba.cpp" />
     <ClCompile Include="..\Code\CHitCreenUI.cpp" />
     <ClCompile Include="..\Code\CCursorPolicyMgr.cpp" />
+    <ClCompile Include="..\Code\CHitScan.cpp" />
     <ClCompile Include="..\Code\CItemContainer.cpp" />
     <ClCompile Include="..\Code\CLaser.cpp" />
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />

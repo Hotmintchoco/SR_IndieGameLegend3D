@@ -76,7 +76,7 @@ TWeaponOutput CLiminalGun::SpecialAttack(EInputState ePri, EInputState eSec)
     case EInputState::Pressed:
     {
         RayCastToLiminalObject();
-        return { true, EWeaponAnimEvent::NONE };
+        return { false, EWeaponAnimEvent::NONE };
         break;
     }
     case EInputState::Held:
@@ -113,7 +113,17 @@ TWeaponOutput CLiminalGun::SpecialAttack(EInputState ePri, EInputState eSec)
     return { false, EWeaponAnimEvent::NONE };
 }
 
-TWeaponOutput CLiminalGun::UltimateAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CLiminalGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    return { false, EWeaponAnimEvent::NONE };
+}
+
+TWeaponOutput CLiminalGun::UpdateUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    return { false, EWeaponAnimEvent::NONE };
+}
+
+TWeaponOutput CLiminalGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
 {
     return { false, EWeaponAnimEvent::NONE };
 }

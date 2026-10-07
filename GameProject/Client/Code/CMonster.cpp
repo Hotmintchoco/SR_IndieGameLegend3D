@@ -41,6 +41,7 @@ HRESULT CMonster::Ready_GameObject()
     if (CRoomLayer* pRoomLayer = dynamic_cast<CRoomLayer*>(pLayer))
     {
        pRoomLayer->IncreaseEntityCount();
+       pRoomLayer->AddMonster(this);
        pRoomLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t); });
     }
     /* 스테이지 도중 소환되는 경우 : 씬을 통해 레이어 정보 얻기 */
@@ -50,6 +51,7 @@ HRESULT CMonster::Ready_GameObject()
         if (pStage)
         {
             pStage->GetCurrentRoomLayer()->IncreaseEntityCount();
+            pStage->GetCurrentRoomLayer()->AddMonster(this);
             pStage->GetCurrentRoomLayer()->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t); });
         }
     }

@@ -58,7 +58,13 @@ public:
 	/* 디버그 용 */
 	void Render_Collider(LPDIRECT3DDEVICE9& pGraphicDev);
 	void Render_DebugTriangle(LPDIRECT3DDEVICE9& pGraphicDev);
+	void Render_DebugScreen(LPDIRECT3DDEVICE9& pGraphicDev);
 	void Add_DebugTriangle(const std::array<_vec3, 3>& vTri, const _vec3& vNormal, D3DCOLOR dwColor = D3DCOLOR_ARGB(255, 255, 0, 0));
+	void Add_DebugScreenLine(const _vec2& vStart, const _vec2& vEnd, D3DCOLOR dwColor = D3DCOLOR_ARGB(255, 0, 255, 0));
+	void Add_DebugScreenCross(const _vec2& vCenter, _float fSize = 10.f, D3DCOLOR dwColor = D3DCOLOR_ARGB(255, 0, 255, 0));
+	void Add_DebugScreenRect(const _vec2& vCenter, _float fHalf = 10.f, D3DCOLOR dwColor = D3DCOLOR_ARGB(255, 0, 255, 0));
+	void Add_DebugWorldMarker(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vWorldPos, _float fSize = 10.f, D3DCOLOR dwColor = D3DCOLOR_ARGB(255, 0, 255, 0));
+
 
 private:
 	list<IRenderable*>		m_RenderGroup[RENDER_END];
@@ -79,6 +85,7 @@ private:
 	LPDIRECT3DPIXELSHADER9 m_pPulseShader = nullptr;
 	D3DVIEWPORT9 m_tPulseViewport{};
 
+	/* 디버그 용 */
 	struct TDebugTri
 	{
 		std::array<_vec3, 3> vTri;
@@ -86,6 +93,13 @@ private:
 		D3DCOLOR             dwColor;
 	};
 	std::vector<TDebugTri> m_vecDebugTri;
+	struct VTXSCREEN
+	{
+		_vec4  vPos;     // x, y, z, rhw
+		DWORD  dwColor;
+	};
+	static constexpr _ulong FVF_SCREEN = D3DFVF_XYZRHW | D3DFVF_DIFFUSE;
+	std::vector<VTXSCREEN> m_vecDebugScreenLine;
 
 
 private:

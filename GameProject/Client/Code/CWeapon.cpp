@@ -198,6 +198,20 @@ void CWeapon::ShotSingleBullet()
     StartShotAnimation();
 }
 
+void CWeapon::ShotSingleBullet(const _vec3& vToward)
+{
+    _vec3 vDir = vToward - m_vBulletFrom;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+    pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+
+    CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
+
+    StartShotAnimation();
+}
+
 TWeaponLocalInfo CWeapon::GetLocalInfo(CAMERA_MODE eMode)
 {
     return (eMode == CAMERA_MODE::FIRST_PERSON) ? m_tLocalFView : m_tLocalTView;

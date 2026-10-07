@@ -134,7 +134,7 @@ TWeaponOutput CBow::SpecialAttack(EInputState ePri, EInputState eSec)
     return { false, EWeaponAnimEvent::NONE };
 }
 
-TWeaponOutput CBow::UltimateAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CBow::StartUltimateAttack(EInputState ePri, EInputState eSec)
 {
     CBombardArrowSpawner* pSpawner = CBombardArrowSpawner::Create(m_pGraphicDev);
     if (!pSpawner) return { false, EWeaponAnimEvent::NONE };
@@ -142,6 +142,16 @@ TWeaponOutput CBow::UltimateAttack(EInputState ePri, EInputState eSec)
     CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"BombardArrowSpawner", pSpawner);
 
     return { true, EWeaponAnimEvent::NONE };
+}
+
+TWeaponOutput CBow::UpdateUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    return { false, EWeaponAnimEvent::NONE };
+}
+
+TWeaponOutput CBow::EndUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    return { false, EWeaponAnimEvent::NONE };
 }
 
 void CBow::ShootArrow()

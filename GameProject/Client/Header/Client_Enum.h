@@ -215,6 +215,7 @@ enum class EWeaponAnimEvent
 	BOW_CHARGE_START,
 	BOW_CHARGE_END,
 	ULT_SHOTGUN,
+	ULT_RAPIDGUN,
 
 	MAX,
 };

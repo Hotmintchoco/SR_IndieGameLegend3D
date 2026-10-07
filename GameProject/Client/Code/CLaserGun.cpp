@@ -82,6 +82,21 @@ TWeaponOutput CLaserGun::SpecialAttack(EInputState ePri, EInputState eSec)
     return { false, EWeaponAnimEvent::NONE };
 }
 
+TWeaponOutput CLaserGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    return { false, EWeaponAnimEvent::NONE };
+}
+
+TWeaponOutput CLaserGun::UpdateUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    return { false, EWeaponAnimEvent::NONE };
+}
+
+TWeaponOutput CLaserGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    return { false, EWeaponAnimEvent::NONE };
+}
+
 void CLaserGun::ShotLaser()
 {
     _vec3 vDir = m_vBulletTo - m_vBulletFrom;
@@ -95,11 +110,6 @@ void CLaserGun::ShotLaser()
     CSoundMgr::GetInstance()->PlaySFX(L"sfxLaser.wav");
 
     StartShotAnimation();
-}
-
-TWeaponOutput CLaserGun::UltimateAttack(EInputState ePri, EInputState eSec)
-{
-    return { false, EWeaponAnimEvent::NONE };
 }
 
 HRESULT CLaserGun::Add_Component()
