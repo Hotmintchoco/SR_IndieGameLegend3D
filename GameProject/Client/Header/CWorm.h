@@ -70,6 +70,7 @@ public:
 public:
 	void Check_Sandburst(_float fTimeDelta);
 	void Effect_Sandburst(_float fLifeTime);
+	void Effect_Sandburst2();
 protected:
 	Engine::CTransform* m_pTransformCom2 = nullptr;
 	Engine::CTexture* m_pTextureCom2 = nullptr;
@@ -127,6 +128,7 @@ private:
 	_float m_fMoveHeight = 1.25f;
 
 	_float m_fElapsedTime2 = 0.f;
+	_float m_fElapsedTime3 = 0.f;
 
 	inline static _vec3 s_vRoomCenter = { 0.f,0.f,0.f };
 };

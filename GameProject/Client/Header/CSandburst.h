@@ -30,7 +30,7 @@ public:
 	static CSandburst* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos);
 
 	void Set_OriginPos(_vec3 vPos) { m_vOriginPos = vPos; }
-	void LookAtPlayer2();
+	void LookAtPlayer2_Sandburst();
 private:
 	_vec3 m_vOriginPos{ 0.f,0.f,0.f };
 

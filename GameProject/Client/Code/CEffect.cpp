@@ -216,6 +216,7 @@ void CEffect::Ready_Effect()
         break;
     }
     case SANDBURST2:
+        m_fLifeTime = 2.f;
         break;
     }
 }
@@ -474,8 +475,6 @@ void CEffect::Update_Effect(const _float fTimeDelta)
     }
     case SANDBURST:
     {
-        //if(m_pEffect_Owner);
-
         m_fElapsedTime2 += fTimeDelta;
 
         if (m_fElapsedTime2 > 0.5f)
@@ -493,6 +492,42 @@ void CEffect::Update_Effect(const _float fTimeDelta)
     }
     case SANDBURST2:
     {
+		_int iRand1 = 0;
+		_int iRand2 = 0;
+		_int iRand3 = 0;
+
+		D3DXCOLOR eColor = { 1.f,1.f,0.f,1.f };
+
+		_vec3 vPos, vDir, vScale;
+		for (int i = 0; i < 128; ++i)
+		{
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			vPos.y = 0.5f;
+
+            vDir.x = (_float)(rand() % 128 - 64) / 64.f;
+            vDir.y = (_float)(rand() % 128 - 64) / 64.f;
+			//vDir.y = (_float)(rand() % 64) / 64.f;
+			vDir.z = (_float)(rand() % 128 - 64) / 64.f;
+			//D3DXVec3Normalize(&vDir, &vDir);
+			vDir *= 0.5f;
+			vPos += vDir;
+			vDir = { 0.f,-2.5f,0.f };
+
+            _int iRandScale = rand() % 5;
+            _float fScale = 0.05f + (_float)iRandScale * 0.01f;
+            vScale = { fScale,fScale,fScale };
+
+			_int iRand = rand() % 3;
+            if (iRand == 0) eColor = { 217.f / 256.f, 199.f / 256.f, 141.f / 256.f,1.f };
+            else if (iRand == 1) eColor = { 232.f / 256.f, 216.f / 256.f, 179.f / 256.f,1.f };
+            else eColor = { 179.f / 256.f, 148.f / 256.f, 54.f / 256.f ,1.f };
+
+			pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vDir, vScale, eColor, 2.f, CParticle_Rectangle::SAND);
+			if (nullptr == pGameObject) return;
+			if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
+		}
+		Set_Dead(true);
+
         break;
     }
     }

@@ -40,6 +40,7 @@ public:
 
 	void Set_LifeTime(const _float& fLifeTime) { m_fLifeTime = fLifeTime; }
 
+	void LookAtPlayer();
 	void LookAtPlayer2();
 public:
 

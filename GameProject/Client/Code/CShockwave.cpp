@@ -43,17 +43,7 @@ void CShockwave::LateUpdate_GameObject(_float fTimeDelta)
 {
     CParticle::LateUpdate_GameObject(fTimeDelta);
 
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-    if (nullptr == pPlayerTransformCom) return;
-
-    _vec3   vPlayerPos;
-    _vec3   vPlayerLook;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
-
-    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
-
+    LookAtPlayer();
 }
 
 void CShockwave::Render_GameObject()

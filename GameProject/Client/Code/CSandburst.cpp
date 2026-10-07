@@ -20,10 +20,7 @@ HRESULT CSandburst::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    //m_fLifeTime = 5.f;
-
     m_fScale = 0.9f;
-    //m_fScale = 10.f;
     _vec3 vScale = { m_fScale ,m_fScale ,m_fScale };
     m_pTransformCom->Set_Scale(vScale);
 
@@ -34,19 +31,11 @@ _int CSandburst::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CParticle::Update_GameObject(fTimeDelta);
 
-    //if (m_fElapsedTime > m_fLifeTime)
-    //{
-    //    Set_Dead(true);
-    //}
     m_fFrame += 20.f * fTimeDelta;
-    //if (5.f <= m_fFrame)
-    //    m_fFrame -= 5.f;
-
     if (5.f <= m_fFrame)
         Set_Dead(true);
-    _vec3 vPos;
 
-    LookAtPlayer2();
+    LookAtPlayer2_Sandburst();
 
     return iExit;
 }
@@ -121,7 +110,7 @@ CSandburst* CSandburst::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos)
     return pSandburst;
 }
 
-void CSandburst::LookAtPlayer2()
+void CSandburst::LookAtPlayer2_Sandburst()
 {
     CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
         ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));

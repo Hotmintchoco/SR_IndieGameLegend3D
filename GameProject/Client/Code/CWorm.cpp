@@ -292,6 +292,7 @@ HRESULT CWorm::Add_Component()
 void CWorm::Check_Sandburst(_float fTimeDelta)
 {
     m_fElapsedTime2 += fTimeDelta;
+    m_fElapsedTime3 += fTimeDelta;
     if (m_iWormIndex == 1)
     {
         _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -314,6 +315,18 @@ void CWorm::Check_Sandburst(_float fTimeDelta)
             }
         }
     }
+    if (m_iWormIndex == 9)
+    {
+        _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        if (0.f < vPos.y && vPos.y < 0.125f)
+        {
+            if (m_fElapsedTime3 > 0.5f)
+            {
+                Effect_Sandburst2();
+                m_fElapsedTime3 = 0.f;
+            }
+        }
+    }
 }
 
 void CWorm::Effect_Sandburst(_float fLifeTime)
@@ -323,6 +336,18 @@ void CWorm::Effect_Sandburst(_float fLifeTime)
 
     CGameObject* pGameObject = nullptr;
     pGameObject = CEffect::Create(m_pGraphicDev, CEffect::SANDBURST, vPos, fLifeTime);
+    if (nullptr == pGameObject) return;
+
+    if (FAILED(pLayer->Add_GameObject(L"Sandburst", pGameObject))) return;
+}
+
+void CWorm::Effect_Sandburst2()
+{
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+
+    CGameObject* pGameObject = nullptr;
+    pGameObject = CEffect::Create(m_pGraphicDev, CEffect::SANDBURST2, vPos);
     if (nullptr == pGameObject) return;
 
     if (FAILED(pLayer->Add_GameObject(L"Sandburst", pGameObject))) return;
@@ -399,18 +424,16 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
         {
             m_eWormState = static_cast<WORMSTATE>(rand() % 2);
         }
-        m_eWormState = SPAWN;
+        //m_eWormState = SPAWN;
         //m_eWormState = MOVE;
         if (m_eWormState == SPAWN)
         {
             Set_MoveDest();
             m_fStateUpdateDuration = 6.f;
-            m_fStateUpdateDuration = 20.f;
             m_bSpawnStart = false;
             m_bMoveFlag = false;
             m_bMoveFlag2 = false;
             Set_Speed_Worm(9.f);
-            Set_Speed_Worm(2.f);
             m_fSpawnTime = 0.f;
             m_fSpawnTime2 = 0.f;
         }
@@ -589,7 +612,7 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
 {
 	m_bElapsedOpeningTime += fTimeDelta;
 
-    if (m_bElapsedOpeningTime > 1.f && m_bElapsedOpeningTime<=3.f)
+    if (m_bElapsedOpeningTime > 1.f && m_bElapsedOpeningTime<=1.1f)
     {
         //오프닝 도착지점 세팅
         if (m_bOpeningStart == false)
@@ -672,7 +695,7 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
         }
     }
     //3초뒤 움직임
-    else if (m_bElapsedOpeningTime > 3.f)
+    else if (m_bElapsedOpeningTime > 1.f)
     {
         if (!m_vMoveDest.empty())
         {

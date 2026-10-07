@@ -16,18 +16,12 @@ CBullet_Trail::~CBullet_Trail()
 
 HRESULT CBullet_Trail::Ready_GameObject()
 {
-    //if (Is_Dead())return S_OK;
     m_fLifeTime = 10.f;
 
     m_vTrailPoint[0] = { 0.f,0.f,0.f };
     m_vTrailPoint[1] = { 0.f,0.05f,0.f };
     m_vTrailPoint[2] = { 0.f,0.f,-0.8f };
     m_vTrailPoint[3] = { 0.f,-0.05f,0.f };
-
-    //m_vTrailPoint[0] *= 10.f;
-    //m_vTrailPoint[1] *= 10.f;
-    //m_vTrailPoint[2] *= 10.f;
-    //m_vTrailPoint[3] *= 10.f;
 
 
     for (int i = 0; i < 4; ++i)
@@ -39,14 +33,11 @@ HRESULT CBullet_Trail::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    //m_pTransformCom->Set_Scale(10.f, 10.f, 10.f);
     _vec3 vPos, vScale;
     static_cast<CProjectile*>(m_pBullet)->Get_Transform()->Get_Info(INFO_POS, &vPos);
-    //vScale = static_cast<CProjectile*>(m_pBullet)->Get_Transform()->Get_Scale();
 
     m_pTransformCom->Set_Pos(vPos);
 
-    //m_pTransformCom->Set_Scale(vScale);
     return S_OK;
 }
 
@@ -81,10 +72,7 @@ _int CBullet_Trail::Update_GameObject(_float fTimeDelta)
 
 void CBullet_Trail::LateUpdate_GameObject(_float fTimeDelta)
 {
-    //if (m_pBullet == nullptr) return;
     CTrail::LateUpdate_GameObject(fTimeDelta);
-
-
 }
 
 void CBullet_Trail::Render_GameObject()
