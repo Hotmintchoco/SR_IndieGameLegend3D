@@ -238,4 +238,16 @@ call Copy.bat</Command>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Header\CPostEffect.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Code\CPostEffect.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Header\CUnderwaterEffect.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Code\CUnderwaterEffect.cpp" />
+  </ItemGroup>
 </Project>

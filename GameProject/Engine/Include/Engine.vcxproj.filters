@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -386,5 +386,17 @@
     <Filter Include="15. Sound">
       <UniqueIdentifier>{541ae4de-6182-4806-b205-f090097c1e66}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Header\CPostEffect.h"><Filter>08. Renderer</Filter></ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Code\CPostEffect.cpp"><Filter>08. Renderer</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Header\CUnderwaterEffect.h"><Filter>08. Renderer</Filter></ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Code\CUnderwaterEffect.cpp"><Filter>08. Renderer</Filter></ClCompile>
   </ItemGroup>
 </Project>

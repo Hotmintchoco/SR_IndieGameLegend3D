@@ -224,12 +224,19 @@ HRESULT CStage::Ready_Camera()
 
 void CStage::OnEnter()
 {
+    auto* pRoomMgr = CRoomLoadingMgr::GetInstance();
+    if (m_pCurrentRoomLayer && m_iCurrentRoomIndex >= 0)
+    {
+        const auto* pRoom = pRoomMgr->GetRoomData(m_iCurrentRoomIndex);
+        ApplyRoomShader(pRoomMgr->GetBiomeInfo(pRoom->iBiome).eType);
+    }
 	if (SUCCEEDED(CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::PLAYER)))
 		CClientCameraMgr::GetInstance()->LateUpdate_Camera(0.f);
 }
 
 void CStage::OnExit()
 {
+    CRenderer::GetInstance()->Set_PostEffect(POST_EFFECT::NONE);
 	CSoundMgr::GetInstance()->StopBGM();
 
 }
@@ -618,8 +625,18 @@ void CStage::CheckRoomChanged()
 		if(m_pStatus) m_pStatus->UpdateCurrentRoomIndex(m_iCurrentRoomIndex);
 		wstring wstrRoomLayerKey = L"Room_" + to_wstring(m_iCurrentRoomIndex) + L"_Layer";
 		CRoomLayer* pLayer = static_cast<CRoomLayer*>(CManagement::GetInstance()->Get_Layer(wstrRoomLayerKey.c_str()));
+
 		m_pCurrentRoomLayer = pLayer;
-		if(m_pCurrentRoomLayer) GetCurrentRoomLayer()->ApplyDarkness();
+		if (m_pCurrentRoomLayer)
+		{
+			m_pCurrentRoomLayer->ApplyDarkness();
+
+			auto* pMgr = CRoomLoadingMgr::GetInstance();
+			const auto* pRoom = pMgr->GetRoomData(m_iCurrentRoomIndex);
+			const auto biome = pMgr->GetBiomeInfo(pRoom->iBiome);
+
+			ApplyRoomShader(biome.eType);
+		}
 	}
 }
 
@@ -642,6 +659,11 @@ int CStage::CalculateRoomIndexFromPlayerPosition()
 	if (0 > iCol || iCol >= iColCount || 0 > iRow || iRow >= iRowCount) return -1;
 
 	return iRow * iColCount + iCol;
+}
+
+void CStage::ApplyRoomShader(EBiomeType eBiomeType)
+{
+    CRenderer::GetInstance()->Set_PostEffect(eBiomeType == EBiomeType::AQUA ? POST_EFFECT::UNDERWATER : POST_EFFECT::NONE);
 }
 
 CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)

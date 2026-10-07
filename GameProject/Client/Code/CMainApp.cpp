@@ -20,6 +20,7 @@
 #include "CUIMgr.h"
 #include "CCursorPolicyMgr.h"
 #include "CRenderer.h"
+#include "CUnderwaterEffect.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -55,13 +56,16 @@ int CMainApp::Update_MainApp(_float fTimeDelta)
 	// 정민 : 쉐이더 왜곡 효과 테스트용
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_F6))
 	{
-		CRenderer::GetInstance()->Set_PulseEnabled(!CRenderer::GetInstance()->Get_PulseEnabled());
+		auto* pRenderer = CRenderer::GetInstance();
+        pRenderer->Set_PostEffect(pRenderer->Get_PostEffectType() == POST_EFFECT::NONE
+            ? POST_EFFECT::UNDERWATER : POST_EFFECT::NONE);
+        auto* pWater = static_cast<CUnderwaterEffect*>(pRenderer->Get_PostEffect(POST_EFFECT::UNDERWATER));
 		// 기존 4x4 확대/축소, 움직임 속도
-		CRenderer::GetInstance()->Set_PulseParameters(0.14f, 2.5f);
+		if (pWater) pWater->Set_PulseParameters(0.14f, 2.5f);
 		// 물방울 굴절 강도, 움직임 속도
-		CRenderer::GetInstance()->Set_WaterDropParameters(0.08f, 2.f);
+		if (pWater) pWater->Set_WaterDropParameters(0.06f, 1.f);
 	}
-	CRenderer::GetInstance()->Update_PulseEffect(fTimeDelta);
+	CRenderer::GetInstance()->Update_PostEffect(fTimeDelta);
 	CCursorPolicyMgr::GetInstance()->Update();
 
 	m_pManagementClass->Update_Scene(min(fTimeDelta, 0.01f));
@@ -79,15 +83,15 @@ void CMainApp::LateUpdate_MainApp(_float fTimeDelta)
 void CMainApp::Render_MainApp()
 {
 	// Capture before Render_Begin so its clear also clears the offscreen target.
-	const bool bPulse = dynamic_cast<CStage*>(m_pManagementClass->GetCurrentScene()) &&
-		CRenderer::GetInstance()->Begin_PulseEffect(m_pGraphicDev);
+	const bool bPostEffect = dynamic_cast<CStage*>(m_pManagementClass->GetCurrentScene()) &&
+		CRenderer::GetInstance()->Begin_PostEffect(m_pGraphicDev);
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
 
 	CImGuiTool::BeginFrame();
 
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
-	if (bPulse)
-		CRenderer::GetInstance()->End_PulseEffect(m_pGraphicDev);
+	if (bPostEffect)
+		CRenderer::GetInstance()->End_PostEffect(m_pGraphicDev);
 
 	CImGuiTool::EndFrame();
 

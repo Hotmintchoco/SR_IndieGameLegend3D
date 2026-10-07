@@ -2,6 +2,7 @@
 
 #include "CBase.h"
 #include "Engine_Define.h"
+#include "CPostEffect.h"
 
 BEGIN(Engine)
 
@@ -36,18 +37,14 @@ public:
 	void	Render(LPDIRECT3DDEVICE9& pGraphicDev);
 	void	Clear_RenderGroup();
 
-	// ------------ 쉐이더 왜곡 효과 ------------ 
-	void	Set_PulseEnabled(_bool bEnabled) { m_bPulseEnabled = bEnabled; if (bEnabled) m_bPulseFailed = false; }
-	_bool	Get_PulseEnabled() const { return m_bPulseEnabled; }
-	void	Update_PulseEffect(_float fTimeDelta);
-	//		4x4 확대/축소 강도, 반복 속도
-	void	Set_PulseParameters(_float fStrength, _float fSpeed);
-	// 물방울 굴절 강도, 움직임 속도 (강도 0이면 물방울 효과 없음)
-	void	Set_WaterDropParameters(_float fStrength, _float fSpeed);
-	_bool	Begin_PulseEffect(LPDIRECT3DDEVICE9 pDevice);
-	void	End_PulseEffect(LPDIRECT3DDEVICE9 pDevice);
-	// ------------ 쉐이더 왜곡 효과 ------------ 
-
+    // Ownership is transferred only when registration succeeds.
+    _bool Register_PostEffect(POST_EFFECT eType, CPostEffect* pEffect);
+    CPostEffect* Get_PostEffect(POST_EFFECT eType) const;
+    _bool Set_PostEffect(POST_EFFECT eType);
+    POST_EFFECT Get_PostEffectType() const { return m_ePostEffect; }
+    void Update_PostEffect(_float fTimeDelta);
+    _bool Begin_PostEffect(LPDIRECT3DDEVICE9 pDevice);
+    void End_PostEffect(LPDIRECT3DDEVICE9 pDevice);
 public:
 	void	Render_Priority(LPDIRECT3DDEVICE9& pGraphicDev);
 	void	Render_NonAlpha(LPDIRECT3DDEVICE9& pGraphicDev);
@@ -63,22 +60,9 @@ public:
 private:
 	list<IRenderable*>		m_RenderGroup[RENDER_END];
 
-	// 정민 : 쉐이더 왜곡 효과 용도
-	_bool m_bPulseEnabled = false;
-	_bool m_bPulseFailed = false;
-	_float m_fPulseTime = 0.f;
-	_float m_fPulseAmplitude = 0.12f;
-	_float m_fPulseSpeed = 1.5f;
-	_float m_fWaterDropTime = 0.f;
-	_float m_fWaterDropAmplitude = 0.04f;
-	_float m_fWaterDropSpeed = 2.f;
-	LPDIRECT3DTEXTURE9 m_pPulseTexture = nullptr;
-	LPDIRECT3DTEXTURE9 m_pWaterDropTexture = nullptr;
-	LPDIRECT3DSURFACE9 m_pPulseSurface = nullptr;
-	LPDIRECT3DSURFACE9 m_pPulseOutput = nullptr;
-	LPDIRECT3DPIXELSHADER9 m_pPulseShader = nullptr;
-	D3DVIEWPORT9 m_tPulseViewport{};
-
+    std::map<POST_EFFECT, CPostEffect*> m_postEffects;
+    POST_EFFECT m_ePostEffect = POST_EFFECT::NONE;
+    CPostEffect* m_pCapturedEffect = nullptr;
 	struct TDebugTri
 	{
 		std::array<_vec3, 3> vTri;
@@ -91,9 +75,6 @@ private:
 private:
 	virtual void	Free();
 
-	// 정민 : 쉐이더 왜곡 효과 용도
-	HRESULT Ready_PulseEffect(LPDIRECT3DDEVICE9 pDevice, const D3DSURFACE_DESC& desc);
-	void Release_PulseEffect();
 };
 
 END

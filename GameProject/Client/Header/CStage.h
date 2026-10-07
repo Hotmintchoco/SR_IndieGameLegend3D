@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CScene.h"
+#include "Client_Enum.h"
 
 namespace Engine
 {
@@ -51,6 +52,7 @@ private:
 
 	void CheckRoomChanged();
 	int CalculateRoomIndexFromPlayerPosition();
+	void ApplyRoomShader(EBiomeType eBiomeType);
 
 	/* 방 관련 */
 	CRoomLayer* m_pCurrentRoomLayer = nullptr;
