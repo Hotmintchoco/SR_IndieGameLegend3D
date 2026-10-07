@@ -774,6 +774,9 @@
     <ClInclude Include="..\Header\CSeaweed.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CSandburst.h">
+      <Filter>02. GameObject\06. Effect\Sandburst</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1141,6 +1144,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSeaweed.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSandburst.cpp">
+      <Filter>02. GameObject\06. Effect\Sandburst</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

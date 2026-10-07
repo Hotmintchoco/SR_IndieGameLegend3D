@@ -74,6 +74,26 @@ CParticle* CParticle::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pEffect;
 }
 
+void CParticle::LookAtPlayer2()
+{
+    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+    if (nullptr == pPlayerTransformCom) return;
+
+    _vec3   vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vDir = vPlayerPos - vPos;
+    vDir.y = 0.f;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    _vec3 vAngle;
+    vAngle.x = D3DXToDegree(-asinf(vDir.y));
+    vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+    vAngle.z = 0.f;
+    m_pTransformCom->Set_Angle(vAngle);
+}
+
 void CParticle::Free()
 {
     CGameObject::Free();

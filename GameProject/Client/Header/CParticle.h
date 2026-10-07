@@ -24,10 +24,12 @@ protected:
 
 protected:
 	Engine::CTransform* m_pTransformCom = nullptr;
-	_float				m_fFrame;
+	_float				m_fFrame = 0.f;
 
 	_float m_fLifeTime = 0.f;
 	_float m_fElapsedTime = 0.f;
+
+	_float m_fScale = 0.f;
 
 public:
 	static CParticle* Create(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -38,7 +40,7 @@ public:
 
 	void Set_LifeTime(const _float& fLifeTime) { m_fLifeTime = fLifeTime; }
 
-
+	void LookAtPlayer2();
 public:
 
 protected:

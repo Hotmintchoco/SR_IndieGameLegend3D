@@ -67,6 +67,9 @@ public:
 	virtual _int Get_Hp() { return m_iHp; }
 	WORMSTATE Get_WormState() { return m_eWormState; }
 	
+public:
+	void Check_Sandburst(_float fTimeDelta);
+	void Effect_Sandburst(_float fLifeTime);
 protected:
 	Engine::CTransform* m_pTransformCom2 = nullptr;
 	Engine::CTexture* m_pTextureCom2 = nullptr;
@@ -122,6 +125,8 @@ private:
 	_bool m_bSet_InitPos = false;
 	_float m_fSpeed = 6.f;
 	_float m_fMoveHeight = 1.25f;
+
+	_float m_fElapsedTime2 = 0.f;
 
 	inline static _vec3 s_vRoomCenter = { 0.f,0.f,0.f };
 };

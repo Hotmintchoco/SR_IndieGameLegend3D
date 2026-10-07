@@ -39,7 +39,8 @@ HRESULT CWorm::Ready_GameObject()
         }
     }
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
-
+    _vec3 a{};
+    _vec3 b = {};
     m_iMaxHp = 5;
     m_iHp = m_iMaxHp;
     m_bCollision_WithMonster = false;
@@ -103,6 +104,7 @@ _int CWorm::Update_GameObject(_float fTimeDelta)
     }
     _int    iExit = CMonster::Update_GameObject(_fTimeDelta);
 
+    Check_Sandburst(fTimeDelta);
     if (m_iWormIndex == 1)
     {
 		Update_Motion(_fTimeDelta);
@@ -295,6 +297,35 @@ HRESULT CWorm::Add_Component()
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform2", pComponent });
 
     return S_OK;
+}
+
+void CWorm::Check_Sandburst(_float fTimeDelta)
+{
+    m_fElapsedTime2 += fTimeDelta;
+    if (m_iWormIndex == 1)
+    {
+        _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        if (0.f < vPos.y && vPos.y < 0.125f)
+        {
+            if (m_fElapsedTime2 > 0.5f)
+            {
+                Effect_Sandburst(1.f);
+                m_fElapsedTime2 = 0.f;
+            }
+        }
+    }
+}
+
+void CWorm::Effect_Sandburst(_float fLifeTime)
+{
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+
+    CGameObject* pGameObject = nullptr;
+    pGameObject = CEffect::Create(m_pGraphicDev, CEffect::SANDBURST, vPos, fLifeTime);
+    if (nullptr == pGameObject) return;
+
+    if (FAILED(pLayer->Add_GameObject(L"Sandburst", pGameObject))) return;
 }
 
 CWorm* CWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -1628,7 +1659,7 @@ void CWorm::Update_WormBoby(const _float& fTimeDelta)
     vDir = m_vMoveDest.front() - vPos;
     _float fDist;
     _float f = +0.f;
-    if (m_iWormIndex == 2 || m_iWormIndex == 10)fDist = 1.25 + f;
+    if (m_iWormIndex == 2 || m_iWormIndex == 10)fDist = 1.25f + f;
     else fDist = 1.f + f;
 
     //if (static_cast<CWorm*>(m_pHeadWorm)->Get_WormState() == MOVE && m_iWormIndex == 2)

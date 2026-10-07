@@ -210,6 +210,7 @@
     <ClInclude Include="..\Header\CGameStatus.h" />
     <ClInclude Include="..\Header\CGaugeUI.h" />
     <ClInclude Include="..\Header\CRayCaster.h" />
+    <ClInclude Include="..\Header\CSandburst.h" />
     <ClInclude Include="..\Header\CSeaweed.h" />
     <ClInclude Include="..\Header\CSGBullet.h" />
     <ClInclude Include="..\Header\CShockwave.h" />
@@ -342,6 +343,7 @@
     <ClCompile Include="..\Code\CGameMachine.cpp" />
     <ClCompile Include="..\Code\CGameStatus.cpp" />
     <ClCompile Include="..\Code\CRayCaster.cpp" />
+    <ClCompile Include="..\Code\CSandburst.cpp" />
     <ClCompile Include="..\Code\CSeaweed.cpp" />
     <ClCompile Include="..\Code\CSGBullet.cpp" />
     <ClCompile Include="..\Code\CShockwave.cpp" />

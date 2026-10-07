@@ -9,6 +9,7 @@
 #include "CTrail.h"
 #include "CBullet_Trail.h"
 #include "CArrow_Effect.h"
+#include "CSandburst.h"
 
 CEffect::CEffect(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_fFrame(0.f)
@@ -100,6 +101,23 @@ CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type
     return pEffect;
 }
 
+CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, const _vec3& vPos, _float fLifeTime)
+{
+    CEffect* pEffect = new CEffect(pGraphicDev);
+    pEffect->Set_Effect_Type(eEffect_Type);
+    pEffect->Set_LifeTime(fLifeTime);
+
+    if (FAILED(pEffect->Ready_GameObject()))
+    {
+        Safe_Release(pEffect);
+        MSG_BOX("CEffect Create Failed");
+        return nullptr;
+    }
+    pEffect->Set_Pos(vPos);
+
+    return pEffect;
+}
+
 CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, CGameObject* pEffect_Owner)
 {
     CEffect* pEffect = new CEffect(pGraphicDev);
@@ -148,8 +166,6 @@ void CEffect::Set_Scale(const _vec3& vPos)
 
 void CEffect::Ready_Effect()
 {
-    _vec3 vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
     switch (m_eEffect_Type)
     {
     case MAGMA_FIREBALL:
@@ -184,19 +200,22 @@ void CEffect::Ready_Effect()
     {
         m_fLifeTime = 100.f;
 
-        //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-        CGameObject* pGameObject = nullptr;
-
-        pGameObject = CBullet_Trail::Create(m_pGraphicDev, static_cast<CProjectile*>(m_pEffect_Owner));
-
+        CGameObject* pGameObject = CBullet_Trail::Create(m_pGraphicDev, static_cast<CProjectile*>(m_pEffect_Owner));
         if (nullptr == pGameObject) return;
-        //if (FAILED(pLayer->Add_GameObject(L"Bullet_Trail", pGameObject))) return;
+
         CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
         if (FAILED(pScene->Add_GameObject(L"Bullet_Trail", pGameObject))) return;
         static_cast<CProjectile*>(m_pEffect_Owner)->Set_TrailPointer(pGameObject);
         break;
     }
     case ARROW_TRAIL:
+        break;
+    case SANDBURST:
+    {
+        m_fElapsedTime2 = 0.5f;
+        break;
+    }
+    case SANDBURST2:
         break;
     }
 }
@@ -212,9 +231,7 @@ void CEffect::Update_Effect(const _float fTimeDelta)
     switch (m_eEffect_Type)
     {
     case MAGMA_FIREBALL:
-        //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-        //CGameObject* pGameObject = nullptr;
-
+    {
         pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::ORANGE, 45, 7.f, 0.16f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
@@ -225,10 +242,13 @@ void CEffect::Update_Effect(const _float fTimeDelta)
 
         Set_Dead(true);
         break;
-
+    }
     case MAGMA_TRAIL:
+    {
         break;
+    }
     case MAGMA_DEAD_EFFECT:
+    {
         m_fElapsedTime2 += fTimeDelta;
 
         if (m_fElapsedTime2 > 0.25f)
@@ -262,9 +282,10 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         }
         if (m_fElapsedTime > m_fLifeTime)
             Set_Dead(true);
-
         break;
+    }
     case BOSS1_DEAD_EFFECT:
+    {
         m_fElapsedTime2 += fTimeDelta;
 
         if (m_fElapsedTime2 > 0.3f && m_fElapsedTime < m_fLifeTime - 0.5f)
@@ -307,7 +328,9 @@ void CEffect::Update_Effect(const _float fTimeDelta)
             Set_Dead(true);
 
         break;
+    }
     case MAGMA_EXPLOSION1:
+    {
         m_fElapsedTime3 += fTimeDelta;
         if (m_fElapsedTime3 > 0.125f && m_fElapsedTime < m_fLifeTime - 0.5f)
         {
@@ -341,24 +364,24 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         if (m_fElapsedTime > m_fLifeTime)
             Set_Dead(true);
         break;
+    }
     case MAGMA_EXPLOSION2:
+    {
         pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::RED, 50, 3.f, 1.f, { 1.f,1.f,1.f }, CParticle_Sphere::DOWN);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
 
         Set_Dead(true);
-
         break;
-
-
+    }
     case BOSS1_EXPLOSION2:
+    {
         pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::PINK, 40, 6.f, 1.f, { 1.5f,1.5f,1.5f }, CParticle_Sphere::DOWN);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
-
         Set_Dead(true);
-
         break;
+    }
     case BULLET_EFFECT:
     {
         _vec3 vVelocity;
@@ -419,10 +442,13 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         Set_Dead(true);
         break;
     }
-	case BULLET_TRAIL:
-		Set_Dead(true);
-		break;
+    case BULLET_TRAIL:
+    {
+        Set_Dead(true);
+        break;
+    }
     case ARROW_TRAIL:
+    {
         m_fElapsedTime2 += fTimeDelta;
         CTransform* pEffectOwnerTransformCom = static_cast<CProjectile*>(m_pEffect_Owner)->Get_Transform();
         _vec3 vPos, vLook;
@@ -446,5 +472,30 @@ void CEffect::Update_Effect(const _float fTimeDelta)
             Set_Dead(true);
         break;
     }
+    case SANDBURST:
+    {
+        //if(m_pEffect_Owner);
+
+        m_fElapsedTime2 += fTimeDelta;
+
+        if (m_fElapsedTime2 > 0.5f)
+        {
+            m_fElapsedTime2 -= 0.5f;
+
+            pGameObject = CSandburst::Create(m_pGraphicDev, vPos);
+
+            if (nullptr == pGameObject) return;
+            if (FAILED(pLayer->Add_GameObject(L"Sandburst", pGameObject))) return;
+        }
+        if (m_fElapsedTime >= m_fLifeTime)
+            Set_Dead(true);
+        break;
+    }
+    case SANDBURST2:
+    {
+        break;
+    }
+    }
+
 
 }
