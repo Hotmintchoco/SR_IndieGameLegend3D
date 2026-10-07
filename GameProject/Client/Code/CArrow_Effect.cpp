@@ -28,17 +28,17 @@ HRESULT CArrow_Effect::Ready_GameObject()
 
 
 
-    _float iRand1 = _float(rand() % 128) - 64.f;
-    _float iRand2 = _float(rand() % 128) - 64.f;
-    _float iRand3 = _float(rand() % 128) - 64.f;
+    //_float iRand1 = _float(rand() % 128) - 64.f;
+    //_float iRand2 = _float(rand() % 128) - 64.f;
+    //_float iRand3 = _float(rand() % 128) - 64.f;
 
-    m_vRandDir = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
-    m_vRandDir = m_vRandDir / 10.f;
+    //m_vRandDir = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
+    //m_vRandDir = m_vRandDir / 10.f;
 
     return S_OK;
 }
 
-_int CArrow_Effect::Update_GameObject(const _float& fTimeDelta)
+_int CArrow_Effect::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CParticle::Update_GameObject(fTimeDelta);
 
@@ -90,7 +90,7 @@ _int CArrow_Effect::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CArrow_Effect::LateUpdate_GameObject(const _float& fTimeDelta)
+void CArrow_Effect::LateUpdate_GameObject(_float fTimeDelta)
 {
     CParticle::LateUpdate_GameObject(fTimeDelta);
 

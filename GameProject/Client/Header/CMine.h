@@ -1,11 +1,20 @@
 ﻿#pragma once
+
 #include "CMonster.h"
 
-class CSkull : public CMonster
+namespace Engine
+{
+	class CRcTex;
+	class CTransform;
+	class CTexture;
+	class CCalculator;
+}
+
+class CMine : public CMonster
 {
 protected:
-	explicit CSkull(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CSkull();
+	explicit CMine(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CMine();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -19,7 +28,7 @@ private:
 	HRESULT			Add_Component();
 
 public:
-	static CSkull* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CMine* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 protected:
 	virtual void		Free();

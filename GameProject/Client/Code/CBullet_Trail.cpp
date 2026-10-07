@@ -50,7 +50,7 @@ HRESULT CBullet_Trail::Ready_GameObject()
     return S_OK;
 }
 
-_int CBullet_Trail::Update_GameObject(const _float& fTimeDelta)
+_int CBullet_Trail::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CTrail::Update_GameObject(fTimeDelta);
 
@@ -79,7 +79,7 @@ _int CBullet_Trail::Update_GameObject(const _float& fTimeDelta)
     return iExit;
 }
 
-void CBullet_Trail::LateUpdate_GameObject(const _float& fTimeDelta)
+void CBullet_Trail::LateUpdate_GameObject(_float fTimeDelta)
 {
     //if (m_pBullet == nullptr) return;
     CTrail::LateUpdate_GameObject(fTimeDelta);

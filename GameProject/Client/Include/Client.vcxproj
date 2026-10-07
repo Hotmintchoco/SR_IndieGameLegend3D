@@ -171,10 +171,13 @@
     <ClInclude Include="..\Header\CLiminalGun.h" />
     <ClInclude Include="..\Header\CLiminalObject.h" />
     <ClInclude Include="..\Header\CLiminalSlope.h" />
+    <ClInclude Include="..\Header\CMine.h" />
     <ClInclude Include="..\Header\CMiniGame.h" />
     <ClInclude Include="..\Header\CMiniGame1.h" />
     <ClInclude Include="..\Header\CMiniGameBG.h" />
     <ClInclude Include="..\Header\CMovement.h" />
+    <ClInclude Include="..\Header\COcto.h" />
+    <ClInclude Include="..\Header\COctoBullet.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
     <ClInclude Include="..\Header\CPlayerAnimator.h" />
     <ClInclude Include="..\Header\CPlayerMovement.h" />
@@ -207,6 +210,7 @@
     <ClInclude Include="..\Header\CGameStatus.h" />
     <ClInclude Include="..\Header\CGaugeUI.h" />
     <ClInclude Include="..\Header\CRayCaster.h" />
+    <ClInclude Include="..\Header\CSeaweed.h" />
     <ClInclude Include="..\Header\CSGBullet.h" />
     <ClInclude Include="..\Header\CShockwave.h" />
     <ClInclude Include="..\Header\CShotGun.h" />
@@ -267,6 +271,7 @@
     <ClInclude Include="..\Header\CUnbreakableFrustum.h" />
     <ClInclude Include="..\Header\CSprnub1.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="CSeaweed2.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -300,10 +305,13 @@
     <ClCompile Include="..\Code\CLiminalGun.cpp" />
     <ClCompile Include="..\Code\CLiminalObject.cpp" />
     <ClCompile Include="..\Code\CLiminalSlope.cpp" />
+    <ClCompile Include="..\Code\CMine.cpp" />
     <ClCompile Include="..\Code\CMiniGame.cpp" />
     <ClCompile Include="..\Code\CMiniGame1.cpp" />
     <ClCompile Include="..\Code\CMiniGameBG.cpp" />
     <ClCompile Include="..\Code\CMovement.cpp" />
+    <ClCompile Include="..\Code\COcto.cpp" />
+    <ClCompile Include="..\Code\COctoBullet.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />
     <ClCompile Include="..\Code\CPlayerAnimator.cpp" />
     <ClCompile Include="..\Code\CPlayerMovement.cpp" />
@@ -335,6 +343,7 @@
     <ClCompile Include="..\Code\CGameMachine.cpp" />
     <ClCompile Include="..\Code\CGameStatus.cpp" />
     <ClCompile Include="..\Code\CRayCaster.cpp" />
+    <ClCompile Include="..\Code\CSeaweed.cpp" />
     <ClCompile Include="..\Code\CSGBullet.cpp" />
     <ClCompile Include="..\Code\CShockwave.cpp" />
     <ClCompile Include="..\Code\CShotGun.cpp" />
@@ -404,6 +413,7 @@
     <ClCompile Include="..\Code\CSprnub1.cpp" />
     <ClCompile Include="..\Code\ITerrain.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="CSeaweed2.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

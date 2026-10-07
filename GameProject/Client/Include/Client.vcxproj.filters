@@ -358,6 +358,21 @@
     <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\00. MiniGame_BG">
       <UniqueIdentifier>{94ef362d-1db6-45cb-812b-ff21cfdee457}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Octo">
+      <UniqueIdentifier>{c20efa02-3173-4705-a23b-0265460121c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Mine">
+      <UniqueIdentifier>{40bf8d56-80ca-47d4-bebd-0c4610a3b875}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Octo\OctoBullet">
+      <UniqueIdentifier>{3b3a93cc-5288-46de-8221-d2aa5321b07a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Seaweed">
+      <UniqueIdentifier>{b82a3fc1-9e29-49af-9ac9-f669d58ff8c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Effect\Sandburst">
+      <UniqueIdentifier>{69b6c6d4-f00e-47f5-ad25-a665e1e2428b}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01. Scene\MiniGame_1">
       <UniqueIdentifier>{660a1a37-0d64-4ef5-b6cc-c9ccb58d72f7}</UniqueIdentifier>
     </Filter>
@@ -747,6 +762,21 @@
     <ClInclude Include="..\Header\CStartScreen.h">
       <Filter>01. Scene\Start</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMine.h">
+      <Filter>02. GameObject\02. Monster\Mine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COcto.h">
+      <Filter>02. GameObject\02. Monster\Octo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COctoBullet.h">
+      <Filter>02. GameObject\02. Monster\Octo\OctoBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="CSeaweed2.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSeaweed.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CSocket.h">
       <Filter>02. GameObject\01. Character\00. Player\02. Socket</Filter>
     </ClInclude>
@@ -1102,6 +1132,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\CStartScreen.cpp">
       <Filter>01. Scene\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMine.cpp">
+      <Filter>02. GameObject\02. Monster\Mine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COcto.cpp">
+      <Filter>02. GameObject\02. Monster\Octo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COctoBullet.cpp">
+      <Filter>02. GameObject\02. Monster\Octo\OctoBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="CSeaweed2.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSeaweed.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CSocket.cpp">
       <Filter>02. GameObject\01. Character\00. Player\02. Socket</Filter>

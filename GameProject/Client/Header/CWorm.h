@@ -2,14 +2,6 @@
 
 #include "CMonster.h"
 
-namespace Engine
-{
-	class CRcTex;
-	class CTransform;
-	class CTexture;
-	class CCalculator;
-}
-
 class CWorm : public CMonster
 {
 public:
@@ -21,7 +13,7 @@ public:
 		SIDE45,
 		CONNECTOR
 	};
-	enum WORMSTATE { SPAWN, MOVE, IDLE, DEAD, OPENING };
+	enum WORMSTATE { SPAWN, MOVE, IDLE, DEAD, ATTACK, OPENING };
 
 protected:
 	explicit CWorm(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -38,14 +30,22 @@ public:
 private:
 	HRESULT			Add_Component();
 
-	void Shuffle_Array(_uint N);
-
 	void Update_Motion(const _float& fTimeDelta);
 
 	void Opening_Worm(const _float& fTimeDelta);
-	void Move_Worm(const _float& fTimeDelta);
+	void Move_WormHead(const _float& fTimeDelta);
+	void Update_WormBoby(const _float& fTimeDelta);
 	void Spawn_Monster(const _float& fTimeDelta);
 	void IDLE_Worm(const _float& fTimeDelta);
+
+	void Move_WormHead_BeforeSpawn(const _float& fTimeDelta);
+	void Move_WormHead_AfterSpawn(const _float& fTimeDelta);
+
+	void Set_MoveDest();
+	void Set_Pos_Worm(_vec3 vPos);
+	void Set_Speed_Worm(_float fSpeed);
+	void Push_Back_MoveDest(const _vec3& vDest);
+	void Clear_MoveDest();
 
 	void Worm_Dead(const _float& fTimeDelta);
 	void Worm_Dead_Effect();
@@ -58,17 +58,18 @@ private:
 	CMonster* Get_Head_Worm() { return m_pHeadWorm; }
 	void Set_WormIndex (_uint iIndex) { m_iWormIndex = iIndex; }
 
+
 	void Set_Init_Worm();
+	void Set_Motion_FromAngle();
+
 public:
-	void Set_Angle();
-	//void Set_Pos_Worm(_vec3& vPos);
-	void Update_WormHead(const _float& fTimeDelta);
-	void Update_WormBoby(const _float& fTimeDelta);
 	virtual void Set_Damage(_int iDamage) { m_iHp -= iDamage; }
 	virtual _int Get_Hp() { return m_iHp; }
 	WORMSTATE Get_WormState() { return m_eWormState; }
 	
-public:
+protected:
+	Engine::CTransform* m_pTransformCom2 = nullptr;
+	Engine::CTexture* m_pTextureCom2 = nullptr;
 
 public:
 	static CWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -78,10 +79,10 @@ protected:
 	virtual void		Free();
 
 private:
-	WORMSTATE m_eWormState = MOVE;
+	WORMSTATE m_eWormState = OPENING;
+	WORMDIR m_eDir = FRONT;
 	_bool m_bOpening = true;
 
-	_vec3 m_fAngle_FromPlayer = {};
 	_uint m_iWormIndex = 1;
 	CMonster* m_pPrevWorm = nullptr;
 	CMonster* m_pNextWorm = nullptr;
@@ -89,28 +90,20 @@ private:
 
 	_int m_iPhase = 0;
 
-	_float m_fSpawn_CoolDown = 1.0f;
 	_float m_fSpawnTime = 0.f;
-	_bool m_bSpawnFinish[4] = {};
-	_bool m_bSpawnFinish2[4] = {};
-	_float m_fSpawnStartTime[4] = {};
-	_uint m_iSpawnOrderArr[4] = {};
-	CGameObject* m_pSpawnMonster[4] = {};
+	_float m_fSpawnTime2 = 0.f;
+	_bool m_bSpawnStart = false;
 
 	_float m_fStateUpdateTime = 0.f;
 	_float m_fStateUpdateDuration = 2.f;
 
-	_vec3 m_vRoomCenterLocation = {};
-	_vec3 m_vMovePosition = {};
+	_vec3 m_vRoomCenterLocation = { 0.f,0.f,0.f };
+
 	_bool m_bMoveFlag = false;
 	_bool m_bMoveFlag2 = false;
 	_bool m_bMoveState = true;
 
-	_bool m_bLandingState = true;
-	_vec3 m_vLandingDirection = {};
-	_float m_fLandingTime = 0.f;
-	_float m_fVelocityY = 0.f;
-	_uint m_iLandingCount = 0;
+	_vec3 m_vSpawnDirection = { 0.f,0.f,0.f };
 
 	_bool m_bDead_Effect1 = false;
 	_bool m_bDead_Effect2 = false;
@@ -121,14 +114,14 @@ private:
 	_bool m_DeadExplosion = false;
 
 	_bool m_bOpeningStart = false;
-	_bool m_bOpeningMoveFlag = false;
-	_bool m_bOpeningMoveFlag2 = false;
+
 	_float m_bElapsedOpeningTime = 0.f;
 
-	_vec3 m_vOpeningMoveDirection[6] =
-	{
-	};
-	_int m_iOpeningMoveIndex = 0;
+	vector<_vec3> m_vMoveDest;
 
 	_bool m_bSet_InitPos = false;
+	_float m_fSpeed = 6.f;
+	_float m_fMoveHeight = 1.25f;
+
+	inline static _vec3 s_vRoomCenter = { 0.f,0.f,0.f };
 };

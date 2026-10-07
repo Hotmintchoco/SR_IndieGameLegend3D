@@ -184,14 +184,15 @@ void CEffect::Ready_Effect()
     {
         m_fLifeTime = 100.f;
 
-        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+        //CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
         CGameObject* pGameObject = nullptr;
 
         pGameObject = CBullet_Trail::Create(m_pGraphicDev, static_cast<CProjectile*>(m_pEffect_Owner));
 
         if (nullptr == pGameObject) return;
-        if (FAILED(pLayer->Add_GameObject(L"Bullet_Trail", pGameObject))) return;
-
+        //if (FAILED(pLayer->Add_GameObject(L"Bullet_Trail", pGameObject))) return;
+        CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+        if (FAILED(pScene->Add_GameObject(L"Bullet_Trail", pGameObject))) return;
         static_cast<CProjectile*>(m_pEffect_Owner)->Set_TrailPointer(pGameObject);
         break;
     }
@@ -428,16 +429,13 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         pEffectOwnerTransformCom->Get_Info(INFO_POS, &vPos);
         pEffectOwnerTransformCom->Get_Info(INFO_LOOK, &vLook);
         D3DXVec3Normalize(&vLook, &vLook);
-        vPos = vPos - vLook;
+        vPos = vPos - vLook * 0.66f;
 
         m_pTransformCom->Set_Pos(vPos);
 
         if (m_fElapsedTime2 > 0.125f && m_fElapsedTime < m_fLifeTime)
         {
             m_fElapsedTime2 = 0.f;
-
-            CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-            CGameObject* pGameObject = nullptr;
 
             pGameObject = CArrow_Effect::Create(m_pGraphicDev, vPos, vLook);
 

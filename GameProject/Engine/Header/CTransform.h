@@ -88,6 +88,8 @@ public:
 		UpdateWorldMatrix();
 	}
 
+	inline _vec3 Get_Angle() { return m_vAngle; }
+	
 	inline void UpdateMatrix()
 	{
 		if (m_bUseLocal)

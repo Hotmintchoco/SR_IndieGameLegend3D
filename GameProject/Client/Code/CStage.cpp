@@ -86,6 +86,7 @@ HRESULT CStage::Ready_Scene()
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODE, COLL_PLAYER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MONSTER, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MONSTER, COLL_MONSTER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MBULLET, COLL_PLAYER);
 
 	/* 방 로직 */
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_ROOMLOGIC, COLL_PLAYER);
