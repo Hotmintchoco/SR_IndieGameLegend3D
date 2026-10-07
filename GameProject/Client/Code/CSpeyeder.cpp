@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CSpeyeder.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
