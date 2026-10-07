@@ -95,6 +95,17 @@ void CUIMgr::RequestHitEffect()
     }
 }
 
+void CUIMgr::EnterBossScreen()
+{
+    CGameObject* pHitUI = CManagement::GetInstance()->Get_GameObject(L"UI_Layer", L"HitScreen");
+    if (nullptr != pHitUI)
+    {
+        CHitCreenUI* pHitScreen = dynamic_cast<CHitCreenUI*>(pHitUI);
+        if (nullptr != pHitScreen)
+            pHitScreen->EnterBossRoom();
+    }
+}
+
 void CUIMgr::SpecialAtkCheck()
 {
     CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());

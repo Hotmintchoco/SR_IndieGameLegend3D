@@ -1160,9 +1160,6 @@
     <None Include="..\Bin\Resource\Map\DefaultRoom.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
-    <None Include="..\Bin\Resource\Map\Room 작성 가이드.md">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
     <None Include="..\Bin\Resource\Map\Room_1_1.json">
       <Filter>03. Resource\01. Map</Filter>
     </None>
@@ -1185,17 +1182,41 @@
   <ItemGroup>
     <Filter Include="05. Shader" />
     <Filter Include="03. Resource\02. Shader" />
-    <ClInclude Include="..\Header\CPostEffect.h"><Filter>05. Shader</Filter></ClInclude>
-    <ClCompile Include="..\Code\CPostEffect.cpp"><Filter>05. Shader</Filter></ClCompile>
-    <ClInclude Include="..\Header\CUnderwaterEffect.h"><Filter>05. Shader</Filter></ClInclude>
-    <ClCompile Include="..\Code\CUnderwaterEffect.cpp"><Filter>05. Shader</Filter></ClCompile>
-    <ClInclude Include="..\Header\CLavaEffect.h"><Filter>05. Shader</Filter></ClInclude>
-    <ClCompile Include="..\Code\CLavaEffect.cpp"><Filter>05. Shader</Filter></ClCompile>
-    <ClInclude Include="..\Header\CShaderEffectMgr.h"><Filter>05. Shader</Filter></ClInclude>
-    <ClCompile Include="..\Code\CShaderEffectMgr.cpp"><Filter>05. Shader</Filter></ClCompile>
-    <None Include="..\Bin\Resource\Shader\Lava.hlsl"><Filter>03. Resource\02. Shader</Filter></None>
-    <None Include="..\Bin\Resource\Shader\WaterDrop.hlsl"><Filter>03. Resource\02. Shader</Filter></None>
-    <None Include="..\Bin\Resource\Shader\CameraFilterPack_WaterDrop.png"><Filter>03. Resource\02. Shader</Filter></None>
-    <None Include="..\Bin\Resource\Shader\CameraFilterPack_RainDrop.png"><Filter>03. Resource\02. Shader</Filter></None>
+    <ClInclude Include="..\Header\CPostEffect.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CPostEffect.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <ClInclude Include="..\Header\CUnderwaterEffect.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CUnderwaterEffect.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <ClInclude Include="..\Header\CLavaEffect.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CLavaEffect.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <ClInclude Include="..\Header\CShaderEffectMgr.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CShaderEffectMgr.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <None Include="..\Bin\Resource\Shader\Lava.hlsl">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\WaterDrop.hlsl">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\CameraFilterPack_WaterDrop.png">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\CameraFilterPack_RainDrop.png">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

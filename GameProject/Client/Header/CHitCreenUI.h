@@ -14,9 +14,11 @@ public:
 
 public:
 	void			Hit() { m_fAlpha = 255.f; }
+	void			EnterBossRoom();
 
 private:
 	_float			m_fAlpha;
+	_float			m_fShowTime;
 
 public:
 	static CHitCreenUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
