@@ -42,7 +42,7 @@ _int CHitScan::Update_GameObject(_float fTimeDelta)
     else
     {
         m_fTimeAfterBirth += fTimeDelta;
-        m_iOpacity = clamp((int)(1.f - m_fTimeAfterBirth / m_fLifeTime), 0, 100);
+        m_iOpacity = clamp((int)((1.f - m_fTimeAfterBirth / m_fLifeTime) * 100.f), 0, 100);
     }
 
     /* TODO 임시 */
@@ -68,7 +68,7 @@ void CHitScan::Render_GameObject()
 HRESULT CHitScan::Add_Component()
 {
     // Mesh
-    m_pBuffer = dynamic_cast<CLaserBuffer*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlaneTex"));
+    m_pBuffer = dynamic_cast<CLaserBuffer*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Laser_Buffer"));
 
     if (nullptr == m_pBuffer)
         return E_FAIL;
@@ -89,7 +89,7 @@ HRESULT CHitScan::Add_Component()
     if (nullptr == m_pTexture)
         return E_FAIL;
 
-    m_mapComponent[ID_STATIC].insert({ L"Com_Transform", m_pTexture });
+    m_mapComponent[ID_STATIC].insert({ L"Com_Texture", m_pTexture });
 
     return S_OK;
 }
@@ -136,7 +136,7 @@ CHitScan* CHitScan::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, C
     if (FAILED(pObject->Ready_GameObject()))
     {
         Safe_Release(pObject);
-        MSG_BOX("CLaser Create Failed");
+        MSG_BOX("CHitScan Create Failed");
         return nullptr;
     }
 
@@ -145,4 +145,5 @@ CHitScan* CHitScan::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, C
 
 void CHitScan::Free()
 {
+    CGameObject::Free();
 }

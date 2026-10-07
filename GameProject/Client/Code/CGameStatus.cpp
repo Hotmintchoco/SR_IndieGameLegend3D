@@ -208,11 +208,10 @@ void CGameStatus::RenderImGui()
             CTimerMgr::GetInstance()->SetGlobalTimeScale(m_fTimeScale);
             if (m_bExcludePlayer)
             {
-                CTimerMgr::GetInstance()->SetGroupTimeScale(TG_PLAYER, 1.f / CTimerMgr::GetInstance()->GetGlobalTimeScale());
-            }
-            else
-            {
                 CTimerMgr::GetInstance()->SetGroupTimeScale(TG_PLAYER, 1.f);
+            }
+            {
+                CTimerMgr::GetInstance()->ClearGroupTimeScale(TG_PLAYER);
             }
         }
     }

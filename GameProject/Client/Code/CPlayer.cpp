@@ -48,7 +48,7 @@ HRESULT CPlayer::Ready_GameObject()
 _int CPlayer::Update_GameObject(_float fTimeDelta)
 {
 	/* 캐릭터 타임스케일 */
-	fTimeDelta *= CTimerMgr::GetInstance()->GetGroupTimeScale(TG_PLAYER);
+	fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(TG_PLAYER);
 
     int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -104,7 +104,7 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(_float fTimeDelta)
 {
-    fTimeDelta *= CTimerMgr::GetInstance()->GetGroupTimeScale(TG_PLAYER);
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(TG_PLAYER);
 
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }

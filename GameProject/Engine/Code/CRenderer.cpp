@@ -364,7 +364,7 @@ void CRenderer::Add_DebugScreenRect(const _vec2& vCenter, _float fHalf, D3DCOLOR
 	Add_DebugScreenLine(lb, lt, dwColor);
 }
 
-void CRenderer::Add_DebugWorldMarker(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vWorldPos, _float fSize, D3DCOLOR dwColor)
+bool CRenderer::World_To_Screen(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vWorldPos, _vec2& vOutScreen)
 {
 	_matrix matView, matProj;
 	pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
@@ -373,18 +373,29 @@ void CRenderer::Add_DebugWorldMarker(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3&
 	D3DVIEWPORT9 vp;
 	pGraphicDev->GetViewport(&vp);
 
-	_vec4 vClip;
 	_matrix matVP = matView * matProj;
-	_vec4 vXYZW(vWorldPos, 1.f);
+	_vec4 vClip, vXYZW(vWorldPos, 1.f);
 	D3DXVec4Transform(&vClip, &vXYZW, &matVP);
-	if (vClip.w <= 0.f) return;   // 카메라 뒤
+	if (vClip.w <= 0.f) return false;   // 카메라 뒤
 
-	_float fX = (vClip.x / vClip.w + 1.f) * 0.5f * vp.Width + vp.X;
-	_float fY = (1.f - vClip.y / vClip.w) * 0.5f * vp.Height + vp.Y;
-
-	Add_DebugScreenCross({ fX, fY }, fSize, dwColor);
+	vOutScreen.x = (vClip.x / vClip.w + 1.f) * 0.5f * vp.Width + vp.X;
+	vOutScreen.y = (1.f - vClip.y / vClip.w) * 0.5f * vp.Height + vp.Y;
+	return true;
 }
 
+void CRenderer::Add_DebugWorldMarker(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vWorldPos, _float fSize, D3DCOLOR dwColor)
+{
+	_vec2 vScreen;
+	if (World_To_Screen(pGraphicDev, vWorldPos, vScreen))
+		Add_DebugScreenCross(vScreen, fSize, dwColor);
+}
+
+void CRenderer::Add_DebugWorldRect(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vWorldPos, _float fHalfPixel, D3DCOLOR dwColor)
+{
+	_vec2 vScreen;
+	if (World_To_Screen(pGraphicDev, vWorldPos, vScreen))
+		Add_DebugScreenRect(vScreen, fHalfPixel, dwColor);
+}
 
 void CRenderer::Update_PulseEffect(_float fTimeDelta)
 {

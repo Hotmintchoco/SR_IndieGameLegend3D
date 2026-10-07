@@ -10,6 +10,10 @@
 #include "CRoomLayer.h"
 #include "CClientCameraMgr.h"
 #include "CCamera.h"
+#include "CWeaponSystem.h"
+#include "CTimerMgr.h"
+#include "CMonster.h"
+#include "CHitScan.h"
 
 CLiminalGun::CLiminalGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -36,6 +40,8 @@ HRESULT CLiminalGun::Ready_GameObject()
 
 _int CLiminalGun::Update_GameObject(_float fTimeDelta)
 {
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(TG_PLAYER);
+
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
@@ -45,11 +51,15 @@ _int CLiminalGun::Update_GameObject(_float fTimeDelta)
         CalculateView(m_pHolingObject);
     }
 
+    UpdateUltimateAttackState(fTimeDelta);
+
     return iExit;
 }
 
 void CLiminalGun::LateUpdate_GameObject(_float fTimeDelta)
 {
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(TG_PLAYER);
+
     CWeapon::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -115,16 +125,52 @@ TWeaponOutput CLiminalGun::SpecialAttack(EInputState ePri, EInputState eSec)
 
 TWeaponOutput CLiminalGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
 {
-    return { false, EWeaponAnimEvent::NONE };
+    CTimerMgr::GetInstance()->SetGlobalTimeScale(0.1f);
+    CTimerMgr::GetInstance()->SetGroupTimeScale(TG_PLAYER, 0.5f);
+    m_bOnUltimateAttack = true;
+    m_fTimeAfterUltimate = 0.f;
+    m_pSystem->SetUltimateAttackOnGoing(true);
+
+    return { true, EWeaponAnimEvent::ULT_LIMINALGUN_START };
 }
 
 TWeaponOutput CLiminalGun::UpdateUltimateAttack(EInputState ePri, EInputState eSec)
 {
-    return { false, EWeaponAnimEvent::NONE };
+    switch (ePri)
+    {
+    case EInputState::Pressed:
+    {
+        if (CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene()))
+        {
+            const vector<CMonster*>& vecMonster = pStage->GetCurrentRoomLayer()->GetMonsterList();
+
+            for (auto p : vecMonster)
+            {
+                if (p->Is_Dead()) continue;
+
+                CHitScan* pHitScan = CHitScan::Create(m_pGraphicDev, m_vBulletFrom, p);
+                if (pHitScan) CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"HitScan", pHitScan);
+            }
+        }
+
+        EndUltimateAttack(EInputState::NONE, EInputState::NONE);
+        return { true, EWeaponAnimEvent::ULT_LIMINALGUN_END };
+        break;
+    }
+    }
+
+    return { false, EWeaponAnimEvent::ULT_LIMINALGUN_LOOP };
 }
 
 TWeaponOutput CLiminalGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
 {
+    CTimerMgr::GetInstance()->SetGlobalTimeScale(1.f);
+    CTimerMgr::GetInstance()->ClearGroupTimeScale(TG_PLAYER);
+    m_fDmgAccumulated = 0.f;
+    m_bOnUltimateAttack = false;
+    m_fTimeAfterUltimate = 0.f;
+    m_pSystem->SetUltimateAttackOnGoing(false);
+
     return { false, EWeaponAnimEvent::NONE };
 }
 
@@ -268,6 +314,33 @@ void CLiminalGun::AdjustRotation(CLiminalObject* pObject)
 
     /* 캡쳐 당시의 트랜스폼도 변경 */
     CaptureTransform(m_pHolingObject);
+}
+
+void CLiminalGun::UpdateUltimateAttackState(_float fTimeDelta)
+{
+    if (!m_bOnUltimateAttack) return;
+
+    m_fTimeAfterUltimate += fTimeDelta;
+    m_fDmgAccumulated = m_fTimeAfterUltimate * m_fDmgPerSecond;
+
+    if (CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene()))
+    {
+        const vector<CMonster*>& vecMonster = pStage->GetCurrentRoomLayer()->GetMonsterList();
+
+        for (auto p : vecMonster)
+        {
+            if (p->Is_Dead()) continue;
+
+            CTransform* pTransform = dynamic_cast<CTransform*>(p->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+
+            int iHp = 10; // TODO int iHp = p->GetHp();
+            float fRatio = clamp(1.f - m_fDmgAccumulated / (float)iHp, 0.f, 1.f);
+
+            /* 디버깅 */
+            DWORD dwColor = (fRatio == 0.f) ? D3DCOLOR_ARGB(255, 255, 0, 0) : D3DCOLOR_ARGB(255, 0, 255, 0);
+            CRenderer::GetInstance()->Add_DebugWorldRect(m_pGraphicDev, pTransform->Get_Info_Value(INFO_POS), fRatio * m_fMaxRadius + (1.f - fRatio) * m_fMinRadius, dwColor);
+        }
+    }
 }
 
 HRESULT CLiminalGun::Add_Component()

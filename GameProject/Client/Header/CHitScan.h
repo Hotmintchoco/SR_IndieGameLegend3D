@@ -39,7 +39,7 @@ private:
 	_vec3 m_vStart{ 0.f, 0.f, 0.f };
 	_vec3 m_vDir{ 0.f, 0.f, 0.f };
 	float m_fLength = 0.f;
-	float m_fWidth = 0.1f;
+	float m_fWidth = 0.05f;
 
 public:
 	static CHitScan* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, CMonster* pTarget);
