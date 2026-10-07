@@ -53,7 +53,7 @@ _int CMine::Update_GameObject(_float fTimeDelta)
 
     Set_OnTerrain();
     m_fFrame += fTimeDelta * 6.f;
-    if (m_fFrame > 2.f)
+    if (m_fFrame >= 2.f)
         m_fFrame = 0.f;
 
 

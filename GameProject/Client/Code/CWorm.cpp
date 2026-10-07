@@ -39,8 +39,7 @@ HRESULT CWorm::Ready_GameObject()
         }
     }
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
-    _vec3 a{};
-    _vec3 b = {};
+
     m_iMaxHp = 5;
     m_iHp = m_iMaxHp;
     m_bCollision_WithMonster = false;
@@ -90,7 +89,7 @@ _int CWorm::Update_GameObject(_float fTimeDelta)
     if (m_iWormIndex == 1)
     {
         m_fFrame += fTimeDelta * 8.f;
-        if (m_fFrame > 4.f)
+        if (m_fFrame >= 4.f)
             m_fFrame -= 4.f;
     }
 
@@ -223,17 +222,8 @@ void CWorm::Render_GameObject()
         m_pTextureCom->Set_Texture((_int)m_eDir);
         m_pBufferCom->Render_Buffer();
 
-
-
-            //if (m_eBoss1State != DEAD)
-            //    m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
 		m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
 		m_pTextureCom2->Set_Texture(4);
-
-            //if (m_eBoss1State != DEAD)
-            //    m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
-        
-
     }
     m_pBufferCom->Render_Buffer();
 
@@ -309,7 +299,17 @@ void CWorm::Check_Sandburst(_float fTimeDelta)
         {
             if (m_fElapsedTime2 > 0.5f)
             {
-                Effect_Sandburst(1.f);
+                _float fTime = 0.f;
+                if (m_eWormState == SPAWN)
+                {
+                    if (m_bMoveFlag == false)
+                        fTime = 0.4f;
+                    else
+                        fTime = 0.9f;
+                }
+                else
+                    fTime = 1.1f;
+                Effect_Sandburst(fTime);
                 m_fElapsedTime2 = 0.f;
             }
         }
@@ -399,16 +399,18 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
         {
             m_eWormState = static_cast<WORMSTATE>(rand() % 2);
         }
-        //m_eWormState = SPAWN;
+        m_eWormState = SPAWN;
         //m_eWormState = MOVE;
         if (m_eWormState == SPAWN)
         {
             Set_MoveDest();
             m_fStateUpdateDuration = 6.f;
+            m_fStateUpdateDuration = 20.f;
             m_bSpawnStart = false;
             m_bMoveFlag = false;
             m_bMoveFlag2 = false;
             Set_Speed_Worm(9.f);
+            Set_Speed_Worm(2.f);
             m_fSpawnTime = 0.f;
             m_fSpawnTime2 = 0.f;
         }

@@ -22,7 +22,7 @@ HRESULT CSandburst::Ready_GameObject()
 
     //m_fLifeTime = 5.f;
 
-    m_fScale = 0.7f;
+    m_fScale = 0.9f;
     //m_fScale = 10.f;
     _vec3 vScale = { m_fScale ,m_fScale ,m_fScale };
     m_pTransformCom->Set_Scale(vScale);

@@ -127,7 +127,7 @@ _int CSprnub3::Update_GameObject(_float fTimeDelta)
         break;
     }
     m_fFrame += fTimeDelta * 5.f;
-    if (m_fFrame > 2.f)
+    if (m_fFrame >= 2.f)
         m_fFrame = 0.f;
 
 

@@ -800,7 +800,7 @@ void CBoss1::Set_Stand(const _float& fTimeDelta)
     if (m_bStand == false)
     {
         m_fFrame += fTimeDelta * 6.f;
-        if (m_fFrame > 4.f)
+        if (m_fFrame >= 4.f)
         {
             m_fFrame = 0.f;
 			m_bStand = true;
@@ -811,7 +811,7 @@ void CBoss1::Set_Stand(const _float& fTimeDelta)
 void CBoss1::Set_Walking(const _float& fTimeDelta)
 {
     m_fFrame += fTimeDelta * 6.f;
-    if (m_fFrame > 4.f)
+    if (m_fFrame >= 4.f)
         m_fFrame = 0.f;
 }
 

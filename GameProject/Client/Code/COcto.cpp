@@ -75,7 +75,7 @@ _int COcto::Update_GameObject(_float fTimeDelta)
 
 	Set_OnTerrain();
 	m_fFrame += fTimeDelta * 8.f;
-	if (m_fFrame > 4.f)
+	if (m_fFrame >= 4.f)
 		m_fFrame = 0.f;
 
     Move_Octo(fTimeDelta);

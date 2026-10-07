@@ -865,7 +865,7 @@ void CMagmamouth::Set_Motion()
 void CMagmamouth::Set_Motion_OpenMouth(const _float& fTimeDelta)
 {
     m_fFrame += fTimeDelta * 6.f;
-    if (m_fFrame > 4.f)
+    if (m_fFrame >= 4.f)
         m_fFrame = 3.f;
 }
 
@@ -890,7 +890,7 @@ void CMagmamouth::Set_Motion_CloseOpenMouth(const _float& fTimeDelta)
             m_fFrame = 0.f;
             m_bCloseMouth = true;
         }
-        else if (m_fFrame > 4.f)
+        else if (m_fFrame >= 4.f)
         {
             m_fFrame = 4.f - 0.5f * 0.5f * 0.5f;
         }
@@ -899,7 +899,7 @@ void CMagmamouth::Set_Motion_CloseOpenMouth(const _float& fTimeDelta)
     else
     {
         m_fFrame += fTimeDelta * 4.f;
-        if (m_fFrame > 4.f)
+        if (m_fFrame >= 4.f)
         {
             m_fFrame = 3.f;
             m_bCloseMouth = false;

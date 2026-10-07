@@ -43,7 +43,7 @@ _int CFireball::Update_GameObject(_float fTimeDelta)
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
 	m_fFrame += fTimeDelta * 10.f;
-	if (m_fFrame > 4.f)
+	if (m_fFrame >= 4.f)
 		m_fFrame = 0.f;
 
 
