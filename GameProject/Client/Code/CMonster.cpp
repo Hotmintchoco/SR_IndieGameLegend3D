@@ -171,6 +171,18 @@ void CMonster::Disable_HitRenderState()
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 }
 
+void CMonster::LookAtPlayer()
+{
+    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+    if (nullptr == pPlayerTransformCom) return ;
+
+    _vec3   vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    _vec3   vPlayerLook; pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+
+    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+}
+
 void CMonster::LookAtPlayer2()
 {
     CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
@@ -234,7 +246,7 @@ void CMonster::CollisionWithMonster(COLLINFO eCollInfo)
 
         // 내 트랜스폼에 새로운 위치 적용
         Set_Pos(vMyPos);
-        LookAtPlayer2();
+        LookAtPlayer();
     }
 }
 
