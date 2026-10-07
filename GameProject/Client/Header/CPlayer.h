@@ -61,16 +61,20 @@ private:
 	void OnCameraViewChanged(const CAMERA_MODE& Ctx);
 	CAMERA_MODE m_ePlayerCamMode; /* 결국 매 프레임 동작해야 하는 것들이 많아 캐싱... */
 	void SyncCameraYaw();
+	float m_fInputYaw = 0.f;
 
 	/* 기본 컴포넌트 */
 	Engine::CTransform* m_pTransformCom = nullptr;
 	Engine::CCollider* m_pColliderCom = nullptr;
 
 	/* 캐릭터 애니메이션 관련 */
+	void OnActionAnimationFinished(const EPlayerActionState& Ctx);
 	CPlayerAnimator* m_pAnimator = nullptr;
 	CPlayerPartTex* m_pBufferCom[PP_END] = { nullptr };
 	CTransform* m_pBufferTransformCom[PP_END] = { nullptr };
 	CTransform* m_pVisualRootTransform = nullptr;
+	bool m_bInputYawIgnored = false;
+	CTransform* m_pAnimRootTransform = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
 
 	/* 1/3인칭에 따른 무기 위치 변경용 소켓 */
@@ -99,7 +103,7 @@ private:
 
 	/* 무기 */
 	CWeaponSystem* m_pWeaponSystem = nullptr;
-	
+
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

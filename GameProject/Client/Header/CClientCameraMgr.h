@@ -38,6 +38,7 @@ public:
     void            LateUpdate_Camera(_float fTimeDelta);
 
     /* 성철 : 뷰 전환 이벤트 처리 */
+    void SetPlayerCameraMode(CAMERA_MODE eMode);
     CEventDelegate<CAMERA_MODE> m_OnCameraViewChanged;
 
     // 씬 종료·재시작 시 카메라들을 정리합니다.

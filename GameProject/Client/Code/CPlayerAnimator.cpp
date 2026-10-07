@@ -92,9 +92,13 @@ void CPlayerAnimator::UpdateAction(float fTimeDelta)
                 m_eAction = EPlayerActionState::NONE;   // 종료. m_tActionPose는 남겨서 페이드아웃에 사용
             break;
         case EPlayerActionState::STRETCH_ARMS:
-            SampleStretchArms();
+            SampleShotGunUltimate(m_fActionTime);
             if (m_fActionTime >= s_fRipperDuration)
+            {
+                m_pRootTransform->Set_Rotation_Raw({ 0.f, 0.f, 0.f });
+                m_OnActionFinished.Broadcast(m_eAction);
                 m_eAction = EPlayerActionState::NONE;
+            }
             break;
         default:
             m_eAction = EPlayerActionState::NONE;
@@ -131,8 +135,11 @@ void CPlayerAnimator::SampleFire(float fTime)
     m_tActionPose.vRot[PP_RARM].x = s_fForward * (90.f + s_tShootParam.fKick * fRecoil);   // 정면 90도 + 위로 반동
 }
 
-void CPlayerAnimator::SampleStretchArms()
+void CPlayerAnimator::SampleShotGunUltimate(float fTime)
 {
+    float fRotationSpeed = 540.f;
+    m_pRootTransform->Set_Rotation_Raw(_vec3{ 0.f, fRotationSpeed * fTime, 0.f });
+
     m_tActionPose.Reset();
     m_tActionPose.bMask[PP_LARM] = true;
     m_tActionPose.bMask[PP_RARM] = true;
@@ -162,13 +169,15 @@ TLocoParam CPlayerAnimator::GetLocoParam(EPlayerLocomotionState eLoco)
 
 void CPlayerAnimator::TransformPropagation(const _matrix& matRootWorld)
 {
+    _matrix matAnimRootWorld = (*m_pRootTransform->Get_World()) * matRootWorld;
+
 	for (int i = 0; i < PP_END; ++i)
 	{
 		int pp = s_arrUpdateOrder[i];
 		int ppParent = s_arrParent[pp];
 		if (ppParent == PP_ROOT)
 		{
-			m_arrBuffer[pp].pTransform->WorldMatrixPropagation(matRootWorld);
+			m_arrBuffer[pp].pTransform->WorldMatrixPropagation(matAnimRootWorld);
 		}
 		else
 		{

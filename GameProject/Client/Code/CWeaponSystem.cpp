@@ -12,6 +12,7 @@
 #include "CPlayer.h"
 #include "CSocket.h"
 #include "CClientCameraMgr.h"
+#include "CShotGun.h"
 
 CWeaponSystem::CWeaponSystem(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -83,7 +84,7 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
         {
             TWeaponOutput tWpOut = GetCurrentWeapon()->SpecialAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
                 tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
-            tOut.eWpEvent = tWpOut.eWpEvent;
+            tOut.tWpOut = tWpOut;
             if (tWpOut.bAttackExecuted)
             {
                 m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
@@ -102,7 +103,7 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
         {
             TWeaponOutput tWpOut = GetCurrentWeapon()->DefaultAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
                                               tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
-            tOut.eWpEvent = tWpOut.eWpEvent;
+            tOut.tWpOut = tWpOut;
         }
     }
 
@@ -110,7 +111,7 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
     {
         TWeaponOutput tWpOut = GetCurrentWeapon()->UltimateAttack(tInput.tWeaponInput[(int)EWeaponAction::Primary].eState,
                                            tInput.tWeaponInput[(int)EWeaponAction::Secondary].eState);
-        tOut.eWpEvent = tWpOut.eWpEvent;
+        tOut.tWpOut = tWpOut;
         
         if (tWpOut.bAttackExecuted)
         {
@@ -180,6 +181,18 @@ void CWeaponSystem::SwitchWeaponTo(int iIndex)
         if (pSocket)
         {
             pSocket->SetTarget(m_vecWeapon.at(m_iCurrentIndex)->GetTransform());
+        }
+        pSocket = pStage->GetPlayer()->GetSocket(L"Com_Socket_LHand");
+        if (pSocket)
+        {
+            if (CShotGun* pWeapon = dynamic_cast<CShotGun*>(m_vecWeapon.at(m_iCurrentIndex)))
+            {
+                pSocket->SetTarget(pWeapon->GetUltTransform());
+            }
+            else
+            {
+                pSocket->SetTarget(nullptr);
+            }
         }
     }
 

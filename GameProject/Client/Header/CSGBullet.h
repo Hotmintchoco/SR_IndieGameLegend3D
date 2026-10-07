@@ -48,6 +48,7 @@ private:
 	
 	inline static TSGBulletData s_tData = []()-> TSGBulletData {
 		TSGBulletData t;
+		t.fSpeed = 11.f;
 		return t;
 	}();
 

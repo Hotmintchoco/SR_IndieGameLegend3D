@@ -100,6 +100,13 @@ void CClientCameraMgr::LateUpdate_Camera(_float fTimeDelta)
     m_pActiveCamera->Apply_Transform();
 }
 
+void CClientCameraMgr::SetPlayerCameraMode(CAMERA_MODE eMode)
+{
+    Select_Camera(CLIENT_CAMERA_TYPE::PLAYER);
+    static_cast<CPlayerCamera*>(m_pActiveCamera)->Set_CameraMode(eMode);
+    m_OnCameraViewChanged.Broadcast(eMode);
+}
+
 void CClientCameraMgr::Free()
 {
     // 선택 포인터는 소유권이 없으므로 비우기만 합니다.
