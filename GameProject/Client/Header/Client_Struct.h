@@ -85,3 +85,9 @@ struct TWeaponSystemOutput
 {
 	TWeaponOutput tWpOut;
 };
+
+struct TBillBoardInfo
+{
+	_vec3 vPosition{ 0.f, 0.f, 0.f };
+	_vec3 vLook{ 0.f, 0.f, 0.f };
+};

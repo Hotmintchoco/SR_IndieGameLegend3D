@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "COcto.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -10,6 +10,7 @@
 #include "CGem.h"
 #include "CEnergy.h"
 #include "COctoBullet.h"
+#include "CPlayerCamera.h"
 
 _bool COcto::sOctoRight = false;
 COcto::COcto(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -180,10 +181,8 @@ void COcto::Attack_Octo(_float fTimeDelta)
     {
         m_fAttackElapsedTime = _float(rand() % 128) / 1024.f;
 
-        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-        if (nullptr == pPlayerTransformCom) return;
-        _vec3   vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+        _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
         _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
         vPos.y -= 0.2f;
         _vec3 vDir = vPlayerPos - vPos;

@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CGameObject.h"
+#include "Client_Struct.h"
 
 namespace Engine
 {
@@ -12,6 +13,8 @@ namespace Engine
 }
 
 struct TRoomEventCtx;
+
+class CPlayerCamera;
 
 class CMonster : public CGameObject
 {
@@ -65,6 +68,11 @@ protected:
 	_float m_fElapsedTime = 0.f;
 
 	_bool m_bCollision_WithMonster = true;
+
+	/* 성철 */
+	CPlayerCamera* m_pBillBoardCamera = nullptr;
+	/* --- */
+
 private:
 	/* 성철 */
 	void OnRoomEvent(const TRoomEventCtx& t);

@@ -13,7 +13,8 @@
 #include "CSoundMgr.h"
 #include "CStage.h"
 #include "CLayerContext.h"
-
+#include "CPlayerCamera.h"
+#include "CClientCameraMgr.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -53,6 +54,7 @@ HRESULT CMonster::Ready_GameObject()
             pStage->GetCurrentRoomLayer()->IncreaseEntityCount();
             pStage->GetCurrentRoomLayer()->AddMonster(this);
             pStage->GetCurrentRoomLayer()->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t); });
+            m_pBillBoardCamera = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
         }
     }
     /* --- */
@@ -65,6 +67,14 @@ _int CMonster::Update_GameObject(_float fTimeDelta)
 {
     if (!Get_IsActive()) return S_OK;
     m_fElapsedTime += fTimeDelta;
+
+    /* 성철 : 빌보드용 카메라 지연 등록 */
+    if (!m_pBillBoardCamera)
+    {
+        m_pBillBoardCamera = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
+        assert(m_pBillBoardCamera);
+    }
+    /* ---------------------------- */
 
     if (!m_pColliderCom->Get_IsActive())
     {
@@ -175,23 +185,19 @@ void CMonster::Disable_HitRenderState()
 
 void CMonster::LookAtPlayer()
 {
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-    if (nullptr == pPlayerTransformCom) return ;
+    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
 
-    _vec3   vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-    _vec3   vPlayerLook; pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
+    _vec3   vPlayerLook; vPlayerLook = tInfo.vLook;
 
     m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
 }
 
 void CMonster::LookAtPlayer2()
 {
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-    if (nullptr == pPlayerTransformCom) return;
+    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
 
-    _vec3   vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
 
     _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
     _vec3 vDir = vPlayerPos - vPos;

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CCamera.h"
+#include "Client_Struct.h"
 
 namespace Engine
 {
@@ -28,6 +29,8 @@ public:
 
     void SetPseudoScale(float fScale);
 
+    inline TBillBoardInfo GetBillBoardInfo() { return m_tBillBoardInfo; }
+
 public:
     void            Set_Target(CTransform* pTarget) { m_pTarget = pTarget; }
     void            Set_EyeOffset(const _vec3& vOffset) { m_vEyeOffset = vOffset; }
@@ -40,12 +43,16 @@ public:
 private:
     void            Mouse_Move();
     void            Follow_Target();
+    void UpdateBillBoardInfo();
 
     /* 스프링 암 관련 */
     float CalculateSpringArmLength();
 
 private:
     CTransform*     m_pTarget;
+
+    /* 카메라 빌보드 */
+    TBillBoardInfo m_tBillBoardInfo;
 
     /* 가짜 스케일 관련 */
     _vec3 m_vEyeOffsetRaw = _vec3{0.f, 1.f, 0.f};

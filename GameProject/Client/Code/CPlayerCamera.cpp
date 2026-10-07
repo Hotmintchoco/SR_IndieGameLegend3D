@@ -63,6 +63,8 @@ _int CPlayerCamera::Update_GameObject(_float fTimeDelta)
 	// 현재 Eye에서 시선 방향 갱신
 	Update_LookFromAngles();
 
+	UpdateBillBoardInfo();
+
 	return 0;
 }
 
@@ -120,6 +122,13 @@ void CPlayerCamera::Follow_Target()
 	}
 
 	m_vUp = { 0.f, 1.f, 0.f };
+}
+
+void CPlayerCamera::UpdateBillBoardInfo()
+{
+	const _float fCosPitch = cosf(m_fPitch);
+	const _vec3 vLook{ sinf(m_fYaw) * fCosPitch, -sinf(m_fPitch), cosf(m_fYaw) * fCosPitch };
+	m_tBillBoardInfo = { m_vEye , vLook };
 }
 
 float CPlayerCamera::CalculateSpringArmLength()
