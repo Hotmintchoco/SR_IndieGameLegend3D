@@ -2,7 +2,7 @@
 
 #include "CBase.h"
 #include "Engine_Define.h"
-#include "CPostEffect.h"
+
 
 BEGIN(Engine)
 
@@ -37,14 +37,6 @@ public:
 	void	Render(LPDIRECT3DDEVICE9& pGraphicDev);
 	void	Clear_RenderGroup();
 
-    // Ownership is transferred only when registration succeeds.
-    _bool Register_PostEffect(POST_EFFECT eType, CPostEffect* pEffect);
-    CPostEffect* Get_PostEffect(POST_EFFECT eType) const;
-    _bool Set_PostEffect(POST_EFFECT eType);
-    POST_EFFECT Get_PostEffectType() const { return m_ePostEffect; }
-    void Update_PostEffect(_float fTimeDelta);
-    _bool Begin_PostEffect(LPDIRECT3DDEVICE9 pDevice);
-    void End_PostEffect(LPDIRECT3DDEVICE9 pDevice);
 public:
 	void	Render_Priority(LPDIRECT3DDEVICE9& pGraphicDev);
 	void	Render_NonAlpha(LPDIRECT3DDEVICE9& pGraphicDev);
@@ -60,9 +52,6 @@ public:
 private:
 	list<IRenderable*>		m_RenderGroup[RENDER_END];
 
-    std::map<POST_EFFECT, CPostEffect*> m_postEffects;
-    POST_EFFECT m_ePostEffect = POST_EFFECT::NONE;
-    CPostEffect* m_pCapturedEffect = nullptr;
 	struct TDebugTri
 	{
 		std::array<_vec3, 3> vTri;

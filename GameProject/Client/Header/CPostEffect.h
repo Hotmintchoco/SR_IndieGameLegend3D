@@ -1,12 +1,10 @@
-#pragma once
+﻿#pragma once
 #include "Engine_Define.h"
 
-BEGIN(Engine)
+enum class POST_EFFECT { NONE, UNDERWATER, LAVA };
 
-enum class POST_EFFECT { NONE, UNDERWATER };
-
-// One effect owns its shader and scene capture. The renderer owns the effect.
-class ENGINE_DLL CPostEffect
+// One effect owns its shader and scene capture. CShaderEffectMgr owns the effect.
+class CPostEffect
 {
 public:
     explicit CPostEffect(const wchar_t* pShaderFile);
@@ -36,4 +34,3 @@ private:
     D3DVIEWPORT9 m_viewport{};
 };
 
-END

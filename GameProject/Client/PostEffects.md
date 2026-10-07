@@ -6,18 +6,22 @@
 
 - `CPostEffect`: 화면 캡처, HLSL 컴파일, 전체 화면 사각형 출력, 렌더 상태 복원, 실패 시 원본 화면 출력.
 - `CUnderwaterEffect`: 수중 효과 시간, 물방울 텍스처, HLSL 상수 설정.
-- `CRenderer`: 효과 등록·소유, 활성 효과 선택, Update/Begin/End 호출.
+- `CShaderEffectMgr`: 효과 등록·소유, 활성 효과 선택, Update/Begin/End 호출.
 - `CStage::ApplyRoomShader`: 맵 특성과 효과 종류 연결.
 
 수중 HLSL은 기존 `Client/Bin/Resource/Shader/WaterDrop.hlsl`을 사용합니다. 색상과 혼합 강도도 이 파일에 유지됩니다. 수중 왜곡 강도와 속도는 `CUnderwaterEffect`의 두 Set 함수로 조절합니다.
+
+용암은 `CLavaEffect`와 `POST_EFFECT::LAVA`로 분리되어 있습니다. `CameraFilterPack_WaterDrop.png`의 밝기 변화로 열기 굴절을 만들고 주황빛 색감을 더합니다. `AQUA` 방은 수중, `LAVA` 방은 용암, 나머지 방은 `NONE`으로 선택됩니다.
+
+용암의 기본 왜곡 강도는 `0.025`, 속도는 `1.2`, 색감 혼합은 `0.12`입니다. `CLavaEffect::Set_HeatParameters()`와 `Set_TintStrength()`로 조정합니다. HLSL 원본은 `Client/Bin/Resource/Shader/Lava.hlsl`입니다. Client의 `03. Resource > 02. Shader` 필터에서 직접 편집하며 Engine에서 복사하지 않습니다.
 
 ## 새 효과 추가
 
 1. `CPostEffect.h`의 `POST_EFFECT`에 새 종류를 추가합니다.
 2. `CPostEffect`를 상속한 클래스를 만듭니다. 생성자에서 HLSL 파일명을 전달하고, `Bind_Resources()`에서 해당 효과의 상수와 추가 텍스처를 설정합니다.
 3. 추가 텍스처가 필요하면 `Ready_Resources()`에서 한 번 로딩하고 파생 클래스 소멸자에서 해제합니다. 시간 변화가 필요하면 `Update()`를 구현합니다.
-4. 새 헤더와 cpp를 Engine 프로젝트에 추가합니다.
-5. `CRenderer` 생성자에서 `Register_PostEffect()`로 등록합니다.
+4. 새 헤더와 cpp를 Client 프로젝트의 `05. Shader` 필터에 추가합니다.
+5. `CShaderEffectMgr` 생성자에서 `Register_PostEffect()`로 등록합니다.
 6. `CStage::ApplyRoomShader()`에서 원하는 맵에 `Set_PostEffect()`로 연결합니다.
 
 아래 이름은 추가할 효과를 가정한 예시입니다.
@@ -28,7 +32,7 @@ Set_PostEffect(POST_EFFECT::HEAT);
 Set_PostEffect(POST_EFFECT::NONE); // 효과 해제
 ```
 
-등록 성공 시 렌더러가 객체를 소유합니다. 중복 종류나 동일 포인터의 중복 등록은 거부합니다. 실패한 등록의 객체는 호출자가 관리해야 합니다. 등록되지 않은 종류로 전환하면 false를 반환하고 기존 선택을 유지합니다. 캡처 도중 선택이 바뀌어도 해당 프레임은 Begin에서 선택했던 효과로 End합니다.
+등록 성공 시 클라이언트 효과 매니저가 객체를 소유합니다. 중복 종류나 동일 포인터의 중복 등록은 거부합니다. 실패한 등록의 객체는 호출자가 관리해야 합니다. 등록되지 않은 종류로 전환하면 false를 반환하고 기존 선택을 유지합니다. 캡처 도중 선택이 바뀌어도 해당 프레임은 Begin에서 선택했던 효과로 End합니다.
 
 ## HLSL 규칙
 

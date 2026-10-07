@@ -1,3 +1,4 @@
+﻿#include "pch.h"
 #include "CPostEffect.h"
 #include <fstream>
 

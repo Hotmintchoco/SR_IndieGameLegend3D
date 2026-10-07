@@ -1,9 +1,7 @@
-#pragma once
+﻿#pragma once
 #include "CPostEffect.h"
 
-BEGIN(Engine)
-
-class ENGINE_DLL CUnderwaterEffect final : public CPostEffect
+class CUnderwaterEffect final : public CPostEffect
 {
 public:
     CUnderwaterEffect();
@@ -24,4 +22,3 @@ private:
     LPDIRECT3DTEXTURE9 m_pWaterDropTexture = nullptr;
 };
 
-END

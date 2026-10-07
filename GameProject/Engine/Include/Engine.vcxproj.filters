@@ -365,9 +365,6 @@
     <Filter Include="09. LightMgr\Light">
       <UniqueIdentifier>{c480bb77-e74a-44ab-a2fb-585ee51f9dc3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="11. CameraMgr\CameraObj\Camera_TPV_Perspective">
-      <UniqueIdentifier>{92de3bac-9e8d-49da-84ff-a0e99cbd9d54}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04. Management\01. Layer\LayerContext">
       <UniqueIdentifier>{4866132a-0539-4584-ad18-520c05dd6dcc}</UniqueIdentifier>
     </Filter>
@@ -386,17 +383,5 @@
     <Filter Include="15. Sound">
       <UniqueIdentifier>{541ae4de-6182-4806-b205-f090097c1e66}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Header\CPostEffect.h"><Filter>08. Renderer</Filter></ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\Code\CPostEffect.cpp"><Filter>08. Renderer</Filter></ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Header\CUnderwaterEffect.h"><Filter>08. Renderer</Filter></ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\Code\CUnderwaterEffect.cpp"><Filter>08. Renderer</Filter></ClCompile>
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 ﻿#include "pch.h"
+#include "CShaderEffectMgr.h"
 #include "CMainApp.h"
 #include "CTimerMgr.h"
 #include "CFrameMgr.h"
@@ -56,16 +57,16 @@ int CMainApp::Update_MainApp(_float fTimeDelta)
 	// 정민 : 쉐이더 왜곡 효과 테스트용
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_F6))
 	{
-		auto* pRenderer = CRenderer::GetInstance();
-        pRenderer->Set_PostEffect(pRenderer->Get_PostEffectType() == POST_EFFECT::NONE
+		auto* pEffects = CShaderEffectMgr::GetInstance();
+        pEffects->Set_PostEffect(pEffects->Get_PostEffectType() == POST_EFFECT::NONE
             ? POST_EFFECT::UNDERWATER : POST_EFFECT::NONE);
-        auto* pWater = static_cast<CUnderwaterEffect*>(pRenderer->Get_PostEffect(POST_EFFECT::UNDERWATER));
+        auto* pWater = static_cast<CUnderwaterEffect*>(pEffects->Get_PostEffect(POST_EFFECT::UNDERWATER));
 		// 기존 4x4 확대/축소, 움직임 속도
 		if (pWater) pWater->Set_PulseParameters(0.14f, 2.5f);
 		// 물방울 굴절 강도, 움직임 속도
 		if (pWater) pWater->Set_WaterDropParameters(0.06f, 1.f);
 	}
-	CRenderer::GetInstance()->Update_PostEffect(fTimeDelta);
+	CShaderEffectMgr::GetInstance()->Update_PostEffect(fTimeDelta);
 	CCursorPolicyMgr::GetInstance()->Update();
 
 	m_pManagementClass->Update_Scene(min(fTimeDelta, 0.01f));
@@ -84,14 +85,14 @@ void CMainApp::Render_MainApp()
 {
 	// Capture before Render_Begin so its clear also clears the offscreen target.
 	const bool bPostEffect = dynamic_cast<CStage*>(m_pManagementClass->GetCurrentScene()) &&
-		CRenderer::GetInstance()->Begin_PostEffect(m_pGraphicDev);
+		CShaderEffectMgr::GetInstance()->Begin_PostEffect(m_pGraphicDev);
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
 
 	CImGuiTool::BeginFrame();
 
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
 	if (bPostEffect)
-		CRenderer::GetInstance()->End_PostEffect(m_pGraphicDev);
+		CShaderEffectMgr::GetInstance()->End_PostEffect(m_pGraphicDev);
 
 	CImGuiTool::EndFrame();
 
@@ -176,6 +177,7 @@ CMainApp* CMainApp::Create()
 
 void CMainApp::Free()
 {
+    CShaderEffectMgr::DestroyInstance();
 	Safe_Release(m_pDeviceClass);
 
 	CCollisionMgr::DestroyInstance();

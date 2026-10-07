@@ -1,4 +1,5 @@
 ﻿#include "pch.h"
+#include "CShaderEffectMgr.h"
 #include "CStage.h"
 
 /* 매니저 */
@@ -236,7 +237,7 @@ void CStage::OnEnter()
 
 void CStage::OnExit()
 {
-    CRenderer::GetInstance()->Set_PostEffect(POST_EFFECT::NONE);
+    CShaderEffectMgr::GetInstance()->Set_PostEffect(POST_EFFECT::NONE);
 	CSoundMgr::GetInstance()->StopBGM();
 
 }
@@ -663,7 +664,14 @@ int CStage::CalculateRoomIndexFromPlayerPosition()
 
 void CStage::ApplyRoomShader(EBiomeType eBiomeType)
 {
-    CRenderer::GetInstance()->Set_PostEffect(eBiomeType == EBiomeType::AQUA ? POST_EFFECT::UNDERWATER : POST_EFFECT::NONE);
+    POST_EFFECT eEffect = POST_EFFECT::NONE;
+    switch (eBiomeType)
+    {
+    case EBiomeType::AQUA: eEffect = POST_EFFECT::UNDERWATER; break;
+    case EBiomeType::LAVA: eEffect = POST_EFFECT::LAVA; break;
+    default: break;
+    }
+    CShaderEffectMgr::GetInstance()->Set_PostEffect(eEffect);
 }
 
 CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)

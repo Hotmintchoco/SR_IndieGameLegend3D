@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -439,4 +439,18 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Header\CPostEffect.h" />
+    <ClCompile Include="..\Code\CPostEffect.cpp" />
+    <ClInclude Include="..\Header\CUnderwaterEffect.h" />
+    <ClCompile Include="..\Code\CUnderwaterEffect.cpp" />
+    <ClInclude Include="..\Header\CLavaEffect.h" />
+    <ClCompile Include="..\Code\CLavaEffect.cpp" />
+    <ClInclude Include="..\Header\CShaderEffectMgr.h" />
+    <ClCompile Include="..\Code\CShaderEffectMgr.cpp" />
+    <None Include="..\Bin\Resource\Shader\Lava.hlsl" />
+    <None Include="..\Bin\Resource\Shader\WaterDrop.hlsl" />
+    <None Include="..\Bin\Resource\Shader\CameraFilterPack_WaterDrop.png" />
+    <None Include="..\Bin\Resource\Shader\CameraFilterPack_RainDrop.png" />
+  </ItemGroup>
 </Project>
