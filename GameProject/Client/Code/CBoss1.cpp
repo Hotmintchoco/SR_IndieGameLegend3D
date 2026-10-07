@@ -697,8 +697,6 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
 		m_pTransformCom->Get_Info(INFO_POS, &vBossPos);
 
         // 정민 : 컷신 연출
-        CUIMgr::GetInstance()->EnterBossScreen();
-
         auto* pCameraMgr = CClientCameraMgr::GetInstance();
 
         auto* pCinematic = dynamic_cast<CCinematicCamera*>(

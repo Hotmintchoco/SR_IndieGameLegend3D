@@ -653,6 +653,9 @@ void CStage::CheckRoomChanged()
 			const auto biome = pMgr->GetBiomeInfo(pRoom->iBiome);
 
 			ApplyRoomShader(biome.eType);
+
+			if (pRoom->bBossRoom)
+				CUIMgr::GetInstance()->EnterBossScreen();
 		}
 	}
 }
