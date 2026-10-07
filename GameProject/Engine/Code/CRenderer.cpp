@@ -36,6 +36,8 @@ void CRenderer::Render(LPDIRECT3DDEVICE9& pGraphicDev)
 
 	Render_UI(pGraphicDev);
 
+	Render_DebugScreen(pGraphicDev);
+
 	Clear_RenderGroup();
 }
 
@@ -289,9 +291,86 @@ void CRenderer::Render_DebugTriangle(LPDIRECT3DDEVICE9& pGraphicDev)
 	m_vecDebugTri.clear();   // 매 프레임 새로 요청받는 방식
 }
 
+void CRenderer::Render_DebugScreen(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+	if (m_vecDebugScreenLine.empty())
+		return;
+
+	// 상태 백업
+	DWORD dwZ, dwLighting, dwAlphaTest, dwFog;
+	pGraphicDev->GetRenderState(D3DRS_ZENABLE, &dwZ);
+	pGraphicDev->GetRenderState(D3DRS_LIGHTING, &dwLighting);
+	pGraphicDev->GetRenderState(D3DRS_ALPHATESTENABLE, &dwAlphaTest);
+	pGraphicDev->GetRenderState(D3DRS_FOGENABLE, &dwFog);
+
+	pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
+	pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+	pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	pGraphicDev->SetRenderState(D3DRS_FOGENABLE, FALSE);
+	pGraphicDev->SetVertexShader(nullptr);
+	pGraphicDev->SetPixelShader(nullptr);
+	pGraphicDev->SetTexture(0, nullptr);
+	pGraphicDev->SetFVF(FVF_SCREEN);
+
+	pGraphicDev->DrawPrimitiveUP(D3DPT_LINELIST,
+		(UINT)(m_vecDebugScreenLine.size() / 2),
+		m_vecDebugScreenLine.data(), sizeof(VTXSCREEN));
+
+	// 복구
+	pGraphicDev->SetRenderState(D3DRS_ZENABLE, dwZ);
+	pGraphicDev->SetRenderState(D3DRS_LIGHTING, dwLighting);
+	pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, dwAlphaTest);
+	pGraphicDev->SetRenderState(D3DRS_FOGENABLE, dwFog);
+
+	m_vecDebugScreenLine.clear();
+}
+
 void CRenderer::Add_DebugTriangle(const std::array<_vec3, 3>& vTri, const _vec3& vNormal, D3DCOLOR dwColor)
 {
 	m_vecDebugTri.push_back({ vTri, vNormal, dwColor });
+}
+
+void CRenderer::Add_DebugScreenLine(const _vec2& vStart, const _vec2& vEnd, D3DCOLOR dwColor)
+{
+	m_vecDebugScreenLine.push_back({ _vec4(vStart.x, vStart.y, 0.f, 1.f), dwColor });
+	m_vecDebugScreenLine.push_back({ _vec4(vEnd.x,   vEnd.y,   0.f, 1.f), dwColor });
+}
+
+void CRenderer::Add_DebugScreenCross(const _vec2& vCenter, _float fSize, D3DCOLOR dwColor)
+{
+	Add_DebugScreenLine({ vCenter.x - fSize, vCenter.y }, { vCenter.x + fSize, vCenter.y }, dwColor);
+	Add_DebugScreenLine({ vCenter.x, vCenter.y - fSize }, { vCenter.x, vCenter.y + fSize }, dwColor);
+}
+
+void CRenderer::Add_DebugScreenRect(const _vec2& vCenter, _float fHalf, D3DCOLOR dwColor)
+{
+	_vec2 lt{ vCenter.x - fHalf, vCenter.y - fHalf }, rt{ vCenter.x + fHalf, vCenter.y - fHalf };
+	_vec2 lb{ vCenter.x - fHalf, vCenter.y + fHalf }, rb{ vCenter.x + fHalf, vCenter.y + fHalf };
+	Add_DebugScreenLine(lt, rt, dwColor);
+	Add_DebugScreenLine(rt, rb, dwColor);
+	Add_DebugScreenLine(rb, lb, dwColor);
+	Add_DebugScreenLine(lb, lt, dwColor);
+}
+
+void CRenderer::Add_DebugWorldMarker(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vWorldPos, _float fSize, D3DCOLOR dwColor)
+{
+	_matrix matView, matProj;
+	pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
+
+	D3DVIEWPORT9 vp;
+	pGraphicDev->GetViewport(&vp);
+
+	_vec4 vClip;
+	_matrix matVP = matView * matProj;
+	_vec4 vXYZW(vWorldPos, 1.f);
+	D3DXVec4Transform(&vClip, &vXYZW, &matVP);
+	if (vClip.w <= 0.f) return;   // 카메라 뒤
+
+	_float fX = (vClip.x / vClip.w + 1.f) * 0.5f * vp.Width + vp.X;
+	_float fY = (1.f - vClip.y / vClip.w) * 0.5f * vp.Height + vp.Y;
+
+	Add_DebugScreenCross({ fX, fY }, fSize, dwColor);
 }
 
 void CRenderer::Free()

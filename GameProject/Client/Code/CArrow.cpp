@@ -49,7 +49,7 @@ HRESULT CArrow::Ready_GameObject()
     m_pColliderCom->Set_Radius(0.1f);
 
     //261002 재현
-    if (m_fSpeed > 0.f)
+    if (m_tData.bShowTrail && m_fSpeed > 0.f)
         Create_Arrow_Trail();
     
 

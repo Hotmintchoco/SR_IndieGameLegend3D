@@ -7,9 +7,22 @@
 namespace Engine
 {
 	class CTransform;
+	class CCamera;
 }
 
+struct TWeaponLocalInfo
+{
+	_vec3 vScale{ 1.f, 1.f, 1.f };
+	_vec3 vRotation{ 0.f, 0.f, 0.f };
+	_vec3 vPosition{ 0.f, 0.f, 0.f };
+};
+
+class CMonster;
+class CWeaponSystem;
+
 struct TWeaponAnimArgs;
+
+enum class CAMERA_MODE;
 
 class CWeapon : public CGameObject
 {
@@ -23,31 +36,37 @@ public:
 	virtual	void LateUpdate_GameObject(_float fTimeDelta);
 	virtual	void Render_GameObject() PURE;
 
-	virtual EWeaponEvent DefaultAttack(EInputState ePri, EInputState eSec);
-	virtual EWeaponEvent SpecialAttack(EInputState ePri, EInputState eSec) PURE;
-	virtual EWeaponEvent UltimateAttack(EInputState ePri, EInputState eSec) PURE;
+	virtual TWeaponOutput DefaultAttack(EInputState ePri, EInputState eSec);
+	virtual TWeaponOutput SpecialAttack(EInputState ePri, EInputState eSec) PURE;
+	virtual TWeaponOutput StartUltimateAttack(EInputState ePri, EInputState eSec) PURE;
+	virtual TWeaponOutput UpdateUltimateAttack(EInputState ePri, EInputState eSec) PURE;
+	virtual TWeaponOutput EndUltimateAttack(EInputState ePri, EInputState eSec) PURE;
 
 	void UpdateAnimationArgs(const TWeaponAnimArgs& t);
 
 	inline bool IsOnCoolTime() { return m_bIsCoolTime; }
 	inline float GetSpecialAtkGaugeConsume() { return m_fGaugeConsumePerSpecialAtk; }
+	inline CTransform* GetTransform() { return m_pTransformCom; }
+	TWeaponLocalInfo GetLocalInfo(CAMERA_MODE eMode);
+	void UpdateLocalTransform(const TWeaponLocalInfo& tInfo);
+	inline void SetSystem(CWeaponSystem* pSystem) { m_pSystem = pSystem; }
 
 protected:
 	HRESULT	Add_Component();
-	void SyncTransformToCamera();
-	void UpdateLocalTransform(const _vec3& vScale, const _vec3& vRotation, const _vec3& vTransition);
+	void SyncTransformToCamera(CCamera* pCamera);
+	void UpdateBulletShotPos(const _matrix& matWorld, const _matrix& matCamera);
 	void CheckCoolTime(const _float& fTimeDelta);
 	void Animation(const _float fTimeDelta);
 	void StartShotAnimation();
 	void ShotSingleBullet();
+	void ShotSingleBullet(const _vec3& vToward);
 
 	Engine::CTransform* m_pTransformCom = nullptr;
 
-	/* 카메라 시점 기준 로컬 오프셋 */
-	_vec3 m_vScaleLocal{0.3f, 0.3f, 0.45f};
-	_vec3 m_vPositionLocal{0.13f, -0.33f, 0.35f};
-	_vec3 m_vRotationLocal{ -1.f, -2.f, 0.f };
-	_vec3 m_vMuzzlePositionLocal{0.0f, 0.4f, 0.7f};
+	/* 1/3인칭 로컬 오프셋 */
+	TWeaponLocalInfo m_tLocalFView;
+	TWeaponLocalInfo m_tLocalTView;
+	_vec3 m_vMuzzlePositionLocal{0.f, 0.f, 0.f};
 
 	/* 기본 공격 */
 	float m_fShootInterval = 0.2f; // 애니메이션 시간은 여기에 맞추기
@@ -63,6 +82,9 @@ protected:
 	float m_fGaugeConsumePerSpecialAtk = 0.04f;
 	float m_fSpecialAtkInterval = 0.5f;
 
+	/* 궁극기 */
+	bool m_bOnUltimateAttack = false;
+
 	/* 애니메이션 */
 	bool m_bOnMoveAnimation = false;
 	bool m_bOnSprint = false;
@@ -75,6 +97,9 @@ protected:
 	float m_fRecoilDamping = 2.f; // 반동 감쇠. 0으로 갈수록 직선, 값이 커질수록 아래로 굽은 곡선
 	float m_fTimeAfterShot = 0.f;
 	bool m_bSpecialAttackSwitchOn = false;
+
+	/* 정보 전달 */
+	CWeaponSystem* m_pSystem = nullptr;
 
 protected:
 	virtual void Free() override;

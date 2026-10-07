@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CCryder.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -10,6 +10,7 @@
 #include "CHeart.h"
 #include "CGem.h"
 #include "CEnergy.h"
+#include "CPlayerCamera.h"
 
 CCryder::CCryder(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_bLandingState(false), m_fLandingTime(0.f), m_fVelocityY(0.f), m_vLandingDirection{ 0.f,0.f,0.f }
@@ -92,27 +93,25 @@ void CCryder::LateUpdate_GameObject(_float fTimeDelta)
         if (nullptr == pPlayerTransformCom)
             return;
 
+        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+
         _vec3   vPlayerPos;
         pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
 
         _vec3   vPlayerLook;
-        pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+        vPlayerLook = tInfo.vLook;
 
         m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 3.f, fTimeDelta);
     }
     else
     {
-        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-        if (nullptr == pPlayerTransformCom)
-            return;
+        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
 
         _vec3   vPlayerPos;
-        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+        vPlayerPos = tInfo.vPosition;
 
         _vec3   vPlayerLook;
-        pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+        vPlayerLook = tInfo.vLook;
 
         m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
     }

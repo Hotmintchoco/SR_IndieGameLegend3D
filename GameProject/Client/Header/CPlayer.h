@@ -14,6 +14,10 @@ class CPlayerAnimator;
 class CPlayerPartTex;
 class CPlayerMovement;
 class CWeaponSystem;
+class CSocket;
+class CPlayerCamera;
+
+enum class CAMERA_MODE;
 
 class CPlayer : public CGameObject
 {
@@ -43,25 +47,39 @@ public:
 	void SetPseudoScale(float fScale);
 
 	inline CTransform* GetTransform() { return m_pTransformCom; }
-	inline void SetWeaponSystem(CWeaponSystem* pSystem) { m_pWeaponSystem = pSystem; }
-
-	/* UI 전달 요소 */
-
+	void SetWeaponSystem(CWeaponSystem* pSystem);
+	CSocket* GetSocket(const wstring& wstrName);
+	inline void SetCamera(CPlayerCamera* pCamera) { m_pCamera = pCamera; }
 
 private:
 	HRESULT	Add_Component();
 	void UpdateInput();
 	void UpdateWeaponInput();
 
+	/* 카메라 뷰 */
+	CPlayerCamera* m_pCamera = nullptr;
+	void OnCameraViewChanged(const CAMERA_MODE& Ctx);
+	CAMERA_MODE m_ePlayerCamMode; /* 결국 매 프레임 동작해야 하는 것들이 많아 캐싱... */
+	void SyncCameraYaw();
+	float m_fInputYaw = 0.f;
+
 	/* 기본 컴포넌트 */
 	Engine::CTransform* m_pTransformCom = nullptr;
 	Engine::CCollider* m_pColliderCom = nullptr;
 
 	/* 캐릭터 애니메이션 관련 */
+	void OnActionAnimationFinished(const EPlayerActionState& Ctx);
 	CPlayerAnimator* m_pAnimator = nullptr;
 	CPlayerPartTex* m_pBufferCom[PP_END] = { nullptr };
 	CTransform* m_pBufferTransformCom[PP_END] = { nullptr };
+	CTransform* m_pVisualRootTransform = nullptr;
+	bool m_bInputYawIgnored = false;
+	CTransform* m_pAnimRootTransform = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
+
+	/* 1/3인칭에 따른 무기 위치 변경용 소켓 */
+	CSocket* m_pLHandSocket = nullptr;
+	CSocket* m_pRHandSocket = nullptr;
 
 	/* 캐릭터 작아짐 연출용 */
 	float m_fPseudoScale = 1.f;
@@ -85,7 +103,7 @@ private:
 
 	/* 무기 */
 	CWeaponSystem* m_pWeaponSystem = nullptr;
-	
+
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

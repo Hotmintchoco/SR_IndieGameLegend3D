@@ -4,7 +4,7 @@
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CClientCameraMgr.h"
-#include "CCamera.h"
+#include "CPlayerCamera.h"
 #include "CImGuiTool.h"
 #include "CDefaultBullet.h"
 #include "CDInputMgr.h"
@@ -26,14 +26,20 @@ HRESULT CWeapon::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
+    m_pTransformCom->SetUseLocal(true);
+
+    m_tLocalFView = { {0.3f, 0.3f, 0.45f}, {-1.f, -2.f, 0.f}, {0.13f, -0.33f, 0.35f} };
+    m_tLocalTView = { {0.3f, 0.3f, 0.45f}, {0.f, 0.f, 0.f}, {0.f, 0.f, 0.f} };
+    m_vMuzzlePositionLocal = _vec3{ 0.0f, 0.4f, 0.7f };
+    UpdateLocalTransform(m_tLocalFView);
+
+
     return S_OK;
 }
 
 _int CWeapon::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
-    
-    Animation(fTimeDelta);
 
     CheckCoolTime(fTimeDelta);
 
@@ -56,21 +62,42 @@ void CWeapon::CheckCoolTime(const _float& fTimeDelta)
 
 void CWeapon::LateUpdate_GameObject(_float fTimeDelta)
 {
-    SyncTransformToCamera();
-
     CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+    /* 1인칭 업데이트 (3인칭인 경우는 소켓에서 위치 업데이트 해줌) */
+    CPlayerCamera* pCamera = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
+    if (pCamera)
+    {
+        _matrix matCamWorld;
+        pCamera->GetWorld(&matCamWorld);
+
+        switch (pCamera->Get_CameraMode())
+        {
+        case CAMERA_MODE::FIRST_PERSON:
+        {
+            SyncTransformToCamera(pCamera);
+            Animation(fTimeDelta);
+            break;
+        }
+        case CAMERA_MODE::THIRD_PERSON:
+        {
+            break;
+        }
+        }
+        UpdateBulletShotPos(*m_pTransformCom->Get_World(), matCamWorld);
+    }
 }
 
-void CWeapon::SyncTransformToCamera()
+void CWeapon::SyncTransformToCamera(CCamera* pCamera)
 {
     /* 카메라 위치를 받아 위치값 조정*/
-    _matrix matCamera, matWorld;
-    auto* pCamera = CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER);
-    if (!pCamera) return;
+    _matrix matCamera;
     pCamera->GetWorld(&matCamera);
-    D3DXMatrixMultiply(&matWorld, m_pTransformCom->Get_World(), &matCamera);
-    m_pTransformCom->Set_World(&matWorld);
-    
+    m_pTransformCom->WorldMatrixPropagation(matCamera);
+}
+
+void CWeapon::UpdateBulletShotPos(const _matrix& matWorld, const _matrix& matCamera)
+{
     /* 총구 위치와 발사 방향 업데이트 */
     D3DXVec3TransformCoord(&m_vBulletFrom, &m_vMuzzlePositionLocal, &matWorld);
     _vec3 vCameraLook, vCameraPos;
@@ -87,13 +114,13 @@ void CWeapon::UpdateAnimationArgs(const TWeaponAnimArgs& t)
 }
 
 
-void CWeapon::UpdateLocalTransform(const _vec3& vScale, const _vec3& vRotation, const _vec3& vTransition)
+void CWeapon::UpdateLocalTransform(const TWeaponLocalInfo& tInfo)
 {
     if (!m_pTransformCom) return;
 
-    m_pTransformCom->Set_Scale(vScale);
-    m_pTransformCom->Set_Rotation_Raw(vRotation);
-    m_pTransformCom->Set_Pos(vTransition);
+    m_pTransformCom->Set_Scale(tInfo.vScale);
+    m_pTransformCom->Set_Rotation_Raw(tInfo.vRotation);
+    m_pTransformCom->Set_Pos(tInfo.vPosition);
 }
 
 void CWeapon::Animation(const _float fTimeDelta)
@@ -104,7 +131,9 @@ void CWeapon::Animation(const _float fTimeDelta)
         float fT = m_fTimeAfterShot / m_fShootInterval;        
         float fRotXDegree = (expf(-m_fRecoilDamping * fT) - expf(-m_fRecoilDamping)) / (1.f - expf(-m_fRecoilDamping)) * m_fMaxRecoilAngle;
 
-        UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal + _vec3{ fRotXDegree, 0.f, 0.f }, m_vPositionLocal);
+        TWeaponLocalInfo t = { m_tLocalFView.vScale, m_tLocalFView.vRotation + _vec3{ fRotXDegree, 0.f, 0.f }, m_tLocalFView.vPosition };
+
+        UpdateLocalTransform(t);
 
         if (m_fTimeAfterShot >= m_fShootInterval)
         {
@@ -119,8 +148,9 @@ void CWeapon::Animation(const _float fTimeDelta)
         float fT = sinf(2 * D3DX_PI * m_fMoveAnimationFrequency * m_fTimeAfterMove);
         _vec2 v{ m_fHorizontalMove * fT, m_fQuadraticA * fT * fT };
 
-        UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal + _vec3{ v.x, v.y, 0.f });
+        TWeaponLocalInfo t = { m_tLocalFView.vScale, m_tLocalFView.vRotation, m_tLocalFView.vPosition + _vec3{ v.x, v.y, 0.f } };
 
+        UpdateLocalTransform(t);
     }
     else
     {
@@ -134,7 +164,7 @@ void CWeapon::StartShotAnimation()
     m_fTimeAfterShot = 0.f;
 }
 
-EWeaponEvent CWeapon::DefaultAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CWeapon::DefaultAttack(EInputState ePri, EInputState eSec)
 {
     switch (ePri)
     {
@@ -144,14 +174,14 @@ EWeaponEvent CWeapon::DefaultAttack(EInputState ePri, EInputState eSec)
 
         m_bIsCoolTime = true;
         m_fCoolTimeLeft = m_fShootInterval;
-        return EWeaponEvent::GUN_SHOT;
+        return { true, EWeaponAnimEvent::GUN_SHOT };
         break;
     }
     default:
         break;
     }
 
-    return EWeaponEvent::NONE;
+    return { false, EWeaponAnimEvent::NONE };
 }
 
 void CWeapon::ShotSingleBullet()
@@ -166,6 +196,25 @@ void CWeapon::ShotSingleBullet()
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
 
     StartShotAnimation();
+}
+
+void CWeapon::ShotSingleBullet(const _vec3& vToward)
+{
+    _vec3 vDir = vToward - m_vBulletFrom;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    CProjectile* pProjectile = CDefaultBullet::Create(m_pGraphicDev, m_vBulletFrom, vDir);
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+    pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+
+    CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
+
+    StartShotAnimation();
+}
+
+TWeaponLocalInfo CWeapon::GetLocalInfo(CAMERA_MODE eMode)
+{
+    return (eMode == CAMERA_MODE::FIRST_PERSON) ? m_tLocalFView : m_tLocalTView;
 }
 
 HRESULT CWeapon::Add_Component()

@@ -29,7 +29,7 @@ HRESULT CLiminalGun::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
+    m_fGaugeConsumePerSpecialAtk = 0.f;
 
     return S_OK;
 }
@@ -69,13 +69,14 @@ void CLiminalGun::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 }
 
-EWeaponEvent CLiminalGun::SpecialAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CLiminalGun::SpecialAttack(EInputState ePri, EInputState eSec)
 {
     switch (ePri)
     {
     case EInputState::Pressed:
     {
         RayCastToLiminalObject();
+        return { false, EWeaponAnimEvent::NONE };
         break;
     }
     case EInputState::Held:
@@ -109,12 +110,22 @@ EWeaponEvent CLiminalGun::SpecialAttack(EInputState ePri, EInputState eSec)
         break;
     }
 
-    return EWeaponEvent::NONE;
+    return { false, EWeaponAnimEvent::NONE };
 }
 
-EWeaponEvent CLiminalGun::UltimateAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CLiminalGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
 {
-    return EWeaponEvent::NONE;
+    return { false, EWeaponAnimEvent::NONE };
+}
+
+TWeaponOutput CLiminalGun::UpdateUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    return { false, EWeaponAnimEvent::NONE };
+}
+
+TWeaponOutput CLiminalGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    return { false, EWeaponAnimEvent::NONE };
 }
 
 void CLiminalGun::RayCastToLiminalObject()

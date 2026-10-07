@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CBase.h"
 #include "Engine_Define.h"
@@ -17,12 +17,12 @@ public:
 	bool Chance(float fProb);
 
 	template<typename T>
-	T AddRandomNoise(const T& Value, const float fRange)
+	T ApplyRandomNoise(const T& Value, const float fRange)
 	{
 		T Min = (T)(Value * (1.f - fRange));
 		T Max = (T)(Value * (1.f + fRange));
 
-		/* Value°¡ À½¼öÀÎ °æ¿ì */
+		/* Valueê°€ ìŒìˆ˜ì¸ ê²½ìš° */
 		if (Min > Max) swap(Min, Max);
 
 		if constexpr (is_integral_v<T>)

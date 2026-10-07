@@ -183,6 +183,8 @@ enum class EPlayerActionState
 	BOW_SHOOT,
 	DIE,
 
+	STRETCH_ARMS,
+
 	MAX,
 };
 
@@ -205,13 +207,15 @@ enum class EInputState
 	MAX,
 };
 
-enum class EWeaponEvent
+enum class EWeaponAnimEvent
 {
 	NONE,
 
 	GUN_SHOT,
 	BOW_CHARGE_START,
 	BOW_CHARGE_END,
+	ULT_SHOTGUN,
+	ULT_RAPIDGUN,
 
 	MAX,
 };

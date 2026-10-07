@@ -85,6 +85,7 @@ void CBombardArrowSpawner::SpawnArrows(float fTimeDelta)
         t.fMaxSpeed = 60.f;
         t.fGravityCoef = 48.f;
         t.fLifeTime = 10.f;
+        t.bShowTrail = false;
         CArrow* pArrow = CArrow::Create(m_pGraphicDev, vPos, vDir, fPower, t);
         if (!pArrow) continue;
 

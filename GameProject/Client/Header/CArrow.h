@@ -14,6 +14,7 @@ struct TArrowData : public TProjectileData
 	float fMaxSpeed = 25.f;
 	float fGravityCoef = 6.f;
 	_vec3 vInitScale = _vec3{0.5f, 0.5f, 0.75f};
+	bool bShowTrail = true;
 };
 
 class CCrossBuffer;

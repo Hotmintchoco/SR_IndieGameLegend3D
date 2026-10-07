@@ -145,7 +145,7 @@ void CExplosiveFrustum::SpawnChildren()
 
     m_pExplodeRange->SetScale(2.f);
     m_pExplodeRange->SetDelayTime(
-        CRandomMgr::GetInstance()->AddRandomNoise<float>(m_fPropagateSpeed, m_fPropagateVariance));
+        CRandomMgr::GetInstance()->ApplyRandomNoise<float>(m_fPropagateSpeed, m_fPropagateVariance));
 }
 
 void CExplosiveFrustum::Destroy()
@@ -170,7 +170,7 @@ void CExplosiveFrustum::Destroy()
     CRandomMgr::GetInstance()->GetRandomValue<float>(0.4f, 0.6f),
     CRandomMgr::GetInstance()->GetRandomValue<float>(-0.1f, 0.1f),
     };
-    const float fScaleNoise = CRandomMgr::GetInstance()->AddRandomNoise<float>(0.7f, 0.2f);
+    const float fScaleNoise = CRandomMgr::GetInstance()->ApplyRandomNoise<float>(0.7f, 0.2f);
     pObject = CFrustumExplodeEffect::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS] + vPosNoise, _vec3{ fScaleNoise, fScaleNoise, fScaleNoise });
     if (nullptr == pObject)
         assert(0);
@@ -183,8 +183,8 @@ void CExplosiveFrustum::Destroy()
         CRandomMgr::GetInstance()->GetRandomValue<float>(0.2f, 0.4f),
         CRandomMgr::GetInstance()->GetRandomValue<float>(-0.2f, 0.2f),
     };
-    const float fStartScale = CRandomMgr::GetInstance()->AddRandomNoise<float>(0.2f, 1.f);
-    const float fEndScale = CRandomMgr::GetInstance()->AddRandomNoise<float>(1.f + fStartScale, 0.6f);
+    const float fStartScale = CRandomMgr::GetInstance()->ApplyRandomNoise<float>(0.2f, 1.f);
+    const float fEndScale = CRandomMgr::GetInstance()->ApplyRandomNoise<float>(1.f + fStartScale, 0.6f);
     const float fLifeTime = CRandomMgr::GetInstance()->GetRandomValue<float>(0.05f, 0.2f);
     pObject = CExplodeSphere::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS] + vPosNoise, fStartScale, fEndScale, fLifeTime);
     if (nullptr == pObject)

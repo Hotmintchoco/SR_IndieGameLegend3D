@@ -29,6 +29,7 @@ public:
 	virtual void LateUpdate_Component() override;
 
 	void AttachTransform(CTransform* pTransform);
+	void SetRefYaw(float fYaw) { m_fRefYaw = fYaw; }
 
 protected:
 	void PerformMovement(float fTimeDelta);
@@ -70,6 +71,8 @@ protected:
 	/* Launch */
 	TLaunchRequest m_tLaunchRequest;
 
+	/* Yaw */
+	float m_fRefYaw = 0.f;
 
 public:
 	static CMovement* Create(LPDIRECT3DDEVICE9 pGraphicDev);

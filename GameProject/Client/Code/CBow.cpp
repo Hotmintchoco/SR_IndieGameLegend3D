@@ -32,11 +32,10 @@ HRESULT CBow::Ready_GameObject()
 
     m_fSpecialAtkInterval = 0.1f;
 
-    m_vScaleLocal = _vec3{ 0.05f, 0.05f, 0.05f };
-    m_vPositionLocal = _vec3{ 0.3f, -0.4f, 0.75f };
-    m_vRotationLocal = _vec3{ 35.f, -15.f, -10.f };
+    m_tLocalFView = { {0.05f, 0.05f, 0.05f}, {35.f, -15.f, -10.f}, {0.3f, -0.4f, 0.75f} };
+    m_tLocalTView = { {0.05f, 0.05f, 0.05f}, {0.f, 0.f, 0.f}, {0.f, 0.f, 0.f} };
     m_vMuzzlePositionLocal = _vec3{ 0.0f, 5.f, 5.f };
-    UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
+    UpdateLocalTransform(m_tLocalFView);
 
     return S_OK;
 }
@@ -80,12 +79,14 @@ void CBow::Render_GameObject()
 
 void CBow::RenderEditorPanel()
 {
-    ImGui::Begin("Bow");
+    bool bTransformUpdated = false;
+
+    ImGui::Begin("Gun");
 
     ImGui::SeparatorText("Transform");
-    ImGui::DragFloat3("Scale", &m_vScaleLocal.x, 0.01f, 0.001f, 100.f);
-    ImGui::DragFloat3("Position", &m_vPositionLocal.x, 0.01f);
-    ImGui::DragFloat3("Rotation", &m_vRotationLocal.x, 0.5f, -360.f, 360.f);
+    bTransformUpdated |= ImGui::DragFloat3("Scale", &m_tLocalFView.vPosition.x, 0.01f, 0.001f, 100.f);
+    bTransformUpdated |= ImGui::DragFloat3("Position", &m_tLocalFView.vPosition.x, 0.01f);
+    bTransformUpdated |= ImGui::DragFloat3("Rotation", &m_tLocalFView.vPosition.x, 0.5f, -360.f, 360.f);
 
     ImGui::SeparatorText("Animation");
     ImGui::DragFloat("Move Cycle", &m_fMoveAnimationFrequency, 0.01f, 0.05f, 5.f, "%.2f s");
@@ -96,17 +97,20 @@ void CBow::RenderEditorPanel()
 
     ImGui::End();
 
-    UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
+    if (bTransformUpdated)
+    {
+        UpdateLocalTransform(m_tLocalFView);
+    }
 }
 
-EWeaponEvent CBow::DefaultAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CBow::DefaultAttack(EInputState ePri, EInputState eSec)
 {
     switch (eSec)
     {
     case EInputState::Pressed:
     {
         m_bOnCharging = true;
-        return EWeaponEvent::BOW_CHARGE_START;
+        return { false, EWeaponAnimEvent::BOW_CHARGE_START };
         break;
     }
     case EInputState::Released:
@@ -115,29 +119,39 @@ EWeaponEvent CBow::DefaultAttack(EInputState ePri, EInputState eSec)
 
         m_bOnCharging = false;
         m_fChargeTime = 0.f;
-        return EWeaponEvent::BOW_CHARGE_END;
+        return { true, EWeaponAnimEvent::BOW_CHARGE_END };
         break;
     }
     default:
         break;
     }
 
-    return EWeaponEvent::NONE;
+    return { false, EWeaponAnimEvent::NONE };
 }
 
-EWeaponEvent CBow::SpecialAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CBow::SpecialAttack(EInputState ePri, EInputState eSec)
 {
-    return EWeaponEvent::NONE;
+    return { false, EWeaponAnimEvent::NONE };
 }
 
-EWeaponEvent CBow::UltimateAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CBow::StartUltimateAttack(EInputState ePri, EInputState eSec)
 {
     CBombardArrowSpawner* pSpawner = CBombardArrowSpawner::Create(m_pGraphicDev);
-    if (!pSpawner) return EWeaponEvent::NONE;
+    if (!pSpawner) return { false, EWeaponAnimEvent::NONE };
 
     CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"BombardArrowSpawner", pSpawner);
 
-    return EWeaponEvent::NONE;
+    return { true, EWeaponAnimEvent::NONE };
+}
+
+TWeaponOutput CBow::UpdateUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    return { false, EWeaponAnimEvent::NONE };
+}
+
+TWeaponOutput CBow::EndUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    return { false, EWeaponAnimEvent::NONE };
 }
 
 void CBow::ShootArrow()

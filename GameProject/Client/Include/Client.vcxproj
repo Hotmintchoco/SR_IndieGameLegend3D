@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -162,6 +162,7 @@
     <ClInclude Include="..\Header\CCrossBuffer.h" />
     <ClInclude Include="..\Header\CDdokddak.h" />
     <ClInclude Include="..\Header\CCursorPolicyMgr.h" />
+    <ClInclude Include="..\Header\CHitScan.h" />
     <ClInclude Include="..\Header\CItemContainer.h" />
     <ClInclude Include="..\Header\CHitCreenUI.h" />
     <ClInclude Include="..\Header\CLaser.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="..\Header\CSGBullet.h" />
     <ClInclude Include="..\Header\CShockwave.h" />
     <ClInclude Include="..\Header\CShotGun.h" />
+    <ClInclude Include="..\Header\CSocket.h" />
     <ClInclude Include="..\Header\CSprnub2.h" />
     <ClInclude Include="..\Header\CSprnub3.h" />
     <ClInclude Include="..\Header\CUIMgr.h" />
@@ -296,6 +298,7 @@
     <ClCompile Include="..\Code\CGlubba.cpp" />
     <ClCompile Include="..\Code\CHitCreenUI.cpp" />
     <ClCompile Include="..\Code\CCursorPolicyMgr.cpp" />
+    <ClCompile Include="..\Code\CHitScan.cpp" />
     <ClCompile Include="..\Code\CItemContainer.cpp" />
     <ClCompile Include="..\Code\CLaser.cpp" />
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />
@@ -346,6 +349,7 @@
     <ClCompile Include="..\Code\CSGBullet.cpp" />
     <ClCompile Include="..\Code\CShockwave.cpp" />
     <ClCompile Include="..\Code\CShotGun.cpp" />
+    <ClCompile Include="..\Code\CSocket.cpp" />
     <ClCompile Include="..\Code\CSprnub2.cpp" />
     <ClCompile Include="..\Code\CSprnub3.cpp" />
     <ClCompile Include="..\Code\CUIMgr.cpp" />

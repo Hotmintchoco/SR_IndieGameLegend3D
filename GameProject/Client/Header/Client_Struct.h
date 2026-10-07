@@ -62,6 +62,12 @@ struct TWeaponInput
 	EInputState eState = EInputState::NONE;
 };
 
+struct TWeaponOutput
+{
+	bool bAttackExecuted = false;	
+	EWeaponAnimEvent eWpEvent = EWeaponAnimEvent::NONE;
+};
+
 struct TWeaponSystemInput
 {
 	/* 공격 관련 */
@@ -77,5 +83,11 @@ struct TWeaponSystemInput
 
 struct TWeaponSystemOutput
 {
-	EWeaponEvent eWpEvent = EWeaponEvent::NONE;
+	TWeaponOutput tWpOut;
+};
+
+struct TBillBoardInfo
+{
+	_vec3 vPosition{ 0.f, 0.f, 0.f };
+	_vec3 vLook{ 0.f, 0.f, 0.f };
 };
