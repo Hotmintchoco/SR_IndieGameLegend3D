@@ -383,7 +383,7 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
         }
         //m_eWormState = SPAWN;
         //m_eWormState = MOVE;
-        //m_eWormState = ATTACK;
+        m_eWormState = ATTACK;
         if (m_eWormState == SPAWN)
         {
             Set_MoveDest();
