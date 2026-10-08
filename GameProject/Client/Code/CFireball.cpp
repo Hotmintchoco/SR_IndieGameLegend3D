@@ -1,14 +1,10 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CFireball.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CTimerMgr.h"
 #include "CTerrain.h"
-#include "CSmallExplode.h"
 #include "CAbstractFactory.h"
-#include "CHeart.h"
-#include "CGem.h"
-#include "CEnergy.h"
 #include "CStage.h"
 #include "CRoomLayer.h"
 #include "CSpriteTile.h"
@@ -53,7 +49,7 @@ _int CFireball::Update_GameObject(_float fTimeDelta)
     /* 성철 : Dead 처리 조건 확인하는 함수 */
     CheckDeadCondition();
     /* -------------------------------- */
-
+    LookAtPlayer();
     return iExit;
 }
 
@@ -95,16 +91,6 @@ void CFireball::CheckDeadCondition()
 void CFireball::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
-
-	const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
-	_vec3   vPlayerPos;
-	vPlayerPos = tInfo.vPosition;
-
-	_vec3   vPlayerLook;
-	vPlayerLook = tInfo.vLook;
-
-	m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
 }
 
 void CFireball::Render_GameObject()
@@ -124,7 +110,6 @@ void CFireball::Render_GameObject()
 
 void CFireball::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    //CMonster::OnCollisionEnter(pOther);
 }
 
 HRESULT CFireball::Add_Component()

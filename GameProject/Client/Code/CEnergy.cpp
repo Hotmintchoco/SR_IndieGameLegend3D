@@ -31,8 +31,8 @@ HRESULT CEnergy::Ready_GameObject()
     if (FAILED(CItem::Ready_GameObject()))
         return E_FAIL;
 
+    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{ 0.f, -m_vSpawnPos.y + 0.25f, 0.f });
     m_pTransformCom->Set_Scale(0.20f, 0.20f, 1.f);
-    m_pTransformCom->Set_Pos(m_vSpawnPos + _vec3{ 0.f, -m_vSpawnPos.y + 0.45f, 0.f });
 
     return S_OK;
 }

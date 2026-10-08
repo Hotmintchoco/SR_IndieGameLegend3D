@@ -198,10 +198,7 @@ void CTransform::Chase_Target(const _vec3* pPos, const _vec3* pLook, const _floa
 {
 	_vec3	vDir = *pPos - m_vInfo[INFO_POS];
 
-	//if (D3DXVec3Length(&vDir) > 5.f)
-	{
-		m_vInfo[INFO_POS] += *D3DXVec3Normalize(&vDir, &vDir) * fSpeed * fTimeDelta;
-	}
+	m_vInfo[INFO_POS] += *D3DXVec3Normalize(&vDir, &vDir) * fSpeed * fTimeDelta;
 
 	_matrix	matScale, matRot, matTrans;
 

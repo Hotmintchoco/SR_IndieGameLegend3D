@@ -4,6 +4,7 @@
 #include "CRenderer.h"
 #include "CManagement.h"
 #include <ctime>
+#include "CPlayerCamera.h"
 
 CSandburst::CSandburst(LPDIRECT3DDEVICE9 pGraphicDev)
     : CParticle(pGraphicDev)
@@ -114,11 +115,9 @@ CSandburst* CSandburst::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos)
 
 void CSandburst::LookAtPlayer2_Sandburst()
 {
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-    if (nullptr == pPlayerTransformCom) return;
+    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
 
-    _vec3   vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
 
     _vec3 vPos;
     vPos = m_vOriginPos;

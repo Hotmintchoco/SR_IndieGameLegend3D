@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CSkull.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -48,21 +48,21 @@ void CSkull::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
 
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+    //CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+    //    ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
 
-    if (nullptr == pPlayerTransformCom)
-        return;
+    //if (nullptr == pPlayerTransformCom)
+    //    return;
 
-    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+    //const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
 
-    _vec3   vPlayerPos;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    //_vec3   vPlayerPos;
+    //pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
 
-    _vec3   vPlayerLook;
-    vPlayerLook = tInfo.vLook;
+    //_vec3   vPlayerLook;
+    //vPlayerLook = tInfo.vLook;
 
-    m_pTransformCom->Chase_Target2(&vPlayerPos, &vPlayerLook, 30.f, fTimeDelta);
+    //m_pTransformCom->Chase_Target2(&vPlayerPos, &vPlayerLook, 30.f, fTimeDelta);
 
 }
 

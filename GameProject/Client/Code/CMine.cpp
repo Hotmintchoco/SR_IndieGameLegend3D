@@ -4,7 +4,6 @@
 #include "CManagement.h"
 #include "CTimerMgr.h"
 #include "CTerrain.h"
-#include "CSmallExplode.h"
 #include "CAbstractFactory.h"
 
 CMine::CMine(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -24,7 +23,6 @@ HRESULT CMine::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(0.25f, 0.25f, 0.25f);
-    //m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
     m_pColliderCom->Set_Radius(0.35f);
 
     m_iMaxHp = 3;
@@ -37,16 +35,7 @@ _int CMine::Update_GameObject(_float fTimeDelta)
     if (m_iHp <= 0)
     {
         m_bDelete = true;
-
-        CGameObject* pGameObject = nullptr;
-        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-
-        pGameObject = CSmallExplode::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS], m_pTransformCom->m_vScale);
-        if (nullptr == pGameObject)
-            return E_FAIL;
-
-        if (FAILED(pLayer->Add_GameObject(L"SmallExplode", pGameObject)))
-            return E_FAIL;
+        Effect_SmallExplode();
     }
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
@@ -55,14 +44,13 @@ _int CMine::Update_GameObject(_float fTimeDelta)
     if (m_fFrame >= 2.f)
         m_fFrame = 0.f;
 
+    LookAtPlayer2();
     return iExit;
 }
 
 void CMine::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
-
-    LookAtPlayer2();
 }
 
 void CMine::Render_GameObject()

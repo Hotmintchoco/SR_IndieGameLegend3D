@@ -1,14 +1,10 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CSprnub3.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CTimerMgr.h"
 #include "CTerrain.h"
-#include "CSmallExplode.h"
 #include "CAbstractFactory.h"
-#include "CHeart.h"
-#include "CGem.h"
-#include "CEnergy.h"
 #include "CPlayerCamera.h"
 
 CSprnub3::CSprnub3(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -29,6 +25,7 @@ HRESULT CSprnub3::Ready_GameObject()
 
     m_pTransformCom->Set_Scale(0.45f, 0.45f, 0.45f);
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
+
     m_iMaxHp = 2;
     m_iHp = m_iMaxHp;
     m_eMonsterState = MOVE;
@@ -40,100 +37,28 @@ _int CSprnub3::Update_GameObject(_float fTimeDelta)
     if (m_iHp <= 0)
     {
         m_bDelete = true;
-
-        CGameObject* pGameObject = nullptr;
-        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-
-        pGameObject = CSmallExplode::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS], m_pTransformCom->m_vScale);
-        if (nullptr == pGameObject)
-            return E_FAIL;
-
-        if (FAILED(pLayer->Add_GameObject(L"SmallExplode", pGameObject)))
-            return E_FAIL;
-
-        //pGameObject = CHeart::Create(m_pGraphicDev, this);
-        pGameObject = CGem::Create(m_pGraphicDev, this);
-        //pGameObject = CEnergy::Create(m_pGraphicDev, this);
-        if (nullptr == pGameObject)
-            return E_FAIL;
-
-        if (FAILED(pLayer->Add_GameObject(L"Gem", pGameObject)))
-            return E_FAIL;
+        Effect_SmallExplode();
+        DropItem();
     }
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
-
-    if (m_fElapsedTime > m_fJumpInterval)
-    {
-        _uint iX = rand() % 3;
-        m_fElapsedTime = _float(iX) / 8.f * 9.f;
-        iX = 0;
-        if (iX == 0)
-        {
-            m_eMonsterState = JUMP;
-            m_bLandingState = false;
-            m_fJumpTime = 0.f;
-            m_fVelocityY = 0.f;
-
-            CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-                ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-            if (nullptr == pPlayerTransformCom)
-                return E_FAIL;
-
-            _vec3   vPos, vPlayerPos;
-            pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-            m_pTransformCom->Get_Info(INFO_POS, &vPos);
-            m_vJumpDirection = vPlayerPos - vPos;
-            D3DXVec3Normalize(&m_vJumpDirection, &m_vJumpDirection);
-            m_vJumpDirection.y = 3.f;
-        }
-        else
-        {
-            m_eMonsterState = MOVE;
-        }
-    }
+    Check_Jump(fTimeDelta);
     switch (m_eMonsterState)
     {
     case IDLE:
         break;
     case JUMP:
         Jump(fTimeDelta);
+        LookAtPlayer();
         break;
     case MOVE:
         Set_OnTerrain();
-
-        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-        if (nullptr == pPlayerTransformCom)
-            return E_FAIL;
-
-        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
-        _vec3   vPlayerPos;
-        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-
-        _vec3   vPlayerLook;
-        vPlayerLook = tInfo.vLook;
-
-        if (m_fActiveElapsedTime < m_fActiveTime)
-        {
-            m_fActiveElapsedTime += fTimeDelta;
-            m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
-
-        }
-        else
-        {
-            m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 2.f, fTimeDelta);
-        }
+        Move(fTimeDelta);
         break;
     }
     m_fFrame += fTimeDelta * 5.f;
     if (m_fFrame >= 2.f)
         m_fFrame = 0.f;
-
-
 
     return iExit;
 }
@@ -145,7 +70,6 @@ void CSprnub3::LateUpdate_GameObject(_float fTimeDelta)
 
 void CSprnub3::Render_GameObject()
 {
-
     if (m_bHitState == true) CMonster::Enable_HitRenderState();
 
     CMonster::Render_GameObject();
@@ -220,6 +144,23 @@ void CSprnub3::Free()
     CMonster::Free();
 }
 
+void CSprnub3::Move(const _float& fTimeDelta)
+{
+    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+    _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+    _vec3 vPlayerLook; vPlayerLook = tInfo.vLook;
+
+    if (m_fActiveElapsedTime < m_fActiveTime)
+    {
+        m_fActiveElapsedTime += fTimeDelta;
+        m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+    }
+    else
+    {
+        m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 2.f, fTimeDelta);
+    }
+}
+
 void CSprnub3::Jump(const _float& fTimeDelta)
 {
     _vec3 vPos;
@@ -232,19 +173,38 @@ void CSprnub3::Jump(const _float& fTimeDelta)
         m_pTransformCom->Set_Pos(vPos);
         m_bLandingState = true;
         m_eMonsterState = MOVE;
-
     }
     else
     {
         m_pTransformCom->Move_Pos(&m_vJumpDirection, 1.f, fTimeDelta);
     }
+}
 
-    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+void CSprnub3::Check_Jump(const _float& fTimeDelta)
+{
+    if (m_fElapsedTime > m_fJumpInterval)
+    {
+        _int iRand = rand() % 3;
+        m_fElapsedTime = _float(iRand) / 8.f * 9.f;
+        iRand = 0;
+        if (iRand == 0)
+        {
+            m_eMonsterState = JUMP;
+            m_bLandingState = false;
+            m_fJumpTime = 0.f;
+            m_fVelocityY = 0.f;
 
-    _vec3   vPlayerPos;
-    vPlayerPos = tInfo.vPosition;
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+            _vec3   vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-    _vec3   vPlayerLook;
-    vPlayerLook = tInfo.vLook;
-    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+            m_vJumpDirection = vPlayerPos - vPos;
+            D3DXVec3Normalize(&m_vJumpDirection, &m_vJumpDirection);
+            m_vJumpDirection.y = 3.f;
+        }
+        else
+        {
+            m_eMonsterState = MOVE;
+        }
+    }
 }

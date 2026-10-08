@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CMagmamouth.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -72,7 +72,6 @@ HRESULT CMagmamouth::Ready_GameObject()
     
 _int CMagmamouth::Update_GameObject(_float fTimeDelta)
 {
-
     _float _fTimeDelta = fTimeDelta;
     if (m_iHp <= 0)
     {
@@ -225,11 +224,9 @@ void CMagmamouth::Spawn_Spider(const _float& fTimeDelta)
         if (nullptr == pGameObject) return;
         pGameObject->Set_IsActive(true);
 
-        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-        if (nullptr == pPlayerTransformCom) return;
-        _vec3   vPlayerPos;
-        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+        _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
+
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
         vVelocity = vPlayerPos - vPos;
         vVelocity.y = 0.f;
@@ -362,14 +359,9 @@ void CMagmamouth::Opening_MagmaMouth(const _float& fTimeDelta)
             D3DXVec3Normalize(&vDir, &vDir);
             m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
         }
-
     }
-
     // 정민 : Boss Hp UI 처리
-    CUIMgr::GetInstance()->Active_Boss(true);
-
-    
-    
+    CUIMgr::GetInstance()->Active_Boss(true);   
 }
 
 void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
@@ -415,11 +407,9 @@ void CMagmamouth::Throw_Fireball(const _float& fTimeDelta)
         if (nullptr == pGameObject) return;
         pGameObject->Set_IsActive(true);
 
-        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-        if (nullptr == pPlayerTransformCom) return;
-        _vec3   vPlayerPos;
-        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+        _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
+
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
         vVelocity = vPlayerPos - vPos;
         vVelocity.y = 0.f;
@@ -510,11 +500,6 @@ void CMagmamouth::Update_Motion(const _float& fTimeDelta)
         m_fStateUpdateTime = 0.f;
         m_bCloseMouth = false;
 
-        //if (m_iPhase == -1)
-        //{
-        //    m_eMagmaMouthState = MOVE;
-        //    ++m_iPhase;
-        //}
         if (m_iPhase == 0)
         {
             m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 3);
@@ -599,13 +584,9 @@ void CMagmamouth::Set_MovePosition()
 
 void CMagmamouth::Set_Position()
 {
-    _vec3 vMonsterPos, vPlayerPos;
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-    if (nullptr == pPlayerTransformCom) return;
-
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-    m_pTransformCom->Get_Info(INFO_POS, &vMonsterPos);
+    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+    _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+    _vec3 vMonsterPos; m_pTransformCom->Get_Info(INFO_POS, &vMonsterPos);
 
     vMonsterPos -= m_vRoomCenterLocation;
     vPlayerPos -= m_vRoomCenterLocation;
@@ -641,7 +622,6 @@ void CMagmamouth::Set_Position()
         m_iPlayerZ = 1;
     else
         m_iPlayerZ = 2;
-    
 }
 
 void CMagmamouth::Find_BackPoint()
@@ -800,12 +780,8 @@ void CMagmamouth::Find_BackPoint()
 void CMagmamouth::Set_Motion()
 {
     const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
-    _vec3   vPlayerPos;
-    vPlayerPos = tInfo.vPosition;
-
-    _vec3   vPlayerLook;
-    vPlayerLook = tInfo.vLook;
+    _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+    _vec3 vPlayerLook; vPlayerLook = tInfo.vLook;
 
     if (m_eMagmaMouthState == MOVE)
     {
@@ -926,8 +902,6 @@ void CMagmamouth::MagmaMouth_Trail(const _float& fTimeDelta)
     vDown.y -= (0.75f + (_float)Downy / 1024.f);
     vDown.z += (_float)Downz / 1024.f;
 
-
-
     if (m_bTrailStart == false)
     {
         m_fTrailTime = 0.f;
@@ -982,6 +956,8 @@ void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
     if (m_fElapsedDeadTime > m_fDeadTime)
     {
         CUIMgr::GetInstance()->Active_Boss(false);
+        if (m_bDelete == false)
+            DropItem_Boss();
         m_bDelete = true;
     }
     if (m_fElapsedDeadTime2 > 0.5f)
@@ -990,24 +966,6 @@ void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
 		m_bHitState = !m_bHitState;
         m_fHitEffectElapsedTime = 0.f;
     }
-    //if (m_bMoveFlag == false)
-    //{
-    //    if (m_bMoveFlag2 == false)
-    //    {
-    //        m_bMoveFlag2 = true;
-    //        _vec3 vPos;
-    //        m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    //        int iRandx = rand() % 128 - 64;
-    //        int iRandy = rand() % 128 - 64;
-    //        int iRandz = rand() % 128 - 64;
-    //        _vec3 vRandPos = { iRandx / 64.f * 64.f, iRandy / 64.f * 64.f, iRandz / 64.f * 64.f };
-    //        m_vMovePosition = vPos + vRandPos;
-    //    }
-    //}
-    //else
-    //{
-
-    //}
     for (int j = 0; j < 3; ++j)
     {
         if (m_fElapsedDeadTime > m_fDeadTime - 1.25f + 0.5f * j && m_DeadFireball[j] == false)
@@ -1017,7 +975,7 @@ void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
             _matrix matRot;
             _float fDegreeInterval = 30.f;
             _float fVelocityY;
-            fVelocityY = 2.f +4.f * j;
+            fVelocityY = 2.f + 4.f * j;
 
             m_pTransformCom->Get_Info(INFO_POS, &vPos);
 

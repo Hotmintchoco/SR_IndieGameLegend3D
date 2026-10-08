@@ -37,15 +37,13 @@ _int CShockwave::Update_GameObject(_float fTimeDelta)
         Set_Dead(true);
     }
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
-
+    LookAtPlayer();
     return iExit;
 }
 
 void CShockwave::LateUpdate_GameObject(_float fTimeDelta)
 {
     CParticle::LateUpdate_GameObject(fTimeDelta);
-
-    LookAtPlayer();
 }
 
 void CShockwave::Render_GameObject()

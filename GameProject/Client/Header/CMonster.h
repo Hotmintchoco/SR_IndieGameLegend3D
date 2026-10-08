@@ -34,19 +34,23 @@ public:
 	_bool Get_Collision_WithMonster() { return m_bCollision_WithMonster; }
 
 	void Set_Damage(_float fDamage) { m_iHp -= (_int)fDamage; }
-	_int Get_CurrentHp() { return m_iHp; }
+	_int Get_Hp() { return m_iHp; }
 	_int Get_MaxHp() { return m_iMaxHp; }
 
 protected:
 	HRESULT			Add_Component();
 	void Set_OnTerrain();
-	void Chase_Player(const _float& fTimeDelta);
 	void Update_HitState(const _float& fTimeDelta);
 	void Enable_HitRenderState();
 	void Disable_HitRenderState();
 
+	void Chase_Player(const _float& fTimeDelta, _float fSpeed);
 	void LookAtPlayer();
 	void LookAtPlayer2();
+
+	void Effect_SmallExplode();
+	void DropItem();
+	void DropItem_Boss();
 
 	// 정민 : OnCollisionStay에서 호출 (몬스터끼리 뭉침 방지 용)
 	void CollisionWithMonster(COLLINFO eCollInfo);

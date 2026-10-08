@@ -58,8 +58,6 @@ _int CArrow_Effect::Update_GameObject(_float fTimeDelta)
         m_iFrame = 0;
     }
 
-
-
     _vec3 vLook, vUp, vRight;
     D3DXVec3Normalize(&vLook, &m_vDir);
     _vec3 vWorldUp = _vec3{ 0.f, 1.f, 0.f };
@@ -83,8 +81,6 @@ _int CArrow_Effect::Update_GameObject(_float fTimeDelta)
 void CArrow_Effect::LateUpdate_GameObject(_float fTimeDelta)
 {
     CParticle::LateUpdate_GameObject(fTimeDelta);
-
-
 }
 
 void CArrow_Effect::Render_GameObject()

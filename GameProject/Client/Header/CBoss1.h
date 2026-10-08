@@ -29,9 +29,6 @@ private:
 
 	void Set_Stand(const _float& fTimeDelta);
 	void Set_Walking(const _float& fTimeDelta);
-	void Look_AtPlayer();
-	void Look_AtDestination();
-	void Chase_Player_Boss1(const _float& fTimeDelta);
 
 	void Boss1_Dead(const _float& fTimeDelta);
 	void Boss1_Dead_Effect();
