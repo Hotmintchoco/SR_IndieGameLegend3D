@@ -55,8 +55,7 @@ void CProjectile::Create_BulletDead_Effect()
     CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
 
     CGameObject* pGameObject = nullptr;
-    //pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BULLET_EFFECT, vPos);
-    pGameObject = CEffect::Create(m_pGraphicDev, CEffect::AIRBUBBLE, vPos);
+    pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BULLET_EFFECT, vPos);
     if (nullptr == pGameObject) return;
     if (FAILED(pLayer->Add_GameObject(L"Effect_Bullet_Dead", pGameObject))) return;
 }

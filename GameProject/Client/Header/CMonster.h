@@ -75,6 +75,8 @@ protected:
 	_float m_fElapsedTime = 0.f;
 
 	_bool m_bCollision_WithMonster = true;
+	_bool m_bRoomCenterLocation = false;
+	_vec3 m_vRoomCenterLocation = { 0.f,0.f,0.f };
 
 	/* 성철 */
 	CPlayerCamera* m_pBillBoardCamera = nullptr;
@@ -86,11 +88,21 @@ private:
 	/* --- */
 
 public:
-	static _uint iMonsterIdx;
 	void Set_Pos(_vec3 vPos);
 	void Set_Pos(_float fX, _float fY, _float fZ);
 
 	void Get_Pos(_vec3* pPos);
+
+	_float GetCenterX(_float x)
+	{
+		return 60.f + 15.f * floorf((x - 60.f + 7.5f) / 15.f);
+	}
+
+	_float GetCenterZ(_float z)
+	{
+		return 60.f + 13.f * floorf((z - 60.f + 6.5f) / 13.f);
+	}
+	void Set_RoomCenterLocation();
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

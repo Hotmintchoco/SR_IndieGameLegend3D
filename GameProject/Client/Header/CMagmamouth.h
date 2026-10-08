@@ -65,7 +65,6 @@ private:
 	_float m_fStateUpdateDuration;
 	_bool m_bFireballFinish[4];
 
-	_vec3 m_vRoomCenterLocation;
 	_vec3 m_vMovePosition;
 	_bool m_bMoveFlag;
 	_bool m_bMoveFlag2;

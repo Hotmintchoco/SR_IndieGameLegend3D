@@ -407,6 +407,16 @@ void CMonster::Set_OnTerrain()
     m_pTransformCom->Set_Pos(vPos.x, fY + m_pTransformCom->m_vScale.y, vPos.z);
 }
 
+void CMonster::Set_RoomCenterLocation()
+{
+    if (m_bRoomCenterLocation == false)
+    {
+        m_bRoomCenterLocation = true;
+        _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        m_vRoomCenterLocation = { GetCenterX(vPos.x), 0.f, GetCenterZ(vPos.z) };
+    }
+}
+
 CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
     CMonster* pMonster = new CMonster(pGraphicDev);

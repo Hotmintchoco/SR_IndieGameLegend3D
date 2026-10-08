@@ -33,17 +33,6 @@ HRESULT CBoss1::Ready_GameObject()
 
     m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.5f);
 
-    if (m_pOwner == nullptr)
-    {
-        m_vRoomCenterLocation = s_vRoomCenter;
-    }
-    else
-    {
-        m_vRoomCenterLocation = static_cast<CRoomLayer*>(m_pOwner)->GetCenterPos();
-        s_vRoomCenter = m_vRoomCenterLocation;
-    }
-
-
     m_pTransformCom2->Set_Scale(0.75f, 0.75f, 0.75f);
     m_pTransformCom2->Set_Pos(m_pTransformCom->m_vInfo[INFO_POS].x, m_pTransformCom->m_vInfo[INFO_POS].y, m_pTransformCom->m_vInfo[INFO_POS].z);
 
@@ -58,6 +47,7 @@ HRESULT CBoss1::Ready_GameObject()
 
 _int CBoss1::Update_GameObject(_float fTimeDelta)
 {
+    Set_RoomCenterLocation();
     _float _fTimeDelta = fTimeDelta;
     if (m_iHp <= 0)
     {

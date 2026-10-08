@@ -20,7 +20,7 @@
 
 CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(0.f), m_fStateUpdateDuration(2.f), 
-    m_eMagmaMouthState(OPENING), m_vRoomCenterLocation{ 0.f,0.f,0.f }, m_vMovePosition{0.f,0.f,0.f},
+    m_eMagmaMouthState(OPENING), m_vMovePosition{0.f,0.f,0.f},
     m_iMonsterX(0), m_iMonsterZ(0), m_iPlayerX(0), m_iPlayerZ(0), m_bMoveFlag(false), m_bMoveFlag2(false), m_bCloseMouth(false),
     m_fTrailTime(0.f), m_fTrailTime2(0.f), m_fTrailDuration(0.f), m_bTrailStart(false), m_bTrailFinish(false), m_fSpawnTime(0.f)
 {
@@ -46,19 +46,6 @@ HRESULT CMagmamouth::Ready_GameObject()
 
     m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
     m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x + 0.2f);
-    
-    if (m_pOwner == nullptr)
-    {
-        m_vRoomCenterLocation = s_vRoomCenter;
-    }
-    else
-    {
-        m_vRoomCenterLocation = static_cast<CRoomLayer*>(m_pOwner)->GetCenterPos();
-        s_vRoomCenter = m_vRoomCenterLocation;
-    }
-    m_pTransformCom->Get_Info(INFO_POS, &m_vMovePosition);
-    m_vMovePosition = m_vOpeningMoveDirection[m_iOpeningMoveIndex] + m_vRoomCenterLocation;
-    m_vMovePosition.y = 2.f;
 
     m_fTrailDuration = 0.5f * 0.5f * 0.5f;
 
@@ -72,6 +59,12 @@ HRESULT CMagmamouth::Ready_GameObject()
     
 _int CMagmamouth::Update_GameObject(_float fTimeDelta)
 {
+    if (m_bRoomCenterLocation == false)
+    {
+        Set_RoomCenterLocation();
+        m_vMovePosition = m_vOpeningMoveDirection[m_iOpeningMoveIndex] + m_vRoomCenterLocation;
+        m_vMovePosition.y = 2.f;
+    }
     _float _fTimeDelta = fTimeDelta;
     if (m_iHp <= 0)
     {

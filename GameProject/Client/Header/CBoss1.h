@@ -63,7 +63,6 @@ private:
 	_float m_fStateUpdateTime = 0.f;
 	_float m_fStateUpdateDuration = 2.f;
 
-	_vec3 m_vRoomCenterLocation = {};
 	_vec3 m_vMovePosition = {};
 	_bool m_bMoveFlag = false;
 	_bool m_bMoveFlag2 = false;

@@ -388,6 +388,9 @@
     <Filter Include="02. GameObject\06. Effect\AirBubble">
       <UniqueIdentifier>{98141dfd-119a-44d6-9b8b-23f378e20ec7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Generator_MapEffect">
+      <UniqueIdentifier>{27fb29b9-5faa-4bc5-82eb-30c9ec125b0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -795,6 +798,15 @@
     <ClInclude Include="..\Header\CAirbubble.h">
       <Filter>02. GameObject\06. Effect\AirBubble</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGenerator_Airbubble.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGenerator_Snow.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGenerator_Sand.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1174,6 +1186,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CAirbubble.cpp">
       <Filter>02. GameObject\06. Effect\AirBubble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGenerator_Airbubble.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGenerator_Snow.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGenerator_Sand.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
