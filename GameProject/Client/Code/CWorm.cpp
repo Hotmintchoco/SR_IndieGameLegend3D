@@ -691,7 +691,7 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
 {
 	m_bElapsedOpeningTime += fTimeDelta;
 
-    if (m_bElapsedOpeningTime > 1.f && m_bElapsedOpeningTime<=1.1f)
+    if (m_bElapsedOpeningTime > 1.f && m_bElapsedOpeningTime<=3.f)
     {
         //오프닝 도착지점 세팅
         if (m_bOpeningStart == false)
@@ -773,7 +773,7 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
         }
     }
     //3초뒤 움직임
-    else if (m_bElapsedOpeningTime > 1.f)
+    else if (m_bElapsedOpeningTime > 3.f)
     {
         if (!m_vMoveDest.empty())
         {
