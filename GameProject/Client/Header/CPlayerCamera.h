@@ -40,10 +40,14 @@ public:
 	void            Set_Distance(_float fDistance) { m_fDistance = fDistance; }
     _float          Get_Distance() const { return m_fDistance; }
 
+    const _vec3&    Get_ShakeOffset() const { return m_vShakeOffset; }
+    void            Set_ShakingTime(_float fShakeTime) { m_fShakeTime = fShakeTime; }
+
 private:
     void            Mouse_Move();
     void            Follow_Target();
-    void UpdateBillBoardInfo();
+    void            UpdateBillBoardInfo();
+    void            Shaking_Action(_float fTimeDelta);
 
     /* 스프링 암 관련 */
     float CalculateSpringArmLength();
@@ -61,6 +65,10 @@ private:
 
     /* 스프링 암 관련 */
     float m_fNearPlaneMargin = 0.1f;
+
+    /* 쉐이킹 처리*/
+    _float          m_fShakeTime = 0.f;
+    _vec3           m_vShakeOffset{ 0.f, 0.f, 0.f };
 
     // 실제 플레이어 Transform의 기준점에 맞춰 설정
     _vec3           m_vEyeOffset = m_vEyeOffsetRaw;

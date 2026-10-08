@@ -93,6 +93,20 @@ void CWeapon::SyncTransformToCamera(CCamera* pCamera)
     /* 카메라 위치를 받아 위치값 조정*/
     _matrix matCamera;
     pCamera->GetWorld(&matCamera);
+
+    /* 정민 : 카메라 쉐이킹 효과 */
+    if (auto* pPlayerCamera = dynamic_cast<CPlayerCamera*>(pCamera))
+    {
+        const _vec3& vShake = pPlayerCamera->Get_ShakeOffset();
+
+        // 카메라의 흔들림을 일부 제거해 화면에서 무기가 흔들리게 함
+        const _float fWeaponShake = 0.1f;
+
+        matCamera._41 -= vShake.x * fWeaponShake;
+        matCamera._42 -= vShake.y * fWeaponShake;
+        matCamera._43 -= vShake.z * fWeaponShake;
+    }
+
     m_pTransformCom->WorldMatrixPropagation(matCamera);
 }
 

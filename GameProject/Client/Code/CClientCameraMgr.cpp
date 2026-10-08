@@ -72,6 +72,14 @@ CCamera* CClientCameraMgr::Get_ActiveCamera() const
     return m_pActiveCamera;
 }
 
+void CClientCameraMgr::Camera_Shake(_float fOnTime)
+{
+    if (m_eCurrentType != CLIENT_CAMERA_TYPE::PLAYER)
+        return;
+
+    static_cast<CPlayerCamera*>(m_pActiveCamera)->Set_ShakingTime(fOnTime);
+}
+
 void CClientCameraMgr::Update_Camera(_float fTimeDelta)
 {
     if (nullptr == m_pActiveCamera)
@@ -144,6 +152,10 @@ void CClientCameraMgr::Key_Input(_float fTimeDelta)
             Select_Camera(CLIENT_CAMERA_TYPE::PLAYER);
             static_cast<CPlayerCamera*>(m_pActiveCamera)->Set_CameraMode(CAMERA_MODE::THIRD_PERSON);
             m_OnCameraViewChanged.Broadcast(CAMERA_MODE::THIRD_PERSON);
+        }
+        else if (CDInputMgr::GetInstance()->Key_Down(DIK_F9))
+        {
+            Camera_Shake(3.f);
         }
     }
     else

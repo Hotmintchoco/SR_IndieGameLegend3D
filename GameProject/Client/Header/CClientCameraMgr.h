@@ -33,6 +33,9 @@ public:
     CCamera*        Find_Camera(CLIENT_CAMERA_TYPE eType) const;
     CCamera*        Get_ActiveCamera() const;
 
+    // 플레이어 카메라에서 적용 / 매개변수에 적용할 시간
+    void            Camera_Shake(_float fOnTime);
+
 public:
     void            Update_Camera(_float fTimeDelta);
     void            LateUpdate_Camera(_float fTimeDelta);
