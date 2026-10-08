@@ -9,6 +9,7 @@
 #include "CGlubba.h"
 #include "CShockwave.h"
 #include "CPlayerCamera.h"
+#include "CWormBullet.h"
 
 CWorm::CWorm(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -360,6 +361,7 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
         Clear_MoveDest();
 
         m_eWormState = static_cast<WORMSTATE>(Get_MotionState());
+        m_eWormState = ATTACK;
 
         if (m_eWormState == SPAWN)
         {
@@ -387,7 +389,9 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
         {
             Set_MoveDest();
             m_fStateUpdateDuration = 12.f;
-            m_bAttackStart = false;
+            m_bAttackStart1 = false;
+            m_bAttackStart2 = false;
+            m_bAttackStart3 = false;
             m_bMoveFlag = false;
             m_bMoveFlag2 = false;
             Set_Speed_Worm(9.f);
@@ -602,7 +606,6 @@ void CWorm::Spawn_Monster(const _float& fTimeDelta)
             CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
             if (FAILED(pScene->Add_GameObject(L"Glubba", pGameObject))) return;
         }
-
     }
     else
     {
@@ -620,12 +623,62 @@ void CWorm::Attack_Worm(const _float& fTimeDelta)
     {
         Move_WormHead_BeforeAttack(fTimeDelta);
     }
-    else if (m_bAttackStart == false)
+    else if (m_bAttackStart1 == false || m_bAttackStart2 == false || m_bAttackStart3 == false)
     {
         m_fAttackTime += fTimeDelta;
-        if (m_fAttackTime > 1.5f)
+        if (m_fAttackTime > 1.5f && m_bAttackStart1 == false)
         {
-            m_bAttackStart = true;
+            m_bAttackStart1 = true;
+
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            vPos.x += 0.1f;
+            _vec3 vDir = vPlayerPos - vPos;
+            D3DXVec3Normalize(&vDir, &vDir);
+
+            CProjectile* pProjectile = CWormBullet::Create(m_pGraphicDev, vPos, vDir);
+            CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+
+            pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+
+            //CSoundMgr::GetInstance()->PlaySFX(L"sfxLaser.wav");
+        }
+        if (m_fAttackTime > 2.25f && m_bAttackStart2 == false)
+        {
+            m_bAttackStart2 = true;
+
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            vPos.x += 0.1f;
+            _vec3 vDir = vPlayerPos - vPos;
+            D3DXVec3Normalize(&vDir, &vDir);
+
+            CProjectile* pProjectile = CWormBullet::Create(m_pGraphicDev, vPos, vDir);
+            CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+
+            pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+
+            //CSoundMgr::GetInstance()->PlaySFX(L"sfxLaser.wav");
+        }
+        if (m_fAttackTime > 3.f && m_bAttackStart3 == false)
+        {
+            m_bAttackStart3 = true;
+
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            vPos.x += 0.1f;
+            _vec3 vDir = vPlayerPos - vPos;
+            D3DXVec3Normalize(&vDir, &vDir);
+
+            CProjectile* pProjectile = CWormBullet::Create(m_pGraphicDev, vPos, vDir);
+            CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+
+            pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+
+            //CSoundMgr::GetInstance()->PlaySFX(L"sfxLaser.wav");
         }
     }
     else

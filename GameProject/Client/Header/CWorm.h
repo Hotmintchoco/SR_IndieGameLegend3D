@@ -114,7 +114,9 @@ private:
 
 	_float m_fAttackTime = 0.f;
 	_float m_fAttackTime2 = 0.f;
-	_bool m_bAttackStart = false;
+	_bool m_bAttackStart1 = false;
+	_bool m_bAttackStart2 = false;
+	_bool m_bAttackStart3 = false;
 
 	_vec3 m_vSpawnDirection = { 0.f,0.f,0.f };
 

@@ -231,8 +231,12 @@ _uint CLoading::Loading_Stage()
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Laser_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Projectile/laserbullet.png", 1))))
         return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Laser2_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Projectile/laserbullet2.png", 1))))
+        return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Laser_Corner_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Projectile/laserbullet_corner.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Laser_Corner2_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Projectile/laserbullet_corner2.png", 1))))
         return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Cross_Buffer", CCrossBuffer::Create(m_pGraphicDev))))
