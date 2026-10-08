@@ -742,7 +742,7 @@ void CWorm::Worm_Dead(const _float& fTimeDelta)
 
     if (m_fElapsedDeadTime > m_fDeadTime)
     {
-        if (m_bDelete == false)
+        if (m_bDelete == false && m_iWormIndex == 10)
             DropItem_Boss();
         m_bDelete = true;
     }

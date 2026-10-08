@@ -126,7 +126,20 @@ CGem* CGem::Create(LPDIRECT3DDEVICE9 pGraphicDev, Engine::CGameObject* pSpawner)
         MSG_BOX("CGem Create Failed");
         return nullptr;
     }
+    return pGem;
+}
 
+CGem* CGem::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos)
+{
+    CGem* pGem = new CGem(pGraphicDev);
+    pGem->Set_SpawnPos(vPos);
+
+    if (FAILED(pGem->Ready_GameObject()))
+    {
+        Safe_Release(pGem);
+        MSG_BOX("CGem Create Failed");
+        return nullptr;
+    }
     return pGem;
 }
 

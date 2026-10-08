@@ -296,11 +296,18 @@ void CMonster::DropItem_Boss()
 {
     CGameObject* pGameObject = nullptr;
     CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-
-    //int iRand = rand() % 100;
-    for (int i = 0; i < 10; ++i)
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    int iRand = rand() % 10;
+    
+    for (int i = 0; i < 10 + iRand; ++i)
     {
-        pGameObject = CGem::Create(m_pGraphicDev, this);
+        _float fRandX = (_float(rand() % 101) - 50.f) * 0.03f;
+        _float fRandZ = (_float(rand() % 101) - 50.f) * 0.03f;
+
+        _vec3 vRandPos = { vPos.x + fRandX, vPos.y, vPos.z + fRandZ };
+
+        pGameObject = CGem::Create(m_pGraphicDev, vRandPos);
+
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Gem", pGameObject))) return;
     }

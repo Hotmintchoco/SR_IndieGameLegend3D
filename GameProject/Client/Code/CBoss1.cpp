@@ -60,14 +60,16 @@ _int CBoss1::Update_GameObject(_float fTimeDelta)
         {
             m_bDeadStart = true;
             m_bStand = false;
-        }
 
-        for (int i = 0; i < 4; ++i)
-        {
-            if (m_bSpawnFinish[i] == true && m_bSpawnFinish2[i] == false)
+            for (int i = 0; i < 4; ++i)
             {
-				m_pSpawnMonster[i]->Set_Dead(true);
+                if (m_bSpawnFinish[i] == true && m_bSpawnFinish2[i] == false)
+                {
+                    //static_cast<CMonster*>(m_pSpawnMonster[i])->Set_Damage(static_cast<CMonster*>(m_pSpawnMonster[i])->Get_Hp());
+                    m_pSpawnMonster[i]->Set_IsActive(true);
+                }
             }
+            int a = 1;
         }
     }
     else if (m_iHp <= m_iMaxHp / 2)
@@ -578,7 +580,7 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
 	{
         //오프닝 종료
 		m_bOpening = false;
-		LookAtPlayer();
+		LookAtPlayer2();
 		return;
     }
     //Y값 최초 조정
@@ -684,7 +686,7 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
         }
         m_pTransformCom->Move_Pos(&vDir, 2.f, fTimeDelta);
     }
-    LookAtPlayer();
+    LookAtPlayer2();
 
     // 정민 : Boss Hp UI 처리
     CUIMgr::GetInstance()->Active_Boss(true);

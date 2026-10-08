@@ -29,6 +29,10 @@ private:
 	void BillBoard();
 	void Drop(_float fTimeDelta);
 	void Attract_To_Player(const _float& fTimeDelta);
+
+public:
+	void Set_SpawnPos(_vec3 vPos) { m_vSpawnPos = vPos; }
+
 protected:
 	virtual void Consume();
 
