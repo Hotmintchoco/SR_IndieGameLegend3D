@@ -36,6 +36,8 @@ private:
 	void Boss1_Dead(const _float& fTimeDelta);
 	void Boss1_Dead_Effect();
 
+	void Update_AngryFace();
+
 protected:
 	Engine::CTexture* m_pTextureCom2 = nullptr;
 	Engine::CTransform* m_pTransformCom2 = nullptr;

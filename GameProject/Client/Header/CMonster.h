@@ -42,6 +42,7 @@ protected:
 	void Update_HitState(const _float& fTimeDelta);
 	void Enable_HitRenderState();
 	void Disable_HitRenderState();
+
 	void LookAtPlayer();
 	void LookAtPlayer2();
 

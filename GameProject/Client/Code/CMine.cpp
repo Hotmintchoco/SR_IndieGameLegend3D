@@ -50,14 +50,10 @@ _int CMine::Update_GameObject(_float fTimeDelta)
     }
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
-
     Set_OnTerrain();
     m_fFrame += fTimeDelta * 6.f;
     if (m_fFrame >= 2.f)
         m_fFrame = 0.f;
-
-
-
 
     return iExit;
 }

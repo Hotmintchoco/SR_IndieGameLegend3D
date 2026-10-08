@@ -216,8 +216,25 @@ void CEffect::Ready_Effect()
         break;
     }
     case SANDBURST2:
+    {
         m_fLifeTime = 2.f;
         break;
+    }
+    case WORM_DEAD_EFFECT:
+    {
+        m_fLifeTime = 0.5f;
+        break;
+    }
+    case WORM_EXPLOSION1:
+    {
+        m_fLifeTime = 0.5f;
+        break;
+    }
+    case WORM_EXPLOSION2:
+    {
+        m_fLifeTime = 0.5f;
+        break;
+    }
     }
 }
 
@@ -528,6 +545,106 @@ void CEffect::Update_Effect(const _float fTimeDelta)
 		}
 		Set_Dead(true);
 
+        break;
+    }
+    case WORM_DEAD_EFFECT:
+    {
+        m_fElapsedTime2 += fTimeDelta;
+
+        if (m_fElapsedTime2 > 0.125f)
+        {
+            m_fElapsedTime2 = 0.f;
+            _vec3 vVelocity;
+
+            _int iRand1 = 0;
+            _int iRand2 = 0;
+            _int iRand3 = 0;
+
+            D3DXCOLOR eColor = { 1.f,1.f,0.f,1.f };
+
+            _vec3 vRand;
+            vRand.x = (_float)(rand() % 128 - 64) / 64.f;
+            vRand.y = (_float)(rand() % 128 - 64) / 64.f;
+            vRand.z = (_float)(rand() % 128 - 64) / 64.f;
+            D3DXVec3Normalize(&vRand, &vRand);
+            vPos += vRand * 0.25f;
+
+            for (int i = 0; i < 12; ++i)
+            {
+                //iRand1 = rand() % 128 - 64;
+                //iRand2 = rand() % 128;
+                //iRand3 = rand() % 128 - 64;
+
+                //vVelocity = { _float(iRand1) / 48.f,_float(iRand2) / 96.f,_float(iRand3) / 48.f };
+
+                iRand1 = rand() % 128 - 64;
+                iRand2 = rand() % 128 - 64;
+                iRand3 = rand() % 128 - 64;
+
+                vVelocity = { _float(iRand1) / 48.f,_float(iRand2) / 48.f,_float(iRand3) / 48.f };
+
+                //vVelocity *= 0.75f;
+                vVelocity *= 1.f;
+
+                int iRand = rand() % 3;
+                if (iRand == 0) eColor.g = 245.f / 256.f;
+                else if (iRand == 1) eColor.g = 235.f / 256.f;
+
+                float fScale = 0.5f * 0.5f * 0.5f * 0.75f * 0.66f;
+                _vec3 vScale = { fScale,fScale ,fScale };
+                pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, vScale, eColor, 0.5f);
+                if (nullptr == pGameObject) return;
+                if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
+            }
+        }
+        if (m_fElapsedTime > m_fLifeTime)
+            Set_Dead(true);
+
+        break;
+    }
+    case WORM_EXPLOSION1:
+    {
+        m_fElapsedTime3 += fTimeDelta;
+        if (m_fElapsedTime3 > 0.125f*0.5f)
+        {
+            m_fElapsedTime3 = 0.f;
+
+            _vec3 vVelocity;
+
+            _int iRand1 = rand() % 128 - 64;
+            _int iRand2 = rand() % 128 - 64;
+            _int iRand3 = rand() % 128 - 64;
+
+            vVelocity = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
+
+            vPos += vVelocity / 6.f * 2.f;
+
+            CParticle_Sphere::EFFECT_SPHERE_COLOR eEffect_Color;
+            int iRand = rand() % 3;
+            if (iRand % 3 == 0) eEffect_Color = CParticle_Sphere::RED;
+            else if (iRand % 3 == 1) eEffect_Color = CParticle_Sphere::ORANGE;
+            else eEffect_Color = CParticle_Sphere::YELLOW;
+            //eEffect_Color = CParticle_Sphere::RED;
+            pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, eEffect_Color, 25, 3.f, 0.125f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
+            if (nullptr == pGameObject) return;
+            if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
+
+            pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, eEffect_Color, 15, 2.0f, 0.125f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
+            if (nullptr == pGameObject) return;
+            if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
+        }
+
+        if (m_fElapsedTime > m_fLifeTime)
+            Set_Dead(true);
+        break;
+        break;
+    }
+    case WORM_EXPLOSION2:
+    {
+        pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::YELLOWOCHER, 45, 5.f, 0.5f, { 0.75f,0.75f,0.75f }, CParticle_Sphere::DOWN);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
+        Set_Dead(true);
         break;
     }
     }

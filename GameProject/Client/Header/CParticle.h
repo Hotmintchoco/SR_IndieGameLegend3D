@@ -1,11 +1,13 @@
 ﻿#pragma once
 
 #include "CGameObject.h"
+#include "Client_Struct.h"
 
 namespace Engine
 {
 	class CTransform;
 }
+class CPlayerCamera;
 
 class CParticle : public CGameObject
 {
@@ -30,6 +32,7 @@ protected:
 	_float m_fElapsedTime = 0.f;
 
 	_float m_fScale = 0.f;
+	CPlayerCamera* m_pBillBoardCamera = nullptr;
 
 public:
 	static CParticle* Create(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "COcto.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -42,6 +42,7 @@ HRESULT COcto::Ready_GameObject()
 
 _int COcto::Update_GameObject(_float fTimeDelta)
 {
+    _int    iExit = CMonster::Update_GameObject(fTimeDelta);
     if (m_bUpdateStart == false)
     {
         m_bUpdateStart = true;
@@ -71,7 +72,6 @@ _int COcto::Update_GameObject(_float fTimeDelta)
         if (FAILED(pLayer->Add_GameObject(L"Gem", pGameObject)))
             return E_FAIL;
     }
-    _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
 
 	Set_OnTerrain();

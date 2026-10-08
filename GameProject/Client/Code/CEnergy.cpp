@@ -42,7 +42,7 @@ _int CEnergy::Update_GameObject(_float fTimeDelta)
     _int    iExit = CItem::Update_GameObject(fTimeDelta);
 
     m_fFrame += fTimeDelta * 6.f;
-    if (m_fFrame > 8.f)
+    if (m_fFrame >= 8.f)
         m_fFrame = 0.f;
 
     return iExit;

@@ -4,6 +4,10 @@
 #include "CRenderer.h"
 #include "CManagement.h"
 #include <ctime>
+#include "Client_Struct.h"
+#include "CPlayerCamera.h"
+#include "CClientCameraMgr.h"
+
 
 CParticle::CParticle(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_fFrame(0.f)
@@ -26,6 +30,11 @@ HRESULT CParticle::Ready_GameObject()
 _int CParticle::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
+    if (!m_pBillBoardCamera)
+    {
+        m_pBillBoardCamera = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
+        assert(m_pBillBoardCamera);
+    }
 
     m_fElapsedTime += fTimeDelta;
 
@@ -37,7 +46,6 @@ _int CParticle::Update_GameObject(_float fTimeDelta)
 void CParticle::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
-
 }
 
 void CParticle::Render_GameObject()
@@ -76,15 +84,13 @@ CParticle* CParticle::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CParticle::LookAtPlayer()
 {
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-    if (nullptr == pPlayerTransformCom) return;
+    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
 
     _vec3   vPlayerPos;
+    vPlayerPos = tInfo.vPosition;
+
     _vec3   vPlayerLook;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+    vPlayerLook = tInfo.vLook;
 
     m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
 }

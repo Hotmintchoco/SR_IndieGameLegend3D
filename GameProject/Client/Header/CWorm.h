@@ -44,6 +44,7 @@ private:
 	void Set_MoveDest();
 	void Set_Pos_Worm(_vec3 vPos);
 	void Set_Speed_Worm(_float fSpeed);
+	void Set_HeadWorm_Null();
 	void Push_Back_MoveDest(const _vec3& vDest);
 	void Clear_MoveDest();
 
@@ -56,17 +57,19 @@ private:
 	CMonster* Get_Next_Worm() { return m_pNextWorm; }
 	void Set_Head_Worm(CMonster* pHeadWorm) { m_pHeadWorm = pHeadWorm; }
 	CMonster* Get_Head_Worm() { return m_pHeadWorm; }
-	void Set_WormIndex (_uint iIndex) { m_iWormIndex = iIndex; }
+	void Set_WormIndex(_uint iIndex) { m_iWormIndex = iIndex; }
 
 
 	void Set_Init_Worm();
 	void Set_Motion_FromAngle();
 
+	void Update_Connector();
+
 public:
 	virtual void Set_Damage(_int iDamage) { m_iHp -= iDamage; }
 	virtual _int Get_Hp() { return m_iHp; }
 	WORMSTATE Get_WormState() { return m_eWormState; }
-	
+
 public:
 	void Check_Sandburst(_float fTimeDelta);
 	void Effect_Sandburst(_float fLifeTime);
@@ -113,7 +116,8 @@ private:
 	_bool m_bDead_Effect2 = false;
 	_float m_fElapsedDeadTime = 0.f;
 	_float m_fElapsedDeadTime2 = 0.f;
-	_float m_fDeadTime = 5.f;
+	_float m_fElapsedDeadTime3 = 0.f;
+	_float m_fDeadTime = 0.5f;
 	_bool m_bDeadStart = false;
 	_bool m_DeadExplosion = false;
 
@@ -129,6 +133,8 @@ private:
 
 	_float m_fElapsedTime2 = 0.f;
 	_float m_fElapsedTime3 = 0.f;
+
+	_matrix m_matConnector;
 
 	inline static _vec3 s_vRoomCenter = { 0.f,0.f,0.f };
 };

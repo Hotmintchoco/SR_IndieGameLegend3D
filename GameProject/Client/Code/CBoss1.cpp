@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CBoss1.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -119,53 +119,8 @@ _int CBoss1::Update_GameObject(_float fTimeDelta)
 
 void CBoss1::LateUpdate_GameObject(_float fTimeDelta)
 {
-    
-
-    //Angry버전 Transform->chase업데이트
-    if (m_iPhase == 1)
-    {
-        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
-        _matrix	matWorld, matScale, matRot, matTrans;
-
-        D3DXMatrixScaling(&matScale, m_pTransformCom2->m_vScale.x, m_pTransformCom2->m_vScale.y, m_pTransformCom2->m_vScale.z);
-
-        if ((_uint)m_fFrame % 2 == 0)
-        {
-            D3DXMatrixTranslation(&matTrans,
-                m_pTransformCom->m_vInfo[INFO_POS].x,
-                m_pTransformCom->m_vInfo[INFO_POS].y,
-                m_pTransformCom->m_vInfo[INFO_POS].z);
-        }
-        else
-        {
-            D3DXMatrixTranslation(&matTrans,
-                m_pTransformCom->m_vInfo[INFO_POS].x,
-                m_pTransformCom->m_vInfo[INFO_POS].y + 0.1f,
-                m_pTransformCom->m_vInfo[INFO_POS].z);
-        }
-        _vec3 vSrc = m_pTransformCom->m_vInfo[INFO_LOOK];
-        _vec3 vDst = -tInfo.vLook;
-
-        _vec3 vAxis = { 0.f, 1.f, 0.f };
-        _vec3 vCross;
-
-        vSrc.y = 0;
-        vDst.y = 0;
-
-        float fAngle = acosf(D3DXVec3Dot(D3DXVec3Normalize(&vSrc, &vSrc), D3DXVec3Normalize(&vDst, &vDst)));
-
-        if (D3DXVec3Dot(D3DXVec3Cross(&vCross, &vSrc, &vDst), &vAxis) < 0.f)
-            fAngle *= -1;
-
-        D3DXMatrixRotationAxis(&matRot, &m_pTransformCom->m_vInfo[INFO_UP], fAngle);
-
-        //D3DXMatrixIdentity(&matRot);
-
-        matWorld = matScale * matRot * matTrans;
-        m_pTransformCom2->Set_World(&matWorld);
-    }
     CMonster::LateUpdate_GameObject(fTimeDelta);
+    //Update_AngryFace();
 }
 
 void CBoss1::Render_GameObject()
@@ -180,16 +135,16 @@ void CBoss1::Render_GameObject()
     m_pTextureCom->Set_Texture((_uint)m_fFrame);
     m_pBufferCom->Render_Buffer();
 
-    if (m_iPhase == 1)
-    {
-        if(m_eBoss1State!=DEAD)
-			m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
-        m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
-        m_pTextureCom2->Set_Texture((_uint)m_fFrame / 2);
-        m_pBufferCom->Render_Buffer();
-        if (m_eBoss1State != DEAD)
-            m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
-    }
+   // if (m_iPhase == 1)
+   // {
+   //     if(m_eBoss1State!=DEAD)
+			//m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
+   //     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
+   //     m_pTextureCom2->Set_Texture((_uint)m_fFrame / 2);
+   //     m_pBufferCom->Render_Buffer();
+   //     if (m_eBoss1State != DEAD)
+   //         m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
+   // }
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
     if (m_bHitState == true) CMonster::Disable_HitRenderState();
@@ -931,5 +886,53 @@ void CBoss1::Boss1_Dead_Effect()
         pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BOSS1_EXPLOSION2, vPos);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Boss1_Explosion2", pGameObject))) return;
+    }
+}
+
+void CBoss1::Update_AngryFace()
+{
+    //Angry버전 Transform->chase업데이트
+    if (m_iPhase == 1)
+    {
+        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+
+        _matrix	matWorld, matScale, matRot, matTrans;
+
+        D3DXMatrixScaling(&matScale, m_pTransformCom2->m_vScale.x, m_pTransformCom2->m_vScale.y, m_pTransformCom2->m_vScale.z);
+
+        if ((_uint)m_fFrame % 2 == 0)
+        {
+            D3DXMatrixTranslation(&matTrans,
+                m_pTransformCom->m_vInfo[INFO_POS].x,
+                m_pTransformCom->m_vInfo[INFO_POS].y,
+                m_pTransformCom->m_vInfo[INFO_POS].z);
+        }
+        else
+        {
+            D3DXMatrixTranslation(&matTrans,
+                m_pTransformCom->m_vInfo[INFO_POS].x,
+                m_pTransformCom->m_vInfo[INFO_POS].y + 0.1f,
+                m_pTransformCom->m_vInfo[INFO_POS].z);
+        }
+        _vec3 vSrc = m_pTransformCom->m_vInfo[INFO_LOOK];
+        _vec3 vDst = -tInfo.vLook;
+
+        _vec3 vAxis = { 0.f, 1.f, 0.f };
+        _vec3 vCross;
+
+        vSrc.y = 0;
+        vDst.y = 0;
+
+        float fAngle = acosf(D3DXVec3Dot(D3DXVec3Normalize(&vSrc, &vSrc), D3DXVec3Normalize(&vDst, &vDst)));
+
+        if (D3DXVec3Dot(D3DXVec3Cross(&vCross, &vSrc, &vDst), &vAxis) < 0.f)
+            fAngle *= -1;
+
+        D3DXMatrixRotationAxis(&matRot, &m_pTransformCom->m_vInfo[INFO_UP], fAngle);
+
+        //D3DXMatrixIdentity(&matRot);
+
+        matWorld = matScale * matRot * matTrans;
+        m_pTransformCom2->Set_World(&matWorld);
     }
 }

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CWorm.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -13,6 +13,7 @@
 CWorm::CWorm(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
 {
+    ZeroMemory(&m_matConnector, sizeof(m_matConnector));
 }
 
 CWorm::~CWorm()
@@ -63,7 +64,7 @@ _int CWorm::Update_GameObject(_float fTimeDelta)
     _float _fTimeDelta = fTimeDelta;
     if (m_iHp <= 0)
 	{
-
+        m_fElapsedDeadTime3 += fTimeDelta;
 		if (m_bDeadStart == false)
 		{
 			m_bDeadStart = true;
@@ -73,13 +74,19 @@ _int CWorm::Update_GameObject(_float fTimeDelta)
             m_bMoveFlag = false;
             m_bMoveFlag2 = false;
             m_pColliderCom->Set_IsActive(false);
-
-			if (m_pNextWorm != nullptr)
-			{
-				static_cast<CWorm*>(m_pNextWorm)->Set_Damage(static_cast<CWorm*>(m_pNextWorm)->Get_Hp());
-				m_pHeadWorm = nullptr;
-			}
+            if (m_iWormIndex == 1)
+            {
+                Set_HeadWorm_Null();
+            }
 		}
+        if (m_pNextWorm != nullptr)
+        {
+            if (m_fElapsedDeadTime3 > 0.25f)
+            {
+                static_cast<CWorm*>(m_pNextWorm)->Set_Damage(static_cast<CWorm*>(m_pNextWorm)->Get_Hp());
+                m_pNextWorm = nullptr;
+            }
+        }
     }
     else if (m_iHp <= m_iMaxHp / 2)
     {
@@ -131,10 +138,15 @@ _int CWorm::Update_GameObject(_float fTimeDelta)
     }
     else
     {
-        if (m_pHeadWorm != nullptr && static_cast<CWorm*>(m_pHeadWorm)->Get_WormState() != DEAD)
-            Update_WormBoby(_fTimeDelta);
+		if (m_eWormState == DEAD)
+		{
+			Worm_Dead(_fTimeDelta);    
+		}
         else
-            Worm_Dead(_fTimeDelta);
+        {
+            Update_WormBoby(_fTimeDelta);
+        }
+        //if (m_pHeadWorm != nullptr && static_cast<CWorm*>(m_pHeadWorm)->Get_WormState() != DEAD)
     }
 
     return iExit;
@@ -145,62 +157,7 @@ void CWorm::LateUpdate_GameObject(_float fTimeDelta)
     CMonster::LateUpdate_GameObject(fTimeDelta);
     Set_Motion_FromAngle();
 
-    //Connector
-    if (m_iWormIndex != 1)
-    {
-        _matrix* matpWorldCurrWorm = m_pTransformCom->Get_World();
-        _matrix matWorld = *matpWorldCurrWorm;
-        _vec3 vPrevWormPos;
-        m_pPrevWorm->Get_Pos(&vPrevWormPos);
-
-        _vec3 vCurrWormPos;
-        memcpy(&vCurrWormPos, &matWorld.m[INFO_POS][0], sizeof(_vec3));
-
-        _vec3 vPos = (vPrevWormPos + vCurrWormPos) / 2.f;
-
-        memcpy(&matWorld.m[INFO_POS][0], &vPos, sizeof(_vec3));
-
-
-        _vec3 vRight(matWorld._11, matWorld._12, matWorld._13);
-        _vec3 vUp(matWorld._21, matWorld._22, matWorld._23);
-        _vec3 vLook(matWorld._31, matWorld._32, matWorld._33);
-
-        vRight *=0.75f;
-        vUp *=   0.75f;   
-        vLook *= 0.75f; 
-        //vRight *= 1.f;
-        //vUp *=    1.f;
-        //vLook *=  1.f;
-
-        memcpy(&matWorld._11, &vRight, sizeof(_vec3));
-        memcpy(&matWorld._21, &vUp, sizeof(_vec3));
-        memcpy(&matWorld._31, &vLook, sizeof(_vec3));
-
-        D3DXVec3Normalize(&vLook, &vLook);
-
-        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-        _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
-        vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
-        _vec3 vDir = vPos - vPlayerPos;
-        D3DXVec3Normalize(&vDir, &vDir);
-
-        _float fDot = D3DXVec3Dot(&vDir, &vLook);
-
-        if (fDot < 0.f)
-        {
-            vLook *= -1;
-        }
-        vLook *= 0.5f;
-        _matrix matTrans;
-        //D3DXMatrixTranslation(&matTrans, vLook.x, vLook.y, vLook.z);
-        vDir *= 0.35f;
-        //vDir *= 0.4f;
-        //vDir *= 0.5f;
-        D3DXMatrixTranslation(&matTrans, vDir.x, vDir.y, vDir.z);
-        matWorld = matWorld * matTrans;
-
-        m_pTransformCom2->Set_World(&matWorld);
-    }
+    Update_Connector();
 }
 
 void CWorm::Render_GameObject()
@@ -520,6 +477,15 @@ void CWorm::Set_Speed_Worm(_float fSpeed)
     }
 }
 
+void CWorm::Set_HeadWorm_Null()
+{
+    m_pHeadWorm = nullptr;
+    if (m_pNextWorm != nullptr)
+    {
+        static_cast<CWorm*>(m_pNextWorm)->Set_HeadWorm_Null();
+    }
+}
+
 void CWorm::Push_Back_MoveDest(const _vec3& vDest)
 {
     m_vMoveDest.push_back(vDest);
@@ -732,18 +698,20 @@ void CWorm::Worm_Dead(const _float& fTimeDelta)
     Worm_Dead_Effect();
 
     m_fElapsedDeadTime += fTimeDelta;
-    m_fElapsedDeadTime2 += fTimeDelta;
+    //m_fElapsedDeadTime2 += fTimeDelta;
 
     if (m_fElapsedDeadTime > m_fDeadTime)
     {
         m_bDelete = true;
     }
-    if (m_fElapsedDeadTime2 > 0.5f)
+    /*if (m_fElapsedDeadTime2 > 0.5f)
     {
         m_fElapsedDeadTime2 = 0.f;
         m_bHitState = !m_bHitState;
         m_fHitEffectElapsedTime = 0.f;
-    }
+    }*/
+    //m_bHitState = true;
+    //m_fHitEffectElapsedTime = 0.f;
 }
 
 void CWorm::Worm_Dead_Effect()
@@ -757,7 +725,7 @@ void CWorm::Worm_Dead_Effect()
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
         CGameObject* pGameObject = nullptr;
 
-        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BOSS1_DEAD_EFFECT, vPos);
+        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::WORM_DEAD_EFFECT, vPos);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Worm_Dead", pGameObject))) return;
     }
@@ -771,7 +739,7 @@ void CWorm::Worm_Dead_Effect()
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
         CGameObject* pGameObject = nullptr;
 
-        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::MAGMA_EXPLOSION1, vPos);
+        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::WORM_EXPLOSION1, vPos);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Worm_Explosion1", pGameObject))) return;
     }
@@ -783,7 +751,7 @@ void CWorm::Worm_Dead_Effect()
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
         CGameObject* pGameObject = nullptr;
 
-        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BOSS1_EXPLOSION2, vPos);
+        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::WORM_EXPLOSION2, vPos);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Worm_Explosion2", pGameObject))) return;
     }
@@ -1000,6 +968,70 @@ void CWorm::Set_Motion_FromAngle()
 	//}
 	//D3DXMatrixTranslation(&matTrans, vLook.x, vLook.y, vLook.z);
 	//(*matWorld) = (*matWorld) * matTrans;
+}
+
+void CWorm::Update_Connector()
+{
+    if (m_eWormState == DEAD)
+    {
+        m_pTransformCom2->Set_World(&m_matConnector);
+        return;
+    }
+    if (m_iWormIndex != 1)
+    {
+        _matrix* matpWorldCurrWorm = m_pTransformCom->Get_World();
+        _matrix matWorld = *matpWorldCurrWorm;
+        _vec3 vPrevWormPos;
+        m_pPrevWorm->Get_Pos(&vPrevWormPos);
+
+        _vec3 vCurrWormPos;
+        memcpy(&vCurrWormPos, &matWorld.m[INFO_POS][0], sizeof(_vec3));
+
+        _vec3 vPos = (vPrevWormPos + vCurrWormPos) / 2.f;
+
+        memcpy(&matWorld.m[INFO_POS][0], &vPos, sizeof(_vec3));
+
+
+        _vec3 vRight(matWorld._11, matWorld._12, matWorld._13);
+        _vec3 vUp(matWorld._21, matWorld._22, matWorld._23);
+        _vec3 vLook(matWorld._31, matWorld._32, matWorld._33);
+
+        vRight *= 0.75f;
+        vUp *= 0.75f;
+        vLook *= 0.75f;
+        //vRight *= 1.f;
+        //vUp *=    1.f;
+        //vLook *=  1.f;
+
+        memcpy(&matWorld._11, &vRight, sizeof(_vec3));
+        memcpy(&matWorld._21, &vUp, sizeof(_vec3));
+        memcpy(&matWorld._31, &vLook, sizeof(_vec3));
+
+        D3DXVec3Normalize(&vLook, &vLook);
+
+        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+        _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+        vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        _vec3 vDir = vPos - vPlayerPos;
+        D3DXVec3Normalize(&vDir, &vDir);
+
+        _float fDot = D3DXVec3Dot(&vDir, &vLook);
+
+        if (fDot < 0.f)
+        {
+            vLook *= -1;
+        }
+        vLook *= 0.5f;
+        _matrix matTrans;
+        //D3DXMatrixTranslation(&matTrans, vLook.x, vLook.y, vLook.z);
+        vDir *= 0.35f;
+        //vDir *= 0.4f;
+        //vDir *= 0.5f;
+        D3DXMatrixTranslation(&matTrans, vDir.x, vDir.y, vDir.z);
+        matWorld = matWorld * matTrans;
+        m_matConnector = matWorld;
+        m_pTransformCom2->Set_World(&m_matConnector);
+    }
 }
 
 ///////////////////버전2
