@@ -44,7 +44,7 @@ _int CGem::Update_GameObject(_float fTimeDelta)
     _int    iExit = CItem::Update_GameObject(fTimeDelta);
 
     m_fFrame += fTimeDelta * 6.f;
-    if (m_fFrame > 6.f)
+    if (m_fFrame >= 6.f)
         m_fFrame = 0.f;
 
     return iExit;
@@ -126,7 +126,20 @@ CGem* CGem::Create(LPDIRECT3DDEVICE9 pGraphicDev, Engine::CGameObject* pSpawner)
         MSG_BOX("CGem Create Failed");
         return nullptr;
     }
+    return pGem;
+}
 
+CGem* CGem::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos)
+{
+    CGem* pGem = new CGem(pGraphicDev);
+    pGem->Set_SpawnPos(vPos);
+
+    if (FAILED(pGem->Ready_GameObject()))
+    {
+        Safe_Release(pGem);
+        MSG_BOX("CGem Create Failed");
+        return nullptr;
+    }
     return pGem;
 }
 

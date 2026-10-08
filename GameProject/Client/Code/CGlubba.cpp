@@ -4,11 +4,7 @@
 #include "CManagement.h"
 #include "CTimerMgr.h"
 #include "CTerrain.h"
-#include "CSmallExplode.h"
 #include "CAbstractFactory.h"
-#include "CHeart.h"
-#include "CGem.h"
-#include "CEnergy.h"
 #include "CPlayerCamera.h"
 
 CGlubba::CGlubba(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -28,7 +24,6 @@ HRESULT CGlubba::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(0.25f, 0.25f, 0.25f);
-    //m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
     m_pColliderCom->Set_Radius(0.5f);
     m_iMaxHp = 2;
     m_iHp = m_iMaxHp;
@@ -41,25 +36,8 @@ _int CGlubba::Update_GameObject(_float fTimeDelta)
     if (m_iHp <= 0)
     {
         m_bDelete = true;
-
-        CGameObject* pGameObject = nullptr;
-        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-
-        pGameObject = CSmallExplode::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS], m_pTransformCom->m_vScale);
-        if (nullptr == pGameObject)
-            return E_FAIL;
-
-        if (FAILED(pLayer->Add_GameObject(L"SmallExplode", pGameObject)))
-            return E_FAIL;
-
-        //pGameObject = CHeart::Create(m_pGraphicDev, this);
-        pGameObject = CGem::Create(m_pGraphicDev, this);
-        //pGameObject = CEnergy::Create(m_pGraphicDev, this);
-        if (nullptr == pGameObject)
-            return E_FAIL;
-
-        if (FAILED(pLayer->Add_GameObject(L"Gem", pGameObject)))
-            return E_FAIL;
+        Effect_SmallExplode();
+        DropItem();
     }
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
@@ -72,28 +50,11 @@ _int CGlubba::Update_GameObject(_float fTimeDelta)
         break;
     case MOVE:
         Set_OnTerrain();
-
-        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-        if (nullptr == pPlayerTransformCom)
-            return E_FAIL;
-
-        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
-        _vec3   vPlayerPos;
-        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-
-        _vec3   vPlayerLook;
-        vPlayerLook = tInfo.vLook;
-
-
-		m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 0.75f, fTimeDelta);
-        
+        Chase_Player(fTimeDelta, 0.75f);
         break;
     }
     m_fFrame += fTimeDelta * 5.f;
-    if (m_fFrame > 4.f)
+    if (m_fFrame >= 4.f)
         m_fFrame = 0.f;
 
 
@@ -108,7 +69,6 @@ void CGlubba::LateUpdate_GameObject(_float fTimeDelta)
 
 void CGlubba::Render_GameObject()
 {
-
     if (m_bHitState == true) CMonster::Enable_HitRenderState();
 
     CMonster::Render_GameObject();
@@ -186,12 +146,5 @@ void CGlubba::Land(const _float& fTimeDelta)
         m_pTransformCom->Move_Pos(&m_vLandingDirection, 1.f, fTimeDelta);
     }
 
-    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
-    _vec3   vPlayerPos;
-    vPlayerPos = tInfo.vPosition;
-
-    _vec3   vPlayerLook;
-    vPlayerLook = tInfo.vLook;
-    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+    LookAtPlayer();
 }

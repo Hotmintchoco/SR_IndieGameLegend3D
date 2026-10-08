@@ -30,6 +30,7 @@ public:
     void            Set_BossHp(_float fHp);
     void            Update_HPUI(int iHP, bool bAddTextureOffset);
     void            RequestHitEffect();
+    void            EnterBossScreen();
 
 private:
     void            SpecialAtkCheck();

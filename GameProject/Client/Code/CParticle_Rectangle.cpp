@@ -36,6 +36,14 @@ HRESULT CParticle_Rectangle::Ready_GameObject()
         color[i] = m_eColor;
     }
 
+    if (m_eType == SAND)
+    {
+        m_fFallingStartTime = (_float)(rand() % 128) / (256.f+128.f+64.f);
+        _float fAngle = _float(rand() % 360);
+        _vec3 vAngle = { 0.f,fAngle, 0.f };
+        m_pTransformCom->Set_Angle(vAngle);
+    }
+
     static_cast<CRcColCustom*>(m_pBufferCom)->Set_Buffer(vec3, color);
 
     return S_OK;
@@ -61,19 +69,17 @@ _int CParticle_Rectangle::Update_GameObject(_float fTimeDelta)
     else if (m_eType == BULLET)
     {
         m_pTransformCom->Move_Pos(&m_vVelocity, 1.f, fTimeDelta);
-
-        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-        if (nullptr == pPlayerTransformCom)
-            return E_FAIL;
-
-        _vec3   vPlayerPos;
-        _vec3   vPlayerLook;
-        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-        pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
-
-        m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+        LookAtPlayer();
+    }
+    else if (m_eType == SAND)
+    {
+        if (m_fElapsedTime > m_fFallingStartTime)
+        {
+            m_pTransformCom->Move_Pos(&m_vVelocity, 2.f, fTimeDelta);
+		    LookAtPlayer2();
+        }
+        _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        if (vPos.y < 0.f)Set_Dead(true);
     }
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
@@ -115,7 +121,6 @@ HRESULT CParticle_Rectangle::Add_Component()
 
     return S_OK;
 }
-
 
 CParticle_Rectangle* CParticle_Rectangle::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {

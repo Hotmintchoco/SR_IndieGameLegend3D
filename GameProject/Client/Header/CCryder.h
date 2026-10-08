@@ -25,10 +25,9 @@ public:
 	void Set_Velocity(const _vec3& vDirection) { m_vLandingDirection = vDirection; }
 	void Land(const _float& fTimeDelta);
 private:
-	_bool m_bLandingState;
-	_vec3 m_vLandingDirection;
-	_float m_fLandingTime;
-	_float m_fVelocityY;
+	_bool m_bLandingState = false;
+	_vec3 m_vLandingDirection = { 0.f, 0.f, 0.f };
+	_float m_fVelocityY = 0.f;
 
 protected:
 	virtual void		Free();

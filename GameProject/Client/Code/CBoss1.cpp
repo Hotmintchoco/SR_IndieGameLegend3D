@@ -33,17 +33,6 @@ HRESULT CBoss1::Ready_GameObject()
 
     m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.5f);
 
-    if (m_pOwner == nullptr)
-    {
-        m_vRoomCenterLocation = s_vRoomCenter;
-    }
-    else
-    {
-        m_vRoomCenterLocation = static_cast<CRoomLayer*>(m_pOwner)->GetCenterPos();
-        s_vRoomCenter = m_vRoomCenterLocation;
-    }
-
-
     m_pTransformCom2->Set_Scale(0.75f, 0.75f, 0.75f);
     m_pTransformCom2->Set_Pos(m_pTransformCom->m_vInfo[INFO_POS].x, m_pTransformCom->m_vInfo[INFO_POS].y, m_pTransformCom->m_vInfo[INFO_POS].z);
 
@@ -58,6 +47,7 @@ HRESULT CBoss1::Ready_GameObject()
 
 _int CBoss1::Update_GameObject(_float fTimeDelta)
 {
+    Set_RoomCenterLocation();
     _float _fTimeDelta = fTimeDelta;
     if (m_iHp <= 0)
     {
@@ -70,14 +60,16 @@ _int CBoss1::Update_GameObject(_float fTimeDelta)
         {
             m_bDeadStart = true;
             m_bStand = false;
-        }
 
-        for (int i = 0; i < 4; ++i)
-        {
-            if (m_bSpawnFinish[i] == true && m_bSpawnFinish2[i] == false)
+            for (int i = 0; i < 4; ++i)
             {
-				m_pSpawnMonster[i]->Set_Dead(true);
+                if (m_bSpawnFinish[i] == true && m_bSpawnFinish2[i] == false)
+                {
+                    //static_cast<CMonster*>(m_pSpawnMonster[i])->Set_Damage(static_cast<CMonster*>(m_pSpawnMonster[i])->Get_Hp());
+                    m_pSpawnMonster[i]->Set_IsActive(true);
+                }
             }
+            int a = 1;
         }
     }
     else if (m_iHp <= m_iMaxHp / 2)
@@ -87,8 +79,6 @@ _int CBoss1::Update_GameObject(_float fTimeDelta)
     }
 
     _int    iExit = CMonster::Update_GameObject(_fTimeDelta);
-
-
 
     Update_Motion(_fTimeDelta);
 
@@ -119,53 +109,8 @@ _int CBoss1::Update_GameObject(_float fTimeDelta)
 
 void CBoss1::LateUpdate_GameObject(_float fTimeDelta)
 {
-    
-
-    //Angry버전 Transform->chase업데이트
-    if (m_iPhase == 1)
-    {
-        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
-        _matrix	matWorld, matScale, matRot, matTrans;
-
-        D3DXMatrixScaling(&matScale, m_pTransformCom2->m_vScale.x, m_pTransformCom2->m_vScale.y, m_pTransformCom2->m_vScale.z);
-
-        if ((_uint)m_fFrame % 2 == 0)
-        {
-            D3DXMatrixTranslation(&matTrans,
-                m_pTransformCom->m_vInfo[INFO_POS].x,
-                m_pTransformCom->m_vInfo[INFO_POS].y,
-                m_pTransformCom->m_vInfo[INFO_POS].z);
-        }
-        else
-        {
-            D3DXMatrixTranslation(&matTrans,
-                m_pTransformCom->m_vInfo[INFO_POS].x,
-                m_pTransformCom->m_vInfo[INFO_POS].y + 0.1f,
-                m_pTransformCom->m_vInfo[INFO_POS].z);
-        }
-        _vec3 vSrc = m_pTransformCom->m_vInfo[INFO_LOOK];
-        _vec3 vDst = -tInfo.vLook;
-
-        _vec3 vAxis = { 0.f, 1.f, 0.f };
-        _vec3 vCross;
-
-        vSrc.y = 0;
-        vDst.y = 0;
-
-        float fAngle = acosf(D3DXVec3Dot(D3DXVec3Normalize(&vSrc, &vSrc), D3DXVec3Normalize(&vDst, &vDst)));
-
-        if (D3DXVec3Dot(D3DXVec3Cross(&vCross, &vSrc, &vDst), &vAxis) < 0.f)
-            fAngle *= -1;
-
-        D3DXMatrixRotationAxis(&matRot, &m_pTransformCom->m_vInfo[INFO_UP], fAngle);
-
-        //D3DXMatrixIdentity(&matRot);
-
-        matWorld = matScale * matRot * matTrans;
-        m_pTransformCom2->Set_World(&matWorld);
-    }
     CMonster::LateUpdate_GameObject(fTimeDelta);
+    Update_AngryFace();
 }
 
 void CBoss1::Render_GameObject()
@@ -180,20 +125,21 @@ void CBoss1::Render_GameObject()
     m_pTextureCom->Set_Texture((_uint)m_fFrame);
     m_pBufferCom->Render_Buffer();
 
-    if (m_iPhase == 1)
-    {
-        if(m_eBoss1State!=DEAD)
+	if (m_iPhase == 1)
+	{
+		if (m_eBoss1State != DEAD)
 			m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
-        m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
-        m_pTextureCom2->Set_Texture((_uint)m_fFrame / 2);
-        m_pBufferCom->Render_Buffer();
-        if (m_eBoss1State != DEAD)
-            m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
-    }
+
+		m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
+		m_pTextureCom2->Set_Texture((_uint)m_fFrame / 2);
+		m_pBufferCom->Render_Buffer();
+
+		if (m_eBoss1State != DEAD)
+			m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
+	}
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
     if (m_bHitState == true) CMonster::Disable_HitRenderState();
-
 }
 
 void CBoss1::OnCollisionEnter(COLLINFO eCollInfo)
@@ -229,7 +175,6 @@ HRESULT CBoss1::Add_Component()
 
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform2", pComponent });
 
-
     return S_OK;
 }
 
@@ -261,7 +206,6 @@ void CBoss1::Update_Motion(const _float& fTimeDelta)
     if (m_fStateUpdateTime > m_fStateUpdateDuration)
     {
         m_fStateUpdateTime = 0.f;
-
 
         if (m_iPhase == 0)
         {
@@ -297,12 +241,9 @@ void CBoss1::Update_Motion(const _float& fTimeDelta)
         }
         else if (m_eBoss1State == MOVE)
         {
-            //Set_MovePosition();
             m_fStateUpdateDuration = 5.f;
             m_bMoveFlag = false;
             m_bMoveFlag2 = false;
-            //m_bTrailStart = false;
-            //m_fTrailTime2 = 0.f;
 
             m_iLandingCount = 0;
             m_bStand = false;
@@ -316,23 +257,11 @@ void CBoss1::Update_Motion(const _float& fTimeDelta)
 
 void CBoss1::Move_Boss1(const _float& fTimeDelta)
 {
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-    _vec3 vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-    if (nullptr == pPlayerTransformCom)
-        return;
-    
-    _vec3   vPlayerPos;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-
-    _vec3   vPlayerLook;
-    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
-
-
+    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
+    _vec3   vPlayerLook; vPlayerLook = tInfo.vLook;
 
     if (m_bMoveFlag == false)
     {
@@ -364,14 +293,12 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
                 m_pTransformCom->Move_Pos(&m_vLandingDirection, 3.f, fTimeDelta);
             }
 
-
             if (vPos.y <= m_pTransformCom->m_vScale.y && m_fLandingTime > 0.5f)
             {
                 m_fLandingTime = 0.f;
                 ++m_iLandingCount;
 
-                //_vec3 vPlayerPos;
-                pPlayerTransformCom->Get_Info(INFO_POS, &m_vMovePosition);
+                m_vMovePosition = vPlayerPos;
 
                 _float fBlank = m_pTransformCom->m_vScale.y;
                 if (m_vMovePosition.x > m_vRoomCenterLocation.x + 6.5f - fBlank)
@@ -391,22 +318,18 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
                     m_vMovePosition.z = m_vRoomCenterLocation.z - 5.0f + fBlank;
                 }
 
-
                 m_vMovePosition.y = m_pTransformCom->m_vScale.y;
             }
-            Look_AtPlayer();
         }
         else
         {
             Set_OnTerrain();
             Set_Walking(fTimeDelta);
 
-
             _vec3 vec3 = vPos - m_vMovePosition;
 
             if (D3DXVec3Length(&vec3) < 0.1f)
             {
-                //Look_AtPlayer();
                 m_bMoveFlag = true;
             }
             else
@@ -414,20 +337,16 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
                 _vec3 vDir = m_vMovePosition - vPos;
                 D3DXVec3Normalize(&vDir, &vDir);
                 m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
-                //Look_AtDestination();
             }
-			Look_AtPlayer();
         }
+        LookAtPlayer();
     }
     else
     {
         Set_OnTerrain();
         Set_Walking(fTimeDelta);
-        Chase_Player_Boss1(fTimeDelta);
+        Chase_Player(fTimeDelta, 2.f);
     }
-    
-    
-   
 }
 
 void CBoss1::Spawn_Spn(const _float& fTimeDelta)
@@ -436,17 +355,11 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
 
     if (m_bMoveFlag == false)
     {
-        _vec3 vPos;
-        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-        if (nullptr == pPlayerTransformCom) return;
-
-        _vec3   vPlayerPos;
-        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-        _vec3   vPlayerLook;
-        pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+        _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+        _vec3 vPlayerLook; vPlayerLook = tInfo.vLook;
 
         if (m_iLandingCount == 0 || m_iLandingCount == 1)
         {
@@ -474,7 +387,6 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
                 m_pTransformCom->Move_Pos(&m_vLandingDirection, 3.f, fTimeDelta);
             }
 
-
             if (vPos.y <= m_pTransformCom->m_vScale.y && m_fLandingTime > 0.5f)
             {
                 m_fLandingTime = 0.f;
@@ -482,10 +394,8 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
                 if (m_iLandingCount == 2)
                     m_bMoveFlag = true;
             }
-            Look_AtPlayer();
         }
     }
-
     else
     {
         Set_OnTerrain();
@@ -508,7 +418,6 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
                 pGameObject = CSprnub2::Create(m_pGraphicDev, 0.75f);
             }
             if (nullptr == pGameObject) return;
-            //pGameObject->Set_IsActive(true);
             m_pSpawnMonster[iFlag - 1] = pGameObject;
         }
         else if (m_fSpawnTime > m_fSpawn_CoolDown * 2 && m_bSpawnFinish[1] == false)
@@ -525,7 +434,6 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
                 pGameObject = CSprnub2::Create(m_pGraphicDev, 0.75f);
             }
             if (nullptr == pGameObject) return;
-            //pGameObject->Set_IsActive(true);
             m_pSpawnMonster[iFlag - 1] = pGameObject;
         }
         else if (m_fSpawnTime > m_fSpawn_CoolDown * 3 && m_bSpawnFinish[2] == false)
@@ -542,7 +450,6 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
                 pGameObject = CSprnub3::Create(m_pGraphicDev, 0.75f);
             }
             if (nullptr == pGameObject) return;
-            //pGameObject->Set_IsActive(true);
             m_pSpawnMonster[iFlag - 1] = pGameObject;
         }
         else if (m_fSpawnTime > m_fSpawn_CoolDown * 4 && m_bSpawnFinish[3] == false)
@@ -559,11 +466,9 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
                 pGameObject = CSprnub3::Create(m_pGraphicDev, 0.75f);
             }
             if (nullptr == pGameObject) return;
-            //pGameObject->Set_IsActive(true);
 
             m_pSpawnMonster[iFlag - 1] = pGameObject;
         }
-
         _float fSpawnLatency = 0.5f;
         if (m_fSpawnTime > m_fSpawn_CoolDown && m_bSpawnFinish2[0] == false)
         {
@@ -606,14 +511,11 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
             }
         }
 
-
         if (iFlag != 0)
         {
-            CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-                ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-            if (nullptr == pPlayerTransformCom) return;
-            _vec3   vPlayerPos;
-            pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
+
             m_pTransformCom->Get_Info(INFO_POS, &vPos);
             vVelocity = vPlayerPos - vPos;
             vVelocity.y = 0.f;
@@ -657,18 +559,16 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
             if (nullptr == pGameObject) return;
 
             if (FAILED(pGameLogicLayer->Add_GameObject(L"Shockwave", pGameObject))) return;
-
         }
-        Look_AtPlayer();
     }
+    LookAtPlayer();
 }
 
 void CBoss1::IDLE_Boss1(const _float& fTimeDelta)
 {
     Set_OnTerrain();
-    Chase_Player_Boss1(fTimeDelta);
+    Chase_Player(fTimeDelta, 2.f);
     Set_Walking(fTimeDelta);
-
 }
 
 void CBoss1::Opening_Boss1(const _float& fTimeDelta)
@@ -680,7 +580,7 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
 	{
         //오프닝 종료
 		m_bOpening = false;
-		Look_AtPlayer();
+		LookAtPlayer2();
 		return;
     }
     //Y값 최초 조정
@@ -693,7 +593,7 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
 		_vec3 vBossPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vBossPos);
 
-        // 정민 : 컷신 테스트 용
+        // 정민 : 컷신 연출
         auto* pCameraMgr = CClientCameraMgr::GetInstance();
 
         auto* pCinematic = dynamic_cast<CCinematicCamera*>(
@@ -786,7 +686,7 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
         }
         m_pTransformCom->Move_Pos(&vDir, 2.f, fTimeDelta);
     }
-    Look_AtPlayer();
+    LookAtPlayer2();
 
     // 정민 : Boss Hp UI 처리
     CUIMgr::GetInstance()->Active_Boss(true);
@@ -797,7 +697,7 @@ void CBoss1::Set_Stand(const _float& fTimeDelta)
     if (m_bStand == false)
     {
         m_fFrame += fTimeDelta * 6.f;
-        if (m_fFrame > 4.f)
+        if (m_fFrame >= 4.f)
         {
             m_fFrame = 0.f;
 			m_bStand = true;
@@ -808,49 +708,8 @@ void CBoss1::Set_Stand(const _float& fTimeDelta)
 void CBoss1::Set_Walking(const _float& fTimeDelta)
 {
     m_fFrame += fTimeDelta * 6.f;
-    if (m_fFrame > 4.f)
+    if (m_fFrame >= 4.f)
         m_fFrame = 0.f;
-}
-
-void CBoss1::Look_AtPlayer()
-{
-    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
-    _vec3   vPlayerPos;
-    vPlayerPos = tInfo.vPosition;
-
-    _vec3   vPlayerLook;
-    vPlayerLook = tInfo.vLook;
-
-    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
-}
-
-void CBoss1::Look_AtDestination()
-{
-    _vec3 vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    _vec3 vecLook = vPos - m_vMovePosition;
-    m_pTransformCom->LookAt_Player(&m_vMovePosition, &vecLook);
-
-}
-
-void CBoss1::Chase_Player_Boss1(const _float& fTimeDelta)
-{
-	CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-		->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-	if (nullptr == pPlayerTransformCom)
-		return;
-
-	const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
-	_vec3   vPlayerPos;
-	pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-
-	_vec3   vPlayerLook;
-	vPlayerLook = tInfo.vLook;
-
-	m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 2.f, fTimeDelta);
 }
 
 void CBoss1::Shuffle_Array(_uint N)
@@ -873,7 +732,7 @@ void CBoss1::Boss1_Dead(const _float& fTimeDelta)
 {
     Boss1_Dead_Effect();
     Set_Stand(fTimeDelta);
-    Look_AtPlayer();
+    LookAtPlayer();
 
     m_fElapsedDeadTime += fTimeDelta;
     m_fElapsedDeadTime2 += fTimeDelta;
@@ -881,6 +740,8 @@ void CBoss1::Boss1_Dead(const _float& fTimeDelta)
     if (m_fElapsedDeadTime > m_fDeadTime)
     {
         CUIMgr::GetInstance()->Active_Boss(false);
+        if (m_bDelete == false)
+            DropItem_Boss();
         m_bDelete = true;
     }
     if (m_fElapsedDeadTime2 > 0.5f)
@@ -931,5 +792,48 @@ void CBoss1::Boss1_Dead_Effect()
         pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BOSS1_EXPLOSION2, vPos);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Boss1_Explosion2", pGameObject))) return;
+    }
+}
+
+void CBoss1::Update_AngryFace()
+{
+    //Angry버전
+    if (m_iPhase == 1)
+    {
+        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+        _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        _vec3 vUp; m_pTransformCom->Get_Info(INFO_UP, &vUp);
+        _vec3 vLook; m_pTransformCom2->Get_Info(INFO_LOOK, &vLook);
+        _matrix	matWorld, matScale, matRot, matTrans;
+
+        _vec3 vScale = m_pTransformCom2->Get_Scale();
+        D3DXMatrixScaling(&matScale, vScale.x, vScale.y, vScale.z);
+
+        if ((_uint)m_fFrame % 2 == 0)
+        {
+            D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y, vPos.z);
+        }
+        else
+        {
+            D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y + 0.1f, vPos.z);
+        }
+        _vec3 vSrc = vLook;
+        _vec3 vDst = -tInfo.vLook;
+
+        _vec3 vAxis = { 0.f, 1.f, 0.f };
+
+        vSrc.y = 0;
+        vDst.y = 0;
+
+        float fAngle = acosf(D3DXVec3Dot(D3DXVec3Normalize(&vSrc, &vSrc), D3DXVec3Normalize(&vDst, &vDst)));
+
+        _vec3 vCross;
+        if (D3DXVec3Dot(D3DXVec3Cross(&vCross, &vSrc, &vDst), &vAxis) < 0.f)
+            fAngle *= -1;
+
+        D3DXMatrixRotationAxis(&matRot, &vUp, fAngle);
+
+        matWorld = matScale * matRot * matTrans;
+        m_pTransformCom2->Set_World(&matWorld);
     }
 }

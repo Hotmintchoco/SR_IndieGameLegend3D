@@ -29,12 +29,11 @@ private:
 
 	void Set_Stand(const _float& fTimeDelta);
 	void Set_Walking(const _float& fTimeDelta);
-	void Look_AtPlayer();
-	void Look_AtDestination();
-	void Chase_Player_Boss1(const _float& fTimeDelta);
 
 	void Boss1_Dead(const _float& fTimeDelta);
 	void Boss1_Dead_Effect();
+
+	void Update_AngryFace();
 
 protected:
 	Engine::CTexture* m_pTextureCom2 = nullptr;
@@ -64,7 +63,6 @@ private:
 	_float m_fStateUpdateTime = 0.f;
 	_float m_fStateUpdateDuration = 2.f;
 
-	_vec3 m_vRoomCenterLocation = {};
 	_vec3 m_vMovePosition = {};
 	_bool m_bMoveFlag = false;
 	_bool m_bMoveFlag2 = false;

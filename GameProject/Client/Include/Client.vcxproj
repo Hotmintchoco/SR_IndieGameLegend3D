@@ -144,7 +144,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Header\CAirbubble.h" />
     <ClInclude Include="..\Header\CAbstractFactory.h" />
+    <ClInclude Include="..\Header\CGenerator_Airbubble.h" />
     <ClInclude Include="..\Header\CArrow.h" />
     <ClInclude Include="..\Header\CArrow_Effect.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
@@ -158,6 +160,8 @@
     <ClInclude Include="..\Header\CCryder.h" />
     <ClInclude Include="..\Header\CDefaultBullet.h" />
     <ClInclude Include="..\Header\CFloor.h" />
+    <ClInclude Include="..\Header\CGenerator_Sand.h" />
+    <ClInclude Include="..\Header\CGenerator_Snow.h" />
     <ClInclude Include="..\Header\CGlubba.h" />
     <ClInclude Include="..\Header\CCrossBuffer.h" />
     <ClInclude Include="..\Header\CDdokddak.h" />
@@ -212,18 +216,9 @@
     <ClInclude Include="..\Header\CGameStatus.h" />
     <ClInclude Include="..\Header\CGaugeUI.h" />
     <ClInclude Include="..\Header\CRayCaster.h" />
-    <ClInclude Include="..\Header\CRibbon.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="..\Header\CRibbonBuffer.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClInclude>
+	<ClInclude Include="..\Header\CRibbon.h" />
+	<ClInclude Include="..\Header\CRibbonBuffer.h" />
+    <ClInclude Include="..\Header\CSandburst.h" />
     <ClInclude Include="..\Header\CSeaweed.h" />
     <ClInclude Include="..\Header\CSGBullet.h" />
     <ClInclude Include="..\Header\CShockwave.h" />
@@ -292,7 +287,9 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\CAirbubble.cpp" />
     <ClCompile Include="..\Code\CAbstractFactory.cpp" />
+    <ClCompile Include="..\Code\CGenerator_Airbubble.cpp" />
     <ClCompile Include="..\Code\CArrow.cpp" />
     <ClCompile Include="..\Code\CArrow_Effect.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
@@ -308,6 +305,8 @@
     <ClCompile Include="..\Code\CCryder.cpp" />
     <ClCompile Include="..\Code\CDefaultBullet.cpp" />
     <ClCompile Include="..\Code\CFloor.cpp" />
+    <ClCompile Include="..\Code\CGenerator_Sand.cpp" />
+    <ClCompile Include="..\Code\CGenerator_Snow.cpp" />
     <ClCompile Include="..\Code\CGlubba.cpp" />
     <ClCompile Include="..\Code\CHitCreenUI.cpp" />
     <ClCompile Include="..\Code\CCursorPolicyMgr.cpp" />
@@ -359,18 +358,9 @@
     <ClCompile Include="..\Code\CGameMachine.cpp" />
     <ClCompile Include="..\Code\CGameStatus.cpp" />
     <ClCompile Include="..\Code\CRayCaster.cpp" />
-    <ClCompile Include="..\Code\CRibbon.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\Code\CRibbonBuffer.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClCompile>
+	<ClCompile Include="..\Code\CRibbon.cpp" />
+	<ClCompile Include="..\Code\CRibbonBuffer.cpp" />
+    <ClCompile Include="..\Code\CSandburst.cpp" />
     <ClCompile Include="..\Code\CSeaweed.cpp" />
     <ClCompile Include="..\Code\CSGBullet.cpp" />
     <ClCompile Include="..\Code\CShockwave.cpp" />
@@ -442,12 +432,12 @@
     <ClCompile Include="..\Code\ITerrain.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="CSeaweed2.cpp" />
-    <ClCompile Include="pch.cpp">
+	<ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
+	</ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc" />
@@ -455,6 +445,18 @@
   <ItemGroup>
     <Image Include="Client.ico" />
     <Image Include="small.ico" />
+	<ClInclude Include="..\Header\CPostEffect.h" />
+	<ClCompile Include="..\Code\CPostEffect.cpp" />
+	<ClInclude Include="..\Header\CUnderwaterEffect.h" />
+	<ClCompile Include="..\Code\CUnderwaterEffect.cpp" />
+	<ClInclude Include="..\Header\CLavaEffect.h" />
+	<ClCompile Include="..\Code\CLavaEffect.cpp" />
+	<ClInclude Include="..\Header\CShaderEffectMgr.h" />
+	<ClCompile Include="..\Code\CShaderEffectMgr.cpp" />
+	<None Include="..\Bin\Resource\Shader\Lava.hlsl" />
+	<None Include="..\Bin\Resource\Shader\WaterDrop.hlsl" />
+	<None Include="..\Bin\Resource\Shader\CameraFilterPack_WaterDrop.png" />
+	<None Include="..\Bin\Resource\Shader\CameraFilterPack_RainDrop.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

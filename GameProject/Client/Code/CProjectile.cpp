@@ -51,12 +51,10 @@ void CProjectile::Create_Bullet_Trail()
 
 void CProjectile::Create_BulletDead_Effect()
 {
-    _vec3 vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
     CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-    CGameObject* pGameObject = nullptr;
 
+    CGameObject* pGameObject = nullptr;
     pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BULLET_EFFECT, vPos);
     if (nullptr == pGameObject) return;
     if (FAILED(pLayer->Add_GameObject(L"Effect_Bullet_Dead", pGameObject))) return;

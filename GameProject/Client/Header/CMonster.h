@@ -33,17 +33,24 @@ public:
 
 	_bool Get_Collision_WithMonster() { return m_bCollision_WithMonster; }
 
-
+	void Set_Damage(_float fDamage) { m_iHp -= (_int)fDamage; }
+	_int Get_Hp() { return m_iHp; }
+	_int Get_MaxHp() { return m_iMaxHp; }
 
 protected:
 	HRESULT			Add_Component();
 	void Set_OnTerrain();
-	void Chase_Player(const _float& fTimeDelta);
 	void Update_HitState(const _float& fTimeDelta);
 	void Enable_HitRenderState();
 	void Disable_HitRenderState();
+
+	void Chase_Player(const _float& fTimeDelta, _float fSpeed);
 	void LookAtPlayer();
 	void LookAtPlayer2();
+
+	void Effect_SmallExplode();
+	void DropItem();
+	void DropItem_Boss();
 
 	// 정민 : OnCollisionStay에서 호출 (몬스터끼리 뭉침 방지 용)
 	void CollisionWithMonster(COLLINFO eCollInfo);
@@ -68,6 +75,8 @@ protected:
 	_float m_fElapsedTime = 0.f;
 
 	_bool m_bCollision_WithMonster = true;
+	_bool m_bRoomCenterLocation = false;
+	_vec3 m_vRoomCenterLocation = { 0.f,0.f,0.f };
 
 	/* 성철 */
 	CPlayerCamera* m_pBillBoardCamera = nullptr;
@@ -79,11 +88,21 @@ private:
 	/* --- */
 
 public:
-	static _uint iMonsterIdx;
 	void Set_Pos(_vec3 vPos);
 	void Set_Pos(_float fX, _float fY, _float fZ);
 
 	void Get_Pos(_vec3* pPos);
+
+	_float GetCenterX(_float x)
+	{
+		return 60.f + 15.f * floorf((x - 60.f + 7.5f) / 15.f);
+	}
+
+	_float GetCenterZ(_float z)
+	{
+		return 60.f + 13.f * floorf((z - 60.f + 6.5f) / 13.f);
+	}
+	void Set_RoomCenterLocation();
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

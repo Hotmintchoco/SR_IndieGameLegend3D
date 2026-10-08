@@ -29,10 +29,10 @@ private:
 	void CheckDeadCondition();
 	/* --- */
 
-	_vec3 m_vVelocity;
-	_float m_fLandingTime;
-	_float m_fLandingVelocity;
-	_uint m_iLandingCount;
+	_vec3 m_vVelocity{ 0.f,0.f,0.f };
+	_float m_fLandingTime = 0.f;
+	_float m_fLandingVelocity = 0.f;
+	_uint m_iLandingCount = 0.f;
 
 protected:
 	virtual void		Free();

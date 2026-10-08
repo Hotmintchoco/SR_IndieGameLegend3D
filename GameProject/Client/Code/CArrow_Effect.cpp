@@ -26,15 +26,6 @@ HRESULT CArrow_Effect::Ready_GameObject()
     _vec3 vScale = { fScale ,fScale ,fScale };
     m_pTransformCom->Set_Scale(vScale);
 
-
-
-    //_float iRand1 = _float(rand() % 128) - 64.f;
-    //_float iRand2 = _float(rand() % 128) - 64.f;
-    //_float iRand3 = _float(rand() % 128) - 64.f;
-
-    //m_vRandDir = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
-    //m_vRandDir = m_vRandDir / 10.f;
-
     return S_OK;
 }
 
@@ -67,8 +58,6 @@ _int CArrow_Effect::Update_GameObject(_float fTimeDelta)
         m_iFrame = 0;
     }
 
-
-
     _vec3 vLook, vUp, vRight;
     D3DXVec3Normalize(&vLook, &m_vDir);
     _vec3 vWorldUp = _vec3{ 0.f, 1.f, 0.f };
@@ -86,20 +75,16 @@ _int CArrow_Effect::Update_GameObject(_float fTimeDelta)
     memcpy(&pWorld->m[1][0], &vUp, sizeof(_vec3));
     memcpy(&pWorld->m[2][0], &vLook, sizeof(_vec3));
 
-    //m_pTransformCom->Move_Pos(&m_vRandDir, 1.f, fTimeDelta);
     return iExit;
 }
 
 void CArrow_Effect::LateUpdate_GameObject(_float fTimeDelta)
 {
     CParticle::LateUpdate_GameObject(fTimeDelta);
-
-
 }
 
 void CArrow_Effect::Render_GameObject()
 {
-
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 

@@ -5,7 +5,7 @@
 #include "CRenderer.h"
 
 CHitCreenUI::CHitCreenUI(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CUI(pGraphicDev), m_fAlpha(0.f)
+	: CUI(pGraphicDev), m_fAlpha(0.f), m_fShowTime(0.f)
 {
 }
 
@@ -27,15 +27,31 @@ HRESULT CHitCreenUI::Ready_GameObject()
 _int CHitCreenUI::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
+    
+    _float fMultTime = 1.f;
+
+    if (m_fShowTime > 0.f)
+    {
+        fMultTime = 4.f;
+        m_fShowTime -= fTimeDelta;
+        
+        if (m_fShowTime < 0.f)
+            Set_Texture(0);
+    }
 
     // 알파값이 0보다 크면 서서히 감소시킴 (페이드 아웃)
     if (m_fAlpha > 0.f)
     {
         // 초당 약 255씩 감소 (1초 만에 완전히 사라짐, 속도는 조절 가능)
-        m_fAlpha -= 255.f * fTimeDelta;
+        m_fAlpha -= 255.f * fTimeDelta * (fMultTime);
     
         if (m_fAlpha < 0.f)
+        {
             m_fAlpha = 0.f;
+
+            if (m_fShowTime > 0.f)
+                m_fAlpha = 255.f;
+        }
     }
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
@@ -62,7 +78,7 @@ void CHitCreenUI::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, tintColor);
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-    m_pTextureCom->Set_Texture(0); // 피격 텍스처 세팅
+    m_pTextureCom->Set_Texture(_uint(m_fFrame)); // 피격 텍스처 세팅
 
     // TFactor 연산 설정
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
@@ -78,6 +94,13 @@ void CHitCreenUI::Render_GameObject()
     // 렌더 스테이트 원상 복구 (다른 객체 렌더링에 영향을 주지 않도록)
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+}
+
+void CHitCreenUI::EnterBossRoom()
+{
+    Set_Texture(1);
+    m_fAlpha = 255.f;
+    m_fShowTime = 1.5f;
 }
 
 CHitCreenUI* CHitCreenUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)

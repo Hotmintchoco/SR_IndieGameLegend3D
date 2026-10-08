@@ -388,6 +388,12 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Jail">
       <UniqueIdentifier>{d5b9a43e-9e4b-4d02-86a7-9031fe4cd903}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. Effect\AirBubble">
+      <UniqueIdentifier>{98141dfd-119a-44d6-9b8b-23f378e20ec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Generator_MapEffect">
+      <UniqueIdentifier>{27fb29b9-5faa-4bc5-82eb-30c9ec125b0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -783,6 +789,9 @@
     <ClInclude Include="..\Header\CSeaweed.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CSandburst.h">
+      <Filter>02. GameObject\06. Effect\Sandburst</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CSocket.h">
       <Filter>02. GameObject\01. Character\00. Player\02. Socket</Filter>
     </ClInclude>
@@ -797,6 +806,18 @@
     </ClInclude>
     <ClInclude Include="..\Header\CJail.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Jail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CAirbubble.h">
+      <Filter>02. GameObject\06. Effect\AirBubble</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGenerator_Airbubble.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGenerator_Snow.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGenerator_Sand.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1166,6 +1187,9 @@
     <ClCompile Include="..\Code\CSeaweed.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CSandburst.cpp">
+      <Filter>02. GameObject\06. Effect\Sandburst</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CSocket.cpp">
       <Filter>02. GameObject\01. Character\00. Player\02. Socket</Filter>
     </ClCompile>
@@ -1181,6 +1205,18 @@
     <ClCompile Include="..\Code\CJail.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Jail</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CAirbubble.cpp">
+      <Filter>02. GameObject\06. Effect\AirBubble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGenerator_Airbubble.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGenerator_Snow.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGenerator_Sand.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -1194,5 +1230,45 @@
     <Image Include="Client.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="05. Shader" />
+    <Filter Include="03. Resource\02. Shader" />
+    <ClInclude Include="..\Header\CPostEffect.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CPostEffect.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <ClInclude Include="..\Header\CUnderwaterEffect.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CUnderwaterEffect.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <ClInclude Include="..\Header\CLavaEffect.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CLavaEffect.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <ClInclude Include="..\Header\CShaderEffectMgr.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CShaderEffectMgr.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <None Include="..\Bin\Resource\Shader\Lava.hlsl">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\WaterDrop.hlsl">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\CameraFilterPack_WaterDrop.png">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\CameraFilterPack_RainDrop.png">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

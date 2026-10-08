@@ -10,9 +10,7 @@
 #include "CManagement.h"
 
 CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_fFrame(0.f), m_fAttractTime(0.f), m_fAttractDuration(0.25f), m_bAttractStart(false),
-    m_bDropFinish(false), m_fDropTime(0.f), m_fDropDuration(0.25f), m_fLifeTime(0.f), m_fLifeDuration(7.f), 
-    m_bBlinkStart(false), m_bVisible(true), m_fBlinkTime(0.f), m_fBlinkDuration(0.25f), m_fBlinkDuration2(3.f)
+    : CGameObject(pGraphicDev)
 {
 }
 
@@ -27,7 +25,8 @@ HRESULT CItem::Ready_GameObject()
 
     m_pColliderCom->Set_Owner(this);
     //m_pColliderCom->Set_Extents(0.2f, 0.2f, 0.2f);
-    m_pColliderCom->Set_Extents(1.f, 1.f, 1.f);
+    //m_pColliderCom->Set_Extents(1.f, 1.f, 1.f);
+    m_pColliderCom->Set_Extents(1.5f, 1.5f, 1.5f);
 
     return S_OK;
 }
@@ -161,9 +160,10 @@ void CItem::Attract_To_Player(const _float& fTimeDelta)
     CTransform* pTransform = static_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
     pTransform->Get_Info(INFO_POS, &vPlayerPos);
     m_pTransformCom->Get_Info(INFO_POS, &vItemPos);
+    vPlayerPos.y = 0.4f;
 
-    _vec3 vPos = vItemPos + (vPlayerPos - vItemPos) / 16.f;
-    vPos.y = vItemPos.y;
+    _vec3 vPos = vItemPos + (vPlayerPos - vItemPos) / 128.f;
+    //vPos.y = vItemPos.y;
     m_pTransformCom->Set_Pos(vPos);
 }
 

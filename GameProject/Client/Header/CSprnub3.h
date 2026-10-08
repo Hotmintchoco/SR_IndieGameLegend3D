@@ -22,8 +22,11 @@ public:
 	static CSprnub3* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	static CSprnub3* Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fActiveTime);
 	void Set_ActiveTime(_float fActiveTime) { m_fActiveTime = fActiveTime; }
+
 private:
+	void Move(const _float& fTimeDelta);
 	void Jump(const _float& fTimeDelta);
+	void Check_Jump(const _float& fTimeDelta);
 
 private:
 	_float m_fActiveTime = 0.f;

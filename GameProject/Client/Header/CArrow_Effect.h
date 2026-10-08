@@ -31,7 +31,6 @@ public:
 	void Set_Dir(_vec3 vDir) { m_vDir = vDir; }
 private:
 	_vec3 m_vDir = {};
-	_vec3 m_vRandDir = {};
 	_int m_iFrame = 0;
 
 protected:

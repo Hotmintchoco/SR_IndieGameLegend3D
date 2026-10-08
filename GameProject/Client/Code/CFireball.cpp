@@ -4,11 +4,7 @@
 #include "CManagement.h"
 #include "CTimerMgr.h"
 #include "CTerrain.h"
-#include "CSmallExplode.h"
 #include "CAbstractFactory.h"
-#include "CHeart.h"
-#include "CGem.h"
-#include "CEnergy.h"
 #include "CStage.h"
 #include "CRoomLayer.h"
 #include "CSpriteTile.h"
@@ -17,7 +13,7 @@
 #include "CPlayerCamera.h"
 
 CFireball::CFireball(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev), m_fLandingTime(0.f), m_iLandingCount(0), m_fLandingVelocity(0.f)
+    : CMonster(pGraphicDev)
 {
 }
 
@@ -44,7 +40,7 @@ _int CFireball::Update_GameObject(_float fTimeDelta)
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
 	m_fFrame += fTimeDelta * 10.f;
-	if (m_fFrame > 4.f)
+	if (m_fFrame >= 4.f)
 		m_fFrame = 0.f;
 
 
@@ -53,7 +49,7 @@ _int CFireball::Update_GameObject(_float fTimeDelta)
     /* 성철 : Dead 처리 조건 확인하는 함수 */
     CheckDeadCondition();
     /* -------------------------------- */
-
+    LookAtPlayer();
     return iExit;
 }
 
@@ -95,16 +91,6 @@ void CFireball::CheckDeadCondition()
 void CFireball::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
-
-	const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
-	_vec3   vPlayerPos;
-	vPlayerPos = tInfo.vPosition;
-
-	_vec3   vPlayerLook;
-	vPlayerLook = tInfo.vLook;
-
-	m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
 }
 
 void CFireball::Render_GameObject()
@@ -124,7 +110,6 @@ void CFireball::Render_GameObject()
 
 void CFireball::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    //CMonster::OnCollisionEnter(pOther);
 }
 
 HRESULT CFireball::Add_Component()
