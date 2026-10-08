@@ -165,6 +165,7 @@
     <ClInclude Include="..\Header\CHitScan.h" />
     <ClInclude Include="..\Header\CItemContainer.h" />
     <ClInclude Include="..\Header\CHitCreenUI.h" />
+    <ClInclude Include="..\Header\CJail.h" />
     <ClInclude Include="..\Header\CLaser.h" />
     <ClInclude Include="..\Header\CLaserBuffer.h" />
     <ClInclude Include="..\Header\CLaserGun.h" />
@@ -312,6 +313,7 @@
     <ClCompile Include="..\Code\CCursorPolicyMgr.cpp" />
     <ClCompile Include="..\Code\CHitScan.cpp" />
     <ClCompile Include="..\Code\CItemContainer.cpp" />
+    <ClCompile Include="..\Code\CJail.cpp" />
     <ClCompile Include="..\Code\CLaser.cpp" />
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />
     <ClCompile Include="..\Code\CLaserGun.cpp" />
@@ -453,16 +455,6 @@
   <ItemGroup>
     <Image Include="Client.ico" />
     <Image Include="small.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Bin\Resource\Map\DefaultRoom.json" />
-    <None Include="..\Bin\Resource\Map\Room 작성 가이드.md" />
-    <None Include="..\Bin\Resource\Map\Room_1_1.json" />
-    <None Include="..\Bin\Resource\Map\Room_1_2.json" />
-    <None Include="..\Bin\Resource\Map\Room_1_3.json" />
-    <None Include="..\Bin\Resource\Map\Room_1_4.json" />
-    <None Include="..\Bin\Resource\Map\Room_2_1.json" />
-    <None Include="..\Bin\Resource\Map\Room_2_2.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

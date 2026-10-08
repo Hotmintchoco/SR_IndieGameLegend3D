@@ -64,6 +64,7 @@ enum class EObjectType
 	DDOKDDAK,
 	LIMINAL_CUBE,
 	LIMINAL_SLOPE,
+	JAIL,
 
 	Skull = 11,
 	Boss1 = 12,

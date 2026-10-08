@@ -49,12 +49,6 @@
     <Filter Include="02. GameObject\07. Room">
       <UniqueIdentifier>{b9d90846-4426-48a5-9d9f-65b142898dac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. Resource">
-      <UniqueIdentifier>{39c1497e-736d-4f33-890a-bf345083759c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Resource\01. Map">
-      <UniqueIdentifier>{e0824a1c-09b7-469b-a0d4-6c5eb5eace80}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99. Header">
       <UniqueIdentifier>{1010db34-d77a-4a40-b8f4-2c712aa1dbd3}</UniqueIdentifier>
     </Filter>
@@ -390,6 +384,9 @@
     </Filter>
     <Filter Include="02. GameObject\08. Combat\01. Projectile\04. Ribbon\RibbonBuffer">
       <UniqueIdentifier>{8c82dd45-b5a4-4013-b419-96bec90d9224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Jail">
+      <UniqueIdentifier>{d5b9a43e-9e4b-4d02-86a7-9031fe4cd903}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -798,6 +795,9 @@
     <ClInclude Include="..\Header\CRibbon.h">
       <Filter>02. GameObject\08. Combat\01. Projectile\04. Ribbon</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CJail.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Jail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1178,6 +1178,9 @@
     <ClCompile Include="..\Code\CRibbon.cpp">
       <Filter>02. GameObject\08. Combat\01. Projectile\04. Ribbon</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CJail.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Jail</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -1191,31 +1194,5 @@
     <Image Include="Client.ico">
       <Filter>리소스 파일</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Bin\Resource\Map\DefaultRoom.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room 작성 가이드.md">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_1_1.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_1_2.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_1_3.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_1_4.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_2_1.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_2_2.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
   </ItemGroup>
 </Project>
