@@ -391,6 +391,9 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Generator_MapEffect">
       <UniqueIdentifier>{27fb29b9-5faa-4bc5-82eb-30c9ec125b0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Worm\WormBullet">
+      <UniqueIdentifier>{ce9c4643-760b-4ae1-bd0a-2b4319bacad7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -807,6 +810,9 @@
     <ClInclude Include="..\Header\CGenerator_Sand.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CWormBullet.h">
+      <Filter>02. GameObject\02. Monster\Worm\WormBullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1195,6 +1201,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGenerator_Sand.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWormBullet.cpp">
+      <Filter>02. GameObject\02. Monster\Worm\WormBullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -15,7 +15,7 @@
 #include "CClientCameraMgr.h"
 
 CEffect::CEffect(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_fFrame(0.f)
+    : CGameObject(pGraphicDev)
 {
 }
 

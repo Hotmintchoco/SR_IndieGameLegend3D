@@ -261,6 +261,7 @@
     <ClInclude Include="..\Header\CWeaponSystem.h" />
     <ClInclude Include="..\Header\CWorm.h" />
     <ClInclude Include="..\Header\Client_Struct.h" />
+    <ClInclude Include="..\Header\CWormBullet.h" />
     <ClInclude Include="..\Header\imconfig.h" />
     <ClInclude Include="..\Header\imgui.h" />
     <ClInclude Include="..\Header\imgui_impl_dx9.h" />
@@ -398,6 +399,7 @@
     <ClCompile Include="..\Code\CWall.cpp" />
     <ClCompile Include="..\Code\CWeaponPickup.cpp" />
     <ClCompile Include="..\Code\CWeaponSystem.cpp" />
+    <ClCompile Include="..\Code\CWormBullet.cpp" />
     <ClCompile Include="..\Code\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>

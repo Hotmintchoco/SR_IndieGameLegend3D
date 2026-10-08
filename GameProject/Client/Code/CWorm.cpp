@@ -359,22 +359,8 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
         m_bMotionEnd = false;
         Clear_MoveDest();
 
-        if (m_iPhase == 0)
-        {
-            m_eWormState = static_cast<WORMSTATE>(rand() % 3);
-            if (m_bMoveState == true)
-            {
-                m_eWormState = MOVE;
-                m_bMoveState = false;
-            }
-        }
-        else
-        {
-            m_eWormState = static_cast<WORMSTATE>(rand() % 3);
-        }
-        //m_eWormState = SPAWN;
-        //m_eWormState = MOVE;
-        m_eWormState = ATTACK;
+        m_eWormState = static_cast<WORMSTATE>(Get_MotionState());
+
         if (m_eWormState == SPAWN)
         {
             Set_MoveDest();
@@ -409,6 +395,39 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
             m_fAttackTime2 = 0.f;
         }
     }
+}
+
+_int CWorm::Get_MotionState()
+{
+    if (m_listState.empty() == true)
+    {
+        m_listState.push_back(0);
+        return m_listState.back();
+    }
+
+    if (m_listState.size() == 3)
+    {
+        for (int i = 0; i < 3; ++i)
+        {
+            if (find(m_listState.begin(), m_listState.end(), i) == m_listState.end())
+            {
+                m_listState.pop_front();
+                m_listState.push_back(i);
+                return m_listState.back();
+            }
+        }
+    }
+    _int iRand;
+    do
+    {
+        iRand = rand() % 3;
+    } while (m_listState.size() >= 2 && *m_listState.rbegin() == iRand && *next(m_listState.rbegin()) == iRand);
+
+    if (m_listState.size() == 3)
+        m_listState.pop_front();
+
+    m_listState.push_back(iRand);
+    return m_listState.back();
 }
 
 void CWorm::Set_MoveDest()

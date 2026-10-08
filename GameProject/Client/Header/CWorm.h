@@ -13,7 +13,7 @@ public:
 		SIDE45,
 		CONNECTOR
 	};
-	enum WORMSTATE { SPAWN, MOVE, ATTACK, IDLE, DEAD, OPENING };
+	enum WORMSTATE { MOVE, SPAWN, ATTACK, IDLE, DEAD, OPENING };
 
 protected:
 	explicit CWorm(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -31,6 +31,7 @@ private:
 	HRESULT			Add_Component();
 
 	void Update_Motion(const _float& fTimeDelta);
+	_int Get_MotionState();
 
 	void Opening_Worm(const _float& fTimeDelta);
 	void Move_WormHead(const _float& fTimeDelta);
@@ -110,7 +111,6 @@ private:
 
 	_bool m_bMoveFlag = false;
 	_bool m_bMoveFlag2 = false;
-	_bool m_bMoveState = true;
 
 	_float m_fAttackTime = 0.f;
 	_float m_fAttackTime2 = 0.f;
@@ -144,5 +144,5 @@ private:
 
 	_bool m_bMotionEnd = false;
 
-	inline static _vec3 s_vRoomCenter = { 0.f,0.f,0.f };
+	list<_int> m_listState;
 };
