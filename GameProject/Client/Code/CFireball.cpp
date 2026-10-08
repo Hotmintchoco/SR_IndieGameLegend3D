@@ -13,7 +13,7 @@
 #include "CPlayerCamera.h"
 
 CFireball::CFireball(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev), m_fLandingTime(0.f), m_iLandingCount(0), m_fLandingVelocity(0.f)
+    : CMonster(pGraphicDev)
 {
 }
 

@@ -385,6 +385,9 @@
     <Filter Include="02. GameObject\08. Combat\02. HitScan">
       <UniqueIdentifier>{67889039-9bc9-4c5a-a834-2887b54ddcf0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. Effect\AirBubble">
+      <UniqueIdentifier>{98141dfd-119a-44d6-9b8b-23f378e20ec7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -789,6 +792,9 @@
     <ClInclude Include="..\Header\CHitScan.h">
       <Filter>02. GameObject\08. Combat\02. HitScan</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CAirbubble.h">
+      <Filter>02. GameObject\06. Effect\AirBubble</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1165,6 +1171,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CHitScan.cpp">
       <Filter>02. GameObject\08. Combat\02. HitScan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CAirbubble.cpp">
+      <Filter>02. GameObject\06. Effect\AirBubble</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

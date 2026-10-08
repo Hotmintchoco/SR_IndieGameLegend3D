@@ -185,21 +185,69 @@ void CMonster::Disable_HitRenderState()
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 }
 
+//void CMonster::Chase_Player(const _float& fTimeDelta, _float fSpeed)
+//{
+//    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+//
+//    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
+//    _vec3   vPlayerLook; vPlayerLook = tInfo.vLook;
+//
+//    m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, fSpeed, fTimeDelta);
+//}
+
+//void CMonster::LookAtPlayer()
+//{
+//    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+//    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
+//    _vec3   vPlayerLook; vPlayerLook = tInfo.vLook;
+//
+//    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+//}
+
+void CMonster::Chase_Player(const _float& fTimeDelta, _float fSpeed)
+{
+    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+    _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+    _vec3 vPlayerLook; vPlayerLook = tInfo.vLook;
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vDir = vPlayerPos - vPos;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    m_pTransformCom->Move_Pos(&vDir, fSpeed, fTimeDelta);
+
+    vDir = -vPlayerLook;
+    vDir.y = 0.f;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    _vec3 vAngle;
+    vAngle.x = D3DXToDegree(-asinf(vDir.y));
+    vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+    vAngle.z = 0.f;
+    m_pTransformCom->Set_Angle(vAngle);
+}
+
 void CMonster::LookAtPlayer()
 {
     const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+    _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+    _vec3 vPlayerLook; vPlayerLook = tInfo.vLook;
 
-    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
-    _vec3   vPlayerLook; vPlayerLook = tInfo.vLook;
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vDir = -vPlayerLook;
+    vDir.y = 0.f;
+    D3DXVec3Normalize(&vDir, &vDir);
 
-    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+    _vec3 vAngle;
+    vAngle.x = D3DXToDegree(-asinf(vDir.y));
+    vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+    vAngle.z = 0.f;
+    m_pTransformCom->Set_Angle(vAngle);
 }
 
 void CMonster::LookAtPlayer2()
 {
     const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
-    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
+    _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
 
     _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
     _vec3 vDir = vPlayerPos - vPos;
@@ -357,16 +405,6 @@ void CMonster::Set_OnTerrain()
     _float  fY = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
 
     m_pTransformCom->Set_Pos(vPos.x, fY + m_pTransformCom->m_vScale.y, vPos.z);
-}
-
-void CMonster::Chase_Player(const _float& fTimeDelta, _float fSpeed)
-{
-    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
-    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
-    _vec3   vPlayerLook; vPlayerLook = tInfo.vLook;
-
-    m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, fSpeed, fTimeDelta);
 }
 
 CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -8,7 +8,7 @@
 #include "CPlayerCamera.h"
 
 CCryder::CCryder(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev), m_bLandingState(false), m_fLandingTime(0.f), m_fVelocityY(0.f), m_vLandingDirection{ 0.f,0.f,0.f }
+    : CMonster(pGraphicDev)
 {
 }
 

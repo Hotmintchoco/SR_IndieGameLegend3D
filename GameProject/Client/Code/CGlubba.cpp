@@ -146,12 +146,5 @@ void CGlubba::Land(const _float& fTimeDelta)
         m_pTransformCom->Move_Pos(&m_vLandingDirection, 1.f, fTimeDelta);
     }
 
-    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
-    _vec3   vPlayerPos;
-    vPlayerPos = tInfo.vPosition;
-
-    _vec3   vPlayerLook;
-    vPlayerLook = tInfo.vLook;
-    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+    LookAtPlayer();
 }

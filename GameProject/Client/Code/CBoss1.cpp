@@ -133,20 +133,21 @@ void CBoss1::Render_GameObject()
     m_pTextureCom->Set_Texture((_uint)m_fFrame);
     m_pBufferCom->Render_Buffer();
 
-   // if (m_iPhase == 1)
-   // {
-   //     if(m_eBoss1State!=DEAD)
-			//m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
-   //     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
-   //     m_pTextureCom2->Set_Texture((_uint)m_fFrame / 2);
-   //     m_pBufferCom->Render_Buffer();
-   //     if (m_eBoss1State != DEAD)
-   //         m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
-   // }
+	if (m_iPhase == 1)
+	{
+		if (m_eBoss1State != DEAD)
+			m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
+
+		m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
+		m_pTextureCom2->Set_Texture((_uint)m_fFrame / 2);
+		m_pBufferCom->Render_Buffer();
+
+		if (m_eBoss1State != DEAD)
+			m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
+	}
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
     if (m_bHitState == true) CMonster::Disable_HitRenderState();
-
 }
 
 void CBoss1::OnCollisionEnter(COLLINFO eCollInfo)
@@ -327,7 +328,6 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
 
                 m_vMovePosition.y = m_pTransformCom->m_vScale.y;
             }
-            LookAtPlayer();
         }
         else
         {
@@ -346,8 +346,8 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
                 D3DXVec3Normalize(&vDir, &vDir);
                 m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
             }
-			LookAtPlayer();
         }
+        LookAtPlayer();
     }
     else
     {
@@ -402,7 +402,6 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
                 if (m_iLandingCount == 2)
                     m_bMoveFlag = true;
             }
-            LookAtPlayer();
         }
     }
     else
@@ -522,11 +521,9 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
 
         if (iFlag != 0)
         {
-            CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-                ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-            if (nullptr == pPlayerTransformCom) return;
-            _vec3   vPlayerPos;
-            pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
+
             m_pTransformCom->Get_Info(INFO_POS, &vPos);
             vVelocity = vPlayerPos - vPos;
             vVelocity.y = 0.f;
@@ -571,8 +568,8 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
 
             if (FAILED(pGameLogicLayer->Add_GameObject(L"Shockwave", pGameObject))) return;
         }
-        LookAtPlayer();
     }
+    LookAtPlayer();
 }
 
 void CBoss1::IDLE_Boss1(const _float& fTimeDelta)
@@ -808,46 +805,41 @@ void CBoss1::Boss1_Dead_Effect()
 
 void CBoss1::Update_AngryFace()
 {
-    //Angry버전 Transform->chase업데이트
+    //Angry버전
     if (m_iPhase == 1)
     {
         const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
+        _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        _vec3 vUp; m_pTransformCom->Get_Info(INFO_UP, &vUp);
+        _vec3 vLook; m_pTransformCom2->Get_Info(INFO_LOOK, &vLook);
         _matrix	matWorld, matScale, matRot, matTrans;
 
-        D3DXMatrixScaling(&matScale, m_pTransformCom2->m_vScale.x, m_pTransformCom2->m_vScale.y, m_pTransformCom2->m_vScale.z);
+        _vec3 vScale = m_pTransformCom2->Get_Scale();
+        D3DXMatrixScaling(&matScale, vScale.x, vScale.y, vScale.z);
 
         if ((_uint)m_fFrame % 2 == 0)
         {
-            D3DXMatrixTranslation(&matTrans,
-                m_pTransformCom->m_vInfo[INFO_POS].x,
-                m_pTransformCom->m_vInfo[INFO_POS].y,
-                m_pTransformCom->m_vInfo[INFO_POS].z);
+            D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y, vPos.z);
         }
         else
         {
-            D3DXMatrixTranslation(&matTrans,
-                m_pTransformCom->m_vInfo[INFO_POS].x,
-                m_pTransformCom->m_vInfo[INFO_POS].y + 0.1f,
-                m_pTransformCom->m_vInfo[INFO_POS].z);
+            D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y + 0.1f, vPos.z);
         }
-        _vec3 vSrc = m_pTransformCom->m_vInfo[INFO_LOOK];
+        _vec3 vSrc = vLook;
         _vec3 vDst = -tInfo.vLook;
 
         _vec3 vAxis = { 0.f, 1.f, 0.f };
-        _vec3 vCross;
 
         vSrc.y = 0;
         vDst.y = 0;
 
         float fAngle = acosf(D3DXVec3Dot(D3DXVec3Normalize(&vSrc, &vSrc), D3DXVec3Normalize(&vDst, &vDst)));
 
+        _vec3 vCross;
         if (D3DXVec3Dot(D3DXVec3Cross(&vCross, &vSrc, &vDst), &vAxis) < 0.f)
             fAngle *= -1;
 
-        D3DXMatrixRotationAxis(&matRot, &m_pTransformCom->m_vInfo[INFO_UP], fAngle);
-
-        //D3DXMatrixIdentity(&matRot);
+        D3DXMatrixRotationAxis(&matRot, &vUp, fAngle);
 
         matWorld = matScale * matRot * matTrans;
         m_pTransformCom2->Set_World(&matWorld);

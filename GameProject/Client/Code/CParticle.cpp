@@ -24,17 +24,18 @@ HRESULT CParticle::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
+    if (!m_pBillBoardCamera)
+    {
+        m_pBillBoardCamera = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
+        assert(m_pBillBoardCamera);
+    }
+
     return S_OK;
 }
 
 _int CParticle::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
-    if (!m_pBillBoardCamera)
-    {
-        m_pBillBoardCamera = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
-        assert(m_pBillBoardCamera);
-    }
 
     m_fElapsedTime += fTimeDelta;
 
@@ -82,14 +83,32 @@ CParticle* CParticle::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pEffect;
 }
 
+//void CParticle::LookAtPlayer()
+//{
+//    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+//
+//    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
+//    _vec3   vPlayerLook; vPlayerLook = tInfo.vLook;
+//
+//    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+//}
+
 void CParticle::LookAtPlayer()
 {
     const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+    _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+    _vec3 vPlayerLook; vPlayerLook = tInfo.vLook;
 
-    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
-    _vec3   vPlayerLook; vPlayerLook = tInfo.vLook;
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vDir = -vPlayerLook;
+    vDir.y = 0.f;
+    D3DXVec3Normalize(&vDir, &vDir);
 
-    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+    _vec3 vAngle;
+    vAngle.x = D3DXToDegree(-asinf(vDir.y));
+    vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+    vAngle.z = 0.f;
+    m_pTransformCom->Set_Angle(vAngle);
 }
 
 void CParticle::LookAtPlayer2()

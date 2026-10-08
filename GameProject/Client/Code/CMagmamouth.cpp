@@ -45,7 +45,7 @@ HRESULT CMagmamouth::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
-    m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
+    m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x + 0.2f);
     
     if (m_pOwner == nullptr)
     {
@@ -806,13 +806,10 @@ void CMagmamouth::Set_Motion()
         if (D3DXToDegree(fAngle) > 135.f)
         {
             m_fFrame = 3.f;
-            m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
-
         }
         else if (D3DXToDegree(fAngle) > 45.f)
         {
             _vec3 vecA = vPlayerPos - vPos;
-            m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
             if (D3DXVec3Dot(D3DXVec3Cross(&vCross, &vecA, &vMonsterLook), &vAxis) > 0.f)
                 m_fFrame = 6.f;
             else
@@ -821,14 +818,9 @@ void CMagmamouth::Set_Motion()
         else
         {
             m_fFrame = 5.f;
-            m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
-
         }
     }
-    else
-    {
-        m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
-    }
+    LookAtPlayer();
 }
 
 void CMagmamouth::Set_Motion_OpenMouth(const _float& fTimeDelta)

@@ -12,7 +12,6 @@ CSpeyeder::CSpeyeder(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 }
 
-
 CSpeyeder::~CSpeyeder()
 {
 }

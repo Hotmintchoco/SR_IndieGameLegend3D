@@ -49,10 +49,8 @@ _int CSprnub3::Update_GameObject(_float fTimeDelta)
         break;
     case JUMP:
         Jump(fTimeDelta);
-        LookAtPlayer();
         break;
     case MOVE:
-        Set_OnTerrain();
         Move(fTimeDelta);
         break;
     }
@@ -146,18 +144,15 @@ void CSprnub3::Free()
 
 void CSprnub3::Move(const _float& fTimeDelta)
 {
-    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-    _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
-    _vec3 vPlayerLook; vPlayerLook = tInfo.vLook;
-
+    Set_OnTerrain();
     if (m_fActiveElapsedTime < m_fActiveTime)
     {
         m_fActiveElapsedTime += fTimeDelta;
-        m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+        LookAtPlayer();
     }
     else
     {
-        m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 2.f, fTimeDelta);
+        Chase_Player(fTimeDelta, 2.f);
     }
 }
 
@@ -178,6 +173,7 @@ void CSprnub3::Jump(const _float& fTimeDelta)
     {
         m_pTransformCom->Move_Pos(&m_vJumpDirection, 1.f, fTimeDelta);
     }
+    LookAtPlayer();
 }
 
 void CSprnub3::Check_Jump(const _float& fTimeDelta)

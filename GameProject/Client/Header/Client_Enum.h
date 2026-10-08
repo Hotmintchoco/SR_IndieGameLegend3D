@@ -95,7 +95,6 @@ enum class EObjectType
 	WEAPON_LIMINAL,
 	WEAPON_MAX,
 
-
 	MAX,
 };
 

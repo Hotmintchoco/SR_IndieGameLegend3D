@@ -10,6 +10,9 @@
 #include "CBullet_Trail.h"
 #include "CArrow_Effect.h"
 #include "CSandburst.h"
+#include "CAirbubble.h"
+#include "CPlayerCamera.h"
+#include "CClientCameraMgr.h"
 
 CEffect::CEffect(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev), m_fFrame(0.f)
@@ -25,6 +28,12 @@ HRESULT CEffect::Ready_GameObject()
 {
     if (FAILED(Add_Component()))
         return E_FAIL;
+    if (!m_pBillBoardCamera)
+    {
+        m_pBillBoardCamera = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
+        assert(m_pBillBoardCamera);
+    }
+
     Ready_Effect();
 
 
@@ -159,11 +168,6 @@ void CEffect::Set_Pos(const _vec3& vPos)
     m_pTransformCom->Set_Pos(vPos);
 }
 
-void CEffect::Set_Scale(const _vec3& vPos)
-{
-    m_pTransformCom->Set_Scale(vPos);
-}
-
 void CEffect::Ready_Effect()
 {
     switch (m_eEffect_Type)
@@ -233,6 +237,10 @@ void CEffect::Ready_Effect()
     case WORM_EXPLOSION2:
     {
         m_fLifeTime = 0.5f;
+        break;
+    }
+    case AIRBUBBLE:
+    {
         break;
     }
     }
@@ -424,17 +432,10 @@ void CEffect::Update_Effect(const _float fTimeDelta)
 
             eColor = { fRandRed , fRandGreen, fRandBlue, 1.f };
 
-            CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-                ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+            _vec3 vPlayerLook; vPlayerLook = tInfo.vLook;
 
-            if (nullptr == pPlayerTransformCom)
-                return;
-
-            _vec3   vPlayerPos;
-            pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-
-            _vec3   vPlayerLook;
-            pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
             D3DXVec3Normalize(&vPlayerLook, &vPlayerLook);
 
             fRand1 = (_float)(rand() % 128 - 64) / 64.f;
@@ -456,7 +457,6 @@ void CEffect::Update_Effect(const _float fTimeDelta)
             if (nullptr == pGameObject) return;
             if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
         }
-
         Set_Dead(true);
         break;
     }
@@ -644,6 +644,30 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, CParticle_Sphere::YELLOWOCHER, 45, 5.f, 0.5f, { 0.75f,0.75f,0.75f }, CParticle_Sphere::DOWN);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
+        Set_Dead(true);
+        break;
+    }
+    case AIRBUBBLE:
+    {
+        _int iRand = rand() % 3;
+        for (int i = 0; i < 6 + iRand; ++i)
+        {
+            _float fRand1 = (_float)(rand() % 128 - 64) / (64.f * 4.f);
+            _float fRand2 = (_float)(rand() % 128 - 64) / (64.f * 4.f);
+            _float fRand3 = (_float)(rand() % 128 - 64) / (64.f * 4.f);
+            _vec3 vRand{ fRand1, fRand2, fRand3 };
+
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            vPos += vRand;
+
+            //_int iRand = rand() % 2;
+            _int iType = 0;
+            if (i < 4)iType = 1;
+
+            pGameObject = CAirbubble::Create(m_pGraphicDev, vPos, iType);
+            if (nullptr == pGameObject) return;
+            if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
+        }
         Set_Dead(true);
         break;
     }

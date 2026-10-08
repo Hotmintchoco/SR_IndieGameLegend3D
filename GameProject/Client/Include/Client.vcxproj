@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Header\CAirbubble.h" />
     <ClInclude Include="..\Header\CAbstractFactory.h" />
     <ClInclude Include="..\Header\CArrow.h" />
     <ClInclude Include="..\Header\CArrow_Effect.h" />
@@ -280,6 +281,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\CAirbubble.cpp" />
     <ClCompile Include="..\Code\CAbstractFactory.cpp" />
     <ClCompile Include="..\Code\CArrow.cpp" />
     <ClCompile Include="..\Code\CArrow_Effect.cpp" />
