@@ -8,6 +8,13 @@
 #include "CRoomLayer.h"
 #include "CRandomMgr.h"
 #include "CRenderer.h"
+#include "CRibbon.h"
+#include "CWeaponSystem.h"
+#include "CClientCameraMgr.h"
+#include "CStage.h"
+#include "CPlayer.h"
+#include "CTimerMgr.h"
+#include "CPlayerCamera.h"
 
 CLaserGun::CLaserGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -33,6 +40,8 @@ HRESULT CLaserGun::Ready_GameObject()
 
 _int CLaserGun::Update_GameObject(_float fTimeDelta)
 {
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(CTG_WEAPON);
+
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
@@ -42,6 +51,8 @@ _int CLaserGun::Update_GameObject(_float fTimeDelta)
 
 void CLaserGun::LateUpdate_GameObject(_float fTimeDelta)
 {
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(CTG_WEAPON);
+
     CWeapon::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -84,16 +95,65 @@ TWeaponOutput CLaserGun::SpecialAttack(EInputState ePri, EInputState eSec)
 
 TWeaponOutput CLaserGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
 {
-    return { false, EWeaponAnimEvent::NONE };
+    m_pRibbon = CRibbon::Create(m_pGraphicDev, m_vBulletFrom, m_vBulletTo);
+    if (m_pRibbon)
+    {
+        CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"Ribbon", m_pRibbon);
+    }
+
+    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+    if (pStage)
+    {
+        pStage->GetPlayer()->LockInput(PIC_MOVE);
+    }
+
+    CTimerMgr::GetInstance()->SetGlobalTimeScale(0.f);
+    CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_WEAPON, 1.f);
+    CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_CINEMATIC, 1.f);
+    CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_PLAYER, 1.f);
+
+    m_bOnUltimateAttack = true;
+    m_pSystem->SetUltimateAttackOnGoing(true);
+    CClientCameraMgr::GetInstance()->SetPlayerCameraMode(CAMERA_MODE::THIRD_PERSON);
+    CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
+
+    return { true, EWeaponAnimEvent::NONE };
 }
 
 TWeaponOutput CLaserGun::UpdateUltimateAttack(EInputState ePri, EInputState eSec)
 {
+    switch (ePri)
+    {
+    case EInputState::Released:
+    {
+        m_pRibbon->StartExplosionPhase();
+        EndUltimateAttack(EInputState::NONE, EInputState::NONE);
+        return { true, EWeaponAnimEvent::NONE };
+        break;
+    }
+    default:
+        break;
+    }
+
     return { false, EWeaponAnimEvent::NONE };
 }
 
 TWeaponOutput CLaserGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
 {
+    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+    if (pStage)
+    {
+        pStage->GetPlayer()->UnlockInput(PIC_MOVE);
+    }
+
+    CTimerMgr::GetInstance()->SetGlobalTimeScale(1.f);
+    CTimerMgr::GetInstance()->ClearAllGroupTimeScale();
+
+    m_bOnUltimateAttack = false;
+    m_pSystem->SetUltimateAttackOnGoing(false);
+    CClientCameraMgr::GetInstance()->SetPlayerCameraMode(CAMERA_MODE::FIRST_PERSON);
+    CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::PLAYER);
+
     return { false, EWeaponAnimEvent::NONE };
 }
 

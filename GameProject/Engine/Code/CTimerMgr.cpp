@@ -34,24 +34,24 @@ void CTimerMgr::Set_TimeDelta(const _tchar* pTimerTag)
 	pTimer->Update_Timer();
 }
 
-void CTimerMgr::ClearGroupTimeScale(TIME_GROUP eGroup)
+void CTimerMgr::ClearGroupTimeScale(int eGroup)
 {
 	if (eGroup <= TG_NONE || eGroup >= TG_END) return;
 	m_fGroupTimeScale[eGroup] = -1.f;
 }
 
-float CTimerMgr::GetGroupTimeDelta(TIME_GROUP eGroup)
+float CTimerMgr::GetGroupTimeDelta(int eGroup)
 {
 	return m_fFrameDelta * GetGroupTimeScale(eGroup);
 }
 
-void CTimerMgr::SetGroupTimeScale(TIME_GROUP eGroup, float fScale)
+void CTimerMgr::SetGroupTimeScale(int eGroup, float fScale)
 {
 	if (eGroup <= TG_NONE || eGroup >= TG_END) return;
 	m_fGroupTimeScale[eGroup] = fScale;
 }
 
-float CTimerMgr::GetGroupTimeScale(TIME_GROUP eGroup)
+float CTimerMgr::GetGroupTimeScale(int eGroup)
 {
 	if (eGroup <= TG_NONE || eGroup >= TG_END) return m_fGlobalTimeScale;
 

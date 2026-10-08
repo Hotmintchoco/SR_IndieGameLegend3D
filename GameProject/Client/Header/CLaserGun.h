@@ -7,6 +7,8 @@ namespace Engine
 	class CTexture;
 }
 
+class CRibbon;
+
 class CLaserGun : public CWeapon
 {
 protected:
@@ -30,6 +32,9 @@ private:
 
 	Engine::CPlyTex* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
+
+	/* 궁극기 리본 캐싱용 */
+	CRibbon* m_pRibbon = nullptr;
 
 public:
 	static CLaserGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);

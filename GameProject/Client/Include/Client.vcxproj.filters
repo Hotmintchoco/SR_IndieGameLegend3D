@@ -385,6 +385,12 @@
     <Filter Include="02. GameObject\08. Combat\02. HitScan">
       <UniqueIdentifier>{67889039-9bc9-4c5a-a834-2887b54ddcf0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\04. Ribbon">
+      <UniqueIdentifier>{6bffae3e-c303-467d-8980-c4042f1074df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\04. Ribbon\RibbonBuffer">
+      <UniqueIdentifier>{8c82dd45-b5a4-4013-b419-96bec90d9224}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -786,6 +792,12 @@
     <ClInclude Include="..\Header\CHitScan.h">
       <Filter>02. GameObject\08. Combat\02. HitScan</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CRibbonBuffer.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\04. Ribbon\RibbonBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRibbon.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\04. Ribbon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1159,6 +1171,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CHitScan.cpp">
       <Filter>02. GameObject\08. Combat\02. HitScan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRibbonBuffer.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\04. Ribbon\RibbonBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRibbon.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\04. Ribbon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

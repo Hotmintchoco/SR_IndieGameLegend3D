@@ -40,7 +40,7 @@ HRESULT CLiminalGun::Ready_GameObject()
 
 _int CLiminalGun::Update_GameObject(_float fTimeDelta)
 {
-    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(TG_PLAYER);
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(CTG_PLAYER);
 
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
@@ -58,7 +58,7 @@ _int CLiminalGun::Update_GameObject(_float fTimeDelta)
 
 void CLiminalGun::LateUpdate_GameObject(_float fTimeDelta)
 {
-    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(TG_PLAYER);
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(CTG_PLAYER);
 
     CWeapon::LateUpdate_GameObject(fTimeDelta);
 }
@@ -126,7 +126,7 @@ TWeaponOutput CLiminalGun::SpecialAttack(EInputState ePri, EInputState eSec)
 TWeaponOutput CLiminalGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
 {
     CTimerMgr::GetInstance()->SetGlobalTimeScale(0.1f);
-    CTimerMgr::GetInstance()->SetGroupTimeScale(TG_PLAYER, 0.5f);
+    CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_PLAYER, 0.5f);
     m_bOnUltimateAttack = true;
     m_fTimeAfterUltimate = 0.f;
     m_pSystem->SetUltimateAttackOnGoing(true);
@@ -148,7 +148,7 @@ TWeaponOutput CLiminalGun::UpdateUltimateAttack(EInputState ePri, EInputState eS
             {
                 if (p->Is_Dead()) continue;
 
-                CHitScan* pHitScan = CHitScan::Create(m_pGraphicDev, m_vBulletFrom, p);
+                CHitScan* pHitScan = CHitScan::Create(m_pGraphicDev, m_vBulletFrom, p, m_fDmgAccumulated);
                 if (pHitScan) CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"HitScan", pHitScan);
             }
         }
@@ -165,7 +165,7 @@ TWeaponOutput CLiminalGun::UpdateUltimateAttack(EInputState ePri, EInputState eS
 TWeaponOutput CLiminalGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
 {
     CTimerMgr::GetInstance()->SetGlobalTimeScale(1.f);
-    CTimerMgr::GetInstance()->ClearGroupTimeScale(TG_PLAYER);
+    CTimerMgr::GetInstance()->ClearAllGroupTimeScale();
     m_fDmgAccumulated = 0.f;
     m_bOnUltimateAttack = false;
     m_fTimeAfterUltimate = 0.f;

@@ -26,7 +26,7 @@ protected:
 	virtual ~CVIBuffer();
 
 public:
-	virtual HRESULT		Ready_Buffer();
+	virtual HRESULT		Ready_Buffer(DWORD dwVBUsage = 0, D3DPOOL eVBPool = D3DPOOL_MANAGED);
 	virtual void		Render_Buffer();
 
 	inline TVIBufferInfo GetInfo() const {
@@ -57,7 +57,6 @@ protected:
 	D3DFORMAT		m_IdxFmt;
 
 	shared_ptr<const vector<TTriInfo>> m_pTri;
-	vector<TTriInfo> m_vecTri;
 
 public:
 	virtual void	Free();

@@ -36,7 +36,7 @@ CVIBuffer::~CVIBuffer()
 {
 }
 
-HRESULT CVIBuffer::Ready_Buffer()
+HRESULT CVIBuffer::Ready_Buffer(DWORD dwVBUsage, D3DPOOL eVBPool)
 {
 	// D3DPOOL_DEFAULT : 그래픽 메모리
 	// D3DPOOL_MANAGED : 그래픽 메모리에 저장, 메인 메모리 백업
@@ -44,9 +44,9 @@ HRESULT CVIBuffer::Ready_Buffer()
 	// D3DPOOL_SCRATCH : 메인 메모리에 저장(DX 장치로 접근 불가)
 
 	if (FAILED(m_pGraphicDev->CreateVertexBuffer(m_dwVtxCnt * m_dwVtxSize,	// 버텍스 버퍼의 크기
-												0,							// 0인 경우 정적 버퍼, D3DUSAGE_DYNAMIC인 경우 동적 버퍼
+												dwVBUsage,					// 0인 경우 정적 버퍼, D3DUSAGE_DYNAMIC인 경우 동적 버퍼
 												m_dwFVF,					// 버텍스 속성
-												D3DPOOL_MANAGED,			// 메모리 풀 세팅
+												eVBPool,					// 메모리 풀 세팅
 												&m_pVB,						// 버텍스 버퍼 객체
 												NULL)))						// 공유할 일 없어서 null
 												return E_FAIL;

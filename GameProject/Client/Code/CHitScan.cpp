@@ -5,8 +5,8 @@
 #include "CRenderer.h"
 #include "CMonster.h"
 
-CHitScan::CHitScan(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, CMonster* pTarget)
-    : CGameObject(pGraphicDev), m_vStart(vStart), m_pTarget(pTarget)
+CHitScan::CHitScan(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, CMonster* pTarget, const float fDamage)
+    : CGameObject(pGraphicDev), m_vStart(vStart), m_pTarget(pTarget), m_fDamage(fDamage)
 {
 }
 
@@ -24,7 +24,8 @@ HRESULT CHitScan::Ready_GameObject()
 
     CalculateLength();
     
-    // m_pTarget->Hit();
+    /* TODO */
+    m_pTarget->Set_Dead(true);
 
 	return S_OK;
 }
@@ -129,9 +130,9 @@ void CHitScan::CalculateLength()
     m_pTransform->WorldMatrixDecompose();
 }
 
-CHitScan* CHitScan::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, CMonster* pTarget)
+CHitScan* CHitScan::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, CMonster* pTarget, const float fDamage)
 {
-    CHitScan* pObject = new CHitScan(pGraphicDev, vStart, pTarget);
+    CHitScan* pObject = new CHitScan(pGraphicDev, vStart, pTarget, fDamage);
 
     if (FAILED(pObject->Ready_GameObject()))
     {

@@ -7,7 +7,7 @@
 
 BEGIN(Engine)
 
-enum TIME_GROUP { TG_NONE, TG_PLAYER, TG_END };
+enum TIME_GROUP { TG_NONE, TG_1, TG_2, TG_3, TG_4, TG_5, TG_6, TG_7, TG_8, TG_9, TG_10, TG_END };
 
 class CGameObject;
 
@@ -29,11 +29,11 @@ public:
 	/* 시간 스케일 */
 	inline void SetGlobalTimeScale(const float fScale) { m_fGlobalTimeScale = fScale; }
 	inline float GetGlobalTimeScale() { return m_fGlobalTimeScale; }
-	void SetGroupTimeScale(TIME_GROUP eGroup, float fScale);
-	float GetGroupTimeScale(TIME_GROUP eGroup);
+	void SetGroupTimeScale(int eGroup, float fScale);
+	float GetGroupTimeScale(int eGroup);
 	void ClearAllGroupTimeScale();
-	void ClearGroupTimeScale(TIME_GROUP eGroup);
-	float GetGroupTimeDelta(TIME_GROUP eGroup);
+	void ClearGroupTimeScale(int eGroup);
+	float GetGroupTimeDelta(int eGroup);
 
 public:
 	HRESULT		Ready_Timer(const _tchar* pTimerTag);

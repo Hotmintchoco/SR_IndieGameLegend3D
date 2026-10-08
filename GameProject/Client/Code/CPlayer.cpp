@@ -47,8 +47,8 @@ HRESULT CPlayer::Ready_GameObject()
 
 _int CPlayer::Update_GameObject(_float fTimeDelta)
 {
-	/* 캐릭터 타임스케일 */
-	fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(TG_PLAYER);
+    /* 캐릭터 타임스케일 */
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(CTG_PLAYER);
 
     int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -57,16 +57,13 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
-    if (m_bInputEnabled)
-    {
-	    UpdateInput();        
-    }
+    UpdateInput();
 
-	CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
-	if (CStage* pStage = dynamic_cast<CStage*>(pScene))
-	{
-		pStage->UpdatePlayerPosition(m_pTransformCom->Get_Info_Value(INFO_POS));
-	}
+    CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+    if (CStage* pStage = dynamic_cast<CStage*>(pScene))
+    {
+        pStage->UpdatePlayerPosition(m_pTransformCom->Get_Info_Value(INFO_POS));
+    }
 
     if (m_bInvincible)
     {
@@ -77,13 +74,11 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
         }
     }
 
-    if (m_fLeftInputDisabledTime > 0.f)
+    for (int i = 0; i < PIC_END; ++i)
     {
-        m_fLeftInputDisabledTime -= fTimeDelta;
-        if (m_fLeftInputDisabledTime <= 0.f)
+        if (m_fInputLockTime[i] > 0.f)
         {
-            m_bInputEnabled = true;
-            m_fLeftInputDisabledTime = 0.f;
+            m_fInputLockTime[i] -= fTimeDelta;
         }
     }
 
@@ -104,7 +99,7 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(_float fTimeDelta)
 {
-    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(TG_PLAYER);
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(CTG_PLAYER);
 
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -243,42 +238,48 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::UpdateInput()
 {
-    m_pMovement->SetSprint(CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT));
+    if (IsInputAllowed(PIC_MOVE))
+    {
+        m_pMovement->SetSprint(CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT));
 
-    _vec2 vCommand{ 0.f, 0.f }; // (x, z)
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
-    {
-        vCommand += _vec2{ 0.f, 1.f };
-    }
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_S))
-    {
-        vCommand += _vec2{ 0.f, -1.f };
-    }
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_D))
-    {
-        vCommand += _vec2{ 1.f, 0.f };
-    }
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
-    {
-        vCommand += _vec2{ -1.f, 0.f };
-    }
-    m_pMovement->Walk(vCommand);
-    if (D3DXVec2Length(&vCommand) > 1e-6)
-    {
-        m_fInputYaw = atan2f(vCommand.x, vCommand.y);
-        m_pAnimator->PlayLocomotion((m_pMovement->GetSprint()) ? EPlayerLocomotionState::SPRINT : EPlayerLocomotionState::WALK);
-    }
-    else
-    {
-        m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
+        _vec2 vCommand{ 0.f, 0.f }; // (x, z)
+        if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
+        {
+            vCommand += _vec2{ 0.f, 1.f };
+        }
+        if (CDInputMgr::GetInstance()->Key_Press(DIK_S))
+        {
+            vCommand += _vec2{ 0.f, -1.f };
+        }
+        if (CDInputMgr::GetInstance()->Key_Press(DIK_D))
+        {
+            vCommand += _vec2{ 1.f, 0.f };
+        }
+        if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
+        {
+            vCommand += _vec2{ -1.f, 0.f };
+        }
+        m_pMovement->Walk(vCommand);
+        if (D3DXVec2Length(&vCommand) > 1e-6)
+        {
+            m_fInputYaw = atan2f(vCommand.x, vCommand.y);
+            m_pAnimator->PlayLocomotion((m_pMovement->GetSprint()) ? EPlayerLocomotionState::SPRINT : EPlayerLocomotionState::WALK);
+        }
+        else
+        {
+            m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
+        }
+
+        if (CDInputMgr::GetInstance()->Key_Press(DIK_SPACE))
+        {
+            m_pMovement->Jump();
+        }
     }
 
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_SPACE))
+    if (IsInputAllowed(PIC_WEAPON))
     {
-        m_pMovement->Jump();
+        UpdateWeaponInput();
     }
-
-    UpdateWeaponInput();
 }
 
 void CPlayer::UpdateWeaponInput()
@@ -391,20 +392,22 @@ void CPlayer::OnHit(CGameObject* pSrcObj)
 
     _vec3 vDist = m_pTransformCom->Get_Info_Value(INFO_POS) - pSrcTransform->Get_Info_Value(INFO_POS);
     m_pMovement->Knockback(vDist, 3.f);
-    SetInputEnabled(false, 0.5f);
+    LockInputFor(PIC_MOVE, 0.5f);
 }
 
 void CPlayer::Revive()
 {
     RestoreHP(m_iMaxHP);
-    SetInputEnabled(true);
+    UnlockInput(PIC_MOVE);
+    UnlockInput(PIC_WEAPON);
     m_pColliderCom->Set_IsActive(true);
 }
 
 void CPlayer::OnDead()
 {
     m_pMovement->Stop();
-    SetInputEnabled(false);
+    LockInput(PIC_MOVE);
+    LockInput(PIC_WEAPON);
     m_pColliderCom->Set_IsActive(false);
     /* 나중에 무기류도 비활성화 */
 
@@ -423,13 +426,24 @@ void CPlayer::RestoreHP(int iAmount)
     CUIMgr::GetInstance()->Update_HPUI(m_iHP, false);
 }
 
-void CPlayer::SetInputEnabled(bool bFlag, float fDisabledTime)
+void CPlayer::LockInput(EPlayerInputChannel e)
 {
-    m_bInputEnabled = bFlag;
-    if (bFlag == false && fDisabledTime >= 0.f)
-    {
-        m_fLeftInputDisabledTime = fDisabledTime;
-    }
+    ++m_iInputLockCount[e];
+}
+
+void CPlayer::LockInputFor(EPlayerInputChannel e, float fDuration)
+{
+    m_fInputLockTime[e] = max(m_fInputLockTime[e], fDuration);
+}
+
+void CPlayer::UnlockInput(EPlayerInputChannel e)
+{
+    if (m_iInputLockCount[e] > 0) --m_iInputLockCount[e];
+}
+
+bool CPlayer::IsInputAllowed(EPlayerInputChannel e)
+{
+    return (m_iInputLockCount[e] == 0 && m_fInputLockTime[e] <= 0.f);
 }
 
 void CPlayer::SetPseudoScale(float fScale)

@@ -133,6 +133,12 @@ void CMonster::OnCollisionEnter(COLLINFO eCollInfo)
         m_fHitEffectElapsedTime = 0.f;
         m_iHp -= 1; /* 성철 : Collider ID, 데미지 받는 방식 임시로 바꿔둠 */
     }
+    if (pCollider && pCollider->Get_CollisionID() == COLL_EXPLODE)
+    {
+        m_bHitState = true;
+        m_fHitEffectElapsedTime = 0.f;
+        m_iHp -= 100; /* 성철 : Collider ID, 데미지 받는 방식 임시로 바꿔둠 */
+    }
 }
 
 void CMonster::OnCollisionStay(COLLINFO eCollInfo)

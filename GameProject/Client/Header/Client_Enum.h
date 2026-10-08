@@ -237,3 +237,12 @@ enum class EColorTexture
 
 	MAX,
 };
+
+enum CLIENT_TIME_GROUP { CTG_NONE, CTG_PLAYER, CTG_WEAPON, CTG_CINEMATIC, CTG_4, CTG_5, CTG_6, CTG_7, CTG_8, CTG_9, CTG_10, CTG_END };
+
+enum EPlayerInputChannel
+{
+	PIC_MOVE,
+	PIC_WEAPON,
+	PIC_END,
+};
