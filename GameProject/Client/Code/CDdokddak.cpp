@@ -105,7 +105,7 @@ void CDdokddak::OnCollisionEnter(COLLINFO eCollInfo)
     }
     case COLLISIONID::COLL_PLAYER:
     {
-        static_cast<CPlayer*>(pOtherCol->Get_Owner())->OnHit(nullptr);
+        static_cast<CPlayer*>(pOtherCol->Get_Owner())->OnHit(this);
         break;
     }
     default:
