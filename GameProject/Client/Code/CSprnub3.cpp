@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CSprnub3.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -9,6 +9,7 @@
 #include "CHeart.h"
 #include "CGem.h"
 #include "CEnergy.h"
+#include "CPlayerCamera.h"
 
 CSprnub3::CSprnub3(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -108,11 +109,13 @@ _int CSprnub3::Update_GameObject(_float fTimeDelta)
         if (nullptr == pPlayerTransformCom)
             return E_FAIL;
 
+        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+
         _vec3   vPlayerPos;
         pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
 
         _vec3   vPlayerLook;
-        pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+        vPlayerLook = tInfo.vLook;
 
         if (m_fActiveElapsedTime < m_fActiveTime)
         {
@@ -236,16 +239,12 @@ void CSprnub3::Jump(const _float& fTimeDelta)
         m_pTransformCom->Move_Pos(&m_vJumpDirection, 1.f, fTimeDelta);
     }
 
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-    if (nullptr == pPlayerTransformCom)
-        return;
+    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
 
     _vec3   vPlayerPos;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    vPlayerPos = tInfo.vPosition;
 
     _vec3   vPlayerLook;
-    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+    vPlayerLook = tInfo.vLook;
     m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
 }

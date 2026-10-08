@@ -3,6 +3,8 @@
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CEffect.h"
+#include "CPlayerCamera.h"
+#include "CClientCameraMgr.h"
 
 _uint CProjectile::g_iProjectileID = 0;
 
@@ -87,11 +89,12 @@ HRESULT CProjectile::Add_Component()
 
 void CProjectile::BillBoard()
 {
-    CTransform* pPlayerTransform = static_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+    _matrix matCamWorld;
+    CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER)->GetWorld(&matCamWorld);
 
     /* 플레이어 - 투사체 변위 벡터를 vLook으로 하는 world matrix를 만듬 */
     _vec3 vPlayerPos, vBulletPos, vDisplacement, vLook;
-    pPlayerTransform->Get_Info(INFO_POS, &vPlayerPos);
+    memcpy(&vPlayerPos, &matCamWorld.m[3][0], sizeof(_vec3));
     m_pTransformCom->Get_Info(INFO_POS, &vBulletPos);
     vDisplacement = vBulletPos - vPlayerPos;
     D3DXVec3Normalize(&vLook, &vDisplacement);

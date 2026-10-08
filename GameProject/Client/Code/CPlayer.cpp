@@ -14,6 +14,10 @@
 #include "CCollisionMgr.h"
 #include "CWeaponSystem.h"
 #include "Client_Struct.h"
+#include "CClientCameraMgr.h"
+#include "CPlayerCamera.h"
+#include "CSocket.h"
+#include "CWeapon.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
     :CGameObject(pGraphicDev)
@@ -36,6 +40,8 @@ HRESULT CPlayer::Ready_GameObject()
     m_pColliderCom->Set_DiffPos(_vec3{0.f, 0.5f, 0.f});
 	m_pColliderCom->Set_CollisionID(COLL_PLAYER);
 
+    CClientCameraMgr::GetInstance()->m_OnCameraViewChanged.AddBinding(GetToken(), [this](const CAMERA_MODE& Ctx) { OnCameraViewChanged(Ctx); });
+
 	return S_OK;
 }
 
@@ -46,12 +52,14 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
 
     int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
+    SyncCameraYaw();
+
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
     if (m_bInputEnabled)
     {
-	    UpdateInput();
+	    UpdateInput();        
     }
 
 	CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
@@ -79,10 +87,18 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
         }
     }
 
-    m_pAnimator->TransformPropagation(*m_pTransformCom->Get_World());
+    /* 업데이트 순서 : 애니메이션으로 캐릭터 위치 확정 후 소켓에 전달 */
+    if (m_ePlayerCamMode == CAMERA_MODE::THIRD_PERSON)
+    {
+        _matrix matVisualWorld = (*m_pVisualRootTransform->Get_World()) * (*m_pTransformCom->Get_World());
+        m_pAnimator->TransformPropagation(matVisualWorld);
+        m_pLHandSocket->UpdateSocket();
+        m_pRHandSocket->UpdateSocket();
+    }
+    /* ----------- */
 
     CUIMgr::GetInstance()->Update_HPUI(m_iHP, m_bInvincible);
-
+ 
 	return iExit;
 }
 
@@ -95,10 +111,15 @@ void CPlayer::LateUpdate_GameObject(_float fTimeDelta)
 
 void CPlayer::Render_GameObject()
 {
+    switch (m_ePlayerCamMode)
+    {
     /* 1인칭 시점일 때 */
-
+    case CAMERA_MODE::FIRST_PERSON:
+    {
+        break;
+    }
     /* 3인칭 시점일 때 */
-    if (0)
+    case CAMERA_MODE::THIRD_PERSON:
     {
         m_pTextureCom->Set_Texture(0);
 
@@ -107,9 +128,24 @@ void CPlayer::Render_GameObject()
             m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pBufferTransformCom[i]->Get_World());
             m_pBufferCom[i]->Render_Buffer();
         }
+        break;
+    }
+    default:
+        break;
     }
 
     //m_pAnimator->RenderDebugTransform();
+}
+
+void CPlayer::SetWeaponSystem(CWeaponSystem* pSystem)
+{
+    m_pWeaponSystem = pSystem;
+    m_pRHandSocket->SetTarget(m_pWeaponSystem->GetCurrentWeapon()->GetTransform());
+}
+
+CSocket* CPlayer::GetSocket(const wstring& wstrName)
+{
+    return dynamic_cast<CSocket*>(m_mapComponent[ID_DYNAMIC].at(wstrName));
 }
 
 HRESULT CPlayer::Add_Component()
@@ -150,10 +186,11 @@ HRESULT CPlayer::Add_Component()
         m_mapComponent[ID_STATIC].insert({ wstrName.c_str(), pBuffer });
 
         CTransform* pTransform = m_pBufferTransformCom[i] = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
-        pTransform->SetUseLocal(true);
 
         if (nullptr == pTransform)
             return E_FAIL;
+
+        pTransform->SetUseLocal(true);
 
         wstrName = L"Com_BufferTransform_" + arrPartName[i];
         m_mapComponent[ID_DYNAMIC].insert({ wstrName.c_str(), pTransform });
@@ -161,15 +198,45 @@ HRESULT CPlayer::Add_Component()
         arrBuffer[i] = TPlayerBuffer{ pBuffer, pTransform };
     }
 
+    m_pVisualRootTransform = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
+    if (nullptr == m_pVisualRootTransform)
+        return E_FAIL;
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_VisualRootTransform", m_pVisualRootTransform });
+
     m_pAnimator = CPlayerAnimator::Create(m_pGraphicDev);
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_PlayerAnimator", m_pAnimator });
 
     m_pAnimator->SetBuffer(arrBuffer);
+    m_pAnimator->m_OnActionFinished.AddBinding(GetToken(), [this](const EPlayerActionState& Ctx) { OnActionAnimationFinished(Ctx); });
+
+    /* 애니메이션 루트 트랜스폼 */
+    m_pAnimRootTransform = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
+    if (nullptr == m_pAnimRootTransform)
+        return E_FAIL;
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_AnimRootTransform", m_pAnimRootTransform });
+    m_pAnimator->SetRootTransform(m_pAnimRootTransform);
 
     /* Movement */
     m_pMovement = CPlayerMovement::Create(m_pGraphicDev);
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_PlayerMovement", m_pMovement });
     m_pMovement->AttachTransform(m_pTransformCom);
+
+    /* Socket */
+    _matrix  matOffset;
+    D3DXQUATERNION q;
+    _vec3 pos(0.f, -0.3f, 0.f);
+
+    D3DXQuaternionRotationYawPitchRoll(&q, 0.f, D3DXToRadian(90.f), 0.f);
+    D3DXMatrixAffineTransformation(&matOffset, 1.f, nullptr, &q, &pos);
+
+    m_pLHandSocket = CSocket::Create(m_pGraphicDev, m_pBufferTransformCom[PP_LARM]);
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Socket_LHand", m_pLHandSocket });
+    m_pLHandSocket->SetOffset(matOffset);
+
+    m_pRHandSocket = CSocket::Create(m_pGraphicDev, m_pBufferTransformCom[PP_RARM]);
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Socket_RHand", m_pRHandSocket });
+    m_pRHandSocket->SetOffset(matOffset);
+
 
     return S_OK;
 }
@@ -196,8 +263,15 @@ void CPlayer::UpdateInput()
         vCommand += _vec2{ -1.f, 0.f };
     }
     m_pMovement->Walk(vCommand);
-    if (D3DXVec2Length(&vCommand) > 1e-6) m_pAnimator->PlayLocomotion((m_pMovement->GetSprint()) ? EPlayerLocomotionState::SPRINT : EPlayerLocomotionState::WALK);
-    else m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
+    if (D3DXVec2Length(&vCommand) > 1e-6)
+    {
+        m_fInputYaw = atan2f(vCommand.x, vCommand.y);
+        m_pAnimator->PlayLocomotion((m_pMovement->GetSprint()) ? EPlayerLocomotionState::SPRINT : EPlayerLocomotionState::WALK);
+    }
+    else
+    {
+        m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
+    }
 
     if (CDInputMgr::GetInstance()->Key_Press(DIK_SPACE))
     {
@@ -244,11 +318,44 @@ void CPlayer::UpdateWeaponInput()
 
     TWeaponSystemOutput tOutput = m_pWeaponSystem->UpdateInput(tSysInput);
 
-    switch (tOutput.eWpEvent)
+    switch (tOutput.tWpOut.eWpEvent)
     {
-    case EWeaponEvent::GUN_SHOT:
+    case EWeaponAnimEvent::GUN_SHOT:
         m_pAnimator->PlayAction(EPlayerActionState::GUN_SHOOT);
         break;
+    case EWeaponAnimEvent::ULT_SHOTGUN:
+        m_bInputYawIgnored = true;
+        CClientCameraMgr::GetInstance()->SetPlayerCameraMode(CAMERA_MODE::THIRD_PERSON);
+        m_pAnimator->PlayAction(EPlayerActionState::STRETCH_ARMS);
+        break;
+    }
+}
+
+void CPlayer::OnCameraViewChanged(const CAMERA_MODE& Ctx)
+{
+    m_ePlayerCamMode = Ctx;
+    m_pWeaponSystem->ApplyCameraView(m_ePlayerCamMode);
+}
+
+void CPlayer::SyncCameraYaw()
+{
+    float fYaw = m_pCamera->Get_Yaw();
+    m_pMovement->SetRefYaw(fYaw);
+
+    float fVisualYaw = fYaw + (m_bInputYawIgnored ? 0.f : m_fInputYaw);
+    m_pVisualRootTransform->Set_Rotation_Raw({ 0.f, D3DXToDegree(fVisualYaw), 0.f });
+}
+
+void CPlayer::OnActionAnimationFinished(const EPlayerActionState& Ctx)
+{
+    switch (Ctx)
+    {
+    case EPlayerActionState::STRETCH_ARMS:
+    {
+        m_bInputYawIgnored = false;
+        CClientCameraMgr::GetInstance()->SetPlayerCameraMode(CAMERA_MODE::FIRST_PERSON);
+        break;
+    }
     }
 }
 

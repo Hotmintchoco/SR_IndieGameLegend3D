@@ -182,7 +182,10 @@ HRESULT CTransform::Ready_Transform()
 
 _int CTransform::Update_Component(_float fTimeDelta)
 {
-	UpdateWorldMatrix();
+	if (!m_bUseLocal)
+	{
+		UpdateWorldMatrix();
+	}
 
 	return 0;
 }

@@ -3,6 +3,7 @@
 #include "CBase.h"
 #include "Engine_Define.h"
 
+
 BEGIN(Engine)
 
 class IRenderable;
@@ -36,18 +37,6 @@ public:
 	void	Render(LPDIRECT3DDEVICE9& pGraphicDev);
 	void	Clear_RenderGroup();
 
-	// ------------ 쉐이더 왜곡 효과 ------------ 
-	void	Set_PulseEnabled(_bool bEnabled) { m_bPulseEnabled = bEnabled; if (bEnabled) m_bPulseFailed = false; }
-	_bool	Get_PulseEnabled() const { return m_bPulseEnabled; }
-	void	Update_PulseEffect(_float fTimeDelta);
-	//		4x4 확대/축소 강도, 반복 속도
-	void	Set_PulseParameters(_float fStrength, _float fSpeed);
-	// 물방울 굴절 강도, 움직임 속도 (강도 0이면 물방울 효과 없음)
-	void	Set_WaterDropParameters(_float fStrength, _float fSpeed);
-	_bool	Begin_PulseEffect(LPDIRECT3DDEVICE9 pDevice);
-	void	End_PulseEffect(LPDIRECT3DDEVICE9 pDevice);
-	// ------------ 쉐이더 왜곡 효과 ------------ 
-
 public:
 	void	Render_Priority(LPDIRECT3DDEVICE9& pGraphicDev);
 	void	Render_NonAlpha(LPDIRECT3DDEVICE9& pGraphicDev);
@@ -58,26 +47,16 @@ public:
 	/* 디버그 용 */
 	void Render_Collider(LPDIRECT3DDEVICE9& pGraphicDev);
 	void Render_DebugTriangle(LPDIRECT3DDEVICE9& pGraphicDev);
+	void Render_DebugScreen(LPDIRECT3DDEVICE9& pGraphicDev);
 	void Add_DebugTriangle(const std::array<_vec3, 3>& vTri, const _vec3& vNormal, D3DCOLOR dwColor = D3DCOLOR_ARGB(255, 255, 0, 0));
+	void Add_DebugScreenLine(const _vec2& vStart, const _vec2& vEnd, D3DCOLOR dwColor = D3DCOLOR_ARGB(255, 0, 255, 0));
+	void Add_DebugScreenCross(const _vec2& vCenter, _float fSize = 10.f, D3DCOLOR dwColor = D3DCOLOR_ARGB(255, 0, 255, 0));
+	void Add_DebugScreenRect(const _vec2& vCenter, _float fHalf = 10.f, D3DCOLOR dwColor = D3DCOLOR_ARGB(255, 0, 255, 0));
+	void Add_DebugWorldMarker(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vWorldPos, _float fSize = 10.f, D3DCOLOR dwColor = D3DCOLOR_ARGB(255, 0, 255, 0));
+
 
 private:
 	list<IRenderable*>		m_RenderGroup[RENDER_END];
-
-	// 정민 : 쉐이더 왜곡 효과 용도
-	_bool m_bPulseEnabled = false;
-	_bool m_bPulseFailed = false;
-	_float m_fPulseTime = 0.f;
-	_float m_fPulseAmplitude = 0.12f;
-	_float m_fPulseSpeed = 1.5f;
-	_float m_fWaterDropTime = 0.f;
-	_float m_fWaterDropAmplitude = 0.04f;
-	_float m_fWaterDropSpeed = 2.f;
-	LPDIRECT3DTEXTURE9 m_pPulseTexture = nullptr;
-	LPDIRECT3DTEXTURE9 m_pWaterDropTexture = nullptr;
-	LPDIRECT3DSURFACE9 m_pPulseSurface = nullptr;
-	LPDIRECT3DSURFACE9 m_pPulseOutput = nullptr;
-	LPDIRECT3DPIXELSHADER9 m_pPulseShader = nullptr;
-	D3DVIEWPORT9 m_tPulseViewport{};
 
 	struct TDebugTri
 	{
@@ -86,14 +65,18 @@ private:
 		D3DCOLOR             dwColor;
 	};
 	std::vector<TDebugTri> m_vecDebugTri;
+	struct VTXSCREEN
+	{
+		_vec4  vPos;     // x, y, z, rhw
+		DWORD  dwColor;
+	};
+	static constexpr _ulong FVF_SCREEN = D3DFVF_XYZRHW | D3DFVF_DIFFUSE;
+	std::vector<VTXSCREEN> m_vecDebugScreenLine;
 
 
 private:
 	virtual void	Free();
 
-	// 정민 : 쉐이더 왜곡 효과 용도
-	HRESULT Ready_PulseEffect(LPDIRECT3DDEVICE9 pDevice, const D3DSURFACE_DESC& desc);
-	void Release_PulseEffect();
 };
 
 END

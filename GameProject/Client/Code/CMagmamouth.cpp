@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CMagmamouth.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -16,6 +16,7 @@
 #include "CUIMgr.h"
 #include "CClientCameraMgr.h"
 #include "CCinematicCamera.h"
+#include "CPlayerCamera.h"
 
 CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(0.f), m_fStateUpdateDuration(2.f), 
@@ -798,30 +799,22 @@ void CMagmamouth::Find_BackPoint()
 
 void CMagmamouth::Set_Motion()
 {
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-    if (nullptr == pPlayerTransformCom)
-        return;
+    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
 
     _vec3   vPlayerPos;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    vPlayerPos = tInfo.vPosition;
 
     _vec3   vPlayerLook;
-    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+    vPlayerLook = tInfo.vLook;
 
     if (m_eMagmaMouthState == MOVE)
     {
         _vec3 vMonsterLook, vPlayerLook,vPlayerPos, vPos;
 
-        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
 
-        if (nullptr == pPlayerTransformCom)
-            return;
-
-        pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
-        pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+        vPlayerLook = tInfo.vLook;
+        vPlayerPos = tInfo.vPosition;
         m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
         vMonsterLook = m_vMovePosition - vPos;

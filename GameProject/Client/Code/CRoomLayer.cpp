@@ -23,6 +23,7 @@
 #include "CItemContainer.h"
 #include "CRandomMgr.h"
 #include "CAtmosphereVeil.h"
+#include "CMonster.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -421,6 +422,11 @@ HRESULT CRoomLayer::SpawnRoom()
 		{
 			m_vecTerrain.push_back(pObj);
 		}
+
+		if (CMonster* pObj = dynamic_cast<CMonster*>(pGameObject))
+		{
+			m_vecMonster.push_back({ pObj, pObj->GetToken() });
+		}
 	}
 
 	for (auto& tMapEntity : t->vecObjectInfo)
@@ -451,6 +457,11 @@ HRESULT CRoomLayer::SpawnRoom()
 		if (ITerrain* pObj = dynamic_cast<ITerrain*>(pGameObject))
 		{
 			m_vecTerrain.push_back(pObj);
+		}
+
+		if (CMonster* pObj = dynamic_cast<CMonster*>(pGameObject))
+		{
+			m_vecMonster.push_back({ pObj, pObj->GetToken() });
 		}
 	}
 
@@ -517,6 +528,29 @@ void CRoomLayer::RequestTileContamination(const _vec3& vPos, int iRange, EContam
 			static_cast<CSpriteTile*>(pTile)->Contaminate(eType, fDuration);
 		}
 	}
+}
+
+void CRoomLayer::AddMonster(CMonster* pMonster)
+{
+	m_vecMonster.push_back({ pMonster, pMonster->GetToken() });
+}
+
+vector<CMonster*> CRoomLayer::GetMonsterList()
+{
+	vector<CMonster*> vecMonster;
+	for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); )
+	{
+		if (iter->pToken.expired())
+		{
+			iter = m_vecMonster.erase(iter);
+		}
+		else
+		{
+			vecMonster.push_back(iter->pMonster);
+			++iter;
+		}
+	}
+	return vecMonster;
 }
 
 void CRoomLayer::SetPseudoDark(bool bFlag)

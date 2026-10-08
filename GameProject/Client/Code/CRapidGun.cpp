@@ -7,6 +7,11 @@
 #include "CManagement.h"
 #include "CRoomLayer.h"
 #include "CRenderer.h"
+#include "CStage.h"
+#include "CMonster.h"
+#include "CClientCameraMgr.h"
+#include "CCamera.h"
+#include "CWeaponSystem.h"
 
 CRapidGun::CRapidGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -25,8 +30,6 @@ HRESULT CRapidGun::Ready_GameObject()
     if (FAILED(Add_Component()))
         return E_FAIL;
 
-    UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
-
     m_fSpecialAtkInterval = 0.1f;
 
     return S_OK;
@@ -38,7 +41,72 @@ _int CRapidGun::Update_GameObject(_float fTimeDelta)
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
+    UpdateUltimateAttackStatus(fTimeDelta);
+
     return iExit;
+}
+
+void CRapidGun::UpdateUltimateAttackStatus(_float fTimeDelta)
+{
+    if (!m_bOnUltimateAttack) return;
+
+    m_fTimeAfterUltimate += fTimeDelta;
+
+    if (m_fTimeAfterUltimate > m_fUltimateTime)
+    {
+        EndUltimateAttack(EInputState::NONE, EInputState::NONE);
+        return;
+    }
+
+    if (CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene()))
+    {
+        const vector<CMonster*>& vecMonster = pStage->GetCurrentRoomLayer()->GetMonsterList();
+
+        /* 1인칭을 가정 */
+        CCamera* pCamera = CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER);
+        _matrix matWorld;
+        pCamera->GetWorld(&matWorld);
+        _vec3 vCamPos, vCamLook, vLookNorm;
+        memcpy(&vCamLook, &matWorld.m[2][0], sizeof(_vec3));
+        memcpy(&vCamPos, &matWorld.m[3][0], sizeof(_vec3));
+        D3DXVec3Normalize(&vLookNorm, &vCamLook);
+
+        m_pUltTarget = nullptr;
+        float fAngleMin = m_fAngleLimit;
+        for (auto p : vecMonster)
+        {
+            if (p->Is_Dead()) continue;
+
+            /* 시야각이 너무 멀면 패스 */
+            CTransform* pTransform = dynamic_cast<CTransform*>(p->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+            _vec3 vDisplacement = pTransform->Get_Info_Value(INFO_POS) - vCamPos;
+            _vec3 vDirNorm;
+            D3DXVec3Normalize(&vDirNorm, &vDisplacement);
+            _vec3 vCross;
+            D3DXVec3Cross(&vCross, &vDirNorm, &vCamLook);
+
+            float fCos = D3DXVec3Dot(&vLookNorm, &vDirNorm);
+            float fSin = D3DXVec3Length(&vCross);
+            float fAngle = atan2f(fSin, fCos);
+
+            if (fAngle > m_fAngleLimit) continue;
+
+            /* 가장 시선 방향과 가까운 적을 타겟으로 지정 */
+            if (fAngle < fAngleMin)
+            {
+                fAngleMin = min(fAngleMin, fAngle);
+                m_pUltTarget = p;
+            }
+        }
+
+        if (m_pUltTarget)
+        {
+            CTransform* pTransform = dynamic_cast<CTransform*>(m_pUltTarget->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+
+            /* 디버깅 */
+            CRenderer::GetInstance()->Add_DebugWorldMarker(m_pGraphicDev, pTransform->Get_Info_Value(INFO_POS), 15.f);
+        }
+    }
 }
 
 void CRapidGun::LateUpdate_GameObject(_float fTimeDelta)
@@ -66,12 +134,14 @@ void CRapidGun::Render_GameObject()
 
 void CRapidGun::RenderEditorPanel()
 {
+    bool bTransformUpdated = false;
+
     ImGui::Begin("Gun");
 
     ImGui::SeparatorText("Transform");
-    ImGui::DragFloat3("Scale", &m_vScaleLocal.x, 0.01f, 0.001f, 100.f);
-    ImGui::DragFloat3("Position", &m_vPositionLocal.x, 0.01f);
-    ImGui::DragFloat3("Rotation", &m_vRotationLocal.x, 0.5f, -360.f, 360.f);
+    bTransformUpdated |= ImGui::DragFloat3("Scale", &m_tLocalFView.vPosition.x, 0.01f, 0.001f, 100.f);
+    bTransformUpdated |= ImGui::DragFloat3("Position", &m_tLocalFView.vPosition.x, 0.01f);
+    bTransformUpdated |= ImGui::DragFloat3("Rotation", &m_tLocalFView.vPosition.x, 0.5f, -360.f, 360.f);
 
     ImGui::SeparatorText("Animation");
     ImGui::DragFloat("Move Cycle", &m_fMoveAnimationFrequency, 0.01f, 0.05f, 5.f, "%.2f s");
@@ -82,10 +152,13 @@ void CRapidGun::RenderEditorPanel()
 
     ImGui::End();
 
-    UpdateLocalTransform(m_vScaleLocal, m_vRotationLocal, m_vPositionLocal);
+    if (bTransformUpdated)
+    {
+        UpdateLocalTransform(m_tLocalFView);
+    }
 }
 
-EWeaponEvent CRapidGun::SpecialAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CRapidGun::SpecialAttack(EInputState ePri, EInputState eSec)
 {
     switch (ePri)
     {
@@ -94,19 +167,62 @@ EWeaponEvent CRapidGun::SpecialAttack(EInputState ePri, EInputState eSec)
         ShotSingleBullet();
         m_bIsCoolTime = true;
         m_fCoolTimeLeft = m_fSpecialAtkInterval;
-        return EWeaponEvent::GUN_SHOT;
+        return { true, EWeaponAnimEvent::GUN_SHOT };
         break;
     }
     default:
         break;
     }
 
-    return EWeaponEvent::NONE;
+    return { false, EWeaponAnimEvent::NONE };
 }
 
-EWeaponEvent CRapidGun::UltimateAttack(EInputState ePri, EInputState eSec)
+TWeaponOutput CRapidGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
 {
-    return EWeaponEvent::NONE;
+    m_bOnUltimateAttack = true;
+    m_fTimeAfterUltimate = 0.f;
+    m_pSystem->SetUltimateAttackOnGoing(true);
+
+    return { true, EWeaponAnimEvent::ULT_RAPIDGUN };
+}
+
+TWeaponOutput CRapidGun::UpdateUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    switch (ePri)
+    {
+    case EInputState::Held:
+    {
+        if (m_pUltTarget)
+        {
+            CTransform* pTransform = dynamic_cast<CTransform*>(m_pUltTarget->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+
+            /* 타겟에게 총알을 발사 */
+            ShotSingleBullet(pTransform->Get_Info_Value(INFO_POS));
+            m_bIsCoolTime = true;
+            m_fCoolTimeLeft = m_fUltimateAttackInterval;
+            return { true, EWeaponAnimEvent::GUN_SHOT };
+        }
+        else
+        {
+            ShotSingleBullet();
+            m_bIsCoolTime = true;
+            m_fCoolTimeLeft = m_fUltimateAttackInterval;
+            return { true, EWeaponAnimEvent::GUN_SHOT };
+        }
+        break;
+    }
+    }
+
+    return { false, EWeaponAnimEvent::NONE };
+}
+
+TWeaponOutput CRapidGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
+{
+    m_bOnUltimateAttack = false;
+    m_fTimeAfterUltimate = 0.f;
+    m_pSystem->SetUltimateAttackOnGoing(false);
+
+    return { false, EWeaponAnimEvent::NONE };
 }
 
 HRESULT CRapidGun::Add_Component()

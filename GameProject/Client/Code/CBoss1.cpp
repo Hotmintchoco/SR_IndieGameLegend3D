@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CBoss1.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -13,6 +13,7 @@
 #include "CUIMgr.h"
 #include "CClientCameraMgr.h"
 #include "CCinematicCamera.h"
+#include "CPlayerCamera.h"
 
 CBoss1::CBoss1(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -123,11 +124,7 @@ void CBoss1::LateUpdate_GameObject(_float fTimeDelta)
     //Angry버전 Transform->chase업데이트
     if (m_iPhase == 1)
     {
-        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-        if (nullptr == pPlayerTransformCom)
-            return;
+        const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
 
         _matrix	matWorld, matScale, matRot, matTrans;
 
@@ -148,7 +145,7 @@ void CBoss1::LateUpdate_GameObject(_float fTimeDelta)
                 m_pTransformCom->m_vInfo[INFO_POS].z);
         }
         _vec3 vSrc = m_pTransformCom->m_vInfo[INFO_LOOK];
-        _vec3 vDst = -pPlayerTransformCom->m_vInfo[INFO_LOOK];
+        _vec3 vDst = -tInfo.vLook;
 
         _vec3 vAxis = { 0.f, 1.f, 0.f };
         _vec3 vCross;
@@ -696,7 +693,7 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
 		_vec3 vBossPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vBossPos);
 
-        // 정민 : 컷신 테스트 용
+        // 정민 : 컷신 연출
         auto* pCameraMgr = CClientCameraMgr::GetInstance();
 
         auto* pCinematic = dynamic_cast<CCinematicCamera*>(
@@ -817,17 +814,13 @@ void CBoss1::Set_Walking(const _float& fTimeDelta)
 
 void CBoss1::Look_AtPlayer()
 {
-    CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
-        ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-    if (nullptr == pPlayerTransformCom)
-        return;
+    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
 
     _vec3   vPlayerPos;
-    pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    vPlayerPos = tInfo.vPosition;
 
     _vec3   vPlayerLook;
-    pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+    vPlayerLook = tInfo.vLook;
 
     m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
 }
@@ -849,11 +842,13 @@ void CBoss1::Chase_Player_Boss1(const _float& fTimeDelta)
 	if (nullptr == pPlayerTransformCom)
 		return;
 
+	const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+
 	_vec3   vPlayerPos;
 	pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
 
 	_vec3   vPlayerLook;
-	pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+	vPlayerLook = tInfo.vLook;
 
 	m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, 2.f, fTimeDelta);
 }

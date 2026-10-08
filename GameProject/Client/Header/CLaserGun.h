@@ -23,8 +23,10 @@ private:
 	HRESULT	Add_Component();
 	void RenderEditorPanel();
 	void ShotLaser();
-	virtual EWeaponEvent SpecialAttack(EInputState ePri, EInputState eSec) override;
-	virtual EWeaponEvent UltimateAttack(EInputState ePri, EInputState eSec) override;
+	virtual TWeaponOutput SpecialAttack(EInputState ePri, EInputState eSec) override;
+	virtual TWeaponOutput StartUltimateAttack(EInputState ePri, EInputState eSec) override;
+	virtual TWeaponOutput UpdateUltimateAttack(EInputState ePri, EInputState eSec) override;
+	virtual TWeaponOutput EndUltimateAttack(EInputState ePri, EInputState eSec) override;
 
 	Engine::CPlyTex* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;

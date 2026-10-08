@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -378,6 +378,12 @@
     </Filter>
     <Filter Include="01. Scene\Start">
       <UniqueIdentifier>{222d9d69-9432-484e-8bbb-87a6726a3348}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Character\00. Player\02. Socket">
+      <UniqueIdentifier>{a7fa9fbc-8201-4485-92b7-39da87526dff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\02. HitScan">
+      <UniqueIdentifier>{67889039-9bc9-4c5a-a834-2887b54ddcf0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -777,6 +783,12 @@
     <ClInclude Include="..\Header\CSandburst.h">
       <Filter>02. GameObject\06. Effect\Sandburst</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CSocket.h">
+      <Filter>02. GameObject\01. Character\00. Player\02. Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CHitScan.h">
+      <Filter>02. GameObject\08. Combat\02. HitScan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1148,6 +1160,12 @@
     <ClCompile Include="..\Code\CSandburst.cpp">
       <Filter>02. GameObject\06. Effect\Sandburst</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CSocket.cpp">
+      <Filter>02. GameObject\01. Character\00. Player\02. Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CHitScan.cpp">
+      <Filter>02. GameObject\08. Combat\02. HitScan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -1164,9 +1182,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\Resource\Map\DefaultRoom.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room 작성 가이드.md">
       <Filter>03. Resource\01. Map</Filter>
     </None>
     <None Include="..\Bin\Resource\Map\Room_1_1.json">
@@ -1186,6 +1201,46 @@
     </None>
     <None Include="..\Bin\Resource\Map\Room_2_2.json">
       <Filter>03. Resource\01. Map</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="05. Shader" />
+    <Filter Include="03. Resource\02. Shader" />
+    <ClInclude Include="..\Header\CPostEffect.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CPostEffect.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <ClInclude Include="..\Header\CUnderwaterEffect.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CUnderwaterEffect.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <ClInclude Include="..\Header\CLavaEffect.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CLavaEffect.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <ClInclude Include="..\Header\CShaderEffectMgr.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CShaderEffectMgr.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <None Include="..\Bin\Resource\Shader\Lava.hlsl">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\WaterDrop.hlsl">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\CameraFilterPack_WaterDrop.png">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\CameraFilterPack_RainDrop.png">
+      <Filter>03. Resource\02. Shader</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -364,9 +364,6 @@
     </Filter>
     <Filter Include="09. LightMgr\Light">
       <UniqueIdentifier>{c480bb77-e74a-44ab-a2fb-585ee51f9dc3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="11. CameraMgr\CameraObj\Camera_TPV_Perspective">
-      <UniqueIdentifier>{92de3bac-9e8d-49da-84ff-a0e99cbd9d54}</UniqueIdentifier>
     </Filter>
     <Filter Include="04. Management\01. Layer\LayerContext">
       <UniqueIdentifier>{4866132a-0539-4584-ad18-520c05dd6dcc}</UniqueIdentifier>

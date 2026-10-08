@@ -3,18 +3,6 @@
 #include "IRenderable.h"
 #include "CGameObject.h"
 
-namespace
-{
-	// 실제 객체는 모든 소유자가 참조를 반납하여 COM 참조 수가 0이 될 때 삭제된다
-	template<typename T>
-	void Release_PulseResource(T*& resource)
-	{
-		T* owned = resource;
-		resource = nullptr;
-		if (owned) owned->Release();
-	}
-}
-
 IMPLEMENT_SINGLETON(CRenderer)
 
 CRenderer::CRenderer()
@@ -47,6 +35,8 @@ void CRenderer::Render(LPDIRECT3DDEVICE9& pGraphicDev)
 	Render_DebugTriangle(pGraphicDev);
 
 	Render_UI(pGraphicDev);
+
+	Render_DebugScreen(pGraphicDev);
 
 	Clear_RenderGroup();
 }
@@ -301,187 +291,89 @@ void CRenderer::Render_DebugTriangle(LPDIRECT3DDEVICE9& pGraphicDev)
 	m_vecDebugTri.clear();   // 매 프레임 새로 요청받는 방식
 }
 
+void CRenderer::Render_DebugScreen(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+	if (m_vecDebugScreenLine.empty())
+		return;
+
+	// 상태 백업
+	DWORD dwZ, dwLighting, dwAlphaTest, dwFog;
+	pGraphicDev->GetRenderState(D3DRS_ZENABLE, &dwZ);
+	pGraphicDev->GetRenderState(D3DRS_LIGHTING, &dwLighting);
+	pGraphicDev->GetRenderState(D3DRS_ALPHATESTENABLE, &dwAlphaTest);
+	pGraphicDev->GetRenderState(D3DRS_FOGENABLE, &dwFog);
+
+	pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
+	pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+	pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	pGraphicDev->SetRenderState(D3DRS_FOGENABLE, FALSE);
+	pGraphicDev->SetVertexShader(nullptr);
+	pGraphicDev->SetPixelShader(nullptr);
+	pGraphicDev->SetTexture(0, nullptr);
+	pGraphicDev->SetFVF(FVF_SCREEN);
+
+	pGraphicDev->DrawPrimitiveUP(D3DPT_LINELIST,
+		(UINT)(m_vecDebugScreenLine.size() / 2),
+		m_vecDebugScreenLine.data(), sizeof(VTXSCREEN));
+
+	// 복구
+	pGraphicDev->SetRenderState(D3DRS_ZENABLE, dwZ);
+	pGraphicDev->SetRenderState(D3DRS_LIGHTING, dwLighting);
+	pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, dwAlphaTest);
+	pGraphicDev->SetRenderState(D3DRS_FOGENABLE, dwFog);
+
+	m_vecDebugScreenLine.clear();
+}
+
 void CRenderer::Add_DebugTriangle(const std::array<_vec3, 3>& vTri, const _vec3& vNormal, D3DCOLOR dwColor)
 {
 	m_vecDebugTri.push_back({ vTri, vNormal, dwColor });
 }
 
-void CRenderer::Update_PulseEffect(_float fTimeDelta)
+void CRenderer::Add_DebugScreenLine(const _vec2& vStart, const _vec2& vEnd, D3DCOLOR dwColor)
 {
-	if (m_bPulseEnabled && fTimeDelta > 0.f)
-	{
-		m_fPulseTime = fmodf(m_fPulseTime + fTimeDelta * m_fPulseSpeed, D3DX_PI * 2.f);
-		m_fWaterDropTime = fmodf(m_fWaterDropTime + fTimeDelta * m_fWaterDropSpeed, D3DX_PI * 2.f);
-	}
+	m_vecDebugScreenLine.push_back({ _vec4(vStart.x, vStart.y, 0.f, 1.f), dwColor });
+	m_vecDebugScreenLine.push_back({ _vec4(vEnd.x,   vEnd.y,   0.f, 1.f), dwColor });
 }
 
-void CRenderer::Set_PulseParameters(_float fStrength, _float fSpeed)
+void CRenderer::Add_DebugScreenCross(const _vec2& vCenter, _float fSize, D3DCOLOR dwColor)
 {
-	m_fPulseAmplitude = max(0.f, min(fStrength, 0.25f));
-	m_fPulseSpeed = max(0.f, fSpeed);
+	Add_DebugScreenLine({ vCenter.x - fSize, vCenter.y }, { vCenter.x + fSize, vCenter.y }, dwColor);
+	Add_DebugScreenLine({ vCenter.x, vCenter.y - fSize }, { vCenter.x, vCenter.y + fSize }, dwColor);
 }
 
-void CRenderer::Set_WaterDropParameters(_float fStrength, _float fSpeed)
+void CRenderer::Add_DebugScreenRect(const _vec2& vCenter, _float fHalf, D3DCOLOR dwColor)
 {
-	m_fWaterDropAmplitude = max(0.f, min(fStrength, 0.25f));
-	m_fWaterDropSpeed = max(0.f, fSpeed);
+	_vec2 lt{ vCenter.x - fHalf, vCenter.y - fHalf }, rt{ vCenter.x + fHalf, vCenter.y - fHalf };
+	_vec2 lb{ vCenter.x - fHalf, vCenter.y + fHalf }, rb{ vCenter.x + fHalf, vCenter.y + fHalf };
+	Add_DebugScreenLine(lt, rt, dwColor);
+	Add_DebugScreenLine(rt, rb, dwColor);
+	Add_DebugScreenLine(rb, lb, dwColor);
+	Add_DebugScreenLine(lb, lt, dwColor);
 }
 
-HRESULT CRenderer::Ready_PulseEffect(LPDIRECT3DDEVICE9 pDevice, const D3DSURFACE_DESC& desc)
+void CRenderer::Add_DebugWorldMarker(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vWorldPos, _float fSize, D3DCOLOR dwColor)
 {
-	if (!m_pPulseShader)
-	{
-        // Resolve resources beside the executable, independent of VS working directory.
-        wchar_t exePath[MAX_PATH] = {};
-        const DWORD length = GetModuleFileNameW(nullptr, exePath, MAX_PATH);
-        if (!length || length >= MAX_PATH) return E_FAIL;
-        std::wstring directory(exePath);
-        directory = directory.substr(0, directory.find_last_of(L"\\/") + 1);
-        const std::wstring shaderPath = directory + L"Resource\\Shader\\WaterDrop.hlsl";
-        LPD3DXBUFFER code = nullptr;
-        LPD3DXBUFFER errors = nullptr;
-        HRESULT hr = D3DXCompileShaderFromFileW(shaderPath.c_str(), nullptr, nullptr,
-            "main", "ps_2_0", 0, &code, &errors, nullptr);
-		if (errors)
-			OutputDebugStringA(static_cast<const char*>(errors->GetBufferPointer()));
-		Release_PulseResource(errors);
-		if (SUCCEEDED(hr))
-			hr = pDevice->CreatePixelShader(static_cast<const DWORD*>(code->GetBufferPointer()), &m_pPulseShader);
-		Release_PulseResource(code);
-		if (FAILED(hr)) return hr;
-	}
+	_matrix matView, matProj;
+	pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
 
-    if (!m_pWaterDropTexture)
-    {
-        wchar_t exePath[MAX_PATH] = {};
-        const DWORD length = GetModuleFileNameW(nullptr, exePath, MAX_PATH);
-        if (!length || length >= MAX_PATH) return E_FAIL;
-        std::wstring directory(exePath);
-        directory = directory.substr(0, directory.find_last_of(L"\\/") + 1);
-        const std::wstring texturePath = directory + L"Resource\\Shader\\CameraFilterPack_RainDrop.png";
-        HRESULT hr = D3DXCreateTextureFromFileExW(pDevice, texturePath.c_str(),
-            D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2, 1, 0, D3DFMT_A8R8G8B8,
-            D3DPOOL_MANAGED, D3DX_FILTER_LINEAR, D3DX_FILTER_NONE, 0,
-            nullptr, nullptr, &m_pWaterDropTexture);
-        if (FAILED(hr)) return hr;
-    }
-	D3DSURFACE_DESC current{};
-	if (m_pPulseSurface) m_pPulseSurface->GetDesc(&current);
-	if (current.Width != desc.Width || current.Height != desc.Height || current.Format != desc.Format)
-	{
-		Release_PulseResource(m_pPulseSurface);
-		Release_PulseResource(m_pPulseTexture);
-		HRESULT hr = pDevice->CreateTexture(desc.Width, desc.Height, 1, D3DUSAGE_RENDERTARGET,
-			desc.Format, D3DPOOL_DEFAULT, &m_pPulseTexture, nullptr);
-		if (FAILED(hr)) return hr;
-		return m_pPulseTexture->GetSurfaceLevel(0, &m_pPulseSurface);
-	}
-	return S_OK;
-}
+	D3DVIEWPORT9 vp;
+	pGraphicDev->GetViewport(&vp);
 
-_bool CRenderer::Begin_PulseEffect(LPDIRECT3DDEVICE9 pDevice)
-{
-	if (!m_bPulseEnabled || m_bPulseFailed || m_pPulseOutput) return false;
-	if (FAILED(pDevice->TestCooperativeLevel()))
-	{
-		Release_PulseEffect();
-		return false;
-	}
-	LPDIRECT3DSURFACE9 output = nullptr;
-	if (FAILED(pDevice->GetRenderTarget(0, &output))) return false;
-	D3DSURFACE_DESC desc{};
-	output->GetDesc(&desc);
-	// The current device uses a non-MSAA depth buffer, shared by this target.
-	if (desc.MultiSampleType != D3DMULTISAMPLE_NONE ||
-		FAILED(Ready_PulseEffect(pDevice, desc)))
-	{
-		OutputDebugStringA("Water-drop effect unavailable; check Resource/Shader/WaterDrop.hlsl and CameraFilterPack_WaterDrop.png beside Client.exe. Using normal rendering.\n");
-		m_bPulseFailed = true;
-		Release_PulseResource(output);
-		Release_PulseEffect();
-		return false;
-	}
-	pDevice->GetViewport(&m_tPulseViewport);
-	if (FAILED(pDevice->SetRenderTarget(0, m_pPulseSurface)))
-	{
-		Release_PulseResource(output);
-		return false;
-	}
-	pDevice->SetViewport(&m_tPulseViewport);
-	m_pPulseOutput = output;
-	return true;
-}
+	_vec4 vClip;
+	_matrix matVP = matView * matProj;
+	_vec4 vXYZW(vWorldPos, 1.f);
+	D3DXVec4Transform(&vClip, &vXYZW, &matVP);
+	if (vClip.w <= 0.f) return;   // 카메라 뒤
 
-void CRenderer::End_PulseEffect(LPDIRECT3DDEVICE9 pDevice)
-{
-	if (!m_pPulseOutput) return;
-	pDevice->SetRenderTarget(0, m_pPulseOutput);
-	pDevice->SetViewport(&m_tPulseViewport);
-	LPDIRECT3DSTATEBLOCK9 state = nullptr;
-	if (SUCCEEDED(pDevice->CreateStateBlock(D3DSBT_ALL, &state)))
-	{
-		D3DSURFACE_DESC desc{};
-		m_pPulseSurface->GetDesc(&desc);
-		const float w = static_cast<float>(desc.Width), h = static_cast<float>(desc.Height);
-		D3DSURFACE_DESC dropDesc{};
-		m_pWaterDropTexture->GetLevelDesc(0, &dropDesc);
-		const float constants[] = { m_fPulseAmplitude, sinf(m_fPulseTime), m_fWaterDropAmplitude, sinf(m_fWaterDropTime),
-			0.5f / w, 0.5f / h, 1.f / dropDesc.Width, 1.f / dropDesc.Height };
-		struct SCREENVERTEX { float x, y, z, rhw, u, v; };
-		// D3D9 half-pixel correction, matching texel centers to screen pixels.
-		const SCREENVERTEX quad[] = {
-			{ -0.5f, -0.5f, 0.f, 1.f, 0.f, 0.f },
-			{ w - 0.5f, -0.5f, 0.f, 1.f, 1.f, 0.f },
-			{ -0.5f, h - 0.5f, 0.f, 1.f, 0.f, 1.f },
-			{ w - 0.5f, h - 0.5f, 0.f, 1.f, 1.f, 1.f } };
-		pDevice->SetVertexShader(nullptr);
-		pDevice->SetFVF(D3DFVF_XYZRHW | D3DFVF_TEX1);
-		pDevice->SetPixelShader(m_pPulseShader);
-		pDevice->SetPixelShaderConstantF(0, constants, 2);
-		pDevice->SetTexture(0, m_pPulseTexture);
-		pDevice->SetTexture(1, m_pWaterDropTexture);
-		for (DWORD sampler = 0; sampler < 2; ++sampler)
-		{
-			pDevice->SetSamplerState(sampler, D3DSAMP_SRGBTEXTURE, FALSE);
-			pDevice->SetSamplerState(sampler, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
-			pDevice->SetSamplerState(sampler, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
-			pDevice->SetSamplerState(sampler, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-			pDevice->SetSamplerState(sampler, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-			pDevice->SetSamplerState(sampler, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-		}
-		pDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
-		pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-		pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
-		pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-		pDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
-		pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
-		pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-		pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-		pDevice->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
-		pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, quad, sizeof(SCREENVERTEX));
-		state->Apply();
-		Release_PulseResource(state);
-	}
-	else
-	{
-		// Preserve the rendered frame if state capture fails.
-		pDevice->StretchRect(m_pPulseSurface, nullptr, m_pPulseOutput, nullptr, D3DTEXF_NONE);
-	}
-	Release_PulseResource(m_pPulseOutput);
-}
+	_float fX = (vClip.x / vClip.w + 1.f) * 0.5f * vp.Width + vp.X;
+	_float fY = (1.f - vClip.y / vClip.w) * 0.5f * vp.Height + vp.Y;
 
-void CRenderer::Release_PulseEffect()
-{
-	Release_PulseResource(m_pPulseOutput);
-	Release_PulseResource(m_pPulseSurface);
-	Release_PulseResource(m_pPulseTexture);
-	Release_PulseResource(m_pPulseShader);
-	Release_PulseResource(m_pWaterDropTexture);
+	Add_DebugScreenCross({ fX, fY }, fSize, dwColor);
 }
 
 void CRenderer::Free()
 {
-	Release_PulseEffect();
-	Clear_RenderGroup();
+    Clear_RenderGroup();
 }

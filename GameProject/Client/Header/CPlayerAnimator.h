@@ -2,6 +2,7 @@
 
 #include "CComponent.h"
 #include "Client_Enum.h"
+#include "CEventDelegate.h"
 
 namespace Engine
 {
@@ -70,22 +71,20 @@ public:
 	void TransformPropagation(const _matrix& matRootWorld);
 
 	void SetBuffer(const array<TPlayerBuffer, PP_END>& tBuffer);
-	void SetInitialTransform();
+	inline void SetRootTransform(CTransform* pTransform) { m_pRootTransform = pTransform; }
 
 	void RenderDebugTransform();
 
 	inline bool OnAction() { return m_eAction != EPlayerActionState::NONE; }
 
-	constexpr static int PP_ROOT = -1;
-	static constexpr float s_fForward = -1.f; /* LH 기준 팔 +x 회전 */
-	static constexpr float s_fLocoBlendSpeed = 10.f; /* 로코모션이 바뀔 때 목표 Param까지 멤버 Param이 쫓아가는 속도 */
-	static constexpr float s_fActionBlendSpeed = 20.f; /* 액션이 시작될/끝날 때 목표 Param까지 멤버 Param이 쫓아가는 속도 */
+	CEventDelegate<EPlayerActionState> m_OnActionFinished;
 
 private:
 	void UpdateLocomotion(float fTimeDelta);
 	void UpdateAction(float fTimeDelta);
 	void ApplyPose();
 	static TLocoParam GetLocoParam(EPlayerLocomotionState eLoco);
+	void SetInitialTransform();
 
 	// Root
 	// ├─ vBody
@@ -100,6 +99,7 @@ private:
 	const static array<PLAYERPART, PP_END> s_arrUpdateOrder;
 	static const char* s_szPartName[PP_END];
 	array<TPlayerBuffer, PP_END> m_arrBuffer = {};
+	CTransform* m_pRootTransform = nullptr;
 
 	/* 애니메이션 상태 */
 	EPlayerActionState m_eAction = EPlayerActionState::NONE;
@@ -111,14 +111,25 @@ private:
 	float m_fPhase = 0.f;
 
 	/* 액션 */
-	void SampleFire(float fTime);
 	TActionPose m_tActionPose;
 	float m_fActionTime = 0.f;
 	float m_fActionWeight = 0.f;
+
+	/* 액션 : 사격 */
+	void SampleFire(float fTime);
 	static constexpr TShootParam s_tShootParam{};
+
+	/* 액션 : 팔 들기 */
+	void SampleShotGunUltimate(float fTime);
+	static constexpr float s_fRipperDuration = 3.f;
 
 	/* 애니메이션 디버그용 */
 	bool m_bAnimPause = false;
+
+	constexpr static int PP_ROOT = -1;
+	static constexpr float s_fForward = -1.f; /* LH 기준 팔 +x 회전 */
+	static constexpr float s_fLocoBlendSpeed = 10.f; /* 로코모션이 바뀔 때 목표 Param까지 멤버 Param이 쫓아가는 속도 */
+	static constexpr float s_fActionBlendSpeed = 20.f; /* 액션이 시작될/끝날 때 목표 Param까지 멤버 Param이 쫓아가는 속도 */
 
 public:
 	static CPlayerAnimator* Create(LPDIRECT3DDEVICE9 pGraphicDev);

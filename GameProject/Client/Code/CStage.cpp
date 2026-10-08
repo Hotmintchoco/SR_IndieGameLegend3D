@@ -1,4 +1,5 @@
 ﻿#include "pch.h"
+#include "CShaderEffectMgr.h"
 #include "CStage.h"
 
 /* 매니저 */
@@ -72,6 +73,9 @@ HRESULT CStage::Ready_Scene()
 		return E_FAIL;
 
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
+		return E_FAIL;
+
+	if (FAILED(Ready_Screen_Layer(L"Screen_Layer")))
 		return E_FAIL;
 
 	if (FAILED(Ready_Camera()))
@@ -192,16 +196,19 @@ HRESULT CStage::Ready_Camera()
 		return E_FAIL;
 	}
 
-	pCamera = CPlayerCamera::Create(m_pGraphicDev, pPlayerTransformCom);
+	CPlayerCamera* pPlayerCamera = CPlayerCamera::Create(m_pGraphicDev, pPlayerTransformCom);
 
-	if (!pCamera)
+	if (!pPlayerCamera)
 		return E_FAIL;
 
-	if (FAILED(pCameraMgr->Add_Camera(CLIENT_CAMERA_TYPE::PLAYER, pCamera)))
+	if (FAILED(pCameraMgr->Add_Camera(CLIENT_CAMERA_TYPE::PLAYER, pPlayerCamera)))
 	{
 		pCamera->Release();
 		return E_FAIL;
 	}
+
+	GetPlayer()->SetCamera(pPlayerCamera);
+
 
 	pCamera = CCinematicCamera::Create(m_pGraphicDev);
 
@@ -224,12 +231,19 @@ HRESULT CStage::Ready_Camera()
 
 void CStage::OnEnter()
 {
+    auto* pRoomMgr = CRoomLoadingMgr::GetInstance();
+    if (m_pCurrentRoomLayer && m_iCurrentRoomIndex >= 0)
+    {
+        const auto* pRoom = pRoomMgr->GetRoomData(m_iCurrentRoomIndex);
+        ApplyRoomShader(pRoomMgr->GetBiomeInfo(pRoom->iBiome).eType);
+    }
 	if (SUCCEEDED(CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::PLAYER)))
 		CClientCameraMgr::GetInstance()->LateUpdate_Camera(0.f);
 }
 
 void CStage::OnExit()
 {
+    CShaderEffectMgr::GetInstance()->Set_PostEffect(POST_EFFECT::NONE);
 	CSoundMgr::GetInstance()->StopBGM();
 
 }
@@ -549,17 +563,6 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"SkillEnableUI", pUI)))
 		return E_FAIL;
 
-	// Hud Hit Effect UI
-	pUI = CHitCreenUI::Create(m_pGraphicDev, L"Proto_HitScreenTexture");
-	if (nullptr == pUI)
-		return E_FAIL;
-
-	pUI->Set_Pos(WINCX >> 1, WINCY >> 1, 0.f);
-	pUI->Set_Size({ WINCX >> 1, WINCY >> 1 });
-
-	if (FAILED(pLayer->Add_GameObject(L"HitScreen", pUI)))
-		return E_FAIL;
-
 	// Boss Font
 	pUI = CUI::Create(m_pGraphicDev, L"Proto_BossFontTexture");
 	if (nullptr == pUI)
@@ -607,6 +610,30 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	return S_OK;
 }
 
+HRESULT CStage::Ready_Screen_Layer(const _tchar* pLayerTag)
+{
+	CLayer* pLayer = CLayer::Create();
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	CUI* pUI = nullptr;
+
+	// Hud Hit Effect UI
+	pUI = CHitCreenUI::Create(m_pGraphicDev, L"Proto_HitScreenTexture");
+	if (nullptr == pUI)
+		return E_FAIL;
+
+	pUI->Set_Pos(WINCX >> 1, WINCY >> 1, 0.f);
+	pUI->Set_Size({ WINCX >> 1, WINCY >> 1 });
+
+	if (FAILED(pLayer->Add_GameObject(L"HitScreen", pUI)))
+		return E_FAIL;
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
+
+	return S_OK;
+}
+
 void CStage::CheckRoomChanged()
 {
 	int m_iRoomIndex = CalculateRoomIndexFromPlayerPosition();
@@ -618,8 +645,21 @@ void CStage::CheckRoomChanged()
 		if(m_pStatus) m_pStatus->UpdateCurrentRoomIndex(m_iCurrentRoomIndex);
 		wstring wstrRoomLayerKey = L"Room_" + to_wstring(m_iCurrentRoomIndex) + L"_Layer";
 		CRoomLayer* pLayer = static_cast<CRoomLayer*>(CManagement::GetInstance()->Get_Layer(wstrRoomLayerKey.c_str()));
+
 		m_pCurrentRoomLayer = pLayer;
-		if(m_pCurrentRoomLayer) GetCurrentRoomLayer()->ApplyDarkness();
+		if (m_pCurrentRoomLayer)
+		{
+			m_pCurrentRoomLayer->ApplyDarkness();
+
+			auto* pMgr = CRoomLoadingMgr::GetInstance();
+			const auto* pRoom = pMgr->GetRoomData(m_iCurrentRoomIndex);
+			const auto biome = pMgr->GetBiomeInfo(pRoom->iBiome);
+
+			ApplyRoomShader(biome.eType);
+
+			if (pRoom->bBossRoom)
+				CUIMgr::GetInstance()->EnterBossScreen();
+		}
 	}
 }
 
@@ -642,6 +682,18 @@ int CStage::CalculateRoomIndexFromPlayerPosition()
 	if (0 > iCol || iCol >= iColCount || 0 > iRow || iRow >= iRowCount) return -1;
 
 	return iRow * iColCount + iCol;
+}
+
+void CStage::ApplyRoomShader(EBiomeType eBiomeType)
+{
+    POST_EFFECT eEffect = POST_EFFECT::NONE;
+    switch (eBiomeType)
+    {
+    case EBiomeType::AQUA: eEffect = POST_EFFECT::UNDERWATER; break;
+    case EBiomeType::LAVA: eEffect = POST_EFFECT::LAVA; break;
+    default: break;
+    }
+    CShaderEffectMgr::GetInstance()->Set_PostEffect(eEffect);
 }
 
 CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -7,6 +7,7 @@
 #include "CStage.h"
 #include "IRayTestable.h"
 #include "CRoomLayer.h"
+#include "CCursorPolicyMgr.h"
 
 CPlayerCamera::CPlayerCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCamera(pGraphicDev), m_pTarget(nullptr),
@@ -62,6 +63,8 @@ _int CPlayerCamera::Update_GameObject(_float fTimeDelta)
 	// 현재 Eye에서 시선 방향 갱신
 	Update_LookFromAngles();
 
+	UpdateBillBoardInfo();
+
 	return 0;
 }
 
@@ -80,12 +83,12 @@ void CPlayerCamera::SetPseudoScale(float fScale)
 
 void CPlayerCamera::Mouse_Move()
 {
+	if (!CCursorPolicyMgr::GetInstance()->IsCursorFixed()) return;
+
 	const _long mouseX = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_X);
 	const _long mouseY = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Y);
 	Rotate(D3DXToRadian(mouseX / 10.f), D3DXToRadian(mouseY / 10.f));
 	Update_LookFromAngles();
-
-	m_pTarget->Rotation(ROT_Y, mouseX / 10.f); /* 플레이어 회전 */
 }
 
 void CPlayerCamera::Follow_Target()
@@ -107,7 +110,7 @@ void CPlayerCamera::Follow_Target()
 	if (m_eCameraMode == CAMERA_MODE::THIRD_PERSON)
 	{
 		// 시선 방향의 반대쪽으로 물러나서 플레이어를 바라봄 (3인칭)
-		float fSpringArmLength = floatCalculateSpringArmLength();
+		float fSpringArmLength = CalculateSpringArmLength();
 		m_vEye = vPivot - vLook * min(fSpringArmLength - m_fNearPlaneMargin, m_fDistance);
 		m_vAt = vPivot;
 	}
@@ -121,7 +124,14 @@ void CPlayerCamera::Follow_Target()
 	m_vUp = { 0.f, 1.f, 0.f };
 }
 
-float CPlayerCamera::floatCalculateSpringArmLength()
+void CPlayerCamera::UpdateBillBoardInfo()
+{
+	const _float fCosPitch = cosf(m_fPitch);
+	const _vec3 vLook{ sinf(m_fYaw) * fCosPitch, -sinf(m_fPitch), cosf(m_fYaw) * fCosPitch };
+	m_tBillBoardInfo = { m_vEye , vLook };
+}
+
+float CPlayerCamera::CalculateSpringArmLength()
 {
 	CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
 	if (!pStage) return FLT_MAX;
