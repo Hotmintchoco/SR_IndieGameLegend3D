@@ -72,12 +72,6 @@ void CPlayerCamera::LateUpdate_GameObject(_float fTimeDelta)
 {
 	// 플레이어 Transform을 따라가도록 Eye 위치 갱신
 	Follow_Target();
-
-	// 쉐이킹 상태
-	m_vShakeOffset = { 0.f, 0.f, 0.f };
-
-	if (m_fShakeTime > 0.f)
-		Shaking_Action(fTimeDelta);
 }
 
 void CPlayerCamera::SetPseudoScale(float fScale)
@@ -85,20 +79,6 @@ void CPlayerCamera::SetPseudoScale(float fScale)
 	m_vEyeOffset = m_vEyeOffsetRaw * fScale;
 	m_fNear = m_fNearRaw * fScale;
 	m_fFar = m_fFarRaw * fScale;
-}
-
-void CPlayerCamera::Shaking_Action(_float fTimeDelta)
-{
-	m_fShakeTime -= fTimeDelta;
-
-	m_vShakeOffset = {
-	sinf(m_fShakeTime * 70.f) * 0.03f,
-	cosf(m_fShakeTime * 90.f) * 0.02f,
-	0.f
-	};
-
-	m_vEye += m_vShakeOffset;
-	m_vAt += m_vShakeOffset;
 }
 
 void CPlayerCamera::Mouse_Move()
