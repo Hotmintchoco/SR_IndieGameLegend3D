@@ -648,6 +648,4 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         break;
     }
     }
-
-
 }

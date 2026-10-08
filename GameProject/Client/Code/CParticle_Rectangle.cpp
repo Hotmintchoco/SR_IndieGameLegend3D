@@ -38,7 +38,7 @@ HRESULT CParticle_Rectangle::Ready_GameObject()
 
     if (m_eType == SAND)
     {
-        m_fFallingStartTime = (_float)(rand() % 128) / (256.f+128.f);
+        m_fFallingStartTime = (_float)(rand() % 128) / (256.f+128.f+64.f);
         _float fAngle = _float(rand() % 360);
         _vec3 vAngle = { 0.f,fAngle, 0.f };
         m_pTransformCom->Set_Angle(vAngle);

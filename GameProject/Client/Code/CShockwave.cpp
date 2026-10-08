@@ -32,8 +32,10 @@ _int CShockwave::Update_GameObject(_float fTimeDelta)
     m_fFrame += 6.f * fTimeDelta;
 
     if (6.f <= m_fFrame)
+    {
+        m_fFrame = 5.5f;
         Set_Dead(true);
-
+    }
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
 
     return iExit;

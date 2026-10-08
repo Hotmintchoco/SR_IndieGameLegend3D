@@ -133,6 +133,7 @@ _int CWorm::Update_GameObject(_float fTimeDelta)
             Opening_Worm(_fTimeDelta);
             break;
         case ATTACK:
+            Attack_Worm(_fTimeDelta);
             break;
 	    }
     }
@@ -257,7 +258,7 @@ void CWorm::Check_Sandburst(_float fTimeDelta)
             if (m_fElapsedTime2 > 0.5f)
             {
                 _float fTime = 0.f;
-                if (m_eWormState == SPAWN)
+                if (m_eWormState == SPAWN || m_eWormState == ATTACK)
                 {
                     if (m_bMoveFlag == false)
                         fTime = 0.4f;
@@ -364,12 +365,12 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
     if (m_fStateUpdateTime > m_fStateUpdateDuration)
     {
         m_fStateUpdateTime = 0.f;
-
+        m_bMotionEnd = false;
         Clear_MoveDest();
 
         if (m_iPhase == 0)
         {
-            m_eWormState = static_cast<WORMSTATE>(rand() % 2);
+            m_eWormState = static_cast<WORMSTATE>(rand() % 3);
             if (m_bMoveState == true)
             {
                 m_eWormState = MOVE;
@@ -378,10 +379,11 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
         }
         else
         {
-            m_eWormState = static_cast<WORMSTATE>(rand() % 2);
+            m_eWormState = static_cast<WORMSTATE>(rand() % 3);
         }
         //m_eWormState = SPAWN;
         //m_eWormState = MOVE;
+        //m_eWormState = ATTACK;
         if (m_eWormState == SPAWN)
         {
             Set_MoveDest();
@@ -398,7 +400,7 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
             Set_MoveDest();
             m_fStateUpdateDuration = 5.f;
             m_bMoveFlag = false;
-            Set_Speed_Worm(7.f);
+            Set_Speed_Worm(9.f);
         }
         else if (m_eWormState == IDLE)
         {
@@ -406,10 +408,14 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
         }
         else if (m_eWormState == ATTACK)
         {
-            m_fStateUpdateDuration = 6.f;
-
+            Set_MoveDest();
+            m_fStateUpdateDuration = 12.f;
+            m_bAttackStart = false;
             m_bMoveFlag = false;
-            Set_Speed_Worm(5.f);
+            m_bMoveFlag2 = false;
+            Set_Speed_Worm(9.f);
+            m_fAttackTime = 0.f;
+            m_fAttackTime2 = 0.f;
         }
     }
 }
@@ -430,7 +436,14 @@ void CWorm::Set_MoveDest()
     D3DXMatrixRotationY(&matRotY, D3DXToRadian(-90.f + (_float)iRand));
     D3DXVec3TransformNormal(&vDir, &vDir, &matRotY);
 
-    vDir *= 4.f;
+    if (m_eWormState == ATTACK)
+    {
+        vDir *= 3.5f;
+    }
+    else
+    {
+        vDir *= 4.f;
+    }
 
     _vec3 vInitPos = m_vRoomCenterLocation + vDir;
     vInitPos.y = -2.f;
@@ -449,13 +462,38 @@ void CWorm::Set_MoveDest()
     }
     else if (m_eWormState == SPAWN)
     {
-        //vDir = vPlayerPos - vInitPos;
-        //vDir.y = 0.f;
-        //D3DXVec3Normalize(&vDir, &vDir);
-        //vDir.y = 2.f + m_MoveHeight;
         vDir = { 0.f,5.f,0.f };
         _vec3 vDest = vInitPos + vDir;
         Push_Back_MoveDest(vDest);
+    }
+    else if (m_eWormState == ATTACK)
+    {
+        CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
+            ->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+        if (nullptr == pPlayerTransformCom) return;
+        _vec3 vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+        _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        _vec3 vDir2 = vPlayerPos - vPos;
+        vDir2.y = 0.f;
+        D3DXVec3Normalize(&vDir2, &vDir2);
+
+        vDir = { 0.f,1.f,0.f };
+
+        _vec3 vDest = vInitPos + vDir * 3.f - vDir2 * 0.5f;
+        Push_Back_MoveDest(vDest);
+
+        vDest += vDir * 1.5f - vDir2 * 0.5f;
+        Push_Back_MoveDest(vDest);
+
+        vDest += vDir2 + vDir * 0.5f;
+        Push_Back_MoveDest(vDest);
+
+        vDest += vDir2*0.5f;
+        Push_Back_MoveDest(vDest);
+
+        vDest += vDir2 - vDir*0.5f;
+        Push_Back_MoveDest(vDest);
+
     }
 }
 
@@ -573,6 +611,26 @@ void CWorm::IDLE_Worm(const _float& fTimeDelta)
 {
 }
 
+void CWorm::Attack_Worm(const _float& fTimeDelta)
+{
+    if (m_bMoveFlag == false)
+    {
+        Move_WormHead_BeforeAttack(fTimeDelta);
+    }
+    else if (m_bAttackStart == false)
+    {
+        m_fAttackTime += fTimeDelta;
+        if (m_fAttackTime > 1.5f)
+        {
+            m_bAttackStart = true;
+        }
+    }
+    else
+    {
+        Move_WormHead_AfterAttack(fTimeDelta);
+    }
+}
+
 void CWorm::Opening_Worm(const _float& fTimeDelta)
 {
 	m_bElapsedOpeningTime += fTimeDelta;
@@ -582,7 +640,7 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
         //오프닝 도착지점 세팅
         if (m_bOpeningStart == false)
         {
-            Set_Speed_Worm(7.f);
+            Set_Speed_Worm(9.f);
             m_bOpeningStart = true;
 
             CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()
@@ -1514,8 +1572,15 @@ void CWorm::Move_WormHead(const _float& fTimeDelta)
 {
     _vec3 vDir, vPos, vAngle, vDest;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    if (m_vMoveDest.empty())return;
-
+    if (m_vMoveDest.empty())
+    {
+        if (m_bMotionEnd == false)
+        {
+            m_bMotionEnd = true;
+            m_fStateUpdateDuration = m_fStateUpdateTime + 1.f;
+        }
+        return;
+    }
     vDest = m_vMoveDest.front();
     vDir = vDest - vPos;
     if (D3DXVec3Length(&vDir) > 0.125f)
@@ -1566,13 +1631,13 @@ void CWorm::Move_WormHead(const _float& fTimeDelta)
                     Push_Back_MoveDest(vDest);
 
                 }
-                else
-                {
-                    D3DXVec3Normalize(&vDir, &vDir);
-                    vDir.y = -1.f;
-                    _vec3 vDest = vPos + vDir * 15.f;
-                    Push_Back_MoveDest(vDest);
-                }
+                //else
+                //{
+                //    D3DXVec3Normalize(&vDir, &vDir);
+                //    vDir.y = -1.f;
+                //    _vec3 vDest = vPos + vDir * 15.f;
+                //    Push_Back_MoveDest(vDest);
+                //}
             }
         }
     }
@@ -1664,7 +1729,7 @@ void CWorm::Move_WormHead_AfterSpawn(const _float& fTimeDelta)
             vDest = vDest + vDir;
             Push_Back_MoveDest(vDest);
 
-            vDir = { 0.f, -20.f, 0.f };
+            vDir = { 0.f, -22.f, 0.f };
             vDest = vDest + vDir;
             Push_Back_MoveDest(vDest);
         }
@@ -1683,7 +1748,98 @@ void CWorm::Move_WormHead_AfterSpawn(const _float& fTimeDelta)
 
                     if (m_vMoveDest.empty())
                     {
-                        m_bOpening = false;
+                        if (m_bMotionEnd == false)
+                        {
+                            m_bMotionEnd = true;
+                            m_fStateUpdateDuration = m_fStateUpdateTime + 1.f;
+                        }
+                    }
+                }
+                else
+                {
+                    D3DXVec3Normalize(&vDir, &vDir);
+                    m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+
+                    _vec3 vAngle;
+                    vAngle.x = D3DXToDegree(-asinf(vDir.y));
+                    vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+                    vAngle.z = 0.f;
+                    m_pTransformCom->Set_Angle(vAngle);
+                }
+            }
+        }
+    }
+}
+
+void CWorm::Move_WormHead_BeforeAttack(const _float& fTimeDelta)
+{
+    _vec3 vDir, vPos, vAngle, vDest;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    if (m_vMoveDest.empty())return;
+
+    vDest = m_vMoveDest.front();
+    vDir = vDest - vPos;
+    if (D3DXVec3Length(&vDir) > 0.125f)
+    {
+        D3DXVec3Normalize(&vDir, &vDir);
+        m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+
+        _vec3 vAngle;
+        vAngle.x = D3DXToDegree(-asinf(vDir.y));
+        vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+        vAngle.z = 0.f;
+        m_pTransformCom->Set_Angle(vAngle);
+    }
+    else
+    {
+        Set_Pos(vDest);
+        if (!m_vMoveDest.empty())
+        {
+            m_vMoveDest.erase(m_vMoveDest.begin());
+            if (m_vMoveDest.empty())
+            {
+                m_bMoveFlag = true;
+            }
+        }
+    }
+}
+
+void CWorm::Move_WormHead_AfterAttack(const _float& fTimeDelta)
+{
+    if (m_fAttackTime2 < 0.5f)
+    {
+        m_fAttackTime2 += fTimeDelta;
+    }
+    else
+    {
+        if (m_bMoveFlag2 == false)
+        {
+            m_bMoveFlag2 = true;
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            vPos.y = -18.f;
+            Push_Back_MoveDest(vPos);
+
+        }
+        else
+        {
+            if (!m_vMoveDest.empty())
+            {
+                _vec3 vPos, vDir;
+                m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+                vDir = m_vMoveDest.front() - vPos;
+                if (D3DXVec3Length(&vDir) < 0.125f)
+                {
+                    if (!m_vMoveDest.empty())
+                        m_vMoveDest.erase(m_vMoveDest.begin());
+
+                    if (m_vMoveDest.empty())
+                    {
+                        if (m_bMotionEnd == false)
+                        {
+                            m_bMotionEnd = true;
+                            m_fStateUpdateDuration = m_fStateUpdateTime + 1.f;
+                        }
                     }
                 }
                 else

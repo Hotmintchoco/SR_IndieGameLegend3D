@@ -33,8 +33,10 @@ _int CSandburst::Update_GameObject(_float fTimeDelta)
 
     m_fFrame += 20.f * fTimeDelta;
     if (5.f <= m_fFrame)
+    {
+        m_fFrame = 4.5f;
         Set_Dead(true);
-
+    }
     LookAtPlayer2_Sandburst();
 
     return iExit;

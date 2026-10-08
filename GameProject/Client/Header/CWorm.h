@@ -13,7 +13,7 @@ public:
 		SIDE45,
 		CONNECTOR
 	};
-	enum WORMSTATE { SPAWN, MOVE, IDLE, DEAD, ATTACK, OPENING };
+	enum WORMSTATE { SPAWN, MOVE, ATTACK, IDLE, DEAD, OPENING };
 
 protected:
 	explicit CWorm(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -37,9 +37,13 @@ private:
 	void Update_WormBoby(const _float& fTimeDelta);
 	void Spawn_Monster(const _float& fTimeDelta);
 	void IDLE_Worm(const _float& fTimeDelta);
+	void Attack_Worm(const _float& fTimeDelta);
 
 	void Move_WormHead_BeforeSpawn(const _float& fTimeDelta);
 	void Move_WormHead_AfterSpawn(const _float& fTimeDelta);
+
+	void Move_WormHead_BeforeAttack(const _float& fTimeDelta);
+	void Move_WormHead_AfterAttack(const _float& fTimeDelta);
 
 	void Set_MoveDest();
 	void Set_Pos_Worm(_vec3 vPos);
@@ -110,6 +114,10 @@ private:
 	_bool m_bMoveFlag2 = false;
 	_bool m_bMoveState = true;
 
+	_float m_fAttackTime = 0.f;
+	_float m_fAttackTime2 = 0.f;
+	_bool m_bAttackStart = false;
+
 	_vec3 m_vSpawnDirection = { 0.f,0.f,0.f };
 
 	_bool m_bDead_Effect1 = false;
@@ -135,6 +143,8 @@ private:
 	_float m_fElapsedTime3 = 0.f;
 
 	_matrix m_matConnector;
+
+	_bool m_bMotionEnd = false;
 
 	inline static _vec3 s_vRoomCenter = { 0.f,0.f,0.f };
 };
