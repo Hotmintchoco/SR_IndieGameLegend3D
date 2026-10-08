@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "Engine_Define.h"
 
-enum class POST_EFFECT { NONE, UNDERWATER, LAVA };
+enum class POST_EFFECT { NONE, UNDERWATER, LAVA, INVERT };
 
 // One effect owns its shader and scene capture. CShaderEffectMgr owns the effect.
 class CPostEffect

@@ -1212,6 +1212,15 @@
     <ClCompile Include="..\Code\CUnderwaterEffect.cpp">
       <Filter>05. Shader</Filter>
     </ClCompile>
+    <ClInclude Include="..\Header\CInvertEffect.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CInvertEffect.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <None Include="..\Bin\Resource\Shader\Invert.hlsl">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
     <ClInclude Include="..\Header\CLavaEffect.h">
       <Filter>05. Shader</Filter>
     </ClInclude>

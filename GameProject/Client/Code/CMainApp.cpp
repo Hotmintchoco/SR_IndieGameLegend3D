@@ -55,17 +55,24 @@ int CMainApp::Update_MainApp(_float fTimeDelta)
 	CDInputMgr::GetInstance()->Update_InputDev();
 
 	// 정민 : 쉐이더 왜곡 효과 테스트용
+	auto* pEffects = CShaderEffectMgr::GetInstance();
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_F6))
 	{
-		auto* pEffects = CShaderEffectMgr::GetInstance();
         pEffects->Set_PostEffect(pEffects->Get_PostEffectType() == POST_EFFECT::NONE
             ? POST_EFFECT::UNDERWATER : POST_EFFECT::NONE);
-        auto* pWater = static_cast<CUnderwaterEffect*>(pEffects->Get_PostEffect(POST_EFFECT::UNDERWATER));
-		// 기존 4x4 확대/축소, 움직임 속도
-		if (pWater) pWater->Set_PulseParameters(0.14f, 2.5f);
-		// 물방울 굴절 강도, 움직임 속도
-		if (pWater) pWater->Set_WaterDropParameters(0.06f, 1.f);
 	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F7))
+	{
+		pEffects->Set_PostEffect(pEffects->Get_PostEffectType() == POST_EFFECT::NONE
+			? POST_EFFECT::LAVA : POST_EFFECT::NONE);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F8))
+	{
+		pEffects->Set_PostEffect(pEffects->Get_PostEffectType() == POST_EFFECT::NONE
+			? POST_EFFECT::INVERT : POST_EFFECT::NONE);
+	}
+
+
 	CShaderEffectMgr::GetInstance()->Update_PostEffect(fTimeDelta);
 	CCursorPolicyMgr::GetInstance()->Update();
 

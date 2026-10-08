@@ -449,6 +449,9 @@
     <ClCompile Include="..\Code\CUnderwaterEffect.cpp" />
     <ClInclude Include="..\Header\CLavaEffect.h" />
     <ClCompile Include="..\Code\CLavaEffect.cpp" />
+    <ClInclude Include="..\Header\CInvertEffect.h" />
+    <ClCompile Include="..\Code\CInvertEffect.cpp" />
+    <None Include="..\Bin\Resource\Shader\Invert.hlsl" />
     <ClInclude Include="..\Header\CShaderEffectMgr.h" />
     <ClCompile Include="..\Code\CShaderEffectMgr.cpp" />
     <None Include="..\Bin\Resource\Shader\Lava.hlsl" />
