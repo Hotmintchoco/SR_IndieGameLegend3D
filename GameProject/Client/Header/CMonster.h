@@ -33,7 +33,9 @@ public:
 
 	_bool Get_Collision_WithMonster() { return m_bCollision_WithMonster; }
 
-
+	void Set_Damage(_float fDamage) { m_iHp -= (_int)fDamage; }
+	_int Get_CurrentHp() { return m_iHp; }
+	_int Get_MaxHp() { return m_iMaxHp; }
 
 protected:
 	HRESULT			Add_Component();
