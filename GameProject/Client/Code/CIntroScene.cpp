@@ -18,7 +18,14 @@ HRESULT CIntroScene::Ready_Scene()
 {
     if (FAILED(Ready_Prototype()))
         return E_FAIL;
-    return Ready_UI_Layer();
+
+    if (FAILED(Ready_UI_Layer()))
+        return E_FAIL;
+
+    if (FAILED(CSoundMgr::GetInstance()->LoadSound(L"../Bin/Resource/Sound/sfx/")))
+        return E_FAIL;
+
+    return S_OK;
 }
 
 HRESULT CIntroScene::Ready_Prototype()
@@ -73,9 +80,64 @@ HRESULT CIntroScene::Ready_UI_Layer()
     return S_OK;
 }
 
+void CIntroScene::Start_Dialogue(const std::wstring& strText)
+{
+    m_strDialogue = strText;
+    m_strVisibleDialogue.clear();
+    m_vecWordEnds.clear();
+
+    m_iVisibleWordCount = 0;
+    m_fTextElapsed = 0.f;
+
+    auto IsSpace = [](wchar_t ch)
+        {
+            return ch == L' ' || ch == L'\n' || ch == L'\r' || ch == L'\t';
+        };
+
+    for (size_t i = 0; i < m_strDialogue.size(); ++i)
+    {
+        const bool bWordEnd =
+            !IsSpace(m_strDialogue[i]) && (i + 1 == m_strDialogue.size() || IsSpace(m_strDialogue[i + 1]));
+
+        if (bWordEnd)
+            m_vecWordEnds.push_back(i + 1);
+    }
+}
+
+void CIntroScene::Update_Dialogue(_float fTimeDelta)
+{
+    if (m_iVisibleWordCount >= m_vecWordEnds.size())
+        return;
+
+    m_fTextElapsed += fTimeDelta;
+
+    bool bWordRevealed = false;
+
+    while (m_fTextElapsed >= m_fWordInterval &&
+        m_iVisibleWordCount < m_vecWordEnds.size())
+    {
+        m_fTextElapsed -= m_fWordInterval;
+
+        const size_t iEnd = m_vecWordEnds[m_iVisibleWordCount];
+        ++m_iVisibleWordCount;
+
+        m_strVisibleDialogue = m_strDialogue.substr(0, iEnd);
+        bWordRevealed = true;
+    }
+
+    if (bWordRevealed)
+        CSoundMgr::GetInstance()->PlaySFX(L"sfxEnergy.wav");
+}
+
 void CIntroScene::OnEnter()
 {
     CCursorPolicyMgr::GetInstance()->Set_MenuMode(true);
+
+    CSoundMgr::GetInstance()->SetSFXVolume(0.3f);
+
+    Start_Dialogue(
+        L"임무에 대한 설명은 들었나?\n"
+        L"출발할 준비를 하게.");
 }
 
 void CIntroScene::OnExit()
@@ -93,7 +155,10 @@ _int CIntroScene::Update_Scene(_float fTimeDelta)
         Finish_Intro();
 
     if (!m_bFinishRequested)
+    {
+        Update_Dialogue(fTimeDelta);
         return CScene::Update_Scene(fTimeDelta);
+    }
 
     m_bFinishRequested = false;
     CLogo* pLogo = CLogo::Create(m_pGraphicDev);
@@ -117,13 +182,17 @@ void CIntroScene::Render_Scene()
     const float fLeft = WINCX * 0.5f - 480.f * fScale;
     const _vec2 vTitle{ fLeft + 210.f * fScale, 142.f * fScale };
     const _vec2 vGuide{ fLeft, 325.f * fScale };
-    CFontMgr::GetInstance()->Render_Font(L"Font_Dialogue",
-        L"임무에 대한 설명은 들었나?\n출발할 준비를 하게.", &vTitle,
-        D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+
+    CFontMgr::GetInstance()->Render_Font(
+                             L"Font_Dialogue",
+                             m_strVisibleDialogue.c_str(),
+                             &vTitle,
+                             D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+
     CFontMgr::GetInstance()->Render_Font(L"Font_Dialogue",
         m_bLoadingFailed ? L"Loading failed. Press ENTER to retry."
                          : L"ENTER / SPACE : 건너뛰기   ESC : 종료",
-        &vGuide, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+                            &vGuide, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 }
 
 CIntroScene* CIntroScene::Create(LPDIRECT3DDEVICE9 pGraphicDev)
