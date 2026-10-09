@@ -32,18 +32,11 @@ HRESULT CMine::Ready_GameObject()
 
 _int CMine::Update_GameObject(_float fTimeDelta)
 {
-    if (m_iHp <= 0)
-    {
-        m_bDelete = true;
-        Effect_SmallExplode();
-    }
+    Check_Hp(fTimeDelta);
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
     Set_OnTerrain();
-    m_fFrame += fTimeDelta * 6.f;
-    if (m_fFrame >= 2.f)
-        m_fFrame = 0.f;
-
+    Animation_Monster(fTimeDelta);
     LookAtPlayer2();
     return iExit;
 }
@@ -55,7 +48,6 @@ void CMine::LateUpdate_GameObject(_float fTimeDelta)
 
 void CMine::Render_GameObject()
 {
-
     if (m_bHitState == true) CMonster::Enable_HitRenderState();
 
     CMonster::Render_GameObject();
@@ -84,6 +76,22 @@ void CMine::OnCollisionEnter(COLLINFO eCollInfo)
         m_fHitEffectElapsedTime = 0.f;
         m_iHp = 0;
     }
+}
+
+void CMine::Check_Hp(_float& fTimedelta)
+{
+    if (m_iHp <= 0)
+    {
+        m_bDelete = true;
+        Effect_SmallExplode();
+    }
+}
+
+void CMine::Animation_Monster(const _float& fTimeDelta)
+{
+    m_fFrame += fTimeDelta * 6.f;
+    if (m_fFrame >= 2.f)
+        m_fFrame = 0.f;
 }
 
 HRESULT CMine::Add_Component()

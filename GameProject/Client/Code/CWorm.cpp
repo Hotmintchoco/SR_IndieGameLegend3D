@@ -28,7 +28,8 @@ HRESULT CWorm::Ready_GameObject()
 
     m_pTransformCom->Set_Scale(0.75f, 0.5f, 0.5f);
 
-    m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+    m_pColliderCom->Set_Radius(vScale.x);
 
     m_iMaxHp = 5;
     m_iHp = m_iMaxHp;
@@ -47,100 +48,45 @@ HRESULT CWorm::Ready_GameObject()
 
 _int CWorm::Update_GameObject(_float fTimeDelta)
 {
-    if (m_iWormIndex == 1)
-        Set_RoomCenterLocation();
-
     Set_Init_Worm();
+    Check_Hp(fTimeDelta);
+    Animation_Monster(fTimeDelta);
 
-    _float _fTimeDelta = fTimeDelta;
-    if (m_iHp <= 0)
-	{
-        m_fElapsedDeadTime3 += fTimeDelta;
-		if (m_bDeadStart == false)
-		{
-			m_bDeadStart = true;
-
-            m_eWormState = DEAD;
-
-            m_bMoveFlag = false;
-            m_bMoveFlag2 = false;
-            m_pColliderCom->Set_IsActive(false);
-            if (m_iWormIndex == 1)
-            {
-                Set_HeadWorm_Null();
-            }
-		}
-        if (m_pNextWorm != nullptr)
-        {
-            if (m_fElapsedDeadTime3 > 0.25f)
-            {
-                static_cast<CWorm*>(m_pNextWorm)->Set_Damage(static_cast<CWorm*>(m_pNextWorm)->Get_Hp());
-                m_pNextWorm = nullptr;
-            }
-        }
-    }
-    else if (m_iHp <= m_iMaxHp / 2)
-    {
-        m_iPhase = 1;
-        //_fTimeDelta *= 1.5f;
-    }
-
-    if (m_iWormIndex == 1)
-    {
-        m_fFrame += fTimeDelta * 8.f;
-        if (m_fFrame >= 4.f)
-            m_fFrame -= 4.f;
-    }
-
-    if (m_iWormIndex == 1 || m_iWormIndex == 10)
-    {
-        m_pTransformCom->Set_Scale(0.75f, 0.5f, 0.5f);
-    }
-    else
-    {
-        m_pTransformCom->Set_Scale(0.5f, 0.5f, 0.5f);
-    }
-    _int    iExit = CMonster::Update_GameObject(_fTimeDelta);
+    _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
     Check_Sandburst(fTimeDelta);
     if (m_iWormIndex == 1)
     {
-		Update_Motion(_fTimeDelta);
+		Update_Motion(fTimeDelta);
         switch (m_eWormState)
         {
         case IDLE:
-            IDLE_Worm(_fTimeDelta);
+            IDLE_Worm(fTimeDelta);
             break;
         case SPAWN:
-            Spawn_Monster(_fTimeDelta);
+            Spawn_Monster(fTimeDelta);
             break;
         case MOVE:
-            Move_WormHead(_fTimeDelta);
+            Move_WormHead(fTimeDelta);
             break;
         case DEAD:
-            Worm_Dead(_fTimeDelta);
+            Worm_Dead(fTimeDelta);
             break;
         case OPENING:
-            Opening_Worm(_fTimeDelta);
+            Opening_Worm(fTimeDelta);
             break;
         case ATTACK:
-            Attack_Worm(_fTimeDelta);
+            Attack_Worm(fTimeDelta);
             break;
 	    }
     }
     else
     {
 		if (m_eWormState == DEAD)
-		{
-			Worm_Dead(_fTimeDelta);    
-		}
+			Worm_Dead(fTimeDelta);
         else
-        {
-            Update_WormBoby(_fTimeDelta);
-        }
-        //if (m_pHeadWorm != nullptr && static_cast<CWorm*>(m_pHeadWorm)->Get_WormState() != DEAD)
+            Update_WormBoby(fTimeDelta);
     }
-
     return iExit;
 }
 
@@ -148,7 +94,6 @@ void CWorm::LateUpdate_GameObject(_float fTimeDelta)
 {
     CMonster::LateUpdate_GameObject(fTimeDelta);
     Set_Motion_FromAngle();
-
     Update_Connector();
 }
 
@@ -193,6 +138,59 @@ void CWorm::OnCollisionEnter(COLLINFO eCollInfo)
         if (m_pHeadWorm == nullptr)return;
         if (static_cast<CWorm*>(m_pHeadWorm)->Get_Hp() <= 0) return;
         static_cast<CWorm*>(m_pHeadWorm)->Set_Damage(1);
+    }
+}
+
+void CWorm::Check_Hp(_float& fTimeDelta)
+{
+    if (m_iHp <= 0)
+    {
+        m_fElapsedDeadTime3 += fTimeDelta;
+        if (m_bDeadStart == false)
+        {
+            m_bDeadStart = true;
+
+            m_eWormState = DEAD;
+
+            m_bMoveFlag = false;
+            m_bMoveFlag2 = false;
+            m_pColliderCom->Set_IsActive(false);
+            if (m_iWormIndex == 1)
+            {
+                Set_HeadWorm_Null();
+            }
+        }
+        if (m_pNextWorm != nullptr)
+        {
+            if (m_fElapsedDeadTime3 > 0.25f)
+            {
+                static_cast<CWorm*>(m_pNextWorm)->Set_Damage(static_cast<CWorm*>(m_pNextWorm)->Get_Hp());
+                m_pNextWorm = nullptr;
+            }
+        }
+    }
+    else if (m_iHp <= m_iMaxHp / 2)
+    {
+        m_iPhase = 1;
+        //fTimeDelta *= 1.5f;
+    }
+    if (m_iWormIndex == 1 || m_iWormIndex == 10)
+    {
+        m_pTransformCom->Set_Scale(0.75f, 0.5f, 0.5f);
+    }
+    else
+    {
+        m_pTransformCom->Set_Scale(0.5f, 0.5f, 0.5f);
+    }
+}
+
+void CWorm::Animation_Monster(const _float& fTimeDelta)
+{
+    if (m_iWormIndex == 1)
+    {
+        m_fFrame += fTimeDelta * 8.f;
+        if (m_fFrame >= 4.f)
+            m_fFrame -= 4.f;
     }
 }
 
@@ -864,7 +862,8 @@ void CWorm::Worm_Dead_Effect()
 
 void CWorm::Set_Init_Worm()
 {
-
+    if (m_iWormIndex == 1)
+        Set_RoomCenterLocation();
     if (m_bSet_InitPos == false)
     {
         m_bSet_InitPos = true;

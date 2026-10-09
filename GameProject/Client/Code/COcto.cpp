@@ -26,7 +26,8 @@ HRESULT COcto::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(0.5f, 0.5f, 0.5f);
-    m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+    m_pColliderCom->Set_Radius(vScale.x);
 
     m_iMaxHp = 5;
     m_iHp = m_iMaxHp;
@@ -39,25 +40,9 @@ HRESULT COcto::Ready_GameObject()
 _int COcto::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
-    if (m_bUpdateStart == false)
-    {
-        m_bUpdateStart = true;
-        m_pTransformCom->Get_Info(INFO_POS, &m_vOriginPos);
-        LookAtPlayer2();
-    }
-    if (m_iHp <= 0)
-    {
-        m_bDelete = true;
-        Effect_SmallExplode();
-        DropItem();
-    }
-
-
+    Check_Hp(fTimeDelta);
 	Set_OnTerrain();
-	m_fFrame += fTimeDelta * 8.f;
-	if (m_fFrame >= 4.f)
-		m_fFrame = 0.f;
-
+    Animation_Monster(fTimeDelta);
     Move_Octo(fTimeDelta);
     Attack_Octo(fTimeDelta);
     LookAtPlayer2();
@@ -92,6 +77,29 @@ void COcto::Render_GameObject()
 void COcto::OnCollisionEnter(COLLINFO eCollInfo)
 {
     CMonster::OnCollisionEnter(eCollInfo);
+}
+
+void COcto::Check_Hp(_float& fTimedelta)
+{
+    if (m_bUpdateStart == false)
+    {
+        m_bUpdateStart = true;
+        m_pTransformCom->Get_Info(INFO_POS, &m_vOriginPos);
+        LookAtPlayer2();
+    }
+    if (m_iHp <= 0)
+    {
+        m_bDelete = true;
+        Effect_SmallExplode();
+        DropItem();
+    }
+}
+
+void COcto::Animation_Monster(const _float& fTimeDelta)
+{
+    m_fFrame += fTimeDelta * 8.f;
+    if (m_fFrame >= 4.f)
+        m_fFrame = 0.f;
 }
 
 HRESULT COcto::Add_Component()

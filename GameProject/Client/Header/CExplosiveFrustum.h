@@ -34,8 +34,8 @@ private:
 	void SpawnChildren();
 
 private:
-	Engine::CPlyTex* m_pBufferCom;
-	Engine::CTexture* m_pTextureCom;
+	Engine::CPlyTex* m_pBufferCom = nullptr;
+	Engine::CTexture* m_pTextureCom = nullptr;
 
 	CExplosiveFrustumLight* m_pLight = nullptr;
 	CExplosiveFrustumGlass* m_pGlass = nullptr;

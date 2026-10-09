@@ -32,7 +32,10 @@ HRESULT COctoBullet::Ready_GameObject()
     m_pTransformCom->Set_Pos(m_vStart);
     m_pTransformCom->Set_Scale(_vec3{ 0.15f, 0.15f, 0.15f });
     m_pColliderCom->Set_Owner(this);
-    m_pColliderCom->Set_Radius(0.15f);
+
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+    m_pColliderCom->Set_Radius(vScale.x);
+
     m_iTotalFrameCount = m_pTextureCom->GetCount();
 
     s_tData.fLifeTime = 100.f;

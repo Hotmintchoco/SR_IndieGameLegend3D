@@ -15,6 +15,9 @@ public:
 
 	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
 
+	void Check_Hp(_float& fTimedelta) override {}
+	void Animation_Monster(const _float& fTimeDelta) override;
+
 private:
 	HRESULT			Add_Component();
 
@@ -32,7 +35,7 @@ private:
 	_vec3 m_vVelocity{ 0.f,0.f,0.f };
 	_float m_fLandingTime = 0.f;
 	_float m_fLandingVelocity = 0.f;
-	_uint m_iLandingCount = 0.f;
+	_uint m_iLandingCount = 0;
 
 protected:
 	virtual void		Free();

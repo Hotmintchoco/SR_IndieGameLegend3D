@@ -31,6 +31,9 @@ public:
 	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
 	virtual 		void		OnCollisionStay(COLLINFO eCollInfo) override;
 
+	virtual void Check_Hp(_float& fTimeDelta) {}
+	virtual void Animation_Monster(const _float& fTimeDelta) {}
+
 	_bool Get_Collision_WithMonster() { return m_bCollision_WithMonster; }
 
 	void Set_Damage(_float fDamage) { m_iHp -= (_int)fDamage; }
@@ -102,7 +105,7 @@ public:
 	{
 		return 60.f + 13.f * floorf((z - 60.f + 6.5f) / 13.f);
 	}
-	void Set_RoomCenterLocation();
+	virtual void Set_RoomCenterLocation();
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

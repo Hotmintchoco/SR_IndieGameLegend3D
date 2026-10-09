@@ -15,6 +15,9 @@ public:
 
 	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
 
+	void Check_Hp(_float& fTimedelta) override;
+	void Animation_Monster(const _float& fTimeDelta) override;
+
 private:
 	HRESULT			Add_Component();
 

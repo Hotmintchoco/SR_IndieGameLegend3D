@@ -32,21 +32,14 @@ HRESULT CSpeyeder::Ready_GameObject()
 
 _int CSpeyeder::Update_GameObject(_float fTimeDelta)
 {
-    if (m_iHp <= 0)
-    {
-        m_bDelete = true;
-        Effect_SmallExplode();
-        DropItem();
-    }
+    Check_Hp(fTimeDelta);
+    Animation_Monster(fTimeDelta);
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
     if (m_bLandingState == true)
     {
         Set_OnTerrain();
         Chase_Player(fTimeDelta, 2.f);
-        m_fFrame += fTimeDelta * 10.f;
-        if (m_fFrame >= 4.f)
-            m_fFrame = 0.f;
     }
     else
     {
@@ -92,6 +85,26 @@ void CSpeyeder::OnCollisionEnter(COLLINFO eCollInfo)
     CMonster::OnCollisionEnter(eCollInfo);
 }
 
+void CSpeyeder::Check_Hp(_float& fTimedelta)
+{
+    if (m_iHp <= 0)
+    {
+        m_bDelete = true;
+        Effect_SmallExplode();
+        DropItem();
+    }
+}
+
+void CSpeyeder::Animation_Monster(const _float& fTimeDelta)
+{
+    if (m_bLandingState == true)
+    {
+        m_fFrame += fTimeDelta * 10.f;
+        if (m_fFrame >= 4.f)
+            m_fFrame = 0.f;
+    }
+}
+
 HRESULT CSpeyeder::Add_Component()
 {
     CComponent* pComponent = nullptr;
@@ -124,21 +137,20 @@ CSpeyeder* CSpeyeder::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CSpeyeder::Land(const _float& fTimeDelta)
 {
-    _vec3 vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
     m_vLandingDirection.y -= 9.8f * fTimeDelta;
-
-    if(m_pTransformCom->m_vInfo[INFO_POS].y < m_pTransformCom->m_vScale.y)
+    
+    if (vPos.y < vScale.y)
     {
-        _float y = m_pTransformCom->m_vScale.y;
-        _float x = m_pTransformCom->m_vInfo[INFO_POS].x;
-        _float z = m_pTransformCom->m_vInfo[INFO_POS].z;
+        _float y = vScale.y;
+        _float x = vPos.x;
+        _float z = vPos.z;
         m_pTransformCom->Set_Pos(x, y, z);
         m_bLandingState = true;
         return;
     }
     m_pTransformCom->Move_Pos(&m_vLandingDirection, 1.f, fTimeDelta);
-    
 }
 
 void CSpeyeder::Free()

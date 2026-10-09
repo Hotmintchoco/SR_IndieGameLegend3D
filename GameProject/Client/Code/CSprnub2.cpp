@@ -24,7 +24,8 @@ HRESULT CSprnub2::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(0.35f, 0.35f, 0.35f);
-    m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+    m_pColliderCom->Set_Radius(vScale.x);
 
     m_iMaxHp = 2;
     m_iHp = m_iMaxHp;
@@ -34,12 +35,8 @@ HRESULT CSprnub2::Ready_GameObject()
 
 _int CSprnub2::Update_GameObject(_float fTimeDelta)
 {
-    if (m_iHp <= 0)
-    {
-        m_bDelete = true;
-        Effect_SmallExplode();
-        DropItem();
-    }
+    Check_Hp(fTimeDelta);
+    Animation_Monster(fTimeDelta);
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
     Check_Jump(fTimeDelta);
@@ -54,9 +51,6 @@ _int CSprnub2::Update_GameObject(_float fTimeDelta)
         Move(fTimeDelta);
         break;
     }
-    m_fFrame += fTimeDelta * 5.f;
-    if (m_fFrame >= 2.f)
-        m_fFrame = 0.f;
 
     return iExit;
 }
@@ -90,6 +84,23 @@ void CSprnub2::Render_GameObject()
 void CSprnub2::OnCollisionEnter(COLLINFO eCollInfo)
 {
     CMonster::OnCollisionEnter(eCollInfo);
+}
+
+void CSprnub2::Check_Hp(_float& fTimedelta)
+{
+    if (m_iHp <= 0)
+    {
+        m_bDelete = true;
+        Effect_SmallExplode();
+        DropItem();
+    }
+}
+
+void CSprnub2::Animation_Monster(const _float& fTimeDelta)
+{
+    m_fFrame += fTimeDelta * 5.f;
+    if (m_fFrame >= 2.f)
+        m_fFrame = 0.f;
 }
 
 HRESULT CSprnub2::Add_Component()
@@ -158,13 +169,13 @@ void CSprnub2::Move(const _float& fTimeDelta)
 
 void CSprnub2::Jump(const _float& fTimeDelta)
 {
-    _vec3 vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
     m_vJumpDirection.y -= 9.8f * fTimeDelta;
     m_fJumpTime += fTimeDelta;
-    if (vPos.y < m_pTransformCom->m_vScale.y && m_fJumpTime>0.25f)
+    if (vPos.y < vScale.y && m_fJumpTime>0.25f)
     {
-        vPos.y = m_pTransformCom->m_vScale.y;
+        vPos.y = vScale.y;
         m_pTransformCom->Set_Pos(vPos);
         m_bLandingState = true;
         m_eMonsterState = MOVE;

@@ -33,12 +33,8 @@ HRESULT CGlubba::Ready_GameObject()
 
 _int CGlubba::Update_GameObject(_float fTimeDelta)
 {
-    if (m_iHp <= 0)
-    {
-        m_bDelete = true;
-        Effect_SmallExplode();
-        DropItem();
-    }
+    Check_Hp(fTimeDelta);
+    Animation_Monster(fTimeDelta);
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
     switch (m_eMonsterState)
@@ -53,11 +49,6 @@ _int CGlubba::Update_GameObject(_float fTimeDelta)
         Chase_Player(fTimeDelta, 0.75f);
         break;
     }
-    m_fFrame += fTimeDelta * 5.f;
-    if (m_fFrame >= 4.f)
-        m_fFrame = 0.f;
-
-
 
     return iExit;
 }
@@ -91,6 +82,23 @@ void CGlubba::Render_GameObject()
 void CGlubba::OnCollisionEnter(COLLINFO eCollInfo)
 {
     CMonster::OnCollisionEnter(eCollInfo);
+}
+
+void CGlubba::Check_Hp(_float& fTimedelta)
+{
+    if (m_iHp <= 0)
+    {
+        m_bDelete = true;
+        Effect_SmallExplode();
+        DropItem();
+    }
+}
+
+void CGlubba::Animation_Monster(const _float& fTimeDelta)
+{
+    m_fFrame += fTimeDelta * 5.f;
+    if (m_fFrame >= 4.f)
+        m_fFrame = 0.f;
 }
 
 HRESULT CGlubba::Add_Component()
@@ -129,13 +137,13 @@ void CGlubba::Free()
 
 void CGlubba::Land(const _float& fTimeDelta)
 {
-    _vec3 vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
     m_vLandingDirection.y -= 9.8f * fTimeDelta;
 
-    if (vPos.y < m_pTransformCom->m_vScale.y)
+    if (vPos.y < vScale.y)
     {
-        vPos.y = m_pTransformCom->m_vScale.y;
+        vPos.y = vScale.y;
         m_pTransformCom->Set_Pos(vPos);
         m_bLandingState = true;
         m_eMonsterState = MOVE;

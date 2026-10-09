@@ -171,7 +171,9 @@ void CExplosiveFrustum::Destroy()
     CRandomMgr::GetInstance()->GetRandomValue<float>(-0.1f, 0.1f),
     };
     const float fScaleNoise = CRandomMgr::GetInstance()->ApplyRandomNoise<float>(0.7f, 0.2f);
-    pObject = CFrustumExplodeEffect::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS] + vPosNoise, _vec3{ fScaleNoise, fScaleNoise, fScaleNoise });
+
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    pObject = CFrustumExplodeEffect::Create(m_pGraphicDev, vPos + vPosNoise, _vec3{ fScaleNoise, fScaleNoise, fScaleNoise });
     if (nullptr == pObject)
         assert(0);
     if (FAILED(pScene->Add_GameObject(L"FrustumExplode", pObject)))
@@ -186,7 +188,7 @@ void CExplosiveFrustum::Destroy()
     const float fStartScale = CRandomMgr::GetInstance()->ApplyRandomNoise<float>(0.2f, 1.f);
     const float fEndScale = CRandomMgr::GetInstance()->ApplyRandomNoise<float>(1.f + fStartScale, 0.6f);
     const float fLifeTime = CRandomMgr::GetInstance()->GetRandomValue<float>(0.05f, 0.2f);
-    pObject = CExplodeSphere::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS] + vPosNoise, fStartScale, fEndScale, fLifeTime);
+    pObject = CExplodeSphere::Create(m_pGraphicDev, vPos + vPosNoise, fStartScale, fEndScale, fLifeTime);
     if (nullptr == pObject)
         assert(0);
     if (FAILED(pScene->Add_GameObject(L"ExplodeSphere", pObject)))

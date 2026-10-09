@@ -266,7 +266,10 @@ void CMonster::Effect_SmallExplode()
     CGameObject* pGameObject = nullptr;
     CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
 
-    pGameObject = CSmallExplode::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS], m_pTransformCom->m_vScale);
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+
+    pGameObject = CSmallExplode::Create(m_pGraphicDev, vPos, vScale);
     if (nullptr == pGameObject) return;
 
     if (FAILED(pLayer->Add_GameObject(L"SmallExplode", pGameObject))) return;
@@ -411,7 +414,9 @@ void CMonster::Set_OnTerrain()
 
     _float  fY = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
 
-    m_pTransformCom->Set_Pos(vPos.x, fY + m_pTransformCom->m_vScale.y, vPos.z);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+
+    m_pTransformCom->Set_Pos(vPos.x, fY + vScale.y, vPos.z);
 }
 
 void CMonster::Set_RoomCenterLocation()

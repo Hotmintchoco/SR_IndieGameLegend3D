@@ -34,12 +34,8 @@ HRESULT CSprnub1::Ready_GameObject()
 
 _int CSprnub1::Update_GameObject(_float fTimeDelta)
 {
-    if (m_iHp <= 0)
-    {
-        m_bDelete = true;
-        Effect_SmallExplode();
-        DropItem();
-    }
+    Check_Hp(fTimeDelta);
+    Animation_Monster(fTimeDelta);
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
     Check_Jump(fTimeDelta);
@@ -54,9 +50,6 @@ _int CSprnub1::Update_GameObject(_float fTimeDelta)
         Move(fTimeDelta);
         break;
     }
-	m_fFrame += fTimeDelta * 5.f;
-	if (m_fFrame >= 2.f)
-		m_fFrame = 0.f;
 
     return iExit;
 }
@@ -90,6 +83,23 @@ void CSprnub1::Render_GameObject()
 void CSprnub1::OnCollisionEnter(COLLINFO eCollInfo)
 {
     CMonster::OnCollisionEnter(eCollInfo);
+}
+
+void CSprnub1::Check_Hp(_float& fTimedelta)
+{
+    if (m_iHp <= 0)
+    {
+        m_bDelete = true;
+        Effect_SmallExplode();
+        DropItem();
+    }
+}
+
+void CSprnub1::Animation_Monster(const _float& fTimeDelta)
+{
+    m_fFrame += fTimeDelta * 5.f;
+    if (m_fFrame >= 2.f)
+        m_fFrame = 0.f;
 }
 
 HRESULT CSprnub1::Add_Component()
@@ -158,13 +168,13 @@ void CSprnub1::Move(const _float& fTimeDelta)
 
 void CSprnub1::Jump(const _float& fTimeDelta)
 {
-    _vec3 vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
     m_vJumpDirection.y -= 9.8f * fTimeDelta;
     m_fJumpTime += fTimeDelta;
-    if (vPos.y < m_pTransformCom->m_vScale.y && m_fJumpTime>0.25f)
+    if (vPos.y < vScale.y && m_fJumpTime>0.25f)
     {
-        vPos.y = m_pTransformCom->m_vScale.y;
+        vPos.y = vScale.y;
         m_pTransformCom->Set_Pos(vPos);
         m_bLandingState = true;
         m_eMonsterState = MOVE;

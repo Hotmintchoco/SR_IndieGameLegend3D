@@ -118,7 +118,7 @@ public:
 	virtual _int	Update_Component(_float fTimeDelta);
 	virtual void	LateUpdate_Component();
 
-public:
+private:
 	_vec3		m_vInfo[INFO_END];
 	_vec3		m_vScale;
 	_vec3		m_vAngle;

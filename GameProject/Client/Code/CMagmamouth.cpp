@@ -40,9 +40,10 @@ HRESULT CMagmamouth::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
-    m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x + 0.2f);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+    m_pColliderCom->Set_Radius(vScale.x + 0.2f);
 
-    m_fTrailDuration = 0.5f * 0.5f * 0.5f;
+    m_fTrailDuration = 0.125f;
 
     m_iMaxHp = 10;
     m_iHp = m_iMaxHp;
@@ -54,51 +55,33 @@ HRESULT CMagmamouth::Ready_GameObject()
     
 _int CMagmamouth::Update_GameObject(_float fTimeDelta)
 {
-    if (m_bRoomCenterLocation == false)
-    {
-        Set_RoomCenterLocation();
-        m_vMovePosition = m_vOpeningMoveDirection[m_iOpeningMoveIndex] + m_vRoomCenterLocation;
-        m_vMovePosition.y = 2.f;
-    }
-    _float _fTimeDelta = fTimeDelta;
-    if (m_iHp <= 0)
-    {
-        m_eMagmaMouthState = DEAD;
-        m_fFrame = 3.f;
-        m_bMoveFlag = false;
-        m_bMoveFlag2 = false;
-        m_pColliderCom->Set_IsActive(false);
-    }
-    else if (m_iHp <= m_iMaxHp/2.f)
-    {
-        m_iPhase = 1;
-        _fTimeDelta *= 1.5f;
-    }
+    Set_RoomCenterLocation();
+    Check_Hp(fTimeDelta);
 
-    _int    iExit = CMonster::Update_GameObject(_fTimeDelta);
+    _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
-    Update_Motion(_fTimeDelta);
+    Update_Motion(fTimeDelta);
    
     switch (m_eMagmaMouthState)
     {
     case IDLE:
-        Set_Motion_CloseOpenMouth(_fTimeDelta);
+        Set_Motion_CloseOpenMouth(fTimeDelta);
         break;
     case SPAWN:
-        Spawn_Spider(_fTimeDelta);
+        Spawn_Spider(fTimeDelta);
         break;
     case FIREBALL:
-        Throw_Fireball(_fTimeDelta);
+        Throw_Fireball(fTimeDelta);
         break;
     case MOVE:
-        Move_Magmamouth(_fTimeDelta);
-        MagmaMouth_Trail(_fTimeDelta);
+        Move_Magmamouth(fTimeDelta);
+        MagmaMouth_Trail(fTimeDelta);
         break;
     case DEAD:
-        MagmaMouth_Dead(_fTimeDelta);
+        MagmaMouth_Dead(fTimeDelta);
         break;
     case OPENING:
-        Opening_MagmaMouth(_fTimeDelta);
+        Opening_MagmaMouth(fTimeDelta);
         break;
     }
 
@@ -132,6 +115,27 @@ void CMagmamouth::Render_GameObject()
 void CMagmamouth::OnCollisionEnter(COLLINFO eCollInfo)
 {
     CMonster::OnCollisionEnter(eCollInfo);
+}
+
+void CMagmamouth::Check_Hp(_float& fTimeDelta)
+{
+    if (m_iHp <= 0)
+    {
+        m_eMagmaMouthState = DEAD;
+        m_fFrame = 3.f;
+        m_bMoveFlag = false;
+        m_bMoveFlag2 = false;
+        m_pColliderCom->Set_IsActive(false);
+    }
+    else if (m_iHp <= m_iMaxHp / 2.f)
+    {
+        m_iPhase = 1;
+        fTimeDelta *= 1.5f;
+    }
+}
+
+void CMagmamouth::Animation_Monster(const _float& fTimeDelta)
+{
 }
 
 HRESULT CMagmamouth::Add_Component()
@@ -1038,6 +1042,19 @@ void CMagmamouth::MagmaMouth_Dead_Effect()
         pGameObject = CEffect::Create(m_pGraphicDev, CEffect::MAGMA_EXPLOSION2, vPos);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Magma_Explosion2", pGameObject))) return;
+    }
+}
+
+void CMagmamouth::Set_RoomCenterLocation()
+{
+    if (m_bRoomCenterLocation == false)
+    {
+		m_bRoomCenterLocation = true;
+		_vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		m_vRoomCenterLocation = { GetCenterX(vPos.x), 0.f, GetCenterZ(vPos.z) };
+        
+        m_vMovePosition = m_vOpeningMoveDirection[m_iOpeningMoveIndex] + m_vRoomCenterLocation;
+        m_vMovePosition.y = 2.f;
     }
 }
 
