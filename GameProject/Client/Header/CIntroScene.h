@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CScene.h"
+class CUI;
 
 class CIntroScene : public CScene
 {
@@ -18,12 +19,16 @@ public:
     void        OnExit() override;
     HRESULT     Add_GameObject(const wstring&, CGameObject*) override { return E_NOTIMPL; }
 
-    // Future dialogue completion and skip both use this entry point.
-    void Finish_Intro() { m_bFinishRequested = true; }
+    void                Finish_Intro() { m_bFinishRequested = true; }
     static CIntroScene* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
+    HRESULT Ready_Prototype();
+    HRESULT Ready_UI_Layer();
+    CUI* m_pPortrait = nullptr; // Owned by the UI layer.
     bool m_bFinishRequested = false;
     bool m_bLoadingFailed = false;
+
+private:
     void Free() override;
 };

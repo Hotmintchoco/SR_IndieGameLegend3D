@@ -36,7 +36,6 @@ void CStartScreen::OnEnter()
 
 void CStartScreen::OnExit()
 {
-    // Keep title music playing through the intro; CIntroScene stops it on exit.
     CCursorPolicyMgr::GetInstance()->Set_MenuMode(false);
 }
 

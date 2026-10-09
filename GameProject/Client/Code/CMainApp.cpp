@@ -22,6 +22,7 @@
 #include "CCursorPolicyMgr.h"
 #include "CRenderer.h"
 #include "CUnderwaterEffect.h"
+#include "CIntroScene.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -93,7 +94,9 @@ void CMainApp::Render_MainApp()
 	// Capture before Render_Begin so its clear also clears the offscreen target.
 	const bool bPostEffect = dynamic_cast<CStage*>(m_pManagementClass->GetCurrentScene()) &&
 		CShaderEffectMgr::GetInstance()->Begin_PostEffect(m_pGraphicDev);
-	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
+    const bool bIntro = dynamic_cast<CIntroScene*>(m_pManagementClass->GetCurrentScene()) != nullptr;
+    m_pDeviceClass->Render_Begin(bIntro ? D3DXCOLOR(0.f, 0.f, 0.f, 1.f)
+                                     : D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
 
 	CImGuiTool::BeginFrame();
 
