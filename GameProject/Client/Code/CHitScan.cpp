@@ -24,8 +24,8 @@ HRESULT CHitScan::Ready_GameObject()
 
     CalculateLength();
     
-    /* TODO */
-    m_pTarget->Set_Dead(true);
+    /* 공격은 즉발 */
+    m_pTarget->Set_Damage(m_fDamage);
 
 	return S_OK;
 }

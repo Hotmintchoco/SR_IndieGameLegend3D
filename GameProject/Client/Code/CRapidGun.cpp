@@ -182,6 +182,7 @@ TWeaponOutput CRapidGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
     m_bOnUltimateAttack = true;
     m_fTimeAfterUltimate = 0.f;
     m_pSystem->SetUltimateAttackOnGoing(true);
+    //CSoundMgr::GetInstance()->PlaySFX(L"Ult_Default.mp3");
 
     return { true, EWeaponAnimEvent::ULT_RAPIDGUN };
 }

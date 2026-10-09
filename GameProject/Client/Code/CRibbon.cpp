@@ -126,14 +126,13 @@ void CRibbon::Render_GameObject()
 
 void CRibbon::OnCollisionEnter(COLLINFO eCollInfo)
 {
+    CProjectile::OnCollisionEnter(eCollInfo);
+
     auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
     auto pObject = eCollInfo.pOtherCollider->Get_Owner();
 
     switch (iOtherID)
     {
-    case COLLISIONID::COLL_MONSTER:
-        /* 몬스터 피격은 몬스터에 이미 구현 */
-        break;
     default:
         break;
     }

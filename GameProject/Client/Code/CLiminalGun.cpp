@@ -14,6 +14,7 @@
 #include "CTimerMgr.h"
 #include "CMonster.h"
 #include "CHitScan.h"
+#include "CSoundMgr.h"
 
 CLiminalGun::CLiminalGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -130,6 +131,7 @@ TWeaponOutput CLiminalGun::StartUltimateAttack(EInputState ePri, EInputState eSe
     m_bOnUltimateAttack = true;
     m_fTimeAfterUltimate = 0.f;
     m_pSystem->SetUltimateAttackOnGoing(true);
+    //CSoundMgr::GetInstance()->PlaySFX(L"Ult_Liminal.mp3");
 
     return { true, EWeaponAnimEvent::ULT_LIMINALGUN_START };
 }
@@ -333,8 +335,9 @@ void CLiminalGun::UpdateUltimateAttackState(_float fTimeDelta)
 
             CTransform* pTransform = dynamic_cast<CTransform*>(p->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 
-            int iHp = 10; // TODO int iHp = p->GetHp();
-            float fRatio = clamp(1.f - m_fDmgAccumulated / (float)iHp, 0.f, 1.f);
+            int iMaxHp = p->Get_MaxHp();
+            int iHp = p->Get_Hp();
+            float fRatio = clamp((iHp - m_fDmgAccumulated) / (float)iMaxHp, 0.f, 1.f);
 
             /* 디버깅 */
             DWORD dwColor = (fRatio == 0.f) ? D3DCOLOR_ARGB(255, 255, 0, 0) : D3DCOLOR_ARGB(255, 0, 255, 0);

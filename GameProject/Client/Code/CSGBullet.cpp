@@ -75,6 +75,8 @@ void CSGBullet::Render_GameObject()
 
 void CSGBullet::OnCollisionEnter(COLLINFO eCollInfo)
 {
+    CProjectile::OnCollisionEnter(eCollInfo);
+
     m_pColliderCom->Set_IsActive(false);
     Set_Dead(true);
 

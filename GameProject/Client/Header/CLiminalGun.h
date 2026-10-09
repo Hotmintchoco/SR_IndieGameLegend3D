@@ -44,7 +44,7 @@ private:
 	float m_fCaptureDist = 0.f;
 
 	/* 궁극기 */
-	float m_fDmgPerSecond = 10.f;
+	float m_fDmgPerSecond = 3.f;
 	float m_fTimeAfterUltimate = 0.f;
 	float m_fDmgAccumulated = 0.f;
 	float m_fMaxRadius = 30.f;
