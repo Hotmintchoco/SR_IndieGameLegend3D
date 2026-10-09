@@ -768,6 +768,9 @@
     <ClInclude Include="..\Header\CMiniGame1.h">
       <Filter>01. Scene\MiniGame_1</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CIntroScene.h">
+      <Filter>01. Scene\Intro</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CStartScreen.h">
       <Filter>01. Scene\Start</Filter>
     </ClInclude>
@@ -1157,6 +1160,9 @@
     <ClCompile Include="..\Code\CMiniGame1.cpp">
       <Filter>01. Scene\MiniGame_1</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CIntroScene.cpp">
+      <Filter>01. Scene\Intro</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CStartScreen.cpp">
       <Filter>01. Scene\Start</Filter>
     </ClCompile>
@@ -1234,6 +1240,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Filter Include="01. Scene\Intro" />
     <Filter Include="05. Shader" />
     <Filter Include="03. Resource\02. Shader" />
     <ClInclude Include="..\Header\CPostEffect.h">

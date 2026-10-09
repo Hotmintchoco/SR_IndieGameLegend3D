@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "CStartScreen.h"
-#include "CLogo.h"
+#include "CIntroScene.h"
 #include "CManagement.h"
 #include "CProtoMgr.h"
 #include "CCursorPolicyMgr.h"
@@ -36,7 +36,7 @@ void CStartScreen::OnEnter()
 
 void CStartScreen::OnExit()
 {
-    CSoundMgr::GetInstance()->StopBGM();
+    // Keep title music playing through the intro; CIntroScene stops it on exit.
     CCursorPolicyMgr::GetInstance()->Set_MenuMode(false);
 }
 
@@ -46,14 +46,14 @@ _int CStartScreen::Update_Scene(_float fTimeDelta)
         return CScene::Update_Scene(fTimeDelta);
 
     m_bStartRequested = false;
-    CLogo* pLogo = CLogo::Create(m_pGraphicDev);
-    if (!pLogo)
+    CIntroScene* pIntro = CIntroScene::Create(m_pGraphicDev);
+    if (!pIntro)
     {
         m_bStartFailed = true;
         return 0;
     }
 
-    return CManagement::GetInstance()->Change_Scene(0, pLogo, true);
+    return CManagement::GetInstance()->Change_Scene(0, pIntro, true);
 }
 
 void CStartScreen::LateUpdate_Scene(_float fTimeDelta)
@@ -92,7 +92,7 @@ void CStartScreen::Render_Scene()
 
         if (m_bStartFailed)
         {
-            ImGui::TextUnformatted("Loading could not start. Please restart the game.");
+            ImGui::TextUnformatted("Intro could not start. Please restart the game.");
         }
     }
     ImGui::End();
