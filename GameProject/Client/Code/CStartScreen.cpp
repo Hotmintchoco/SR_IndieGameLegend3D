@@ -6,6 +6,7 @@
 #include "CCursorPolicyMgr.h"
 #include "CImGuiTool.h"
 #include "CUI.h"
+#include "CSoundMgr.h"
 
 CStartScreen::CStartScreen(LPDIRECT3DDEVICE9 pGraphicDev)
     : CScene(pGraphicDev)
@@ -20,16 +21,22 @@ HRESULT CStartScreen::Ready_Scene()
     if (FAILED(Ready_UI_Layer(L"UI_Layer")))
         return E_FAIL;
 
+    if (FAILED(CSoundMgr::GetInstance()->LoadSound(L"../Bin/Resource/Sound/bgm/")))
+        return E_FAIL;
+
     return S_OK;
 }
 
 void CStartScreen::OnEnter()
 {
     CCursorPolicyMgr::GetInstance()->Set_MenuMode(true);
+    CSoundMgr::GetInstance()->PlayBGM(L"Title.wav");
+    CSoundMgr::GetInstance()->SetBGMVolume(0.3f);
 }
 
 void CStartScreen::OnExit()
 {
+    CSoundMgr::GetInstance()->StopBGM();
     CCursorPolicyMgr::GetInstance()->Set_MenuMode(false);
 }
 
