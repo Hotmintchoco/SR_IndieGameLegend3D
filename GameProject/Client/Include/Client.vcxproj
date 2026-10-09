@@ -160,7 +160,7 @@
     <ClInclude Include="..\Header\CCryder.h" />
     <ClInclude Include="..\Header\CDefaultBullet.h" />
     <ClInclude Include="..\Header\CFloor.h" />
-    <ClInclude Include="..\Header\CGenerator_Sand.h" />
+    <ClInclude Include="..\Header\CGenerator_YellowDust.h" />
     <ClInclude Include="..\Header\CGenerator_Snow.h" />
     <ClInclude Include="..\Header\CGlubba.h" />
     <ClInclude Include="..\Header\CCrossBuffer.h" />
@@ -303,7 +303,7 @@
     <ClCompile Include="..\Code\CCryder.cpp" />
     <ClCompile Include="..\Code\CDefaultBullet.cpp" />
     <ClCompile Include="..\Code\CFloor.cpp" />
-    <ClCompile Include="..\Code\CGenerator_Sand.cpp" />
+    <ClCompile Include="..\Code\CGenerator_YellowDust.cpp" />
     <ClCompile Include="..\Code\CGenerator_Snow.cpp" />
     <ClCompile Include="..\Code\CGlubba.cpp" />
     <ClCompile Include="..\Code\CHitCreenUI.cpp" />
@@ -324,6 +324,7 @@
     <ClCompile Include="..\Code\CMovement.cpp" />
     <ClCompile Include="..\Code\COcto.cpp" />
     <ClCompile Include="..\Code\COctoBullet.cpp" />
+    <ClCompile Include="..\Code\CParticle_Rectangle.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />
     <ClCompile Include="..\Code\CPlayerAnimator.cpp" />
     <ClCompile Include="..\Code\CPlayerMovement.cpp" />
@@ -341,7 +342,6 @@
     <ClCompile Include="..\Code\CEffect.cpp" />
     <ClCompile Include="..\Code\CParticle.cpp" />
     <ClCompile Include="..\Code\CParticle_Sphere.cpp" />
-    <ClCompile Include="..\Code\CParticle_Rectangle.cpp" />
     <ClCompile Include="..\Code\CEnergy.cpp" />
     <ClCompile Include="..\Code\CExplodeRange.cpp" />
     <ClCompile Include="..\Code\CExplodeSphere.cpp" />

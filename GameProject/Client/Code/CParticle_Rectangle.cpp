@@ -21,7 +21,7 @@ HRESULT CParticle_Rectangle::Ready_GameObject()
         return E_FAIL;
 
     m_fLifeTime = 1.f;
-    float fScale = 0.5f * 0.5f * 0.5f * 0.75f;
+    _float fScale = 0.5f * 0.5f * 0.5f * 0.75f;
     m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
     _vec3 vec3[4];
@@ -79,7 +79,23 @@ _int CParticle_Rectangle::Update_GameObject(_float fTimeDelta)
 		    LookAtPlayer2();
         }
         _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
-        if (vPos.y < 0.f)Set_Dead(true);
+        if (vPos.y < 0.f) Set_Dead(true);
+    }
+    else if (m_eType == YELLOWDUST)
+    {
+        m_pTransformCom->Move_Pos(&m_vVelocity, 1.f, fTimeDelta);
+        LookAtPlayer2();
+
+        _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        if (vPos.y < 0.f) Set_Dead(true);
+    }
+    else if (m_eType == SNOW)
+    {
+		m_pTransformCom->Move_Pos(&m_vVelocity, 1.f, fTimeDelta);
+		LookAtPlayer2();
+        
+        _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        if (vPos.y < 0.f) Set_Dead(true);
     }
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);

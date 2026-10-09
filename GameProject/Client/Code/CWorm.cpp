@@ -7,7 +7,6 @@
 #include "CRoomLayer.h"
 #include "CEffect.h"
 #include "CGlubba.h"
-#include "CShockwave.h"
 #include "CPlayerCamera.h"
 #include "CWormBullet.h"
 
