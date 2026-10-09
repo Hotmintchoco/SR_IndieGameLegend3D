@@ -360,7 +360,7 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
         Clear_MoveDest();
 
         m_eWormState = static_cast<WORMSTATE>(Get_MotionState());
-        m_eWormState = ATTACK;
+        //m_eWormState = ATTACK;
 
         if (m_eWormState == SPAWN)
         {
