@@ -53,7 +53,7 @@ void CMiniGame1::LateUpdate_Scene(_float fTimeDelta)
 void CMiniGame1::Render_Scene()
 {
     _vec2 vTitlePos{ 40.f, 40.f };
-    CFontMgr::GetInstance()->Render_Font(L"Font_Default", L"Mini Game", &vTitlePos,
+    CFontMgr::GetInstance()->Render_Font(L"Font_Dialogue", L"Mini Game", &vTitlePos,
         D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 }
 

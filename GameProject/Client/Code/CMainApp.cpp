@@ -120,20 +120,24 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 
 	(*ppGraphicDev) = m_pDeviceClass->Get_GraphicDev();
 
-	// 폰트 추가
-    // Common components are needed by the start screen before loading begins.
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(
-        L"Proto_RcTex", Engine::CRcTex::Create(m_pGraphicDev))))
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTex", Engine::CRcTex::Create(m_pGraphicDev))))
         return E_FAIL;
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(
-        L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
         return E_FAIL;
 
+	// 폰트 추가
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"바탕", 20, 20, FW_HEAVY)))
 		return E_FAIL;
 
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Jinji", L"궁서", 15, 15, FW_THIN)))
 		return E_FAIL;
+
+	// 새로운 폰트(L"Neo둥근모") 추가
+	if (AddFontResourceExW(L"../Bin/Resource/Font/neodgm.ttf", FR_PRIVATE, nullptr) == 0)
+		return E_FAIL;
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Dialogue", L"Neo둥근모", 0, 32, FW_NORMAL)))
+		return E_FAIL;
+
 
 	(*ppGraphicDev)->SetRenderState(D3DRS_LIGHTING, FALSE);
 
