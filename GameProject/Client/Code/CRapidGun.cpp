@@ -12,6 +12,10 @@
 #include "CClientCameraMgr.h"
 #include "CCamera.h"
 #include "CWeaponSystem.h"
+#include "CRapidGunUltimateMarker.h"
+#include "CRapidGunUltimateScope.h"
+#include "CRapidGunUltimateTimer.h"
+#include "CLayerContext.h"
 
 CRapidGun::CRapidGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -31,6 +35,25 @@ HRESULT CRapidGun::Ready_GameObject()
         return E_FAIL;
 
     m_fSpecialAtkInterval = 0.1f;
+
+    m_pMarker = CRapidGunUltimateMarker::Create(m_pGraphicDev);
+    if (m_pMarker)
+    {
+        CLayerContext::GetLayer()->Add_GameObject(L"Effect", m_pMarker);
+        m_pMarker->Set_IsActive(false);
+    }
+    m_pScope = CRapidGunUltimateScope::Create(m_pGraphicDev);
+    if (m_pScope)
+    {
+        CLayerContext::GetLayer()->Add_GameObject(L"Scope", m_pScope);
+        m_pScope->Set_IsActive(false);
+    }
+    m_pTimer = CRapidGunUltimateTimer::Create(m_pGraphicDev);
+    if (m_pTimer)
+    {
+        CLayerContext::GetLayer()->Add_GameObject(L"Timer", m_pTimer);
+        m_pTimer->Set_IsActive(false);
+    }
 
     return S_OK;
 }
@@ -57,6 +80,18 @@ void CRapidGun::UpdateUltimateAttackStatus(_float fTimeDelta)
         EndUltimateAttack(EInputState::NONE, EInputState::NONE);
         return;
     }
+
+    m_fLeftEffectStartTime -= fTimeDelta;
+
+    if (!m_bEffectStart && m_fLeftEffectStartTime <= 0.f)
+    {
+        m_bEffectStart = true;
+        m_pMarker->Set_IsActive(true);
+        m_pScope->Begin();
+        m_pTimer->Set_IsActive(true);
+    }
+
+    m_pTimer->SetTimeRatio(1.f - m_fTimeAfterUltimate / m_fUltimateTime);
 
     if (CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene()))
     {
@@ -101,10 +136,7 @@ void CRapidGun::UpdateUltimateAttackStatus(_float fTimeDelta)
 
         if (m_pUltTarget)
         {
-            CTransform* pTransform = dynamic_cast<CTransform*>(m_pUltTarget->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-
-            /* 디버깅 */
-            CRenderer::GetInstance()->Add_DebugWorldMarker(m_pGraphicDev, pTransform->Get_Info_Value(INFO_POS), 15.f);
+            m_pMarker->UpdateTarget(m_pUltTarget);
         }
     }
 }
@@ -182,7 +214,10 @@ TWeaponOutput CRapidGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
     m_bOnUltimateAttack = true;
     m_fTimeAfterUltimate = 0.f;
     m_pSystem->SetUltimateAttackOnGoing(true);
-    //CSoundMgr::GetInstance()->PlaySFX(L"Ult_Default.mp3");
+    CSoundMgr::GetInstance()->PlaySFX(L"Ult_Default.mp3");
+
+    m_bEffectStart = false;
+    m_fLeftEffectStartTime = m_fLazyEffectStartTime;
 
     return { true, EWeaponAnimEvent::ULT_RAPIDGUN };
 }
@@ -201,14 +236,14 @@ TWeaponOutput CRapidGun::UpdateUltimateAttack(EInputState ePri, EInputState eSec
             ShotSingleBullet(pTransform->Get_Info_Value(INFO_POS));
             m_bIsCoolTime = true;
             m_fCoolTimeLeft = m_fUltimateAttackInterval;
-            return { true, EWeaponAnimEvent::GUN_SHOT };
+            return { true, EWeaponAnimEvent::NONE };
         }
         else
         {
             ShotSingleBullet();
             m_bIsCoolTime = true;
             m_fCoolTimeLeft = m_fUltimateAttackInterval;
-            return { true, EWeaponAnimEvent::GUN_SHOT };
+            return { true, EWeaponAnimEvent::NONE };
         }
         break;
     }
@@ -222,6 +257,10 @@ TWeaponOutput CRapidGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
     m_bOnUltimateAttack = false;
     m_fTimeAfterUltimate = 0.f;
     m_pSystem->SetUltimateAttackOnGoing(false);
+
+    m_pMarker->Set_IsActive(false);
+    m_pScope->End();
+    m_pTimer->Set_IsActive(false);
 
     return { false, EWeaponAnimEvent::NONE };
 }

@@ -21,6 +21,8 @@ public:
 	virtual	void LateUpdate_GameObject(_float fTimeDelta) override;
 	virtual	void Render_GameObject() override;
 
+	void OnExplosionPhaseEnded();
+
 private:
 	HRESULT	Add_Component();
 	void RenderEditorPanel();

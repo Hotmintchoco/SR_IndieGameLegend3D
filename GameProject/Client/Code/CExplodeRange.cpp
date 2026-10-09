@@ -6,6 +6,7 @@
 #include "CCollisionMgr.h"
 #include "Client_Enum.h"
 #include "CPlayer.h"
+#include "CMonster.h"
 
 CExplodeRange::CExplodeRange(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -119,6 +120,11 @@ void CExplodeRange::OnCollisionEnter(COLLINFO eCollInfo)
     case COLLISIONID::COLL_PLAYER:
     {
         static_cast<CPlayer*>(pOtherCol->Get_Owner())->OnHit(this);
+        break;
+    }
+    case COLLISIONID::COLL_MONSTER:
+    {
+        static_cast<CMonster*>(pOtherCol->Get_Owner())->Set_Damage(2.f);
         break;
     }
     default:

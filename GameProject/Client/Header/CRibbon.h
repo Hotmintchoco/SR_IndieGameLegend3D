@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CProjectile.h"
+#include "CEventDelegate.h"
 
 namespace Engine
 {
@@ -25,6 +26,8 @@ public:
 	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
 
 	void StartExplosionPhase();
+
+	CEventDelegate<void> m_OnExplosionPhaseEnded;
 
 private:
 	HRESULT	Add_Component();

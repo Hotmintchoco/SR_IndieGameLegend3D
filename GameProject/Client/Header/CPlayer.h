@@ -73,9 +73,10 @@ private:
 	/* 캐릭터 애니메이션 관련 */
 	void OnActionAnimationFinished(const EPlayerActionState& Ctx);
 	CPlayerAnimator* m_pAnimator = nullptr;
-	CPlayerPartTex* m_pBufferCom[PP_END] = { nullptr };
-	CTransform* m_pBufferTransformCom[PP_END] = { nullptr };
+	CPlayerPartTex* m_pBufferCom[TP_END] = { nullptr };
+	CTransform* m_pTPBufferTransformCom[TP_END] = { nullptr };
 	CTransform* m_pVisualRootTransform = nullptr;
+	CTransform* m_pFPBufferTransformCom[FP_END] = { nullptr }; /* 왼팔과 오른팔 */
 	bool m_bInputYawIgnored = false;
 	CTransform* m_pAnimRootTransform = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;

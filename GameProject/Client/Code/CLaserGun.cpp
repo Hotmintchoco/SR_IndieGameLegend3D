@@ -74,6 +74,11 @@ void CLaserGun::Render_GameObject()
     // CLaser::RenderEditorPanel();
 }
 
+void CLaserGun::OnExplosionPhaseEnded()
+{
+    EndUltimateAttack(EInputState::NONE, EInputState::NONE);
+}
+
 TWeaponOutput CLaserGun::SpecialAttack(EInputState ePri, EInputState eSec)
 {
     switch (ePri)
@@ -99,6 +104,7 @@ TWeaponOutput CLaserGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
     if (m_pRibbon)
     {
         CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"Ribbon", m_pRibbon);
+        m_pRibbon->m_OnExplosionPhaseEnded.AddBinding(GetToken(), [this]() { OnExplosionPhaseEnded(); });
     }
 
     CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
@@ -126,8 +132,14 @@ TWeaponOutput CLaserGun::UpdateUltimateAttack(EInputState ePri, EInputState eSec
     {
     case EInputState::Released:
     {
+        CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+        if (pStage)
+        {
+            pStage->GetPlayer()->UnlockInput(PIC_MOVE);
+        }
+        CClientCameraMgr::GetInstance()->SetPlayerCameraMode(CAMERA_MODE::FIRST_PERSON);
+        CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::PLAYER);
         m_pRibbon->StartExplosionPhase();
-        EndUltimateAttack(EInputState::NONE, EInputState::NONE);
         return { true, EWeaponAnimEvent::NONE };
         break;
     }
@@ -140,19 +152,11 @@ TWeaponOutput CLaserGun::UpdateUltimateAttack(EInputState ePri, EInputState eSec
 
 TWeaponOutput CLaserGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
 {
-    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-    if (pStage)
-    {
-        pStage->GetPlayer()->UnlockInput(PIC_MOVE);
-    }
-
     CTimerMgr::GetInstance()->SetGlobalTimeScale(1.f);
     CTimerMgr::GetInstance()->ClearAllGroupTimeScale();
 
     m_bOnUltimateAttack = false;
     m_pSystem->SetUltimateAttackOnGoing(false);
-    CClientCameraMgr::GetInstance()->SetPlayerCameraMode(CAMERA_MODE::FIRST_PERSON);
-    CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::PLAYER);
 
     return { false, EWeaponAnimEvent::NONE };
 }

@@ -259,6 +259,7 @@ void CRibbon::UpdateExplosionPhase(float fTimeDelta)
 
     if (m_iCurrentIndex >= (int)m_vecExplodePoint.size())
     {
+        m_OnExplosionPhaseEnded.Broadcast();
         Set_Dead(true);
         return;
     }

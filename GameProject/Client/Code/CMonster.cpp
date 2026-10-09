@@ -46,7 +46,7 @@ HRESULT CMonster::Ready_GameObject()
     if (CRoomLayer* pRoomLayer = dynamic_cast<CRoomLayer*>(pLayer))
     {
        pRoomLayer->IncreaseEntityCount();
-       pRoomLayer->AddMonster(this);
+       /* 시작 시부터 배치되는 경우는 roomlayer에서 몬스터를 추가함 */
        pRoomLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t); });
     }
     /* 스테이지 도중 소환되는 경우 : 씬을 통해 레이어 정보 얻기 */

@@ -394,6 +394,18 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Generator_MapEffect">
       <UniqueIdentifier>{27fb29b9-5faa-4bc5-82eb-30c9ec125b0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Combat\03. Resource">
+      <UniqueIdentifier>{ae427c38-a859-4279-8685-91da39e909c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\03. Resource\00. SGUlt">
+      <UniqueIdentifier>{529f7bf2-6bc8-4aad-8503-3b5315d6ea94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\03. Resource\01. RapidUlt">
+      <UniqueIdentifier>{2e2bc0eb-bf31-4ccf-a13d-4a112d810898}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\03. Resource\02. LiminalUlt">
+      <UniqueIdentifier>{c6eb1faf-de14-4b12-bd9e-2c178d8fe734}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -819,6 +831,21 @@
     <ClInclude Include="..\Header\CGenerator_Sand.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CShotGunUltimateEffect.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\00. SGUlt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRapidGunUltimateTimer.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRapidGunUltimateScope.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRapidGunUltimateMarker.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalGunUltimateEffect.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\02. LiminalUlt</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1217,6 +1244,21 @@
     <ClCompile Include="..\Code\CGenerator_Sand.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CShotGunUltimateEffect.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\00. SGUlt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRapidGunUltimateTimer.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRapidGunUltimateScope.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRapidGunUltimateMarker.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalGunUltimateEffect.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\02. LiminalUlt</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -1233,7 +1275,6 @@
   </ItemGroup>
   <ItemGroup>
     <Filter Include="05. Shader" />
-    <Filter Include="03. Resource\02. Shader" />
     <ClInclude Include="..\Header\CPostEffect.h">
       <Filter>05. Shader</Filter>
     </ClInclude>
@@ -1258,17 +1299,15 @@
     <ClCompile Include="..\Code\CShaderEffectMgr.cpp">
       <Filter>05. Shader</Filter>
     </ClCompile>
-    <None Include="..\Bin\Resource\Shader\Lava.hlsl">
-      <Filter>03. Resource\02. Shader</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Shader\WaterDrop.hlsl">
-      <Filter>03. Resource\02. Shader</Filter>
-    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\Resource\Shader\Lava.hlsl" />
+    <None Include="..\Bin\Resource\Shader\WaterDrop.hlsl" />
     <None Include="..\Bin\Resource\Shader\CameraFilterPack_WaterDrop.png">
-      <Filter>03. Resource\02. Shader</Filter>
+      <Filter>리소스 파일</Filter>
     </None>
     <None Include="..\Bin\Resource\Shader\CameraFilterPack_RainDrop.png">
-      <Filter>03. Resource\02. Shader</Filter>
+      <Filter>리소스 파일</Filter>
     </None>
   </ItemGroup>
 </Project>

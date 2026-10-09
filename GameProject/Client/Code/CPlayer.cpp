@@ -42,6 +42,8 @@ HRESULT CPlayer::Ready_GameObject()
 
     CClientCameraMgr::GetInstance()->m_OnCameraViewChanged.AddBinding(GetToken(), [this](const CAMERA_MODE& Ctx) { OnCameraViewChanged(Ctx); });
 
+    m_ePlayerCamMode = CAMERA_MODE::FIRST_PERSON;
+
 	return S_OK;
 }
 
@@ -111,6 +113,21 @@ void CPlayer::Render_GameObject()
     /* 1인칭 시점일 때 */
     case CAMERA_MODE::FIRST_PERSON:
     {
+        if (!m_pAnimator->IsFPPartVisible()) break;
+
+        /* 카메라를 추적하는 1인칭 좌표계 업데이트 */
+        _matrix matCamWorld;
+        m_pCamera->GetWorld(&matCamWorld);
+        m_pAnimator->TransformFPPropagation(matCamWorld);
+
+        m_pTextureCom->Set_Texture(0);
+
+        m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pFPBufferTransformCom[FP_LARM]->Get_World());
+        m_pBufferCom[TP_LARM]->Render_Buffer();
+
+        m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pFPBufferTransformCom[FP_RARM]->Get_World());
+        m_pBufferCom[TP_RARM]->Render_Buffer();
+
         break;
     }
     /* 3인칭 시점일 때 */
@@ -118,9 +135,9 @@ void CPlayer::Render_GameObject()
     {
         m_pTextureCom->Set_Texture(0);
 
-        for (int i = 0; i < PP_END; ++i)
+        for (int i = 0; i < TP_END; ++i)
         {
-            m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pBufferTransformCom[i]->Get_World());
+            m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTPBufferTransformCom[i]->Get_World());
             m_pBufferCom[i]->Render_Buffer();
         }
         break;
@@ -165,11 +182,11 @@ HRESULT CPlayer::Add_Component()
         return E_FAIL;
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
-    /* Animator */
-    array<TPlayerBuffer, PP_END> arrBuffer;
-    array<wstring, PP_END> arrPartName = { L"Head", L"Body", L"LArm", L"RArm", L"LLeg", L"RLeg" };
+    /* Animator(3인칭) */
+    array<TPlayerBuffer, TP_END> arrBuffer;
+    array<wstring, TP_END> arrPartName = { L"Head", L"Body", L"LArm", L"RArm", L"LLeg", L"RLeg" };
 
-    for (int i = 0; i < PP_END; ++i)
+    for (int i = 0; i < TP_END; ++i)
     {
         wstring wstrName = L"Proto_Player_" + arrPartName[i] + L"_Vertex";
         CPlayerPartTex* pBuffer = m_pBufferCom[i] = dynamic_cast<CPlayerPartTex*>(CProtoMgr::GetInstance()->Clone_Prototype(wstrName.c_str()));
@@ -180,17 +197,35 @@ HRESULT CPlayer::Add_Component()
         wstrName = L"Com_Buffer_" + arrPartName[i];
         m_mapComponent[ID_STATIC].insert({ wstrName.c_str(), pBuffer });
 
-        CTransform* pTransform = m_pBufferTransformCom[i] = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
+        CTransform* pTransform = m_pTPBufferTransformCom[i] = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
 
         if (nullptr == pTransform)
             return E_FAIL;
 
         pTransform->SetUseLocal(true);
 
-        wstrName = L"Com_BufferTransform_" + arrPartName[i];
+        wstrName = L"Com_TPBufferTransform_" + arrPartName[i];
         m_mapComponent[ID_DYNAMIC].insert({ wstrName.c_str(), pTransform });
 
         arrBuffer[i] = TPlayerBuffer{ pBuffer, pTransform };
+    }
+
+    /* Animator(1인칭) */
+    array<wstring, FP_END> arrFPPartName = { L"LArm", L"RArm" };
+    array<CTransform*, FP_END> arrFPTransform;
+    for (int i = 0; i < 2; ++i)
+    {
+        CTransform* pTransform = m_pFPBufferTransformCom[i] = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
+
+        if (nullptr == pTransform)
+            return E_FAIL;
+
+        pTransform->SetUseLocal(true);
+
+        wstring wstrName = L"Com_FPBufferTransform_" + arrFPPartName[i];
+        m_mapComponent[ID_DYNAMIC].insert({ wstrName.c_str(), pTransform });
+        
+        arrFPTransform[i] = pTransform;
     }
 
     m_pVisualRootTransform = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
@@ -202,6 +237,7 @@ HRESULT CPlayer::Add_Component()
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_PlayerAnimator", m_pAnimator });
 
     m_pAnimator->SetBuffer(arrBuffer);
+    m_pAnimator->SetFPTransform(arrFPTransform);
     m_pAnimator->m_OnActionFinished.AddBinding(GetToken(), [this](const EPlayerActionState& Ctx) { OnActionAnimationFinished(Ctx); });
 
     /* 애니메이션 루트 트랜스폼 */
@@ -224,11 +260,11 @@ HRESULT CPlayer::Add_Component()
     D3DXQuaternionRotationYawPitchRoll(&q, 0.f, D3DXToRadian(90.f), 0.f);
     D3DXMatrixAffineTransformation(&matOffset, 1.f, nullptr, &q, &pos);
 
-    m_pLHandSocket = CSocket::Create(m_pGraphicDev, m_pBufferTransformCom[PP_LARM]);
+    m_pLHandSocket = CSocket::Create(m_pGraphicDev, m_pTPBufferTransformCom[TP_LARM]);
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Socket_LHand", m_pLHandSocket });
     m_pLHandSocket->SetOffset(matOffset);
 
-    m_pRHandSocket = CSocket::Create(m_pGraphicDev, m_pBufferTransformCom[PP_RARM]);
+    m_pRHandSocket = CSocket::Create(m_pGraphicDev, m_pTPBufferTransformCom[TP_RARM]);
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Socket_RHand", m_pRHandSocket });
     m_pRHandSocket->SetOffset(matOffset);
 
@@ -327,7 +363,16 @@ void CPlayer::UpdateWeaponInput()
     case EWeaponAnimEvent::ULT_SHOTGUN:
         m_bInputYawIgnored = true;
         CClientCameraMgr::GetInstance()->SetPlayerCameraMode(CAMERA_MODE::THIRD_PERSON);
-        m_pAnimator->PlayAction(EPlayerActionState::STRETCH_ARMS);
+        m_pAnimator->PlayAction(EPlayerActionState::ULT_SHOTGUN);
+        break;
+    case EWeaponAnimEvent::ULT_RAPIDGUN:
+        m_pAnimator->PlayAction(EPlayerActionState::ULT_RAPIDGUN_START);
+        break;
+    case EWeaponAnimEvent::ULT_LIMINALGUN_START:
+        m_pAnimator->PlayAction(EPlayerActionState::ULT_LIMINALGUN_START);
+        break;
+    case EWeaponAnimEvent::ULT_LIMINALGUN_END:
+        m_pAnimator->PlayAction(EPlayerActionState::ULT_LIMINALGUN_END);
         break;
     }
 }
@@ -351,7 +396,7 @@ void CPlayer::OnActionAnimationFinished(const EPlayerActionState& Ctx)
 {
     switch (Ctx)
     {
-    case EPlayerActionState::STRETCH_ARMS:
+    case EPlayerActionState::ULT_SHOTGUN:
     {
         m_bInputYawIgnored = false;
         CClientCameraMgr::GetInstance()->SetPlayerCameraMode(CAMERA_MODE::FIRST_PERSON);

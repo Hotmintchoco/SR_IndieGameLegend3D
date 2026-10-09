@@ -15,6 +15,8 @@
 #include "CMonster.h"
 #include "CHitScan.h"
 #include "CSoundMgr.h"
+#include "CLiminalGunUltimateEffect.h"
+#include "CLayerContext.h"
 
 CLiminalGun::CLiminalGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -36,6 +38,13 @@ HRESULT CLiminalGun::Ready_GameObject()
 
     m_fGaugeConsumePerSpecialAtk = 0.f;
 
+    m_pEffect = CLiminalGunUltimateEffect::Create(m_pGraphicDev);
+    if (m_pEffect)
+    {
+        CLayerContext::GetLayer()->Add_GameObject(L"Effect", m_pEffect);
+        m_pEffect->Set_IsActive(false);
+    }
+
     return S_OK;
 }
 
@@ -53,6 +62,8 @@ _int CLiminalGun::Update_GameObject(_float fTimeDelta)
     }
 
     UpdateUltimateAttackState(fTimeDelta);
+
+    UpdateHitScanState(fTimeDelta);
 
     return iExit;
 }
@@ -133,6 +144,8 @@ TWeaponOutput CLiminalGun::StartUltimateAttack(EInputState ePri, EInputState eSe
     m_pSystem->SetUltimateAttackOnGoing(true);
     //CSoundMgr::GetInstance()->PlaySFX(L"Ult_Liminal.mp3");
 
+    m_pEffect->Set_IsActive(true);
+
     return { true, EWeaponAnimEvent::ULT_LIMINALGUN_START };
 }
 
@@ -148,14 +161,11 @@ TWeaponOutput CLiminalGun::UpdateUltimateAttack(EInputState ePri, EInputState eS
 
             for (auto p : vecMonster)
             {
-                if (p->Is_Dead()) continue;
-
-                CHitScan* pHitScan = CHitScan::Create(m_pGraphicDev, m_vBulletFrom, p, m_fDmgAccumulated);
-                if (pHitScan) CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"HitScan", pHitScan);
+                float fYaw = GetYawFromCameraToTarget(p);
+                m_pqCapture.push({p, fYaw});
             }
+            m_bOnHitScan = true;
         }
-
-        EndUltimateAttack(EInputState::NONE, EInputState::NONE);
         return { true, EWeaponAnimEvent::ULT_LIMINALGUN_END };
         break;
     }
@@ -172,6 +182,9 @@ TWeaponOutput CLiminalGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
     m_bOnUltimateAttack = false;
     m_fTimeAfterUltimate = 0.f;
     m_pSystem->SetUltimateAttackOnGoing(false);
+    m_bOnHitScan = false;
+
+    m_pEffect->Set_IsActive(false);
 
     return { false, EWeaponAnimEvent::NONE };
 }
@@ -320,7 +333,7 @@ void CLiminalGun::AdjustRotation(CLiminalObject* pObject)
 
 void CLiminalGun::UpdateUltimateAttackState(_float fTimeDelta)
 {
-    if (!m_bOnUltimateAttack) return;
+    if (!m_bOnUltimateAttack || m_bOnHitScan) return;
 
     m_fTimeAfterUltimate += fTimeDelta;
     m_fDmgAccumulated = m_fTimeAfterUltimate * m_fDmgPerSecond;
@@ -337,13 +350,70 @@ void CLiminalGun::UpdateUltimateAttackState(_float fTimeDelta)
 
             int iMaxHp = p->Get_MaxHp();
             int iHp = p->Get_Hp();
-            float fRatio = clamp((iHp - m_fDmgAccumulated) / (float)iMaxHp, 0.f, 1.f);
-
-            /* 디버깅 */
-            DWORD dwColor = (fRatio == 0.f) ? D3DCOLOR_ARGB(255, 255, 0, 0) : D3DCOLOR_ARGB(255, 0, 255, 0);
-            CRenderer::GetInstance()->Add_DebugWorldRect(m_pGraphicDev, pTransform->Get_Info_Value(INFO_POS), fRatio * m_fMaxRadius + (1.f - fRatio) * m_fMinRadius, dwColor);
+            float fRatio = clamp(1.f - (iHp - m_fDmgAccumulated) / (float)iMaxHp, 0.f, 1.f);
+            
+            m_pEffect->AddTargetInfo(TLiminalUltimateTargetInfo{ pTransform->Get_Info_Value(INFO_POS), fRatio });
         }
     }
+}
+
+void CLiminalGun::UpdateHitScanState(float fTimeDelta)
+{
+    if (!m_bOnHitScan) return;
+
+    m_fTimeAfterHitScan += fTimeDelta;
+
+    if (m_fTimeAfterHitScan < m_fSingleHitScanInverval) return;
+    
+    m_fTimeAfterHitScan -= m_fSingleHitScanInverval;
+
+    const TLiminalGunHitScanInfo& tInfo = m_pqCapture.top();
+
+    if (!tInfo.pTarget->Is_Dead())
+    {
+        CHitScan* pHitScan = CHitScan::Create(m_pGraphicDev, m_vBulletFrom, tInfo.pTarget, m_fDmgAccumulated);
+        if (pHitScan) CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"HitScan", pHitScan);
+    }
+
+    m_pqCapture.pop();
+
+    StartShotAnimation();
+
+    if (m_pqCapture.empty())
+    {
+        EndUltimateAttack(EInputState::NONE, EInputState::NONE);
+    }
+}
+
+float CLiminalGun::GetYawFromCameraToTarget(CMonster* pMonster)
+{
+    _vec3 vPos;
+    pMonster->Get_Pos(&vPos);
+
+    _vec3 vCamPos, vCamLook;
+    CCamera* pCamera = CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER);
+    _matrix matCamWorld;
+    pCamera->GetWorld(&matCamWorld);
+    memcpy(&vCamPos, &matCamWorld.m[3][0], sizeof(_vec3));
+    memcpy(&vCamLook, &matCamWorld.m[2][0], sizeof(_vec3));
+
+    _vec3 vDisplacement = vPos - vCamPos;
+
+    _vec3 vFlat = _vec3{ vDisplacement.x, 0.f, vDisplacement.z };
+    if (D3DXVec3LengthSq(&vFlat) < 1e-6f)
+        return 0.f;
+    D3DXVec3Normalize(&vFlat, &vFlat);
+    _vec3 vCamFlat = _vec3{ vCamLook.x, 0.f, vCamLook.z };
+    D3DXVec3Normalize(&vCamFlat, &vCamFlat);
+
+    _vec3 vCross;
+    D3DXVec3Cross(&vCross, &vCamFlat, &vFlat);
+
+    float fCos = D3DXVec3Dot(&vCamFlat, &vFlat);
+    float fSin = vCross.y;
+    float fYaw = atan2f(fSin, fCos);
+
+    return fYaw;
 }
 
 HRESULT CLiminalGun::Add_Component()

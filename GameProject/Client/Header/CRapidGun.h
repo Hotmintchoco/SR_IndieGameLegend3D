@@ -9,6 +9,9 @@ namespace Engine
 }
 
 class CMonster;
+class CRapidGunUltimateMarker;
+class CRapidGunUltimateScope;
+class CRapidGunUltimateTimer;
 
 class CRapidGun : public CWeapon
 {
@@ -40,6 +43,13 @@ private:
 	CMonster* m_pUltTarget = nullptr;
 	float m_fAngleLimit = D3DXToRadian(30.f);
 	float m_fUltimateAttackInterval = 0.075f;
+	float m_fLazyEffectStartTime = 0.35f;
+	float m_fLeftEffectStartTime = 0.f;
+	bool m_bEffectStart = false;
+
+	CRapidGunUltimateMarker* m_pMarker = nullptr;
+	CRapidGunUltimateScope* m_pScope = nullptr;
+	CRapidGunUltimateTimer* m_pTimer = nullptr;
 
 public:
 	static CRapidGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);

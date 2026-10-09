@@ -9,6 +9,22 @@ namespace Engine
 }
 
 class CLiminalObject;
+class CLiminalGunUltimateEffect;
+class CMonster;
+
+struct TLiminalGunHitScanInfo
+{
+	CMonster* pTarget;
+	float fYaw;
+};
+
+struct TYawLesser
+{
+	bool operator()(const TLiminalGunHitScanInfo& a, const TLiminalGunHitScanInfo& b) const
+	{
+		return a.fYaw < b.fYaw;
+	}
+};
 
 class CLiminalGun : public CWeapon
 {
@@ -33,6 +49,8 @@ private:
 	void CalculateView(CLiminalObject* pObject);
 	void AdjustRotation(CLiminalObject* pObject);
 	void UpdateUltimateAttackState(_float fTimeDelta);
+	void UpdateHitScanState(float fTimeDelta);
+	float GetYawFromCameraToTarget(CMonster* pMonster);
 
 	Engine::CPlyTex* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
@@ -49,6 +67,12 @@ private:
 	float m_fDmgAccumulated = 0.f;
 	float m_fMaxRadius = 30.f;
 	float m_fMinRadius = 10.f;
+	float m_fSingleHitScanInverval = 0.05f;
+	float m_fTimeAfterHitScan = 0.f;
+	bool m_bOnHitScan = false;
+	priority_queue<TLiminalGunHitScanInfo, vector<TLiminalGunHitScanInfo>, TYawLesser> m_pqCapture;
+	CLiminalGunUltimateEffect* m_pEffect = nullptr;
+
 
 public:
 	static CLiminalGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);

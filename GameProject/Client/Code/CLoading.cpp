@@ -211,6 +211,11 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_3_Vertex", CVoxelBuffer::Create(m_pGraphicDev, L"../Bin/Resource/Texture/Weapon/Bow/bow_pulling_2.png"))))
         return E_FAIL;
 
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Ultimate_SG_Wall_Cube_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Ult_SG_Wall_Cube.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Ultimate_SG_Wall_Cylinder_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Ult_SG_Wall_Cylinder.ply"))))
+        return E_FAIL;
+
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Gun_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/Gun_Diffuse_%d.png", 2))))
         return E_FAIL;
 
@@ -222,6 +227,7 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bow_3_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Bow/bow_pulling_2.png", 1))))
         return E_FAIL;
+
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Bullet_Default_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Projectile/bigbullet_%d.png", 2))))
         return E_FAIL;
@@ -240,6 +246,24 @@ _uint CLoading::Loading_Stage()
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Arrow_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Projectile/arrow.png", 1))))
         return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Ultimate_SG_Floor_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Ult/SG/ult_floorV_%d.png",16))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Ultimate_SG_Wall_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Ult/SG/ult_wallB_%d.png", 16))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Ultimate_RapidGun_Marker_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Ult/Rapid/marker/visor_marker_%d.png",6))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Ultimate_RapidGun_Scope_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Ult/Rapid/scope/visor_scope_%d.png", 15))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Ultimate_RapidGun_Timer_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Ult/Rapid/timer/visor_timer_%d.png", 25))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Ultimate_LiminalGun_FixedRing_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Ult/Liminal/deadeye_fixed.png",1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Ultimate_LiminalGun_Ring_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Ult/Liminal/deadeye_ring_%d.png", 12))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Ultimate_LiminalGun_Skull_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Weapon/Ult/Liminal/deadeye_skull.png", 1))))
+        return E_FAIL;
+
 
     m_fProgress.store(0.7f); // Etc
 
