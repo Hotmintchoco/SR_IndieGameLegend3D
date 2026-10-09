@@ -119,20 +119,10 @@ public:
 	virtual void	LateUpdate_Component();
 
 public:
-	void		Chase_Target(const _vec3* pPos, const _vec3* pAngle, const _float& fSpeed, const _float& fTimeDelta);
-	void		Chase_Target2(const _vec3* pPos, const _vec3* pAngle, const _float& fSpeed, const _float& fTimeDelta);
-	void LookAt_Player(const _vec3* pPos, const _vec3* pLook);
-	_matrix* Compute_LookAtTarget(const _vec3* pPos, const _vec3* pLook);
-
-public:
 	_vec3		m_vInfo[INFO_END];
-
 	_vec3		m_vScale;
 	_vec3		m_vAngle;
-
 	_matrix		m_matWorld;
-
-	_float m_fAccumulatedTime;
 
 private:
 	_matrix m_matLocal; // 부모 객체 트랜스폼이 있는 경우 자신의 로컬 위치 캐싱용
@@ -144,7 +134,6 @@ public:
 
 private:
 	virtual void		Free();
-
 };
 
 END

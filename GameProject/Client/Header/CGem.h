@@ -25,6 +25,7 @@ protected:
 
 public:
 	static CGem* Create(LPDIRECT3DDEVICE9 pGraphicDev, Engine::CGameObject* pSpawner);
+	static CGem* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos);
 
 private:
 	virtual void		Free();

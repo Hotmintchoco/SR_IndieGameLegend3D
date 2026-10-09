@@ -113,9 +113,12 @@ private:
 	_float			m_fAnimTime = 0.f;
 	_float			m_fGateTimer = 0.f;
 	_float			m_fFireInterval = 0.12f;
+	_float			m_fClearTimer = 3.f;
 	_int			m_iGatePairId = 0;
 	_int			m_iDamage = 1;
 	_int			m_iBulletCount = 1;
 	_int			m_iLife = 5;
+	_int			m_iKillCount = 0;
+
 	_bool			m_bGameOver = false;
 };

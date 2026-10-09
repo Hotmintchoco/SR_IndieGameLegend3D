@@ -26,7 +26,7 @@ protected:
 	Engine::CRcColCustom* m_pBufferCom = nullptr;
 
 public:
-	enum PARTICLE_RECT_TYPE{DEAD, BULLET};
+	enum PARTICLE_RECT_TYPE{DEAD, BULLET, SAND};
 
 public:
 	static CParticle_Rectangle* Create(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -44,6 +44,8 @@ private:
 	_vec3 m_vVelocity = { 0.f,0.f,0.f };
 	D3DXCOLOR m_eColor = { 1.f,1.f,1.f,1.f };
 	_uint m_eType = DEAD;
+	_float m_fFallingStartTime = 0.f;
+
 private:
 	virtual void		Free();
 };

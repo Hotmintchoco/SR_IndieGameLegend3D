@@ -13,7 +13,7 @@ public:
 		SIDE45,
 		CONNECTOR
 	};
-	enum WORMSTATE { SPAWN, MOVE, IDLE, DEAD, ATTACK, OPENING };
+	enum WORMSTATE { SPAWN, MOVE, ATTACK, IDLE, DEAD, OPENING };
 
 protected:
 	explicit CWorm(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -37,13 +37,18 @@ private:
 	void Update_WormBoby(const _float& fTimeDelta);
 	void Spawn_Monster(const _float& fTimeDelta);
 	void IDLE_Worm(const _float& fTimeDelta);
+	void Attack_Worm(const _float& fTimeDelta);
 
 	void Move_WormHead_BeforeSpawn(const _float& fTimeDelta);
 	void Move_WormHead_AfterSpawn(const _float& fTimeDelta);
 
+	void Move_WormHead_BeforeAttack(const _float& fTimeDelta);
+	void Move_WormHead_AfterAttack(const _float& fTimeDelta);
+
 	void Set_MoveDest();
 	void Set_Pos_Worm(_vec3 vPos);
 	void Set_Speed_Worm(_float fSpeed);
+	void Set_HeadWorm_Null();
 	void Push_Back_MoveDest(const _vec3& vDest);
 	void Clear_MoveDest();
 
@@ -56,17 +61,23 @@ private:
 	CMonster* Get_Next_Worm() { return m_pNextWorm; }
 	void Set_Head_Worm(CMonster* pHeadWorm) { m_pHeadWorm = pHeadWorm; }
 	CMonster* Get_Head_Worm() { return m_pHeadWorm; }
-	void Set_WormIndex (_uint iIndex) { m_iWormIndex = iIndex; }
+	void Set_WormIndex(_uint iIndex) { m_iWormIndex = iIndex; }
 
 
 	void Set_Init_Worm();
 	void Set_Motion_FromAngle();
 
+	void Update_Connector();
+
 public:
 	virtual void Set_Damage(_int iDamage) { m_iHp -= iDamage; }
 	virtual _int Get_Hp() { return m_iHp; }
 	WORMSTATE Get_WormState() { return m_eWormState; }
-	
+
+public:
+	void Check_Sandburst(_float fTimeDelta);
+	void Effect_Sandburst(_float fLifeTime);
+	void Effect_Sandburst2();
 protected:
 	Engine::CTransform* m_pTransformCom2 = nullptr;
 	Engine::CTexture* m_pTextureCom2 = nullptr;
@@ -97,11 +108,13 @@ private:
 	_float m_fStateUpdateTime = 0.f;
 	_float m_fStateUpdateDuration = 2.f;
 
-	_vec3 m_vRoomCenterLocation = { 0.f,0.f,0.f };
-
 	_bool m_bMoveFlag = false;
 	_bool m_bMoveFlag2 = false;
 	_bool m_bMoveState = true;
+
+	_float m_fAttackTime = 0.f;
+	_float m_fAttackTime2 = 0.f;
+	_bool m_bAttackStart = false;
 
 	_vec3 m_vSpawnDirection = { 0.f,0.f,0.f };
 
@@ -109,7 +122,8 @@ private:
 	_bool m_bDead_Effect2 = false;
 	_float m_fElapsedDeadTime = 0.f;
 	_float m_fElapsedDeadTime2 = 0.f;
-	_float m_fDeadTime = 5.f;
+	_float m_fElapsedDeadTime3 = 0.f;
+	_float m_fDeadTime = 0.5f;
 	_bool m_bDeadStart = false;
 	_bool m_DeadExplosion = false;
 
@@ -122,6 +136,13 @@ private:
 	_bool m_bSet_InitPos = false;
 	_float m_fSpeed = 6.f;
 	_float m_fMoveHeight = 1.25f;
+
+	_float m_fElapsedTime2 = 0.f;
+	_float m_fElapsedTime3 = 0.f;
+
+	_matrix m_matConnector;
+
+	_bool m_bMotionEnd = false;
 
 	inline static _vec3 s_vRoomCenter = { 0.f,0.f,0.f };
 };

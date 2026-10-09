@@ -8,11 +8,11 @@ namespace Engine
 	class CTexture;
 }
 
-class CArrow_Effect : public CParticle
+class CAirbubble : public CParticle
 {
 protected:
-	explicit CArrow_Effect(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CArrow_Effect();
+	explicit CAirbubble(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CAirbubble();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -26,12 +26,12 @@ protected:
 	Engine::CRcTex* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
 public:
-	static CArrow_Effect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	static CArrow_Effect* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vDir);
-	void Set_Dir(_vec3 vDir) { m_vDir = vDir; }
+	static CAirbubble* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CAirbubble* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _int iType);
+
+	void Set_AirbubbleType(_int iType) { m_iAirbubbleType = iType; }
 private:
-	_vec3 m_vDir = {};
-	_int m_iFrame = 0;
+	_int m_iAirbubbleType = 0;
 
 protected:
 	virtual void		Free();

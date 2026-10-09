@@ -6,12 +6,15 @@ namespace Engine
 {
 	class CTransform;
 }
+class CPlayerCamera;
 
 class CEffect : public CGameObject
 {
 public:
-	enum EFFECT_TYPE {MAGMA_FIREBALL, MAGMA_TRAIL, MAGMA_DEAD_EFFECT, MAGMA_EXPLOSION1, MAGMA_EXPLOSION2, BOSS1_DEAD_EFFECT, BOSS1_EXPLOSION1, BOSS1_EXPLOSION2,
-		BOSS1_SPAWN, BULLET_EFFECT, BULLET_TRAIL, ARROW_TRAIL, IDLE};
+	enum EFFECT_TYPE {MAGMA_FIREBALL, MAGMA_TRAIL, MAGMA_DEAD_EFFECT, MAGMA_EXPLOSION1, MAGMA_EXPLOSION2, 
+		BOSS1_DEAD_EFFECT, BOSS1_EXPLOSION1, BOSS1_EXPLOSION2,
+		BOSS1_SPAWN, BULLET_EFFECT, BULLET_TRAIL, ARROW_TRAIL, SANDBURST, SANDBURST2, 
+		WORM_DEAD_EFFECT, WORM_EXPLOSION1, WORM_EXPLOSION2, AIRBUBBLE, IDLE};
 protected:
 	explicit CEffect(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CEffect();
@@ -28,15 +31,14 @@ protected:
 public:
 	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, const _vec3& vPos);
+	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, const _vec3& vPos, _float fLifeTime);
 	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, CGameObject* pOwenr);
 	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, CGameObject* pOwenr, _float fLifeTime);
-	//static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_TYPE eEffect_Type, CGameObject* pEffect_Owner);
+
 	void Set_Pos(const _vec3& vPos);
-	void Set_Scale(const _vec3& vScale);
 	void Set_LifeTime(const _float& fLifeTime) { m_fLifeTime = fLifeTime; }
 	void Set_Effect_Type(EFFECT_TYPE eEffect_Type) { m_eEffect_Type = eEffect_Type; }
 	void Set_Effect_Owner(CGameObject* pEffect_Owner) { m_pEffect_Owner = pEffect_Owner; }
-	//void Set_Effect_Owner(CGameObject* pEffect_Owner) { m_pEffect_Owner = pEffect_Owner; }
 
 	void Ready_Effect();
 	void Update_Effect(const _float fTimeDelta);
@@ -56,7 +58,7 @@ protected:
 
 
 	CGameObject* m_pEffect_Owner = nullptr;
-	
+	CPlayerCamera* m_pBillBoardCamera = nullptr;
 public:
 
 protected:

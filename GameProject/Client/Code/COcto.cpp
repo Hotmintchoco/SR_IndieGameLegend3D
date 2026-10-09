@@ -1,14 +1,10 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "COcto.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CTimerMgr.h"
 #include "CTerrain.h"
-#include "CSmallExplode.h"
 #include "CAbstractFactory.h"
-#include "CHeart.h"
-#include "CGem.h"
-#include "CEnergy.h"
 #include "COctoBullet.h"
 #include "CPlayerCamera.h"
 
@@ -42,6 +38,7 @@ HRESULT COcto::Ready_GameObject()
 
 _int COcto::Update_GameObject(_float fTimeDelta)
 {
+    _int    iExit = CMonster::Update_GameObject(fTimeDelta);
     if (m_bUpdateStart == false)
     {
         m_bUpdateStart = true;
@@ -51,32 +48,14 @@ _int COcto::Update_GameObject(_float fTimeDelta)
     if (m_iHp <= 0)
     {
         m_bDelete = true;
-
-        CGameObject* pGameObject = nullptr;
-        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
-
-        pGameObject = CSmallExplode::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS], m_pTransformCom->m_vScale);
-        if (nullptr == pGameObject)
-            return E_FAIL;
-
-        if (FAILED(pLayer->Add_GameObject(L"SmallExplode", pGameObject)))
-            return E_FAIL;
-
-        //pGameObject = CHeart::Create(m_pGraphicDev, this);
-        pGameObject = CGem::Create(m_pGraphicDev, this);
-        //pGameObject = CEnergy::Create(m_pGraphicDev, this);
-        if (nullptr == pGameObject)
-            return E_FAIL;
-
-        if (FAILED(pLayer->Add_GameObject(L"Gem", pGameObject)))
-            return E_FAIL;
+        Effect_SmallExplode();
+        DropItem();
     }
-    _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
 
 	Set_OnTerrain();
 	m_fFrame += fTimeDelta * 8.f;
-	if (m_fFrame > 4.f)
+	if (m_fFrame >= 4.f)
 		m_fFrame = 0.f;
 
     Move_Octo(fTimeDelta);

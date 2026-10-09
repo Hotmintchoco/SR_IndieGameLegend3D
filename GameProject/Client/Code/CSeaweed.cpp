@@ -47,7 +47,7 @@ _int CSeaweed::Update_GameObject(_float fTimeDelta)
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
 
     m_fFrame += fTimeDelta * 5.f;
-    if (m_fFrame > 4.f)
+    if (m_fFrame >= 4.f)
         m_fFrame = 0.f;
 
     return iExit;

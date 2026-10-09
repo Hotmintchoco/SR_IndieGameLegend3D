@@ -15,6 +15,10 @@
 #include "CLayerContext.h"
 #include "CPlayerCamera.h"
 #include "CClientCameraMgr.h"
+#include "CHeart.h"
+#include "CGem.h"
+#include "CEnergy.h"
+#include "CSmallExplode.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -114,8 +118,6 @@ void CMonster::LateUpdate_GameObject(_float fTimeDelta)
 
     // 충돌 처리 여부를 위해 충돌 매니저에 몬스터의 콜라이더를 등록
 	CCollisionMgr::GetInstance()->Add_Collider(COLL_MONSTER, m_pColliderCom);
-
-
 }
 
 void CMonster::Render_GameObject()
@@ -183,21 +185,69 @@ void CMonster::Disable_HitRenderState()
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 }
 
+//void CMonster::Chase_Player(const _float& fTimeDelta, _float fSpeed)
+//{
+//    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+//
+//    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
+//    _vec3   vPlayerLook; vPlayerLook = tInfo.vLook;
+//
+//    m_pTransformCom->Chase_Target(&vPlayerPos, &vPlayerLook, fSpeed, fTimeDelta);
+//}
+
+//void CMonster::LookAtPlayer()
+//{
+//    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+//    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
+//    _vec3   vPlayerLook; vPlayerLook = tInfo.vLook;
+//
+//    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+//}
+
+void CMonster::Chase_Player(const _float& fTimeDelta, _float fSpeed)
+{
+    const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+    _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+    _vec3 vPlayerLook; vPlayerLook = tInfo.vLook;
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vDir = vPlayerPos - vPos;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    m_pTransformCom->Move_Pos(&vDir, fSpeed, fTimeDelta);
+
+    vDir = -vPlayerLook;
+    vDir.y = 0.f;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    _vec3 vAngle;
+    vAngle.x = D3DXToDegree(-asinf(vDir.y));
+    vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+    vAngle.z = 0.f;
+    m_pTransformCom->Set_Angle(vAngle);
+}
+
 void CMonster::LookAtPlayer()
 {
     const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+    _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+    _vec3 vPlayerLook; vPlayerLook = tInfo.vLook;
 
-    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
-    _vec3   vPlayerLook; vPlayerLook = tInfo.vLook;
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vDir = -vPlayerLook;
+    vDir.y = 0.f;
+    D3DXVec3Normalize(&vDir, &vDir);
 
-    m_pTransformCom->LookAt_Player(&vPlayerPos, &vPlayerLook);
+    _vec3 vAngle;
+    vAngle.x = D3DXToDegree(-asinf(vDir.y));
+    vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+    vAngle.z = 0.f;
+    m_pTransformCom->Set_Angle(vAngle);
 }
 
 void CMonster::LookAtPlayer2()
 {
     const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
-
-    _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
+    _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
 
     _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
     _vec3 vDir = vPlayerPos - vPos;
@@ -209,6 +259,58 @@ void CMonster::LookAtPlayer2()
     vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
     vAngle.z = 0.f;
     m_pTransformCom->Set_Angle(vAngle);
+}
+
+void CMonster::Effect_SmallExplode()
+{
+    CGameObject* pGameObject = nullptr;
+    CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+
+    pGameObject = CSmallExplode::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS], m_pTransformCom->m_vScale);
+    if (nullptr == pGameObject) return;
+
+    if (FAILED(pLayer->Add_GameObject(L"SmallExplode", pGameObject))) return;
+}
+
+void CMonster::DropItem()
+{
+    CGameObject* pGameObject = nullptr;
+    CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+
+    int iRand = rand() % 100;
+    if (iRand < 10)
+    {
+        pGameObject = CHeart::Create(m_pGraphicDev, this);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Heart", pGameObject))) return;
+    }
+    else
+    {
+        pGameObject = CEnergy::Create(m_pGraphicDev, this);
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Energy", pGameObject))) return;
+    }
+}
+
+void CMonster::DropItem_Boss()
+{
+    CGameObject* pGameObject = nullptr;
+    CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    int iRand = rand() % 10;
+    
+    for (int i = 0; i < 10 + iRand; ++i)
+    {
+        _float fRandX = (_float(rand() % 101) - 50.f) * 0.03f;
+        _float fRandZ = (_float(rand() % 101) - 50.f) * 0.03f;
+
+        _vec3 vRandPos = { vPos.x + fRandX, vPos.y, vPos.z + fRandZ };
+
+        pGameObject = CGem::Create(m_pGraphicDev, vRandPos);
+
+        if (nullptr == pGameObject) return;
+        if (FAILED(pLayer->Add_GameObject(L"Gem", pGameObject))) return;
+    }
 }
 
 void CMonster::CollisionWithMonster(COLLINFO eCollInfo)
@@ -312,8 +414,14 @@ void CMonster::Set_OnTerrain()
     m_pTransformCom->Set_Pos(vPos.x, fY + m_pTransformCom->m_vScale.y, vPos.z);
 }
 
-void CMonster::Chase_Player(const _float& fTimeDelta)
+void CMonster::Set_RoomCenterLocation()
 {
+    if (m_bRoomCenterLocation == false)
+    {
+        m_bRoomCenterLocation = true;
+        _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        m_vRoomCenterLocation = { GetCenterX(vPos.x), 0.f, GetCenterZ(vPos.z) };
+    }
 }
 
 CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -9,6 +9,8 @@
 #include "CFontMgr.h"
 
 static const _int   MG_MAX_LIFE = 5;
+static const _uint  MG_HEART_FULL = 4;
+static const _float MG_START_INVINCIBLE = 1.6f;
 static const DWORD  MG_FVF = D3DFVF_XYZ | D3DFVF_DIFFUSE;
 static const _int   MG_GATE_TYPE_COUNT = 3;
 static const _float MG_GATE_HALF_X = 4.5f;
@@ -16,6 +18,7 @@ static const _float MG_GATE_HALF_Y = 4.25f;
 static const _float MG_GATE_CENTER_Y = 2.75f;
 static const _tchar* MG_GATE_TEXT[MG_GATE_TYPE_COUNT] = { L"공격력 x2", L"총알 +1", L"연사 UP" };
 static const DWORD  MG_GATE_COLOR[MG_GATE_TYPE_COUNT] = { D3DCOLOR_ARGB(110, 255, 90, 60), D3DCOLOR_ARGB(110, 60, 140, 255), D3DCOLOR_ARGB(110, 60, 220, 110) };
+static const _int   MG_NEEDED_KILL_COUNT = 10;
 
 static _float MG_Random(_float fMin, _float fMax)
 {
@@ -101,6 +104,20 @@ _int CMiniGame::Update_Scene(_float fTimeDelta)
 
     _int iExit = CScene::Update_Scene(fTimeDelta);
 
+    if (m_iKillCount >= MG_NEEDED_KILL_COUNT)
+    {
+        m_fInvincible = 1.f;
+        m_fClearTimer -= fTimeDelta;
+        if (m_fClearTimer <= 0.f)
+        {
+            m_fClearTimer = 0.f;
+            if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
+                return -1;
+
+            return iExit;
+        }
+    }
+
     if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
     {
         if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
@@ -136,10 +153,12 @@ void CMiniGame::Reset_Game()
     m_fFireCool = 0.f;
     m_fSpawnTimer = 1.5f;
     m_fPlayTime = 0.f;
-    m_fInvincible = 2.f;
+    m_fInvincible = MG_START_INVINCIBLE;
     m_fRestartTimer = 0.f;
+    m_fClearTimer = 3.f;
     m_iLife = MG_MAX_LIFE;
     m_bGameOver = false;
+    m_iKillCount = 0;
 }
 
 void CMiniGame::Update_Player(_float fTimeDelta)
@@ -212,6 +231,8 @@ void CMiniGame::Update_Bullets(_float fTimeDelta)
                 if (D3DXVec3LengthSq(&vDiff) < fRadius * fRadius)
                 {
                     tEnemy.iHp -= iter->iHp;
+                    if (tEnemy.iHp <= 0)
+                        ++m_iKillCount;
                     tEnemy.fFlash = 0.08f;
                     Spawn_Explosion(iter->vPos, 0.5f);
                     bRemove = true;
@@ -564,7 +585,7 @@ void CMiniGame::Render_HUD()
         Render_ScreenQuad(m_pHitTex, 0, 0.f, 0.f, WINCX * 0.5f, WINCY * 0.5f, D3DCOLOR_ARGB(iAlpha, 255, 255, 255));
     }
 
-    _uint iFullHeart = (_uint)max(0, m_pHeartTex->GetCount() - 1);
+    _uint iFullHeart = MG_HEART_FULL;
     for (_int i = 0; i < MG_MAX_LIFE; ++i)
     {
         _float fX = -WINCX * 0.5f + 34.f + i * 40.f;
@@ -747,6 +768,34 @@ void CMiniGame::Render_GateText()
         CFontMgr::GetInstance()->Render_Font(L"Font_Default", pText, &vShadow, D3DXCOLOR(0.f, 0.f, 0.f, 1.f));
         CFontMgr::GetInstance()->Render_Font(L"Font_Default", pText, &vPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
     }
+
+
+    _bool bIsCleared = false;
+
+    if (m_fClearTimer < 3.f)
+    {
+        bIsCleared = true;
+    }
+    if (bIsCleared == true)
+    {
+        _vec2 vClearPos(150.f, 100.f);
+        _vec2 vClearShadow = vClearPos + _vec2(2.f, 2.f);
+
+
+        CFontMgr::GetInstance()->Render_Font(L"Font_Default", L"CLEARED!", &vClearShadow, D3DXCOLOR(0.f, 0.f, 0.f, 1.f));
+        CFontMgr::GetInstance()->Render_Font(L"Font_Default", L"CLEARED!", &vClearPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+    }
+    else
+    {
+        wstring strKill = L"KILL : " + to_wstring(m_iKillCount);
+
+        _vec2 vKillPos(20.f, 60.f);
+        _vec2 vKillShadow = vKillPos + _vec2(2.f, 2.f);
+
+        CFontMgr::GetInstance()->Render_Font(L"Font_Default", strKill.c_str(), &vKillShadow, D3DXCOLOR(0.f, 0.f, 0.f, 1.f));
+        CFontMgr::GetInstance()->Render_Font(L"Font_Default", strKill.c_str(), &vKillPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+    }
+
 }
 
 HRESULT CMiniGame::Ready_Environment_Layer(const _tchar* pLayerTag)
