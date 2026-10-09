@@ -44,7 +44,7 @@ private:
     size_t m_iVisibleWordCount = 0;
 
     _float m_fTextElapsed = 0.f;
-    _float m_fWordInterval = 0.35f;
+    _float m_fWordInterval = 0.25f;
 
 private:
     void Free() override;
