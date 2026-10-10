@@ -6,9 +6,12 @@
 #include "CPlayer.h"
 #include "CCollisionMgr.h"
 #include "CRoomLayer.h"
+#include "CAbstractFactory.h"
+#include "CManagement.h"
+#include "CTimerMgr.h"
 
-CGameMachine::CGameMachine(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev)
+CGameMachine::CGameMachine(LPDIRECT3DDEVICE9 pGraphicDev, ESceneType eType)
+    : CGameObject(pGraphicDev), m_eSceneType(eType)
 {
 }
 
@@ -23,6 +26,7 @@ HRESULT CGameMachine::Ready_GameObject()
 
     m_pColliderCom->Set_Owner(this);
     m_pColliderCom->Set_Radius(1.f);
+
 
     return S_OK;
 }
@@ -48,6 +52,20 @@ void CGameMachine::Render_GameObject()
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
     m_pTextureCom->Set_Texture(0);
     m_pBufferCom->Render_Buffer();
+}
+
+void CGameMachine::Interact()
+{
+    CScene* pMiniGame = CAbstractFactory::GetInstance()->CreateScene(m_eSceneType);
+    if (nullptr == pMiniGame)
+        return;
+
+    if (FAILED(CManagement::GetInstance()->Change_Scene(1, pMiniGame)))
+    {
+        Safe_Release(pMiniGame);
+        return;
+    }
+    pMiniGame->Update_Scene(CTimerMgr::GetInstance()->Get_FrameDelta());
 }
 
 HRESULT CGameMachine::Add_Component()
@@ -92,12 +110,11 @@ HRESULT CGameMachine::Add_Component()
 
 void CGameMachine::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    cout << "게임기 상호작용 가능" << endl;
 }
 
-CGameMachine* CGameMachine::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CGameMachine* CGameMachine::Create(LPDIRECT3DDEVICE9 pGraphicDev, ESceneType eType)
 {
-    CGameMachine* pTriggerBox = new CGameMachine(pGraphicDev);
+    CGameMachine* pTriggerBox = new CGameMachine(pGraphicDev, eType);
 
     if (FAILED(pTriggerBox->Ready_GameObject()))
     {

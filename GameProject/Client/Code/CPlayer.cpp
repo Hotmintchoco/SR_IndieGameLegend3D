@@ -18,6 +18,7 @@
 #include "CPlayerCamera.h"
 #include "CSocket.h"
 #include "CWeapon.h"
+#include "CGameMachine.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
     :CGameObject(pGraphicDev)
@@ -419,6 +420,24 @@ void CPlayer::OnCollisionEnter(COLLINFO eCollInfo)
 
 void CPlayer::OnCollisionStay(COLLINFO eCollInfo)
 {
+    auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
+
+    switch (iOtherID)
+    {
+    case COLLISIONID::COLL_ROOMLOGIC:
+    {
+        if (CGameMachine* pObject = dynamic_cast<CGameMachine*>(pOtherCol->Get_Owner()))
+        {
+            if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
+            {
+                pObject->Interact();
+            }
+        }
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 void CPlayer::OnHit(CGameObject* pSrcObj)

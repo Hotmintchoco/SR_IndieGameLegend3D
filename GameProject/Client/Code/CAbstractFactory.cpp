@@ -38,6 +38,8 @@
 #include "CRoomLayer.h"
 #include "CLaserPuzzleRoomLayer.h"
 #include "CLiminalRoomLayer.h"
+#include "CMiniGame.h"
+#include "CMiniGame1.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -47,7 +49,8 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::BREAKABLE_FRUSTUM,        [](const TCreateDesc& t) -> Engine::CGameObject* { return CBreakableFrustum::Create(t.pDevice); } },
         {EObjectType::UNBREAKABLE_FRUSTUM,      [](const TCreateDesc& t) -> Engine::CGameObject* { return CUnbreakableFrustum::Create(t.pDevice); } },
         {EObjectType::EXPLOSIVE_FRUSTUM,        [](const TCreateDesc& t) -> Engine::CGameObject* { return CExplosiveFrustum::Create(t.pDevice); } },
-        {EObjectType::GAME_MACHINE,             [](const TCreateDesc& t) -> Engine::CGameObject* { return CGameMachine::Create(t.pDevice); } },
+        {EObjectType::GAME_MACHINE_A,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CGameMachine::Create(t.pDevice, ESceneType::SCENE_MINI_1); } },
+        {EObjectType::GAME_MACHINE_B,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CGameMachine::Create(t.pDevice, ESceneType::SCENE_MINI_0); } },
         {EObjectType::DDOKDDAK,                 [](const TCreateDesc& t) -> Engine::CGameObject* { return CDdokddak::Create(t.pDevice, EDirection::EAST); } },
         {EObjectType::LIMINAL_CUBE,             [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalCube::Create(t.pDevice); } },
         {EObjectType::LIMINAL_SLOPE,            [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalSlope::Create(t.pDevice); } },
@@ -88,6 +91,11 @@ CAbstractFactory::CAbstractFactory()
         {ERoomType::ROOM_DEFAULT,           [](const int iIndex) -> CRoomLayer* { return CRoomLayer::Create(iIndex); } },
         {ERoomType::ROOM_LASER_PUZZLE,      [](const int iIndex) -> CRoomLayer* { return CLaserPuzzleRoomLayer::Create(iIndex); } },
         {ERoomType::ROOM_LIMINAL,           [](const int iIndex) -> CRoomLayer* { return CLiminalRoomLayer::Create(iIndex); } },
+    };
+
+    m_mapSceneCreator = {
+        {ESceneType::SCENE_MINI_0,          []() -> CScene* { return CMiniGame::Create(CGraphicDev::GetInstance()->Get_GraphicDev()); } },
+        {ESceneType::SCENE_MINI_1,          []() -> CScene* { return CMiniGame1::Create(CGraphicDev::GetInstance()->Get_GraphicDev()); } },
     };
 }
 
@@ -150,6 +158,13 @@ CRoomLayer* CAbstractFactory::CreateRoom(const int iType, const int iIndex) cons
     CRoomLayer* pLayer = m_mapRoomCreator.at((ERoomType)iType)(iIndex);
 
     return pLayer;
+}
+
+CScene* CAbstractFactory::CreateScene(ESceneType eType) const
+{
+    CScene* pScene = m_mapSceneCreator.at(eType)();
+
+    return pScene;
 }
 
 void CAbstractFactory::Free()
