@@ -4,6 +4,7 @@
 #include "CDInputMgr.h"
 #include "CCinematicCamera.h"
 #include "CPlayerCamera.h"
+#include "CRandomMgr.h"
 
 IMPLEMENT_SINGLETON(CClientCameraMgr)
 
@@ -173,7 +174,7 @@ void CClientCameraMgr::Key_Input(_float fTimeDelta)
     // 쉐이킹 효과
     if (CDInputMgr::GetInstance()->Key_Down(DIK_F9))
     {
-        Camera_Shake(3.f);
+        Camera_Shake(3.f, m_fMagnitude);
     }
 }
 
@@ -194,10 +195,17 @@ void CClientCameraMgr::OnShakingCamera(_float fTimeDelta, _vec3& vOutOffeset)
 
     m_fShakeTime -= fTimeDelta;
 
-    vOutOffeset = {
-    sinf(m_fShakeTime * 70.f) * 0.03f,
-    cosf(m_fShakeTime * 90.f) * 0.02f,
-    0.f
-    };
+    int iSeedA = CRandomMgr::GetInstance()->GetRandomValue<int>(0, 10000);
+    int iSeedB = CRandomMgr::GetInstance()->GetRandomValue<int>(0, 10000);
+    int iSeedC = CRandomMgr::GetInstance()->GetRandomValue<int>(0, 10000);
+    float m_fDamping = min(1.f, m_fShakeTime);
 
+    vOutOffeset = {
+        m_fMagnitude * m_fDamping * (sinf(m_fShakeTime * 1.0f + iSeedA) + sinf(m_fShakeTime * 2.17f + iSeedA * 1.3f) * 0.5f
+            + sinf(m_fShakeTime * 4.31f + iSeedA * 2.1f) * 0.25f) / 1.75f / 3.f,
+        m_fMagnitude * m_fDamping * (sinf(m_fShakeTime * 1.0f + iSeedB) + sinf(m_fShakeTime * 2.17f + iSeedB * 1.3f) * 0.5f
+            + sinf(m_fShakeTime * 4.31f + iSeedB * 2.1f) * 0.25f) / 1.75f / 3.f,
+        m_fMagnitude * m_fDamping * (sinf(m_fShakeTime * 1.0f + iSeedC) + sinf(m_fShakeTime * 2.17f + iSeedC * 1.3f) * 0.5f
+            + sinf(m_fShakeTime * 4.31f + iSeedC * 2.1f) * 0.25f) / 1.75f / 3.f
+    };
 }

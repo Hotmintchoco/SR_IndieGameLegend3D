@@ -39,6 +39,9 @@ private:
 	int m_iChargeLevel = 3;
 	bool m_bOnCharging = false;
 	int m_iRenderIdx = 0;
+	float m_fUltReachTime = 2.2f; /* 화살비 도달 시간 */
+	float m_fTimeAfterUlt = 0.f;
+	bool m_bCameraShakeActivated = false;
 
 public:
 	static CBow* Create(LPDIRECT3DDEVICE9 pGraphicDev);

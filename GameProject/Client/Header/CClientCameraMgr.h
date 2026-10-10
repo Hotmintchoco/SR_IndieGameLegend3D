@@ -34,7 +34,7 @@ public:
     CCamera*        Get_ActiveCamera() const;
 
     // 플레이어 카메라에서 적용 / 매개변수에 적용할 시간
-    void            Camera_Shake(_float fOnTime) { m_fShakeTime = fOnTime; }
+    void            Camera_Shake(_float fOnTime, _float fMagnitude) { m_fShakeTime = fOnTime; m_fMagnitude = fMagnitude; }
 
 public:
     void            Update_Camera(_float fTimeDelta);
@@ -57,5 +57,6 @@ private:
     CCamera*                            m_pActiveCamera = nullptr;
     CLIENT_CAMERA_TYPE                  m_eCurrentType = CLIENT_CAMERA_TYPE::PLAYER;
     _float                              m_fShakeTime = 0.f;
+    _float                              m_fMagnitude = 1.f;
 };
 
