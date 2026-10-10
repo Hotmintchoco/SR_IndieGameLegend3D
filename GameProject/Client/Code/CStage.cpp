@@ -95,6 +95,8 @@ HRESULT CStage::Ready_Scene()
 
 	/* 방 로직 */
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_ROOMLOGIC, COLL_PLAYER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_DYNAMICOBJECT, COLL_PLAYER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_DYNAMICOBJECT, COLL_OBSTACLE);
 
 	/* 투사체와의 충돌 */
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PROJECTILE, COLL_MONSTER);
@@ -686,7 +688,12 @@ int CStage::CalculateRoomIndexFromPlayerPosition()
 	const int iCol = (int)floorf((fLocalX + fHalfGridX) / vRoomSize.x);
 	const int iRow = (int)floorf((fHalfGridZ - fLocalZ) / vRoomSize.z);
 
-	if (0 > iCol || iCol >= iColCount || 0 > iRow || iRow >= iRowCount) return -1;
+	if (0 > iCol || iCol >= iColCount || 0 > iRow || iRow >= iRowCount)
+	{
+#include "CDebugPrint.h"
+		cout << m_vPlayerPos << endl;
+		return -1;
+	}
 
 	return iRow * iColCount + iCol;
 }

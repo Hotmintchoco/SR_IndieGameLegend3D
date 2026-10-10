@@ -60,7 +60,7 @@ _int CDdokddak::Update_GameObject(_float fTimeDelta)
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
-    CCollisionMgr::GetInstance()->Add_Collider(COLL_MONSTER, m_pColliderCom);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_DYNAMICOBJECT, m_pColliderCom);
 
     m_bSkipCurrentFrameCollision = false;
     m_pTransformCom->Move_Pos(&m_vDir, m_fSpeed, fTimeDelta);
@@ -70,6 +70,8 @@ _int CDdokddak::Update_GameObject(_float fTimeDelta)
 
 void CDdokddak::LateUpdate_GameObject(_float fTimeDelta)
 {
+    assert(isfinite(m_fSpeed) && isfinite(m_vDir.x) && isfinite(m_vDir.z));
+
     CGameObject::LateUpdate_GameObject(fTimeDelta);
 
     BillBoard();
