@@ -28,17 +28,17 @@ HRESULT CWeaponSystem::Ready_GameObject()
     if (FAILED(AddWeapon(EObjectType::WEAPON_DEFAULT, L"RapidGun")))
         return E_FAIL;
 
-    if (FAILED(AddWeapon(EObjectType::WEAPON_SHOTGUN, L"ShotGun")))
-        return E_FAIL;
-    
-    if (FAILED(AddWeapon(EObjectType::WEAPON_LASERGUN, L"LaserGun")))
-        return E_FAIL;
-    
-    if (FAILED(AddWeapon(EObjectType::WEAPON_BOW, L"Bow")))
-        return E_FAIL;
-    
-    if (FAILED(AddWeapon(EObjectType::WEAPON_LIMINAL, L"LiminalGun")))
-        return E_FAIL;
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_SHOTGUN, L"ShotGun")))
+    //     return E_FAIL;
+    // 
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_LASERGUN, L"LaserGun")))
+    //     return E_FAIL;
+    // 
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_BOW, L"Bow")))
+    //     return E_FAIL;
+    // 
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_LIMINAL, L"LiminalGun")))
+    //     return E_FAIL;
 
     SwitchWeaponTo(0);
 
@@ -89,7 +89,7 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
                 tOut.tWpOut = tWpOut;
                 if (tWpOut.bAttackExecuted)
                 {
-                    // m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
+                    m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
                     m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
                     if (m_fSpecialAtkGauge <= 0.f)
                     {
@@ -125,8 +125,8 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
         
         if (tWpOut.bAttackExecuted)
         {
-            // m_fUltimateAtkGauge = 0.f;
-            // m_bIsUltimateAttackReady = false;
+            m_fUltimateAtkGauge = 0.f;
+            m_bIsUltimateAttackReady = false;
 
             if (pStage)
             {
