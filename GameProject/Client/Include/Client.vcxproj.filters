@@ -409,6 +409,12 @@
     <Filter Include="01. Scene\MiniGame_1\GameObject\Box_MG1">
       <UniqueIdentifier>{6f0d2a13-8903-4ded-b365-58040e9b5a1b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Walkerboss">
+      <UniqueIdentifier>{36e61ccd-5bc8-4493-853d-e28264b96eb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Walkerboss\WalkerBullet">
+      <UniqueIdentifier>{533960a4-a72d-40a4-8c95-cf05073716c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -843,6 +849,12 @@
     <ClInclude Include="..\Header\CBox_MG1.h">
       <Filter>01. Scene\MiniGame_1\GameObject\Box_MG1</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CWalkerboss.h">
+      <Filter>02. GameObject\02. Monster\Walkerboss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWalkerBullet.h">
+      <Filter>02. GameObject\02. Monster\Walkerboss\WalkerBullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1249,6 +1261,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBox_MG1.cpp">
       <Filter>01. Scene\MiniGame_1\GameObject\Box_MG1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWalkerboss.cpp">
+      <Filter>02. GameObject\02. Monster\Walkerboss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWalkerBullet.cpp">
+      <Filter>02. GameObject\02. Monster\Walkerboss\WalkerBullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

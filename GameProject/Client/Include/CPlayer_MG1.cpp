@@ -347,7 +347,12 @@ void CPlayer_MG1::Check_Connection()
     vDir.x /= vDir.y;
     vDir.y /= vDir.y;
     vDir.z /= vDir.y;
+
+
+
     vDir *= 0.5f;
+
+    vDir.y == 0.5f;
     vPos1 += vDir;
 
     _vec3 vDist = vPos2 - vPos1;

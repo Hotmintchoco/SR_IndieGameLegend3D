@@ -261,6 +261,48 @@ void CMonster::LookAtPlayer2()
     m_pTransformCom->Set_Angle(vAngle);
 }
 
+void CMonster::LookAtCamera()
+{
+    _matrix matView;
+    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+
+    _matrix matCameraWorld;
+    D3DXMatrixInverse(&matCameraWorld, nullptr, &matView);
+
+    _vec3 vCameraPos = { matCameraWorld._41, matCameraWorld._42, matCameraWorld._43 };
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vDir = vCameraPos - vPos;
+    //vDir.y = 0.f;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    _vec3 vAngle;
+    vAngle.x = D3DXToDegree(-asinf(vDir.y));
+    vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+    vAngle.z = 0.f;
+    m_pTransformCom->Set_Angle(vAngle);
+}
+
+void CMonster::LookAtCamera2()
+{
+    _matrix matView;
+    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+
+    _matrix matCameraWorld;
+    D3DXMatrixInverse(&matCameraWorld, nullptr, &matView);
+
+    _vec3 vCameraPos = { matCameraWorld._41, matCameraWorld._42, matCameraWorld._43 };
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vDir = vCameraPos - vPos;
+    vDir.y = 0.f;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    _vec3 vAngle;
+    vAngle.x = D3DXToDegree(-asinf(vDir.y));
+    vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+    vAngle.z = 0.f;
+    m_pTransformCom->Set_Angle(vAngle);
+}
+
 void CMonster::Effect_SmallExplode()
 {
     CGameObject* pGameObject = nullptr;

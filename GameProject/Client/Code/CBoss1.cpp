@@ -610,7 +610,7 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
 	{
         //오프닝 종료
 		m_bOpening = false;
-		LookAtPlayer2();
+        LookAtPlayer2();
 		return;
     }
     //Y값 최초 조정
@@ -621,8 +621,22 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
         _vec3 vPos{ 0.f,vScale.y,0.f };
         m_pTransformCom->Move_Pos(&vPos, 1.f, 1.f);
 
+
+
 		_vec3 vBossPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vBossPos);
+
+        //if (CPlayerCamera* pCamera = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Get_ActiveCamera()))
+        //{
+        //    _vec3 vPlayerPos = m_pBillBoardCamera->GetBillBoardInfo().vPosition;
+
+        //    _vec3 vec1 = _vec3{ 0.f,0.f,-4.f };
+        //    _vec3 vec2 = _vec3{ 0.f,0.75f,2.f };
+        //    _vec3 vPos1 = m_vRoomCenterLocation + vec1;
+        //    _vec3 vPos2 = m_vRoomCenterLocation + vec2;
+        //    pCamera->Set_Eye(vPos1, vPos2);
+        //    pCamera->Update_Matrices();
+        //}
 
         // 정민 : 컷신 연출
         auto* pCameraMgr = CClientCameraMgr::GetInstance();
@@ -637,50 +651,71 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
             // 연출 1
             CINEMATIC_DESC desc;
 
-            desc.vEyeFrom = { vBossPos.x, 3.f, vBossPos.z - 6.f };
-            desc.vEyeTo = { vBossPos.x, 2.f, vBossPos.z - 2.f };
+            desc.vEyeFrom = { vBossPos.x, 3.f, vBossPos.z - 5.f };
+            desc.vEyeTo = { vBossPos.x, 1.25f, vBossPos.z - 3.5f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
-            desc.fDuration = 2.f;
+            desc.fDuration = 1.75f;
             desc.fFovFrom = D3DXToRadian(60.f);
             desc.fFovTo = D3DXToRadian(47.5f);
             pCinematic->Add_Shot(desc);
 
             // 연출 2
+            //desc.vEyeFrom = { vBossPos.x, 1.5f, vBossPos.z - 2.f };
             desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
-            desc.fDuration = 0.2f;
+            desc.fDuration = 1.25f;
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
             // 연출 3
-            desc.vEyeTo = { vBossPos.x + 3.f, 4.5f, vBossPos.z - 7.f };
+            desc.vEyeTo = { vBossPos.x - 1.f, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
-            desc.fDuration = 0.5f;
+            desc.fDuration = 0.612f;
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
             // 연출 4
-            desc.vEyeTo = { vBossPos.x - 3.f, 4.5f, vBossPos.z - 7.f };
+            desc.vEyeTo = { vBossPos.x + 1.f, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
-            desc.fDuration = 0.5f;
+            desc.fDuration = 0.612f;
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
             // 연출 5
-            desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
+            desc.vEyeTo = { vBossPos.x - 1.f, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
-            desc.fDuration = 0.25f;
+            desc.fDuration = 0.612f;
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
             // 연출 6
-            desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
+            desc.vEyeTo = { vBossPos.x + 1.f, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 0.612f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 7
+            desc.vEyeTo = { vBossPos.x - 1.f, 4.5f, vBossPos.z - 7.f };
+            desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 0.612f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 8
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+            //_vec3 vPlayerLook; vPlayerLook = tInfo.vLook;
+
+            desc.vEyeTo = { vPlayerPos.x, vPlayerPos.y, vPlayerPos.z };
+            desc.vLookAt = { vBossPos.x, 1.f, vBossPos.z };
 
             desc.fDuration = 1.5f;
             desc.fFovTo = D3DXToRadian(60.f);
@@ -691,7 +726,7 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
     }
 
     //뛰어다니기
-    if (m_fElapsedOpeningTime > 2.f)
+    if (m_fElapsedOpeningTime > 3.f)
     {
         _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
         _vec3 vScale = m_pTransformCom->Get_Scale();
@@ -717,7 +752,8 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
         }
         m_pTransformCom->Move_Pos(&vDir, 2.f, fTimeDelta);
     }
-    LookAtPlayer2();
+    //LookAtPlayer2();
+    LookAtCamera2();
 
     // 정민 : Boss Hp UI 처리
     CUIMgr::GetInstance()->Active_Boss(true);

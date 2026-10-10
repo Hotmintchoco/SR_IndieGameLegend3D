@@ -50,6 +50,8 @@ protected:
 	void Chase_Player(const _float& fTimeDelta, _float fSpeed);
 	void LookAtPlayer();
 	void LookAtPlayer2();
+	void LookAtCamera();
+	void LookAtCamera2();
 
 	void Effect_SmallExplode();
 	void DropItem();
@@ -58,7 +60,7 @@ protected:
 	// 정민 : OnCollisionStay에서 호출 (몬스터끼리 뭉침 방지 용)
 	void CollisionWithMonster(COLLINFO eCollInfo);
 
-	enum GENERAL_MONSTER_STATE { MOVE, JUMP, IDLE };
+	enum GENERAL_MONSTER_STATE { MOVE, JUMP, ATTACK, IDLE };
 protected:
 	Engine::CRcTex* m_pBufferCom = nullptr;
 	Engine::CTransform* m_pTransformCom = nullptr;

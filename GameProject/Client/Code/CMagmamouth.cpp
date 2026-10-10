@@ -276,8 +276,8 @@ void CMagmamouth::Opening_MagmaMouth(const _float& fTimeDelta)
             // 연출 1
             CINEMATIC_DESC desc;
 
-            desc.vEyeFrom = { vBossPos.x - 6.f, 3.f, vBossPos.z };
-            desc.vEyeTo = { vBossPos.x - 2.f, 2.f, vBossPos.z };
+            desc.vEyeFrom = { vBossPos.x + 6.f, 3.f, vBossPos.z };
+            desc.vEyeTo = { vBossPos.x + 2.f, 2.f, vBossPos.z };
 
             desc.fDuration = 2.f;
             desc.fFovFrom = D3DXToRadian(60.f);
@@ -285,16 +285,26 @@ void CMagmamouth::Opening_MagmaMouth(const _float& fTimeDelta)
             pCinematic->Add_Shot(desc);
 
             // 연출 2
-            desc.vEyeTo = { vBossPos.x - 7.f, 4.5f, vBossPos.z };
+            desc.vEyeTo = { vBossPos.x + 7.f, 4.5f, vBossPos.z };
 
             desc.fDuration = 1.f;
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
             // 연출 3
-            desc.vEyeTo = { vBossPos.x - 7.f, 4.5f, vBossPos.z };
+            desc.vEyeTo = { vBossPos.x + 7.f, 4.5f, vBossPos.z };
 
             desc.fDuration = 4.5f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 4
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+
+            desc.vEyeTo = { vPlayerPos.x, vPlayerPos.y, vPlayerPos.z };
+
+            desc.fDuration = 1.25f;
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
@@ -309,13 +319,13 @@ void CMagmamouth::Opening_MagmaMouth(const _float& fTimeDelta)
     {
         m_bOpening = false;
     }
-    //3초까지 입벌렸다 닫기
-    if (m_bElapsedOpeningTime < 3.f)
+    //2.5초까지 입벌렸다 닫기
+    if (m_bElapsedOpeningTime < 2.5f)
     {
         Set_Motion_CloseOpenMouth(fTimeDelta);
     }
-    //3초부터 입벌리기
-    else if (m_bElapsedOpeningTime < 4.f)
+    //3.5초부터 입벌리기
+    else if (m_bElapsedOpeningTime < 3.5f)
     {
         //Set_Motion_CloseMouth(fTimeDelta);
         Set_Motion_OpenMouth(fTimeDelta);
@@ -790,6 +800,11 @@ void CMagmamouth::Find_BackPoint()
 
 void CMagmamouth::Set_Motion()
 {
+    if (m_bOpening == true)
+    {
+        LookAtCamera();
+        return;
+    }
     const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
     _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
     _vec3 vPlayerLook; vPlayerLook = tInfo.vLook;

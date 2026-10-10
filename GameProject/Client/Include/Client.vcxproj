@@ -229,6 +229,8 @@
     <ClInclude Include="..\Header\CUIMgr.h" />
     <ClInclude Include="..\Header\CVeilSphere.h" />
     <ClInclude Include="..\Header\CVoxelBuffer.h" />
+    <ClInclude Include="..\Header\CWalkerboss.h" />
+    <ClInclude Include="..\Header\CWalkerBullet.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
     <ClInclude Include="..\Header\CMagmamouth.h" />
     <ClInclude Include="..\Header\CGem.h" />
@@ -374,6 +376,8 @@
     <ClCompile Include="..\Code\CUIMgr.cpp" />
     <ClCompile Include="..\Code\CVeilSphere.cpp" />
     <ClCompile Include="..\Code\CVoxelBuffer.cpp" />
+    <ClCompile Include="..\Code\CWalkerboss.cpp" />
+    <ClCompile Include="..\Code\CWalkerBullet.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
     <ClCompile Include="..\Code\CGaugeUI.cpp" />
     <ClCompile Include="..\Code\CMagmamouth.cpp" />

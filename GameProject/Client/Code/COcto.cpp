@@ -179,7 +179,6 @@ void COcto::Attack_Octo(_float fTimeDelta)
         CProjectile* pProjectile = COctoBullet::Create(m_pGraphicDev, vPos, vDir);
         CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
         pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
-
     }
 }
 
