@@ -100,9 +100,11 @@ HRESULT CStage::Ready_Scene()
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PROJECTILE, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PROJECTILE, COLL_OBSTACLE);
 
-	CSoundMgr::GetInstance()->PlayBGM(L"Sector1.wav");
-	CSoundMgr::GetInstance()->SetBGMVolume(0.f);
-	CSoundMgr::GetInstance()->SetSFXVolume(0.f);
+	int iBiome = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iStartRoomIndex)->iBiome;
+	TBGMTrack tTrack = CRoomLoadingMgr::GetInstance()->GetBiomeInfo(iBiome).tBGMTrack;
+	CSoundMgr::GetInstance()->PlayBGM(tTrack);
+	CSoundMgr::GetInstance()->SetBGMVolume(0.2f);
+	CSoundMgr::GetInstance()->SetSFXVolume(0.5f);
 
 	return S_OK;
 }
@@ -660,6 +662,10 @@ void CStage::CheckRoomChanged()
 
 			if (pRoom->bBossRoom)
 				CUIMgr::GetInstance()->EnterBossScreen();
+
+			int iBiome = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iCurrentRoomIndex)->iBiome;
+			TBGMTrack tTrack = CRoomLoadingMgr::GetInstance()->GetBiomeInfo(iBiome).tBGMTrack;
+			CSoundMgr::GetInstance()->PlayBGM(tTrack);
 		}
 	}
 }

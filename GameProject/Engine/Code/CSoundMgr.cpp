@@ -74,6 +74,25 @@ void CSoundMgr::Update()
 {
 	if (m_pSystem)
 		FMOD_System_Update(m_pSystem);
+
+	CheckBGMLoopCondition();
+}
+
+void CSoundMgr::CheckBGMLoopCondition()
+{
+	/* play loop bgm sound when intro sound ends */
+	if (m_eBGMState == EBGMState::Intro)
+	{
+		if (!IsPlaying(m_hBGM))
+		{
+			FMOD_SOUND* pSound = FindSound(m_tBGMTrack.wstrLoop);
+			if (!pSound)
+				return;
+
+			m_hBGM = PlayOnChannel(pSound, BGM_SLOT, true);
+			m_eBGMState = EBGMState::Loop;
+		}
+	}
 }
 
 CSoundMgr::SOUND_HANDLE CSoundMgr::PlaySFX(const wstring& pSoundKey, bool bLoop)
@@ -85,13 +104,32 @@ CSoundMgr::SOUND_HANDLE CSoundMgr::PlaySFX(const wstring& pSoundKey, bool bLoop)
 	return PlayOnChannel(pSound, GetNextEffectChannel(), bLoop);
 }
 
-void CSoundMgr::PlayBGM(const wstring& pSoundKey)
+void CSoundMgr::PlayBGM(const TBGMTrack& tTrack)
 {
-	FMOD_SOUND* pSound = FindSound(pSoundKey);
-	if (!pSound)
-		return;
+	if (m_tBGMTrack.wstrID == tTrack.wstrID) return;
 
-	PlayOnChannel(pSound, BGM_SLOT, true);
+	StopBGM();
+	m_tBGMTrack = tTrack;
+
+	/* when bgm track has intro sound file, separated from the general loop sound file */
+	if (!tTrack.wstrIntro.empty())
+	{
+		FMOD_SOUND* pSound = FindSound(tTrack.wstrIntro);
+		if (!pSound)
+			return;
+
+		m_hBGM = PlayOnChannel(pSound, BGM_SLOT, false);
+		m_eBGMState = EBGMState::Intro;
+	}
+	else
+	{
+		FMOD_SOUND* pSound = FindSound(tTrack.wstrLoop);
+		if (!pSound)
+			return;
+
+		m_hBGM = PlayOnChannel(pSound, BGM_SLOT, true);
+		m_eBGMState = EBGMState::Loop;
+	}
 }
 
 void CSoundMgr::StopSFX(SOUND_HANDLE hSound)
@@ -293,8 +331,8 @@ int CSoundMgr::ResolveHandle(SOUND_HANDLE hSound)
 	int iIdx = (int)(hSound & HANDLE_INDEX_MASK);
 	unsigned int iGen = hSound >> HANDLE_INDEX_BITS;
 
-	// 이펙트 채널 범위 밖이거나(BGM 등), 이미 다른 소리가 할당된 채널이면 무효
-	if (iIdx < EFFECT_BEGIN || iIdx >= MAX_SLOT)
+	// 채널 범위 밖이거나, 이미 다른 소리가 할당된 채널이면 무효
+	if (iIdx >= MAX_SLOT)
 		return -1;
 
 	if (m_iGeneration[iIdx] != iGen || !m_pChannelArr[iIdx])
