@@ -16,6 +16,7 @@
 #include "CExplodeRange.h"
 #include "CExplodeSphere.h"
 #include "CRandomMgr.h"
+#include "CSoundMgr.h"
 
 CRibbon::CRibbon(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir)
     : CProjectile(pGraphicDev)
@@ -142,6 +143,16 @@ void CRibbon::StartExplosionPhase()
 {
     m_bOnExplosionPhase = true;
     m_fTraveled = 0.f;
+
+    CCinematicCamera* pCamera = dynamic_cast<CCinematicCamera*>(
+        CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::CINEMATIC));
+
+    if (pCamera)
+        pCamera->Stop();
+
+    if (CLayer* pUILayer = CManagement::GetInstance()->Get_Layer(L"UI_Layer"))
+        pUILayer->Set_IsActive(true);
+
 }
 
 HRESULT CRibbon::Add_Component()
@@ -257,14 +268,19 @@ void CRibbon::UpdateExplosionPhase(float fTimeDelta)
 {
     m_fTraveled += m_fExplodePropagationSpeed * fTimeDelta;
 
+    if (m_fTraveled < m_fSampleExplosionLength) return;
+
+    m_fTraveled = 0.f;
+    ++m_iCurrentIndex;
+
+    if (m_iCurrentIndex < m_iIgnoreExplosionCount) return;
+
     if (m_iCurrentIndex >= (int)m_vecExplodePoint.size())
     {
         m_OnExplosionPhaseEnded.Broadcast();
         Set_Dead(true);
         return;
     }
-
-    if (m_fTraveled < m_fSampleExplosionLength) return;
 
     _vec3 vPos = m_vecExplodePoint.at(m_iCurrentIndex);
 
@@ -306,8 +322,7 @@ void CRibbon::UpdateExplosionPhase(float fTimeDelta)
         pArea->OnSwitch();
     }
 
-    m_fTraveled = 0.f;
-    ++m_iCurrentIndex;
+    CSoundMgr::GetInstance()->PlaySFX(L"sfxExplode.wav");
 }
 
 CRibbon* CRibbon::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir)
