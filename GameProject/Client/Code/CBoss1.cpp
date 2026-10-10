@@ -69,7 +69,6 @@ _int CBoss1::Update_GameObject(_float fTimeDelta)
                     m_pSpawnMonster[i]->Set_IsActive(true);
                 }
             }
-            int a = 1;
         }
     }
     else if (m_iHp <= m_iMaxHp / 2)
@@ -207,19 +206,8 @@ void CBoss1::Update_Motion(const _float& fTimeDelta)
     {
         m_fStateUpdateTime = 0.f;
 
-        if (m_iPhase == 0)
-        {
-            m_eBoss1State = static_cast<BOSS1STATE>(rand() % 2);
-            if (m_bMoveState == true)
-            {
-                m_eBoss1State = MOVE;
-                m_bMoveState = false;
-            }
-        }
-        else
-        {
-            m_eBoss1State = static_cast<BOSS1STATE>(rand() % 2);
-        }
+        m_eBoss1State = static_cast<BOSS1STATE>(Get_MotionState());
+
         //m_eBoss1State = SPAWN;
         //m_eBoss1State = MOVE;
         if (m_eBoss1State == SPAWN)
@@ -253,6 +241,39 @@ void CBoss1::Update_Motion(const _float& fTimeDelta)
             m_fStateUpdateDuration = 2.f;
         }
     }
+}
+
+_int CBoss1::Get_MotionState()
+{
+    if (m_listState.empty() == true)
+    {
+        m_listState.push_back(0);
+        return m_listState.back();
+    }
+
+    if (m_listState.size() == 3)
+    {
+        for (int i = 0; i < 2; ++i)
+        {
+            if (find(m_listState.begin(), m_listState.end(), i) == m_listState.end())
+            {
+                m_listState.pop_front();
+                m_listState.push_back(i);
+                return m_listState.back();
+            }
+        }
+    }
+    _int iRand;
+    do
+    {
+        iRand = rand() % 2;
+    } while (m_listState.size() >= 2 && *m_listState.rbegin() == iRand && *next(m_listState.rbegin()) == iRand);
+
+    if (m_listState.size() == 3)
+        m_listState.pop_front();
+
+    m_listState.push_back(iRand);
+    return m_listState.back();
 }
 
 void CBoss1::Move_Boss1(const _float& fTimeDelta)

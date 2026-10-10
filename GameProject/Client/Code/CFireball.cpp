@@ -8,7 +8,6 @@
 #include "CStage.h"
 #include "CRoomLayer.h"
 #include "CSpriteTile.h"
-#include "CParticle_Sphere.h"
 #include "CEffect.h"
 #include "CPlayerCamera.h"
 

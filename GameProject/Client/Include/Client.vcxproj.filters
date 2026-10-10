@@ -406,6 +406,9 @@
     <Filter Include="02. GameObject\08. Combat\03. Resource\02. LiminalUlt">
       <UniqueIdentifier>{c6eb1faf-de14-4b12-bd9e-2c178d8fe734}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Worm\WormBullet">
+      <UniqueIdentifier>{ce9c4643-760b-4ae1-bd0a-2b4319bacad7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -828,7 +831,7 @@
     <ClInclude Include="..\Header\CGenerator_Snow.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CGenerator_Sand.h">
+    <ClInclude Include="..\Header\CGenerator_YellowDust.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CShotGunUltimateEffect.h">
@@ -845,6 +848,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CLiminalGunUltimateEffect.h">
       <Filter>02. GameObject\08. Combat\03. Resource\02. LiminalUlt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWormBullet.h">
+      <Filter>02. GameObject\02. Monster\Worm\WormBullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1024,9 +1030,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGameMachine.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\GameMachine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CParticle_Rectangle.cpp">
-      <Filter>02. GameObject\06. Effect\Particle_Rectangle</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CParticle_Sphere.cpp">
       <Filter>02. GameObject\06. Effect\Particle_Sphere</Filter>
@@ -1241,7 +1244,7 @@
     <ClCompile Include="..\Code\CGenerator_Snow.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CGenerator_Sand.cpp">
+    <ClCompile Include="..\Code\CGenerator_YellowDust.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CShotGunUltimateEffect.cpp">
@@ -1258,6 +1261,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLiminalGunUltimateEffect.cpp">
       <Filter>02. GameObject\08. Combat\03. Resource\02. LiminalUlt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWormBullet.cpp">
+      <Filter>02. GameObject\02. Monster\Worm\WormBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CParticle_Rectangle.cpp">
+      <Filter>02. GameObject\06. Effect\Particle_Rectangle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

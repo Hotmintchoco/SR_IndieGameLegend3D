@@ -15,7 +15,7 @@
 #include "CClientCameraMgr.h"
 
 CEffect::CEffect(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev), m_fFrame(0.f)
+    : CGameObject(pGraphicDev)
 {
 }
 
@@ -240,6 +240,22 @@ void CEffect::Ready_Effect()
         break;
     }
     case AIRBUBBLE:
+    {
+        break;
+    }
+    case YELLOWDUST:
+    {
+        break;
+    }
+    case YELLOWDUST_INIT:
+    {
+        break;
+    }
+    case SNOW:
+    {
+        break;
+    }
+    case SNOW_INIT:
     {
         break;
     }
@@ -509,41 +525,41 @@ void CEffect::Update_Effect(const _float fTimeDelta)
     }
     case SANDBURST2:
     {
-		_int iRand1 = 0;
-		_int iRand2 = 0;
-		_int iRand3 = 0;
+        _int iRand1 = 0;
+        _int iRand2 = 0;
+        _int iRand3 = 0;
 
-		D3DXCOLOR eColor = { 1.f,1.f,0.f,1.f };
+        D3DXCOLOR eColor = { 1.f,1.f,0.f,1.f };
 
-		_vec3 vPos, vDir, vScale;
-		for (int i = 0; i < 128; ++i)
-		{
-			m_pTransformCom->Get_Info(INFO_POS, &vPos);
-			vPos.y = 0.5f;
+        _vec3 vPos, vDir, vScale;
+        for (int i = 0; i < 128; ++i)
+        {
+            m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            vPos.y = 0.5f;
 
             vDir.x = (_float)(rand() % 128 - 64) / 64.f;
             vDir.y = (_float)(rand() % 128 - 64) / 64.f;
-			//vDir.y = (_float)(rand() % 64) / 64.f;
-			vDir.z = (_float)(rand() % 128 - 64) / 64.f;
-			//D3DXVec3Normalize(&vDir, &vDir);
-			vDir *= 0.5f;
-			vPos += vDir;
-			vDir = { 0.f,-2.5f,0.f };
+            //vDir.y = (_float)(rand() % 64) / 64.f;
+            vDir.z = (_float)(rand() % 128 - 64) / 64.f;
+            //D3DXVec3Normalize(&vDir, &vDir);
+            vDir *= 0.5f;
+            vPos += vDir;
+            vDir = { 0.f,-2.5f,0.f };
 
             _int iRandScale = rand() % 5;
             _float fScale = 0.05f + (_float)iRandScale * 0.01f;
             vScale = { fScale,fScale,fScale };
 
-			_int iRand = rand() % 3;
+            _int iRand = rand() % 3;
             if (iRand == 0) eColor = { 217.f / 256.f, 199.f / 256.f, 141.f / 256.f,1.f };
             else if (iRand == 1) eColor = { 232.f / 256.f, 216.f / 256.f, 179.f / 256.f,1.f };
             else eColor = { 179.f / 256.f, 148.f / 256.f, 54.f / 256.f ,1.f };
 
-			pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vDir, vScale, eColor, 2.f, CParticle_Rectangle::SAND);
-			if (nullptr == pGameObject) return;
-			if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
-		}
-		Set_Dead(true);
+            pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vDir, vScale, eColor, 2.f, CParticle_Rectangle::SAND);
+            if (nullptr == pGameObject) return;
+            if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
+        }
+        Set_Dead(true);
 
         break;
     }
@@ -605,7 +621,7 @@ void CEffect::Update_Effect(const _float fTimeDelta)
     case WORM_EXPLOSION1:
     {
         m_fElapsedTime3 += fTimeDelta;
-        if (m_fElapsedTime3 > 0.125f*0.5f)
+        if (m_fElapsedTime3 > 0.125f * 0.5f)
         {
             m_fElapsedTime3 = 0.f;
 
@@ -667,6 +683,99 @@ void CEffect::Update_Effect(const _float fTimeDelta)
             pGameObject = CAirbubble::Create(m_pGraphicDev, vPos, iType);
             if (nullptr == pGameObject) return;
             if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
+        }
+        Set_Dead(true);
+        break;
+    }
+    case YELLOWDUST:
+    {
+        _vec3 vVelocity;
+        _int iRand = rand() % 128;
+        vVelocity = { 0.f, -_float(iRand) / 128.f, 0.f };
+        vVelocity += s_vYellowDust;
+
+        D3DXCOLOR eColor = { 204.f / 256.f, 153.f / 256.f, 51.f / 256.f,1.f };
+
+        float fScale = 0.125f * 0.33f;
+        _vec3 vScale = { fScale, fScale , fScale };
+
+        for (int i = 0; i < 10; ++i)
+        {
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            _float fRandX = _float(rand() % 131 - 65) / 10.f;
+            _float fRandZ = _float(rand() % 111 - 55) / 10.f;
+
+            vPos.x += fRandX;
+            vPos.y += 3.f;
+            vPos.z += fRandZ;
+
+            pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, vScale, eColor, 20.f, CParticle_Rectangle::YELLOWDUST);
+            if (nullptr == pGameObject) return;
+            if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
+        }
+        Set_Dead(true);
+        break;
+    }
+    case YELLOWDUST_INIT:
+    {
+        Set_Dead(true);
+        break;
+    }
+    case SNOW:
+    {
+        _vec3 vVelocity;
+        _int iRand = rand() % 128;
+        vVelocity = { 0.f, -(_float(iRand) / 128.f + 1.f), 0.f };
+
+        D3DXCOLOR eColor = { 1.f,1.f,1.f,1.f };
+
+        float fScale = 0.125f * 0.25f;
+        _vec3 vScale = { fScale, fScale , fScale };
+
+        for (int i = 0; i < 4; ++i)
+        {
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            _float fRandX = _float(rand() % 131 - 65) / 10.f;
+            _float fRandZ = _float(rand() % 111 - 55) / 10.f;
+
+            vPos.x += fRandX;
+            vPos.y += 5.f;
+            vPos.z += fRandZ;
+
+            pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, vScale, eColor, 20.f, CParticle_Rectangle::SNOW);
+            if (nullptr == pGameObject) return;
+            if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
+        }
+        Set_Dead(true);
+        break;
+    }
+    case SNOW_INIT:
+    {
+        _vec3 vVelocity;
+        _int iRand = rand() % 128;
+        vVelocity = { 0.f, -(_float(iRand) / 128.f + 1.f), 0.f };
+
+        D3DXCOLOR eColor = { 1.f,1.f,1.f,1.f };
+
+        float fScale = 0.125f * 0.25f;
+        _vec3 vScale = { fScale, fScale , fScale };
+
+        for (int i = 0; i < 10; ++i)
+        {
+            for (int j = 1; j < 5; ++j)
+            {
+                _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+                _float fRandX = _float(rand() % 111 - 55) / 10.f;
+                _float fRandZ = _float(rand() % 91 - 45) / 10.f;
+
+                vPos.x += fRandX;
+                vPos.y += (_float)j;
+                vPos.z += fRandZ;
+
+                pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, vScale, eColor, 20.f, CParticle_Rectangle::SNOW);
+                if (nullptr == pGameObject) return;
+                if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
+            }
         }
         Set_Dead(true);
         break;

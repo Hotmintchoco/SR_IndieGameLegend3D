@@ -9,9 +9,7 @@
 #include "CCryder.h"
 #include "CFireball.h"
 #include "CTrail.h"
-#include "CParticle_Rectangle.h"
 #include "CEffect.h"
-#include "CParticle_Sphere.h"
 #include "CRoomLayer.h"
 #include "CUIMgr.h"
 #include "CClientCameraMgr.h"
@@ -19,10 +17,7 @@
 #include "CPlayerCamera.h"
 
 CMagmamouth::CMagmamouth(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev), m_fSpawn_CoolDown(0.25f), m_fStateUpdateTime(0.f), m_fStateUpdateDuration(2.f), 
-    m_eMagmaMouthState(OPENING), m_vMovePosition{0.f,0.f,0.f},
-    m_iMonsterX(0), m_iMonsterZ(0), m_iPlayerX(0), m_iPlayerZ(0), m_bMoveFlag(false), m_bMoveFlag2(false), m_bCloseMouth(false),
-    m_fTrailTime(0.f), m_fTrailTime2(0.f), m_fTrailDuration(0.f), m_bTrailStart(false), m_bTrailFinish(false), m_fSpawnTime(0.f)
+    : CMonster(pGraphicDev)
 {
     ZeroMemory(m_bSpawnFinish, sizeof(m_bSpawnFinish));
     ZeroMemory(m_bFireballFinish, sizeof(m_bFireballFinish));
@@ -81,7 +76,6 @@ _int CMagmamouth::Update_GameObject(_float fTimeDelta)
     }
 
     _int    iExit = CMonster::Update_GameObject(_fTimeDelta);
-
 
     Update_Motion(_fTimeDelta);
    
@@ -493,21 +487,8 @@ void CMagmamouth::Update_Motion(const _float& fTimeDelta)
         m_fStateUpdateTime = 0.f;
         m_bCloseMouth = false;
 
-        if (m_iPhase == 0)
-        {
-            m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 3);
-            if (m_bMoveState == true)
-            {
-                m_eMagmaMouthState = MOVE;
-                m_bMoveState = false;
+        m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(Get_MotionState());
 
-            }
-            //m_bMoveState = !m_bMoveState;
-        }
-        else
-        {
-            m_eMagmaMouthState = static_cast<MAGMAMOUTHSTATE>(rand() % 3);
-        }
         //m_eMagmaMouthState = SPAWN;
         //m_eMagmaMouthState = FIREBALL;
         //m_eMagmaMouthState = MOVE;
@@ -550,6 +531,39 @@ void CMagmamouth::Update_Motion(const _float& fTimeDelta)
             m_fFrame = 3.f;
         }
     }
+}
+
+_int CMagmamouth::Get_MotionState()
+{
+    if (m_listState.empty() == true)
+    {
+        m_listState.push_back(0);
+        return m_listState.back();
+    }
+
+    if (m_listState.size() == 3)
+    {
+        for (int i = 0; i < 3; ++i)
+        {
+            if (find(m_listState.begin(), m_listState.end(), i) == m_listState.end())
+            {
+                m_listState.pop_front();
+                m_listState.push_back(i);
+                return m_listState.back();
+            }
+        }
+    }
+    _int iRand;
+    do
+    {
+        iRand = rand() % 3;
+    } while (m_listState.size() >= 2 && *m_listState.rbegin() == iRand && *next(m_listState.rbegin()) == iRand);
+
+    if (m_listState.size() == 3)
+        m_listState.pop_front();
+
+    m_listState.push_back(iRand);
+    return m_listState.back();
 }
 
 void CMagmamouth::Set_MovePosition()

@@ -30,7 +30,7 @@ public:
 	static CArrow_Effect* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vDir);
 	void Set_Dir(_vec3 vDir) { m_vDir = vDir; }
 private:
-	_vec3 m_vDir = {};
+	_vec3 m_vDir = { 0.f,0.f,0.f };
 	_int m_iFrame = 0;
 
 protected:

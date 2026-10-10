@@ -27,13 +27,13 @@ public:
 private:
 	void Shuffle_Array(_uint N);
 
-	void Opening_MagmaMouth(const _float& fTimeDelta);
+	void Update_Motion(const _float& fTimeDelta);
+	_int Get_MotionState();
 
+	void Opening_MagmaMouth(const _float& fTimeDelta);
 	void Spawn_Spider(const _float& fTimeDelta);
 	void Throw_Fireball(const _float& fTimeDelta);
 	void Move_Magmamouth(const _float& fTimeDelta);
-
-	void Update_Motion(const _float& fTimeDelta);
 
 	void Set_MovePosition();
 	void Set_Position();
@@ -53,35 +53,35 @@ protected:
 	virtual void		Free();
 
 private:
-	enum MAGMAMOUTHSTATE { SPAWN, FIREBALL, MOVE, IDLE, DEAD, OPENING };
-	MAGMAMOUTHSTATE m_eMagmaMouthState;
+	enum MAGMAMOUTHSTATE { MOVE, SPAWN, FIREBALL, IDLE, DEAD, OPENING };
+	MAGMAMOUTHSTATE m_eMagmaMouthState = OPENING;
 
-	_float m_fSpawn_CoolDown;
-	_float m_fSpawnTime;
+	_float m_fSpawn_CoolDown = 0.25f;
+	_float m_fSpawnTime = 0.f;
 	_bool m_bSpawnFinish[4];
 	_uint m_iSpawnOrderArr[4];
 
-	_float m_fStateUpdateTime;
-	_float m_fStateUpdateDuration;
+	_float m_fStateUpdateTime = 0.f;
+	_float m_fStateUpdateDuration = 2.f;
 	_bool m_bFireballFinish[4];
 
-	_vec3 m_vMovePosition;
-	_bool m_bMoveFlag;
-	_bool m_bMoveFlag2;
+	_vec3 m_vMovePosition = { 0.f,0.f,0.f };
+	_bool m_bMoveFlag = false;
+	_bool m_bMoveFlag2 = false;
 
-	_bool m_bTrailStart;
-	_bool m_bTrailFinish;
-	_float m_fTrailTime;
-	_float m_fTrailTime2;
-	_float m_fTrailDuration;
+	_bool m_bTrailStart = false;
+	_bool m_bTrailFinish = false;
+	_float m_fTrailTime = 0.f;
+	_float m_fTrailTime2 = 0.f;
+	_float m_fTrailDuration = 0.f;
 	_vec3 m_fTrailPoint[4];
 
-	_uint m_iMonsterX;
-	_uint m_iMonsterZ;
-	_uint m_iPlayerX;
-	_uint m_iPlayerZ;
+	_uint m_iMonsterX = 0;
+	_uint m_iMonsterZ = 0;
+	_uint m_iPlayerX = 0;
+	_uint m_iPlayerZ = 0;
 
-	_bool m_bCloseMouth;
+	_bool m_bCloseMouth = false;
 
 	_bool m_bDead_Effect1 = false;
 	_bool m_bDead_Effect2 = false;
@@ -103,10 +103,7 @@ private:
 	};
 	_int m_iOpeningMoveIndex = 0;
 
-
-
 	_uint m_iPhase = 0;
-	_bool m_bMoveState = true;
 
-	inline static _vec3 s_vRoomCenter = { 0.f,0.f,0.f };
+	list<_int> m_listState;
 };
