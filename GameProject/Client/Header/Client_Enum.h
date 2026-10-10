@@ -103,6 +103,15 @@ enum class EObjectType
 	MAX,
 };
 
+enum class ERoomType
+{
+	ROOM_DEFAULT,
+	ROOM_LASER_PUZZLE,
+	ROOM_LIMINAL,
+
+	ROOM_MAX
+};
+
 enum class ERoomEventType
 {
 	NONE,

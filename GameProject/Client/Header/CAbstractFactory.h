@@ -15,6 +15,7 @@ struct TCreateDesc
 };
 
 class CWeapon;
+class CRoomLayer;
 
 class CAbstractFactory : public CBase
 {
@@ -31,11 +32,15 @@ public:
 	Engine::CGameObject* CreateRandomItem(CGameObject* pSpawner) const;
 
 	/* Weapon */
-	CWeapon* CraeteWeapon(EObjectType eType) const;
+	CWeapon* CreateWeapon(EObjectType eType) const;
+
+	/* Room Layer */
+	CRoomLayer* CreateRoom(int iType, const int iIndex) const;
 
 private:
 	virtual void Free();
 
 	unordered_map<EObjectType, Engine::CGameObject*(*)(const TCreateDesc&)> m_mapCreator;
+	unordered_map<ERoomType, CRoomLayer*(*)(const int iIndex)> m_mapRoomCreator;
 };
 

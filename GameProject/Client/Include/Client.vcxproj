@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="..\Header\CAirbubble.h" />
     <ClInclude Include="..\Header\CAbstractFactory.h" />
+    <ClInclude Include="..\Header\CCameraHelper.h" />
     <ClInclude Include="..\Header\CGenerator_Airbubble.h" />
     <ClInclude Include="..\Header\CArrow.h" />
     <ClInclude Include="..\Header\CArrow_Effect.h" />
@@ -173,10 +174,12 @@
     <ClInclude Include="..\Header\CLaser.h" />
     <ClInclude Include="..\Header\CLaserBuffer.h" />
     <ClInclude Include="..\Header\CLaserGun.h" />
+    <ClInclude Include="..\Header\CLaserPuzzleRoomLayer.h" />
     <ClInclude Include="..\Header\CLiminalCube.h" />
     <ClInclude Include="..\Header\CLiminalGun.h" />
     <ClInclude Include="..\Header\CLiminalGunUltimateEffect.h" />
     <ClInclude Include="..\Header\CLiminalObject.h" />
+    <ClInclude Include="..\Header\CLiminalRoomLayer.h" />
     <ClInclude Include="..\Header\CLiminalSlope.h" />
     <ClInclude Include="..\Header\CMine.h" />
     <ClInclude Include="..\Header\CMiniGame.h" />
@@ -295,6 +298,7 @@
   <ItemGroup>
     <ClCompile Include="..\Code\CAirbubble.cpp" />
     <ClCompile Include="..\Code\CAbstractFactory.cpp" />
+    <ClCompile Include="..\Code\CCameraHelper.cpp" />
     <ClCompile Include="..\Code\CGenerator_Airbubble.cpp" />
     <ClCompile Include="..\Code\CArrow.cpp" />
     <ClCompile Include="..\Code\CArrow_Effect.cpp" />
@@ -322,10 +326,12 @@
     <ClCompile Include="..\Code\CLaser.cpp" />
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />
     <ClCompile Include="..\Code\CLaserGun.cpp" />
+    <ClCompile Include="..\Code\CLaserPuzzleRoomLayer.cpp" />
     <ClCompile Include="..\Code\CLiminalCube.cpp" />
     <ClCompile Include="..\Code\CLiminalGun.cpp" />
     <ClCompile Include="..\Code\CLiminalGunUltimateEffect.cpp" />
     <ClCompile Include="..\Code\CLiminalObject.cpp" />
+    <ClCompile Include="..\Code\CLiminalRoomLayer.cpp" />
     <ClCompile Include="..\Code\CLiminalSlope.cpp" />
     <ClCompile Include="..\Code\CMine.cpp" />
     <ClCompile Include="..\Code\CMiniGame.cpp" />

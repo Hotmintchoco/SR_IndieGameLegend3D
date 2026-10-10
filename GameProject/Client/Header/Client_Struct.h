@@ -17,6 +17,7 @@ struct TRoomEntity
 struct TRoomData
 {
 	int iVersion = 0;
+	int iSpecial = 0; /* 특수 기믹이 요구되는 방들 */
 	wstring wstrRoomName;
 	int iBiome;
 	bool bBossRoom;

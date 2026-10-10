@@ -310,15 +310,6 @@
     <Filter Include="02. GameObject\08. Combat\00. Weapon\05. Liminal">
       <UniqueIdentifier>{9fd36b58-9936-4820-bcdb-24b265fc4d23}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\Stage\Layer\Interface">
-      <UniqueIdentifier>{65b3c197-e64f-4b58-a0f3-a48b85810a8b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\Stage\Layer\Liminal\Cube">
-      <UniqueIdentifier>{b677509c-03fa-48e6-9e70-3247a12a8f29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\Stage\Layer\Liminal\Slope">
-      <UniqueIdentifier>{b095e27f-ea10-454a-bb4f-fe6ce8e56688}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\06. Effect\Arrow_Effect">
       <UniqueIdentifier>{2c6927cc-9292-403e-91ea-f06959311ff5}</UniqueIdentifier>
     </Filter>
@@ -408,6 +399,24 @@
     </Filter>
     <Filter Include="02. GameObject\02. Monster\Worm\WormBullet">
       <UniqueIdentifier>{ce9c4643-760b-4ae1-bd0a-2b4319bacad7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. Logic\02. CameraHelper">
+      <UniqueIdentifier>{0b4c689d-2ae5-49fc-ad89-0174ef660c29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Object">
+      <UniqueIdentifier>{5f440232-c50a-4ac9-92d9-b10986e379e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Object\Cube">
+      <UniqueIdentifier>{b677509c-03fa-48e6-9e70-3247a12a8f29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Object\Slope">
+      <UniqueIdentifier>{b095e27f-ea10-454a-bb4f-fe6ce8e56688}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Interface">
+      <UniqueIdentifier>{65b3c197-e64f-4b58-a0f3-a48b85810a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\LaserPuzzle">
+      <UniqueIdentifier>{612b5a6b-a31a-4f5b-8b1d-843120f0366d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -747,20 +756,17 @@
     <ClInclude Include="..\Header\CBombardArrowSpawner.h">
       <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CLiminalObject.h">
-      <Filter>01. Scene\Stage\Layer\Liminal</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CLiminalGun.h">
       <Filter>02. GameObject\08. Combat\00. Weapon\05. Liminal</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\ITerrain.h">
-      <Filter>01. Scene\Stage\Layer\Interface</Filter>
+      <Filter>01. Scene\Stage\Layer\Liminal\Interface</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLiminalCube.h">
-      <Filter>01. Scene\Stage\Layer\Liminal\Cube</Filter>
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Cube</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLiminalSlope.h">
-      <Filter>01. Scene\Stage\Layer\Liminal\Slope</Filter>
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Slope</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CArrow_Effect.h">
       <Filter>02. GameObject\06. Effect\Arrow_Effect</Filter>
@@ -851,6 +857,18 @@
     </ClInclude>
     <ClInclude Include="..\Header\CWormBullet.h">
       <Filter>02. GameObject\02. Monster\Worm\WormBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCameraHelper.h">
+      <Filter>02. GameObject\12. Logic\02. CameraHelper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalObject.h">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalRoomLayer.h">
+      <Filter>01. Scene\Stage\Layer\Liminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLaserPuzzleRoomLayer.h">
+      <Filter>01. Scene\Stage\Layer\LaserPuzzle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1160,20 +1178,17 @@
     <ClCompile Include="..\Code\CBombardArrowSpawner.cpp">
       <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CLiminalObject.cpp">
-      <Filter>01. Scene\Stage\Layer\Liminal</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CLiminalGun.cpp">
       <Filter>02. GameObject\08. Combat\00. Weapon\05. Liminal</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ITerrain.cpp">
-      <Filter>01. Scene\Stage\Layer\Interface</Filter>
+      <Filter>01. Scene\Stage\Layer\Liminal\Interface</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLiminalCube.cpp">
-      <Filter>01. Scene\Stage\Layer\Liminal\Cube</Filter>
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Cube</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLiminalSlope.cpp">
-      <Filter>01. Scene\Stage\Layer\Liminal\Slope</Filter>
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Slope</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CArrow_Effect.cpp">
       <Filter>02. GameObject\06. Effect\Arrow_Effect</Filter>
@@ -1267,6 +1282,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CParticle_Rectangle.cpp">
       <Filter>02. GameObject\06. Effect\Particle_Rectangle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCameraHelper.cpp">
+      <Filter>02. GameObject\12. Logic\02. CameraHelper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalObject.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalRoomLayer.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLaserPuzzleRoomLayer.cpp">
+      <Filter>01. Scene\Stage\Layer\LaserPuzzle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

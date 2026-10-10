@@ -35,6 +35,9 @@
 #include "CJail.h"
 #include "CGenerator_YellowDust.h"
 #include "CGenerator_Snow.h"
+#include "CRoomLayer.h"
+#include "CLaserPuzzleRoomLayer.h"
+#include "CLiminalRoomLayer.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -79,6 +82,13 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::WEAPON_BOW,               [](const TCreateDesc& t) -> Engine::CGameObject* { return CBow::Create(t.pDevice); } },
         {EObjectType::WEAPON_LIMINAL,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalGun::Create(t.pDevice); } },
     };
+
+
+    m_mapRoomCreator = {
+        {ERoomType::ROOM_DEFAULT,           [](const int iIndex) -> CRoomLayer* { return CRoomLayer::Create(iIndex); } },
+        {ERoomType::ROOM_LASER_PUZZLE,      [](const int iIndex) -> CRoomLayer* { return CLaserPuzzleRoomLayer::Create(iIndex); } },
+        {ERoomType::ROOM_LIMINAL,           [](const int iIndex) -> CRoomLayer* { return CLiminalRoomLayer::Create(iIndex); } },
+    };
 }
 
 CAbstractFactory::~CAbstractFactory()
@@ -119,7 +129,7 @@ Engine::CGameObject* CAbstractFactory::CreateRandomItem(CGameObject* pSpawner) c
     return pObject;
 }
 
-CWeapon* CAbstractFactory::CraeteWeapon(EObjectType eType) const
+CWeapon* CAbstractFactory::CreateWeapon(EObjectType eType) const
 {
     if ((int)eType <= (int)EObjectType::WEAPON_NONE || (int)eType >= (int)EObjectType::WEAPON_MAX) return nullptr;
 
@@ -133,6 +143,13 @@ CWeapon* CAbstractFactory::CraeteWeapon(EObjectType eType) const
     Engine::CGameObject* pObject = m_mapCreator.at(eType)(t);
 
     return static_cast<CWeapon*>(pObject);
+}
+
+CRoomLayer* CAbstractFactory::CreateRoom(const int iType, const int iIndex) const
+{
+    CRoomLayer* pLayer = m_mapRoomCreator.at((ERoomType)iType)(iIndex);
+
+    return pLayer;
 }
 
 void CAbstractFactory::Free()

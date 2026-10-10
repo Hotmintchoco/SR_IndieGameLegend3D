@@ -460,6 +460,7 @@ HRESULT CLoading::ParseSingleRoom(int iRoomIdx)
         json data = json::parse(f);
         string str = data.at("roomName").get<string>();
         t.wstrRoomName = Utils::Utf8ToWide(str);
+        data.at("special").get_to(t.iSpecial);
         data.at("biome").get_to(t.iBiome);
         data.at("bossRoom").get_to(t.bBossRoom);
         data.at("tileList").get_to(t.vecTile);
@@ -504,6 +505,7 @@ HRESULT CLoading::ParseDefaultRoom(int iRoomIdx)
         json data = json::parse(f);
         string str = data.at("roomName").get<string>();
         t.wstrRoomName = Utils::Utf8ToWide(str);
+        data.at("special").get_to(t.iSpecial);
         data.at("biome").get_to(t.iBiome);
         data.at("bossRoom").get_to(t.bBossRoom);
         data.at("tileList").get_to(t.vecTile);

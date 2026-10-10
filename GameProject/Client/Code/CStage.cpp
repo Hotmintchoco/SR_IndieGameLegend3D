@@ -15,6 +15,7 @@
 #include "CSkyBox.h"
 
 /* 방 레이어*/
+#include "CAbstractFactory.h"
 #include "CRoomLoadingMgr.h"
 #include "CRoomLayer.h"
 #include "CLayerContext.h"
@@ -381,7 +382,8 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 HRESULT CStage::Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx)
 {
-	CLayer* pLayer = CRoomLayer::Create(iRoomIdx);
+	int iType = CRoomLoadingMgr::GetInstance()->GetRoomData(iRoomIdx)->iSpecial;
+	CLayer* pLayer = CAbstractFactory::GetInstance()->CreateRoom(iType, iRoomIdx);
 	if (nullptr == pLayer)
 		return E_FAIL;
 
