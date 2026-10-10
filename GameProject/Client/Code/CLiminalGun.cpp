@@ -152,7 +152,7 @@ TWeaponOutput CLiminalGun::StartUltimateAttack(EInputState ePri, EInputState eSe
     m_bOnUltimateAttack = true;
     m_fTimeAfterUltimate = 0.f;
     m_pSystem->SetUltimateAttackOnGoing(true);
-    //CSoundMgr::GetInstance()->PlaySFX(L"Ult_Liminal.mp3");
+    CSoundMgr::GetInstance()->PlaySFX(L"Ult_Liminal.wav");
 
     m_pEffect->Set_IsActive(true);
 
@@ -394,11 +394,6 @@ void CLiminalGun::UpdateHitScanState(float fTimeDelta)
     m_pqCapture.pop();
 
     StartShotAnimation();
-
-    if (m_pqCapture.empty())
-    {
-        EndUltimateAttack(EInputState::NONE, EInputState::NONE);
-    }
 }
 
 float CLiminalGun::GetYawFromCameraToTarget(CMonster* pMonster)

@@ -128,7 +128,7 @@ TWeaponOutput CShotGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
 {
     m_bOnUltimateAttack = true;
     m_fLeftUltimateTime = m_fUltimateTime;
-    //CSoundMgr::GetInstance()->PlaySFX(L"Ult_SG.mp3");
+    CSoundMgr::GetInstance()->PlaySFX(L"Ult_SG.wav");
     //if (CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene()))
     //{
     //    CShotGunUltimateEffect* pEffect = CShotGunUltimateEffect::Create(m_pGraphicDev, pStage->GetPlayer());

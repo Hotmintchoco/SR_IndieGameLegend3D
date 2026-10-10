@@ -224,7 +224,7 @@ TWeaponOutput CRapidGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
     m_bOnUltimateAttack = true;
     m_fTimeAfterUltimate = 0.f;
     m_pSystem->SetUltimateAttackOnGoing(true);
-    CSoundMgr::GetInstance()->PlaySFX(L"Ult_Default.mp3");
+    CSoundMgr::GetInstance()->PlaySFX(L"Ult_Rapid.wav");
 
     m_bEffectStart = false;
     m_fLeftEffectStartTime = m_fLazyEffectStartTime;
