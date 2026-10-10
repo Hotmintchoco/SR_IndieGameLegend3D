@@ -43,6 +43,10 @@ public:
 	inline int GetCurrentRoomIndex() { return m_iCurrentRoomIndex; }
 	CRoomLayer* GetRoomLayerFromIndex(int iIndex);
 
+	/* 디버깅 */
+	void RequestWarp(int iRoomIdx) { m_iWarpRequest = iRoomIdx; }
+	void WarpToRoom(int iRoomIdx);
+
 private:
 	HRESULT Ready_Environment_Layer(const _tchar* pLayerTag);
 	HRESULT Ready_GameLogic_Layer(const _tchar* pLayerTag);
@@ -70,6 +74,9 @@ private:
 	bool m_bOnPlayerDead = false;
 	float m_fReviveTime = 2.f;
 	float m_fLeftReviveTime = 0.f;
+
+	/* 디버그 */
+	int m_iWarpRequest = -1;
 
 public:
 	static CStage* Create(LPDIRECT3DDEVICE9 pGraphicDev);

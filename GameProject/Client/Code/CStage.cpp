@@ -114,6 +114,7 @@ HRESULT CStage::Ready_Scene()
 
 _int CStage::Update_Scene(_float fTimeDelta)
 {
+	if (m_iWarpRequest >= 0)
 	CClientCameraMgr::GetInstance()->Update_Camera(fTimeDelta);
 	_int iExit = CScene::Update_Scene(fTimeDelta);
 
@@ -291,6 +292,20 @@ CRoomLayer* CStage::GetRoomLayerFromIndex(int iIndex)
 		assert(0);
 		return nullptr;
 	}
+}
+
+void CStage::WarpToRoom(int iRoomIdx)
+{
+	if (iRoomIdx < 0 || iRoomIdx >= 25 || !m_pPlayer) return;
+
+	const int iRoomCnt = CRoomLoadingMgr::GetInstance()->GetRoomTotalCount();
+	if (iRoomIdx < 0 || iRoomIdx >= iRoomCnt || !m_pPlayer) return;
+	if (m_bOnPlayerDead) return;
+
+	const _vec3 vPos = GetRoomLayerFromIndex(iRoomIdx)->GetCenterPos();
+	m_pPlayer->GetTransform()->Set_Pos(vPos);
+
+	UpdatePlayerPosition(vPos);
 }
 
 HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)

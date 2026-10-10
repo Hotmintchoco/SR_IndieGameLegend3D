@@ -124,11 +124,18 @@ void CGameStatus::RenderImGui()
                 if (m_bClearTable[idx]) { mark = "O"; col = ImVec4(0.3f, 1.0f, 0.3f, 1.0f); }
                 else if (m_bVisitTable[idx]) { mark = "A"; col = ImVec4(1.0f, 0.9f, 0.3f, 1.0f); }
 
-                // 현재 방 강조
                 if (idx == m_iCurrentRoomIndex)
                     col = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
 
-                ImGui::TextColored(col, " %s ", mark);
+                ImGui::PushID(idx);
+                ImGui::PushStyleColor(ImGuiCol_Text, col);
+                if (ImGui::Button(mark, ImVec2(28.f, 28.f)))
+                    m_pStage->RequestWarp(idx);
+                ImGui::PopStyleColor();
+
+                if (ImGui::IsItemHovered())
+                    ImGui::SetTooltip("Room %d (%d, %d)", idx, y, x);
+                ImGui::PopID();
             }
         }
     }
