@@ -172,7 +172,7 @@ void CClientCameraMgr::Key_Input(_float fTimeDelta)
     }
 
     // 쉐이킹 효과
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_F9))
+    if (CDInputMgr::GetInstance()->Key_Down(DIK_F11))
     {
         Camera_Shake(3.f, m_fMagnitude);
     }

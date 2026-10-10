@@ -1332,6 +1332,15 @@
     <ClInclude Include="..\Header\CInvertEffect.h">
       <Filter>05. Shader</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGrayscaleEffect.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CGrayscaleEffect.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <None Include="..\Bin\Resource\Shader\Grayscale.hlsl">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
     <ClCompile Include="..\Code\CInvertEffect.cpp">
       <Filter>05. Shader</Filter>
     </ClCompile>
