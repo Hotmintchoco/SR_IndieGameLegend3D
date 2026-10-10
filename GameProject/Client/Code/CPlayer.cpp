@@ -57,7 +57,15 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
     SyncCameraYaw();
 
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+
+    if (m_ePlayerCamMode == CAMERA_MODE::FIRST_PERSON)
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_OVERLAY, this);
+    }
+    else
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    }
 
     UpdateInput();
 

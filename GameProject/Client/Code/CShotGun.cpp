@@ -45,7 +45,14 @@ _int CShotGun::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    if (m_bOverlay)
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_OVERLAY, this);
+    }
+    else
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    }
 
     UpdateUltimateAttackStatus(fTimeDelta);
 
@@ -85,6 +92,8 @@ void CShotGun::LateUpdate_GameObject(_float fTimeDelta)
 
 void CShotGun::Render_GameObject()
 {
+    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+
     if (m_bSpecialAttackSwitchOn)
     {
         m_pTextureCom->Set_Texture(1);
@@ -94,9 +103,8 @@ void CShotGun::Render_GameObject()
         m_pTextureCom->Set_Texture(0);
     }
 
-    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
     m_pBufferCom->Render_Buffer();
-    
+
     if (m_bOnUltimateAttack)
     {
         m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pUltRenderingTransform->Get_World());

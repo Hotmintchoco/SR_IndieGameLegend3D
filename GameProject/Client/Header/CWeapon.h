@@ -50,6 +50,7 @@ public:
 	TWeaponLocalInfo GetLocalInfo(CAMERA_MODE eMode);
 	void UpdateLocalTransform(const TWeaponLocalInfo& tInfo);
 	inline void SetSystem(CWeaponSystem* pSystem) { m_pSystem = pSystem; }
+	void SetRenderOverlay(bool bFlag) { m_bOverlay = bFlag; }
 
 protected:
 	HRESULT	Add_Component();
@@ -100,6 +101,9 @@ protected:
 
 	/* 정보 전달 */
 	CWeaponSystem* m_pSystem = nullptr;
+
+	/* 깊이 테스트 */
+	bool m_bOverlay = true;
 
 protected:
 	virtual void Free() override;

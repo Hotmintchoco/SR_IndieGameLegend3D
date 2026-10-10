@@ -44,7 +44,14 @@ _int CLaserGun::Update_GameObject(_float fTimeDelta)
 
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    if (m_bOverlay)
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_OVERLAY, this);
+    }
+    else
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    }
 
     return iExit;
 }

@@ -264,3 +264,9 @@ enum EPlayerInputChannel
 	PIC_WEAPON,
 	PIC_END,
 };
+
+enum class CAMERA_MODE
+{
+	FIRST_PERSON,
+	THIRD_PERSON
+};

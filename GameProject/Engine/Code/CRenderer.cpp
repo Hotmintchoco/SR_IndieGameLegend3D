@@ -34,6 +34,7 @@ void CRenderer::Render(LPDIRECT3DDEVICE9& pGraphicDev)
 	Render_Collider(pGraphicDev);
 	Render_DebugTriangle(pGraphicDev);
 
+	Render_Overlay(pGraphicDev);
 	Render_UI(pGraphicDev);
 
 	Render_DebugScreen(pGraphicDev);
@@ -197,6 +198,25 @@ void CRenderer::Render_AlphaTest(LPDIRECT3DDEVICE9& pGraphicDev)
 		pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 		pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x00);
 	}
+}
+
+void CRenderer::Render_Overlay(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+	if (CDebugMgr::GetInstance()->GetMeshMode() == MESHRENDERMODE::MESH_NONE) return;
+
+	pGraphicDev->Clear(0, nullptr, D3DCLEAR_ZBUFFER, 0, 1.f, 0);
+
+	_bool bWire = (CDebugMgr::GetInstance()->GetMeshMode() == MESHRENDERMODE::MESH_WIREFRAME);
+
+	PIPELINESTATE tOld;
+	if (bWire)
+		Begin_WireFrame(pGraphicDev, tOld, D3DCOLOR_XRGB(200, 200, 200));
+
+	for (auto& pObj : m_RenderGroup[RENDER_OVERLAY])
+		pObj->Render(pGraphicDev);
+
+	if (bWire)
+		End_WireFrame(pGraphicDev, tOld);
 }
 
 void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)

@@ -7,12 +7,6 @@ namespace Engine
     class CTransform;
 }
 
-enum class CAMERA_MODE 
-{ 
-    FIRST_PERSON,
-    THIRD_PERSON 
-};
-
 class CPlayerCamera : public CCamera
 {
 protected:
