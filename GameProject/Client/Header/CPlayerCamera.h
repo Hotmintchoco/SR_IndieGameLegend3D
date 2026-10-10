@@ -34,8 +34,6 @@ public:
 	void            Set_Distance(_float fDistance) { m_fDistance = fDistance; }
     _float          Get_Distance() const { return m_fDistance; }
 
-    void            Set_Angle(_float fPitch, _float fYaw) { m_fPitch = fPitch; m_fYaw = fYaw; }
-    void            Set_Eye(_vec3 vEye, _vec3 vAt) { m_vEye = vEye; m_vAt = vAt; }
 private:
     void            Mouse_Move();
     void            Follow_Target();

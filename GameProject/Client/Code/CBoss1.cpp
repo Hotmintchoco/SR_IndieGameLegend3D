@@ -702,7 +702,7 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
             pCinematic->Add_Shot(desc);
 
             // 연출 7
-            desc.vEyeTo = { vBossPos.x - 1.f, 4.5f, vBossPos.z - 7.f };
+            desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
             desc.fDuration = 0.612f;

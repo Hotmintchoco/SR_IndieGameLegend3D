@@ -36,7 +36,7 @@ HRESULT CPlayer_MG1::Ready_GameObject()
     if (FAILED(CGameObject::Ready_GameObject()))
         return E_FAIL;
 
-    m_pColliderCom->Set_Radius(m_fColliderScale);
+    m_pColliderCom->Set_Radius(0.25f);
 
     m_pColliderCom->Set_CollisionID(COLL_PLAYER);
 
@@ -57,10 +57,9 @@ _int CPlayer_MG1::Update_GameObject(_float fTimeDelta)
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
 
-    if (m_bInputEnabled)
-    {
-        Update_Input(fTimeDelta);
-    }
+
+    Update_Input(fTimeDelta);
+    
     Check_Connection();
     //CUIMgr::GetInstance()->Update_HPUI(m_iHP, m_bInvincible);
 
@@ -119,65 +118,6 @@ HRESULT CPlayer_MG1::Add_Component()
     if (nullptr == pComponent)
         return E_FAIL;
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
-
-    ///* Animator */
-    //array<TPlayerBuffer, PP_END> arrBuffer;
-    //array<wstring, PP_END> arrPartName = { L"Head", L"Body", L"LArm", L"RArm", L"LLeg", L"RLeg" };
-
-    //for (int i = 0; i < PP_END; ++i)
-    //{
-    //    wstring wstrName = L"Proto_Player_" + arrPartName[i] + L"_Vertex";
-    //    CPlayerPartTex* pBuffer = m_pBufferCom[i] = dynamic_cast<CPlayerPartTex*>(CProtoMgr::GetInstance()->Clone_Prototype(wstrName.c_str()));
-
-    //    if (nullptr == pBuffer)
-    //        return E_FAIL;
-
-    //    wstrName = L"Com_Buffer_" + arrPartName[i];
-    //    m_mapComponent[ID_STATIC].insert({ wstrName.c_str(), pBuffer });
-
-    //    CTransform* pTransform = m_pBufferTransformCom[i] = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
-
-    //    if (nullptr == pTransform)
-    //        return E_FAIL;
-
-    //    pTransform->SetUseLocal(true);
-
-    //    wstrName = L"Com_BufferTransform_" + arrPartName[i];
-    //    m_mapComponent[ID_DYNAMIC].insert({ wstrName.c_str(), pTransform });
-
-    //    arrBuffer[i] = TPlayerBuffer{ pBuffer, pTransform };
-    //}
-
-    //m_pVisualRootTransform = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
-    //if (nullptr == m_pVisualRootTransform)
-    //    return E_FAIL;
-    //m_mapComponent[ID_DYNAMIC].insert({ L"Com_VisualRootTransform", m_pVisualRootTransform });
-
-    //m_pAnimator = CPlayerAnimator::Create(m_pGraphicDev);
-    //m_mapComponent[ID_DYNAMIC].insert({ L"Com_PlayerAnimator", m_pAnimator });
-
-    //m_pAnimator->SetBuffer(arrBuffer);
-    //m_pAnimator->m_OnActionFinished.AddBinding(GetToken(), [this](const EPlayerActionState& Ctx) { OnActionAnimationFinished(Ctx); });
-
-    ///* 애니메이션 루트 트랜스폼 */
-    //m_pAnimRootTransform = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
-    //if (nullptr == m_pAnimRootTransform)
-    //    return E_FAIL;
-    //m_mapComponent[ID_DYNAMIC].insert({ L"Com_AnimRootTransform", m_pAnimRootTransform });
-    //m_pAnimator->SetRootTransform(m_pAnimRootTransform);
-
-    ///* Movement */
-    //m_pMovement = CPlayerMovement::Create(m_pGraphicDev);
-    //m_mapComponent[ID_DYNAMIC].insert({ L"Com_PlayerMovement", m_pMovement });
-    //m_pMovement->AttachTransform(m_pTransformCom);
-
-    ///* Socket */
-    //_matrix  matOffset;
-    //D3DXQUATERNION q;
-    //_vec3 pos(0.f, -0.3f, 0.f);
-
-    //D3DXQuaternionRotationYawPitchRoll(&q, 0.f, D3DXToRadian(90.f), 0.f);
-    //D3DXMatrixAffineTransformation(&matOffset, 1.f, nullptr, &q, &pos);
 
     return S_OK;
 }
@@ -253,67 +193,8 @@ void CPlayer_MG1::Update_Input(const _float& fTimeDelta)
 
     m_pTransformCom->Set_Angle(fAngle);
 
-    //Update_LookFromAngles();
-
-    //m_pMovement->Walk(vCommand);
-    //if (D3DXVec2Length(&vCommand) > 1e-6)
-    //{
-    //    m_fInputYaw = atan2f(vCommand.x, vCommand.y);
-    //    m_pAnimator->PlayLocomotion((m_pMovement->GetSprint()) ? EPlayerLocomotionState::SPRINT : EPlayerLocomotionState::WALK);
-    //}
-    //else
-    //{
-    //    m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
-    //}
-
-    //if (CDInputMgr::GetInstance()->Key_Press(DIK_SPACE))
-    //{
-    //    m_pMovement->Jump();
-    //}
 }
 
-void CPlayer_MG1::UpdateInput()
-{
-    m_pMovement->SetSprint(CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT));
-
-    _vec2 vCommand{ 0.f, 0.f }; // (x, z)
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
-    {
-        vCommand += _vec2{ 0.f, 1.f };
-        //_vec3 vDir = { 0.f, 0.f, 1.f };
-        //m_pTransformCom->Move_Pos(&vDir, 1.f, 1.f / 500.f);
-    }
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_S))
-    {
-        vCommand += _vec2{ 0.f, -1.f };
-    }
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_D))
-    {
-        //vCommand += _vec2{ 1.f, 0.f };
-        _vec3 vAngle = m_pTransformCom->Get_Angle();
-        vAngle.y += 1.f;
-        m_pTransformCom->Set_Angle(vAngle);
-    }
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
-    {
-        vCommand += _vec2{ -1.f, 0.f };
-    }
-    m_pMovement->Walk(vCommand);
-    if (D3DXVec2Length(&vCommand) > 1e-6)
-    {
-        m_fInputYaw = atan2f(vCommand.x, vCommand.y);
-        m_pAnimator->PlayLocomotion((m_pMovement->GetSprint()) ? EPlayerLocomotionState::SPRINT : EPlayerLocomotionState::WALK);
-    }
-    else
-    {
-        m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
-    }
-
-    if (CDInputMgr::GetInstance()->Key_Press(DIK_SPACE))
-    {
-        m_pMovement->Jump();
-    }
-}
 
 void CPlayer_MG1::Check_Connection()
 {
@@ -371,104 +252,12 @@ void CPlayer_MG1::Check_Connection()
     }
 }
 
-void CPlayer_MG1::SyncCameraYaw()
-{
-    float fYaw = m_pCamera->Get_Yaw();
-    m_pMovement->SetRefYaw(fYaw);
-
-    float fVisualYaw = fYaw + (m_bInputYawIgnored ? 0.f : m_fInputYaw);
-    m_pVisualRootTransform->Set_Rotation_Raw({ 0.f, D3DXToDegree(fVisualYaw), 0.f });
-}
-
-void CPlayer_MG1::OnActionAnimationFinished(const EPlayerActionState& Ctx)
-{
-    //switch (Ctx)
-    //{
-    //case EPlayerActionState::STRETCH_ARMS:
-    //{
-    //    m_bInputYawIgnored = false;
-    //    CClientCameraMgr::GetInstance()->SetPlayerCameraMode(CAMERA_MODE::FIRST_PERSON);
-    //    break;
-    //}
-    //}
-}
-
 void CPlayer_MG1::OnCollisionEnter(COLLINFO eCollInfo)
 {
 }
 
 void CPlayer_MG1::OnCollisionStay(COLLINFO eCollInfo)
 {
-}
-
-void CPlayer_MG1::OnHit(CGameObject* pSrcObj)
-{
-    if (m_bInvincible) return;
-
-    --m_iHP;
-    CUIMgr::GetInstance()->RequestHitEffect();
-
-    /* 사망 시 빠지기 */
-    if (m_iHP <= 0)
-    {
-        OnDead();
-        return;
-    }
-
-    m_bInvincible = true;
-    m_fLeftInvincibleTime = m_fInvincibleTime;
-
-    if (!pSrcObj) return;
-
-    CTransform* pSrcTransform = dynamic_cast<CTransform*>(pSrcObj->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-    if (!pSrcTransform) return;
-
-    _vec3 vDist = m_pTransformCom->Get_Info_Value(INFO_POS) - pSrcTransform->Get_Info_Value(INFO_POS);
-    m_pMovement->Knockback(vDist, 3.f);
-    SetInputEnabled(false, 0.5f);
-}
-
-void CPlayer_MG1::Revive()
-{
-    RestoreHP(m_iMaxHP);
-    SetInputEnabled(true);
-    m_pColliderCom->Set_IsActive(true);
-}
-
-void CPlayer_MG1::OnDead()
-{
-    m_pMovement->Stop();
-    SetInputEnabled(false);
-    m_pColliderCom->Set_IsActive(false);
-    /* 나중에 무기류도 비활성화 */
-
-    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-    if (pStage)
-    {
-        pStage->OnPlayerDead();
-    }
-}
-
-void CPlayer_MG1::RestoreHP(int iAmount)
-{
-    m_iHP += iAmount;
-    m_iHP = clamp(m_iHP, 0, m_iMaxHP);
-
-    CUIMgr::GetInstance()->Update_HPUI(m_iHP, false);
-}
-
-void CPlayer_MG1::SetInputEnabled(bool bFlag, float fDisabledTime)
-{
-    m_bInputEnabled = bFlag;
-    if (bFlag == false && fDisabledTime >= 0.f)
-    {
-        m_fLeftInputDisabledTime = fDisabledTime;
-    }
-}
-
-void CPlayer_MG1::SetPseudoScale(float fScale)
-{
-    m_pMovement->SetSpeedScale(fScale);
 }
 
 CPlayer_MG1* CPlayer_MG1::Create(LPDIRECT3DDEVICE9 pGraphicDev)
