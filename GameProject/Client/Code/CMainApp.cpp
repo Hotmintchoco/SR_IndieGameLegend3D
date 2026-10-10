@@ -72,6 +72,11 @@ int CMainApp::Update_MainApp(_float fTimeDelta)
 		pEffects->Set_PostEffect(pEffects->Get_PostEffectType() == POST_EFFECT::NONE
 			? POST_EFFECT::INVERT : POST_EFFECT::NONE);
 	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F9))
+	{
+		pEffects->Set_PostEffect(pEffects->Get_PostEffectType() == POST_EFFECT::NONE
+			? POST_EFFECT::GRAYSCALE : POST_EFFECT::NONE);
+	}
 
 
 	CShaderEffectMgr::GetInstance()->Update_PostEffect(fTimeDelta);

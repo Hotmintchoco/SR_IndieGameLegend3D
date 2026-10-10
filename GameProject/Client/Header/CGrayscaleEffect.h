@@ -1,10 +1,10 @@
-﻿#pragma once
+#pragma once
 #include "CPostEffect.h"
 
-class CInvertEffect final : public CPostEffect
+class CGrayscaleEffect final : public CPostEffect
 {
 public:
-    CInvertEffect();
+    CGrayscaleEffect();
     void Set_Strength(_float fStrength);
 
 private:
