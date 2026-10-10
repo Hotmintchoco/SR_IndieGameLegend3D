@@ -1,7 +1,16 @@
 ﻿#pragma once
 #include "CMonster.h"
 
-class CTest1 : public CMonster
+namespace Engine
+{
+	class CRcTex;
+	class CTransform;
+	class CTexture;
+	class CCalculator;
+	class CCollider;
+}
+
+class CTest1 : public CGameObject
 {
 protected:
 	explicit CTest1(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -15,9 +24,6 @@ public:
 
 	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
 
-	void Check_Hp(_float& fTimeDelta) override;
-	void Animation_Monster(const _float& fTimeDelta) override {};
-
 private:
 	HRESULT			Add_Component();
 
@@ -26,4 +32,11 @@ public:
 
 protected:
 	virtual void		Free();
+
+protected:
+	Engine::CRcTex* m_pBufferCom = nullptr;
+	Engine::CTransform* m_pTransformCom = nullptr;
+	Engine::CTexture* m_pTextureCom = nullptr;
+	Engine::CCalculator* m_pCalculatorCom = nullptr;
+	Engine::CCollider* m_pColliderCom = nullptr;
 };

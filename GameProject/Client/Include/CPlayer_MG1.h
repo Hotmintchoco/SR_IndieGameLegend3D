@@ -17,6 +17,7 @@ class CPlayerPartTex;
 class CPlayerMovement;
 class CPlayer_MG1;
 class CCamera_MG1;
+class CBox_MG1;
 
 class CPlayer_MG1 : public CGameObject
 {
@@ -57,8 +58,15 @@ private:
 public:
 	_float Get_Yaw() { return m_fYaw; }
 	_float Get_Pitch() { return m_fPitch; }
-	void Set_Camere1(CCamera* pCamera) { m_pCamera1 = pCamera; }
-	void Set_Camere2(CCamera* pCamera) { m_pCamera2 = pCamera; }
+	void Set_Camera1(CCamera* pCamera) { m_pCamera1 = pCamera; }
+	void Set_Camera2(CCamera* pCamera) { m_pCamera2 = pCamera; }
+
+	void Set_Box1(CBox_MG1* pBox) { m_pBox1 = pBox; }
+	void Set_Box2(CBox_MG1* pBox) { m_pBox2 = pBox; }
+
+	_bool Is_Connection() { return m_bConnection; }
+
+	void Check_Connection();
 private:
 	_float m_fYaw = 0.f;
 	_float m_fPitch = 0.f;
@@ -67,9 +75,10 @@ private:
 	CCamera* m_pCamera1 = nullptr;
 	CCamera* m_pCamera2 = nullptr;
 
+	_bool m_bConnection = false;
 
-
-
+	CBox_MG1* m_pBox1 = nullptr;
+	CBox_MG1* m_pBox2 = nullptr;
 
 
 

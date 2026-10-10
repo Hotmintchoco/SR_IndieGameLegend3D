@@ -14,6 +14,7 @@
 #include "CCamera2_MG1.h"
 #include "CPlayer_MG1.h"
 #include "CTimerMgr.h"
+#include "CBox_MG1.h"
 
 CMiniGame1::CMiniGame1(LPDIRECT3DDEVICE9 pGraphicDev)
     : CScene(pGraphicDev)
@@ -48,6 +49,7 @@ _int CMiniGame1::Update_Scene(_float fTimeDelta)
     // Scene Change
     if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
     {
+        this;
         if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
             return -1;
     }
@@ -84,6 +86,8 @@ HRESULT CMiniGame1::Ready_Environment_Layer(const _tchar* pLayerTag)
     pGameObject = CSkyBox::Create(m_pGraphicDev);
     if (nullptr == pGameObject) return E_FAIL;
     if (FAILED(pLayer->Add_GameObject(L"SkyBox", pGameObject))) return E_FAIL;
+
+
     m_mapLayer.insert({ pLayerTag ,pLayer });
 
     return S_OK;
@@ -93,21 +97,35 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 {
     CLayer* pLayer = CLayer::Create();
     if (nullptr == pLayer) return E_FAIL;
-    pLayer->Set_IsActive(true);
+    //pLayer->Set_IsActive(true);
+    m_mapLayer.insert({ pLayerTag ,pLayer });
 
     CGameObject* pGameObject = nullptr;
 
     // Test1
     pGameObject = CTest1::Create(m_pGraphicDev);
-    pGameObject->Set_IsActive(true);
     if (nullptr == pGameObject) return E_FAIL;
     if (FAILED(pLayer->Add_GameObject(L"Test1", pGameObject))) return E_FAIL;
-    m_mapLayer.insert({ pLayerTag ,pLayer });
 
     // Player
     m_pPlayer = CPlayer_MG1::Create(m_pGraphicDev);
     if (nullptr == m_pPlayer) return E_FAIL;
     if (FAILED(pLayer->Add_GameObject(L"Player", m_pPlayer))) return E_FAIL;
+
+    _vec3 vPos;
+    //Box
+    vPos = { 1.f, 0.5f, 4.f };
+    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos);
+    if (nullptr == pGameObject) return E_FAIL;
+    if (FAILED(pLayer->Add_GameObject(L"Box1", pGameObject))) return E_FAIL;
+    m_pPlayer->Set_Box1(static_cast<CBox_MG1*>(pGameObject));
+
+    vPos = { -1.f, 1.f, 4.f };
+    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos);
+    if (nullptr == pGameObject) return E_FAIL;
+    if (FAILED(pLayer->Add_GameObject(L"Box2", pGameObject))) return E_FAIL;
+    m_pPlayer->Set_Box2(static_cast<CBox_MG1*>(pGameObject));
+
 
     // Camera1
     CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC,
@@ -115,7 +133,7 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
     pGameObject = CCamera_MG1::Create(m_pGraphicDev, pPlayerTransformCom);
     if (nullptr == pGameObject) return E_FAIL;
     if (FAILED(pLayer->Add_GameObject(L"Camera1", pGameObject))) return E_FAIL;
-    m_pPlayer->Set_Camere1(static_cast<CCamera*>(pGameObject));
+    m_pPlayer->Set_Camera1(static_cast<CCamera*>(pGameObject));
     pGameObject->Set_IsActive(true);
 
     // Camera2
@@ -126,9 +144,10 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
     pGameObject = CCamera2_MG1::Create(m_pGraphicDev, &vEye, &vAt, &vUp);
     if (nullptr == pGameObject) return E_FAIL;
     if (FAILED(pLayer->Add_GameObject(L"Camera2", pGameObject))) return E_FAIL;
-    m_pPlayer->Set_Camere2(static_cast<CCamera*>(pGameObject));
+    m_pPlayer->Set_Camera2(static_cast<CCamera*>(pGameObject));
     pGameObject->Set_IsActive(false);
 
+    //m_mapLayer.insert({ pLayerTag ,pLayer });
     return S_OK;
 }
 
@@ -151,10 +170,15 @@ void CMiniGame1::RenderImGui()
     {
         CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC,
             L"GameLogic_Layer", L"Player", L"Com_Transform"));
+        
+
+        CPlayer_MG1* pPlayer = static_cast<CPlayer_MG1*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"Player"));
         _vec3 vPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPos);
         _vec3 vAngle = pPlayerTransformCom->Get_Angle();
         ImGui::Text("Pos : %.2f, %.2f, %.2f", vPos.x, vPos.y, vPos.z);
         ImGui::Text("Pitch : %.2f, Raw %.2f", vAngle.x, vAngle.y);
+        ImGui::Text("Connection : %d", pPlayer->Is_Connection());
+
     }        
 
     ImGui::End();

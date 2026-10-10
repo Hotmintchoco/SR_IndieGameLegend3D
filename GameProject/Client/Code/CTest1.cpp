@@ -7,7 +7,7 @@
 #include "CPlayerCamera.h"
 
 CTest1::CTest1(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CMonster(pGraphicDev)
+    : CGameObject(pGraphicDev)
 {
 }
 
@@ -20,7 +20,7 @@ HRESULT CTest1::Ready_GameObject()
 {
     if (FAILED(Add_Component()))
         return E_FAIL;
-    CMonster::Ready_GameObject();
+    CGameObject::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(0.5f, 0.5f, 0.5f);
     _vec3 vScale = m_pTransformCom->Get_Scale();
@@ -28,9 +28,6 @@ HRESULT CTest1::Ready_GameObject()
 
     _vec3 vPos = { 0.f,0.f,10.5f };
     m_pTransformCom->Set_Pos(vPos);
-
-    m_iMaxHp = 3;
-    m_iHp = m_iMaxHp;
 
     _vec3 vDir{0.f,0.f,-1.f};
     D3DXVec3Normalize(&vDir, &vDir);
@@ -46,70 +43,21 @@ HRESULT CTest1::Ready_GameObject()
 
 _int CTest1::Update_GameObject(_float fTimeDelta)
 {
-    //_matrix matView;
-    //_matrix matCameraWorld;
-
-    //m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
-    //D3DXMatrixInverse(&matCameraWorld, nullptr, &matView);
-    //
-    //matView;
-    //matCameraWorld;
-
-
-
-    //_vec3 vPos = { 0.f, 0.f, -10.f };
-    //_vec3 vLook = { 0.f, 0.f, 1.f };
-    //_vec3 vUp = { 0.f, 1.f, 0.f };
-
-    //_vec3 vAt = vPos + vLook;
-
-
-    //D3DXMatrixLookAtLH(&matView, &vPos, &vAt, &vUp);
-
-    //m_pGraphicDev->SetTransform(D3DTS_VIEW, &matView);
-
-
-
-
-
-    //_matrix matProj;
-
-    //D3DXMatrixPerspectiveFovLH(
-    //    &matProj,
-    //    D3DXToRadian(60.f), // 세로 시야각(FOV)
-    //    800.f / 600.f,      // 화면 가로/세로 비율
-    //    0.1f,               // Near
-    //    1000.f              // Far
-    //);
-
-    //m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &matProj);
-
-
-
-
-
-
-
-
-
-    Check_Hp(fTimeDelta);
     m_pTransformCom;
-    _int    iExit = CMonster::Update_GameObject(fTimeDelta);
+    _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
 
-    Animation_Monster(fTimeDelta);
 
     return iExit;
 }
 
 void CTest1::LateUpdate_GameObject(_float fTimeDelta)
 {
-    CMonster::LateUpdate_GameObject(fTimeDelta);
+    CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CTest1::Render_GameObject()
 {
-    if (m_bHitState == true) CMonster::Enable_HitRenderState();
-    CMonster::Render_GameObject();
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -118,20 +66,10 @@ void CTest1::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-    if (m_bHitState == true) CMonster::Disable_HitRenderState();
 }
 
 void CTest1::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    CMonster::OnCollisionEnter(eCollInfo);
-}
-
-void CTest1::Check_Hp(_float& fTimedelta)
-{
-    if (m_iHp <= 0)
-    {
-        m_bDelete = true;
-    }
 }
 
 HRESULT CTest1::Add_Component()
@@ -142,6 +80,37 @@ HRESULT CTest1::Add_Component()
     pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_skull3Texture"));
     if (nullptr == pComponent) return E_FAIL;
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+
+    // RcCol
+    pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
+
+    // Transform
+    pComponent = m_pTransformCom = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
+
+    // Collider
+    pComponent = m_pColliderCom = dynamic_cast<CCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SphereCollider"));
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });
+
+    // Calculator
+    pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Calculator"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_STATIC].insert({ L"Com_Calculator", pComponent });
 
     return S_OK;
 }
@@ -162,5 +131,5 @@ CTest1* CTest1::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CTest1::Free()
 {
-    CMonster::Free();
+    CGameObject::Free();
 }

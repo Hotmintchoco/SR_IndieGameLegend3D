@@ -17,6 +17,7 @@
 #include "CClientCameraMgr.h"
 #include "CCamera_MG1.h"
 #include "CCamera2_MG1.h"
+#include "CBox_MG1.h"
 
 CPlayer_MG1::CPlayer_MG1(LPDIRECT3DDEVICE9 pGraphicDev)
     :CGameObject(pGraphicDev)
@@ -42,7 +43,7 @@ HRESULT CPlayer_MG1::Ready_GameObject()
     _vec3 vPos{ 0.f,0.f,0.f };
     m_pTransformCom->Set_Pos(vPos);
 
-    _vec3 vScale{ 0.5f,0.5f,0.5f };
+    _vec3 vScale{ 0.25f,0.25f,0.25f };
     m_pTransformCom->Set_Scale(vScale);
     return S_OK;
 }
@@ -60,7 +61,7 @@ _int CPlayer_MG1::Update_GameObject(_float fTimeDelta)
     {
         Update_Input(fTimeDelta);
     }
-
+    Check_Connection();
     //CUIMgr::GetInstance()->Update_HPUI(m_iHP, m_bInvincible);
 
     return iExit;
@@ -311,6 +312,57 @@ void CPlayer_MG1::UpdateInput()
     if (CDInputMgr::GetInstance()->Key_Press(DIK_SPACE))
     {
         m_pMovement->Jump();
+    }
+}
+
+void CPlayer_MG1::Check_Connection()
+{
+    if (m_iCameraType == 1)return;
+
+    //CTransform* pBoxTransformCom1 = m_pBox1->Get_Component(ID_DYNAMIC, L"Com_Transform");
+
+    CTransform* pBoxTransformCom1 = dynamic_cast<CTransform*>(m_pBox1->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+    CTransform* pBoxTransformCom2 = dynamic_cast<CTransform*>(m_pBox2->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+
+
+    //CTransform* pBoxTransformCom1 = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC,
+    //    L"GameLogic_Layer", L"Box1", L"Com_Transform"));
+    //CTransform* pBoxTransformCom2 = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC,
+    //    L"GameLogic_Layer", L"Box1", L"Com_Transform"));
+
+    //vPos2가 높음
+    _vec3 vPos1, vPos2;
+    pBoxTransformCom1->Get_Info(INFO_POS, &vPos1);
+    pBoxTransformCom2->Get_Info(INFO_POS, &vPos2);
+
+    
+    _matrix matView;
+    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+    _vec3 vLook = { matView._13, matView._23, matView._33 };
+    _vec3 vCameraPos = { matView._14, matView._24, matView._34 };
+
+    D3DXVec3Normalize(&vLook, &vLook);
+
+    _vec3 vDir = vCameraPos - vPos1;
+    vDir.x /= vDir.y;
+    vDir.y /= vDir.y;
+    vDir.z /= vDir.y;
+    vDir *= 0.5f;
+    vPos1 += vDir;
+
+    _vec3 vDist = vPos2 - vPos1;
+    /*if (0.9f < D3DXVec3Length(&vDist) && D3DXVec3Length(&vDist) < 1.1f)
+    {
+        m_bConnection = true;
+    }*/
+    if (0.9f < D3DXVec3Length(&vDist) && D3DXVec3Length(&vDist) < 1.1f)
+    {
+        m_bConnection = true;
+    }
+    else
+    {
+        m_bConnection = false;
+
     }
 }
 

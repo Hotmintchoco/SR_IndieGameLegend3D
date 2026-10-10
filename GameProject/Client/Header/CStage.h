@@ -57,7 +57,7 @@ private:
 
 	/* 방 관련 */
 	CRoomLayer* m_pCurrentRoomLayer = nullptr;
-	int m_iStartRoomIndex = 17;
+	int m_iStartRoomIndex = 12;
 	int m_iCurrentRoomIndex = m_iStartRoomIndex;
 	int m_iPrevRoomIndex = m_iStartRoomIndex;
 	_vec3 m_vPlayerPos{ 0.f, 0.f, 0.f };
