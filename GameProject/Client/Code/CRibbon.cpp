@@ -230,7 +230,18 @@ void CRibbon::UpdateCameraShot(float fTimeDelta)
         desc.fFovFrom = D3DXToRadian(60.f);
         desc.fFovTo = D3DXToRadian(60.f);
 
-        pCamera->Replace_Shot(desc);
+        if (!m_bCamFollowing)
+        {
+            pCamera->Replace_Shot(desc);
+            pCamera->Add_Shot(desc);
+            pCamera->Play();
+
+            m_bCamFollowing = true;
+        }
+        else
+        {
+            pCamera->Replace_Shot(desc);
+        }
     }
 }
 

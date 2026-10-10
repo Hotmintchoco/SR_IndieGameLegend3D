@@ -66,6 +66,7 @@ private:
 	bool m_bOnExplosionPhase = false;
 	int m_iCurrentIndex = -1;
 	int m_iIgnoreExplosionCount = 3; /* 시작부터 터지면 플레이어가 피격됨 */
+	bool m_bCamFollowing = false; /* 처음부터 카메라 위치를 맞추기 위한 변수 */
 
 public:
 	static CRibbon* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir);
