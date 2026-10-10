@@ -210,13 +210,31 @@ void CRenderer::Render_Overlay(LPDIRECT3DDEVICE9& pGraphicDev)
 
 	PIPELINESTATE tOld;
 	if (bWire)
+	{
 		Begin_WireFrame(pGraphicDev, tOld, D3DCOLOR_XRGB(200, 200, 200));
+	}
+	else
+	{
+		pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+		pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
+		pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+		pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+		pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+		pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x80);
+	}
 
 	for (auto& pObj : m_RenderGroup[RENDER_OVERLAY])
 		pObj->Render(pGraphicDev);
 
 	if (bWire)
+	{
 		End_WireFrame(pGraphicDev, tOld);
+	}
+	else
+	{
+		pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+		pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x00);
+	}
 }
 
 void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
