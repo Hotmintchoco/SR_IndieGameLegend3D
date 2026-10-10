@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CPressAllButtonCondition.h"
 #include "Client_Struct.h"
 
@@ -22,9 +22,9 @@ void CPressAllButtonCondition::OnRoomEvent(const TRoomEventCtx& t)
 	{
 	case ERoomEventType::BUTTON:
 	{
-		/* Å¸ÀÔ ¿ÏÀüÇÑ °æ¿ì */
+		/* íƒ€ìž… ì™„ì „í•œ ê²½ìš° */
 		bool bPressed = get<bool>(t.varArgs);
-		/* Å¸ÀÔ ºÒ¿ÏÀüÇÑ °æ¿ì*/
+		/* íƒ€ìž… ë¶ˆì™„ì „í•œ ê²½ìš°*/
 		// if (int* pValue = get_if<int>(&t.varArgs))	
 		m_iLeftButton += ((bPressed) ? -1 : 1);
 		break;

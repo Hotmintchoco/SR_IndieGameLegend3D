@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -48,12 +48,6 @@
     </Filter>
     <Filter Include="02. GameObject\07. Room">
       <UniqueIdentifier>{b9d90846-4426-48a5-9d9f-65b142898dac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Resource">
-      <UniqueIdentifier>{39c1497e-736d-4f33-890a-bf345083759c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Resource\01. Map">
-      <UniqueIdentifier>{e0824a1c-09b7-469b-a0d4-6c5eb5eace80}</UniqueIdentifier>
     </Filter>
     <Filter Include="99. Header">
       <UniqueIdentifier>{1010db34-d77a-4a40-b8f4-2c712aa1dbd3}</UniqueIdentifier>
@@ -385,11 +379,32 @@
     <Filter Include="02. GameObject\08. Combat\02. HitScan">
       <UniqueIdentifier>{67889039-9bc9-4c5a-a834-2887b54ddcf0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\04. Ribbon">
+      <UniqueIdentifier>{6bffae3e-c303-467d-8980-c4042f1074df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\04. Ribbon\RibbonBuffer">
+      <UniqueIdentifier>{8c82dd45-b5a4-4013-b419-96bec90d9224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Jail">
+      <UniqueIdentifier>{d5b9a43e-9e4b-4d02-86a7-9031fe4cd903}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\06. Effect\AirBubble">
       <UniqueIdentifier>{98141dfd-119a-44d6-9b8b-23f378e20ec7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Generator_MapEffect">
       <UniqueIdentifier>{27fb29b9-5faa-4bc5-82eb-30c9ec125b0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\03. Resource">
+      <UniqueIdentifier>{ae427c38-a859-4279-8685-91da39e909c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\03. Resource\00. SGUlt">
+      <UniqueIdentifier>{529f7bf2-6bc8-4aad-8503-3b5315d6ea94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\03. Resource\01. RapidUlt">
+      <UniqueIdentifier>{2e2bc0eb-bf31-4ccf-a13d-4a112d810898}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\03. Resource\02. LiminalUlt">
+      <UniqueIdentifier>{c6eb1faf-de14-4b12-bd9e-2c178d8fe734}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\02. Monster\Worm\WormBullet">
       <UniqueIdentifier>{ce9c4643-760b-4ae1-bd0a-2b4319bacad7}</UniqueIdentifier>
@@ -801,6 +816,15 @@
     <ClInclude Include="..\Header\CHitScan.h">
       <Filter>02. GameObject\08. Combat\02. HitScan</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CRibbonBuffer.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\04. Ribbon\RibbonBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRibbon.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\04. Ribbon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CJail.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Jail</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CAirbubble.h">
       <Filter>02. GameObject\06. Effect\AirBubble</Filter>
     </ClInclude>
@@ -812,6 +836,21 @@
     </ClInclude>
     <ClInclude Include="..\Header\CGenerator_YellowDust.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CShotGunUltimateEffect.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\00. SGUlt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRapidGunUltimateTimer.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRapidGunUltimateScope.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRapidGunUltimateMarker.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalGunUltimateEffect.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\02. LiminalUlt</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CWormBullet.h">
       <Filter>02. GameObject\02. Monster\Worm\WormBullet</Filter>
@@ -1193,6 +1232,15 @@
     <ClCompile Include="..\Code\CHitScan.cpp">
       <Filter>02. GameObject\08. Combat\02. HitScan</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CRibbonBuffer.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\04. Ribbon\RibbonBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRibbon.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\04. Ribbon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CJail.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Jail</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CAirbubble.cpp">
       <Filter>02. GameObject\06. Effect\AirBubble</Filter>
     </ClCompile>
@@ -1204,6 +1252,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGenerator_YellowDust.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CShotGunUltimateEffect.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\00. SGUlt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRapidGunUltimateTimer.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRapidGunUltimateScope.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRapidGunUltimateMarker.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalGunUltimateEffect.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\02. LiminalUlt</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CWormBullet.cpp">
       <Filter>02. GameObject\02. Monster\Worm\WormBullet</Filter>
@@ -1226,32 +1289,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Bin\Resource\Map\DefaultRoom.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_1_1.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_1_2.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_1_3.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_1_4.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_2_1.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_2_2.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="01. Scene\Intro" />
     <Filter Include="05. Shader" />
-    <Filter Include="03. Resource\02. Shader" />
     <ClInclude Include="..\Header\CPostEffect.h">
       <Filter>05. Shader</Filter>
     </ClInclude>
@@ -1285,17 +1323,15 @@
     <ClCompile Include="..\Code\CShaderEffectMgr.cpp">
       <Filter>05. Shader</Filter>
     </ClCompile>
-    <None Include="..\Bin\Resource\Shader\Lava.hlsl">
-      <Filter>03. Resource\02. Shader</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Shader\WaterDrop.hlsl">
-      <Filter>03. Resource\02. Shader</Filter>
-    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\Resource\Shader\Lava.hlsl" />
+    <None Include="..\Bin\Resource\Shader\WaterDrop.hlsl" />
     <None Include="..\Bin\Resource\Shader\CameraFilterPack_WaterDrop.png">
-      <Filter>03. Resource\02. Shader</Filter>
+      <Filter>리소스 파일</Filter>
     </None>
     <None Include="..\Bin\Resource\Shader\CameraFilterPack_RainDrop.png">
-      <Filter>03. Resource\02. Shader</Filter>
+      <Filter>리소스 파일</Filter>
     </None>
   </ItemGroup>
 </Project>

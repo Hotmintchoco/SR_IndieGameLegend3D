@@ -14,7 +14,7 @@ class CMonster;
 class CHitScan : public CGameObject
 {
 protected:
-	explicit CHitScan(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, CMonster* pTarget);
+	explicit CHitScan(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, CMonster* pTarget, const float fDamage);
 	virtual ~CHitScan();
 
 public:
@@ -39,10 +39,11 @@ private:
 	_vec3 m_vStart{ 0.f, 0.f, 0.f };
 	_vec3 m_vDir{ 0.f, 0.f, 0.f };
 	float m_fLength = 0.f;
-	float m_fWidth = 0.1f;
+	float m_fWidth = 0.05f;
+	float m_fDamage = 0.f;
 
 public:
-	static CHitScan* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, CMonster* pTarget);
+	static CHitScan* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, CMonster* pTarget, const float fDamage);
 
 protected:
 	virtual void Free() override;

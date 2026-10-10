@@ -32,6 +32,7 @@
 #include "CSeaweed.h"
 #include "CSeaweed2.h"
 #include "CGenerator_Airbubble.h"
+#include "CJail.h"
 #include "CGenerator_YellowDust.h"
 #include "CGenerator_Snow.h"
 
@@ -47,6 +48,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::DDOKDDAK,                 [](const TCreateDesc& t) -> Engine::CGameObject* { return CDdokddak::Create(t.pDevice, EDirection::EAST); } },
         {EObjectType::LIMINAL_CUBE,             [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalCube::Create(t.pDevice); } },
         {EObjectType::LIMINAL_SLOPE,            [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalSlope::Create(t.pDevice); } },
+        {EObjectType::JAIL,                     [](const TCreateDesc& t) -> Engine::CGameObject* { return CJail::Create(t.pDevice); } },
 
         {EObjectType::Skull,                    [](const TCreateDesc& t) -> Engine::CGameObject* { return CSkull::Create(t.pDevice); } },
         {EObjectType::Boss1,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CBoss1::Create(t.pDevice); } },

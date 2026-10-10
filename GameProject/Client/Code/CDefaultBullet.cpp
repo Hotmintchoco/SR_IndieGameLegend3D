@@ -6,6 +6,7 @@
 #include "Client_Enum.h"
 #include "CManagement.h"
 #include "CEffect.h"
+#include "CMonster.h"
 
 CDefaultBullet::CDefaultBullet(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir)
     : CProjectile(pGraphicDev)
@@ -72,6 +73,8 @@ void CDefaultBullet::Render_GameObject()
 
 void CDefaultBullet::OnCollisionEnter(COLLINFO eCollInfo)
 {
+    CProjectile::OnCollisionEnter(eCollInfo);
+
 	m_pColliderCom->Set_IsActive(false);
     Set_Dead(true);
 

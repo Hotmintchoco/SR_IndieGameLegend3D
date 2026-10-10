@@ -10,6 +10,13 @@
 #include "CRoomLayer.h"
 #include "CClientCameraMgr.h"
 #include "CCamera.h"
+#include "CWeaponSystem.h"
+#include "CTimerMgr.h"
+#include "CMonster.h"
+#include "CHitScan.h"
+#include "CSoundMgr.h"
+#include "CLiminalGunUltimateEffect.h"
+#include "CLayerContext.h"
 
 CLiminalGun::CLiminalGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -31,11 +38,30 @@ HRESULT CLiminalGun::Ready_GameObject()
 
     m_fGaugeConsumePerSpecialAtk = 0.f;
 
+    /* GameLogic Layer */
+    CLayer* pLayer = CLayerContext::GetLayer();
+    if (!pLayer)
+    {
+        if (CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene()))
+        {
+            pLayer = pStage->Get_Layer(L"GameLogic_Layer");
+        }
+    }
+
+    m_pEffect = CLiminalGunUltimateEffect::Create(m_pGraphicDev);
+    if (m_pEffect)
+    {
+        pLayer->Add_GameObject(L"Effect", m_pEffect);
+        m_pEffect->Set_IsActive(false);
+    }
+
     return S_OK;
 }
 
 _int CLiminalGun::Update_GameObject(_float fTimeDelta)
 {
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(CTG_PLAYER);
+
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
@@ -45,11 +71,17 @@ _int CLiminalGun::Update_GameObject(_float fTimeDelta)
         CalculateView(m_pHolingObject);
     }
 
+    UpdateUltimateAttackState(fTimeDelta);
+
+    UpdateHitScanState(fTimeDelta);
+
     return iExit;
 }
 
 void CLiminalGun::LateUpdate_GameObject(_float fTimeDelta)
 {
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(CTG_PLAYER);
+
     CWeapon::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -115,16 +147,55 @@ TWeaponOutput CLiminalGun::SpecialAttack(EInputState ePri, EInputState eSec)
 
 TWeaponOutput CLiminalGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
 {
-    return { false, EWeaponAnimEvent::NONE };
+    CTimerMgr::GetInstance()->SetGlobalTimeScale(0.1f);
+    CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_PLAYER, 0.5f);
+    m_bOnUltimateAttack = true;
+    m_fTimeAfterUltimate = 0.f;
+    m_pSystem->SetUltimateAttackOnGoing(true);
+    CSoundMgr::GetInstance()->PlaySFX(L"Ult_Liminal.wav");
+
+    m_pEffect->Set_IsActive(true);
+
+    return { true, EWeaponAnimEvent::ULT_LIMINALGUN_START };
 }
 
 TWeaponOutput CLiminalGun::UpdateUltimateAttack(EInputState ePri, EInputState eSec)
 {
-    return { false, EWeaponAnimEvent::NONE };
+    switch (ePri)
+    {
+    case EInputState::Pressed:
+    {
+        if (CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene()))
+        {
+            const vector<CMonster*>& vecMonster = pStage->GetCurrentRoomLayer()->GetMonsterList();
+
+            for (auto p : vecMonster)
+            {
+                float fYaw = GetYawFromCameraToTarget(p);
+                m_pqCapture.push({p, fYaw});
+            }
+            m_bOnHitScan = true;
+        }
+        return { true, EWeaponAnimEvent::ULT_LIMINALGUN_END };
+        break;
+    }
+    }
+
+    return { false, EWeaponAnimEvent::ULT_LIMINALGUN_LOOP };
 }
 
 TWeaponOutput CLiminalGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
 {
+    CTimerMgr::GetInstance()->SetGlobalTimeScale(1.f);
+    CTimerMgr::GetInstance()->ClearAllGroupTimeScale();
+    m_fDmgAccumulated = 0.f;
+    m_bOnUltimateAttack = false;
+    m_fTimeAfterUltimate = 0.f;
+    m_pSystem->SetUltimateAttackOnGoing(false);
+    m_bOnHitScan = false;
+
+    m_pEffect->Set_IsActive(false);
+
     return { false, EWeaponAnimEvent::NONE };
 }
 
@@ -268,6 +339,92 @@ void CLiminalGun::AdjustRotation(CLiminalObject* pObject)
 
     /* 캡쳐 당시의 트랜스폼도 변경 */
     CaptureTransform(m_pHolingObject);
+}
+
+void CLiminalGun::UpdateUltimateAttackState(_float fTimeDelta)
+{
+    if (!m_bOnUltimateAttack || m_bOnHitScan) return;
+
+    m_fTimeAfterUltimate += fTimeDelta;
+    m_fDmgAccumulated = m_fTimeAfterUltimate * m_fDmgPerSecond;
+
+    if (CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene()))
+    {
+        const vector<CMonster*>& vecMonster = pStage->GetCurrentRoomLayer()->GetMonsterList();
+
+        for (auto p : vecMonster)
+        {
+            if (p->Is_Dead()) continue;
+
+            CTransform* pTransform = dynamic_cast<CTransform*>(p->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+
+            int iMaxHp = p->Get_MaxHp();
+            int iHp = p->Get_Hp();
+            float fRatio = clamp(1.f - (iHp - m_fDmgAccumulated) / (float)iMaxHp, 0.f, 1.f);
+            
+            m_pEffect->AddTargetInfo(TLiminalUltimateTargetInfo{ pTransform->Get_Info_Value(INFO_POS), fRatio });
+        }
+    }
+}
+
+void CLiminalGun::UpdateHitScanState(float fTimeDelta)
+{
+    if (!m_bOnHitScan) return;
+
+    m_fTimeAfterHitScan += fTimeDelta;
+
+    if (m_fTimeAfterHitScan < m_fSingleHitScanInverval) return;
+    
+    m_fTimeAfterHitScan -= m_fSingleHitScanInverval;
+
+    if (m_pqCapture.empty())
+    {
+        EndUltimateAttack(EInputState::NONE, EInputState::NONE);
+        return;
+    }
+
+    const TLiminalGunHitScanInfo& tInfo = m_pqCapture.top();
+
+    if (!tInfo.pTarget->Is_Dead())
+    {
+        CHitScan* pHitScan = CHitScan::Create(m_pGraphicDev, m_vBulletFrom, tInfo.pTarget, m_fDmgAccumulated);
+        if (pHitScan) CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"HitScan", pHitScan);
+    }
+
+    m_pqCapture.pop();
+
+    StartShotAnimation();
+}
+
+float CLiminalGun::GetYawFromCameraToTarget(CMonster* pMonster)
+{
+    _vec3 vPos;
+    pMonster->Get_Pos(&vPos);
+
+    _vec3 vCamPos, vCamLook;
+    CCamera* pCamera = CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER);
+    _matrix matCamWorld;
+    pCamera->GetWorld(&matCamWorld);
+    memcpy(&vCamPos, &matCamWorld.m[3][0], sizeof(_vec3));
+    memcpy(&vCamLook, &matCamWorld.m[2][0], sizeof(_vec3));
+
+    _vec3 vDisplacement = vPos - vCamPos;
+
+    _vec3 vFlat = _vec3{ vDisplacement.x, 0.f, vDisplacement.z };
+    if (D3DXVec3LengthSq(&vFlat) < 1e-6f)
+        return 0.f;
+    D3DXVec3Normalize(&vFlat, &vFlat);
+    _vec3 vCamFlat = _vec3{ vCamLook.x, 0.f, vCamLook.z };
+    D3DXVec3Normalize(&vCamFlat, &vCamFlat);
+
+    _vec3 vCross;
+    D3DXVec3Cross(&vCross, &vCamFlat, &vFlat);
+
+    float fCos = D3DXVec3Dot(&vCamFlat, &vFlat);
+    float fSin = vCross.y;
+    float fYaw = atan2f(fSin, fCos);
+
+    return fYaw;
 }
 
 HRESULT CLiminalGun::Add_Component()

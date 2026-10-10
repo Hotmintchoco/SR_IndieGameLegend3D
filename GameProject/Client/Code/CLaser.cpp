@@ -122,6 +122,8 @@ void CLaser::Render_GameObject()
 
 void CLaser::OnCollisionEnter(COLLINFO eCollInfo)
 {
+    CProjectile::OnCollisionEnter(eCollInfo);
+
     auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
     auto pObject = eCollInfo.pOtherCollider->Get_Owner();
 
@@ -138,9 +140,6 @@ void CLaser::OnCollisionEnter(COLLINFO eCollInfo)
         }
         break;
     }
-    case COLLISIONID::COLL_MONSTER:
-        /* 몬스터 피격은 몬스터에 이미 구현 */
-        break;
     default:
         break;
     }

@@ -88,20 +88,25 @@ HRESULT CStage::Ready_Scene()
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_ITEM);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODE, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODE, COLL_PLAYER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODE, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MONSTER, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MONSTER, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MBULLET, COLL_PLAYER);
 
 	/* 방 로직 */
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_ROOMLOGIC, COLL_PLAYER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_DYNAMICOBJECT, COLL_PLAYER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_DYNAMICOBJECT, COLL_OBSTACLE);
 
 	/* 투사체와의 충돌 */
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PROJECTILE, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PROJECTILE, COLL_OBSTACLE);
 
-	CSoundMgr::GetInstance()->PlayBGM(L"Sector1.wav");
-	CSoundMgr::GetInstance()->SetBGMVolume(0.f);
-	CSoundMgr::GetInstance()->SetSFXVolume(0.f);
+	int iBiome = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iStartRoomIndex)->iBiome;
+	TBGMTrack tTrack = CRoomLoadingMgr::GetInstance()->GetBiomeInfo(iBiome).tBGMTrack;
+	CSoundMgr::GetInstance()->PlayBGM(tTrack);
+	CSoundMgr::GetInstance()->SetBGMVolume(0.2f);
+	CSoundMgr::GetInstance()->SetSFXVolume(0.5f);
 
 	return S_OK;
 }
@@ -659,6 +664,10 @@ void CStage::CheckRoomChanged()
 
 			if (pRoom->bBossRoom)
 				CUIMgr::GetInstance()->EnterBossScreen();
+
+			int iBiome = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iCurrentRoomIndex)->iBiome;
+			TBGMTrack tTrack = CRoomLoadingMgr::GetInstance()->GetBiomeInfo(iBiome).tBGMTrack;
+			CSoundMgr::GetInstance()->PlayBGM(tTrack);
 		}
 	}
 }
@@ -679,7 +688,12 @@ int CStage::CalculateRoomIndexFromPlayerPosition()
 	const int iCol = (int)floorf((fLocalX + fHalfGridX) / vRoomSize.x);
 	const int iRow = (int)floorf((fHalfGridZ - fLocalZ) / vRoomSize.z);
 
-	if (0 > iCol || iCol >= iColCount || 0 > iRow || iRow >= iRowCount) return -1;
+	if (0 > iCol || iCol >= iColCount || 0 > iRow || iRow >= iRowCount)
+	{
+#include "CDebugPrint.h"
+		cout << m_vPlayerPos << endl;
+		return -1;
+	}
 
 	return iRow * iColCount + iCol;
 }

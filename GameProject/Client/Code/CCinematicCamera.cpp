@@ -2,6 +2,8 @@
 #include "CCinematicCamera.h"
 #include "CManagement.h"
 #include "CTransform.h"
+#include "CTimerMgr.h"
+#include "Client_Enum.h"
 
 CCinematicCamera::CCinematicCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCamera(pGraphicDev), m_bFinished(false), m_bPlaying(false), m_fElapsedTime(0.f), m_bStartFromCurrent(false), m_pTarget(nullptr)
@@ -50,6 +52,8 @@ HRESULT CCinematicCamera::Play()
 
 _int CCinematicCamera::Update_GameObject(_float fTimeDelta)
 {
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(CTG_CINEMATIC);
+
     if (!m_bPlaying)
         return 0;
 
@@ -78,6 +82,7 @@ _int CCinematicCamera::Update_GameObject(_float fTimeDelta)
 
 void CCinematicCamera::LateUpdate_GameObject(_float fTimeDelta)
 {
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(CTG_CINEMATIC);
     
 }
 
@@ -164,6 +169,26 @@ void CCinematicCamera::Skip()
 void CCinematicCamera::Add_Shot(const CINEMATIC_DESC& tDesc)
 {
 	m_queueDesc.push(tDesc);
+}
+
+void CCinematicCamera::Replace_Shot(const CINEMATIC_DESC& tDesc)
+{
+    m_queueDesc = {};
+
+    m_tCurrentDesc = tDesc;
+    m_tCurrentDesc.vEyeFrom = m_vEye;
+    m_tCurrentDesc.fFovFrom = m_fFov;
+    m_fElapsedTime = 0.f;
+
+    if (!m_bPlaying)
+    {
+        CLayer* pUILayer = CManagement::GetInstance()->Get_Layer(L"UI_Layer");
+        if (pUILayer)
+            pUILayer->Set_IsActive(false);
+    }
+
+    m_bPlaying = true;
+    m_bFinished = false;
 }
 
 CCinematicCamera* CCinematicCamera::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -6,9 +6,15 @@
 #include "CCollisionMgr.h"
 #include "Client_Enum.h"
 #include "CPlayer.h"
+#include "CMonster.h"
 
 CExplodeRange::CExplodeRange(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
+{
+}
+
+CExplodeRange::CExplodeRange(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos)
+    : CGameObject(pGraphicDev), m_vPos(vPos)
 {
 }
 
@@ -58,6 +64,12 @@ void CExplodeRange::Render_GameObject()
 
 void CExplodeRange::PropagateTransform(CTransform* pParentTransform)
 {
+    if (!pParentTransform)
+    {
+        m_pTransformCom->Set_Pos(m_vPos);
+        return;
+    }
+
     /* 폭발 전달용 구형 콜라이더 이므로 굳이 회전, 스케일은 고려하지 않음. 부모 삭제 시 위치 업데이트 문제도 있고 */    
     _vec3 vFrustumPos;
     pParentTransform->Get_Info(INFO_POS, &vFrustumPos);
@@ -110,6 +122,11 @@ void CExplodeRange::OnCollisionEnter(COLLINFO eCollInfo)
         static_cast<CPlayer*>(pOtherCol->Get_Owner())->OnHit(this);
         break;
     }
+    case COLLISIONID::COLL_MONSTER:
+    {
+        static_cast<CMonster*>(pOtherCol->Get_Owner())->Set_Damage(2.f);
+        break;
+    }
     default:
         break;
     }
@@ -126,6 +143,21 @@ CExplodeRange* CExplodeRange::Create(LPDIRECT3DDEVICE9 pGraphicDev)
         return nullptr;
     }
 
+    return pArea;
+}
+
+CExplodeRange* CExplodeRange::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos)
+{
+    CExplodeRange* pArea = new CExplodeRange(pGraphicDev, vPos);
+
+    if (FAILED(pArea->Ready_GameObject()))
+    {
+        Safe_Release(pArea);
+        MSG_BOX("CExplodeRange Create Failed");
+        return nullptr;
+    }
+
+    pArea->PropagateTransform(nullptr);
     return pArea;
 }
 

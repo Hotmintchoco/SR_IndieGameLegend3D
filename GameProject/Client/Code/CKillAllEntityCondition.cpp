@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CKillAllEntityCondition.h"
 #include "CRoomLayer.h"
 
@@ -15,7 +15,7 @@ bool CKillAllEntityCondition::IsSatisfied()
 {
 	if (!m_bActivated) return false;
 
-	/* Áö±ÝÀº ÀÌº¥Æ® ÀÌ¿ëÇÏÁö ¾Ê°í Á÷Á¢ ·¹ÀÌ¾îÀÇ ¸ó½ºÅÍ °³¼ö¸¦ ¼¼´Â ¹æ½ÄÀ» ÀÌ¿ë */
+	/* ì§€ê¸ˆì€ ì´ë²¤íŠ¸ ì´ìš©í•˜ì§€ ì•Šê³  ì§ì ‘ ë ˆì´ì–´ì˜ ëª¬ìŠ¤í„° ê°œìˆ˜ë¥¼ ì„¸ëŠ” ë°©ì‹ì„ ì´ìš© */
 	return m_pLayer->GetEntityCount() == 0;
 }
 

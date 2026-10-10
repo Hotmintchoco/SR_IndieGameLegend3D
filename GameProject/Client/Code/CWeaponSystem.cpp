@@ -89,7 +89,7 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
                 tOut.tWpOut = tWpOut;
                 if (tWpOut.bAttackExecuted)
                 {
-                    m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
+                    // m_fSpecialAtkGauge -= GetCurrentWeapon()->GetSpecialAtkGaugeConsume();
                     m_fSpecialAtkGauge = clamp(m_fSpecialAtkGauge, 0.f, 1.f);
                     if (m_fSpecialAtkGauge <= 0.f)
                     {
@@ -125,8 +125,8 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
         
         if (tWpOut.bAttackExecuted)
         {
-            m_fUltimateAtkGauge = 0.f;
-            m_bIsUltimateAttackReady = false;
+            // m_fUltimateAtkGauge = 0.f;
+            // m_bIsUltimateAttackReady = false;
 
             if (pStage)
             {

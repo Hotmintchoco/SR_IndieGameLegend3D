@@ -23,19 +23,19 @@ struct TPlayerBuffer
 struct TAnimPose
 {
 	TAnimPose() { Reset(); }
-	_vec3 vRot[PP_END];
-	void Reset() { ZeroMemory(&vRot, sizeof(_vec3) * PP_END ); }
+	_vec3 vRot[TP_END];
+	void Reset() { ZeroMemory(&vRot, sizeof(_vec3) * TP_END ); }
 };
 
 struct TActionPose
 {
 	TActionPose() { Reset(); }
-	_vec3 vRot[PP_END];
-	bool bMask[PP_END];
+	_vec3 vRot[TP_END];
+	bool bMask[TP_END];
 	void Reset()
 	{
-		ZeroMemory(&vRot, sizeof(_vec3) * PP_END);
-		ZeroMemory(&bMask, sizeof(bool) * PP_END);
+		ZeroMemory(&vRot, sizeof(_vec3) * TP_END);
+		ZeroMemory(&bMask, sizeof(bool) * TP_END);
 	}
 };
 
@@ -54,6 +54,17 @@ struct TShootParam
 	float fRecover = 15.f;		// 반동 복귀 감쇠 속도
 };
 
+enum class EEase : uint8_t { E_LINEAR, E_IN, E_OUT, E_INOUT };
+
+/* 1인칭 양팔에만 적용 */
+struct TFViewKey
+{
+	float fTime;
+	_vec3 vCamLocal;
+	_vec3 vRotDegree;
+	EEase eEase = EEase::E_INOUT;
+};
+
 class CPlayerAnimator : public CComponent
 {
 protected:
@@ -69,15 +80,20 @@ public:
 	void PlayLocomotion(EPlayerLocomotionState eLoco = EPlayerLocomotionState::NONE);
 
 	void TransformPropagation(const _matrix& matRootWorld);
+	void TransformFPPropagation(const _matrix& matCamWorld);
 
-	void SetBuffer(const array<TPlayerBuffer, PP_END>& tBuffer);
+	void SetBuffer(const array<TPlayerBuffer, TP_END>& tBuffer);
 	inline void SetRootTransform(CTransform* pTransform) { m_pRootTransform = pTransform; }
+	inline void SetFPTransform(const array<CTransform*, FP_END>& arrTransform) { m_arrFPTransform = arrTransform; }
 
 	void RenderDebugTransform();
 
 	inline bool OnAction() { return m_eAction != EPlayerActionState::NONE; }
 
 	CEventDelegate<EPlayerActionState> m_OnActionFinished;
+
+	/* 1인칭 애니메이션 여부를 판별하여 플레이어 측에서 팔 버퍼를 띄우기 위함 */
+	bool IsFPPartVisible();
 
 private:
 	void UpdateLocomotion(float fTimeDelta);
@@ -95,11 +111,14 @@ private:
 	// └─ vRLeg
 
 	/* 버퍼 저장용 */
-	const static array<int, PP_END> s_arrParent;
-	const static array<PLAYERPART, PP_END> s_arrUpdateOrder;
-	static const char* s_szPartName[PP_END];
-	array<TPlayerBuffer, PP_END> m_arrBuffer = {};
+	const static array<int, TP_END> s_arrParent;
+	const static array<PLAYERTPPART, TP_END> s_arrUpdateOrder;
+	static const char* s_szPartName[TP_END];
+	array<TPlayerBuffer, TP_END> m_arrBuffer = {};
 	CTransform* m_pRootTransform = nullptr;
+
+	/* 1인칭 애니메이션 용 */
+	array<CTransform*, 2> m_arrFPTransform{};
 
 	/* 애니메이션 상태 */
 	EPlayerActionState m_eAction = EPlayerActionState::NONE;
@@ -123,10 +142,24 @@ private:
 	void SampleShotGunUltimate(float fTime);
 	static constexpr float s_fRipperDuration = 3.f;
 
-	/* 애니메이션 디버그용 */
-	bool m_bAnimPause = false;
+	/* 액션 : 전술 조준경 */
+	void SampleKeys(const TFViewKey* pKeys, int iCount, float fTime, CTransform* pTarget);
+	void SampleRapidGunUltimateStart(float fTime);
 
-	constexpr static int PP_ROOT = -1;
+	/* 액션 : 석양 */
+	void SampleLiminalGunUltimateStart(float fTime);
+	void SampleLiminalGunUltimateLoop(float fTime);
+	void SampleLiminalGunUltimateEnd(float fTime);
+
+	/* 애니메이션 디버그용 */
+	void DrawTransformEditor(const char* szName, CTransform* pTransform,
+		const _vec3* pInitPos, const _vec3* pInitRot,
+		bool bCopyAsKey);
+	float m_fDebugScrubTime = 0.f;
+	bool m_bAnimPause = false;
+	int m_iDebugClip = 0;
+
+	constexpr static int TP_ROOT = -1;
 	static constexpr float s_fForward = -1.f; /* LH 기준 팔 +x 회전 */
 	static constexpr float s_fLocoBlendSpeed = 10.f; /* 로코모션이 바뀔 때 목표 Param까지 멤버 Param이 쫓아가는 속도 */
 	static constexpr float s_fActionBlendSpeed = 20.f; /* 액션이 시작될/끝날 때 목표 Param까지 멤버 Param이 쫓아가는 속도 */

@@ -9,6 +9,22 @@ namespace Engine
 }
 
 class CLiminalObject;
+class CLiminalGunUltimateEffect;
+class CMonster;
+
+struct TLiminalGunHitScanInfo
+{
+	CMonster* pTarget;
+	float fYaw;
+};
+
+struct TYawLesser
+{
+	bool operator()(const TLiminalGunHitScanInfo& a, const TLiminalGunHitScanInfo& b) const
+	{
+		return a.fYaw < b.fYaw;
+	}
+};
 
 class CLiminalGun : public CWeapon
 {
@@ -32,6 +48,9 @@ private:
 	void CaptureTransform(CLiminalObject* pObject);
 	void CalculateView(CLiminalObject* pObject);
 	void AdjustRotation(CLiminalObject* pObject);
+	void UpdateUltimateAttackState(_float fTimeDelta);
+	void UpdateHitScanState(float fTimeDelta);
+	float GetYawFromCameraToTarget(CMonster* pMonster);
 
 	Engine::CPlyTex* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
@@ -41,6 +60,19 @@ private:
 	_vec3 m_vCaptureDisplacement{ 0.f, 0.f, 0.f }; /* 캡쳐 시점의 카메라로부터의 위치 변위를 저장하기 위함 */
 	float m_fCaptureScale = 1.f;
 	float m_fCaptureDist = 0.f;
+
+	/* 궁극기 */
+	float m_fDmgPerSecond = 3.f;
+	float m_fTimeAfterUltimate = 0.f;
+	float m_fDmgAccumulated = 0.f;
+	float m_fMaxRadius = 30.f;
+	float m_fMinRadius = 10.f;
+	float m_fSingleHitScanInverval = 0.05f;
+	float m_fTimeAfterHitScan = 0.f;
+	bool m_bOnHitScan = false;
+	priority_queue<TLiminalGunHitScanInfo, vector<TLiminalGunHitScanInfo>, TYawLesser> m_pqCapture;
+	CLiminalGunUltimateEffect* m_pEffect = nullptr;
+
 
 public:
 	static CLiminalGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);

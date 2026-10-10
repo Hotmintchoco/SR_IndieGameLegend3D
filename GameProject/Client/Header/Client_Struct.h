@@ -54,6 +54,7 @@ struct TBiomeInfo
 {
 	EBiomeType eType;
 	int iDefaultTileIndex;
+	TBGMTrack tBGMTrack;
 };
 
 struct TWeaponInput
