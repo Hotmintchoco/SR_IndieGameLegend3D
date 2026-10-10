@@ -28,9 +28,20 @@ private:
 
     void        Start_Dialogue(const std::wstring& strText);
     void        Update_Dialogue(_float fTimeDelta);
+    void        Show_Dialogue(size_t iIndex);
+
+    enum class SPEAKER { COMMANDER, PLAYER };
+    struct DIALOGUE_LINE
+    {
+        SPEAKER eSpeaker;
+        std::wstring strText;
+    };
 
 private:
     CUI* m_pPortrait = nullptr; // Owned by the UI layer.
+    CUI* m_pPlayerPortrait = nullptr; // Owned by the UI layer.
+    std::vector<DIALOGUE_LINE> m_vecDialogue;
+    size_t m_iDialogueIndex = 0;
     bool m_bFinishRequested = false;
     bool m_bLoadingFailed = false;
 
