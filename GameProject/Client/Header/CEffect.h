@@ -14,7 +14,8 @@ public:
 	enum EFFECT_TYPE {MAGMA_FIREBALL, MAGMA_TRAIL, MAGMA_DEAD_EFFECT, MAGMA_EXPLOSION1, MAGMA_EXPLOSION2, 
 		BOSS1_DEAD_EFFECT, BOSS1_EXPLOSION1, BOSS1_EXPLOSION2,
 		BOSS1_SPAWN, BULLET_EFFECT, BULLET_TRAIL, ARROW_TRAIL, SANDBURST, SANDBURST2, 
-		WORM_DEAD_EFFECT, WORM_EXPLOSION1, WORM_EXPLOSION2, AIRBUBBLE, IDLE};
+		WORM_DEAD_EFFECT, WORM_EXPLOSION1, WORM_EXPLOSION2,
+		AIRBUBBLE, YELLOWDUST, YELLOWDUST_INIT, SNOW, SNOW_INIT, IDLE};
 protected:
 	explicit CEffect(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CEffect();
@@ -47,7 +48,7 @@ protected:
 	Engine::CTransform* m_pTransformCom = nullptr;
 
 	_float m_fFrame = 0.f;
-
+	
 	_float m_fLifeTime = 0.f;
 	_float m_fElapsedTime = 0.f;
 	_float m_fElapsedTime2 = 0.f;
@@ -60,7 +61,8 @@ protected:
 	CGameObject* m_pEffect_Owner = nullptr;
 	CPlayerCamera* m_pBillBoardCamera = nullptr;
 public:
-
+	static void Set_Dir_YellowDust(const _vec3& vDir) { s_vYellowDust = vDir; }
+	inline static _vec3 s_vYellowDust = { 0.f,0.f,0.f };
 protected:
 	virtual void		Free();
 };

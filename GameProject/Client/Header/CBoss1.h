@@ -21,6 +21,7 @@ private:
 	void Shuffle_Array(_uint N);
 
 	void Update_Motion(const _float& fTimeDelta);
+	_int Get_MotionState();
 
 	void Opening_Boss1(const _float& fTimeDelta);
 	void Move_Boss1(const _float& fTimeDelta);
@@ -45,7 +46,7 @@ protected:
 	virtual void		Free();
 
 private:
-	enum BOSS1STATE { SPAWN, MOVE, IDLE, DEAD, OPENING };
+	enum BOSS1STATE { MOVE, SPAWN, IDLE, DEAD, OPENING };
 	BOSS1STATE m_eBoss1State = OPENING;
 	_bool m_bOpening = true;
 	_bool m_bStand = false;
@@ -66,7 +67,6 @@ private:
 	_vec3 m_vMovePosition = {};
 	_bool m_bMoveFlag = false;
 	_bool m_bMoveFlag2 = false;
-	_bool m_bMoveState = true;
 
 	_bool m_bTrailStart = false;
 	_bool m_bTrailFinish = false;
@@ -102,6 +102,5 @@ private:
 	};
 	_int m_iOpeningMoveIndex = 0;
 
-	inline static _vec3 s_vRoomCenter = { 0.f,0.f,0.f };
-
+	list<_int> m_listState;
 };

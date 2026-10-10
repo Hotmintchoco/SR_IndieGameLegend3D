@@ -32,6 +32,8 @@
 #include "CSeaweed.h"
 #include "CSeaweed2.h"
 #include "CGenerator_Airbubble.h"
+#include "CGenerator_YellowDust.h"
+#include "CGenerator_Snow.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -62,6 +64,8 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::Seaweed2,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSeaweed2::Create(t.pDevice); } },
         
         {EObjectType::EFFECT_GENERATOR_AIRBUBBLE,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_Airbubble::Create(t.pDevice); } },
+        {EObjectType::EFFECT_GENERATOR_YELLOWDUST,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_YellowDust::Create(t.pDevice); } },
+        {EObjectType::EFFECT_GENERATOR_SNOW,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_Snow::Create(t.pDevice); } },
 
         {EObjectType::ITEM_HEART,               [](const TCreateDesc& t) -> Engine::CGameObject* { return CHeart::Create(t.pDevice, t.pSpawner); } },
         {EObjectType::ITEM_ENERGY,              [](const TCreateDesc& t) -> Engine::CGameObject* { return CEnergy::Create(t.pDevice, t.pSpawner); } },

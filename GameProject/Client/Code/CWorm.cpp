@@ -7,8 +7,8 @@
 #include "CRoomLayer.h"
 #include "CEffect.h"
 #include "CGlubba.h"
-#include "CShockwave.h"
 #include "CPlayerCamera.h"
+#include "CWormBullet.h"
 
 CWorm::CWorm(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -359,22 +359,9 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
         m_bMotionEnd = false;
         Clear_MoveDest();
 
-        if (m_iPhase == 0)
-        {
-            m_eWormState = static_cast<WORMSTATE>(rand() % 3);
-            if (m_bMoveState == true)
-            {
-                m_eWormState = MOVE;
-                m_bMoveState = false;
-            }
-        }
-        else
-        {
-            m_eWormState = static_cast<WORMSTATE>(rand() % 3);
-        }
-        //m_eWormState = SPAWN;
-        //m_eWormState = MOVE;
-        m_eWormState = ATTACK;
+        m_eWormState = static_cast<WORMSTATE>(Get_MotionState());
+        //m_eWormState = ATTACK;
+
         if (m_eWormState == SPAWN)
         {
             Set_MoveDest();
@@ -401,7 +388,9 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
         {
             Set_MoveDest();
             m_fStateUpdateDuration = 12.f;
-            m_bAttackStart = false;
+            m_bAttackStart1 = false;
+            m_bAttackStart2 = false;
+            m_bAttackStart3 = false;
             m_bMoveFlag = false;
             m_bMoveFlag2 = false;
             Set_Speed_Worm(9.f);
@@ -409,6 +398,39 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
             m_fAttackTime2 = 0.f;
         }
     }
+}
+
+_int CWorm::Get_MotionState()
+{
+    if (m_listState.empty() == true)
+    {
+        m_listState.push_back(0);
+        return m_listState.back();
+    }
+
+    if (m_listState.size() == 3)
+    {
+        for (int i = 0; i < 3; ++i)
+        {
+            if (find(m_listState.begin(), m_listState.end(), i) == m_listState.end())
+            {
+                m_listState.pop_front();
+                m_listState.push_back(i);
+                return m_listState.back();
+            }
+        }
+    }
+    _int iRand;
+    do
+    {
+        iRand = rand() % 3;
+    } while (m_listState.size() >= 2 && *m_listState.rbegin() == iRand && *next(m_listState.rbegin()) == iRand);
+
+    if (m_listState.size() == 3)
+        m_listState.pop_front();
+
+    m_listState.push_back(iRand);
+    return m_listState.back();
 }
 
 void CWorm::Set_MoveDest()
@@ -583,7 +605,6 @@ void CWorm::Spawn_Monster(const _float& fTimeDelta)
             CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
             if (FAILED(pScene->Add_GameObject(L"Glubba", pGameObject))) return;
         }
-
     }
     else
     {
@@ -601,12 +622,62 @@ void CWorm::Attack_Worm(const _float& fTimeDelta)
     {
         Move_WormHead_BeforeAttack(fTimeDelta);
     }
-    else if (m_bAttackStart == false)
+    else if (m_bAttackStart1 == false || m_bAttackStart2 == false || m_bAttackStart3 == false)
     {
         m_fAttackTime += fTimeDelta;
-        if (m_fAttackTime > 1.5f)
+        if (m_fAttackTime > 1.5f && m_bAttackStart1 == false)
         {
-            m_bAttackStart = true;
+            m_bAttackStart1 = true;
+
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            vPos.x += 0.1f;
+            _vec3 vDir = vPlayerPos - vPos;
+            D3DXVec3Normalize(&vDir, &vDir);
+
+            CProjectile* pProjectile = CWormBullet::Create(m_pGraphicDev, vPos, vDir);
+            CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+
+            pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+
+            //CSoundMgr::GetInstance()->PlaySFX(L"sfxLaser.wav");
+        }
+        if (m_fAttackTime > 2.25f && m_bAttackStart2 == false)
+        {
+            m_bAttackStart2 = true;
+
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            vPos.x += 0.1f;
+            _vec3 vDir = vPlayerPos - vPos;
+            D3DXVec3Normalize(&vDir, &vDir);
+
+            CProjectile* pProjectile = CWormBullet::Create(m_pGraphicDev, vPos, vDir);
+            CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+
+            pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+
+            //CSoundMgr::GetInstance()->PlaySFX(L"sfxLaser.wav");
+        }
+        if (m_fAttackTime > 3.f && m_bAttackStart3 == false)
+        {
+            m_bAttackStart3 = true;
+
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            vPos.x += 0.1f;
+            _vec3 vDir = vPlayerPos - vPos;
+            D3DXVec3Normalize(&vDir, &vDir);
+
+            CProjectile* pProjectile = CWormBullet::Create(m_pGraphicDev, vPos, vDir);
+            CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
+
+            pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
+
+            //CSoundMgr::GetInstance()->PlaySFX(L"sfxLaser.wav");
         }
     }
     else
@@ -619,7 +690,7 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
 {
 	m_bElapsedOpeningTime += fTimeDelta;
 
-    if (m_bElapsedOpeningTime > 1.f && m_bElapsedOpeningTime<=1.1f)
+    if (m_bElapsedOpeningTime > 1.f && m_bElapsedOpeningTime<=3.f)
     {
         //오프닝 도착지점 세팅
         if (m_bOpeningStart == false)
@@ -701,7 +772,7 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
         }
     }
     //3초뒤 움직임
-    else if (m_bElapsedOpeningTime > 1.f)
+    else if (m_bElapsedOpeningTime > 3.f)
     {
         if (!m_vMoveDest.empty())
         {

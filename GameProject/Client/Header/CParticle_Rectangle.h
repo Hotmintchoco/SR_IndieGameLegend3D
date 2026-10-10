@@ -26,7 +26,7 @@ protected:
 	Engine::CRcColCustom* m_pBufferCom = nullptr;
 
 public:
-	enum PARTICLE_RECT_TYPE{DEAD, BULLET, SAND};
+	enum PARTICLE_RECT_TYPE{DEAD, BULLET, SAND, SNOW, YELLOWDUST};
 
 public:
 	static CParticle_Rectangle* Create(LPDIRECT3DDEVICE9 pGraphicDev);
