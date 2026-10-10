@@ -394,6 +394,21 @@
     <Filter Include="02. GameObject\02. Monster\Worm\WormBullet">
       <UniqueIdentifier>{ce9c4643-760b-4ae1-bd0a-2b4319bacad7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\MiniGame_1\GameObject">
+      <UniqueIdentifier>{22e61cc0-8bce-43e1-bb72-9724b31be7da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_1\GameObject\Test">
+      <UniqueIdentifier>{86191db4-6547-4b9e-b287-5a381320701e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_1\GameObject\Player_MG1">
+      <UniqueIdentifier>{00184854-144a-4568-befd-939aad09dac5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_1\GameObject\Camera_MG1">
+      <UniqueIdentifier>{34c68a12-2025-4782-8337-947fe2d32cdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_1\GameObject\Box_MG1">
+      <UniqueIdentifier>{6f0d2a13-8903-4ded-b365-58040e9b5a1b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -813,6 +828,21 @@
     <ClInclude Include="..\Header\CWormBullet.h">
       <Filter>02. GameObject\02. Monster\Worm\WormBullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTest1.h">
+      <Filter>01. Scene\MiniGame_1\GameObject\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayer_MG1.h">
+      <Filter>01. Scene\MiniGame_1\GameObject\Player_MG1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCamera_MG1.h">
+      <Filter>01. Scene\MiniGame_1\GameObject\Camera_MG1</Filter>
+    </ClInclude>
+    <ClInclude Include="CCamera2_MG1.h">
+      <Filter>01. Scene\MiniGame_1\GameObject\Camera_MG1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBox_MG1.h">
+      <Filter>01. Scene\MiniGame_1\GameObject\Box_MG1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1204,6 +1234,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\CParticle_Rectangle.cpp">
       <Filter>02. GameObject\06. Effect\Particle_Rectangle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTest1.cpp">
+      <Filter>01. Scene\MiniGame_1\GameObject\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayer_MG1.cpp">
+      <Filter>01. Scene\MiniGame_1\GameObject\Player_MG1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCamera_MG1.cpp">
+      <Filter>01. Scene\MiniGame_1\GameObject\Camera_MG1</Filter>
+    </ClCompile>
+    <ClCompile Include="CCamera2_MG1.cpp">
+      <Filter>01. Scene\MiniGame_1\GameObject\Camera_MG1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBox_MG1.cpp">
+      <Filter>01. Scene\MiniGame_1\GameObject\Box_MG1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

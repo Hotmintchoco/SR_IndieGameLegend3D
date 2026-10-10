@@ -832,7 +832,7 @@ void CWorm::Worm_Dead_Effect()
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Worm_Dead", pGameObject))) return;
     }
-
+    
     if (m_bDead_Effect2 == false)
     {
         m_bDead_Effect2 = true;

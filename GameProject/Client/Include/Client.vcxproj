@@ -146,6 +146,8 @@
   <ItemGroup>
     <ClInclude Include="..\Header\CAirbubble.h" />
     <ClInclude Include="..\Header\CAbstractFactory.h" />
+    <ClInclude Include="..\Header\CBox_MG1.h" />
+    <ClInclude Include="..\Header\CCamera_MG1.h" />
     <ClInclude Include="..\Header\CGenerator_Airbubble.h" />
     <ClInclude Include="..\Header\CArrow.h" />
     <ClInclude Include="..\Header\CArrow_Effect.h" />
@@ -223,6 +225,7 @@
     <ClInclude Include="..\Header\CSocket.h" />
     <ClInclude Include="..\Header\CSprnub2.h" />
     <ClInclude Include="..\Header\CSprnub3.h" />
+    <ClInclude Include="..\Header\CTest1.h" />
     <ClInclude Include="..\Header\CUIMgr.h" />
     <ClInclude Include="..\Header\CVeilSphere.h" />
     <ClInclude Include="..\Header\CVoxelBuffer.h" />
@@ -277,7 +280,9 @@
     <ClInclude Include="..\Header\json_fwd.hpp" />
     <ClInclude Include="..\Header\CUnbreakableFrustum.h" />
     <ClInclude Include="..\Header\CSprnub1.h" />
+    <ClInclude Include="CCamera2_MG1.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="CPlayer_MG1.h" />
     <ClInclude Include="CSeaweed2.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -287,6 +292,8 @@
   <ItemGroup>
     <ClCompile Include="..\Code\CAirbubble.cpp" />
     <ClCompile Include="..\Code\CAbstractFactory.cpp" />
+    <ClCompile Include="..\Code\CBox_MG1.cpp" />
+    <ClCompile Include="..\Code\CCamera_MG1.cpp" />
     <ClCompile Include="..\Code\CGenerator_Airbubble.cpp" />
     <ClCompile Include="..\Code\CArrow.cpp" />
     <ClCompile Include="..\Code\CArrow_Effect.cpp" />
@@ -363,6 +370,7 @@
     <ClCompile Include="..\Code\CSocket.cpp" />
     <ClCompile Include="..\Code\CSprnub2.cpp" />
     <ClCompile Include="..\Code\CSprnub3.cpp" />
+    <ClCompile Include="..\Code\CTest1.cpp" />
     <ClCompile Include="..\Code\CUIMgr.cpp" />
     <ClCompile Include="..\Code\CVeilSphere.cpp" />
     <ClCompile Include="..\Code\CVoxelBuffer.cpp" />
@@ -426,7 +434,9 @@
     <ClCompile Include="..\Code\IRayTestable.cpp" />
     <ClCompile Include="..\Code\CSprnub1.cpp" />
     <ClCompile Include="..\Code\ITerrain.cpp" />
+    <ClCompile Include="CCamera2_MG1.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="CPlayer_MG1.cpp" />
     <ClCompile Include="CSeaweed2.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
