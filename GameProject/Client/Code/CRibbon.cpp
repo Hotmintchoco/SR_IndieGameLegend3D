@@ -129,14 +129,14 @@ void CRibbon::OnCollisionEnter(COLLINFO eCollInfo)
 {
     CProjectile::OnCollisionEnter(eCollInfo);
 
-    auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
-    auto pObject = eCollInfo.pOtherCollider->Get_Owner();
-
-    switch (iOtherID)
-    {
-    default:
-        break;
-    }
+    // auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
+    // auto pObject = eCollInfo.pOtherCollider->Get_Owner();
+    // 
+    // switch (iOtherID)
+    // {
+    // default:
+    //     break;
+    // }
 }
 
 void CRibbon::StartExplosionPhase()
