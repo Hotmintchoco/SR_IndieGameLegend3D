@@ -30,7 +30,13 @@ HRESULT CStartScreen::Ready_Scene()
 void CStartScreen::OnEnter()
 {
     CCursorPolicyMgr::GetInstance()->Set_MenuMode(true);
-    CSoundMgr::GetInstance()->PlayBGM(L"Title.wav");
+
+    Engine::TBGMTrack tTrack{};
+    tTrack.wstrID = L"Title";
+    tTrack.wstrIntro = L"";
+    tTrack.wstrLoop = L"Title.wav";
+
+    CSoundMgr::GetInstance()->PlayBGM(tTrack);
     CSoundMgr::GetInstance()->SetBGMVolume(0.3f);
 }
 
