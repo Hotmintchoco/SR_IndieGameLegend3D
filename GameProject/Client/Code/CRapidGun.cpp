@@ -36,22 +36,32 @@ HRESULT CRapidGun::Ready_GameObject()
 
     m_fSpecialAtkInterval = 0.1f;
 
+    /* GameLogic Layer */
+    CLayer* pLayer = CLayerContext::GetLayer();
+    if (!pLayer)
+    {
+        if (CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene()))
+        {
+            pLayer = pStage->Get_Layer(L"GameLogic_Layer");
+        }
+    }
+
     m_pMarker = CRapidGunUltimateMarker::Create(m_pGraphicDev);
     if (m_pMarker)
     {
-        CLayerContext::GetLayer()->Add_GameObject(L"Effect", m_pMarker);
+        pLayer->Add_GameObject(L"Effect", m_pMarker);
         m_pMarker->Set_IsActive(false);
     }
     m_pScope = CRapidGunUltimateScope::Create(m_pGraphicDev);
     if (m_pScope)
     {
-        CLayerContext::GetLayer()->Add_GameObject(L"Scope", m_pScope);
+        pLayer->Add_GameObject(L"Scope", m_pScope);
         m_pScope->Set_IsActive(false);
     }
     m_pTimer = CRapidGunUltimateTimer::Create(m_pGraphicDev);
     if (m_pTimer)
     {
-        CLayerContext::GetLayer()->Add_GameObject(L"Timer", m_pTimer);
+        pLayer->Add_GameObject(L"Timer", m_pTimer);
         m_pTimer->Set_IsActive(false);
     }
 

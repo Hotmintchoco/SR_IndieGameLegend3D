@@ -38,10 +38,20 @@ HRESULT CLiminalGun::Ready_GameObject()
 
     m_fGaugeConsumePerSpecialAtk = 0.f;
 
+    /* GameLogic Layer */
+    CLayer* pLayer = CLayerContext::GetLayer();
+    if (!pLayer)
+    {
+        if (CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene()))
+        {
+            pLayer = pStage->Get_Layer(L"GameLogic_Layer");
+        }
+    }
+
     m_pEffect = CLiminalGunUltimateEffect::Create(m_pGraphicDev);
     if (m_pEffect)
     {
-        CLayerContext::GetLayer()->Add_GameObject(L"Effect", m_pEffect);
+        pLayer->Add_GameObject(L"Effect", m_pEffect);
         m_pEffect->Set_IsActive(false);
     }
 
@@ -366,6 +376,12 @@ void CLiminalGun::UpdateHitScanState(float fTimeDelta)
     if (m_fTimeAfterHitScan < m_fSingleHitScanInverval) return;
     
     m_fTimeAfterHitScan -= m_fSingleHitScanInverval;
+
+    if (m_pqCapture.empty())
+    {
+        EndUltimateAttack(EInputState::NONE, EInputState::NONE);
+        return;
+    }
 
     const TLiminalGunHitScanInfo& tInfo = m_pqCapture.top();
 
