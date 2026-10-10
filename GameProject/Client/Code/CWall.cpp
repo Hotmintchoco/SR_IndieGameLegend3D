@@ -57,8 +57,8 @@ void CWall::InitializeCollider()
     // -- Collider Initialization -- 
 
     // North Wall Collider
-    _float fExtentsX(0.f), fExtentsY(2.f), fExtentsZ(0.f);
-    _float fDiffX(0.f), fDiffY(1.f), fDiffZ(0.f);
+    _float fExtentsX(0.f), fExtentsY(4.f), fExtentsZ(0.f);
+    _float fDiffX(0.f), fDiffY(2.f), fDiffZ(0.f);
 
     switch (m_eDir)
     {
@@ -143,8 +143,8 @@ void CWall::BlockDoor(bool bBlock)
     // -- Collider Initialization -- 
 
     // North Wall Collider
-    _float fExtentsX(0.f), fExtentsY(2.f), fExtentsZ(0.f);
-    _float fDiffX(0.f), fDiffY(1.f), fDiffZ(0.f);
+    _float fExtentsX(0.f), fExtentsY(4.f), fExtentsZ(0.f);
+    _float fDiffX(0.f), fDiffY(2.f), fDiffZ(0.f);
 
     switch (m_eDir)
     {

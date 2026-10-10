@@ -73,6 +73,8 @@ void CWeaponPickup::Consume()
 {
     static_cast<CWeaponSystem*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"WeaponSystem"))->AddWeapon(m_eWeaponType, L"Weapon_" + to_wstring((int)m_eWeaponType));
 
+    CSoundMgr::GetInstance()->PlaySFX(L"upgrade-1a.wav");
+
     Set_Dead(true);
 }
 

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CGameObject.h"
+#include "Client_Enum.h"
 
 namespace Engine
 {
@@ -12,7 +13,7 @@ namespace Engine
 class CGameMachine : public CGameObject
 {
 protected:
-	explicit CGameMachine(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CGameMachine(LPDIRECT3DDEVICE9 pGraphicDev, ESceneType eType);
 	virtual ~CGameMachine();
 
 public:
@@ -20,6 +21,8 @@ public:
 	virtual			_int		Update_GameObject(_float fTimeDelta);
 	virtual			void		LateUpdate_GameObject(_float fTimeDelta);
 	virtual			void		Render_GameObject();
+
+	void Interact();
 
 private:
 	HRESULT			Add_Component();
@@ -32,8 +35,10 @@ private:
 	Engine::CTexture* m_pTextureCom = nullptr;
 	Engine::CPlyTex* m_pBufferCom = nullptr;
 
+	ESceneType m_eSceneType = ESceneType::SCENE_NONE;
+
 public:
-	static CGameMachine* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CGameMachine* Create(LPDIRECT3DDEVICE9 pGraphicDev, ESceneType eType);
 
 private:
 	virtual void		Free();

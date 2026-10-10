@@ -28,17 +28,17 @@ HRESULT CWeaponSystem::Ready_GameObject()
     if (FAILED(AddWeapon(EObjectType::WEAPON_DEFAULT, L"RapidGun")))
         return E_FAIL;
 
-    if (FAILED(AddWeapon(EObjectType::WEAPON_SHOTGUN, L"ShotGun")))
-        return E_FAIL;
-    
-    if (FAILED(AddWeapon(EObjectType::WEAPON_LASERGUN, L"LaserGun")))
-        return E_FAIL;
-    
-    if (FAILED(AddWeapon(EObjectType::WEAPON_BOW, L"Bow")))
-        return E_FAIL;
-    
-    if (FAILED(AddWeapon(EObjectType::WEAPON_LIMINAL, L"LiminalGun")))
-        return E_FAIL;
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_SHOTGUN, L"ShotGun")))
+    //     return E_FAIL;
+    // 
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_LASERGUN, L"LaserGun")))
+    //     return E_FAIL;
+    // 
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_BOW, L"Bow")))
+    //     return E_FAIL;
+    // 
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_LIMINAL, L"LiminalGun")))
+    //     return E_FAIL;
 
     SwitchWeaponTo(0);
 
@@ -151,7 +151,7 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
 
 HRESULT CWeaponSystem::AddWeapon(EObjectType eType, const wstring& wstrName)
 {
-    CWeapon* pWeapon = CAbstractFactory::GetInstance()->CraeteWeapon(eType);
+    CWeapon* pWeapon = CAbstractFactory::GetInstance()->CreateWeapon(eType);
 
     if (pWeapon)
     {

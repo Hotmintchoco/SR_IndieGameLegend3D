@@ -148,6 +148,7 @@
     <ClInclude Include="..\Header\CAbstractFactory.h" />
     <ClInclude Include="..\Header\CBox_MG1.h" />
     <ClInclude Include="..\Header\CCamera_MG1.h" />
+    <ClInclude Include="..\Header\CCameraHelper.h" />
     <ClInclude Include="..\Header\CGenerator_Airbubble.h" />
     <ClInclude Include="..\Header\CArrow.h" />
     <ClInclude Include="..\Header\CArrow_Effect.h" />
@@ -171,12 +172,16 @@
     <ClInclude Include="..\Header\CHitScan.h" />
     <ClInclude Include="..\Header\CItemContainer.h" />
     <ClInclude Include="..\Header\CHitCreenUI.h" />
+    <ClInclude Include="..\Header\CJail.h" />
     <ClInclude Include="..\Header\CLaser.h" />
     <ClInclude Include="..\Header\CLaserBuffer.h" />
     <ClInclude Include="..\Header\CLaserGun.h" />
+    <ClInclude Include="..\Header\CLaserPuzzleRoomLayer.h" />
     <ClInclude Include="..\Header\CLiminalCube.h" />
     <ClInclude Include="..\Header\CLiminalGun.h" />
+    <ClInclude Include="..\Header\CLiminalGunUltimateEffect.h" />
     <ClInclude Include="..\Header\CLiminalObject.h" />
+    <ClInclude Include="..\Header\CLiminalRoomLayer.h" />
     <ClInclude Include="..\Header\CLiminalSlope.h" />
     <ClInclude Include="..\Header\CMine.h" />
     <ClInclude Include="..\Header\CMiniGame.h" />
@@ -216,12 +221,18 @@
     <ClInclude Include="..\Header\CGameMachine.h" />
     <ClInclude Include="..\Header\CGameStatus.h" />
     <ClInclude Include="..\Header\CGaugeUI.h" />
+    <ClInclude Include="..\Header\CRapidGunUltimateMarker.h" />
+    <ClInclude Include="..\Header\CRapidGunUltimateScope.h" />
+    <ClInclude Include="..\Header\CRapidGunUltimateTimer.h" />
     <ClInclude Include="..\Header\CRayCaster.h" />
+    <ClInclude Include="..\Header\CRibbon.h" />
+    <ClInclude Include="..\Header\CRibbonBuffer.h" />
     <ClInclude Include="..\Header\CSandburst.h" />
     <ClInclude Include="..\Header\CSeaweed.h" />
     <ClInclude Include="..\Header\CSGBullet.h" />
     <ClInclude Include="..\Header\CShockwave.h" />
     <ClInclude Include="..\Header\CShotGun.h" />
+    <ClInclude Include="..\Header\CShotGunUltimateEffect.h" />
     <ClInclude Include="..\Header\CSocket.h" />
     <ClInclude Include="..\Header\CSprnub2.h" />
     <ClInclude Include="..\Header\CSprnub3.h" />
@@ -243,6 +254,7 @@
     <ClInclude Include="..\Header\CLoading.h" />
     <ClInclude Include="..\Header\CLogo.h" />
     <ClInclude Include="..\Header\CStartScreen.h" />
+    <ClInclude Include="..\Header\CIntroScene.h" />
     <ClInclude Include="..\Header\CMainApp.h" />
     <ClInclude Include="..\Header\CMinimapUI.h" />
     <ClInclude Include="..\Header\CAtmosphereVeil.h" />
@@ -296,6 +308,7 @@
     <ClCompile Include="..\Code\CAbstractFactory.cpp" />
     <ClCompile Include="..\Code\CBox_MG1.cpp" />
     <ClCompile Include="..\Code\CCamera_MG1.cpp" />
+    <ClCompile Include="..\Code\CCameraHelper.cpp" />
     <ClCompile Include="..\Code\CGenerator_Airbubble.cpp" />
     <ClCompile Include="..\Code\CArrow.cpp" />
     <ClCompile Include="..\Code\CArrow_Effect.cpp" />
@@ -319,12 +332,16 @@
     <ClCompile Include="..\Code\CCursorPolicyMgr.cpp" />
     <ClCompile Include="..\Code\CHitScan.cpp" />
     <ClCompile Include="..\Code\CItemContainer.cpp" />
+    <ClCompile Include="..\Code\CJail.cpp" />
     <ClCompile Include="..\Code\CLaser.cpp" />
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />
     <ClCompile Include="..\Code\CLaserGun.cpp" />
+    <ClCompile Include="..\Code\CLaserPuzzleRoomLayer.cpp" />
     <ClCompile Include="..\Code\CLiminalCube.cpp" />
     <ClCompile Include="..\Code\CLiminalGun.cpp" />
+    <ClCompile Include="..\Code\CLiminalGunUltimateEffect.cpp" />
     <ClCompile Include="..\Code\CLiminalObject.cpp" />
+    <ClCompile Include="..\Code\CLiminalRoomLayer.cpp" />
     <ClCompile Include="..\Code\CLiminalSlope.cpp" />
     <ClCompile Include="..\Code\CMine.cpp" />
     <ClCompile Include="..\Code\CMiniGame.cpp" />
@@ -363,12 +380,18 @@
     <ClCompile Include="..\Code\CFrustumExplodeEffect.cpp" />
     <ClCompile Include="..\Code\CGameMachine.cpp" />
     <ClCompile Include="..\Code\CGameStatus.cpp" />
+    <ClCompile Include="..\Code\CRapidGunUltimateMarker.cpp" />
+    <ClCompile Include="..\Code\CRapidGunUltimateScope.cpp" />
+    <ClCompile Include="..\Code\CRapidGunUltimateTimer.cpp" />
     <ClCompile Include="..\Code\CRayCaster.cpp" />
+    <ClCompile Include="..\Code\CRibbon.cpp" />
+    <ClCompile Include="..\Code\CRibbonBuffer.cpp" />
     <ClCompile Include="..\Code\CSandburst.cpp" />
     <ClCompile Include="..\Code\CSeaweed.cpp" />
     <ClCompile Include="..\Code\CSGBullet.cpp" />
     <ClCompile Include="..\Code\CShockwave.cpp" />
     <ClCompile Include="..\Code\CShotGun.cpp" />
+    <ClCompile Include="..\Code\CShotGunUltimateEffect.cpp" />
     <ClCompile Include="..\Code\CSocket.cpp" />
     <ClCompile Include="..\Code\CSprnub2.cpp" />
     <ClCompile Include="..\Code\CSprnub3.cpp" />
@@ -390,6 +413,7 @@
     <ClCompile Include="..\Code\CLoading.cpp" />
     <ClCompile Include="..\Code\CLogo.cpp" />
     <ClCompile Include="..\Code\CStartScreen.cpp" />
+    <ClCompile Include="..\Code\CIntroScene.cpp" />
     <ClCompile Include="..\Code\CMainApp.cpp" />
     <ClCompile Include="..\Code\CMinimapUI.cpp" />
     <ClCompile Include="..\Code\CAtmosphereVeil.cpp" />
@@ -455,26 +479,18 @@
   <ItemGroup>
     <Image Include="Client.ico" />
     <Image Include="small.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Bin\Resource\Map\DefaultRoom.json" />
-    <None Include="..\Bin\Resource\Map\Room_1_1.json" />
-    <None Include="..\Bin\Resource\Map\Room_1_2.json" />
-    <None Include="..\Bin\Resource\Map\Room_1_3.json" />
-    <None Include="..\Bin\Resource\Map\Room_1_4.json" />
-    <None Include="..\Bin\Resource\Map\Room_2_1.json" />
-    <None Include="..\Bin\Resource\Map\Room_2_2.json" />
-  </ItemGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
-  <ItemGroup>
     <ClInclude Include="..\Header\CPostEffect.h" />
     <ClCompile Include="..\Code\CPostEffect.cpp" />
     <ClInclude Include="..\Header\CUnderwaterEffect.h" />
     <ClCompile Include="..\Code\CUnderwaterEffect.cpp" />
     <ClInclude Include="..\Header\CLavaEffect.h" />
     <ClCompile Include="..\Code\CLavaEffect.cpp" />
+    <ClInclude Include="..\Header\CInvertEffect.h" />
+    <ClInclude Include="..\Header\CGrayscaleEffect.h" />
+    <ClCompile Include="..\Code\CGrayscaleEffect.cpp" />
+    <None Include="..\Bin\Resource\Shader\Grayscale.hlsl" />
+    <ClCompile Include="..\Code\CInvertEffect.cpp" />
+    <None Include="..\Bin\Resource\Shader\Invert.hlsl" />
     <ClInclude Include="..\Header\CShaderEffectMgr.h" />
     <ClCompile Include="..\Code\CShaderEffectMgr.cpp" />
     <None Include="..\Bin\Resource\Shader\Lava.hlsl" />
@@ -482,4 +498,7 @@
     <None Include="..\Bin\Resource\Shader\CameraFilterPack_WaterDrop.png" />
     <None Include="..\Bin\Resource\Shader\CameraFilterPack_RainDrop.png" />
   </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
 </Project>

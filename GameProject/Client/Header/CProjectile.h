@@ -13,6 +13,7 @@ struct TProjectileData
 {
 	float fSpeed = 20.f;
 	float fLifeTime = 1.5f;
+	float fDamage = 1.f;
 };
 
 class CProjectile : public CGameObject
@@ -28,6 +29,8 @@ public:
 	virtual	void Render_GameObject() PURE;
 
 	virtual _uint GetProjectileID() { return m_iID; }
+
+	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
 
 	//261001 재현
 public:

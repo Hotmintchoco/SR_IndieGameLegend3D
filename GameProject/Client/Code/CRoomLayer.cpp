@@ -585,7 +585,7 @@ void CRoomLayer::CheckClearCondition()
 		if (FAILED(Add_GameObject(L"ClearReward", pGameObject))) return;
 		CTransform* pTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"ClearReward", L"Com_Transform"));
 		pTransformCom->Set_Pos(m_vRoomCenterPos.x, m_vRoomCenterPos.y, m_vRoomCenterPos.z);
-
+		CSoundMgr::GetInstance()->PlaySFX(L"Secret.wav");
 	}
 }
 

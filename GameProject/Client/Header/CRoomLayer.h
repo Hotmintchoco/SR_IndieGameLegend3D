@@ -18,7 +18,7 @@ struct TMonsterHandle
 
 class CRoomLayer : public CLayer
 {
-private:
+protected:
 	explicit CRoomLayer(int iRoomIndex);
 	virtual ~CRoomLayer();
 
@@ -66,7 +66,7 @@ public:
 	void AddMonster(CMonster* pMonster);
 	vector<CMonster*> GetMonsterList();
 
-private:
+protected:
 	/* 어둠 스위치 */
 	void SetPseudoDark(bool bFlag);
 	bool m_bDark = false; // 방의 원래 속성
@@ -112,7 +112,7 @@ private:
 public:
 	static CRoomLayer* Create(int iRoomIndex);
 
-private:
+protected:
 	virtual void Free() override;
 };
 

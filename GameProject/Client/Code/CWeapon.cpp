@@ -93,6 +93,17 @@ void CWeapon::SyncTransformToCamera(CCamera* pCamera)
     /* 카메라 위치를 받아 위치값 조정*/
     _matrix matCamera;
     pCamera->GetWorld(&matCamera);
+
+    // 이 카메라에 적용된 흔들림
+    const _vec3& vShake = pCamera->Get_ViewOffset();
+
+    // 화면에서 무기가 흔들리는 정도
+    const _float fWeaponShake = 0.2f;
+
+    matCamera._41 -= vShake.x * fWeaponShake;
+    matCamera._42 -= vShake.y * fWeaponShake;
+    matCamera._43 -= vShake.z * fWeaponShake;
+
     m_pTransformCom->WorldMatrixPropagation(matCamera);
 }
 

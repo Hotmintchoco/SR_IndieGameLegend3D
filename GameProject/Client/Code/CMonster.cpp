@@ -46,7 +46,7 @@ HRESULT CMonster::Ready_GameObject()
     if (CRoomLayer* pRoomLayer = dynamic_cast<CRoomLayer*>(pLayer))
     {
        pRoomLayer->IncreaseEntityCount();
-       pRoomLayer->AddMonster(this);
+       /* 시작 시부터 배치되는 경우는 roomlayer에서 몬스터를 추가함 */
        pRoomLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) {OnRoomEvent(t); });
     }
     /* 스테이지 도중 소환되는 경우 : 씬을 통해 레이어 정보 얻기 */
@@ -127,14 +127,20 @@ void CMonster::Render_GameObject()
 
 void CMonster::OnCollisionEnter(COLLINFO eCollInfo)
 {
-	CCollider* pCollider = eCollInfo.pOtherCollider;
-    
-    if (pCollider && pCollider->Get_CollisionID() == COLL_PROJECTILE)
-    {
-        m_bHitState = true;
-        m_fHitEffectElapsedTime = 0.f;
-        m_iHp -= 1; /* 성철 : Collider ID, 데미지 받는 방식 임시로 바꿔둠 */
-    }
+	// CCollider* pCollider = eCollInfo.pOtherCollider;
+    // 
+    // if (pCollider && pCollider->Get_CollisionID() == COLL_PROJECTILE)
+    // {
+    //     m_bHitState = true;
+    //     m_fHitEffectElapsedTime = 0.f;
+    //     m_iHp -= 1; /* 성철 : Collider ID, 데미지 받는 방식 임시로 바꿔둠 */
+    // }
+    // if (pCollider && pCollider->Get_CollisionID() == COLL_EXPLODE)
+    // {
+    //     m_bHitState = true;
+    //     m_fHitEffectElapsedTime = 0.f;
+    //     m_iHp -= 100; /* 성철 : Collider ID, 데미지 받는 방식 임시로 바꿔둠 */
+    // }
 }
 
 void CMonster::OnCollisionStay(COLLINFO eCollInfo)

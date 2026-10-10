@@ -36,11 +36,11 @@ private:
 
 	unordered_map<int, TBiomeInfo> m_mapBiomeInfo =
 	{
-		{0, {EBiomeType::CYBER, 50}},
-		{1, {EBiomeType::DESERT, 44}},
-		{2, {EBiomeType::AQUA, 51}},
-		{3, {EBiomeType::SNOW, 47}},
-		{4, {EBiomeType::LAVA, 6}},
+		{0, {EBiomeType::CYBER,		50, TBGMTrack{L"CYBER", L"", L"Sector1.wav"}}},
+		{1, {EBiomeType::DESERT,	44, TBGMTrack{L"DESERT", L"", L"Sector4.wav"}}},
+		{2, {EBiomeType::AQUA,		51, TBGMTrack{L"AQUA", L"", L"SectorA.wav"}}},
+		{3, {EBiomeType::SNOW,		47, TBGMTrack{L"SNOW", L"", L"Sector3.wav"}}},
+		{4, {EBiomeType::LAVA,		6,	TBGMTrack{L"LAVA", L"Sector5_intro.wav", L"Sector5_loop.wav"}}},
 	};
 
 private:

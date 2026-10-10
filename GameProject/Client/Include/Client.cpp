@@ -39,9 +39,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // TODO: 여기에 코드를 입력합니다.
 #ifdef _DEBUG
-    AllocConsole();
-    FILE* fp;
-    freopen_s(&fp, "CONOUT$", "w", stdout);
+    // AllocConsole();
+    // FILE* fp;
+    // freopen_s(&fp, "CONOUT$", "w", stdout);
 #endif
 
     // 전역 문자열을 초기화합니다.
@@ -99,6 +99,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             {
                 CTimerMgr::GetInstance()->Set_TimeDelta(L"Timer_FPS60");
                 _float  fTimer_FPS60 = CTimerMgr::GetInstance()->Get_TimeDelta(L"Timer_FPS60");
+
+                CTimerMgr::GetInstance()->Set_FrameDelta(fTimer_FPS60);
                 float fScale = CTimerMgr::GetInstance()->GetGlobalTimeScale();
 
                 pMainApp->Update_MainApp(fScale * fTimer_FPS60);
@@ -117,7 +119,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
 #ifdef _DEBUG
-    FreeConsole();
+    // FreeConsole();
 #endif
 
     return (int) msg.wParam;

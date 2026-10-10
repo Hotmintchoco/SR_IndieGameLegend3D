@@ -190,6 +190,8 @@ void CArrow::Render_GameObject()
 
 void CArrow::OnCollisionEnter(COLLINFO eCollInfo)
 {
+    CProjectile::OnCollisionEnter(eCollInfo);
+
     auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
 
     switch (eCollInfo.iOtherID)

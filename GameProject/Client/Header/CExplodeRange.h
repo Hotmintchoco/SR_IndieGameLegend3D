@@ -13,6 +13,7 @@ class CExplodeRange : public CGameObject
 {
 protected:
 	explicit CExplodeRange(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CExplodeRange(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos);
 	virtual ~CExplodeRange();
 
 public:
@@ -43,8 +44,12 @@ protected:
 	bool m_bDelayedSwitch = false;
 	virtual	void OnCollisionEnter(COLLINFO eCollInfo) override;
 
+	/* 직접 위치 지정 */
+	_vec3 m_vPos{ 0.f, 0.f, 0.f };
+
 public:
 	static CExplodeRange* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CExplodeRange* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos);
 
 private:
 	virtual void		Free();

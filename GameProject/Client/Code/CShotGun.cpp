@@ -9,6 +9,8 @@
 #include "CRandomMgr.h"
 #include "CRenderer.h"
 #include "CWeaponSystem.h"
+#include "CShotGunUltimateEffect.h"
+#include "CStage.h"
 
 CShotGun::CShotGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -43,7 +45,14 @@ _int CShotGun::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    if (m_bOverlay)
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_OVERLAY, this);
+    }
+    else
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    }
 
     UpdateUltimateAttackStatus(fTimeDelta);
 
@@ -83,6 +92,8 @@ void CShotGun::LateUpdate_GameObject(_float fTimeDelta)
 
 void CShotGun::Render_GameObject()
 {
+    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+
     if (m_bSpecialAttackSwitchOn)
     {
         m_pTextureCom->Set_Texture(1);
@@ -92,9 +103,8 @@ void CShotGun::Render_GameObject()
         m_pTextureCom->Set_Texture(0);
     }
 
-    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
     m_pBufferCom->Render_Buffer();
-    
+
     if (m_bOnUltimateAttack)
     {
         m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pUltRenderingTransform->Get_World());
@@ -126,6 +136,12 @@ TWeaponOutput CShotGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
 {
     m_bOnUltimateAttack = true;
     m_fLeftUltimateTime = m_fUltimateTime;
+    CSoundMgr::GetInstance()->PlaySFX(L"Ult_SG.wav");
+    //if (CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene()))
+    //{
+    //    CShotGunUltimateEffect* pEffect = CShotGunUltimateEffect::Create(m_pGraphicDev, pStage->GetPlayer());
+    //    pStage->Get_Layer(L"GameLogic_Layer")->Add_GameObject(L"Effect", pEffect);
+    //}
 
     return { true, EWeaponAnimEvent::ULT_SHOTGUN };
 }

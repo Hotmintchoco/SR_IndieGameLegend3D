@@ -33,8 +33,14 @@
 #include "CSeaweed2.h"
 #include "CWalkerboss.h"
 #include "CGenerator_Airbubble.h"
+#include "CJail.h"
 #include "CGenerator_YellowDust.h"
 #include "CGenerator_Snow.h"
+#include "CRoomLayer.h"
+#include "CLaserPuzzleRoomLayer.h"
+#include "CLiminalRoomLayer.h"
+#include "CMiniGame.h"
+#include "CMiniGame1.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -44,10 +50,12 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::BREAKABLE_FRUSTUM,        [](const TCreateDesc& t) -> Engine::CGameObject* { return CBreakableFrustum::Create(t.pDevice); } },
         {EObjectType::UNBREAKABLE_FRUSTUM,      [](const TCreateDesc& t) -> Engine::CGameObject* { return CUnbreakableFrustum::Create(t.pDevice); } },
         {EObjectType::EXPLOSIVE_FRUSTUM,        [](const TCreateDesc& t) -> Engine::CGameObject* { return CExplosiveFrustum::Create(t.pDevice); } },
-        {EObjectType::GAME_MACHINE,             [](const TCreateDesc& t) -> Engine::CGameObject* { return CGameMachine::Create(t.pDevice); } },
+        {EObjectType::GAME_MACHINE_A,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CGameMachine::Create(t.pDevice, ESceneType::SCENE_MINI_1); } },
+        {EObjectType::GAME_MACHINE_B,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CGameMachine::Create(t.pDevice, ESceneType::SCENE_MINI_0); } },
         {EObjectType::DDOKDDAK,                 [](const TCreateDesc& t) -> Engine::CGameObject* { return CDdokddak::Create(t.pDevice, EDirection::EAST); } },
         {EObjectType::LIMINAL_CUBE,             [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalCube::Create(t.pDevice); } },
         {EObjectType::LIMINAL_SLOPE,            [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalSlope::Create(t.pDevice); } },
+        {EObjectType::JAIL,                     [](const TCreateDesc& t) -> Engine::CGameObject* { return CJail::Create(t.pDevice); } },
 
         {EObjectType::Skull,                    [](const TCreateDesc& t) -> Engine::CGameObject* { return CSkull::Create(t.pDevice); } },
         {EObjectType::Boss1,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CBoss1::Create(t.pDevice); } },
@@ -78,6 +86,18 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::WEAPON_LASERGUN,          [](const TCreateDesc& t) -> Engine::CGameObject* { return CLaserGun::Create(t.pDevice); } },
         {EObjectType::WEAPON_BOW,               [](const TCreateDesc& t) -> Engine::CGameObject* { return CBow::Create(t.pDevice); } },
         {EObjectType::WEAPON_LIMINAL,           [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalGun::Create(t.pDevice); } },
+    };
+
+
+    m_mapRoomCreator = {
+        {ERoomType::ROOM_DEFAULT,           [](const int iIndex) -> CRoomLayer* { return CRoomLayer::Create(iIndex); } },
+        {ERoomType::ROOM_LASER_PUZZLE,      [](const int iIndex) -> CRoomLayer* { return CLaserPuzzleRoomLayer::Create(iIndex); } },
+        {ERoomType::ROOM_LIMINAL,           [](const int iIndex) -> CRoomLayer* { return CLiminalRoomLayer::Create(iIndex); } },
+    };
+
+    m_mapSceneCreator = {
+        {ESceneType::SCENE_MINI_0,          []() -> CScene* { return CMiniGame::Create(CGraphicDev::GetInstance()->Get_GraphicDev()); } },
+        {ESceneType::SCENE_MINI_1,          []() -> CScene* { return CMiniGame1::Create(CGraphicDev::GetInstance()->Get_GraphicDev()); } },
     };
 }
 
@@ -119,7 +139,7 @@ Engine::CGameObject* CAbstractFactory::CreateRandomItem(CGameObject* pSpawner) c
     return pObject;
 }
 
-CWeapon* CAbstractFactory::CraeteWeapon(EObjectType eType) const
+CWeapon* CAbstractFactory::CreateWeapon(EObjectType eType) const
 {
     if ((int)eType <= (int)EObjectType::WEAPON_NONE || (int)eType >= (int)EObjectType::WEAPON_MAX) return nullptr;
 
@@ -133,6 +153,20 @@ CWeapon* CAbstractFactory::CraeteWeapon(EObjectType eType) const
     Engine::CGameObject* pObject = m_mapCreator.at(eType)(t);
 
     return static_cast<CWeapon*>(pObject);
+}
+
+CRoomLayer* CAbstractFactory::CreateRoom(const int iType, const int iIndex) const
+{
+    CRoomLayer* pLayer = m_mapRoomCreator.at((ERoomType)iType)(iIndex);
+
+    return pLayer;
+}
+
+CScene* CAbstractFactory::CreateScene(ESceneType eType) const
+{
+    CScene* pScene = m_mapSceneCreator.at(eType)();
+
+    return pScene;
 }
 
 void CAbstractFactory::Free()

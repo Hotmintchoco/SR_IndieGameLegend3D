@@ -12,6 +12,8 @@ struct FMOD_CHANNELGROUP;
 
 BEGIN(Engine)
 
+enum class EBGMState { None, Intro, Loop };
+
 class ENGINE_DLL CSoundMgr : public CBase
 {
 	DECLARE_SINGLETON(CSoundMgr)
@@ -37,7 +39,7 @@ public:
 public:
 	// 빈 이펙트 채널 자동 할당. 나중에 제어할 필요가 없으면 반환값은 무시해도 된다.
 	SOUND_HANDLE PlaySFX(const wstring& pSoundKey, bool bLoop = false);
-	void PlayBGM(const wstring& pSoundKey);
+	void PlayBGM(const TBGMTrack& tTrack);
 
 	void StopSFX(SOUND_HANDLE hSound);   // 무효 핸들이면 아무 일도 안 함
 	void StopBGM();
@@ -79,6 +81,12 @@ private:
 
 	float m_fBGMVolume = 1.f;
 	float m_fSFXVolume = 1.f;
+
+	/* BGM 상태 저장용 */
+	void CheckBGMLoopCondition();
+	SOUND_HANDLE m_hBGM = INVALID_SOUND;
+	TBGMTrack m_tBGMTrack{};
+	EBGMState m_eBGMState = EBGMState::None;
 
 private:
 	virtual void Free() override;

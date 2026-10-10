@@ -1,11 +1,12 @@
 ﻿#include "pch.h"
 #include "CStartScreen.h"
-#include "CLogo.h"
+#include "CIntroScene.h"
 #include "CManagement.h"
 #include "CProtoMgr.h"
 #include "CCursorPolicyMgr.h"
 #include "CImGuiTool.h"
 #include "CUI.h"
+#include "CSoundMgr.h"
 
 CStartScreen::CStartScreen(LPDIRECT3DDEVICE9 pGraphicDev)
     : CScene(pGraphicDev)
@@ -20,12 +21,23 @@ HRESULT CStartScreen::Ready_Scene()
     if (FAILED(Ready_UI_Layer(L"UI_Layer")))
         return E_FAIL;
 
+    if (FAILED(CSoundMgr::GetInstance()->LoadSound(L"../Bin/Resource/Sound/bgm/")))
+        return E_FAIL;
+
     return S_OK;
 }
 
 void CStartScreen::OnEnter()
 {
     CCursorPolicyMgr::GetInstance()->Set_MenuMode(true);
+
+    Engine::TBGMTrack tTrack{};
+    tTrack.wstrID = L"Title";
+    tTrack.wstrIntro = L"";
+    tTrack.wstrLoop = L"Title.wav";
+
+    CSoundMgr::GetInstance()->PlayBGM(tTrack);
+    CSoundMgr::GetInstance()->SetBGMVolume(0.3f);
 }
 
 void CStartScreen::OnExit()
@@ -39,14 +51,14 @@ _int CStartScreen::Update_Scene(_float fTimeDelta)
         return CScene::Update_Scene(fTimeDelta);
 
     m_bStartRequested = false;
-    CLogo* pLogo = CLogo::Create(m_pGraphicDev);
-    if (!pLogo)
+    CIntroScene* pIntro = CIntroScene::Create(m_pGraphicDev);
+    if (!pIntro)
     {
         m_bStartFailed = true;
         return 0;
     }
 
-    return CManagement::GetInstance()->Change_Scene(0, pLogo, true);
+    return CManagement::GetInstance()->Change_Scene(0, pIntro, true);
 }
 
 void CStartScreen::LateUpdate_Scene(_float fTimeDelta)
@@ -85,7 +97,7 @@ void CStartScreen::Render_Scene()
 
         if (m_bStartFailed)
         {
-            ImGui::TextUnformatted("Loading could not start. Please restart the game.");
+            ImGui::TextUnformatted("Intro could not start. Please restart the game.");
         }
     }
     ImGui::End();

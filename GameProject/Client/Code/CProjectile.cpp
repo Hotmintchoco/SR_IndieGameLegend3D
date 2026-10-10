@@ -5,6 +5,7 @@
 #include "CEffect.h"
 #include "CPlayerCamera.h"
 #include "CClientCameraMgr.h"
+#include "CMonster.h"
 
 _uint CProjectile::g_iProjectileID = 0;
 
@@ -37,6 +38,16 @@ _int CProjectile::Update_GameObject(_float fTimeDelta)
 void CProjectile::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
+}
+
+void CProjectile::OnCollisionEnter(COLLINFO eCollInfo)
+{
+    switch (eCollInfo.iOtherID)
+    {
+    case COLL_MONSTER:
+        static_cast<CMonster*>(eCollInfo.pOtherCollider->Get_Owner())->Set_Damage(m_pData->fDamage);
+        break;
+    }
 }
 
 void CProjectile::Create_Bullet_Trail()

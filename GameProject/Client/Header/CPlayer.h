@@ -41,7 +41,10 @@ public:
 	void RestoreHP(int iAmount);
 
 	/* 입력 관련 */
-	void SetInputEnabled(bool bFlag, float fFixedTime = -1.f);
+	void LockInput(EPlayerInputChannel e);
+	void LockInputFor(EPlayerInputChannel e, float fDuration);
+	void UnlockInput(EPlayerInputChannel e);
+	bool IsInputAllowed(EPlayerInputChannel e);
 
 	/* 가짜 스케일 */
 	void SetPseudoScale(float fScale);
@@ -70,9 +73,10 @@ private:
 	/* 캐릭터 애니메이션 관련 */
 	void OnActionAnimationFinished(const EPlayerActionState& Ctx);
 	CPlayerAnimator* m_pAnimator = nullptr;
-	CPlayerPartTex* m_pBufferCom[PP_END] = { nullptr };
-	CTransform* m_pBufferTransformCom[PP_END] = { nullptr };
+	CPlayerPartTex* m_pBufferCom[TP_END] = { nullptr };
+	CTransform* m_pTPBufferTransformCom[TP_END] = { nullptr };
 	CTransform* m_pVisualRootTransform = nullptr;
+	CTransform* m_pFPBufferTransformCom[FP_END] = { nullptr }; /* 왼팔과 오른팔 */
 	bool m_bInputYawIgnored = false;
 	CTransform* m_pAnimRootTransform = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
@@ -98,8 +102,8 @@ private:
 	float m_fLeftInvincibleTime = 1.f;
 
 	/* 입력 막기 */
-	bool m_bInputEnabled = true;
-	float m_fLeftInputDisabledTime = 0.f;
+	_uint m_iInputLockCount[PIC_END] = {};
+	float m_fInputLockTime[PIC_END] = {};
 
 	/* 무기 */
 	CWeaponSystem* m_pWeaponSystem = nullptr;

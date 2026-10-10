@@ -40,6 +40,7 @@ public:
     void        Skip();
 
 	void        Add_Shot(const CINEMATIC_DESC& tDesc);
+    void        Replace_Shot(const CINEMATIC_DESC& tDesc);
 	void        Set_StartFromCurrent(_bool bStartFromCurrent) { m_bStartFromCurrent = bStartFromCurrent; }
     void        Set_Target(CTransform* pTarget) { m_pTarget = pTarget; }
 

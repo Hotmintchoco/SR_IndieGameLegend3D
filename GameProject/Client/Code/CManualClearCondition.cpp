@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CManualClearCondition.h"
 #include "CRoomLayer.h"
 

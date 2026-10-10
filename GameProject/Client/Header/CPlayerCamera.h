@@ -7,12 +7,6 @@ namespace Engine
     class CTransform;
 }
 
-enum class CAMERA_MODE 
-{ 
-    FIRST_PERSON,
-    THIRD_PERSON 
-};
-
 class CPlayerCamera : public CCamera
 {
 protected:
@@ -45,7 +39,8 @@ public:
 private:
     void            Mouse_Move();
     void            Follow_Target();
-    void UpdateBillBoardInfo();
+    void            UpdateBillBoardInfo();
+    void            Shaking_Action(_float fTimeDelta);
 
     /* 스프링 암 관련 */
     float CalculateSpringArmLength();

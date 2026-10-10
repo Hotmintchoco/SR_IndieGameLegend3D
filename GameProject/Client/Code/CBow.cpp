@@ -12,6 +12,7 @@
 #include "CBombardArrowSpawner.h"
 #include "Client_Enum.h"
 #include "Client_Struct.h"
+#include "CClientCameraMgr.h"
 
 CBow::CBow(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -44,7 +45,14 @@ _int CBow::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CWeapon::Update_GameObject(fTimeDelta);
 
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
+    if (m_bOverlay)
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_OVERLAY, this);
+    }
+    else
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
+    }
 
     if (m_bOnCharging)
     {
@@ -56,6 +64,17 @@ _int CBow::Update_GameObject(_float fTimeDelta)
     else
     {
         m_iRenderIdx = 0;
+    }
+
+    if (!m_bCameraShakeActivated)
+    {
+        m_fTimeAfterUlt += fTimeDelta;
+
+        if (m_fTimeAfterUlt >= m_fUltReachTime)
+        {
+            CClientCameraMgr::GetInstance()->Camera_Shake(2.f, 2.f);
+            m_bCameraShakeActivated = true;
+        }
     }
 
     return iExit;
@@ -71,7 +90,7 @@ void CBow::Render_GameObject()
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
     m_pTextureCom[m_iRenderIdx]->Set_Texture(0);
-    
+
     m_pBufferCom[m_iRenderIdx]->Render_Buffer();
 
     // RenderEditorPanel();
@@ -138,6 +157,9 @@ TWeaponOutput CBow::StartUltimateAttack(EInputState ePri, EInputState eSec)
 {
     CBombardArrowSpawner* pSpawner = CBombardArrowSpawner::Create(m_pGraphicDev);
     if (!pSpawner) return { false, EWeaponAnimEvent::NONE };
+
+    m_bCameraShakeActivated = false;
+    m_fTimeAfterUlt = 0.f;
 
     CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"BombardArrowSpawner", pSpawner);
 

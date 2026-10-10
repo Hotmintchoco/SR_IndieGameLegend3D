@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -48,12 +48,6 @@
     </Filter>
     <Filter Include="02. GameObject\07. Room">
       <UniqueIdentifier>{b9d90846-4426-48a5-9d9f-65b142898dac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Resource">
-      <UniqueIdentifier>{39c1497e-736d-4f33-890a-bf345083759c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Resource\01. Map">
-      <UniqueIdentifier>{e0824a1c-09b7-469b-a0d4-6c5eb5eace80}</UniqueIdentifier>
     </Filter>
     <Filter Include="99. Header">
       <UniqueIdentifier>{1010db34-d77a-4a40-b8f4-2c712aa1dbd3}</UniqueIdentifier>
@@ -316,15 +310,6 @@
     <Filter Include="02. GameObject\08. Combat\00. Weapon\05. Liminal">
       <UniqueIdentifier>{9fd36b58-9936-4820-bcdb-24b265fc4d23}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\Stage\Layer\Interface">
-      <UniqueIdentifier>{65b3c197-e64f-4b58-a0f3-a48b85810a8b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\Stage\Layer\Liminal\Cube">
-      <UniqueIdentifier>{b677509c-03fa-48e6-9e70-3247a12a8f29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\Stage\Layer\Liminal\Slope">
-      <UniqueIdentifier>{b095e27f-ea10-454a-bb4f-fe6ce8e56688}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\06. Effect\Arrow_Effect">
       <UniqueIdentifier>{2c6927cc-9292-403e-91ea-f06959311ff5}</UniqueIdentifier>
     </Filter>
@@ -385,11 +370,32 @@
     <Filter Include="02. GameObject\08. Combat\02. HitScan">
       <UniqueIdentifier>{67889039-9bc9-4c5a-a834-2887b54ddcf0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\04. Ribbon">
+      <UniqueIdentifier>{6bffae3e-c303-467d-8980-c4042f1074df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\01. Projectile\04. Ribbon\RibbonBuffer">
+      <UniqueIdentifier>{8c82dd45-b5a4-4013-b419-96bec90d9224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Jail">
+      <UniqueIdentifier>{d5b9a43e-9e4b-4d02-86a7-9031fe4cd903}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\06. Effect\AirBubble">
       <UniqueIdentifier>{98141dfd-119a-44d6-9b8b-23f378e20ec7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Generator_MapEffect">
       <UniqueIdentifier>{27fb29b9-5faa-4bc5-82eb-30c9ec125b0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\03. Resource">
+      <UniqueIdentifier>{ae427c38-a859-4279-8685-91da39e909c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\03. Resource\00. SGUlt">
+      <UniqueIdentifier>{529f7bf2-6bc8-4aad-8503-3b5315d6ea94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\03. Resource\01. RapidUlt">
+      <UniqueIdentifier>{2e2bc0eb-bf31-4ccf-a13d-4a112d810898}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Combat\03. Resource\02. LiminalUlt">
+      <UniqueIdentifier>{c6eb1faf-de14-4b12-bd9e-2c178d8fe734}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\02. Monster\Worm\WormBullet">
       <UniqueIdentifier>{ce9c4643-760b-4ae1-bd0a-2b4319bacad7}</UniqueIdentifier>
@@ -414,6 +420,24 @@
     </Filter>
     <Filter Include="02. GameObject\02. Monster\Walkerboss\WalkerBullet">
       <UniqueIdentifier>{533960a4-a72d-40a4-8c95-cf05073716c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. Logic\02. CameraHelper">
+      <UniqueIdentifier>{0b4c689d-2ae5-49fc-ad89-0174ef660c29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Object">
+      <UniqueIdentifier>{5f440232-c50a-4ac9-92d9-b10986e379e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Object\Cube">
+      <UniqueIdentifier>{b677509c-03fa-48e6-9e70-3247a12a8f29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Object\Slope">
+      <UniqueIdentifier>{b095e27f-ea10-454a-bb4f-fe6ce8e56688}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Interface">
+      <UniqueIdentifier>{65b3c197-e64f-4b58-a0f3-a48b85810a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\LaserPuzzle">
+      <UniqueIdentifier>{612b5a6b-a31a-4f5b-8b1d-843120f0366d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -753,20 +777,17 @@
     <ClInclude Include="..\Header\CBombardArrowSpawner.h">
       <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CLiminalObject.h">
-      <Filter>01. Scene\Stage\Layer\Liminal</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CLiminalGun.h">
       <Filter>02. GameObject\08. Combat\00. Weapon\05. Liminal</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\ITerrain.h">
-      <Filter>01. Scene\Stage\Layer\Interface</Filter>
+      <Filter>01. Scene\Stage\Layer\Liminal\Interface</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLiminalCube.h">
-      <Filter>01. Scene\Stage\Layer\Liminal\Cube</Filter>
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Cube</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLiminalSlope.h">
-      <Filter>01. Scene\Stage\Layer\Liminal\Slope</Filter>
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Slope</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CArrow_Effect.h">
       <Filter>02. GameObject\06. Effect\Arrow_Effect</Filter>
@@ -791,6 +812,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CMiniGame1.h">
       <Filter>01. Scene\MiniGame_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CIntroScene.h">
+      <Filter>01. Scene\Intro</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CStartScreen.h">
       <Filter>01. Scene\Start</Filter>
@@ -819,6 +843,15 @@
     <ClInclude Include="..\Header\CHitScan.h">
       <Filter>02. GameObject\08. Combat\02. HitScan</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CRibbonBuffer.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\04. Ribbon\RibbonBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRibbon.h">
+      <Filter>02. GameObject\08. Combat\01. Projectile\04. Ribbon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CJail.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Jail</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CAirbubble.h">
       <Filter>02. GameObject\06. Effect\AirBubble</Filter>
     </ClInclude>
@@ -830,6 +863,21 @@
     </ClInclude>
     <ClInclude Include="..\Header\CGenerator_YellowDust.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CShotGunUltimateEffect.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\00. SGUlt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRapidGunUltimateTimer.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRapidGunUltimateScope.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRapidGunUltimateMarker.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalGunUltimateEffect.h">
+      <Filter>02. GameObject\08. Combat\03. Resource\02. LiminalUlt</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CWormBullet.h">
       <Filter>02. GameObject\02. Monster\Worm\WormBullet</Filter>
@@ -854,6 +902,18 @@
     </ClInclude>
     <ClInclude Include="..\Header\CWalkerBullet.h">
       <Filter>02. GameObject\02. Monster\Walkerboss\WalkerBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCameraHelper.h">
+      <Filter>02. GameObject\12. Logic\02. CameraHelper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalObject.h">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalRoomLayer.h">
+      <Filter>01. Scene\Stage\Layer\Liminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLaserPuzzleRoomLayer.h">
+      <Filter>01. Scene\Stage\Layer\LaserPuzzle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1163,20 +1223,17 @@
     <ClCompile Include="..\Code\CBombardArrowSpawner.cpp">
       <Filter>02. GameObject\08. Combat\01. Projectile\03. Arrow</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CLiminalObject.cpp">
-      <Filter>01. Scene\Stage\Layer\Liminal</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CLiminalGun.cpp">
       <Filter>02. GameObject\08. Combat\00. Weapon\05. Liminal</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ITerrain.cpp">
-      <Filter>01. Scene\Stage\Layer\Interface</Filter>
+      <Filter>01. Scene\Stage\Layer\Liminal\Interface</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLiminalCube.cpp">
-      <Filter>01. Scene\Stage\Layer\Liminal\Cube</Filter>
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Cube</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLiminalSlope.cpp">
-      <Filter>01. Scene\Stage\Layer\Liminal\Slope</Filter>
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Slope</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CArrow_Effect.cpp">
       <Filter>02. GameObject\06. Effect\Arrow_Effect</Filter>
@@ -1201,6 +1258,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMiniGame1.cpp">
       <Filter>01. Scene\MiniGame_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CIntroScene.cpp">
+      <Filter>01. Scene\Intro</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CStartScreen.cpp">
       <Filter>01. Scene\Start</Filter>
@@ -1229,6 +1289,15 @@
     <ClCompile Include="..\Code\CHitScan.cpp">
       <Filter>02. GameObject\08. Combat\02. HitScan</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CRibbonBuffer.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\04. Ribbon\RibbonBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRibbon.cpp">
+      <Filter>02. GameObject\08. Combat\01. Projectile\04. Ribbon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CJail.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Jail</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CAirbubble.cpp">
       <Filter>02. GameObject\06. Effect\AirBubble</Filter>
     </ClCompile>
@@ -1240,6 +1309,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGenerator_YellowDust.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Generator_MapEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CShotGunUltimateEffect.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\00. SGUlt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRapidGunUltimateTimer.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRapidGunUltimateScope.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRapidGunUltimateMarker.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\01. RapidUlt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalGunUltimateEffect.cpp">
+      <Filter>02. GameObject\08. Combat\03. Resource\02. LiminalUlt</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CWormBullet.cpp">
       <Filter>02. GameObject\02. Monster\Worm\WormBullet</Filter>
@@ -1268,6 +1352,18 @@
     <ClCompile Include="..\Code\CWalkerBullet.cpp">
       <Filter>02. GameObject\02. Monster\Walkerboss\WalkerBullet</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CCameraHelper.cpp">
+      <Filter>02. GameObject\12. Logic\02. CameraHelper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalObject.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalRoomLayer.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLaserPuzzleRoomLayer.cpp">
+      <Filter>01. Scene\Stage\Layer\LaserPuzzle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -1283,31 +1379,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Bin\Resource\Map\DefaultRoom.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_1_1.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_1_2.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_1_3.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_1_4.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_2_1.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Map\Room_2_2.json">
-      <Filter>03. Resource\01. Map</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="05. Shader" />
-    <Filter Include="03. Resource\02. Shader" />
     <ClInclude Include="..\Header\CPostEffect.h">
       <Filter>05. Shader</Filter>
     </ClInclude>
@@ -1320,6 +1392,24 @@
     <ClCompile Include="..\Code\CUnderwaterEffect.cpp">
       <Filter>05. Shader</Filter>
     </ClCompile>
+    <ClInclude Include="..\Header\CInvertEffect.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGrayscaleEffect.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CGrayscaleEffect.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <None Include="..\Bin\Resource\Shader\Grayscale.hlsl">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
+    <ClCompile Include="..\Code\CInvertEffect.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <None Include="..\Bin\Resource\Shader\Invert.hlsl">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
     <ClInclude Include="..\Header\CLavaEffect.h">
       <Filter>05. Shader</Filter>
     </ClInclude>
@@ -1332,17 +1422,15 @@
     <ClCompile Include="..\Code\CShaderEffectMgr.cpp">
       <Filter>05. Shader</Filter>
     </ClCompile>
-    <None Include="..\Bin\Resource\Shader\Lava.hlsl">
-      <Filter>03. Resource\02. Shader</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Shader\WaterDrop.hlsl">
-      <Filter>03. Resource\02. Shader</Filter>
-    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\Resource\Shader\Lava.hlsl" />
+    <None Include="..\Bin\Resource\Shader\WaterDrop.hlsl" />
     <None Include="..\Bin\Resource\Shader\CameraFilterPack_WaterDrop.png">
-      <Filter>03. Resource\02. Shader</Filter>
+      <Filter>리소스 파일</Filter>
     </None>
     <None Include="..\Bin\Resource\Shader\CameraFilterPack_RainDrop.png">
-      <Filter>03. Resource\02. Shader</Filter>
+      <Filter>리소스 파일</Filter>
     </None>
   </ItemGroup>
 </Project>

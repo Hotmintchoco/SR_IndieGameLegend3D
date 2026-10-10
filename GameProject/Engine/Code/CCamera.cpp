@@ -89,7 +89,10 @@ void CCamera::Update_LookFromAngles()
 
 void CCamera::Update_Matrices()
 {
-	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
+	const _vec3 vRenderEye = m_vEye + m_vViewOffset;
+	const _vec3 vRenderAt = m_vAt + m_vViewOffset;
+
+	D3DXMatrixLookAtLH(&m_matView, &vRenderEye, &vRenderAt, &m_vUp);
 	D3DXMatrixPerspectiveFovLH(&m_matProj, m_fFov, m_fAspect, m_fNear, m_fFar);
 }
 

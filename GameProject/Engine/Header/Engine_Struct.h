@@ -3,6 +3,7 @@
 
 #include "Engine_Typedef.h"
 #include "Engine_Enum.h"
+#include <string>
 
 namespace Engine
 {
@@ -71,6 +72,13 @@ namespace Engine
 		std::array<_vec3, 3> vTriVtx = { _vec3{0.f, 0.f, 0.f}, _vec3{0.f, 0.f, 0.f}, _vec3{0.f, 0.f, 0.f} };
 		_vec3 fHitPoint{ 0.f, 0.f, 0.f };
 		_vec3 fTriNormal{ 0.f, 0.f, 0.f };
+	};
+
+	struct TBGMTrack
+	{
+		std::wstring wstrID;
+		std::wstring wstrIntro;
+		std::wstring wstrLoop;
 	};
 }
 

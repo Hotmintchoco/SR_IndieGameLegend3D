@@ -34,6 +34,7 @@ void CRenderer::Render(LPDIRECT3DDEVICE9& pGraphicDev)
 	Render_Collider(pGraphicDev);
 	Render_DebugTriangle(pGraphicDev);
 
+	Render_Overlay(pGraphicDev);
 	Render_UI(pGraphicDev);
 
 	Render_DebugScreen(pGraphicDev);
@@ -186,6 +187,43 @@ void CRenderer::Render_AlphaTest(LPDIRECT3DDEVICE9& pGraphicDev)
 	}
 
 	for (auto& pObj : m_RenderGroup[RENDER_ALPHATEST])
+		pObj->Render(pGraphicDev);
+
+	if (bWire)
+	{
+		End_WireFrame(pGraphicDev, tOld);
+	}
+	else
+	{
+		pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+		pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x00);
+	}
+}
+
+void CRenderer::Render_Overlay(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+	if (CDebugMgr::GetInstance()->GetMeshMode() == MESHRENDERMODE::MESH_NONE) return;
+
+	pGraphicDev->Clear(0, nullptr, D3DCLEAR_ZBUFFER, 0, 1.f, 0);
+
+	_bool bWire = (CDebugMgr::GetInstance()->GetMeshMode() == MESHRENDERMODE::MESH_WIREFRAME);
+
+	PIPELINESTATE tOld;
+	if (bWire)
+	{
+		Begin_WireFrame(pGraphicDev, tOld, D3DCOLOR_XRGB(200, 200, 200));
+	}
+	else
+	{
+		pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+		pGraphicDev->SetRenderState(D3DRS_ZENABLE, TRUE);
+		pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+		pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+		pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+		pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x80);
+	}
+
+	for (auto& pObj : m_RenderGroup[RENDER_OVERLAY])
 		pObj->Render(pGraphicDev);
 
 	if (bWire)
@@ -352,7 +390,7 @@ void CRenderer::Add_DebugScreenRect(const _vec2& vCenter, _float fHalf, D3DCOLOR
 	Add_DebugScreenLine(lb, lt, dwColor);
 }
 
-void CRenderer::Add_DebugWorldMarker(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vWorldPos, _float fSize, D3DCOLOR dwColor)
+bool CRenderer::World_To_Screen(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vWorldPos, _vec2& vOutScreen)
 {
 	_matrix matView, matProj;
 	pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
@@ -361,16 +399,28 @@ void CRenderer::Add_DebugWorldMarker(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3&
 	D3DVIEWPORT9 vp;
 	pGraphicDev->GetViewport(&vp);
 
-	_vec4 vClip;
 	_matrix matVP = matView * matProj;
-	_vec4 vXYZW(vWorldPos, 1.f);
+	_vec4 vClip, vXYZW(vWorldPos, 1.f);
 	D3DXVec4Transform(&vClip, &vXYZW, &matVP);
-	if (vClip.w <= 0.f) return;   // 카메라 뒤
+	if (vClip.w <= 0.f) return false;   // 카메라 뒤
 
-	_float fX = (vClip.x / vClip.w + 1.f) * 0.5f * vp.Width + vp.X;
-	_float fY = (1.f - vClip.y / vClip.w) * 0.5f * vp.Height + vp.Y;
+	vOutScreen.x = (vClip.x / vClip.w + 1.f) * 0.5f * vp.Width + vp.X;
+	vOutScreen.y = (1.f - vClip.y / vClip.w) * 0.5f * vp.Height + vp.Y;
+	return true;
+}
 
-	Add_DebugScreenCross({ fX, fY }, fSize, dwColor);
+void CRenderer::Add_DebugWorldMarker(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vWorldPos, _float fSize, D3DCOLOR dwColor)
+{
+	_vec2 vScreen;
+	if (World_To_Screen(pGraphicDev, vWorldPos, vScreen))
+		Add_DebugScreenCross(vScreen, fSize, dwColor);
+}
+
+void CRenderer::Add_DebugWorldRect(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vWorldPos, _float fHalfPixel, D3DCOLOR dwColor)
+{
+	_vec2 vScreen;
+	if (World_To_Screen(pGraphicDev, vWorldPos, vScreen))
+		Add_DebugScreenRect(vScreen, fHalfPixel, dwColor);
 }
 
 void CRenderer::Free()

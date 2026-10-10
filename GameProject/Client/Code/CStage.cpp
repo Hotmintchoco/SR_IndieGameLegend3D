@@ -15,6 +15,7 @@
 #include "CSkyBox.h"
 
 /* 방 레이어*/
+#include "CAbstractFactory.h"
 #include "CRoomLoadingMgr.h"
 #include "CRoomLayer.h"
 #include "CLayerContext.h"
@@ -88,61 +89,41 @@ HRESULT CStage::Ready_Scene()
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PLAYER, COLL_ITEM);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODE, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODE, COLL_PLAYER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_EXPLODE, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MONSTER, COLL_OBSTACLE);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MONSTER, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_MBULLET, COLL_PLAYER);
 
 	/* 방 로직 */
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_ROOMLOGIC, COLL_PLAYER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_DYNAMICOBJECT, COLL_PLAYER);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_DYNAMICOBJECT, COLL_OBSTACLE);
 
 	/* 투사체와의 충돌 */
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PROJECTILE, COLL_MONSTER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PROJECTILE, COLL_OBSTACLE);
 
-	CSoundMgr::GetInstance()->PlayBGM(L"Sector1.wav");
-	CSoundMgr::GetInstance()->SetBGMVolume(0.f);
-	CSoundMgr::GetInstance()->SetSFXVolume(0.f);
+	int iBiome = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iStartRoomIndex)->iBiome;
+	TBGMTrack tTrack = CRoomLoadingMgr::GetInstance()->GetBiomeInfo(iBiome).tBGMTrack;
+	CSoundMgr::GetInstance()->PlayBGM(tTrack);
+	CSoundMgr::GetInstance()->SetBGMVolume(0.2f);
+	CSoundMgr::GetInstance()->SetSFXVolume(0.5f);
 
 	return S_OK;
 }
 
 _int CStage::Update_Scene(_float fTimeDelta)
 {
+	if (m_iWarpRequest >= 0)
+	{
+		WarpToRoom(m_iWarpRequest);
+		m_iWarpRequest = -1;
+	}
+
 	CClientCameraMgr::GetInstance()->Update_Camera(fTimeDelta);
 	_int iExit = CScene::Update_Scene(fTimeDelta);
 
 	CUIMgr::GetInstance()->Update_UI();
-
-	// Scene Change
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
-	{
-		CScene* pMiniGame = CMiniGame::Create(m_pGraphicDev);
-		if (nullptr == pMiniGame)
-			return E_FAIL;
-
-		if (FAILED(CManagement::GetInstance()->Change_Scene(1, pMiniGame)))
-		{
-			Safe_Release(pMiniGame);
-			MSG_BOX("MiniGame Create Failed");
-			return -1;
-		}
-		pMiniGame->Update_Scene(fTimeDelta);
-	}
-
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_F3))
-	{
-		CScene* pMiniGame = CMiniGame1::Create(m_pGraphicDev);
-		if (nullptr == pMiniGame)
-			return E_FAIL;
-
-		if (FAILED(CManagement::GetInstance()->Change_Scene(1, pMiniGame)))
-		{
-			Safe_Release(pMiniGame);
-			MSG_BOX("MiniGame Create Failed");
-			return -1;
-		}
-		pMiniGame->Update_Scene(fTimeDelta);
-	}
 
 	if (m_bOnPlayerDead)
 	{
@@ -287,6 +268,20 @@ CRoomLayer* CStage::GetRoomLayerFromIndex(int iIndex)
 	}
 }
 
+void CStage::WarpToRoom(int iRoomIdx)
+{
+	if (iRoomIdx < 0 || iRoomIdx >= 25 || !m_pPlayer) return;
+
+	const int iRoomCnt = CRoomLoadingMgr::GetInstance()->GetRoomTotalCount();
+	if (iRoomIdx < 0 || iRoomIdx >= iRoomCnt || !m_pPlayer) return;
+	if (m_bOnPlayerDead) return;
+
+	const _vec3 vPos = GetRoomLayerFromIndex(iRoomIdx)->GetCenterPos();
+	m_pPlayer->GetTransform()->Set_Pos(vPos);
+
+	UpdatePlayerPosition(vPos);
+}
+
 HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
 	CLayer* pLayer = CLayer::Create();
@@ -376,7 +371,8 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 HRESULT CStage::Ready_Room_Layer(const wstring& wstrLayerTag, int iRoomIdx)
 {
-	CLayer* pLayer = CRoomLayer::Create(iRoomIdx);
+	int iType = CRoomLoadingMgr::GetInstance()->GetRoomData(iRoomIdx)->iSpecial;
+	CLayer* pLayer = CAbstractFactory::GetInstance()->CreateRoom(iType, iRoomIdx);
 	if (nullptr == pLayer)
 		return E_FAIL;
 
@@ -659,6 +655,10 @@ void CStage::CheckRoomChanged()
 
 			if (pRoom->bBossRoom)
 				CUIMgr::GetInstance()->EnterBossScreen();
+
+			int iBiome = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iCurrentRoomIndex)->iBiome;
+			TBGMTrack tTrack = CRoomLoadingMgr::GetInstance()->GetBiomeInfo(iBiome).tBGMTrack;
+			CSoundMgr::GetInstance()->PlayBGM(tTrack);
 		}
 	}
 }
@@ -679,7 +679,12 @@ int CStage::CalculateRoomIndexFromPlayerPosition()
 	const int iCol = (int)floorf((fLocalX + fHalfGridX) / vRoomSize.x);
 	const int iRow = (int)floorf((fHalfGridZ - fLocalZ) / vRoomSize.z);
 
-	if (0 > iCol || iCol >= iColCount || 0 > iRow || iRow >= iRowCount) return -1;
+	if (0 > iCol || iCol >= iColCount || 0 > iRow || iRow >= iRowCount)
+	{
+#include "CDebugPrint.h"
+		cout << m_vPlayerPos << endl;
+		return -1;
+	}
 
 	return iRow * iColCount + iCol;
 }

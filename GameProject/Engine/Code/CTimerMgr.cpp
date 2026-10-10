@@ -6,6 +6,7 @@ IMPLEMENT_SINGLETON(CTimerMgr)
 
 CTimerMgr::CTimerMgr()
 {
+	ClearAllGroupTimeScale();
 }
 
 CTimerMgr::~CTimerMgr()
@@ -33,26 +34,37 @@ void CTimerMgr::Set_TimeDelta(const _tchar* pTimerTag)
 	pTimer->Update_Timer();
 }
 
-void CTimerMgr::ResetGroupTimeScale()
-{
-	for (int i = 0; i < TG_END; ++i)
-	{
-		m_fGroupTimeScale[i] = 1.f;
-	}
-}
-
-void CTimerMgr::SetGroupTimeScale(TIME_GROUP eGroup, float fScale)
+void CTimerMgr::ClearGroupTimeScale(int eGroup)
 {
 	if (eGroup <= TG_NONE || eGroup >= TG_END) return;
+	m_fGroupTimeScale[eGroup] = -1.f;
+}
 
+float CTimerMgr::GetGroupTimeDelta(int eGroup)
+{
+	return m_fFrameDelta * GetGroupTimeScale(eGroup);
+}
+
+void CTimerMgr::SetGroupTimeScale(int eGroup, float fScale)
+{
+	if (eGroup <= TG_NONE || eGroup >= TG_END) return;
 	m_fGroupTimeScale[eGroup] = fScale;
 }
 
-float CTimerMgr::GetGroupTimeScale(TIME_GROUP eGroup)
+float CTimerMgr::GetGroupTimeScale(int eGroup)
 {
-	if (eGroup <= TG_NONE || eGroup >= TG_END) return 1.f;
+	if (eGroup <= TG_NONE || eGroup >= TG_END) return m_fGlobalTimeScale;
 
-	return m_fGroupTimeScale[eGroup];
+	float fScale = m_fGroupTimeScale[eGroup];
+	return (fScale < 0.f) ? m_fGlobalTimeScale : fScale;
+}
+
+void CTimerMgr::ClearAllGroupTimeScale()
+{
+	for (int i = 0; i < TG_END; ++i)
+	{
+		m_fGroupTimeScale[i] = -1.f;
+	}
 }
 
 HRESULT CTimerMgr::Ready_Timer(const _tchar* pTimerTag)

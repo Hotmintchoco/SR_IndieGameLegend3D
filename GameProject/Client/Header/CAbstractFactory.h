@@ -6,6 +6,7 @@
 namespace Engine
 {
 	class CGameObject;
+	class CScene;
 }
 
 struct TCreateDesc
@@ -15,6 +16,7 @@ struct TCreateDesc
 };
 
 class CWeapon;
+class CRoomLayer;
 
 class CAbstractFactory : public CBase
 {
@@ -31,11 +33,19 @@ public:
 	Engine::CGameObject* CreateRandomItem(CGameObject* pSpawner) const;
 
 	/* Weapon */
-	CWeapon* CraeteWeapon(EObjectType eType) const;
+	CWeapon* CreateWeapon(EObjectType eType) const;
+
+	/* Room Layer */
+	CRoomLayer* CreateRoom(int iType, const int iIndex) const;
+
+	/* MiniGame */
+	CScene* CreateScene(ESceneType eType) const;
 
 private:
 	virtual void Free();
 
 	unordered_map<EObjectType, Engine::CGameObject*(*)(const TCreateDesc&)> m_mapCreator;
+	unordered_map<ERoomType, CRoomLayer*(*)(const int iIndex)> m_mapRoomCreator;
+	unordered_map<ESceneType, CScene*(*)()> m_mapSceneCreator;
 };
 
