@@ -87,6 +87,7 @@ void CSprnub1::OnCollisionEnter(COLLINFO eCollInfo)
 
 void CSprnub1::Check_Hp(_float& fTimedelta)
 {
+    Check_InRoom();
     if (m_iHp <= 0)
     {
         m_bDelete = true;

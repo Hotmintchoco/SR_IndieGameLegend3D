@@ -429,6 +429,21 @@ void CMonster::Set_RoomCenterLocation()
     }
 }
 
+void CMonster::Check_InRoom()
+{
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    if (fabsf(vPos.x - GetCenterX(vPos.x)) > 6.5f)
+    {
+        Set_Damage(Get_Hp());
+        return;
+    }
+    if (fabsf(vPos.z - GetCenterZ(vPos.z)) > 5.5f)
+    {
+        Set_Damage(Get_Hp());
+        return;
+    }
+}
+
 CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
     CMonster* pMonster = new CMonster(pGraphicDev);

@@ -41,7 +41,7 @@ HRESULT CMagmamouth::Ready_GameObject()
 
     m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
     _vec3 vScale = m_pTransformCom->Get_Scale();
-    m_pColliderCom->Set_Radius(vScale.x + 0.2f);
+    m_pColliderCom->Set_Radius(vScale.x+0.2f);
 
     m_fTrailDuration = 0.125f;
 

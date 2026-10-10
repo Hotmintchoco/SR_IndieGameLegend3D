@@ -87,6 +87,7 @@ void CCryder::OnCollisionEnter(COLLINFO eCollInfo)
 
 void CCryder::Check_Hp(_float& fTimedelta)
 {
+    Check_InRoom();
     if (m_iHp <= 0)
     {
         m_bDelete = true;

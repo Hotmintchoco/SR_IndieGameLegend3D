@@ -106,6 +106,7 @@ public:
 		return 60.f + 13.f * floorf((z - 60.f + 6.5f) / 13.f);
 	}
 	virtual void Set_RoomCenterLocation();
+	void Check_InRoom();
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
