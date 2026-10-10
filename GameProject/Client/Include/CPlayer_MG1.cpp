@@ -211,18 +211,27 @@ void CPlayer_MG1::Check_Connection()
     //CTransform* pBoxTransformCom2 = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC,
     //    L"GameLogic_Layer", L"Box1", L"Com_Transform"));
 
-    //vPos2가 높음
+    //vPos2가 높도록 설정
     _vec3 vPos1, vPos2;
     pBoxTransformCom1->Get_Info(INFO_POS, &vPos1);
     pBoxTransformCom2->Get_Info(INFO_POS, &vPos2);
 
+    if (vPos1.y > vPos2.y)
+    {
+        _vec3 temp = vPos1;
+        vPos1 = vPos2;
+        vPos2 = temp;
+    }
     
-    _matrix matView;
-    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
-    _vec3 vLook = { matView._13, matView._23, matView._33 };
-    _vec3 vCameraPos = { matView._14, matView._24, matView._34 };
+    _matrix matView, matCameraWorld;
 
-    D3DXVec3Normalize(&vLook, &vLook);
+    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+    D3DXMatrixInverse(&matCameraWorld, nullptr, &matView);
+
+    //_vec3 vLook = { matView._13, matView._23, matView._33 };
+    _vec3 vCameraPos = { matCameraWorld._41, matCameraWorld._42, matCameraWorld._43 };
+
+    //D3DXVec3Normalize(&vLook, &vLook);
 
     _vec3 vDir = vCameraPos - vPos1;
     vDir.x /= vDir.y;
@@ -230,10 +239,8 @@ void CPlayer_MG1::Check_Connection()
     vDir.z /= vDir.y;
 
 
+    vDir *= (vPos2.y - vPos1.y);
 
-    vDir *= 0.5f;
-
-    vDir.y == 0.5f;
     vPos1 += vDir;
 
     _vec3 vDist = vPos2 - vPos1;
@@ -241,7 +248,10 @@ void CPlayer_MG1::Check_Connection()
     {
         m_bConnection = true;
     }*/
-    if (0.9f < D3DXVec3Length(&vDist) && D3DXVec3Length(&vDist) < 1.1f)
+    _float fDist2 = 1.f;
+    _float fDist = D3DXVec3Length(&vDist);
+    m_fDist = fDist;
+    if (fDist2 - 0.01f < fDist && fDist < fDist2 + 0.01f)
     {
         m_bConnection = true;
     }

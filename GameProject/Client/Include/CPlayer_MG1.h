@@ -68,7 +68,10 @@ private:
 	CBox_MG1* m_pBox1 = nullptr;
 	CBox_MG1* m_pBox2 = nullptr;
 
-
+	//디버그
+public:
+	_float Dist() { return m_fDist; }
+	_float m_fDist = 0,f;
 
 
 	/* 카메라 뷰 */

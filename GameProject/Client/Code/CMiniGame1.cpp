@@ -177,7 +177,7 @@ void CMiniGame1::RenderImGui()
         _vec3 vAngle = pPlayerTransformCom->Get_Angle();
         ImGui::Text("Pos : %.2f, %.2f, %.2f", vPos.x, vPos.y, vPos.z);
         ImGui::Text("Pitch : %.2f, Raw %.2f", vAngle.x, vAngle.y);
-        ImGui::Text("Connection : %d", pPlayer->Is_Connection());
+        ImGui::Text("Connection : %d, Dist : %.4f", pPlayer->Is_Connection(), pPlayer->Dist());
 
     }        
 
