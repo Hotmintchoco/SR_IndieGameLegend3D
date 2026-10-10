@@ -22,6 +22,7 @@
 #include "CCursorPolicyMgr.h"
 #include "CRenderer.h"
 #include "CUnderwaterEffect.h"
+#include "CIntroScene.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -55,17 +56,24 @@ int CMainApp::Update_MainApp(_float fTimeDelta)
 	CDInputMgr::GetInstance()->Update_InputDev();
 
 	// 정민 : 쉐이더 왜곡 효과 테스트용
+	auto* pEffects = CShaderEffectMgr::GetInstance();
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_F6))
 	{
-		auto* pEffects = CShaderEffectMgr::GetInstance();
         pEffects->Set_PostEffect(pEffects->Get_PostEffectType() == POST_EFFECT::NONE
             ? POST_EFFECT::UNDERWATER : POST_EFFECT::NONE);
-        auto* pWater = static_cast<CUnderwaterEffect*>(pEffects->Get_PostEffect(POST_EFFECT::UNDERWATER));
-		// 기존 4x4 확대/축소, 움직임 속도
-		if (pWater) pWater->Set_PulseParameters(0.14f, 2.5f);
-		// 물방울 굴절 강도, 움직임 속도
-		if (pWater) pWater->Set_WaterDropParameters(0.06f, 1.f);
 	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F7))
+	{
+		pEffects->Set_PostEffect(pEffects->Get_PostEffectType() == POST_EFFECT::NONE
+			? POST_EFFECT::LAVA : POST_EFFECT::NONE);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F8))
+	{
+		pEffects->Set_PostEffect(pEffects->Get_PostEffectType() == POST_EFFECT::NONE
+			? POST_EFFECT::INVERT : POST_EFFECT::NONE);
+	}
+
+
 	CShaderEffectMgr::GetInstance()->Update_PostEffect(fTimeDelta);
 	CCursorPolicyMgr::GetInstance()->Update();
 
@@ -86,7 +94,9 @@ void CMainApp::Render_MainApp()
 	// Capture before Render_Begin so its clear also clears the offscreen target.
 	const bool bPostEffect = dynamic_cast<CStage*>(m_pManagementClass->GetCurrentScene()) &&
 		CShaderEffectMgr::GetInstance()->Begin_PostEffect(m_pGraphicDev);
-	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
+    const bool bIntro = dynamic_cast<CIntroScene*>(m_pManagementClass->GetCurrentScene()) != nullptr;
+    m_pDeviceClass->Render_Begin(bIntro ? D3DXCOLOR(0.f, 0.f, 0.f, 1.f)
+                                     : D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
 
 	CImGuiTool::BeginFrame();
 
@@ -113,20 +123,24 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 
 	(*ppGraphicDev) = m_pDeviceClass->Get_GraphicDev();
 
-	// 폰트 추가
-    // Common components are needed by the start screen before loading begins.
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(
-        L"Proto_RcTex", Engine::CRcTex::Create(m_pGraphicDev))))
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTex", Engine::CRcTex::Create(m_pGraphicDev))))
         return E_FAIL;
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(
-        L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
         return E_FAIL;
 
+	// 폰트 추가
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"바탕", 20, 20, FW_HEAVY)))
 		return E_FAIL;
 
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Jinji", L"궁서", 15, 15, FW_THIN)))
 		return E_FAIL;
+
+	// 새로운 폰트(L"Neo둥근모") 추가
+	if (AddFontResourceExW(L"../Bin/Resource/Font/neodgm.ttf", FR_PRIVATE, nullptr) == 0)
+		return E_FAIL;
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Dialogue", L"Neo둥근모", 0, 32, FW_NORMAL)))
+		return E_FAIL;
+
 
 	(*ppGraphicDev)->SetRenderState(D3DRS_LIGHTING, FALSE);
 

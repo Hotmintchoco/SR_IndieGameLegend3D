@@ -792,6 +792,9 @@
     <ClInclude Include="..\Header\CMiniGame1.h">
       <Filter>01. Scene\MiniGame_1</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CIntroScene.h">
+      <Filter>01. Scene\Intro</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CStartScreen.h">
       <Filter>01. Scene\Start</Filter>
     </ClInclude>
@@ -1214,6 +1217,9 @@
     <ClCompile Include="..\Code\CMiniGame1.cpp">
       <Filter>01. Scene\MiniGame_1</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CIntroScene.cpp">
+      <Filter>01. Scene\Intro</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CStartScreen.cpp">
       <Filter>01. Scene\Start</Filter>
     </ClCompile>
@@ -1323,6 +1329,15 @@
     <ClCompile Include="..\Code\CUnderwaterEffect.cpp">
       <Filter>05. Shader</Filter>
     </ClCompile>
+    <ClInclude Include="..\Header\CInvertEffect.h">
+      <Filter>05. Shader</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CInvertEffect.cpp">
+      <Filter>05. Shader</Filter>
+    </ClCompile>
+    <None Include="..\Bin\Resource\Shader\Invert.hlsl">
+      <Filter>03. Resource\02. Shader</Filter>
+    </None>
     <ClInclude Include="..\Header\CLavaEffect.h">
       <Filter>05. Shader</Filter>
     </ClInclude>

@@ -72,6 +72,14 @@ CCamera* CClientCameraMgr::Get_ActiveCamera() const
     return m_pActiveCamera;
 }
 
+// void CClientCameraMgr::Camera_Shake(_float fOnTime)
+// {
+//     if (m_eCurrentType != CLIENT_CAMERA_TYPE::PLAYER)
+//         return;
+// 
+//     static_cast<CPlayerCamera*>(m_pActiveCamera)->Set_ShakingTime(fOnTime);
+// }
+
 void CClientCameraMgr::Update_Camera(_float fTimeDelta)
 {
     if (nullptr == m_pActiveCamera)
@@ -95,7 +103,13 @@ void CClientCameraMgr::LateUpdate_Camera(_float fTimeDelta)
     // 추적 카메라 등에서 필요한 최종 위치 보정
     m_pActiveCamera->LateUpdate_GameObject(fTimeDelta);
 
+    _vec3 vShakeOffset{ 0.f, 0.f, 0.f };
+
+    // 쉐이킹 효과
+    OnShakingCamera(fTimeDelta, vShakeOffset);
+
     // 모든 동작을 마친 뒤 행렬 계산 및 화면 적용
+    m_pActiveCamera->Set_ViewOffset(vShakeOffset);
     m_pActiveCamera->Update_Matrices();
     m_pActiveCamera->Apply_Transform();
 }
@@ -145,6 +159,7 @@ void CClientCameraMgr::Key_Input(_float fTimeDelta)
             static_cast<CPlayerCamera*>(m_pActiveCamera)->Set_CameraMode(CAMERA_MODE::THIRD_PERSON);
             m_OnCameraViewChanged.Broadcast(CAMERA_MODE::THIRD_PERSON);
         }
+        
     }
     else
     {
@@ -153,6 +168,12 @@ void CClientCameraMgr::Key_Input(_float fTimeDelta)
             auto pCinematicCamera = static_cast<CCinematicCamera*>(m_pActiveCamera);
             pCinematicCamera->Skip();
         }
+    }
+
+    // 쉐이킹 효과
+    if (CDInputMgr::GetInstance()->Key_Down(DIK_F9))
+    {
+        Camera_Shake(3.f);
     }
 }
 
@@ -164,4 +185,19 @@ void CClientCameraMgr::CinematicToPlayer()
 	auto pCinematicCamera = static_cast<CCinematicCamera*>(m_pActiveCamera);
     if (pCinematicCamera->Is_Finished())
         Select_Camera(CLIENT_CAMERA_TYPE::PLAYER);
+}
+
+void CClientCameraMgr::OnShakingCamera(_float fTimeDelta, _vec3& vOutOffeset)
+{
+    if (m_fShakeTime <= 0.f)
+        return;
+
+    m_fShakeTime -= fTimeDelta;
+
+    vOutOffeset = {
+    sinf(m_fShakeTime * 70.f) * 0.03f,
+    cosf(m_fShakeTime * 90.f) * 0.02f,
+    0.f
+    };
+
 }

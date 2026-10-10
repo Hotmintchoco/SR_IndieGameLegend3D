@@ -37,7 +37,8 @@ public:
 private:
     void            Mouse_Move();
     void            Follow_Target();
-    void UpdateBillBoardInfo();
+    void            UpdateBillBoardInfo();
+    void            Shaking_Action(_float fTimeDelta);
 
     /* 스프링 암 관련 */
     float CalculateSpringArmLength();

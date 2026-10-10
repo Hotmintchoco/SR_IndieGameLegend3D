@@ -39,7 +39,7 @@ private:
 	int m_iCurrentIndex = 0;
 
 	/* 특수 공격 */
-	bool m_bSpecialAttackSwitchOn = true;
+	bool m_bSpecialAttackSwitchOn = false;
 	float m_fSpecialAtkGauge = 1.f;
 
 	/* 궁극기 */

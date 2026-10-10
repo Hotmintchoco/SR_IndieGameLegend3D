@@ -23,6 +23,8 @@ public:
 	_float			Get_Yaw() const { return atan2f(m_vAt.x - m_vEye.x, m_vAt.z - m_vEye.z); }
 	_float			Get_Pitch() const { return m_fPitch; }
 	HRESULT			Set_PitchLimits(_float fMinPitch, _float fMaxPitch);
+	void			Set_ViewOffset(const _vec3& vOffset){ m_vViewOffset = vOffset; }
+	const _vec3&	Get_ViewOffset() const { return m_vViewOffset; }
 
 protected:
 	void			Sync_AnglesFromLook();
@@ -37,6 +39,7 @@ protected:
 	_float		m_fPitch = 0.f;
 	_float		m_fMinPitch = D3DXToRadian(-89.f);
 	_float		m_fMaxPitch = D3DXToRadian(89.f);
+	_vec3		m_vViewOffset{ 0.f, 0.f, 0.f };
 
 protected:
 	virtual void Free();

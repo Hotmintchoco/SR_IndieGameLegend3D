@@ -2,6 +2,7 @@
 #include "CShaderEffectMgr.h"
 #include "CUnderwaterEffect.h"
 #include "CLavaEffect.h"
+#include "CInvertEffect.h"
 
 IMPLEMENT_SINGLETON(CShaderEffectMgr)
 
@@ -9,6 +10,7 @@ CShaderEffectMgr::CShaderEffectMgr()
 {
     Register_PostEffect(POST_EFFECT::UNDERWATER, new CUnderwaterEffect);
     Register_PostEffect(POST_EFFECT::LAVA, new CLavaEffect);
+    Register_PostEffect(POST_EFFECT::INVERT, new CInvertEffect);
 }
 
 CShaderEffectMgr::~CShaderEffectMgr()

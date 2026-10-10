@@ -17,6 +17,26 @@
 
 ## 새 효과 추가
 
+색 반전은 `CInvertEffect`와 `Invert.hlsl`을 사용합니다. 기본 강도는 1(완전 반전)이며 알파는 유지합니다.
+
+```cpp
+#include "CShaderEffectMgr.h"
+#include "CInvertEffect.h"
+
+auto* pMgr = CShaderEffectMgr::GetInstance();
+const POST_EFFECT ePrevious = pMgr->Get_PostEffectType();
+pMgr->Set_PostEffect(POST_EFFECT::INVERT);
+
+// Optional: 0 = original, 1 = inverted.
+auto* pInvert = static_cast<CInvertEffect*>(pMgr->Get_PostEffect(POST_EFFECT::INVERT));
+pInvert->Set_Strength(1.f);
+
+// When the event ends, restore the previous effect.
+pMgr->Set_PostEffect(ePrevious);
+```
+
+시작과 종료 코드는 각각 연출 시작/종료 시점에 호출합니다. 색 반전은 기존 효과를 대체하며 수중/용암과 합성되지 않습니다. 연출 중 방이 바뀌면 이전 효과 대신 현재 방의 효과를 다시 선택해야 합니다.
+
 1. `CPostEffect.h`의 `POST_EFFECT`에 새 종류를 추가합니다.
 2. `CPostEffect`를 상속한 클래스를 만듭니다. 생성자에서 HLSL 파일명을 전달하고, `Bind_Resources()`에서 해당 효과의 상수와 추가 텍스처를 설정합니다.
 3. 추가 텍스처가 필요하면 `Ready_Resources()`에서 한 번 로딩하고 파생 클래스 소멸자에서 해제합니다. 시간 변화가 필요하면 `Update()`를 구현합니다.
