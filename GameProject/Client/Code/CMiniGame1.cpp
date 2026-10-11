@@ -38,7 +38,7 @@ HRESULT CMiniGame1::Ready_Scene()
 
     //if (FAILED(Ready_Camera()))
     //    return E_FAIL;
-
+    s_bClear = false;
     return S_OK;
 }
 
@@ -49,11 +49,14 @@ _int CMiniGame1::Update_Scene(_float fTimeDelta)
     // Scene Change
     if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
     {
-        this;
         if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
             return -1;
     }
-    //Update_Input(fTimeDelta);
+    if (s_bClear == true)
+    {
+        if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
+            return -1;
+    }
     return iExit;
 }
 
@@ -102,8 +105,29 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
     CGameObject* pGameObject = nullptr;
 
-    // Test1
-    pGameObject = CTest1::Create(m_pGraphicDev);
+    //
+    _vec3 vPos{2.f,0.f,8.f};
+    _vec3 vScale{0.75f,0.75f,0.75f};
+    
+    pGameObject = CTest1::Create(m_pGraphicDev, 0, vScale, vPos);
+    if (nullptr == pGameObject) return E_FAIL;
+    if (FAILED(pLayer->Add_GameObject(L"Test1", pGameObject))) return E_FAIL;
+
+    vPos.y += 1.5f;
+    vScale = { 2.f,1.f,2.f };
+    pGameObject = CTest1::Create(m_pGraphicDev, 1, vScale, vPos);
+    if (nullptr == pGameObject) return E_FAIL;
+    if (FAILED(pLayer->Add_GameObject(L"Test1", pGameObject))) return E_FAIL;
+
+    vPos = {-5.f,1.5f,4.f};
+    vScale = { 0.75f,0.75f,0.75f };
+    pGameObject = CTest1::Create(m_pGraphicDev, 3, vScale, vPos);
+    if (nullptr == pGameObject) return E_FAIL;
+    if (FAILED(pLayer->Add_GameObject(L"Test1", pGameObject))) return E_FAIL;
+
+    vPos.y += 1.f;
+    vScale = { 1.5f,1.0f,1.5f };
+    pGameObject = CTest1::Create(m_pGraphicDev, 2, vScale, vPos);
     if (nullptr == pGameObject) return E_FAIL;
     if (FAILED(pLayer->Add_GameObject(L"Test1", pGameObject))) return E_FAIL;
 
@@ -113,42 +137,78 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
     if (FAILED(pLayer->Add_GameObject(L"Player", m_pPlayer))) return E_FAIL;
     CTransform* pPlayerTransformCom22 = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC,
         L"GameLogic_Layer", L"Player", L"Com_Transform"));
-    pPlayerTransformCom22->Set_Pos(_vec3{ 4.f, 0.25f - 1.f, 4.f });
+    pPlayerTransformCom22->Set_Pos(_vec3{ 4.f, 0.5f - 1.f, 4.f });
 
-    _vec3 vPos;
+
     //Box
+    _vec3 vDir{ 0.f,-1.f,0.f };
     vPos = { 4.f, -1.f, 4.f }; //Box1
-    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos);
+    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 0, vDir);
     if (nullptr == pGameObject) return E_FAIL;
     if (FAILED(pLayer->Add_GameObject(L"Box1", pGameObject))) return E_FAIL;
     m_pPlayer->Set_Box1(static_cast<CBox_MG1*>(pGameObject));
 
-    vPos = { -1.f, 1.f, 4.f }; //Box2
-    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos);
-    if (nullptr == pGameObject) return E_FAIL;
-    if (FAILED(pLayer->Add_GameObject(L"Box2", pGameObject))) return E_FAIL;
-    m_pPlayer->Set_Box2(static_cast<CBox_MG1*>(pGameObject));
+    vPos = { -1.f, 1.f, 4.f };
+    for (int i = 1; i < 6; ++i)
+    {
+        for (int j = 3; j < 6; ++j)
+        {
+            for (int k = 0; k < 2; ++k)
+            {
+                vPos = { (_float)-i, (_float)k, (_float)j };
+                _vec3 vDir{ 0.f,-1.f,0.f };
 
-    vPos = { -2.f, 1.f, 4.f };
-    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos);
-    if (nullptr == pGameObject) return E_FAIL;
-    if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
+                pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 0, vDir);
+                if (nullptr == pGameObject) return E_FAIL;
+                if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
+                if (i == 1 && j == 4 && k==1)
+                    m_pPlayer->Set_Box2(static_cast<CBox_MG1*>(pGameObject));
+            }
+        }
+    }
 
-    vPos = { -3.f, 1.f, 4.f };
-    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos);
-    if (nullptr == pGameObject) return E_FAIL;
-    if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
+    for (int i = 1; i < 6; ++i)
+    {
+        for (int j = 0; j < 2; ++j)
+        {
+            for (int k = 0; k < 1; ++k)
+            {
+                vPos = { (_float)-i, (_float)0.5f, (_float)5.5f - (_float)j * 3.f };
+                _vec3 vDir{ 0.f,0.f,0.f };
 
+                pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 0, vDir);
+                if (nullptr == pGameObject) return E_FAIL;
+                if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
+            }
+        }
+    }
+
+    for (int i = 0; i < 2; ++i)
+    {
+        for (int j = 3; j < 6; ++j)
+        {
+            for (int k = 0; k < 1; ++k)
+            {
+                vPos = { -0.5f - 5.f*(_float)i, (_float)0.5f, (_float)j };
+                _vec3 vDir{ 1.f,0.f,0.f };
+
+                pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 0, vDir);
+                if (nullptr == pGameObject) return E_FAIL;
+                if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
+            }
+        }
+    }
 
     //맨밑
-    vPos = { 4.f, -3.f, 4.f };
+    vPos = { 4.f, -1.f, 4.f };
     for (int i = -11; i < 8; ++i)
     {
         for (int j = -3; j < 4; ++j)
         {
+            _vec3 vDir{ 0.f,-1.f,0.f };
             _vec3 vPos2 = { (_float)i, 0.f, (_float)j };
             _vec3 vPos3 = vPos + vPos2;
-            pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos3);
+            pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos3, 2, vDir);
             if (nullptr == pGameObject) return E_FAIL;
             if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
         }
@@ -175,10 +235,6 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
     //m_mapLayer.insert({ pLayerTag ,pLayer });
     return S_OK;
-}
-
-void CMiniGame1::Update_Input(const _float& fTimeDelta)
-{
 }
 
 void CMiniGame1::RenderImGui()

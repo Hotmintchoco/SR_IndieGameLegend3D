@@ -10,6 +10,7 @@ namespace Engine
 	class CTexture;
 	class CRcTex;
 	class CCamera;
+	class CCalculator;
 }
 
 class CPlayerAnimator;
@@ -36,13 +37,17 @@ public:
 
 	inline CTransform* GetTransform() { return m_pTransformCom; }
 
-	//inline void SetCamera(CCamera_MG1* pCamera) { m_pCamera = pCamera; }
-
 private:
 	HRESULT	Add_Component();
 	void Update_Input(const _float& fTimeDelta);
 	void UpdateInput();
 
+	void Jump(const _float& fTimeDelta);
+
+	_bool m_bJumpStart = false;
+	_bool m_bJumpState = false;
+	_bool m_bLandingState = true;
+	_vec3 m_vJumpDirection = { 0.f,3.f,0.f };
 public:
 	_float Get_Yaw() { return m_fYaw; }
 	_float Get_Pitch() { return m_fPitch; }
@@ -96,6 +101,7 @@ public :
 	Engine::CTransform* m_pTransformCom = nullptr;
 	Engine::CCollider* m_pColliderCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
+	Engine::CCalculator* m_pCalculatorCom = nullptr;
 	//임시 추가
 	Engine::CRcTex* m_pBufferCom2 = nullptr;
 

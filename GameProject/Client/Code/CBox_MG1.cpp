@@ -7,7 +7,7 @@
 #include "CPlayerCamera.h"
 
 CBox_MG1::CBox_MG1(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev)
+    : CTile(pGraphicDev)
 {
 }
 
@@ -30,7 +30,8 @@ HRESULT CBox_MG1::Ready_GameObject()
     //_vec3 vPos = { 0.f,0.f,10.5f };
     //m_pTransformCom->Set_Pos(vPos);
 
-    _vec3 vDir{ 0.f,-1.f,0.f };
+    //_vec3 vDir{ 0.f,-1.f,0.f };
+    _vec3 vDir = m_vDir;
     D3DXVec3Normalize(&vDir, &vDir);
 
     _vec3 vAngle;
@@ -46,8 +47,15 @@ HRESULT CBox_MG1::Ready_GameObject()
 _int CBox_MG1::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
+    //CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    Compute_ViewZ(&vPos);
+    if (m_iTextureIdx == 2)
+    {
+        m_fViewZ += 3.0f;
+    }
     return iExit;
 }
 
@@ -65,12 +73,12 @@ void CBox_MG1::Render_GameObject()
     if (m_bConnection == true)
     {
         //m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
-        m_pTextureCom->Set_Texture(1);
+        m_pTextureCom->Set_Texture(m_iTextureIdx + 1);
     }
     else
     {
         //m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-        m_pTextureCom->Set_Texture(0);
+        m_pTextureCom->Set_Texture(m_iTextureIdx);
     }
 
     m_pBufferCom->Render_Buffer();
@@ -87,7 +95,7 @@ HRESULT CBox_MG1::Add_Component()
     CComponent* pComponent = nullptr;
 
     // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_MG1_Texture"));
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_MG1Tile_Texture"));
     if (nullptr == pComponent) return E_FAIL;
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
@@ -158,6 +166,39 @@ CBox_MG1* CBox_MG1::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos)
         return nullptr;
     }
     pGameObject->Set_Pos(vPos);
+
+    return pGameObject;
+}
+
+CBox_MG1* CBox_MG1::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, _int iIndex)
+{
+    CBox_MG1* pGameObject = new CBox_MG1(pGraphicDev);
+
+    if (FAILED(pGameObject->Ready_GameObject()))
+    {
+        Safe_Release(pGameObject);
+        MSG_BOX("CBox_MG1 Create Failed");
+        return nullptr;
+    }
+    pGameObject->Set_Pos(vPos);
+    pGameObject->Set_TextureIdx(iIndex);
+
+    return pGameObject;
+}
+
+CBox_MG1* CBox_MG1::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, _int iIndex, _vec3 vDir)
+{
+    CBox_MG1* pGameObject = new CBox_MG1(pGraphicDev);
+    pGameObject->Set_Dir(vDir);
+
+    if (FAILED(pGameObject->Ready_GameObject()))
+    {
+        Safe_Release(pGameObject);
+        MSG_BOX("CBox_MG1 Create Failed");
+        return nullptr;
+    }
+    pGameObject->Set_Pos(vPos);
+    pGameObject->Set_TextureIdx(iIndex);
 
     return pGameObject;
 }

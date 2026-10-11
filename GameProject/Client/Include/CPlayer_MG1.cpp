@@ -36,14 +36,15 @@ HRESULT CPlayer_MG1::Ready_GameObject()
     if (FAILED(CGameObject::Ready_GameObject()))
         return E_FAIL;
 
-    m_pColliderCom->Set_Radius(0.25f);
+    m_pColliderCom->Set_Radius(0.5f);
 
     m_pColliderCom->Set_CollisionID(COLL_PLAYER);
 
     _vec3 vPos{ 0.f,0.f,0.f };
     m_pTransformCom->Set_Pos(vPos);
 
-    _vec3 vScale{ 0.25f,0.25f,0.25f };
+    //_vec3 vScale{ 0.25f,0.25f,0.25f };
+    _vec3 vScale{ 0.5f,0.5f,0.5f };
     m_pTransformCom->Set_Scale(vScale);
 
     m_fYaw = D3DXToRadian(-90.f);
@@ -61,6 +62,9 @@ _int CPlayer_MG1::Update_GameObject(_float fTimeDelta)
 
     Update_Input(fTimeDelta);
     Check_Connection();
+
+
+    Jump(fTimeDelta);
 
     return iExit;
 }
@@ -153,8 +157,19 @@ void CPlayer_MG1::Update_Input(const _float& fTimeDelta)
         vDir *= -1.f;
         D3DXVec3Normalize(&vDir, &vDir);
         m_pTransformCom->Move_Pos(&vDir, 4.f, fTimeDelta);
+        if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
+        {
+            _vec3 vDir; m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
+            vDir.y = 0;
+            vDir *= -1.f;
+            D3DXVec3Normalize(&vDir, &vDir);
+            m_pTransformCom->Move_Pos(&vDir, 4.f, fTimeDelta);
+        }
     }
-
+    if (CDInputMgr::GetInstance()->Key_Press(DIK_SPACE))
+    {
+        m_bJumpState = true;
+    }
     if (CDInputMgr::GetInstance()->Key_Down(DIK_1))
     {
         m_iCameraType = 1;
@@ -348,4 +363,30 @@ CPlayer_MG1* CPlayer_MG1::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 void CPlayer_MG1::Free()
 {
     CGameObject::Free();
+}
+
+void CPlayer_MG1::Jump(const _float& fTimeDelta)
+{
+    if (m_bJumpState == true)
+    {
+        if (m_bJumpStart == false)
+        {
+            m_bJumpStart = true;
+            m_vJumpDirection = { 0.f,3.f,0.f };
+        }
+        _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        _vec3 vScale = m_pTransformCom->Get_Scale();
+
+        m_vJumpDirection.y -= 9.8f * fTimeDelta;
+
+        m_pTransformCom->Move_Pos(&m_vJumpDirection, 1.f, fTimeDelta);
+
+        if (vPos.y < -1.f + vScale.y)
+        {
+            vPos.y = -1.f + vScale.y;
+            m_pTransformCom->Set_Pos(vPos);
+            m_bJumpStart = false;
+            m_bJumpState = false;
+        }
+    }
 }
