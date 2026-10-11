@@ -28,7 +28,9 @@ HRESULT CFireball::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(0.25f, 0.25f, 0.25f);
-    m_pColliderCom->Set_Radius(0.25f);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+    m_pColliderCom->Set_Radius(vScale.x);
+
     m_iHp = 100;
     m_bCollision_WithMonster = false;
     return S_OK;
@@ -38,16 +40,9 @@ _int CFireball::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
-	m_fFrame += fTimeDelta * 10.f;
-	if (m_fFrame >= 4.f)
-		m_fFrame = 0.f;
-
-
+    Animation_Monster(fTimeDelta);
 	Throw(fTimeDelta);
-
-    /* 성철 : Dead 처리 조건 확인하는 함수 */
     CheckDeadCondition();
-    /* -------------------------------- */
     LookAtPlayer();
     return iExit;
 }
@@ -111,6 +106,13 @@ void CFireball::OnCollisionEnter(COLLINFO eCollInfo)
 {
 }
 
+void CFireball::Animation_Monster(const _float& fTimeDelta)
+{
+    m_fFrame += fTimeDelta * 10.f;
+    if (m_fFrame >= 4.f)
+        m_fFrame = 0.f;
+}
+
 HRESULT CFireball::Add_Component()
 {
     CComponent* pComponent = nullptr;
@@ -143,10 +145,7 @@ CFireball* CFireball::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CFireball::Throw(const _float& fTimeDelta)
 {
-    //m_fLandingTime += fTimeDelta;
-
-    _vec3 vPos, vVelocity;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vVelocity;
     m_fLandingVelocity -= 9.8f * fTimeDelta;
 
     vVelocity.x = m_vVelocity.x;
@@ -155,20 +154,26 @@ void CFireball::Throw(const _float& fTimeDelta)
 
     m_vVelocity.y -= 9.8f * fTimeDelta;
 
-    if (m_pTransformCom->m_vInfo[INFO_POS].y < m_pTransformCom->m_vScale.y)
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+
+    if (vPos.y < vScale.y)
     {
         ++m_iLandingCount;
-        m_pTransformCom->m_vInfo[INFO_POS].y = m_pTransformCom->m_vScale.y;
+        _vec3 vPos2 = vPos;
+        vPos2.y = vScale.y;
+        m_pTransformCom->Set_Pos(vPos2);
+
         m_vVelocity.y = -vVelocity.y / 3.f * 2.f;
         m_fLandingVelocity = 0.f;
 
         /* 성철 : 튕길 때마다 작은 범위의 불 영역 생성 */
-        _vec3 vPos;
-        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        _vec3 vPos3;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos3);
         CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
         if (CStage* pStage = dynamic_cast<CStage*>(pScene))
         {
-            pStage->GetCurrentRoomLayer()->RequestTileContamination(vPos, 1, EContaminateType::LAVA, 3.f);
+            pStage->GetCurrentRoomLayer()->RequestTileContamination(vPos3, 1, EContaminateType::LAVA, 3.f);
         }
         /* -------------------------------------- */
         
@@ -176,7 +181,7 @@ void CFireball::Throw(const _float& fTimeDelta)
         CGameObject* pGameObject = nullptr;
 
        
-		pGameObject = CEffect::Create(m_pGraphicDev, CEffect::MAGMA_FIREBALL, vPos);
+		pGameObject = CEffect::Create(m_pGraphicDev, CEffect::MAGMA_FIREBALL, vPos3);
 		if (nullptr == pGameObject) return;
 		if (FAILED(pLayer->Add_GameObject(L"Effect_Fireball", pGameObject))) return;
 

@@ -34,9 +34,9 @@ HRESULT CBoss1::Ready_GameObject()
     m_pTransformCom->Set_Scale(1.5f, 1.5f, 1.5f);
 
     m_pTransformCom2->Set_Scale(0.75f, 0.75f, 0.75f);
-    m_pTransformCom2->Set_Pos(m_pTransformCom->m_vInfo[INFO_POS].x, m_pTransformCom->m_vInfo[INFO_POS].y, m_pTransformCom->m_vInfo[INFO_POS].z);
 
-    m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+    m_pColliderCom->Set_Radius(vScale.x);
 
     m_iMaxHp = 10;
     m_iHp = m_iMaxHp;
@@ -48,55 +48,28 @@ HRESULT CBoss1::Ready_GameObject()
 _int CBoss1::Update_GameObject(_float fTimeDelta)
 {
     Set_RoomCenterLocation();
-    _float _fTimeDelta = fTimeDelta;
-    if (m_iHp <= 0)
-    {
-        m_eBoss1State = DEAD;
+    Check_Hp(fTimeDelta);
 
-        m_bMoveFlag = false;
-        m_bMoveFlag2 = false;
-        m_pColliderCom->Set_IsActive(false);
-        if (m_bDeadStart == false)
-        {
-            m_bDeadStart = true;
-            m_bStand = false;
+    _int    iExit = CMonster::Update_GameObject(fTimeDelta);
 
-            for (int i = 0; i < 4; ++i)
-            {
-                if (m_bSpawnFinish[i] == true && m_bSpawnFinish2[i] == false)
-                {
-                    //static_cast<CMonster*>(m_pSpawnMonster[i])->Set_Damage(static_cast<CMonster*>(m_pSpawnMonster[i])->Get_Hp());
-                    m_pSpawnMonster[i]->Set_IsActive(true);
-                }
-            }
-        }
-    }
-    else if (m_iHp <= m_iMaxHp / 2)
-    {
-        m_iPhase = 1;
-        _fTimeDelta *= 1.5f;
-    }
-
-    _int    iExit = CMonster::Update_GameObject(_fTimeDelta);
-
-    Update_Motion(_fTimeDelta);
+    Update_Motion(fTimeDelta);
 
     switch (m_eBoss1State)
     {
     case IDLE:
-        IDLE_Boss1(_fTimeDelta);
+        IDLE_Boss1(fTimeDelta);
         break;
     case SPAWN:
-        Spawn_Spn(_fTimeDelta);
+        Spawn_Spn(fTimeDelta);
         break;
     case MOVE:
-        Move_Boss1(_fTimeDelta);
+        Move_Boss1(fTimeDelta);
         break;
     case DEAD:
-        Boss1_Dead(_fTimeDelta);
+        Boss1_Dead(fTimeDelta);
         break;
     case OPENING:
-        Opening_Boss1(_fTimeDelta);
+        Opening_Boss1(fTimeDelta);
         break;
     }
 
@@ -144,6 +117,40 @@ void CBoss1::Render_GameObject()
 void CBoss1::OnCollisionEnter(COLLINFO eCollInfo)
 {
     CMonster::OnCollisionEnter(eCollInfo);
+}
+
+void CBoss1::Check_Hp(_float& fTimedelta)
+{
+    if (m_iHp <= 0)
+    {
+        m_eBoss1State = DEAD;
+
+        m_bMoveFlag = false;
+        m_bMoveFlag2 = false;
+        m_pColliderCom->Set_IsActive(false);
+        if (m_bDeadStart == false)
+        {
+            m_bDeadStart = true;
+            m_bStand = false;
+
+            for (int i = 0; i < 4; ++i)
+            {
+                if (m_bSpawnFinish[i] == true && m_bSpawnFinish2[i] == false)
+                {
+                    m_pSpawnMonster[i]->Set_IsActive(true);
+                }
+            }
+        }
+    }
+    else if (m_iHp <= m_iMaxHp / 2)
+    {
+        m_iPhase = 1;
+        fTimedelta *= 1.5f;
+    }
+}
+
+void CBoss1::Animation_Monster(const _float& fTimeDelta)
+{
 }
 
 HRESULT CBoss1::Add_Component()
@@ -279,6 +286,7 @@ _int CBoss1::Get_MotionState()
 void CBoss1::Move_Boss1(const _float& fTimeDelta)
 {
     _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
 
     const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
     _vec3   vPlayerPos; vPlayerPos = tInfo.vPosition;
@@ -300,7 +308,7 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
             m_vLandingDirection.y -= m_fLandingTime * 9.8f;
 
             _vec3 vDest = vPos + m_vLandingDirection * 3.f * 0.7f;
-            _float fBlank = m_pTransformCom->m_vScale.y;
+            _float fBlank = vScale.y;
             if (vDest.x > m_vRoomCenterLocation.x + 6.5f - fBlank ||
                 vDest.x < m_vRoomCenterLocation.x - 6.5f + fBlank ||
                 vDest.z > m_vRoomCenterLocation.z + 5.0f - fBlank ||
@@ -314,14 +322,14 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
                 m_pTransformCom->Move_Pos(&m_vLandingDirection, 3.f, fTimeDelta);
             }
 
-            if (vPos.y <= m_pTransformCom->m_vScale.y && m_fLandingTime > 0.5f)
+            if (vPos.y <= vScale.y && m_fLandingTime > 0.5f)
             {
                 m_fLandingTime = 0.f;
                 ++m_iLandingCount;
 
                 m_vMovePosition = vPlayerPos;
 
-                _float fBlank = m_pTransformCom->m_vScale.y;
+                _float fBlank = vScale.y;
                 if (m_vMovePosition.x > m_vRoomCenterLocation.x + 6.5f - fBlank)
                 {
                     m_vMovePosition.x = m_vRoomCenterLocation.x + 6.5f - fBlank;
@@ -339,7 +347,7 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
                     m_vMovePosition.z = m_vRoomCenterLocation.z - 5.0f + fBlank;
                 }
 
-                m_vMovePosition.y = m_pTransformCom->m_vScale.y;
+                m_vMovePosition.y = vScale.y;
             }
         }
         else
@@ -377,6 +385,7 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
     if (m_bMoveFlag == false)
     {
         _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        _vec3 vScale = m_pTransformCom->Get_Scale();
 
         const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
         _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
@@ -394,7 +403,7 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
             m_vLandingDirection.y -= m_fLandingTime * 9.8f;
 
             _vec3 vDest = vPos + m_vLandingDirection * 3.f * 0.7f;
-            _float fBlank = m_pTransformCom->m_vScale.y;
+            _float fBlank = vScale.y;
             if (vDest.x > m_vRoomCenterLocation.x + 6.5f - fBlank ||
                 vDest.x < m_vRoomCenterLocation.x - 6.5f + fBlank ||
                 vDest.z > m_vRoomCenterLocation.z + 5.0f - fBlank ||
@@ -408,7 +417,7 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
                 m_pTransformCom->Move_Pos(&m_vLandingDirection, 3.f, fTimeDelta);
             }
 
-            if (vPos.y <= m_pTransformCom->m_vScale.y && m_fLandingTime > 0.5f)
+            if (vPos.y <= vScale.y && m_fLandingTime > 0.5f)
             {
                 m_fLandingTime = 0.f;
                 ++m_iLandingCount;
@@ -601,18 +610,33 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
 	{
         //오프닝 종료
 		m_bOpening = false;
-		LookAtPlayer2();
+        LookAtPlayer2();
 		return;
     }
     //Y값 최초 조정
     if (m_bInit_YPos == false)
     {
         m_bInit_YPos = true;
-        _vec3 vPos{ 0.f,m_pTransformCom->m_vScale.y,0.f };
+        _vec3 vScale = m_pTransformCom->Get_Scale();
+        _vec3 vPos{ 0.f,vScale.y,0.f };
         m_pTransformCom->Move_Pos(&vPos, 1.f, 1.f);
+
+
 
 		_vec3 vBossPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vBossPos);
+
+        //if (CPlayerCamera* pCamera = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Get_ActiveCamera()))
+        //{
+        //    _vec3 vPlayerPos = m_pBillBoardCamera->GetBillBoardInfo().vPosition;
+
+        //    _vec3 vec1 = _vec3{ 0.f,0.f,-4.f };
+        //    _vec3 vec2 = _vec3{ 0.f,0.75f,2.f };
+        //    _vec3 vPos1 = m_vRoomCenterLocation + vec1;
+        //    _vec3 vPos2 = m_vRoomCenterLocation + vec2;
+        //    pCamera->Set_Eye(vPos1, vPos2);
+        //    pCamera->Update_Matrices();
+        //}
 
         // 정민 : 컷신 연출
         auto* pCameraMgr = CClientCameraMgr::GetInstance();
@@ -627,50 +651,71 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
             // 연출 1
             CINEMATIC_DESC desc;
 
-            desc.vEyeFrom = { vBossPos.x, 3.f, vBossPos.z - 6.f };
-            desc.vEyeTo = { vBossPos.x, 2.f, vBossPos.z - 2.f };
+            desc.vEyeFrom = { vBossPos.x, 3.f, vBossPos.z - 5.f };
+            desc.vEyeTo = { vBossPos.x, 1.25f, vBossPos.z - 3.5f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
-            desc.fDuration = 2.f;
+            desc.fDuration = 1.75f;
             desc.fFovFrom = D3DXToRadian(60.f);
             desc.fFovTo = D3DXToRadian(47.5f);
             pCinematic->Add_Shot(desc);
 
             // 연출 2
+            //desc.vEyeFrom = { vBossPos.x, 1.5f, vBossPos.z - 2.f };
             desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
-            desc.fDuration = 0.2f;
+            desc.fDuration = 1.25f;
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
             // 연출 3
-            desc.vEyeTo = { vBossPos.x + 3.f, 4.5f, vBossPos.z - 7.f };
+            desc.vEyeTo = { vBossPos.x - 1.f, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
-            desc.fDuration = 0.5f;
+            desc.fDuration = 0.612f;
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
             // 연출 4
-            desc.vEyeTo = { vBossPos.x - 3.f, 4.5f, vBossPos.z - 7.f };
+            desc.vEyeTo = { vBossPos.x + 1.f, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
-            desc.fDuration = 0.5f;
+            desc.fDuration = 0.612f;
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
             // 연출 5
-            desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
+            desc.vEyeTo = { vBossPos.x - 1.f, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
-            desc.fDuration = 0.25f;
+            desc.fDuration = 0.612f;
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
             // 연출 6
+            desc.vEyeTo = { vBossPos.x + 1.f, 4.5f, vBossPos.z - 7.f };
+            desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 0.612f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 7
             desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
             desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            desc.fDuration = 0.612f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            // 연출 8
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+            //_vec3 vPlayerLook; vPlayerLook = tInfo.vLook;
+
+            desc.vEyeTo = { vPlayerPos.x, vPlayerPos.y, vPlayerPos.z };
+            desc.vLookAt = { vBossPos.x, 1.f, vBossPos.z };
 
             desc.fDuration = 1.5f;
             desc.fFovTo = D3DXToRadian(60.f);
@@ -681,18 +726,18 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
     }
 
     //뛰어다니기
-    if (m_fElapsedOpeningTime > 2.f)
+    if (m_fElapsedOpeningTime > 3.f)
     {
-        _vec3 vPos, vDir;
-        m_pTransformCom->Get_Info(INFO_POS, &vPos);
-        vDir = m_vOpeningMoveDirection[m_iOpeningMoveIndex];
+        _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        _vec3 vScale = m_pTransformCom->Get_Scale();
+        _vec3 vDir = m_vOpeningMoveDirection[m_iOpeningMoveIndex];
 
         vDir.y = 3.f;
         m_fLandingTime += fTimeDelta;
         vDir.y -= m_fLandingTime * 9.8f;
 
         //착지했을때, 다음 착지위치 설정
-        if (vPos.y <= m_pTransformCom->m_vScale.y && m_fLandingTime > 0.5f)
+        if (vPos.y <= vScale.y && m_fLandingTime > 0.5f)
         {
             m_fLandingTime = 0.f;
 
@@ -707,7 +752,8 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
         }
         m_pTransformCom->Move_Pos(&vDir, 2.f, fTimeDelta);
     }
-    LookAtPlayer2();
+    //LookAtPlayer2();
+    LookAtCamera2();
 
     // 정민 : Boss Hp UI 처리
     CUIMgr::GetInstance()->Active_Boss(true);

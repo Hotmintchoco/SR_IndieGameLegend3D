@@ -123,6 +123,20 @@ _int CStage::Update_Scene(_float fTimeDelta)
 		m_iWarpRequest = -1;
 	}
 
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F3))
+	{
+		CScene* pMiniGame = CMiniGame1::Create(m_pGraphicDev);
+		if (nullptr == pMiniGame)
+			return E_FAIL;
+		if (FAILED(CManagement::GetInstance()->Change_Scene(1, pMiniGame)))
+		{
+			Safe_Release(pMiniGame);
+			MSG_BOX("MiniGame Create Failed");
+			return -1;
+		}
+		pMiniGame->Update_Scene(fTimeDelta);
+	}
+
 	CClientCameraMgr::GetInstance()->Update_Camera(fTimeDelta);
 	_int iExit = CScene::Update_Scene(fTimeDelta);
 

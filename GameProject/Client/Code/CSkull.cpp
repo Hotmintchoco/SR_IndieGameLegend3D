@@ -23,7 +23,9 @@ HRESULT CSkull::Ready_GameObject()
     CMonster::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
-    m_pColliderCom->Set_Radius(m_pTransformCom->m_vScale.x);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+    m_pColliderCom->Set_Radius(vScale.x);
+
     m_iMaxHp = 3;
     m_iHp = m_iMaxHp;
     return S_OK;
@@ -31,13 +33,11 @@ HRESULT CSkull::Ready_GameObject()
 
 _int CSkull::Update_GameObject(_float fTimeDelta)
 {
-    if (m_iHp <= 0)
-    {
-        m_bDelete = true;
-    }
+    Check_Hp(fTimeDelta);
 
     _int    iExit = CMonster::Update_GameObject(fTimeDelta);
     Set_OnTerrain();
+    Animation_Monster(fTimeDelta);
 
     return iExit;
 }
@@ -65,6 +65,18 @@ void CSkull::Render_GameObject()
 void CSkull::OnCollisionEnter(COLLINFO eCollInfo)
 {
     CMonster::OnCollisionEnter(eCollInfo);
+}
+
+void CSkull::Check_Hp(_float& fTimedelta)
+{
+    if (m_iHp <= 0)
+    {
+        m_bDelete = true;
+    }
+}
+
+void CSkull::Animation_Monster(const _float& fTimeDelta)
+{
 }
 
 HRESULT CSkull::Add_Component()

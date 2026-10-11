@@ -42,10 +42,10 @@ private:
 	_float m_fElapsedTime2 = m_fEffectCoolTime2;
 
 	_vec3 m_vDir[4] = {
-		{  4.f, -4.f,  4.f },
-		{  4.f, -4.f, -4.f },
-		{ -4.f, -4.f, -4.f },
-		{ -4.f, -4.f,  4.f },
+		{  8.f, -4.f,  8.f },
+		{  8.f, -4.f, -8.f },
+		{ -8.f, -4.f, -8.f },
+		{ -8.f, -4.f,  8.f },
 	};
 	_int m_iIndex = 0;
 

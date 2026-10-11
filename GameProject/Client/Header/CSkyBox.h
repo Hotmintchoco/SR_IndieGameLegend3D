@@ -25,9 +25,9 @@ private:
 	HRESULT			Add_Component();
 
 private:
-	Engine::CCubeTex* m_pBufferCom;
-	Engine::CTransform* m_pTransformCom;
-	Engine::CTexture* m_pTextureCom;
+	Engine::CCubeTex* m_pBufferCom = nullptr;
+	Engine::CTransform* m_pTransformCom = nullptr;
+	Engine::CTexture* m_pTextureCom = nullptr;
 
 public:
 	static CSkyBox* Create(LPDIRECT3DDEVICE9 pGraphicDev);

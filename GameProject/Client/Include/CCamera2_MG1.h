@@ -1,0 +1,56 @@
+﻿#pragma once
+
+#include "CCamera.h"
+
+namespace Engine
+{
+	class CTransform;
+}
+
+
+class CCamera2_MG1 : public CCamera
+{
+protected:
+	explicit CCamera2_MG1(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CCamera2_MG1(const CCamera2_MG1& rhs);
+	virtual ~CCamera2_MG1();
+
+public:
+	HRESULT		Ready_GameObject(const _vec3* pEye,
+		const _vec3* pAt,
+		const _vec3* pUp,
+		const _float& fFov,
+		const _float& fAspect,
+		const _float& fNear,
+		const _float& fFar);
+
+	virtual			_int		Update_GameObject(_float fTimeDelta);
+	virtual			void		LateUpdate_GameObject(_float fTimeDelta);
+	virtual			void		Render_GameObject() {}
+
+public:
+	void Set_CameraActive(CTransform* pTransform);
+
+private:
+	void			Key_Input(const _float fTimeDelta);
+	void			Mouse_Move();
+	void			Mouse_Fix();
+
+private:
+	_float			m_fSpeed;
+	_bool			m_bFix;
+	_bool			m_bCheck;
+public:
+	static CCamera2_MG1* Create(LPDIRECT3DDEVICE9 pGraphicDev,
+		const _vec3* pEye,
+		const _vec3* pAt,
+		const _vec3* pUp,
+		const _float& fFov = D3DXToRadian(60.f),
+		const _float& fAspect = (_float)WINCX / WINCY,
+		const _float& fNear = 0.1f,
+		const _float& fFar = 1000.f);
+
+private:
+	virtual void		Free();
+};
+

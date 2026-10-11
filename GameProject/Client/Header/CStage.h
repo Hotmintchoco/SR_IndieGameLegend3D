@@ -70,6 +70,7 @@ private:
 private:
 	/* 방 관련 */
 	CRoomLayer* m_pCurrentRoomLayer = nullptr;
+
 	int m_iStartRoomIndex = 12; // 12
 	int m_iCurrentRoomIndex = m_iStartRoomIndex;
 	int m_iPrevRoomIndex = m_iStartRoomIndex;

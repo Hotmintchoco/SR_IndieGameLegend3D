@@ -92,6 +92,8 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_OctoTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/octo/octo_%d.png", 4)))) return E_FAIL;
     //mine
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MineTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/mine/mine_%d.png", 2)))) return E_FAIL;
+    //walker
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_WalkerbossTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/walker/WalkerBoss_%d.png", 8)))) return E_FAIL;
 
     m_fProgress.store(0.2f); // Effect Texture
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_smallexplodeTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/smallexplode/smallExplode_%d.png", 4)))) return E_FAIL;
