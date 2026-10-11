@@ -38,10 +38,10 @@ HRESULT CPlayer::Ready_GameObject()
 		return E_FAIL;
 
 	m_pColliderCom->Set_Radius(m_fColliderScale);
-    //m_pColliderCom->Set_DiffPos(_vec3{0.f, 0.5f, 0.f});
+    m_pColliderCom->Set_DiffPos(_vec3{0.f, 0.5f, 0.f});
 	m_pColliderCom->Set_CollisionID(COLL_PLAYER);
 
-    //CClientCameraMgr::GetInstance()->m_OnCameraViewChanged.AddBinding(GetToken(), [this](const CAMERA_MODE& Ctx) { OnCameraViewChanged(Ctx); });
+    CClientCameraMgr::GetInstance()->m_OnCameraViewChanged.AddBinding(GetToken(), [this](const CAMERA_MODE& Ctx) { OnCameraViewChanged(Ctx); });
 
     m_ePlayerCamMode = CAMERA_MODE::FIRST_PERSON;
 
