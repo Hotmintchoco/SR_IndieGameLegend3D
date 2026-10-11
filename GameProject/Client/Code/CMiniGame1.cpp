@@ -67,14 +67,10 @@ void CMiniGame1::LateUpdate_Scene(_float fTimeDelta)
 
 void CMiniGame1::Render_Scene()
 {
-    RenderImGui();
-
-
-    _vec2 vTitlePos{ 40.f, 40.f };
-    CFontMgr::GetInstance()->Render_Font(L"Font_Dialogue", L"Mini Game", &vTitlePos,
-        D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-
-
+    //RenderImGui();
+    //_vec2 vTitlePos{ 40.f, 40.f };
+    //CFontMgr::GetInstance()->Render_Font(L"Font_Dialogue", L"Mini Game", &vTitlePos,
+    //    D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 }
 
 HRESULT CMiniGame1::Ready_Environment_Layer(const _tchar* pLayerTag)
@@ -143,7 +139,7 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
     //Box
     _vec3 vDir{ 0.f,-1.f,0.f };
     vPos = { 4.f, -1.f, 4.f }; //Box1
-    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 0, vDir);
+    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 4, vDir);
     if (nullptr == pGameObject) return E_FAIL;
     if (FAILED(pLayer->Add_GameObject(L"Box1", pGameObject))) return E_FAIL;
     m_pPlayer->Set_Box1(static_cast<CBox_MG1*>(pGameObject));
@@ -157,12 +153,19 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
             {
                 vPos = { (_float)-i, (_float)k, (_float)j };
                 _vec3 vDir{ 0.f,-1.f,0.f };
-
-                pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 0, vDir);
-                if (nullptr == pGameObject) return E_FAIL;
-                if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
-                if (i == 1 && j == 4 && k==1)
+                if (i == 1 && j == 4 && k == 1)
+                {
+                    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 6, vDir);
+                    if (nullptr == pGameObject) return E_FAIL;
+                    if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
                     m_pPlayer->Set_Box2(static_cast<CBox_MG1*>(pGameObject));
+                }
+                else
+                {
+                    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 0, vDir);
+                    if (nullptr == pGameObject) return E_FAIL;
+                    if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
+                }
             }
         }
     }
@@ -259,9 +262,9 @@ void CMiniGame1::RenderImGui()
         _vec3 vAngle = pPlayerTransformCom->Get_Angle();
         ImGui::Text("Pos : %.2f, %.2f, %.2f", vPos.x, vPos.y, vPos.z);
         ImGui::Text("Pitch : %.2f, Raw %.2f", vAngle.x, vAngle.y);
-        ImGui::Text("Connection : %d, Dist : %.4f", pPlayer->Is_Connection(), pPlayer->Dist());
-        ImGui::Text("POINT1 : %.2f %.2f, %.2f", pPlayer->Get_f1().x, pPlayer->Get_f1().y, pPlayer->Get_f1().z);
-        ImGui::Text("POINT2 : %.2f %.2f, %.2f", pPlayer->Get_f2().x, pPlayer->Get_f2().y, pPlayer->Get_f2().z);
+        //ImGui::Text("Connection : %d, Dist : %.4f", pPlayer->Is_Connection(), pPlayer->Dist());
+        //ImGui::Text("POINT1 : %.2f %.2f, %.2f", pPlayer->Get_f1().x, pPlayer->Get_f1().y, pPlayer->Get_f1().z);
+        //ImGui::Text("POINT2 : %.2f %.2f, %.2f", pPlayer->Get_f2().x, pPlayer->Get_f2().y, pPlayer->Get_f2().z);
 
 
     }        

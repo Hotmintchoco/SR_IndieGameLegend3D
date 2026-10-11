@@ -46,6 +46,7 @@ private:
 
 	_bool m_bJumpStart = false;
 	_bool m_bJumpState = false;
+	_bool m_bJumpState2 = false;
 	_bool m_bLandingState = true;
 	_vec3 m_vJumpDirection = { 0.f,3.f,0.f };
 public:
@@ -70,6 +71,7 @@ private:
 	CCamera* m_pCamera2 = nullptr;
 
 	_bool m_bConnection = false;
+	_bool m_bConnectionStart = false;
 
 	CBox_MG1* m_pBox1 = nullptr;
 	CBox_MG1* m_pBox2 = nullptr;
@@ -79,24 +81,7 @@ private:
 	_vec3 m_vBoxOriginScale = { 0.f,0.f,0.f };
 
 
-	_vec3 m_vBoxChangedPos = { 0.f,0.f,0.f };
-
-	_vec3 m_vPlayerPosAtBox2 = { 0.f,0.f,0.f };
-
-	_bool m_bConnectionStart = false;
-	//디버그
-public:
-	_float Dist() { return m_fDist; }
-	_float m_fDist = 0,f;
-
-	_vec3 m_v1;
-	_vec3 m_v2;
-	_vec3 Get_f1() { return m_v1; }
-	_vec3 Get_f2() { return m_v2; }
 public :
-	/* 카메라 뷰 */
-	//CCamera_MG1* m_pCamera = nullptr;
-
 	/* 기본 컴포넌트 */
 	Engine::CTransform* m_pTransformCom = nullptr;
 	Engine::CCollider* m_pColliderCom = nullptr;
@@ -104,8 +89,6 @@ public :
 	Engine::CCalculator* m_pCalculatorCom = nullptr;
 	//임시 추가
 	Engine::CRcTex* m_pBufferCom2 = nullptr;
-
-
 
 
 public:

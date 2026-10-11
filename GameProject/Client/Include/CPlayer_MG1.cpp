@@ -58,12 +58,25 @@ _int CPlayer_MG1::Update_GameObject(_float fTimeDelta)
     int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
+    if (m_bConnection == true)
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+    }
+    else
+    {
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
+    }
 
     Update_Input(fTimeDelta);
     Check_Connection();
 
-
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    if (!((-5.5f < vPos.x) && (vPos.x < -0.5f) && (2.5f < vPos.z)  && (vPos.z < 5.5f))
+        && (1.f < vPos.y))
+    {
+        m_bJumpState = true;
+        m_bJumpState2 = true;
+    }
     Jump(fTimeDelta);
 
     return iExit;
@@ -84,13 +97,6 @@ void CPlayer_MG1::Render_GameObject()
     m_pBufferCom2->Render_Buffer();
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-    
-    //m_pTextureCom->Set_Texture(0);
-	//for (int i = 0; i < PP_END; ++i)
-	//{
-	//	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pBufferTransformCom[i]->Get_World());
-	//	m_pBufferCom[i]->Render_Buffer();
-	//}
 }
 
 HRESULT CPlayer_MG1::Add_Component()
@@ -132,7 +138,7 @@ void CPlayer_MG1::Update_Input(const _float& fTimeDelta)
         _vec3 vDir; m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
         vDir.y = 0;
         D3DXVec3Normalize(&vDir, &vDir);
-        m_pTransformCom->Move_Pos(&vDir, 4.f, fTimeDelta);
+        m_pTransformCom->Move_Pos(&vDir, 2.f, fTimeDelta);
     }
     if (CDInputMgr::GetInstance()->Key_Press(DIK_S))
     {
@@ -140,7 +146,7 @@ void CPlayer_MG1::Update_Input(const _float& fTimeDelta)
         vDir.y = 0;
         vDir *= -1.f;
         D3DXVec3Normalize(&vDir, &vDir);
-        m_pTransformCom->Move_Pos(&vDir, 4.f, fTimeDelta);
+        m_pTransformCom->Move_Pos(&vDir, 2.f, fTimeDelta);
 
     }
     if (CDInputMgr::GetInstance()->Key_Press(DIK_D))
@@ -148,7 +154,7 @@ void CPlayer_MG1::Update_Input(const _float& fTimeDelta)
         _vec3 vDir; m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
         vDir.y = 0;
         D3DXVec3Normalize(&vDir, &vDir);
-        m_pTransformCom->Move_Pos(&vDir, 4.f, fTimeDelta);
+        m_pTransformCom->Move_Pos(&vDir, 2.f, fTimeDelta);
     }
     if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
     {
@@ -156,15 +162,7 @@ void CPlayer_MG1::Update_Input(const _float& fTimeDelta)
         vDir.y = 0;
         vDir *= -1.f;
         D3DXVec3Normalize(&vDir, &vDir);
-        m_pTransformCom->Move_Pos(&vDir, 4.f, fTimeDelta);
-        if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
-        {
-            _vec3 vDir; m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
-            vDir.y = 0;
-            vDir *= -1.f;
-            D3DXVec3Normalize(&vDir, &vDir);
-            m_pTransformCom->Move_Pos(&vDir, 4.f, fTimeDelta);
-        }
+        m_pTransformCom->Move_Pos(&vDir, 2.f, fTimeDelta);
     }
     if (CDInputMgr::GetInstance()->Key_Press(DIK_SPACE))
     {
@@ -207,9 +205,7 @@ void CPlayer_MG1::Update_Input(const _float& fTimeDelta)
     fAngle.y = D3DXToDegree(m_fYaw);
 
     m_pTransformCom->Set_Angle(fAngle);
-
 }
-
 
 void CPlayer_MG1::Check_Connection()
 {
@@ -261,6 +257,7 @@ void CPlayer_MG1::Check_Connection()
                 }
             }
             m_pBox2->Set_Connection(false);
+            m_pBox1->Set_Connection(false);
             m_bConnection = false;
             pBoxTransformCom2->Set_Pos(m_vBoxOriginPos);
             pBoxTransformCom2->Set_Scale(m_vBoxOriginScale);
@@ -293,14 +290,11 @@ void CPlayer_MG1::Check_Connection()
 
     _vec3 vDist = vPosBox2Point - vPosBox1Point;
 
-    m_v1 = vPosBox1Point;
-    m_v2 = vPosBox2Point;
-    m_fDist = D3DXVec3Length(&vDist);
-
     if (fabsf(vDist.x) < 0.02f && (3.8f < vCameraPos.z && vCameraPos.z < 4.2f))
     {
         m_bConnection = true;
         m_pBox2->Set_Connection(true);
+        m_pBox1->Set_Connection(true);
 
         _vec3 vPos1 = m_vBoxOriginPos - vCameraPos;
         _vec3 vPos2 = m_vBoxOriginPos - vCameraPos - vDir;
@@ -332,6 +326,7 @@ void CPlayer_MG1::Check_Connection()
             }
         }
         m_pBox2->Set_Connection(false);
+        m_pBox1->Set_Connection(false);
         m_bConnection = false;
         pBoxTransformCom2->Set_Pos(m_vBoxOriginPos);
         pBoxTransformCom2->Set_Scale(m_vBoxOriginScale);
@@ -372,7 +367,14 @@ void CPlayer_MG1::Jump(const _float& fTimeDelta)
         if (m_bJumpStart == false)
         {
             m_bJumpStart = true;
-            m_vJumpDirection = { 0.f,3.f,0.f };
+            if (m_bJumpState2 == false)
+            {
+				m_vJumpDirection = { 0.f,2.5f,0.f };
+            }
+            else
+            {
+                m_vJumpDirection = { 0.f,0.f,0.f };
+            }
         }
         _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
         _vec3 vScale = m_pTransformCom->Get_Scale();
@@ -381,12 +383,21 @@ void CPlayer_MG1::Jump(const _float& fTimeDelta)
 
         m_pTransformCom->Move_Pos(&m_vJumpDirection, 1.f, fTimeDelta);
 
-        if (vPos.y < -1.f + vScale.y)
+        _float fY = -1.f;
+        if ((-5.5f < vPos.x && vPos.x < -0.5f) &&
+            (2.5f < vPos.z && vPos.z < 5.5f) &&
+            1.f < vPos.y)
         {
-            vPos.y = -1.f + vScale.y;
+            fY = 1.f;
+        }
+        if (vPos.y < fY + vScale.y)
+        {
+            vPos.y = fY + vScale.y;
             m_pTransformCom->Set_Pos(vPos);
             m_bJumpStart = false;
             m_bJumpState = false;
+            m_bJumpState2 = false;
         }
+
     }
 }

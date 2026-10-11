@@ -52,9 +52,9 @@ _int CBox_MG1::Update_GameObject(_float fTimeDelta)
 
     _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
     Compute_ViewZ(&vPos);
-    if (m_iTextureIdx == 2)
+    if (m_iTextureIdx == 0 || m_iTextureIdx == 2)
     {
-        m_fViewZ += 3.0f;
+        m_fViewZ += 10.0f;
     }
     return iExit;
 }
