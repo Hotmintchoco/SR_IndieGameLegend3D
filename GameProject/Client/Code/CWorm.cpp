@@ -7,8 +7,11 @@
 #include "CRoomLayer.h"
 #include "CEffect.h"
 #include "CGlubba.h"
+#include "CClientCameraMgr.h"
 #include "CPlayerCamera.h"
+#include "CCinematicCamera.h"
 #include "CWormBullet.h"
+#include "CUIMgr.h"
 
 CWorm::CWorm(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -94,6 +97,14 @@ _int CWorm::Update_GameObject(_float fTimeDelta)
         else
             Update_WormBoby(fTimeDelta);
     }
+
+    // 정민 : Boss HP 처리
+    if (m_iWormIndex == 1)
+    {
+        CUIMgr::GetInstance()->Set_BossHp(
+            m_iHp / _float(m_iMaxHp));
+    }
+
     return iExit;
 }
 
@@ -774,6 +785,48 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
             //vDir = { 0.f, -20.f, 0.f };
             //vDest = vDest + vDir;
             //Push_Back_MoveDest(vDest);
+
+            // 정민 : Boss Hp UI 처리
+            CUIMgr::GetInstance()->Active_Boss(true);
+
+            // 정민 : 컷신 연출
+            _vec3 vBossPos;
+            m_pTransformCom->Get_Info(INFO_POS, &vBossPos);
+
+            auto* pCameraMgr = CClientCameraMgr::GetInstance();
+
+            auto* pCinematic = dynamic_cast<CCinematicCamera*>(
+                pCameraMgr->Find_Camera(CLIENT_CAMERA_TYPE::CINEMATIC));
+
+            if (pCinematic)
+            {
+                pCinematic->Set_StartFromCurrent(true); // 연속적 동작 설정
+
+                // 연출 1
+                CINEMATIC_DESC desc;
+
+                desc.vEyeFrom = { vBossPos.x, 3.f, vBossPos.z + 5.f };
+                desc.vEyeTo = { vBossPos.x, 4.25f, vBossPos.z + 3.5f };
+                desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+                desc.fDuration = 0.35f;
+                desc.fFovFrom = D3DXToRadian(60.f);
+                desc.fFovTo = D3DXToRadian(65.f);
+                pCinematic->Add_Shot(desc);
+
+                // 연출 2
+                CINEMATIC_DESC orbitDesc{};
+                orbitDesc.bOrbit = true;
+                orbitDesc.vEyeFrom = desc.vEyeTo;
+                orbitDesc.vLookAt = desc.vLookAt;
+                orbitDesc.fDuration = 1.f;
+                orbitDesc.fOrbitAngle = D3DXToRadian(360.f);
+                orbitDesc.fFovFrom = desc.fFovTo;
+                orbitDesc.fFovTo = desc.fFovTo;
+                pCinematic->Add_Shot(orbitDesc);
+
+                pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
+            }
         }
     }
     //3초뒤 움직임
@@ -818,6 +871,7 @@ void CWorm::Worm_Dead(const _float& fTimeDelta)
 
     if (m_fElapsedDeadTime > m_fDeadTime)
     {
+        CUIMgr::GetInstance()->Active_Boss(false);
         if (m_bDelete == false && m_iWormIndex == 10)
             DropItem_Boss();
         m_bDelete = true;
