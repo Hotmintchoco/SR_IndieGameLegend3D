@@ -80,6 +80,8 @@ private:
 	_vec3 m_vBoxOriginRight = { 0.f,0.f,0.f };
 	_vec3 m_vBoxOriginScale = { 0.f,0.f,0.f };
 
+	_vec3 m_vOriginScale = { 0.f,0.f,0.f };
+
 
 public :
 	/* 기본 컴포넌트 */

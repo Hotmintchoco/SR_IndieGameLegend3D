@@ -46,7 +46,7 @@ HRESULT CPlayer_MG1::Ready_GameObject()
     //_vec3 vScale{ 0.25f,0.25f,0.25f };
     _vec3 vScale{ 0.5f,0.5f,0.5f };
     m_pTransformCom->Set_Scale(vScale);
-
+    m_vOriginScale = vScale;
     m_fYaw = D3DXToRadian(-90.f);
 
     return S_OK;
@@ -77,6 +77,9 @@ _int CPlayer_MG1::Update_GameObject(_float fTimeDelta)
         m_bJumpState = true;
         m_bJumpState2 = true;
     }
+    if(-0.1f < vPos.y && vPos.y < 0.1f)
+		m_pTransformCom->Set_Scale(m_vOriginScale);
+
     Jump(fTimeDelta);
 
     return iExit;
@@ -250,10 +253,10 @@ void CPlayer_MG1::Check_Connection()
                 {
 
                     vDir *= m_vBoxOriginScale.x / vScale2.x;
-                    _vec3 vPos = m_vBoxOriginPos + vDir;
+                    _vec3 vPos2 = m_vBoxOriginPos + vDir;
                     _vec3 vScale = m_pTransformCom->Get_Scale();
-                    vPos.y += vScale.y;
-                    m_pTransformCom->Set_Pos(vPos);
+                    vPos2.y += vScale.y;
+                    m_pTransformCom->Set_Pos(vPos2);
                 }
             }
             m_pBox2->Set_Connection(false);
@@ -317,12 +320,25 @@ void CPlayer_MG1::Check_Connection()
             _vec3 vScale = pBoxTransformCom2->Get_Scale();
             if (-vScale.x <= vDir.x && vDir.x <= vScale.x && -vScale.z <= vDir.z && vDir.z <= vScale.z)
             {
-
-                 vDir *= m_vBoxOriginScale.x / vScale2.x;
-                 _vec3 vPos = m_vBoxOriginPos + vDir;
+                vDir *= m_vBoxOriginScale.x / vScale2.x;
+                _vec3 vPos2 = m_vBoxOriginPos + vDir;
                 _vec3 vScale = m_pTransformCom->Get_Scale();
-                vPos.y += vScale.y;
-                m_pTransformCom->Set_Pos(vPos);
+                //vPos2.y += vScale.y;
+                //m_pTransformCom->Set_Pos(vPos2);
+
+                _matrix matView, matCameraWorld;
+                m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+                D3DXMatrixInverse(&matCameraWorld, nullptr, &matView);
+                _vec3 vEye = { matCameraWorld._41, matCameraWorld._42, matCameraWorld._43 };
+
+                _vec3 vDist = vEye - vPos;
+                _vec3 vDist2 = vEye - vPos2;
+                _vec3 vScale2 = vScale * (D3DXVec3Length(&vDist2) / D3DXVec3Length(&vDist));
+                m_pTransformCom->Set_Scale(vScale2);
+
+
+                vPos2.y += vScale2.y;
+                m_pTransformCom->Set_Pos(vPos2);
             }
         }
         m_pBox2->Set_Connection(false);
