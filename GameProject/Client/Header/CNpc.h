@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CGameObject.h"
 
 namespace Engine
@@ -7,6 +7,8 @@ namespace Engine
 	class CTexture;
 	class CRcTex;
 }
+
+struct TRoomEventCtx;
 
 class CNpc : public CGameObject
 {
@@ -23,18 +25,22 @@ public:
 private:
 	HRESULT			Add_Component();
 
-	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
+	virtual void	OnCollisionEnter(COLLINFO eCollInfo) override;
 
 private:
 	Engine::CTransform* m_pTransformCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
 	Engine::CRcTex* m_pBufferCom = nullptr;
 
-	void BillBoard();
 	_bool m_bStart = false;
+	_bool m_bRoomBeginHandled = false;
+
+private:
+	void			BillBoard();
+	void			OnRoomEvent(const TRoomEventCtx& t);
 
 public:
-	static CNpc* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CNpc*	Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void		Free();
