@@ -81,7 +81,6 @@ enum class EObjectType
 	Mine = 22,
 	Seaweed = 23,
 	Seaweed2 = 24,
-	Npc = 25,
 
 	ITEM_NONE = 31,
 	ITEM_HEART,
@@ -97,6 +96,7 @@ enum class EObjectType
 	WEAPON_LIMINAL,
 	WEAPON_MAX,
 
+	Npc = 50,
 
 	EFFECT_GENERATOR_AIRBUBBLE = 60,
 	EFFECT_GENERATOR_YELLOWDUST = 61,
