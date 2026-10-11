@@ -1370,4 +1370,13 @@
       <Filter>리소스 파일</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Npc" />
+    <ClInclude Include="..\Header\CNpc.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Npc</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CNpc.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Npc</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>

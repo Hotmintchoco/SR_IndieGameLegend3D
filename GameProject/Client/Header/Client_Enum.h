@@ -81,7 +81,7 @@ enum class EObjectType
 	Mine = 22,
 	Seaweed = 23,
 	Seaweed2 = 24,
-
+	Npc = 25,
 
 	ITEM_NONE = 31,
 	ITEM_HEART,
