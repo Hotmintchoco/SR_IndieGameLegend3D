@@ -55,6 +55,7 @@ public:
 	_bool Is_Connection() { return m_bConnection; }
 
 	void Check_Connection();
+	void Set_Box2Location();
 private:
 	_float m_fYaw = 0.f;
 	_float m_fPitch = 0.f;
@@ -69,7 +70,13 @@ private:
 	CBox_MG1* m_pBox2 = nullptr;
 
 	_vec3 m_vBoxOriginPos = { 0.f,0.f,0.f };
+	_vec3 m_vBoxOriginRight = { 0.f,0.f,0.f };
+	_vec3 m_vBoxOriginScale = { 0.f,0.f,0.f };
+
+
 	_vec3 m_vBoxChangedPos = { 0.f,0.f,0.f };
+
+	_vec3 m_vPlayerPosAtBox2 = { 0.f,0.f,0.f };
 
 	_bool m_bConnectionStart = false;
 	//디버그

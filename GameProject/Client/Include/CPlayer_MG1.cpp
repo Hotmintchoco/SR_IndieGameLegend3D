@@ -126,12 +126,14 @@ void CPlayer_MG1::Update_Input(const _float& fTimeDelta)
     if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
     {
         _vec3 vDir; m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
+        vDir.y = 0;
         D3DXVec3Normalize(&vDir, &vDir);
         m_pTransformCom->Move_Pos(&vDir, 4.f, fTimeDelta);
     }
     if (CDInputMgr::GetInstance()->Key_Press(DIK_S))
     {
         _vec3 vDir; m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
+        vDir.y = 0;
         vDir *= -1.f;
         D3DXVec3Normalize(&vDir, &vDir);
         m_pTransformCom->Move_Pos(&vDir, 4.f, fTimeDelta);
@@ -140,18 +142,17 @@ void CPlayer_MG1::Update_Input(const _float& fTimeDelta)
     if (CDInputMgr::GetInstance()->Key_Press(DIK_D))
     {
         _vec3 vDir; m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
+        vDir.y = 0;
         D3DXVec3Normalize(&vDir, &vDir);
         m_pTransformCom->Move_Pos(&vDir, 4.f, fTimeDelta);
     }
     if (CDInputMgr::GetInstance()->Key_Press(DIK_A))
     {
         _vec3 vDir; m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
+        vDir.y = 0;
         vDir *= -1.f;
         D3DXVec3Normalize(&vDir, &vDir);
         m_pTransformCom->Move_Pos(&vDir, 4.f, fTimeDelta);
-        //_vec3 vAngle = m_pTransformCom->Get_Angle();
-        //vAngle.y -= 180.f * fTimeDelta;
-        //m_pTransformCom->Set_Angle(vAngle);
     }
 
     if (CDInputMgr::GetInstance()->Key_Down(DIK_1))
@@ -199,8 +200,6 @@ void CPlayer_MG1::Check_Connection()
 {
     if (m_iCameraType == 1)return;
 
-    //CTransform* pBoxTransformCom1 = m_pBox1->Get_Component(ID_DYNAMIC, L"Com_Transform");
-
     CTransform* pBoxTransformCom1 = dynamic_cast<CTransform*>(m_pBox1->Get_Component(ID_DYNAMIC, L"Com_Transform"));
     CTransform* pBoxTransformCom2 = dynamic_cast<CTransform*>(m_pBox2->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 
@@ -229,17 +228,18 @@ void CPlayer_MG1::Check_Connection()
     {
         m_bConnectionStart = true;
         m_vBoxOriginPos = vPosBox2;
+        m_vBoxOriginScale = vScale2;
+        m_vBoxOriginRight = vRightBox2;
     }
     
     _matrix matView, matCameraWorld;
-
     m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
     D3DXMatrixInverse(&matCameraWorld, nullptr, &matView);
-
+    _vec3 vCameraLook = { matView._13,matView._23,matView._33 };
     _vec3 vCameraPos = { matCameraWorld._41, matCameraWorld._42, matCameraWorld._43 };
 
     _vec3 vPosBox1Point = vPosBox1 - vRightBox1 * vScale1.x;
-    _vec3 vPosBox2Point = vPosBox2 + vRightBox2 * (vScale2.x * 0.9f);
+    _vec3 vPosBox2Point = m_vBoxOriginPos + m_vBoxOriginRight * (m_vBoxOriginScale.x * 0.9f);
 
     _vec3 vDir = vCameraPos - vPosBox1Point;
     vDir.x /= vDir.y;
@@ -247,24 +247,57 @@ void CPlayer_MG1::Check_Connection()
     vDir.z /= vDir.y;
 
 
-    vDir *= (vPosBox2.y - vPosBox1.y);
+    vDir *= (m_vBoxOriginPos.y - vPosBox1.y);
 
     vPosBox1Point += vDir;
 
     _vec3 vDist = vPosBox2Point - vPosBox1Point;
 
-    //_float fDist2 = 1.f;
-    //_float fDist = D3DXVec3Length(&vDist);
     m_fDist = D3DXVec3Length(&vDist);
     if (fabsf(D3DXVec3Length(&vDist)) < 0.05f)
     {
         m_bConnection = true;
-        //pBoxTransformCom1->Set_Pos(m_vBoxOriginPos + vDir);
+
+        _vec3 vPos1 = m_vBoxOriginPos - vCameraPos;
+        _vec3 vPos2 = m_vBoxOriginPos - vCameraPos - vDir;
+        _float fOldDepth = D3DXVec3Dot(&vPos1, &vCameraLook);
+        _float fNewDepth = D3DXVec3Dot(&vPos2, &vCameraLook);
+        _float fScaleRatio = fNewDepth / fOldDepth;
+
+        pBoxTransformCom2->Set_Pos(m_vBoxOriginPos - vDir);
+        pBoxTransformCom2->Set_Scale(m_vBoxOriginScale * fScaleRatio);
     }
     else
     {
+        _vec3 vDist = m_vBoxOriginPos - vPosBox2;
+        if (D3DXVec3Length(&vDist) > 0.1f)
+        {
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            _vec3 vDir = vPos - vPosBox2;
+            vDir.y = 0.f;
+            _vec3 vScale = pBoxTransformCom2->Get_Scale();
+            if (-vScale.x <= vDir.x && vDir.x <= vScale.x && -vScale.z <= vDir.z && vDir.z <= vScale.z)
+            {
+
+                 vDir *= m_vBoxOriginScale.x / vScale2.x;
+                 _vec3 vPos = m_vBoxOriginPos + vDir;
+                _vec3 vScale = m_pTransformCom->Get_Scale();
+                vPos.y += vScale.y;
+                m_pTransformCom->Set_Pos(vPos);
+            }
+        }
+
         m_bConnection = false;
-        //pBoxTransformCom1->Set_Pos(m_vBoxOriginPos);
+        pBoxTransformCom2->Set_Pos(m_vBoxOriginPos);
+        pBoxTransformCom2->Set_Scale(m_vBoxOriginScale);
+    }
+}
+
+void CPlayer_MG1::Set_Box2Location()
+{
+    if (m_iCameraType == 1)
+    {
+
     }
 }
 
