@@ -23,6 +23,7 @@ HRESULT CBox_MG1::Ready_GameObject()
     CGameObject::Ready_GameObject();
 
     m_pTransformCom->Set_Scale(0.5f, 0.5f, 0.5f);
+    m_pTransformCom2->Set_Scale(0.5f, 0.5f, 0.5f);
     _vec3 vScale = m_pTransformCom->Get_Scale();
     m_pColliderCom->Set_Radius(vScale.x);
 
@@ -37,16 +38,15 @@ HRESULT CBox_MG1::Ready_GameObject()
     vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
     vAngle.z = 0.f;
     m_pTransformCom->Set_Angle(vAngle);
+    m_pTransformCom2->Set_Angle(vAngle);
 
     return S_OK;
 }
 
 _int CBox_MG1::Update_GameObject(_float fTimeDelta)
 {
-    m_pTransformCom;
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
-
+    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
     return iExit;
 }
@@ -62,7 +62,17 @@ void CBox_MG1::Render_GameObject()
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-    m_pTextureCom->Set_Texture(100);
+    if (m_bConnection == true)
+    {
+        //m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom2->Get_World());
+        m_pTextureCom->Set_Texture(1);
+    }
+    else
+    {
+        //m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+        m_pTextureCom->Set_Texture(0);
+    }
+
     m_pBufferCom->Render_Buffer();
 
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
@@ -77,7 +87,7 @@ HRESULT CBox_MG1::Add_Component()
     CComponent* pComponent = nullptr;
 
     // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Pink_Texture"));
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_MG1_Texture"));
     if (nullptr == pComponent) return E_FAIL;
     m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
@@ -96,6 +106,14 @@ HRESULT CBox_MG1::Add_Component()
         return E_FAIL;
 
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
+
+    // Transform
+    pComponent = m_pTransformCom2 = dynamic_cast<CTransform*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform2", pComponent });
 
     // Collider
     pComponent = m_pColliderCom = dynamic_cast<CCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SphereCollider"));
@@ -147,6 +165,7 @@ CBox_MG1* CBox_MG1::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos)
 void CBox_MG1::Set_Pos(const _vec3& vPos)
 {
     m_pTransformCom->Set_Pos(vPos);
+    m_pTransformCom2->Set_Pos(vPos);
 }
 
 void CBox_MG1::Free()

@@ -33,13 +33,18 @@ public:
 
 
 	void Set_Pos(const _vec3& vPos);
+
+	void Set_Connection(_bool bConnection) { m_bConnection = bConnection; }
 protected:
 	virtual void		Free();
 
 protected:
 	Engine::CRcTex* m_pBufferCom = nullptr;
 	Engine::CTransform* m_pTransformCom = nullptr;
+	Engine::CTransform* m_pTransformCom2 = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
 	Engine::CCalculator* m_pCalculatorCom = nullptr;
 	Engine::CCollider* m_pColliderCom = nullptr;
+
+	_bool m_bConnection = false;
 };

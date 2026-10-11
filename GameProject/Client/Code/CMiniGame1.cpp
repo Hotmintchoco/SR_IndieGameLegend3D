@@ -113,23 +113,46 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
     if (FAILED(pLayer->Add_GameObject(L"Player", m_pPlayer))) return E_FAIL;
     CTransform* pPlayerTransformCom22 = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC,
         L"GameLogic_Layer", L"Player", L"Com_Transform"));
-    pPlayerTransformCom22->Set_Pos(_vec3{ 1.f, 0.75f, 4.f });
+    pPlayerTransformCom22->Set_Pos(_vec3{ 4.f, 0.25f - 1.f, 4.f });
 
     _vec3 vPos;
     //Box
-    vPos = { 1.f, 0.5f, 4.f };
+    vPos = { 4.f, -1.f, 4.f }; //Box1
     pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos);
     if (nullptr == pGameObject) return E_FAIL;
     if (FAILED(pLayer->Add_GameObject(L"Box1", pGameObject))) return E_FAIL;
     m_pPlayer->Set_Box1(static_cast<CBox_MG1*>(pGameObject));
 
-    vPos = { -1.f, 1.f, 4.f };
+    vPos = { -1.f, 1.f, 4.f }; //Box2
     pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos);
     if (nullptr == pGameObject) return E_FAIL;
     if (FAILED(pLayer->Add_GameObject(L"Box2", pGameObject))) return E_FAIL;
     m_pPlayer->Set_Box2(static_cast<CBox_MG1*>(pGameObject));
 
+    vPos = { -2.f, 1.f, 4.f };
+    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos);
+    if (nullptr == pGameObject) return E_FAIL;
+    if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
 
+    vPos = { -3.f, 1.f, 4.f };
+    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos);
+    if (nullptr == pGameObject) return E_FAIL;
+    if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
+
+
+    //맨밑
+    vPos = { 4.f, -3.f, 4.f };
+    for (int i = -11; i < 8; ++i)
+    {
+        for (int j = -3; j < 4; ++j)
+        {
+            _vec3 vPos2 = { (_float)i, 0.f, (_float)j };
+            _vec3 vPos3 = vPos + vPos2;
+            pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos3);
+            if (nullptr == pGameObject) return E_FAIL;
+            if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
+        }
+    }
     // Camera1
     CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC,
         L"GameLogic_Layer", L"Player", L"Com_Transform"));
@@ -181,6 +204,9 @@ void CMiniGame1::RenderImGui()
         ImGui::Text("Pos : %.2f, %.2f, %.2f", vPos.x, vPos.y, vPos.z);
         ImGui::Text("Pitch : %.2f, Raw %.2f", vAngle.x, vAngle.y);
         ImGui::Text("Connection : %d, Dist : %.4f", pPlayer->Is_Connection(), pPlayer->Dist());
+        ImGui::Text("POINT1 : %.2f %.2f, %.2f", pPlayer->Get_f1().x, pPlayer->Get_f1().y, pPlayer->Get_f1().z);
+        ImGui::Text("POINT2 : %.2f %.2f, %.2f", pPlayer->Get_f2().x, pPlayer->Get_f2().y, pPlayer->Get_f2().z);
+
 
     }        
 

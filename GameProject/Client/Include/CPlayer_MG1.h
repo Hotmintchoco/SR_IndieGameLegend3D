@@ -55,7 +55,7 @@ public:
 	_bool Is_Connection() { return m_bConnection; }
 
 	void Check_Connection();
-	void Set_Box2Location();
+
 private:
 	_float m_fYaw = 0.f;
 	_float m_fPitch = 0.f;
@@ -84,7 +84,11 @@ public:
 	_float Dist() { return m_fDist; }
 	_float m_fDist = 0,f;
 
-
+	_vec3 m_v1;
+	_vec3 m_v2;
+	_vec3 Get_f1() { return m_v1; }
+	_vec3 Get_f2() { return m_v2; }
+public :
 	/* 카메라 뷰 */
 	//CCamera_MG1* m_pCamera = nullptr;
 

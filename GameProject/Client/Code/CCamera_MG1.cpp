@@ -60,9 +60,13 @@ _int CCamera_MG1::Update_GameObject(_float fTimeDelta)
 	//Mouse_Move();
 
 	//Update_LookFromAngles();
+	_matrix matworld = *m_pTarget->Get_World();
 
-	_vec3 vPos; m_pTarget->Get_Info(INFO_POS, &vPos);
-	_vec3 vLook; m_pTarget->Get_Info(INFO_LOOK, &vLook);
+	_vec3 vLook = { matworld._31,matworld._32,matworld._33 };
+	_vec3 vPos = { matworld._41, matworld._42, matworld._43 };
+
+	//_vec3 vPos; m_pTarget->Get_Info(INFO_POS, &vPos);
+	//_vec3 vLook; m_pTarget->Get_Info(INFO_LOOK, &vLook);
 	D3DXVec3Normalize(&vLook, &vLook);
 
 	m_vEye = vPos;
