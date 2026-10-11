@@ -19,6 +19,10 @@ struct CINEMATIC_DESC
     // 라디안 단위
     _float fFovFrom = D3DXToRadian(60.f);
     _float fFovTo = D3DXToRadian(60.f);
+
+    // 회전 연출
+    _bool  bOrbit = false;
+    _float fOrbitAngle = D3DXToRadian(90.f); // 총 회전 각도
 };
 
 class CCinematicCamera : public Engine::CCamera

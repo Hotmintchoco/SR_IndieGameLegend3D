@@ -439,6 +439,9 @@
     <Filter Include="01. Scene\Stage\Layer\LaserPuzzle">
       <UniqueIdentifier>{612b5a6b-a31a-4f5b-8b1d-843120f0366d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\Intro">
+      <UniqueIdentifier>{c80e9381-b779-43fb-a4fe-73fc75d28c59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -813,9 +816,6 @@
     <ClInclude Include="..\Header\CMiniGame1.h">
       <Filter>01. Scene\MiniGame_1</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CIntroScene.h">
-      <Filter>01. Scene\Intro</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CStartScreen.h">
       <Filter>01. Scene\Start</Filter>
     </ClInclude>
@@ -914,6 +914,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CLaserPuzzleRoomLayer.h">
       <Filter>01. Scene\Stage\Layer\LaserPuzzle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CIntroScene.h">
+      <Filter>01. Scene\Intro</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1259,9 +1262,6 @@
     <ClCompile Include="..\Code\CMiniGame1.cpp">
       <Filter>01. Scene\MiniGame_1</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CIntroScene.cpp">
-      <Filter>01. Scene\Intro</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CStartScreen.cpp">
       <Filter>01. Scene\Start</Filter>
     </ClCompile>
@@ -1364,6 +1364,9 @@
     <ClCompile Include="..\Code\CLaserPuzzleRoomLayer.cpp">
       <Filter>01. Scene\Stage\Layer\LaserPuzzle</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CIntroScene.cpp">
+      <Filter>01. Scene\Intro</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -1401,15 +1404,9 @@
     <ClCompile Include="..\Code\CGrayscaleEffect.cpp">
       <Filter>05. Shader</Filter>
     </ClCompile>
-    <None Include="..\Bin\Resource\Shader\Grayscale.hlsl">
-      <Filter>03. Resource\02. Shader</Filter>
-    </None>
     <ClCompile Include="..\Code\CInvertEffect.cpp">
       <Filter>05. Shader</Filter>
     </ClCompile>
-    <None Include="..\Bin\Resource\Shader\Invert.hlsl">
-      <Filter>03. Resource\02. Shader</Filter>
-    </None>
     <ClInclude Include="..\Header\CLavaEffect.h">
       <Filter>05. Shader</Filter>
     </ClInclude>
@@ -1432,5 +1429,16 @@
     <None Include="..\Bin\Resource\Shader\CameraFilterPack_RainDrop.png">
       <Filter>리소스 파일</Filter>
     </None>
+    <None Include="..\Bin\Resource\Shader\Grayscale.hlsl" />
+    <None Include="..\Bin\Resource\Shader\Invert.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Npc" />
+    <ClInclude Include="..\Header\CNpc.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Npc</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CNpc.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Npc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
