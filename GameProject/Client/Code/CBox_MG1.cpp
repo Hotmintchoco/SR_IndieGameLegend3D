@@ -29,7 +29,7 @@ HRESULT CBox_MG1::Ready_GameObject()
     //_vec3 vPos = { 0.f,0.f,10.5f };
     //m_pTransformCom->Set_Pos(vPos);
 
-    _vec3 vDir{ 0.f,-1.f,-0.f };
+    _vec3 vDir{ 0.f,-1.f,0.f };
     D3DXVec3Normalize(&vDir, &vDir);
 
     _vec3 vAngle;

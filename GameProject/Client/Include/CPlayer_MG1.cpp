@@ -62,7 +62,6 @@ _int CPlayer_MG1::Update_GameObject(_float fTimeDelta)
     
     Check_Connection();
     //CUIMgr::GetInstance()->Update_HPUI(m_iHP, m_bInvincible);
-
     return iExit;
 }
 
@@ -205,22 +204,31 @@ void CPlayer_MG1::Check_Connection()
     CTransform* pBoxTransformCom1 = dynamic_cast<CTransform*>(m_pBox1->Get_Component(ID_DYNAMIC, L"Com_Transform"));
     CTransform* pBoxTransformCom2 = dynamic_cast<CTransform*>(m_pBox2->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 
-
-    //CTransform* pBoxTransformCom1 = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC,
-    //    L"GameLogic_Layer", L"Box1", L"Com_Transform"));
-    //CTransform* pBoxTransformCom2 = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC,
-    //    L"GameLogic_Layer", L"Box1", L"Com_Transform"));
-
-    //vPos2가 높도록 설정
-    _vec3 vPos1, vPos2;
-    pBoxTransformCom1->Get_Info(INFO_POS, &vPos1);
-    pBoxTransformCom2->Get_Info(INFO_POS, &vPos2);
-
-    if (vPos1.y > vPos2.y)
+    _vec3 temp1, temp2;
+    pBoxTransformCom1->Get_Info(INFO_POS, &temp1);
+    pBoxTransformCom2->Get_Info(INFO_POS, &temp2);
+    if (temp1.y > temp2.y)
     {
-        _vec3 temp = vPos1;
-        vPos1 = vPos2;
-        vPos2 = temp;
+        CTransform* pTemp = pBoxTransformCom1;
+        pBoxTransformCom1 = pBoxTransformCom2;
+        pBoxTransformCom2 = pTemp;
+    }
+
+    //vPos2가 높도록
+    _vec3 vPosBox1, vPosBox2, vRightBox1, vRightBox2, vScale1, vScale2;
+    pBoxTransformCom1->Get_Info(INFO_POS, &vPosBox1);
+    pBoxTransformCom2->Get_Info(INFO_POS, &vPosBox2);
+    pBoxTransformCom1->Get_Info(INFO_RIGHT, &vRightBox1);
+    pBoxTransformCom2->Get_Info(INFO_RIGHT, &vRightBox2);
+    vScale1 = pBoxTransformCom1->Get_Scale();
+    vScale2 = pBoxTransformCom2->Get_Scale();
+    D3DXVec3Normalize(&vRightBox1, &vRightBox1);
+    D3DXVec3Normalize(&vRightBox2, &vRightBox2);
+
+    if (m_bConnectionStart == false)
+    {
+        m_bConnectionStart = true;
+        m_vBoxOriginPos = vPosBox2;
     }
     
     _matrix matView, matCameraWorld;
@@ -228,37 +236,35 @@ void CPlayer_MG1::Check_Connection()
     m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
     D3DXMatrixInverse(&matCameraWorld, nullptr, &matView);
 
-    //_vec3 vLook = { matView._13, matView._23, matView._33 };
     _vec3 vCameraPos = { matCameraWorld._41, matCameraWorld._42, matCameraWorld._43 };
 
-    //D3DXVec3Normalize(&vLook, &vLook);
+    _vec3 vPosBox1Point = vPosBox1 - vRightBox1 * vScale1.x;
+    _vec3 vPosBox2Point = vPosBox2 + vRightBox2 * (vScale2.x * 0.9f);
 
-    _vec3 vDir = vCameraPos - vPos1;
+    _vec3 vDir = vCameraPos - vPosBox1Point;
     vDir.x /= vDir.y;
     vDir.y /= vDir.y;
     vDir.z /= vDir.y;
 
 
-    vDir *= (vPos2.y - vPos1.y);
+    vDir *= (vPosBox2.y - vPosBox1.y);
 
-    vPos1 += vDir;
+    vPosBox1Point += vDir;
 
-    _vec3 vDist = vPos2 - vPos1;
-    /*if (0.9f < D3DXVec3Length(&vDist) && D3DXVec3Length(&vDist) < 1.1f)
+    _vec3 vDist = vPosBox2Point - vPosBox1Point;
+
+    //_float fDist2 = 1.f;
+    //_float fDist = D3DXVec3Length(&vDist);
+    m_fDist = D3DXVec3Length(&vDist);
+    if (fabsf(D3DXVec3Length(&vDist)) < 0.05f)
     {
         m_bConnection = true;
-    }*/
-    _float fDist2 = 1.f;
-    _float fDist = D3DXVec3Length(&vDist);
-    m_fDist = fDist;
-    if (fDist2 - 0.01f < fDist && fDist < fDist2 + 0.01f)
-    {
-        m_bConnection = true;
+        //pBoxTransformCom1->Set_Pos(m_vBoxOriginPos + vDir);
     }
     else
     {
         m_bConnection = false;
-
+        //pBoxTransformCom1->Set_Pos(m_vBoxOriginPos);
     }
 }
 

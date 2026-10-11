@@ -68,6 +68,10 @@ private:
 	CBox_MG1* m_pBox1 = nullptr;
 	CBox_MG1* m_pBox2 = nullptr;
 
+	_vec3 m_vBoxOriginPos = { 0.f,0.f,0.f };
+	_vec3 m_vBoxChangedPos = { 0.f,0.f,0.f };
+
+	_bool m_bConnectionStart = false;
 	//디버그
 public:
 	_float Dist() { return m_fDist; }

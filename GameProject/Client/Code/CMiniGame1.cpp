@@ -111,6 +111,9 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
     m_pPlayer = CPlayer_MG1::Create(m_pGraphicDev);
     if (nullptr == m_pPlayer) return E_FAIL;
     if (FAILED(pLayer->Add_GameObject(L"Player", m_pPlayer))) return E_FAIL;
+    CTransform* pPlayerTransformCom22 = dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC,
+        L"GameLogic_Layer", L"Player", L"Com_Transform"));
+    pPlayerTransformCom22->Set_Pos(_vec3{ 1.f, 0.75f, 4.f });
 
     _vec3 vPos;
     //Box
