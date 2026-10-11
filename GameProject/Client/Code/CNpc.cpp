@@ -9,6 +9,8 @@
 #include "CLayerContext.h"
 #include "CRoomLayer.h"
 #include "CSoundMgr.h"
+#include "CManagement.h"
+#include "CStage.h"
 
 CNpc::CNpc(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -99,6 +101,8 @@ void CNpc::OnRoomEvent(const TRoomEventCtx& t)
         CSoundMgr::GetInstance()->PlayBGM(tTrack);
 
         // 여기서 NPC의 구조 요청이나 대화 연출 시작
+        if (auto* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene()))
+            pStage->StartNpcDialogue();
 
         break;
     }

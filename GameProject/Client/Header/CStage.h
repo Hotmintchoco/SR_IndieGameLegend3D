@@ -11,6 +11,7 @@ namespace Engine
 class CGameStatus;
 class CRoomLayer;
 class CPlayer;
+class CUI;
 
 class CStage : public CScene
 {
@@ -19,10 +20,11 @@ private:
 	virtual ~CStage();
 
 public:
-	virtual	HRESULT Ready_Scene() override;
-	virtual	_int Update_Scene(_float fTimeDelta) override;
-	virtual	void LateUpdate_Scene(_float fTimeDelta) override;
-	virtual	void Render_Scene() override {}
+	virtual	HRESULT				Ready_Scene() override;
+	virtual	_int				Update_Scene(_float fTimeDelta) override;
+	virtual	void				LateUpdate_Scene(_float fTimeDelta) override;
+	virtual	void				Render_Scene() override;
+    void						StartNpcDialogue();
 
 	virtual			void		OnEnter() override;
 	virtual			void		OnExit() override;
@@ -59,6 +61,13 @@ private:
 	int CalculateRoomIndexFromPlayerPosition();
 	void ApplyRoomShader(EBiomeType eBiomeType);
 
+	/* Npc 대화 */
+	HRESULT		Ready_NpcDialogue();
+	void		UpdateNpcDialogue();
+	void		EndNpcDialogue();
+
+
+private:
 	/* 방 관련 */
 	CRoomLayer* m_pCurrentRoomLayer = nullptr;
 	int m_iStartRoomIndex = 12; // 12
@@ -77,6 +86,22 @@ private:
 
 	/* 디버그 */
 	int m_iWarpRequest = -1;
+
+	/* Npc 대화 */
+	CUI* m_pDialogueWindow = nullptr;
+	CUI* m_pDialoguePortrait = nullptr;
+    CUI* m_pPlayerDialoguePortrait = nullptr;
+    enum class NPC_SPEAKER { NPC, PLAYER };
+    struct NPC_DIALOGUE_LINE
+    {
+        NPC_SPEAKER eSpeaker;
+        std::wstring strText;
+    };
+	bool m_bNpcDialogue = false;
+	size_t m_iNpcLine = 0;
+	size_t m_iNpcVisible = 0;
+	ULONGLONG m_iNpcNextWord = 0;
+	std::vector<NPC_DIALOGUE_LINE> m_npcLines;
 
 public:
 	static CStage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
