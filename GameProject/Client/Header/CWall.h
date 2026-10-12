@@ -2,6 +2,7 @@
 
 #include "CGameObject.h"
 #include "IRayTestable.h"
+#include "IAnamorphicTarget.h"
 #include "Client_Enum.h"
 
 struct TRoomEventCtx;
@@ -15,7 +16,7 @@ namespace Engine
 	class CBoxCollider;
 }
 
-class CWall : public CGameObject, public IRayTestable
+class CWall : public CGameObject, public IRayTestable, public IAnamorphicTarget
 {
 protected:
 	explicit CWall(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -33,8 +34,15 @@ public:
 	inline EWallDir GetDir() { return m_eDir; };
 	inline bool HasDoor() { return m_bHasDoor; };
 
+	/* for short wall */
+	HRESULT ReplaceBuffer(const wstring& wstrBufferProtoTag);
+
 	/* IRayTestable */
 	virtual vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> GetRayTestTargetInfo() override;
+
+	/* IAnamorphicTarget */
+	virtual CVIBuffer* GetBuffer() override;
+	virtual CTransform* GetTransform() override;
 
 private:
 	HRESULT Add_Component();

@@ -151,7 +151,7 @@ TWeaponSystemOutput CWeaponSystem::UpdateInput(const TWeaponSystemInput& tInput)
 
 HRESULT CWeaponSystem::AddWeapon(EObjectType eType, const wstring& wstrName)
 {
-    CWeapon* pWeapon = CAbstractFactory::GetInstance()->CraeteWeapon(eType);
+    CWeapon* pWeapon = CAbstractFactory::GetInstance()->CreateWeapon(eType);
 
     if (pWeapon)
     {
@@ -172,6 +172,7 @@ void CWeaponSystem::ApplyCameraView(CAMERA_MODE eMode)
     for (auto p : m_vecWeapon)
     {
         p->UpdateLocalTransform(p->GetLocalInfo(eMode));
+        p->SetRenderOverlay((eMode == CAMERA_MODE::FIRST_PERSON) ? true : false);
     }
 }
 

@@ -58,6 +58,33 @@ void CLiminalObject::OnCollisionEnter(COLLINFO eCollInfo)
     // }
 }
 
+void CLiminalObject::SetOutlineColor(EColorType eType)
+{
+    if (m_pOutlineTextureCom)
+    {
+        auto iter = m_mapComponent[ID_DYNAMIC].find(L"Com_OutlineTexture");
+        m_mapComponent[ID_DYNAMIC].erase(iter);
+        Safe_Release(m_pOutlineTextureCom);
+    }
+
+    const unordered_map<EColorType, wstring> s_mapColor = {
+        {EColorType::RED, L"Red"},
+        {EColorType::GREEN, L"Green"},
+        {EColorType::BLUE, L"Blue"},
+        {EColorType::YELLOW, L"Yellow"}
+    };
+
+    // Texture
+    wstring wstrProtoTag = L"Proto_" + s_mapColor.at(eType) + L"_Texture";
+
+    m_pOutlineTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(wstrProtoTag.c_str()));
+
+    if (nullptr == m_pOutlineTextureCom)
+        return;
+
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_OutlineTexture", m_pOutlineTextureCom });
+}
+
 HRESULT CLiminalObject::Add_Component()
 {
     CComponent* pComponent = nullptr;
@@ -77,22 +104,14 @@ HRESULT CLiminalObject::Add_Component()
         return E_FAIL;
 
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_OutlineTransform", pComponent });
-
-    // Collider
-    pComponent = m_pColliderCom = dynamic_cast<CBoxCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BoxCollider"));
-
-    if (nullptr == pComponent)
-        return E_FAIL;
-
-    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Collider", pComponent });
     
     // Texture
-    pComponent = m_pWhiteTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Yellow_Texture"));
+    pComponent = m_pOutlineTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_White_Texture"));
 
     if (nullptr == pComponent)
         return E_FAIL;
 
-    m_mapComponent[ID_DYNAMIC].insert({ L"Com_WhiteTexture", pComponent });
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_OutlineTexture", pComponent });
 
 
     return S_OK;

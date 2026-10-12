@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CGameObject.h"
+#include "IAnamorphicTarget.h"
 
 struct TRoomEventCtx;
 
@@ -11,7 +12,7 @@ namespace Engine
 	class CTexture;
 }
 
-class CDoor : public CGameObject
+class CDoor : public CGameObject, public IAnamorphicTarget
 {
 protected:
 	explicit CDoor(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -23,18 +24,25 @@ public:
 	virtual			void		LateUpdate_GameObject(_float fTimeDelta);
 	virtual			void		Render_GameObject();
 
+	inline int GetBindHandle() { return m_iBindHandle; }
+	void Open();
+	void Close();
+
+	/* IAnamorphicTarget */
+	virtual CVIBuffer* GetBuffer() override;
+	virtual CTransform* GetTransform() override;
 
 private:
 	HRESULT			Add_Component();
 
 private:
 	void OnRoomEvent(const TRoomEventCtx& t);
-	void Open();
-	void Close();
 
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
+
+	int m_iBindHandle = -1;
 
 	int m_iTextureIdx = 4;
 	bool m_bOnAnimation = false;

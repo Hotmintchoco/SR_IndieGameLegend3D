@@ -40,6 +40,7 @@
 #include "CLiminalRoomLayer.h"
 #include "CMiniGame.h"
 #include "CMiniGame1.h"
+#include "CAnamorphicObject.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -55,6 +56,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::LIMINAL_CUBE,             [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalCube::Create(t.pDevice); } },
         {EObjectType::LIMINAL_SLOPE,            [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalSlope::Create(t.pDevice); } },
         {EObjectType::JAIL,                     [](const TCreateDesc& t) -> Engine::CGameObject* { return CJail::Create(t.pDevice); } },
+        {EObjectType::ANAMORPHIC_CUBE,          [](const TCreateDesc& t) -> Engine::CGameObject* { return CAnamorphicObject::Create(t.pDevice); } },
 
         {EObjectType::Skull,                    [](const TCreateDesc& t) -> Engine::CGameObject* { return CSkull::Create(t.pDevice); } },
         {EObjectType::Boss1,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CBoss1::Create(t.pDevice); } },
