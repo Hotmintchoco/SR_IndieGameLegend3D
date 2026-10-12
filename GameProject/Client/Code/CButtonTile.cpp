@@ -77,6 +77,7 @@ void CButtonTile::OnCollisionEnter(COLLINFO eCollInfo)
     {
     case COLLISIONID::COLL_OBSTACLE:
     case COLLISIONID::COLL_PLAYER:
+    case COLLISIONID::COLL_DYNAMICOBJECT:
     {
         if (m_iCollisionCount == 0)
         {
@@ -102,6 +103,7 @@ void CButtonTile::OnCollisionExit(COLLINFO eCollInfo)
     {
     case COLLISIONID::COLL_OBSTACLE:
     case COLLISIONID::COLL_PLAYER:
+    case COLLISIONID::COLL_DYNAMICOBJECT:
     {
         --m_iCollisionCount;
 

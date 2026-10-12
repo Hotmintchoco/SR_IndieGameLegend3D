@@ -26,16 +26,12 @@ HRESULT CFrustum::Ready_GameObject()
     if (FAILED(CGameObject::Ready_GameObject()))
         return E_FAIL;
 
-	m_pColliderCom->Set_CollisionID(COLL_OBSTACLE);
-
     return S_OK;
 }
 
 _int CFrustum::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
-
-    CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom);
 
     return iExit;
 }

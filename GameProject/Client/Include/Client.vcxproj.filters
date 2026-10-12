@@ -529,6 +529,12 @@
     <Filter Include="01. Scene\Intro">
       <UniqueIdentifier>{c80e9381-b779-43fb-a4fe-73fc75d28c59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ice">
+      <UniqueIdentifier>{a16ae8e4-a76a-4c90-8d52-9960b5eec7a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Frustum\Pushable">
+      <UniqueIdentifier>{d2d4f74e-77a1-430c-aea5-374a7669cfb9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1116,6 +1122,12 @@
     <ClInclude Include="..\Header\CIntroScene.h">
       <Filter>01. Scene\Intro</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CIceRoomLayer.h">
+      <Filter>01. Scene\Stage\Layer\Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPushableFrustum.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Pushable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1672,6 +1684,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CIntroScene.cpp">
       <Filter>01. Scene\Intro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CIceRoomLayer.cpp">
+      <Filter>01. Scene\Stage\Layer\Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPushableFrustum.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Pushable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

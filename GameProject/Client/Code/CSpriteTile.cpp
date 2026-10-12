@@ -105,6 +105,10 @@ void CSpriteTile::Contaminate(EContaminateType eType, float fDuration)
         m_eContaminationType = EContaminateType::LAVA;
         m_pAnimTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_TileLava_Texture"));
         break;
+    case EContaminateType::ICE:
+        m_eContaminationType = EContaminateType::ICE;
+        m_pAnimTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_TileIce_Texture"));
+        break;
     default:
         break;
     }

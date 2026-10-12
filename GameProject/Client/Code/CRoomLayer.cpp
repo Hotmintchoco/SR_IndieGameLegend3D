@@ -25,6 +25,7 @@
 #include "CRandomMgr.h"
 #include "CAtmosphereVeil.h"
 #include "CMonster.h"
+#include "CPlayerMovement.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -92,6 +93,9 @@ void CRoomLayer::PlayerTileInteraction()
 	{
 	case EContaminateType::LAVA:
 		pPlayer->OnHit(nullptr);
+		break;
+	case EContaminateType::ICE:
+		pPlayer->GetMovement()->Slip(0.1f);
 		break;
 	default:
 		break;

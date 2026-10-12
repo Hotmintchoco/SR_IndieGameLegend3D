@@ -35,6 +35,8 @@ HRESULT CExplosiveFrustum::Ready_GameObject()
 
     SpawnChildren();
 
+    m_pColliderCom->Set_CollisionID(COLL_OBSTACLE);
+
     return S_OK;
 }
 
@@ -43,6 +45,7 @@ _int CExplosiveFrustum::Update_GameObject(_float fTimeDelta)
     _int    iExit = CFrustum::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom);
 
     _vec3   vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);

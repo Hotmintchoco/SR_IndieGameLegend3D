@@ -103,13 +103,16 @@ enum class EObjectType
 	EFFECT_GENERATOR_AIRBUBBLE = 60,
 	EFFECT_GENERATOR_YELLOWDUST = 61,
 	EFFECT_GENERATOR_SNOW = 62,
+
+	PUSHABLE_FRUSTUM = 91,
+
 	MAX,
 };
 
 enum class ERoomType
 {
 	ROOM_DEFAULT,
-	ROOM_LASER_PUZZLE,
+	ROOM_ICE,
 	ROOM_LIMINAL,
 
 	ROOM_MAX
@@ -148,6 +151,7 @@ enum class EContaminateType
 	NONE,
 
 	LAVA,
+	ICE,
 
 	MAX,
 };

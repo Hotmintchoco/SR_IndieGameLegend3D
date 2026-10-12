@@ -334,6 +334,8 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BrownFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/BrownFrustum_Diffuse.png", 1))))
         return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BlueFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/BlueFrustum_Diffuse.png", 1))))
+        return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ExplosiveFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/ExplosiveFrustum2_Diffuse.png", 1))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BombLight_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/bomblight2_%d.png", 2))))
@@ -412,6 +414,8 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Tile_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Tile/StaticTile/StaticTile_%d.png", 57))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileLava_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Tile/AnimationTile/FloorLava_%d.png", 4))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileIce_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Tile/StaticTile/StaticTile_34.png", 1))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Button_Up_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/ButtonUp.ply"))))
         return E_FAIL;
