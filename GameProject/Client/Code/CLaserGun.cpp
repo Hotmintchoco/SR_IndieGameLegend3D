@@ -15,6 +15,8 @@
 #include "CPlayer.h"
 #include "CTimerMgr.h"
 #include "CPlayerCamera.h"
+#include "CShaderEffectMgr.h"
+#include "CInvertEffect.h"
 
 CLaserGun::CLaserGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -35,6 +37,10 @@ HRESULT CLaserGun::Ready_GameObject()
 
     m_fSpecialAtkInterval = 0.5f;
 
+    m_pShaderEffect = dynamic_cast<CInvertEffect*>(CShaderEffectMgr::GetInstance()->Get_PostEffect(POST_EFFECT::INVERT));
+    if (!m_pShaderEffect)
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -51,6 +57,27 @@ _int CLaserGun::Update_GameObject(_float fTimeDelta)
     else
     {
         CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    }
+
+    if (m_bOnEffectTransition)
+    {
+        m_fTimeAfterEffect += fTimeDelta;
+        float fRatio = clamp(m_fTimeAfterEffect / m_fTotalEffectTransitionTime, 0.f, 1.f);
+        float s = fRatio * m_fEndStrength + (1.f - fRatio) * m_fStartStrength;
+        m_pShaderEffect->Set_Strength(s);
+
+        if (m_fTimeAfterEffect >= m_fTotalEffectTransitionTime)
+        {
+            m_bOnEffectTransition = false;
+            if (m_bOnUltimateAttack) /* 궁극기 진입 시 */
+            {
+                CShaderEffectMgr::GetInstance()->Set_PostEffect(POST_EFFECT::INVERT);
+            }
+            else /* 끝나고 되돌아갈때 */
+            {
+                CShaderEffectMgr::GetInstance()->Set_PostEffect(m_eOldEffectType);
+            }
+        }
     }
 
     return iExit;
@@ -107,17 +134,23 @@ TWeaponOutput CLaserGun::SpecialAttack(EInputState ePri, EInputState eSec)
 
 TWeaponOutput CLaserGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
 {
-    m_pRibbon = CRibbon::Create(m_pGraphicDev, m_vBulletFrom, m_vBulletTo);
-    if (m_pRibbon)
     {
-        CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"Ribbon", m_pRibbon);
-        m_pRibbon->m_OnExplosionPhaseEnded.AddBinding(GetToken(), [this]() { OnExplosionPhaseEnded(); });
-    }
+        /* TODO 시간 정지와 분리시키기 */
+        m_pRibbon = CRibbon::Create(m_pGraphicDev, m_vBulletFrom, m_vBulletTo);
+        if (m_pRibbon)
+        {
+            CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"Ribbon", m_pRibbon);
+            m_pRibbon->m_OnExplosionPhaseEnded.AddBinding(GetToken(), [this]() { OnExplosionPhaseEnded(); });
+        }
 
-    CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-    if (pStage)
-    {
-        pStage->GetPlayer()->LockInput(PIC_MOVE);
+        CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+        if (pStage)
+        {
+            pStage->GetPlayer()->LockInput(PIC_MOVE);
+        }
+
+        CClientCameraMgr::GetInstance()->SetPlayerCameraMode(CAMERA_MODE::THIRD_PERSON);
+        CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
     }
 
     CTimerMgr::GetInstance()->SetGlobalTimeScale(0.f);
@@ -125,10 +158,16 @@ TWeaponOutput CLaserGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
     CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_CINEMATIC, 1.f);
     CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_PLAYER, 1.f);
 
+    m_bOnEffectTransition = true;
+    m_fTotalEffectTransitionTime = 1.f;
+    m_fTimeAfterEffect = 0.f;
+    m_fStartStrength = 0.f;
+    m_fEndStrength = 1.f;
+    m_eOldEffectType = CShaderEffectMgr::GetInstance()->Get_PostEffectType();
+    CShaderEffectMgr::GetInstance()->Set_PostEffect(POST_EFFECT::INVERT);
+
     m_bOnUltimateAttack = true;
     m_pSystem->SetUltimateAttackOnGoing(true);
-    CClientCameraMgr::GetInstance()->SetPlayerCameraMode(CAMERA_MODE::THIRD_PERSON);
-    CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
 
     return { true, EWeaponAnimEvent::NONE };
 }
@@ -161,6 +200,12 @@ TWeaponOutput CLaserGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
 {
     CTimerMgr::GetInstance()->SetGlobalTimeScale(1.f);
     CTimerMgr::GetInstance()->ClearAllGroupTimeScale();
+
+    m_bOnEffectTransition = true;
+    m_fTotalEffectTransitionTime = 2.0f;
+    m_fTimeAfterEffect = 0.f;
+    m_fStartStrength = 1.f;
+    m_fEndStrength = 0.f;
 
     m_bOnUltimateAttack = false;
     m_pSystem->SetUltimateAttackOnGoing(false);
