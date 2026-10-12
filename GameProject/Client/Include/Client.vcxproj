@@ -252,6 +252,7 @@
     <ClInclude Include="..\Header\CRibbonBuffer.h" />
     <ClInclude Include="..\Header\CSandburst.h" />
     <ClInclude Include="..\Header\CSeaweed.h" />
+    <ClInclude Include="..\Header\CNpc.h" />
     <ClInclude Include="..\Header\CSGBullet.h" />
     <ClInclude Include="..\Header\CShockwave.h" />
     <ClInclude Include="..\Header\CShotGun.h" />
@@ -435,6 +436,7 @@
     <ClCompile Include="..\Code\CRibbonBuffer.cpp" />
     <ClCompile Include="..\Code\CSandburst.cpp" />
     <ClCompile Include="..\Code\CSeaweed.cpp" />
+    <ClCompile Include="..\Code\CNpc.cpp" />
     <ClCompile Include="..\Code\CSGBullet.cpp" />
     <ClCompile Include="..\Code\CShockwave.cpp" />
     <ClCompile Include="..\Code\CShotGun.cpp" />

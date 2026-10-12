@@ -493,6 +493,9 @@
     <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\10. MiniGame_Train">
       <UniqueIdentifier>{8e2a2f0b-c257-41b2-be7b-c94405343e6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\Intro">
+      <UniqueIdentifier>{c80e9381-b779-43fb-a4fe-73fc75d28c59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1041,6 +1044,9 @@
     <ClInclude Include="..\Header\CMG0_Laser.h">
       <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CIntroScene.h">
+      <Filter>01. Scene\Intro</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1559,6 +1565,9 @@
     <ClCompile Include="..\Code\CMG0_Laser.cpp">
       <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CIntroScene.cpp">
+      <Filter>01. Scene\Intro</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -1623,5 +1632,14 @@
     </None>
     <None Include="..\Bin\Resource\Shader\Grayscale.hlsl" />
     <None Include="..\Bin\Resource\Shader\Invert.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Npc" />
+    <ClInclude Include="..\Header\CNpc.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Npc</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CNpc.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Npc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

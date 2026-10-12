@@ -30,6 +30,7 @@
 #include "COcto.h"
 #include "CMine.h"
 #include "CSeaweed.h"
+#include "CNpc.h"
 #include "CSeaweed2.h"
 #include "CWalkerboss.h"
 #include "CGenerator_Airbubble.h"
@@ -58,20 +59,21 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::JAIL,                     [](const TCreateDesc& t) -> Engine::CGameObject* { return CJail::Create(t.pDevice); } },
 
         {EObjectType::Skull,                    [](const TCreateDesc& t) -> Engine::CGameObject* { return CSkull::Create(t.pDevice); } },
-        {EObjectType::Boss1,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CBoss1::Create(t.pDevice); } },
-        {EObjectType::Speyeder,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSpeyeder::Create(t.pDevice); } },
-        {EObjectType::Magmamouth,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CMagmamouth::Create(t.pDevice); } },
-        {EObjectType::Sprnub1,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub1::Create(t.pDevice); } },
-        {EObjectType::Sprnub2,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub2::Create(t.pDevice); } },
-        {EObjectType::Sprnub3,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub3::Create(t.pDevice); } },
-        {EObjectType::Cryder,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CCryder::Create(t.pDevice); } },
-        {EObjectType::Glubba,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGlubba::Create(t.pDevice); } },
-        {EObjectType::Worm,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CWorm::Create(t.pDevice); } },
-        {EObjectType::Octo,                [](const TCreateDesc& t) -> Engine::CGameObject* { return COcto::Create(t.pDevice); } },
-        {EObjectType::Mine,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CMine::Create(t.pDevice); } },
-        {EObjectType::Seaweed,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSeaweed::Create(t.pDevice); } },
-        {EObjectType::Seaweed2,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CSeaweed2::Create(t.pDevice); } },
-        {EObjectType::Walker,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CWalkerboss::Create(t.pDevice); } },
+        {EObjectType::Boss1,                    [](const TCreateDesc& t) -> Engine::CGameObject* { return CBoss1::Create(t.pDevice); } },
+        {EObjectType::Speyeder,                 [](const TCreateDesc& t) -> Engine::CGameObject* { return CSpeyeder::Create(t.pDevice); } },
+        {EObjectType::Magmamouth,               [](const TCreateDesc& t) -> Engine::CGameObject* { return CMagmamouth::Create(t.pDevice); } },
+        {EObjectType::Sprnub1,                  [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub1::Create(t.pDevice); } },
+        {EObjectType::Sprnub2,                  [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub2::Create(t.pDevice); } },
+        {EObjectType::Sprnub3,                  [](const TCreateDesc& t) -> Engine::CGameObject* { return CSprnub3::Create(t.pDevice); } },
+        {EObjectType::Cryder,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CCryder::Create(t.pDevice); } },
+        {EObjectType::Glubba,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CGlubba::Create(t.pDevice); } },
+        {EObjectType::Worm,                     [](const TCreateDesc& t) -> Engine::CGameObject* { return CWorm::Create(t.pDevice); } },
+        {EObjectType::Octo,                     [](const TCreateDesc& t) -> Engine::CGameObject* { return COcto::Create(t.pDevice); } },
+        {EObjectType::Mine,                     [](const TCreateDesc& t) -> Engine::CGameObject* { return CMine::Create(t.pDevice); } },
+        {EObjectType::Seaweed,                  [](const TCreateDesc& t) -> Engine::CGameObject* { return CSeaweed::Create(t.pDevice); } },
+        {EObjectType::Seaweed2,                 [](const TCreateDesc& t) -> Engine::CGameObject* { return CSeaweed2::Create(t.pDevice); } },
+        {EObjectType::Walker,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CWalkerboss::Create(t.pDevice); } },
+        {EObjectType::Npc,                      [](const TCreateDesc& t) -> Engine::CGameObject* { return CNpc::Create(t.pDevice); } },
         
         {EObjectType::EFFECT_GENERATOR_AIRBUBBLE,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_Airbubble::Create(t.pDevice); } },
         {EObjectType::EFFECT_GENERATOR_YELLOWDUST,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_YellowDust::Create(t.pDevice); } },
