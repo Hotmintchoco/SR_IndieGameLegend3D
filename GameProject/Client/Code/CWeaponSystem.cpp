@@ -172,6 +172,7 @@ void CWeaponSystem::ApplyCameraView(CAMERA_MODE eMode)
     for (auto p : m_vecWeapon)
     {
         p->UpdateLocalTransform(p->GetLocalInfo(eMode));
+        p->SetRenderOverlay((eMode == CAMERA_MODE::FIRST_PERSON) ? true : false);
     }
 }
 

@@ -2,6 +2,7 @@
 
 #include "CGameObject.h"
 #include "IRayTestable.h"
+#include "Client_Enum.h"
 
 namespace Engine
 {
@@ -30,6 +31,7 @@ public:
 
 	inline void SetGrabbed(bool bFlag) { m_bGrabbed = bFlag; }
 	inline CTransform* GetTransform() { return m_pTransformCom; }
+	void SetOutlineColor(EColorType eType);
 
 protected:
 	HRESULT Add_Component();
@@ -40,7 +42,7 @@ protected:
 	Engine::CTexture* m_pTextureCom = nullptr;
 
 	/* 아웃라인 용 */
-	Engine::CTexture* m_pWhiteTextureCom = nullptr;
+	Engine::CTexture* m_pOutlineTextureCom = nullptr;
 	Engine::CTransform* m_pOutlineTransformCom = nullptr;
 
 	bool m_bGrabbed = false;

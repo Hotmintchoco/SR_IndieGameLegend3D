@@ -71,31 +71,69 @@ void CButtonTile::Render_GameObject()
 
 void CButtonTile::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    if (eCollInfo.pOtherCollider == m_pColliderCom) return;
+    auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
 
-    if (m_iCollisionCount == 0)
+    switch (iOtherID)
     {
-        if(m_bFixed && m_bPressed) return;
+    case COLLISIONID::COLL_OBSTACLE:
+    case COLLISIONID::COLL_PLAYER:
+    {
+        if (m_iCollisionCount == 0)
+        {
+            if (m_bFixed && m_bPressed) return;
 
-        static_cast<CRoomLayer*>(m_pOwner)->OnButtonInteracted(true);
-        m_bPressed = true;
+            static_cast<CRoomLayer*>(m_pOwner)->OnButtonInteracted(true);
+            m_bPressed = true;
+        }
+
+        ++m_iCollisionCount;
+        break;
     }
-
-    ++m_iCollisionCount;
+    default:
+        break;
+    }
 }
 
 void CButtonTile::OnCollisionExit(COLLINFO eCollInfo)
 {
-    if (eCollInfo.pOtherCollider == m_pColliderCom) return;
+    auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
 
-    --m_iCollisionCount;
-    
-    if (m_bFixed) return;
-
-    if (m_iCollisionCount == 0)
+    switch (iOtherID)
     {
-        static_cast<CRoomLayer*>(m_pOwner)->OnButtonInteracted(false);
-        m_bPressed = false;
+    case COLLISIONID::COLL_OBSTACLE:
+    case COLLISIONID::COLL_PLAYER:
+    {
+        --m_iCollisionCount;
+
+        if (m_bFixed) return;
+
+        if (m_iCollisionCount == 0)
+        {
+            static_cast<CRoomLayer*>(m_pOwner)->OnButtonInteracted(false);
+            m_bPressed = false;
+        }
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void CButtonTile::ManualPress()
+{
+    if (!m_bFixed) return;
+    m_bPressed = true;
+}
+
+CVIBuffer* CButtonTile::GetBuffer()
+{
+    if (m_bPressed)
+    {
+        return m_pDownBufferCom;
+    }
+    else
+    {
+        return m_pUpBufferCom;
     }
 }
 

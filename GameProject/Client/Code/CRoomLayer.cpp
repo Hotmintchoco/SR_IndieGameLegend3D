@@ -14,6 +14,7 @@
 #include "CDoor.h"
 #include "CKillAllEntityCondition.h"
 #include "CPressAllButtonCondition.h"
+#include "CManualClearCondition.h"
 #include "CManagement.h"
 #include "CButtonTile.h"
 #include "CSoundMgr.h"
@@ -151,6 +152,10 @@ HRESULT CRoomLayer::SpawnRoom()
 		else if (wstrClearCondtiion == L"PressAllButtons")
 		{
 			pCondition = CPressAllButtonCondition::Create(this);
+		}
+		else if (wstrClearCondtiion == L"ManualClear")
+		{
+			pCondition = CManualClearCondition::Create(this);
 		}
 		else
 		{

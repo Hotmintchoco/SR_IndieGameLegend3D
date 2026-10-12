@@ -33,7 +33,7 @@ _int CLiminalCube::Update_GameObject(_float fTimeDelta)
     _int    iExit = CLiminalObject::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
-    CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_ROOMLOGIC, m_pColliderCom);
 
     return iExit;
 }
@@ -50,7 +50,7 @@ void CLiminalCube::Render_GameObject()
         m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pOutlineTransformCom->Get_World());
         m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
 
-        m_pWhiteTextureCom->Set_Texture(100);
+        m_pOutlineTextureCom->Set_Texture(100);
         m_pBufferCom->Render_Buffer();
 
         m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);

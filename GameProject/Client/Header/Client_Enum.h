@@ -66,6 +66,7 @@ enum class EObjectType
 	LIMINAL_SLOPE,
 	JAIL,
 	GAME_MACHINE_B,
+	ANAMORPHIC_CUBE,
 
 	Skull = 11,
 	Boss1 = 12,
@@ -130,6 +131,7 @@ enum class ERoomEventType
 
 	ROOM_CHANGED,
 	ROOM_BEGIN,
+	ROOM_MANUALCLEAR_REQUEST,
 	ROOM_CLEAR,
 	
 	RESET_ROOM,
@@ -281,4 +283,17 @@ enum class CAMERA_MODE
 {
 	FIRST_PERSON,
 	THIRD_PERSON
+};
+
+enum class EColorType
+{
+	NONE,
+
+	RED,
+	GREEN,
+	BLUE,
+	YELLOW,
+	WHITE,
+
+	MAX,
 };

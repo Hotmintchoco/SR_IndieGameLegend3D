@@ -5,6 +5,7 @@
 CManualClearCondition::CManualClearCondition(CRoomLayer* pLayer)
 	: CClearCondition(pLayer)
 {
+	pLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) { OnRoomEvent(t); });
 }
 
 CManualClearCondition::~CManualClearCondition()
@@ -18,7 +19,12 @@ bool CManualClearCondition::IsSatisfied()
 
 void CManualClearCondition::OnRoomEvent(const TRoomEventCtx& t)
 {
-
+	switch (t.eType)
+	{
+	case ERoomEventType::ROOM_MANUALCLEAR_REQUEST:
+		m_bActivated = true;
+		break;
+	}
 }
 
 CManualClearCondition* CManualClearCondition::Create(CRoomLayer* pLayer)

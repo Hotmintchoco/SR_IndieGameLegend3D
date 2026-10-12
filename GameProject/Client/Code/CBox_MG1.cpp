@@ -90,6 +90,11 @@ void CBox_MG1::OnCollisionEnter(COLLINFO eCollInfo)
 {
 }
 
+CVIBuffer* CBox_MG1::GetBuffer()
+{
+    return m_pBufferCom;
+}
+
 HRESULT CBox_MG1::Add_Component()
 {
     CComponent* pComponent = nullptr;
