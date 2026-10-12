@@ -529,6 +529,9 @@
     <Filter Include="01. Scene\Intro">
       <UniqueIdentifier>{c80e9381-b779-43fb-a4fe-73fc75d28c59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\ZemBox">
+      <UniqueIdentifier>{a38e5298-5484-4841-a668-a4e2ddd51c21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1116,6 +1119,9 @@
     <ClInclude Include="..\Header\CIntroScene.h">
       <Filter>01. Scene\Intro</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CZemBox.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\ZemBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1673,6 +1679,9 @@
     <ClCompile Include="..\Code\CIntroScene.cpp">
       <Filter>01. Scene\Intro</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CZemBox.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\ZemBox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -1733,12 +1742,6 @@
     <None Include="..\Bin\Resource\Shader\CameraFilterPack_RainDrop.png">
       <Filter>리소스 파일</Filter>
     </None>
-    <None Include="..\Bin\Resource\Shader\Grayscale.hlsl">
-      <Filter>리소스 파일</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Shader\Invert.hlsl">
-      <Filter>리소스 파일</Filter>
-    </None>
     <None Include="..\Bin\Resource\Shader\Lava.hlsl">
       <Filter>리소스 파일</Filter>
     </None>
@@ -1749,6 +1752,12 @@
     <None Include="..\Bin\Resource\Shader\Grayscale.hlsl" />
     <None Include="..\Bin\Resource\Shader\Grayscale.hlsl" />
     <None Include="..\Bin\Resource\Shader\Invert.hlsl" />
+    <None Include="..\Bin\Resource\Shader\Grayscale.hlsl">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\Invert.hlsl">
+      <Filter>리소스 파일</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Npc" />
