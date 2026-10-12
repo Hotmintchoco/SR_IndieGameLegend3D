@@ -256,9 +256,41 @@ void CWall::OnCollisionStay(COLLINFO eCollInfo)
 
 }
 
+HRESULT CWall::ReplaceBuffer(const wstring& pBufferProtoTag)
+{
+    CPlyTex* pNewBuffer = dynamic_cast<CPlyTex*>(CProtoMgr::GetInstance()->Clone_Prototype(pBufferProtoTag.c_str()));
+    if (nullptr == pNewBuffer)
+        return E_FAIL;
+
+    /* replace buffer already exists */
+    for (auto& Pair : m_mapComponent[ID_STATIC])
+    {
+        if (Pair.second == m_pBufferCom)
+        {
+            Safe_Release(Pair.second);
+            Pair.second = pNewBuffer;
+            m_pBufferCom = pNewBuffer;
+            return S_OK;
+        }
+    }
+
+    Safe_Release(pNewBuffer);
+    return E_FAIL;
+}
+
 vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> CWall::GetRayTestTargetInfo()
 {
     return vector<pair<Engine::CVIBuffer*, Engine::CTransform*>>{{ m_pBufferCom, m_pTransformCom }};
+}
+
+CVIBuffer* CWall::GetBuffer()
+{
+    return m_pBufferCom;
+}
+
+CTransform* CWall::GetTransform()
+{
+    return m_pTransformCom;
 }
 
 HRESULT CWall::Add_Component()

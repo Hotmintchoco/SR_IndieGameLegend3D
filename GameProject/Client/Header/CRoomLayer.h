@@ -27,7 +27,7 @@ public:
 	virtual _int Update_Layer(_float fTimeDelta) override;
 	virtual void LateUpdate_Layer(_float fTimeDelta) override;
 
-	HRESULT SpawnRoom();
+	virtual HRESULT SpawnRoom();
 
 	inline int GetIndexFlat() { return m_iRoomIndex; }
 	pair<int, int> GetIndex2D();
@@ -37,7 +37,7 @@ public:
 	inline _vec3 GetCenterPos() { return m_vRoomCenterPos; }
 
 	CEventDelegate<TRoomEventCtx> m_OnRoomEvent;
-	void OnRoomTriggerBlockCollided();
+	virtual void OnRoomTriggerBlockCollided();
 	void OnButtonInteracted(bool bPressed);
 
 	/* 몬스터 클래스가 사용 */

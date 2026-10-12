@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CGameObject.h"
+#include "IAnamorphicTarget.h"
 #include "Client_Enum.h"
 #include "Client_Struct.h"
 
@@ -9,7 +10,7 @@ namespace Engine
 	class CTransform;
 }
 
-class CTile : public CGameObject
+class CTile : public CGameObject, public IAnamorphicTarget
 {
 protected:
 	explicit CTile(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -26,6 +27,9 @@ public:
 	inline TTileIdx GetPositionIndex2D() { return m_tPositionIdx2D; }
 	inline ETileType GetType() { return m_eType; }
 	inline void SetType(ETileType eType) { m_eType = eType; }
+
+	/* IAnamorphicTarget */
+	virtual CTransform* GetTransform() override;
 
 protected:
 	HRESULT			Add_Component();

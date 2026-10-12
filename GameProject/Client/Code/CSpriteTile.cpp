@@ -115,6 +115,11 @@ void CSpriteTile::Contaminate(EContaminateType eType, float fDuration)
     m_fContaminationLeftTime = max(m_fContaminationLeftTime, fDuration);
 }
 
+CVIBuffer* CSpriteTile::GetBuffer()
+{
+    return m_pBufferCom;
+}
+
 HRESULT CSpriteTile::Add_Component()
 {
     CComponent* pComponent = nullptr;

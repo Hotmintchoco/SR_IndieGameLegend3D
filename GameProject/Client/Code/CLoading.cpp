@@ -9,6 +9,7 @@
 #include "CVoxelBuffer.h"
 #include "CCrossBuffer.h"
 #include "CPlayerPartTex.h"
+#include "COpenCubeTex.h"
 
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoadingID(LOADING_END)
@@ -102,6 +103,8 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_YellowOcher_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/YellowOcher/%d.png", 101)))) return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Orange_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/Orange/%d.png", 101)))) return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Red_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/Red/%d.png", 101)))) return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Blue_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/Blue/%d.png", 101)))) return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Green_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/Green/%d.png", 101)))) return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Pink_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/Pink/%d.png", 101)))) return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_White_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/White/%d.png", 101)))) return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Sand_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/Sand/%d.png", 101)))) return E_FAIL;
@@ -310,6 +313,22 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Jail_Door_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Jail_Door.ply"))))
         return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Frame_0_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Frame_0.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Frame_1_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Frame_1.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Frame_2_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Frame_2.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Frame_3_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Frame_3.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Frame_4_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Frame_4.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LiminalPortal_Frame_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Liminal_Portal_Frame.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LiminalPortal_Anim_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Liminal_Portal_Anim.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_OpenCubeTex", COpenCubeTex::Create(m_pGraphicDev))))
+        return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrayFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/GrayFrustum_Diffuse.png", 1))))
         return E_FAIL;
@@ -347,6 +366,20 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Jail_Bars_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/jailbar.png", 1))))
         return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Frame_0_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/frames/frame_0.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Frame_1_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/frames/frame_1.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Frame_2_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/frames/frame_2.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Frame_3_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/frames/frame_3.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Frame_4_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/frames/frame_4.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LiminalPortal_Frame_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/obsidian.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LiminalPortal_Anim_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/nether_portal/_%d.png", 32))))
+        return E_FAIL;
     
     /* 벽 */
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_EW_NoDoor_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Wall_EW_NoDoor.ply"))))
@@ -356,6 +389,18 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_EW_Door_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Wall_EW_Door.ply"))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_NS_Door_Vertex", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Wall_NS_Door.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_Inner_NS_NoDoor6_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Wall_Inner_NS_NoDoor6.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_Inner_NS_Door6_Mirror_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Wall_Inner_NS_Door6_Mirror.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_Inner_NS_Door6_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Wall_Inner_NS_Door6.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_Inner_NS_Door5_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Wall_Inner_NS_Door5.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_Inner_EW_NoDoor6_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Wall_Inner_EW_NoDoor6.ply"))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_Inner_Tip_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/Wall_Inner_PillarTip.ply"))))
         return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Wall_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Roomprop/wall/Wall_%d.png", 200))))

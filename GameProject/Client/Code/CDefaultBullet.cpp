@@ -30,7 +30,7 @@ HRESULT CDefaultBullet::Ready_GameObject()
     m_pData = &s_tData;
 
     m_pTransformCom->Set_Pos(m_vStart);
-    m_pTransformCom->Set_Scale(_vec3{ 0.1f, 0.1f, 0.1f });
+    m_pTransformCom->Set_Scale(_vec3{ m_fScale * 0.1f, m_fScale * 0.1f, m_fScale * 0.1f });
     m_pColliderCom->Set_Owner(this);
     m_pColliderCom->Set_Radius(0.3f);
     m_iTotalFrameCount = m_pTextureCom->GetCount();
@@ -48,6 +48,7 @@ _int CDefaultBullet::Update_GameObject(_float fTimeDelta)
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PROJECTILE, m_pColliderCom);
 
+    m_pTransformCom->Set_Scale(_vec3{ m_fScale * 0.1f, m_fScale * 0.1f, m_fScale * 0.1f });
     m_pTransformCom->Move_Pos(&m_vDir, s_tData.fSpeed, fTimeDelta);
 
     Animation(fTimeDelta);

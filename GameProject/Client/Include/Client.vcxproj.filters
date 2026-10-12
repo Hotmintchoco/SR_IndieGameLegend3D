@@ -439,6 +439,39 @@
     <Filter Include="01. Scene\Stage\Layer\LaserPuzzle">
       <UniqueIdentifier>{612b5a6b-a31a-4f5b-8b1d-843120f0366d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Object\Anamorphic">
+      <UniqueIdentifier>{59ef79cd-570a-4545-8ce0-f2b5610f86a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Button">
+      <UniqueIdentifier>{62fa1341-febd-4a09-b84a-fe946fb8d820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Object\Frame">
+      <UniqueIdentifier>{f46c9871-3a7b-4df9-a6bb-77b3ba23176c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Object\Portal">
+      <UniqueIdentifier>{2a53fcef-6b97-4f80-a0ba-bed3df51b808}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Object\Bomb">
+      <UniqueIdentifier>{0d3ea4f0-0b5a-466a-94ec-df118bbb8a57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Object\BombDispenser">
+      <UniqueIdentifier>{5acb495c-71bf-4ec7-8e0d-2d7dcc82976e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Buffer">
+      <UniqueIdentifier>{a4598181-1aca-42c5-a289-c1a2f4b97372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\OpenCube">
+      <UniqueIdentifier>{d9cacde2-5ad8-4662-a8dd-b72b36d17f85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Buffer\OpenCube">
+      <UniqueIdentifier>{c37c5d09-704f-418f-bfe8-f94300634ebe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Cube">
+      <UniqueIdentifier>{014fcb51-e49c-4e77-ba4d-423e16b2201b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Liminal\Object\ColorArea">
+      <UniqueIdentifier>{93d6d706-54e6-4bde-88d4-f93fccb9872c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01. Scene\MiniGame_0\99. MiniGame_Header">
       <UniqueIdentifier>{540108a8-e181-4ea1-bd24-23c86042da5d}</UniqueIdentifier>
     </Filter>
@@ -972,6 +1005,42 @@
     <ClInclude Include="..\Header\CIntroScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBombDispenser.h">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\BombDispenser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CAnamorphicObject.h">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Anamorphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\IAnamorphicTarget.h">
+      <Filter>01. Scene\Stage\Layer\Liminal\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CButton.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalPortal.h">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Portal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalBomb.h">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Bomb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLiminalFrame.h">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COpenCubeTex.h">
+      <Filter>01. Scene\Stage\Layer\Liminal\Buffer\OpenCube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COpenCube.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\OpenCube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCube.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CColorArea.h">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\ColorArea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CIntroScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="CMiniGame_Header.h">
       <Filter>01. Scene\MiniGame_0\99. MiniGame_Header</Filter>
     </ClInclude>
@@ -1496,6 +1565,42 @@
     <ClCompile Include="..\Code\CIntroScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CBombDispenser.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\BombDispenser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CAnamorphicObject.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Anamorphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\IAnamorphicTarget.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CButton.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalPortal.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Portal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalBomb.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Bomb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLiminalFrame.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COpenCubeTex.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal\Buffer\OpenCube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COpenCube.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\OpenCube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCube.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CColorArea.cpp">
+      <Filter>01. Scene\Stage\Layer\Liminal\Object\ColorArea</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CIntroScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CMG0_Sprite.cpp">
       <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj</Filter>
     </ClCompile>
@@ -1640,6 +1745,10 @@
     <None Include="..\Bin\Resource\Shader\WaterDrop.hlsl">
       <Filter>리소스 파일</Filter>
     </None>
+    <None Include="..\Bin\Resource\Shader\Invert.hlsl" />
+    <None Include="..\Bin\Resource\Shader\Grayscale.hlsl" />
+    <None Include="..\Bin\Resource\Shader\Grayscale.hlsl" />
+    <None Include="..\Bin\Resource\Shader\Invert.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Npc" />

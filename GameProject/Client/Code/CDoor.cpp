@@ -25,7 +25,7 @@ HRESULT CDoor::Ready_GameObject()
     CRoomLayer* pLayer = static_cast<CRoomLayer*>(CLayerContext::GetLayer());
     if (pLayer)
     {
-        pLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) { OnRoomEvent(t); });
+        m_iBindHandle = pLayer->m_OnRoomEvent.AddBinding(GetToken(), [this](const TRoomEventCtx& t) { OnRoomEvent(t); });
     }
 
     Open();
@@ -36,8 +36,6 @@ HRESULT CDoor::Ready_GameObject()
 _int CDoor::Update_GameObject(_float fTimeDelta)
 {
     _int    iExit = CGameObject::Update_GameObject(fTimeDelta);
-
-    CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
 
     if (m_bOnAnimation)
     {
@@ -58,6 +56,16 @@ _int CDoor::Update_GameObject(_float fTimeDelta)
             m_bOnAnimation = false;
             m_iTextureIdx = m_iFrameCnt - 1;
         }
+    }
+
+    /* Anamorphic 처리를 위해 분기 */
+    if (m_iTextureIdx == m_iFrameCnt - 1)
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    }
+    else
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
     }
 
     return iExit;
@@ -140,6 +148,16 @@ void CDoor::Close()
     m_bOnAnimation = true;
     m_iPlayDirection = 1;
     m_fSingleFrameAccTime = 0.f;
+}
+
+CVIBuffer* CDoor::GetBuffer()
+{
+    return m_pBufferCom;
+}
+
+CTransform* CDoor::GetTransform()
+{
+    return m_pTransformCom;
 }
 
 CDoor* CDoor::Create(LPDIRECT3DDEVICE9 pGraphicDev)

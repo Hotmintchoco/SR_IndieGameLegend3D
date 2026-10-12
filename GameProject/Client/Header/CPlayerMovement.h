@@ -23,6 +23,9 @@ public:
 	void Stop();
 	void Jump();
 
+	inline _vec3 GetVelocity() { return m_vVelocity; }
+	inline void SetVelocity(const _vec3& vVel) { m_vVelocity = vVel; }
+
 private:
 	virtual float GetCurMaxGroundSpeed() const override;
 

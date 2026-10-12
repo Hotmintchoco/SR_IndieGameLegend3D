@@ -101,6 +101,7 @@ HRESULT CStage::Ready_Scene()
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_ROOMLOGIC, COLL_PLAYER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_DYNAMICOBJECT, COLL_PLAYER);
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_DYNAMICOBJECT, COLL_OBSTACLE);
+	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_ROOMLOGIC, COLL_ROOMLOGIC);
 
 	/* 투사체와의 충돌 */
 	Engine::CCollisionMgr::GetInstance()->Check_Group(COLL_PROJECTILE, COLL_MONSTER);
