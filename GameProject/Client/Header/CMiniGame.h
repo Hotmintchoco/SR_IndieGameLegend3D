@@ -1,42 +1,22 @@
 ﻿#pragma once
 
 #include "CScene.h"
+#include "CSoundMgr.h"
+#include "CMiniGame_Header.h"
+
+class CMG0_Player;
+class CMG0_Deck;
+class CMG0_Dancer;
+class CMG0_Dialogue;
+class CMG0_Herobrine;
 
 namespace Engine
 {
-	class CRcTex;
 	class CTexture;
 }
 
 class CMiniGame : public CScene
 {
-private:
-	struct MGVTX
-	{
-		_vec3	vPos;
-		DWORD	dwColor;
-	};
-
-	struct MGOBJ
-	{
-		_vec3	vPos{ 0.f, 0.f, 0.f };
-		_vec3	vVel{ 0.f, 0.f, 0.f };
-		_float	fTimer = 0.f;
-		_float	fLife = 0.f;
-		_float	fCool = 0.f;
-		_float	fPhase = 0.f;
-		_float	fScale = 1.f;
-		_float	fFlash = 0.f;
-		_int	iHp = 1;
-	};
-
-	struct MGGATE
-	{
-		_vec3	vPos{ 0.f, 0.f, 0.f };
-		_int	iType = 0;
-		_int	iPairId = 0;
-	};
-
 private:
 	explicit CMiniGame(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CMiniGame();
@@ -45,35 +25,35 @@ public:
 	virtual			HRESULT		Ready_Scene();
 	virtual			_int		Update_Scene(_float fTimeDelta);
 	virtual			void		LateUpdate_Scene(_float fTimeDelta);
-	virtual			void		Render_Scene();
+	virtual			void		Render_Scene() override {}
 
-	virtual HRESULT Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject) override { return S_OK; }
+	virtual			void		OnExit() override;
+
+	virtual HRESULT Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject) override;
+
+	void			OnPlayerDead();
+	inline CMG0_Player*	Get_Player() { return m_pPlayer; }
+	inline CMG0_Deck*	Get_Deck() { return m_pDeck; }
+	inline CMG0_Dancer*	Get_Dancer() { return m_pDancer; }
+	inline CMG0_Dialogue*	Get_Dialogue() { return m_pDialogue; }
+	inline CMG0_Herobrine*	Get_Boss() { return m_pBoss; }
+	inline _float	Get_SceneTime() { return m_fSceneTime; }
+	inline _bool	Is_Cleared() { return m_fClearTimer < MG_CLEAR_SHOW_TIME; }
+	_uint			Get_TileFrame();
+	_float			Get_WhiteRate();
+	inline _bool	Is_TimeOver() { return m_bTimeOver; }
+	void			Clear_Enemy();
 
 private:
 	HRESULT			Ready_Environment_Layer(const _tchar* pLayerTag);
-	HRESULT			Ready_GameLogic_Layer(const _tchar* pLayerTag) { return S_OK; }
-	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag) { return S_OK; }
-	HRESULT			Ready_Resource();
+	HRESULT			Ready_GameLogic_Layer(const _tchar* pLayerTag);
+	HRESULT			Ready_Texture();
+	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
 
-	void			Build_PlaneMesh();
-	void			Add_Quad(vector<MGVTX>& vecMesh, const _vec3& vCenter, _float fHalfX, _float fHalfY, DWORD dwColor);
-	void			Reset_Game();
-	void			Update_Player(_float fTimeDelta);
-	void			Update_Bullets(_float fTimeDelta);
-	void			Update_Enemies(_float fTimeDelta);
-	void			Update_Explosions(_float fTimeDelta);
-	void			Update_Gates(_float fTimeDelta);
-	void			Spawn_Gates();
-	void			Apply_Gate(_int iType);
+	void			Update_BGM();
+	void			Spawn_Enemy(_float fTimeDelta);
+	void			Spawn_Train(_float fTimeDelta);
 	void			Update_Camera();
-	void			Spawn_Explosion(const _vec3& vPos, _float fScale);
-	void			Hit_Player();
-
-	void			Render_Sprite(CTexture* pTexture, _uint iFrame, const _vec3& vPos, _float fScale, DWORD dwTint);
-	void			Render_ScreenQuad(CTexture* pTexture, _uint iFrame, _float fX, _float fY, _float fSizeX, _float fSizeY, DWORD dwTint);
-	void			Render_Gates();
-	void			Render_GateText();
-	void			Render_HUD();
 
 public:
 	static CMiniGame* Create(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -82,43 +62,26 @@ private:
 	virtual void	Free();
 
 private:
-	CRcTex*			m_pBufferCom = nullptr;
-	CTexture*		m_pEnemyTex = nullptr;
-	CTexture*		m_pEnemyBulletTex = nullptr;
-	CTexture*		m_pBulletTex = nullptr;
-	CTexture*		m_pExplodeTex = nullptr;
-	CTexture*		m_pHeartTex = nullptr;
-	CTexture*		m_pHitTex = nullptr;
+	CMG0_Player*	m_pPlayer = nullptr;
+	CMG0_Deck*		m_pDeck = nullptr;
+	CMG0_Dancer*	m_pDancer = nullptr;
+	CMG0_Dialogue*	m_pDialogue = nullptr;
+	CMG0_Herobrine*	m_pBoss = nullptr;
+	Engine::CTexture*	m_pTrainTex[MINIGAME0::TRAIN_END]{};
 
-	vector<MGVTX>	m_vecPlaneMesh;
-
-	vector<MGOBJ>	m_vecBullets;
-	vector<MGOBJ>	m_vecEnemies;
-	vector<MGOBJ>	m_vecEnemyBullets;
-	vector<MGOBJ>	m_vecExplosions;
-	vector<MGGATE>	m_vecGates;
-
-	_matrix			m_matView;
-	_matrix			m_matProj;
-	_matrix			m_matBill;
-
-	_vec3			m_vPlayerPos{ 0.f, 2.f, 0.f };
-	_float			m_fRoll = 0.f;
-	_float			m_fPitch = 0.f;
-	_float			m_fFireCool = 0.f;
-	_float			m_fSpawnTimer = 0.f;
+	_float			m_fSceneTime = 0.f;
 	_float			m_fPlayTime = 0.f;
-	_float			m_fInvincible = 0.f;
-	_float			m_fRestartTimer = 0.f;
-	_float			m_fAnimTime = 0.f;
-	_float			m_fGateTimer = 0.f;
-	_float			m_fFireInterval = 0.12f;
-	_float			m_fClearTimer = 3.f;
-	_int			m_iGatePairId = 0;
-	_int			m_iDamage = 1;
-	_int			m_iBulletCount = 1;
-	_int			m_iLife = 5;
-	_int			m_iKillCount = 0;
+	_float			m_fSpawnTimer = 1.5f;
+	_float			m_fGameOverTimer = 0.f;
+	_float			m_fClearTimer = MG_CLEAR_SHOW_TIME;
+	_float			m_fTrainTime = 0.f;
+	_float			m_fTrainTimer = MG_TRAIN_START_DELAY;
+	_float			m_fCamRate = 0.f;
+	_float			m_fWhiteTime = 0.f;
+	_int			m_iSafeLane = MG_LANE_COUNT / 2;
 
-	_bool			m_bGameOver = false;
+	_bool			m_bEnemySpawn = false;
+	_bool			m_bBGMStarted = false;
+	_bool			m_bTimeOver = false;
+	CSoundMgr::SOUND_HANDLE	m_hBGM = CSoundMgr::INVALID_SOUND;
 };

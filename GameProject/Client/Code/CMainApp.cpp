@@ -145,6 +145,10 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 		return E_FAIL;
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Dialogue", L"Neo둥근모", 0, 32, FW_NORMAL)))
 		return E_FAIL;
+	if (AddFontResourceExW(L"../Bin/Resource/Font/IBMPlexSansKR-SemiBold.ttf", FR_PRIVATE, nullptr) == 0)
+		return E_FAIL;
+	if (AddFontResourceExW(L"../Bin/Resource/Font/GakNumBold.otf", FR_PRIVATE, nullptr) == 0)
+		return E_FAIL;
 
 
 	(*ppGraphicDev)->SetRenderState(D3DRS_LIGHTING, FALSE);
