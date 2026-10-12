@@ -38,7 +38,7 @@ HRESULT CBoss1::Ready_GameObject()
     _vec3 vScale = m_pTransformCom->Get_Scale();
     m_pColliderCom->Set_Radius(vScale.x);
 
-    m_iMaxHp = 10;
+    m_iMaxHp = 30;
     m_iHp = m_iMaxHp;
     m_bCollision_WithMonster = false;
 

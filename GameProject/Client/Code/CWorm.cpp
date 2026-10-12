@@ -37,7 +37,7 @@ HRESULT CWorm::Ready_GameObject()
     
     if (m_iWormIndex == 1)
     {
-		m_iMaxHp = 10;
+		m_iMaxHp = 30;
     }
     else
         m_iMaxHp = 100;
@@ -49,7 +49,7 @@ HRESULT CWorm::Ready_GameObject()
     _vec3 vAngle;
     vAngle.x = D3DXToDegree(-asinf(vLook.y));
     vAngle.y = D3DXToDegree(atan2f(vLook.x, vLook.z));
-    vAngle.z = 0.f;
+    //vAngle.z = 0.f;
     //vAngle.z = 90.f;
     m_pTransformCom->Set_Angle(vAngle);
 
@@ -706,7 +706,7 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
 {
 	m_bElapsedOpeningTime += fTimeDelta;
 
-    if (m_bElapsedOpeningTime > 1.f && m_bElapsedOpeningTime<=3.f)
+    if (m_bElapsedOpeningTime > 1.0f && m_bElapsedOpeningTime<=3.f)
     {
         //오프닝 도착지점 세팅
         if (m_bOpeningStart == false)
@@ -736,6 +736,13 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
             vDest = vPos;
 			vDir *= 0.5f;
 
+            //vDir.y = 0.75f;
+            vDest = vDest + _vec3{-4.f,2.5f,-4.f};
+            Push_Back_MoveDest(vDest);
+            vDest = vDest + _vec3{ 0.f,1.0f,0.f};
+            Push_Back_MoveDest(vDest);
+
+            vDir.x = 0.75f;
 			vDir.y = 0.75f;
 			vDest = vDest + vDir;
 			Push_Back_MoveDest(vDest);
@@ -768,65 +775,47 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
 			vDest = vDest + vDir;
 			Push_Back_MoveDest(vDest);
 
-            //버전1
-            //vDir *= 1.f;
-            //vDir.y = 0.5f;
-            //vDest = vPos + vDir;
-            //Push_Back_MoveDest(vDest);
-
-            //vDir.y = 0;
-            //vDest = vDest + vDir;
-            //Push_Back_MoveDest(vDest);
-
-            //vDir.y = -0.5;
-            //vDest = vDest + vDir;
-            //Push_Back_MoveDest(vDest);
-
-            //vDir = { 0.f, -20.f, 0.f };
-            //vDest = vDest + vDir;
-            //Push_Back_MoveDest(vDest);
-
             // 정민 : Boss Hp UI 처리
             CUIMgr::GetInstance()->Active_Boss(true);
 
-            // 정민 : 컷신 연출
-            _vec3 vBossPos;
-            m_pTransformCom->Get_Info(INFO_POS, &vBossPos);
+            //// 정민 : 컷신 연출
+            //_vec3 vBossPos;
+            //m_pTransformCom->Get_Info(INFO_POS, &vBossPos);
 
-            auto* pCameraMgr = CClientCameraMgr::GetInstance();
+            //auto* pCameraMgr = CClientCameraMgr::GetInstance();
 
-            auto* pCinematic = dynamic_cast<CCinematicCamera*>(
-                pCameraMgr->Find_Camera(CLIENT_CAMERA_TYPE::CINEMATIC));
+            //auto* pCinematic = dynamic_cast<CCinematicCamera*>(
+            //    pCameraMgr->Find_Camera(CLIENT_CAMERA_TYPE::CINEMATIC));
 
-            if (pCinematic)
-            {
-                pCinematic->Set_StartFromCurrent(true); // 연속적 동작 설정
+            //if (pCinematic)
+            //{
+            //    pCinematic->Set_StartFromCurrent(true); // 연속적 동작 설정
 
-                // 연출 1
-                CINEMATIC_DESC desc;
+            //    // 연출 1
+            //    CINEMATIC_DESC desc;
 
-                desc.vEyeFrom = { vBossPos.x, 3.f, vBossPos.z + 5.f };
-                desc.vEyeTo = { vBossPos.x, 4.25f, vBossPos.z + 3.5f };
-                desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+            //    desc.vEyeFrom = { vBossPos.x, 3.f, vBossPos.z + 5.f };
+            //    desc.vEyeTo = { vBossPos.x, 4.25f, vBossPos.z + 3.5f };
+            //    desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
 
-                desc.fDuration = 0.35f;
-                desc.fFovFrom = D3DXToRadian(60.f);
-                desc.fFovTo = D3DXToRadian(65.f);
-                pCinematic->Add_Shot(desc);
+            //    desc.fDuration = 0.35f;
+            //    desc.fFovFrom = D3DXToRadian(60.f);
+            //    desc.fFovTo = D3DXToRadian(65.f);
+            //    pCinematic->Add_Shot(desc);
 
-                // 연출 2
-                CINEMATIC_DESC orbitDesc{};
-                orbitDesc.bOrbit = true;
-                orbitDesc.vEyeFrom = desc.vEyeTo;
-                orbitDesc.vLookAt = desc.vLookAt;
-                orbitDesc.fDuration = 1.f;
-                orbitDesc.fOrbitAngle = D3DXToRadian(360.f);
-                orbitDesc.fFovFrom = desc.fFovTo;
-                orbitDesc.fFovTo = desc.fFovTo;
-                pCinematic->Add_Shot(orbitDesc);
+            //    // 연출 2
+            //    CINEMATIC_DESC orbitDesc{};
+            //    orbitDesc.bOrbit = true;
+            //    orbitDesc.vEyeFrom = desc.vEyeTo;
+            //    orbitDesc.vLookAt = desc.vLookAt;
+            //    orbitDesc.fDuration = 1.f;
+            //    orbitDesc.fOrbitAngle = D3DXToRadian(360.f);
+            //    orbitDesc.fFovFrom = desc.fFovTo;
+            //    orbitDesc.fFovTo = desc.fFovTo;
+            //    pCinematic->Add_Shot(orbitDesc);
 
-                pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
-            }
+            //    pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
+            //}
         }
     }
     //3초뒤 움직임
@@ -931,7 +920,7 @@ void CWorm::Set_Init_Worm()
         if (m_iWormIndex == 1)
         {
             _vec3 vPos = m_vRoomCenterLocation;
-            vPos.y = 2.5f;
+            vPos.y = -2.5f;
             Set_Pos(vPos);
         }
 

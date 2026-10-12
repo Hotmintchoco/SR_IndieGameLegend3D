@@ -412,9 +412,6 @@
     <Filter Include="01. Scene\MiniGame_1\GameObject\Camera_MG1">
       <UniqueIdentifier>{34c68a12-2025-4782-8337-947fe2d32cdd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\MiniGame_1\GameObject\Box_MG1">
-      <UniqueIdentifier>{6f0d2a13-8903-4ded-b365-58040e9b5a1b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Monster\Walkerboss">
       <UniqueIdentifier>{36e61ccd-5bc8-4493-853d-e28264b96eb9}</UniqueIdentifier>
     </Filter>
@@ -441,6 +438,9 @@
     </Filter>
     <Filter Include="01. Scene\Intro">
       <UniqueIdentifier>{c80e9381-b779-43fb-a4fe-73fc75d28c59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_1\GameObject\Box_MG1">
+      <UniqueIdentifier>{6f0d2a13-8903-4ded-b365-58040e9b5a1b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
