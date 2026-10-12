@@ -24,6 +24,9 @@ public:
 
 	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
 
+	/* IAnamorphicTarget */
+	virtual CVIBuffer* GetBuffer() override;
+
 private:
 	HRESULT			Add_Component();
 

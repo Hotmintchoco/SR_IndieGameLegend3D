@@ -250,7 +250,9 @@ void CStage::OnEnter()
     if (m_pCurrentRoomLayer && m_iCurrentRoomIndex >= 0)
     {
         const auto* pRoom = pRoomMgr->GetRoomData(m_iCurrentRoomIndex);
-        ApplyRoomShader(pRoomMgr->GetBiomeInfo(pRoom->iBiome).eType);
+        const auto biome = pRoomMgr->GetBiomeInfo(pRoom->iBiome);
+        ApplyRoomShader(biome.eType);
+        CSoundMgr::GetInstance()->PlayBGM(biome.tBGMTrack);
     }
 	if (SUCCEEDED(CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::PLAYER)))
 		CClientCameraMgr::GetInstance()->LateUpdate_Camera(0.f);

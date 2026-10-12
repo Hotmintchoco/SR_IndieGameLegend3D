@@ -1727,12 +1727,22 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Bin\Resource\Shader\Lava.hlsl" />
-    <None Include="..\Bin\Resource\Shader\WaterDrop.hlsl" />
     <None Include="..\Bin\Resource\Shader\CameraFilterPack_WaterDrop.png">
       <Filter>리소스 파일</Filter>
     </None>
     <None Include="..\Bin\Resource\Shader\CameraFilterPack_RainDrop.png">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\Grayscale.hlsl">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\Invert.hlsl">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\Lava.hlsl">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\WaterDrop.hlsl">
       <Filter>리소스 파일</Filter>
     </None>
     <None Include="..\Bin\Resource\Shader\Invert.hlsl" />
