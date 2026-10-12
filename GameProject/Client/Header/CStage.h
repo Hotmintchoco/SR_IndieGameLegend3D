@@ -73,6 +73,7 @@ private:
 
 	/* 부활 */
 	bool m_bOnPlayerDead = false;
+	bool m_bMiniGame = false;
 	float m_fReviveTime = 2.f;
 	float m_fLeftReviveTime = 0.f;
 
