@@ -529,7 +529,7 @@
     <Filter Include="01. Scene\Intro">
       <UniqueIdentifier>{c80e9381-b779-43fb-a4fe-73fc75d28c59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. Room\PlaceableProp\ZemBox">
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\GemBox">
       <UniqueIdentifier>{a38e5298-5484-4841-a668-a4e2ddd51c21}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -1119,8 +1119,8 @@
     <ClInclude Include="..\Header\CIntroScene.h">
       <Filter>01. Scene\Intro</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CZemBox.h">
-      <Filter>02. GameObject\07. Room\PlaceableProp\ZemBox</Filter>
+    <ClInclude Include="..\Header\CGemBox.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\GemBox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1679,8 +1679,8 @@
     <ClCompile Include="..\Code\CIntroScene.cpp">
       <Filter>01. Scene\Intro</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CZemBox.cpp">
-      <Filter>02. GameObject\07. Room\PlaceableProp\ZemBox</Filter>
+    <ClCompile Include="..\Code\CGemBox.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\GemBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
