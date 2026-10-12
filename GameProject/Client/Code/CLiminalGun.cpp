@@ -18,6 +18,8 @@
 #include "CLiminalGunUltimateEffect.h"
 #include "CLayerContext.h"
 #include "CLiminalPortal.h"
+#include "CShaderEffectMgr.h"
+#include "CGrayscaleEffect.h"
 
 CLiminalGun::CLiminalGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -56,6 +58,10 @@ HRESULT CLiminalGun::Ready_GameObject()
         m_pEffect->Set_IsActive(false);
     }
 
+    m_pShaderEffect = dynamic_cast<CGrayscaleEffect*>(CShaderEffectMgr::GetInstance()->Get_PostEffect(POST_EFFECT::GRAYSCALE));
+    if (!m_pShaderEffect)
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -77,6 +83,27 @@ _int CLiminalGun::Update_GameObject(_float fTimeDelta)
     UpdateUltimateAttackState(fTimeDelta);
 
     UpdateHitScanState(fTimeDelta);
+
+    if (m_bOnEffectTransition)
+    {
+        m_fTimeAfterEffect += fTimeDelta;
+        float fRatio = clamp(m_fTimeAfterEffect / m_fTotalEffectTransitionTime, 0.f, 1.f);
+        float s = fRatio * m_fEndStrength + (1.f - fRatio) * m_fStartStrength;
+        m_pShaderEffect->Set_Strength(s);
+
+        if (m_fTimeAfterEffect >= m_fTotalEffectTransitionTime)
+        {
+            m_bOnEffectTransition = false;
+            if (m_bOnUltimateAttack) /* 궁극기 진입 시*/
+            {
+                CShaderEffectMgr::GetInstance()->Set_PostEffect(POST_EFFECT::GRAYSCALE);
+            }
+            else /* 끝나고 되돌아갈때 */
+            {
+                CShaderEffectMgr::GetInstance()->Set_PostEffect(m_eOldEffectType);
+            }
+        }
+    }
 
     return iExit;
 }
@@ -157,13 +184,22 @@ TWeaponOutput CLiminalGun::SpecialAttack(EInputState ePri, EInputState eSec)
 TWeaponOutput CLiminalGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
 {
     CTimerMgr::GetInstance()->SetGlobalTimeScale(0.1f);
-    CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_PLAYER, 0.5f);
+    CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_PLAYER, 0.3f);
     m_bOnUltimateAttack = true;
     m_fTimeAfterUltimate = 0.f;
     m_pSystem->SetUltimateAttackOnGoing(true);
     CSoundMgr::GetInstance()->PlaySFX(L"Ult_Liminal.wav");
 
     m_pEffect->Set_IsActive(true);
+
+    m_bOnEffectTransition = true;
+    m_fTotalEffectTransitionTime = 1.f;
+    m_fTimeAfterEffect = 0.f;
+    m_fStartStrength = 0.f;
+    m_fEndStrength = 1.f;
+    m_eOldEffectType = CShaderEffectMgr::GetInstance()->Get_PostEffectType();
+    CShaderEffectMgr::GetInstance()->Set_PostEffect(POST_EFFECT::GRAYSCALE);
+
 
     return { true, EWeaponAnimEvent::ULT_LIMINALGUN_START };
 }
@@ -203,7 +239,11 @@ TWeaponOutput CLiminalGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
     m_pSystem->SetUltimateAttackOnGoing(false);
     m_bOnHitScan = false;
 
-    m_pEffect->Set_IsActive(false);
+    m_bOnEffectTransition = true;
+    m_fTotalEffectTransitionTime = 0.3f;
+    m_fTimeAfterEffect = 0.f;
+    m_fStartStrength = 1.f;
+    m_fEndStrength = 0.f;
 
     return { false, EWeaponAnimEvent::NONE };
 }

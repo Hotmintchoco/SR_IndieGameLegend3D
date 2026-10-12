@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CWeapon.h"
+#include "CPostEffect.h"
 
 namespace Engine
 {
@@ -8,6 +9,7 @@ namespace Engine
 }
 
 class CRibbon;
+class CInvertEffect;
 
 class CLaserGun : public CWeapon
 {
@@ -37,6 +39,14 @@ private:
 
 	/* 궁극기 리본 캐싱용 */
 	CRibbon* m_pRibbon = nullptr;
+	/* 궁극기 셰이더 애니메이션 */
+	float m_fTimeAfterEffect = 0.f;
+	float m_fTotalEffectTransitionTime = 2.f;
+	float m_fStartStrength = 0.f;
+	float m_fEndStrength = 1.f;
+	bool m_bOnEffectTransition = false;
+	CInvertEffect* m_pShaderEffect = nullptr;
+	POST_EFFECT m_eOldEffectType = POST_EFFECT::NONE;
 
 public:
 	static CLaserGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);
