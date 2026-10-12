@@ -11,6 +11,7 @@
 #include "CStage.h"
 #include "CGameStatus.h"
 #include "CUI.h"
+#include "CSoundMgr.h"
 
 CGemBox::CGemBox(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -93,6 +94,7 @@ void CGemBox::Receive_Gem(COLLINFO info)
         m_fDepositTime -= m_fDepositInterval;
         pStatus->UpdateGem(-1);
         --m_iRemainingGems;
+        CSoundMgr::GetInstance()->PlaySFX(L"sfxCoin.wav");
         bChanged = true;
     }
 
