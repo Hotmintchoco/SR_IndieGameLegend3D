@@ -206,7 +206,7 @@ void CWorm::Animation_Monster(const _float& fTimeDelta)
 {
     if (m_iWormIndex == 1)
     {
-        m_fFrame += fTimeDelta * 8.f;
+        m_fFrame += fTimeDelta * 12.f;
         if (m_fFrame >= 4.f)
             m_fFrame -= 4.f;
     }
@@ -270,7 +270,7 @@ void CWorm::Check_Sandburst(_float fTimeDelta)
                     if (m_bMoveFlag == false)
                         fTime = 0.4f;
                     else
-                        fTime = 0.9f;
+                        fTime = 1.1f;
                 }
                 else
                     fTime = 1.1f;
@@ -279,10 +279,11 @@ void CWorm::Check_Sandburst(_float fTimeDelta)
             }
         }
     }
-    if (m_iWormIndex == 9)
+    if (m_iWormIndex == 10)
     {
         _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
-        if (0.f < vPos.y && vPos.y < 0.125f)
+        //if (0.f < vPos.y && vPos.y < 0.125f)
+        if (0.f < vPos.y && vPos.y < 0.5f)
         {
             if (m_fElapsedTime3 > 0.5f)
             {
@@ -377,6 +378,8 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
 
         m_eWormState = static_cast<WORMSTATE>(Get_MotionState());
         //m_eWormState = ATTACK;
+        //m_eWormState = MOVE;
+        //m_eWormState = SPAWN;
 
         if (m_eWormState == SPAWN)
         {
@@ -385,7 +388,7 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
             m_bSpawnStart = false;
             m_bMoveFlag = false;
             m_bMoveFlag2 = false;
-            Set_Speed_Worm(9.f);
+            Set_Speed_Worm(8.f);
             m_fSpawnTime = 0.f;
             m_fSpawnTime2 = 0.f;
         }
@@ -394,7 +397,9 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
             Set_MoveDest();
             m_fStateUpdateDuration = 5.f;
             m_bMoveFlag = false;
-            Set_Speed_Worm(9.f);
+            Set_Speed_Worm(8.f);
+            m_fChaseTime = 0.f;
+            m_bChaseFlag = false;
         }
         else if (m_eWormState == IDLE)
         {
@@ -409,7 +414,7 @@ void CWorm::Update_Motion(const _float& fTimeDelta)
             m_bAttackStart3 = false;
             m_bMoveFlag = false;
             m_bMoveFlag2 = false;
-            Set_Speed_Worm(9.f);
+            Set_Speed_Worm(8.f);
             m_fAttackTime = 0.f;
             m_fAttackTime2 = 0.f;
         }
@@ -484,7 +489,7 @@ void CWorm::Set_MoveDest()
         vDir.y = 0.f;
         D3DXVec3Normalize(&vDir, &vDir);
         vDir *= 0.25f;
-        vDir.y = 2.f + m_fMoveHeight;
+        vDir.y = 2.5f + m_fMoveHeight;
         _vec3 vDest = vInitPos + vDir;
         Push_Back_MoveDest(vDest);
     }
@@ -560,6 +565,32 @@ void CWorm::Push_Back_MoveDest(const _vec3& vDest)
     }
 }
 
+void CWorm::Change_End3_MoveDest(const _vec3& vDest)
+{
+    auto iter = m_vMoveDest.end() - 3;
+
+    iter = m_vMoveDest.erase(iter); 
+    m_vMoveDest.insert(iter, vDest);
+
+    if (m_pNextWorm != nullptr)
+    {
+        static_cast<CWorm*>(m_pNextWorm)->Change_End3_MoveDest(vDest);
+    }
+}
+
+void CWorm::Change_End2_MoveDest(const _vec3& vDest)
+{
+    auto iter = m_vMoveDest.end() - 2;
+
+    iter = m_vMoveDest.erase(iter);
+    m_vMoveDest.insert(iter, vDest);
+
+    if (m_pNextWorm != nullptr)
+    {
+        static_cast<CWorm*>(m_pNextWorm)->Change_End2_MoveDest(vDest);
+    }
+}
+
 void CWorm::Clear_MoveDest()
 {
     m_vMoveDest.clear();
@@ -613,7 +644,8 @@ void CWorm::Spawn_Monster(const _float& fTimeDelta)
             pGameObject = CGlubba::Create(m_pGraphicDev);
             vVelocity.y = 0.f;
 
-            static_cast<CMonster*>(pGameObject)->Set_Pos(vPos + vVelocity * 0.25f);
+            //static_cast<CMonster*>(pGameObject)->Set_Pos(vPos + vVelocity * 0.25f);
+            static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
             vVelocity.y = 4.f;
             static_cast<CGlubba*>(pGameObject)->Set_Velocity(vVelocity);
             vVelocity = vOriginVelocity;
@@ -705,6 +737,134 @@ void CWorm::Attack_Worm(const _float& fTimeDelta)
 void CWorm::Opening_Worm(const _float& fTimeDelta)
 {
 	m_bElapsedOpeningTime += fTimeDelta;
+    if (m_bOpeningFlag == true)
+    {
+        m_bOpeningFlag = true;
+        auto* pCameraMgr = CClientCameraMgr::GetInstance();
+
+        auto* pCinematic = dynamic_cast<CCinematicCamera*>(
+            pCameraMgr->Find_Camera(CLIENT_CAMERA_TYPE::CINEMATIC));
+
+        if (pCinematic)
+        {
+            pCinematic->Set_StartFromCurrent(true); // 연속적 동작 설정
+
+            _vec3 vRoomPos = m_vRoomCenterLocation;
+            vRoomPos.z -= 4.f;
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+            //_vec3 vBossPos; m_pTransformCom->Get_Info(INFO_POS, &vBossPos);
+
+            // 연출 1
+            CINEMATIC_DESC desc;
+
+            desc.vEyeFrom = { vPlayerPos.x, vPlayerPos.y + 1.f, vPlayerPos.z };
+            desc.vEyeTo = { vPlayerPos.x, vPlayerPos.y + 2.f, vPlayerPos.z };
+            desc.vLookAt = vRoomPos;
+
+            desc.fDuration = 1.5f;
+            desc.fFovFrom = D3DXToRadian(60.f);
+            desc.fFovTo = D3DXToRadian(47.5f);
+            pCinematic->Add_Shot(desc);
+
+            //// 연출 2
+            //desc.vEyeTo = { vRoomPos.x, 4.5f, vRoomPos.z + 7.f };
+
+			desc.vEyeTo = { vPlayerPos.x + 2.f, vPlayerPos.y + 2.f, vPlayerPos.z };
+			desc.vLookAt = vRoomPos;
+			desc.fDuration = 0.5f;
+			desc.fFovTo = D3DXToRadian(60.f);
+			pCinematic->Add_Shot(desc);
+
+            desc.vEyeTo = { vPlayerPos.x - 2.f, vPlayerPos.y + 2.f, vPlayerPos.z };
+            desc.vLookAt = vRoomPos;
+            desc.fDuration = 1.f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+            desc.vEyeTo = { vPlayerPos.x + 2.f, vPlayerPos.y + 2.f, vPlayerPos.z };
+            desc.vLookAt = vRoomPos;
+            desc.fDuration = 1.f;
+            desc.fFovTo = D3DXToRadian(60.f);
+            pCinematic->Add_Shot(desc);
+
+ /*           vRoomPos.x -= 4.f;
+			desc.vEyeTo = { vPlayerPos.x - 2.f, vPlayerPos.y + 2.f, vPlayerPos.z };
+			desc.vLookAt = vRoomPos;
+			desc.fDuration = 1.f;
+			desc.fFovTo = D3DXToRadian(60.f);
+			pCinematic->Add_Shot(desc);*/
+
+            //desc.vEyeTo = { vPlayerPos.x + 2.f, vPlayerPos.y + 2.f, vPlayerPos.z };
+            //desc.vLookAt = vRoomPos;
+            //desc.fDuration = 1.f;
+            //desc.fFovTo = D3DXToRadian(60.f);
+            //pCinematic->Add_Shot(desc);
+            // 
+            //desc.vLookAt = vRoomPos + _vec3{2.f,0.f,0.f};
+            //desc.fDuration = 0.5f;
+            //desc.fFovTo = D3DXToRadian(60.f);
+            //pCinematic->Add_Shot(desc);
+
+            //desc.vLookAt = vRoomPos + _vec3{ -2.f,0.f,0.f };
+            //desc.fDuration = 0.5f;
+            //desc.fFovTo = D3DXToRadian(60.f);
+            //pCinematic->Add_Shot(desc);
+            //// 연출 3
+            //desc.vEyeTo = { vRoomPos.x - 1.f, 4.5f, vRoomPos.z + 7.f };
+            //desc.vLookAt = { vRoomPos.x, 2.f, vRoomPos.z };
+
+            //desc.fDuration = 0.612f;
+            //desc.fFovTo = D3DXToRadian(60.f);
+            //pCinematic->Add_Shot(desc);
+
+            //// 연출 4
+            //desc.vEyeTo = { vBossPos.x + 1.f, 4.5f, vBossPos.z - 7.f };
+            //desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            //desc.fDuration = 0.612f;
+            //desc.fFovTo = D3DXToRadian(60.f);
+            //pCinematic->Add_Shot(desc);
+
+            //// 연출 5
+            //desc.vEyeTo = { vBossPos.x - 1.f, 4.5f, vBossPos.z - 7.f };
+            //desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            //desc.fDuration = 0.612f;
+            //desc.fFovTo = D3DXToRadian(60.f);
+            //pCinematic->Add_Shot(desc);
+
+            //// 연출 6
+            //desc.vEyeTo = { vBossPos.x + 1.f, 4.5f, vBossPos.z - 7.f };
+            //desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            //desc.fDuration = 0.612f;
+            //desc.fFovTo = D3DXToRadian(60.f);
+            //pCinematic->Add_Shot(desc);
+
+            //// 연출 7
+            //desc.vEyeTo = { vBossPos.x, 4.5f, vBossPos.z - 7.f };
+            //desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
+
+            //desc.fDuration = 0.612f;
+            //desc.fFovTo = D3DXToRadian(60.f);
+            //pCinematic->Add_Shot(desc);
+
+            //// 연출 8
+            //const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            //_vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+            ////_vec3 vPlayerLook; vPlayerLook = tInfo.vLook;
+
+            //desc.vEyeTo = { vPlayerPos.x, vPlayerPos.y, vPlayerPos.z };
+            //desc.vLookAt = { vBossPos.x, 1.f, vBossPos.z };
+
+            //desc.fDuration = 1.5f;
+            //desc.fFovTo = D3DXToRadian(60.f);
+            //pCinematic->Add_Shot(desc);
+
+            pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
+        }
+    }
 
     if (m_bElapsedOpeningTime > 1.0f && m_bElapsedOpeningTime<=3.f)
     {
@@ -734,7 +894,7 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
             vDir.y = 0;
             D3DXVec3Normalize(&vDir, &vDir);
             vDest = vPos;
-			vDir *= 0.5f;
+			vDir *= 0.6f;
 
             //vDir.y = 0.75f;
             vDest = vDest + _vec3{-4.f,2.5f,-4.f};
@@ -777,48 +937,9 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
 
             // 정민 : Boss Hp UI 처리
             CUIMgr::GetInstance()->Active_Boss(true);
-
-            //// 정민 : 컷신 연출
-            //_vec3 vBossPos;
-            //m_pTransformCom->Get_Info(INFO_POS, &vBossPos);
-
-            //auto* pCameraMgr = CClientCameraMgr::GetInstance();
-
-            //auto* pCinematic = dynamic_cast<CCinematicCamera*>(
-            //    pCameraMgr->Find_Camera(CLIENT_CAMERA_TYPE::CINEMATIC));
-
-            //if (pCinematic)
-            //{
-            //    pCinematic->Set_StartFromCurrent(true); // 연속적 동작 설정
-
-            //    // 연출 1
-            //    CINEMATIC_DESC desc;
-
-            //    desc.vEyeFrom = { vBossPos.x, 3.f, vBossPos.z + 5.f };
-            //    desc.vEyeTo = { vBossPos.x, 4.25f, vBossPos.z + 3.5f };
-            //    desc.vLookAt = { vBossPos.x, 2.f, vBossPos.z };
-
-            //    desc.fDuration = 0.35f;
-            //    desc.fFovFrom = D3DXToRadian(60.f);
-            //    desc.fFovTo = D3DXToRadian(65.f);
-            //    pCinematic->Add_Shot(desc);
-
-            //    // 연출 2
-            //    CINEMATIC_DESC orbitDesc{};
-            //    orbitDesc.bOrbit = true;
-            //    orbitDesc.vEyeFrom = desc.vEyeTo;
-            //    orbitDesc.vLookAt = desc.vLookAt;
-            //    orbitDesc.fDuration = 1.f;
-            //    orbitDesc.fOrbitAngle = D3DXToRadian(360.f);
-            //    orbitDesc.fFovFrom = desc.fFovTo;
-            //    orbitDesc.fFovTo = desc.fFovTo;
-            //    pCinematic->Add_Shot(orbitDesc);
-
-            //    pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
-            //}
         }
     }
-    //3초뒤 움직임
+    // 5초뒤 움직임
     else if (m_bElapsedOpeningTime > 3.f)
     {
         if (!m_vMoveDest.empty())
@@ -913,7 +1034,9 @@ void CWorm::Worm_Dead_Effect()
 void CWorm::Set_Init_Worm()
 {
     if (m_iWormIndex == 1)
+    {
         Set_RoomCenterLocation();
+    }
     if (m_bSet_InitPos == false)
     {
         m_bSet_InitPos = true;
@@ -1191,6 +1314,7 @@ void CWorm::Move_WormHead(const _float& fTimeDelta)
 {
     _vec3 vDir, vPos, vAngle, vDest;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
     if (m_vMoveDest.empty())
     {
         if (m_bMotionEnd == false)
@@ -1200,6 +1324,52 @@ void CWorm::Move_WormHead(const _float& fTimeDelta)
         }
         return;
     }
+    
+    if (m_vMoveDest.size() == 3)
+    {
+        m_fChaseTime += fTimeDelta;
+        if (m_fChaseTime > 0.25f)
+        {
+            m_fChaseTime = 0.f;
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos = tInfo.vPosition;
+            _vec3 vChaseDir = vPlayerPos - vPos;
+            D3DXVec3Normalize(&vChaseDir, &vChaseDir);
+            _vec3 vMoveFront = m_vMoveDest.front();
+
+            _vec3 vDir = vMoveFront - vPos;
+            _float fLength = D3DXVec3Length(&vDir);
+            vChaseDir *= fLength;
+
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            _vec3 vDest = vPos + vChaseDir;
+            Change_End3_MoveDest(vDest);
+        }
+    }
+    else if (m_vMoveDest.size() == 2)
+    {
+        if (m_bChaseFlag == false)
+        {
+            m_bChaseFlag = true;
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos = tInfo.vPosition;
+            _vec3 vChaseDir = vPlayerPos - vPos;
+            D3DXVec3Normalize(&vChaseDir, &vChaseDir);
+            _vec3 vMoveFront = m_vMoveDest.front();
+
+            _vec3 vDir = vMoveFront - vPos;
+            _float fLength = D3DXVec3Length(&vDir);
+            vChaseDir *= fLength;
+            vChaseDir.y -= 7.f;
+
+            _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            _vec3 vDest = vPos + vChaseDir;
+            Change_End2_MoveDest(vDest);
+        }
+    }
+
+
+
     vDest = m_vMoveDest.front();
     vDir = vDest - vPos;
     if (D3DXVec3Length(&vDir) > 0.125f)
@@ -1237,14 +1407,15 @@ void CWorm::Move_WormHead(const _float& fTimeDelta)
                     D3DXVec3Normalize(&vDirN, &vDir);
                     vDir -= vDirN *1.f;
 
-                    vDir.y = 0.f;
+                    vDir.y = -0.5f;
                     _vec3 vDest = vPos + vDir;
                     Push_Back_MoveDest(vDest);
 
                     vDirN.y = -m_fMoveHeight*2.f;
                     vDest = vDest + vDirN*0.5f;
                     Push_Back_MoveDest(vDest);
-                    vDest = vDest + _vec3{ 0.f,-15.f,0.f };
+
+                    vDest = m_vRoomCenterLocation + _vec3{ 0.f,-15.f,0.f };
                     Push_Back_MoveDest(vDest);
                 }
             }
@@ -1309,14 +1480,17 @@ void CWorm::Move_WormHead_AfterSpawn(const _float& fTimeDelta)
             vDir *= 0.5f;
 
             vDir.y = 0.75f;
+            vDir.y *= 0.66f;
             vDest = vDest + vDir;
             Push_Back_MoveDest(vDest);
 
             vDir.y = 0.5f;
+            vDir.y *= 0.66f;
             vDest = vDest + vDir;
             Push_Back_MoveDest(vDest);
 
             vDir.y = 0.25f;
+            vDir.y *= 0.66f;
             vDest = vDest + vDir;
             Push_Back_MoveDest(vDest);
 
@@ -1325,20 +1499,29 @@ void CWorm::Move_WormHead_AfterSpawn(const _float& fTimeDelta)
             Push_Back_MoveDest(vDest);
 
             vDir.y = -0.25f;
+            vDir.y *= 0.66f;
             vDest = vDest + vDir;
             Push_Back_MoveDest(vDest);
 
             vDir.y = -0.5f;
+            vDir.y *= 0.66f;
             vDest = vDest + vDir;
             Push_Back_MoveDest(vDest);
 
             vDir.y = -0.75f;
+            vDir.y *= 0.66f;
             vDest = vDest + vDir;
             Push_Back_MoveDest(vDest);
 
-            vDir = { 0.f, -22.f, 0.f };
-            vDest = vDest + vDir;
-            Push_Back_MoveDest(vDest);
+            vDir.y = 0.f;
+            D3DXVec3Normalize(&vDir, &vDir);
+            //vDir *= 3.f;
+			vDir += _vec3{ 0.f, -22.f, 0.f };
+			vDest = vDest + vDir;
+			Push_Back_MoveDest(vDest);
+            //vDir = { 0.f, -22.f, 0.f };
+            //vDest = vDest + vDir;
+            //Push_Back_MoveDest(vDest);
         }
         else
         {
@@ -1423,7 +1606,10 @@ void CWorm::Move_WormHead_AfterAttack(const _float& fTimeDelta)
         {
             m_bMoveFlag2 = true;
             _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            _vec3 vDir = m_vRoomCenterLocation - vPos;
+            D3DXVec3Normalize(&vDir, &vDir);
             vPos.y = -18.f;
+            vPos += vDir;
             Push_Back_MoveDest(vPos);
 
         }

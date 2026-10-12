@@ -535,7 +535,7 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         for (int i = 0; i < 128; ++i)
         {
             m_pTransformCom->Get_Info(INFO_POS, &vPos);
-            vPos.y = 0.5f;
+            vPos.y = 0.3f;
 
             vDir.x = (_float)(rand() % 128 - 64) / 64.f;
             vDir.y = (_float)(rand() % 128 - 64) / 64.f;
@@ -544,7 +544,7 @@ void CEffect::Update_Effect(const _float fTimeDelta)
             //D3DXVec3Normalize(&vDir, &vDir);
             vDir *= 0.5f;
             vPos += vDir;
-            vDir = { 0.f,-2.5f,0.f };
+            vDir = { 0.f,-3.5f,0.f };
 
             _int iRandScale = rand() % 5;
             _float fScale = 0.05f + (_float)iRandScale * 0.01f;
