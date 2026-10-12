@@ -106,7 +106,7 @@ CSoundMgr::SOUND_HANDLE CSoundMgr::PlaySFX(const wstring& pSoundKey, bool bLoop)
 
 void CSoundMgr::PlayBGM(const TBGMTrack& tTrack)
 {
-	if (m_tBGMTrack.wstrID == tTrack.wstrID) return;
+	if (m_tBGMTrack.wstrID == tTrack.wstrID && IsPlaying(m_hBGM)) return;
 
 	StopBGM();
 	m_tBGMTrack = tTrack;
@@ -144,11 +144,14 @@ void CSoundMgr::StopSFX(SOUND_HANDLE hSound)
 void CSoundMgr::StopBGM()
 {
 	StopChannel(BGM_SLOT);
+	m_hBGM = INVALID_SOUND;
+	m_eBGMState = EBGMState::None;
 }
 
 void CSoundMgr::StopAll()
 {
-	for (int i = 0; i < MAX_SLOT; ++i)
+	StopBGM();
+	for (int i = EFFECT_BEGIN; i < MAX_SLOT; ++i)
 		StopChannel(i);
 }
 
