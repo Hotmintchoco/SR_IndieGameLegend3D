@@ -24,7 +24,6 @@ private:
 
 
 private:
-    bool m_bStartRequested = false;
     bool m_bStartFailed = false;
 
 public:
