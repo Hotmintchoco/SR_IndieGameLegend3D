@@ -66,7 +66,7 @@ _int CBow::Update_GameObject(_float fTimeDelta)
         m_iRenderIdx = 0;
     }
 
-    if (!m_bCameraShakeActivated)
+    if (!m_bCameraShakeActivated && m_bOnUltimateAttack)
     {
         m_fTimeAfterUlt += fTimeDelta;
 
