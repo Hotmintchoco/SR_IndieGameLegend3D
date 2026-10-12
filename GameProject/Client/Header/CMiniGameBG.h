@@ -2,6 +2,7 @@
 
 #include "CGameObject.h"
 #include "Client_Enum.h"
+#include "CMiniGame_Header.h"
 
 namespace Engine
 {
@@ -30,14 +31,6 @@ public:
 	static	CMiniGameBG* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	static	CMiniGameBG* Create(LPDIRECT3DDEVICE9 pGraphicDev, pair<_int, _int> pIdx);
 
-public:
-	static const _float	TILE_SIZE;
-	static const _float	SCROLL_SPEED;
-	static const _int	TILE_MIN_X = -6;
-	static const _int	TILE_MAX_X = 6;
-	static const _int	TILE_MIN_Z = -3;
-	static const _int	TILE_MAX_Z = 19;
-
 protected:
 	virtual void		Free();
 
@@ -47,4 +40,5 @@ private :
 	CTexture*	m_pTextureCom = nullptr;
 
 	_vec3		m_vPos{ 0.f, 0.f, 0.f };
+	_uint		m_iFrame = MGBG_TILE_FRAME;
 };

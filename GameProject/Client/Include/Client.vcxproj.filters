@@ -472,6 +472,60 @@
     <Filter Include="01. Scene\Stage\Layer\Liminal\Object\ColorArea">
       <UniqueIdentifier>{93d6d706-54e6-4bde-88d4-f93fccb9872c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\MiniGame_0\99. MiniGame_Header">
+      <UniqueIdentifier>{540108a8-e181-4ea1-bd24-23c86042da5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\01. MiniGame_Card">
+      <UniqueIdentifier>{60de4cef-b630-4508-97da-d4434ba48d6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\02. MiniGame_Bullet">
+      <UniqueIdentifier>{3959d503-3efa-4ff3-a20e-342b13ee2b96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\03. MiniGame_Enemy">
+      <UniqueIdentifier>{94ad213d-68a6-4b43-97e6-ec92202f7f9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\03. MiniGame_Enemy\00. Enemy_Skull">
+      <UniqueIdentifier>{b54e2cf1-b971-4449-8f6a-240c5246fafd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\04. MiniGame_Explosion">
+      <UniqueIdentifier>{38ce4b3f-9972-4280-96e8-5996719f0025}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\05. MiniGame_HUD">
+      <UniqueIdentifier>{14edb360-1966-4a92-a440-1601724a59fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\06. MiniGame_Player">
+      <UniqueIdentifier>{8aef6521-a37c-4011-9d61-a000e4f64cd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer">
+      <UniqueIdentifier>{c5f84401-3739-41d4-a69e-470700d67b68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\00. Body">
+      <UniqueIdentifier>{8dbe63b2-334d-4423-80b0-d813f38c1c95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\01. Head">
+      <UniqueIdentifier>{07a5f0a6-996e-4a42-8c0b-0dabced6595a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\02. LArm">
+      <UniqueIdentifier>{edd53062-f953-4dec-8635-85e1363a6ba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\03. RArm">
+      <UniqueIdentifier>{4ea42ffc-fcd5-471e-8bb8-f07a36b88d66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\04. LLeg">
+      <UniqueIdentifier>{ceca5f2c-9221-439d-809d-a9b7a41afec0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\05. RLeg">
+      <UniqueIdentifier>{2cc3ad5a-e537-4821-916d-82c3dc39ccb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\08. MiniGame_Dialogue">
+      <UniqueIdentifier>{05a860f5-cfe8-4eb5-9874-835a681badfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\09. MiniGame_Intro">
+      <UniqueIdentifier>{09e1f5b3-3cb2-46f9-9c65-232d0db4b4a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\10. MiniGame_Train">
+      <UniqueIdentifier>{8e2a2f0b-c257-41b2-be7b-c94405343e6c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01. Scene\Intro">
       <UniqueIdentifier>{c80e9381-b779-43fb-a4fe-73fc75d28c59}</UniqueIdentifier>
     </Filter>
@@ -985,6 +1039,81 @@
       <Filter>01. Scene\Stage\Layer\Liminal\Object\ColorArea</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CIntroScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CMiniGame_Header.h">
+      <Filter>01. Scene\MiniGame_0\99. MiniGame_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Sprite.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Card.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\01. MiniGame_Card</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Bullet.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\02. MiniGame_Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Enemy.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\03. MiniGame_Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Enemy_Skull.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\03. MiniGame_Enemy\00. Enemy_Skull</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Explosion.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\04. MiniGame_Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_HUD.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\05. MiniGame_HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Player.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\06. MiniGame_Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Deck.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\01. MiniGame_Card</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Dancer.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_DancerBody.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\00. Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_DancerHead.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\01. Head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_DancerLArm.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\02. LArm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_DancerLLeg.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\04. LLeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_DancerRArm.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\03. RArm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_DancerRLeg.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\05. RLeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_DancerPart.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Sunglass.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Dialogue.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\08. MiniGame_Dialogue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Intro.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\09. MiniGame_Intro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Train13.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\10. MiniGame_Train</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Herobrine.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Laser.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CIntroScene.h">
       <Filter>01. Scene\Intro</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1468,6 +1597,78 @@
     </ClCompile>
     <ClCompile Include="..\Code\CColorArea.cpp">
       <Filter>01. Scene\Stage\Layer\Liminal\Object\ColorArea</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CIntroScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Sprite.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Card.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\01. MiniGame_Card</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Bullet.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\02. MiniGame_Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Enemy.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\03. MiniGame_Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Enemy_Skull.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\03. MiniGame_Enemy\00. Enemy_Skull</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Explosion.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\04. MiniGame_Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_HUD.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\05. MiniGame_HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Player.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\06. MiniGame_Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Deck.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\01. MiniGame_Card</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Dancer.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_DancerBody.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\00. Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_DancerHead.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\01. Head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_DancerLArm.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\02. LArm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_DancerLLeg.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\04. LLeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_DancerRArm.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\03. RArm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_DancerRLeg.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer\05. RLeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_DancerPart.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Sunglass.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\07. MiniGame_Dancer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Dialogue.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\08. MiniGame_Dialogue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Intro.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\09. MiniGame_Intro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Train13.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\10. MiniGame_Train</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Herobrine.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Laser.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CIntroScene.cpp">
       <Filter>01. Scene\Intro</Filter>

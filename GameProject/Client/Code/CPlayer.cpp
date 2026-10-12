@@ -19,6 +19,7 @@
 #include "CSocket.h"
 #include "CWeapon.h"
 #include "CGameMachine.h"
+#include "CPlayer_MG1.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
     :CGameObject(pGraphicDev)

@@ -2,6 +2,7 @@
 #include "CCamera2_MG1.h"
 #include "CDInputMgr.h"
 #include "CTransform.h"
+#include "CManagement.h"
 
 CCamera2_MG1::CCamera2_MG1(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCamera(pGraphicDev), m_bFix(true), m_bCheck(true), m_fSpeed(0.f)
@@ -40,7 +41,7 @@ HRESULT CCamera2_MG1::Ready_GameObject(const _vec3* pEye,
 	if (FAILED(CCamera::Ready_GameObject()))
 		return E_FAIL;
 
-	m_fSpeed = 10.f;
+	m_fSpeed = 3.f;
 
 
 	return S_OK;
@@ -91,37 +92,85 @@ void CCamera2_MG1::Key_Input(const _float fTimeDelta)
 	D3DXVec3Cross(&vRight, &m_vUp, &vLook);
 	D3DXVec3Normalize(&vRight, &vRight);
 
-	if (CDInputMgr::GetInstance()->Key_Press(DIK_RIGHT))
-	{
-		_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * m_fSpeed;
+	CTransform* pPlayerTransformCom = static_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC,
+		L"GameLogic_Layer", L"Player", L"Com_Transform"));
 
-		m_vEye += vLength;
-		m_vAt += vLength;
+	_vec3 vPlayerPos; pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+	_float fSpeed = m_fSpeed;
+	if (CDInputMgr::GetInstance()->Key_Press(DIK_RSHIFT))
+	{
+		fSpeed *= 2.f;
+	}
+	if (vPlayerPos.y < 1.f)
+	{
+		if (CDInputMgr::GetInstance()->Key_Press(DIK_RIGHT))
+		{
+			_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * fSpeed * 0.5f;
+
+			m_vEye += vLength;
+			m_vAt += vLength;
+		}
+
+		if (CDInputMgr::GetInstance()->Key_Press(DIK_LEFT))
+		{
+			_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * fSpeed * 0.5f;
+
+			m_vEye -= vLength;
+			m_vAt -= vLength;
+		}
+
+		if (CDInputMgr::GetInstance()->Key_Press(DIK_UP))
+		{
+			_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * fSpeed;
+
+			m_vEye += vLength;
+			m_vAt += vLength;
+		}
+
+		if (CDInputMgr::GetInstance()->Key_Press(DIK_DOWN))
+		{
+			_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * fSpeed;
+
+			m_vEye -= vLength;
+			m_vAt -= vLength;
+		}
+	}
+	else
+	{
+		fSpeed *= 2.f;
+		if (CDInputMgr::GetInstance()->Key_Press(DIK_RIGHT))
+		{
+			_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * fSpeed;
+
+			m_vEye += vLength;
+			m_vAt += vLength;
+		}
+
+		if (CDInputMgr::GetInstance()->Key_Press(DIK_LEFT))
+		{
+			_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * fSpeed;
+
+			m_vEye -= vLength;
+			m_vAt -= vLength;
+		}
+
+		if (CDInputMgr::GetInstance()->Key_Press(DIK_UP))
+		{
+			_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * fSpeed;
+
+			m_vEye += vLength;
+			m_vAt += vLength;
+		}
+
+		if (CDInputMgr::GetInstance()->Key_Press(DIK_DOWN))
+		{
+			_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * fSpeed;
+
+			m_vEye -= vLength;
+			m_vAt -= vLength;
+		}
 	}
 
-	if (CDInputMgr::GetInstance()->Key_Press(DIK_LEFT))
-	{
-		_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * m_fSpeed;
-
-		m_vEye -= vLength;
-		m_vAt -= vLength;
-	}
-
-	if (CDInputMgr::GetInstance()->Key_Press(DIK_UP))
-	{
-		_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed;
-
-		m_vEye += vLength;
-		m_vAt += vLength;
-	}
-
-	if (CDInputMgr::GetInstance()->Key_Press(DIK_DOWN))
-	{
-		_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed;
-
-		m_vEye -= vLength;
-		m_vAt -= vLength;
-	}
 
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_TAB))
 	{
