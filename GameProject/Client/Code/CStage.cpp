@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "CShaderEffectMgr.h"
 #include "CStage.h"
+#include "CUI.h"
+#include "CFontMgr.h"
 
 /* 매니저 */
 #include "CManagement.h"
@@ -57,6 +59,7 @@ CStage::~CStage()
 
 HRESULT CStage::Ready_Scene()
 {
+    if (FAILED(Ready_NpcDialogue())) return E_FAIL;
 	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
 		return E_FAIL;
 
@@ -121,10 +124,25 @@ _int CStage::Update_Scene(_float fTimeDelta)
 		m_iWarpRequest = -1;
 	}
 
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F3))
+	{
+		CScene* pMiniGame = CMiniGame1::Create(m_pGraphicDev);
+		if (nullptr == pMiniGame)
+			return E_FAIL;
+		if (FAILED(CManagement::GetInstance()->Change_Scene(1, pMiniGame)))
+		{
+			Safe_Release(pMiniGame);
+			MSG_BOX("MiniGame Create Failed");
+			return -1;
+		}
+		pMiniGame->Update_Scene(fTimeDelta);
+	}
+
 	CClientCameraMgr::GetInstance()->Update_Camera(fTimeDelta);
 	_int iExit = CScene::Update_Scene(fTimeDelta);
 
 	CUIMgr::GetInstance()->Update_UI();
+    UpdateNpcDialogue();
 
 	if (m_bOnPlayerDead)
 	{
@@ -225,6 +243,7 @@ void CStage::OnEnter()
 
 void CStage::OnExit()
 {
+    EndNpcDialogue();
     CShaderEffectMgr::GetInstance()->Set_PostEffect(POST_EFFECT::NONE);
 	CSoundMgr::GetInstance()->StopBGM();
 
@@ -241,6 +260,7 @@ HRESULT CStage::Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject)
 
 void CStage::OnPlayerDead()
 {
+    EndNpcDialogue();
 	m_pCurrentRoomLayer->ResetState();
 
 	/* 부활 타이머 */
@@ -637,6 +657,7 @@ void CStage::CheckRoomChanged()
 
 	if (m_iRoomIndex != m_iCurrentRoomIndex)
 	{
+        EndNpcDialogue();
 		m_iPrevRoomIndex = m_iCurrentRoomIndex;
 		m_iCurrentRoomIndex = m_iRoomIndex;
 		if(m_pStatus) m_pStatus->UpdateCurrentRoomIndex(m_iCurrentRoomIndex);
@@ -718,5 +739,133 @@ CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CStage::Free()
 {
+    EndNpcDialogue();
+    Safe_Release(m_pDialogueWindow);
+    Safe_Release(m_pDialoguePortrait);
+    Safe_Release(m_pPlayerDialoguePortrait);
 	CScene::Free();
+}
+
+HRESULT CStage::Ready_NpcDialogue()
+{
+    m_pDialogueWindow = CUI::Create(m_pGraphicDev, L"Proto_Npc_ChatWindow");
+    m_pDialoguePortrait = CUI::Create(m_pGraphicDev, L"Proto_Npc_Dialogue");
+    m_pPlayerDialoguePortrait = CUI::Create(m_pGraphicDev, L"Proto_Npc_PlayerDialogue");
+    if (!m_pDialogueWindow || !m_pDialoguePortrait || !m_pPlayerDialoguePortrait) return E_FAIL;
+    const float s = min(WINCX / 1280.f, WINCY / 720.f);
+    const float left = WINCX * 0.5f - 480.f * s;
+    m_pDialogueWindow->Set_Size({480.f * s, 85.f * s});
+    m_pDialogueWindow->Set_Pos(WINCX * 0.5f, 197.f * s, 0.9f);
+    m_pDialoguePortrait->Set_Size({74.f * s, 74.f * s});
+    m_pDialoguePortrait->Set_Pos(left + 85.f * s, 197.f * s, 0.8f);
+    m_pPlayerDialoguePortrait->Set_Size({74.f * s, 74.f * s});
+    m_pPlayerDialoguePortrait->Set_Pos(left + 875.f * s, 197.f * s, 0.8f);
+    m_npcLines = {
+        { NPC_SPEAKER::NPC, L"역시 형이야!\n구하러 왔구나." },
+        { NPC_SPEAKER::PLAYER, L"아니 나도 잡혔어." },
+        { NPC_SPEAKER::NPC, L"..." },
+        { NPC_SPEAKER::PLAYER, L"농담이야 빨리 풀어줄게." }
+    };
+    return S_OK;
+}
+
+void CStage::StartNpcDialogue()
+{
+    if (m_bNpcDialogue || !m_pPlayer || m_npcLines.empty()) return;
+    m_bNpcDialogue = true;
+    m_iNpcLine = 0;
+    m_iNpcVisible = 0;
+    m_iNpcNextWord = GetTickCount64() + 250;
+    m_pPlayer->LockInput(PIC_MOVE);
+    m_pPlayer->LockInput(PIC_WEAPON);
+}
+
+void CStage::EndNpcDialogue()
+{
+    if (!m_bNpcDialogue) return;
+    m_bNpcDialogue = false;
+    if (m_pPlayer)
+    {
+        m_pPlayer->UnlockInput(PIC_MOVE);
+        m_pPlayer->UnlockInput(PIC_WEAPON);
+    }
+}
+
+void CStage::UpdateNpcDialogue()
+{
+    if (!m_bNpcDialogue) return;
+    auto* input = CDInputMgr::GetInstance();
+    if (input->Key_Down(DIK_RETURN))
+    {
+        EndNpcDialogue();
+        return;
+    }
+    const auto& text = m_npcLines[m_iNpcLine].strText;
+    if (input->Key_Down(DIK_SPACE))
+    {
+        if (m_iNpcVisible < text.size()) m_iNpcVisible = text.size();
+        else if (++m_iNpcLine >= m_npcLines.size()) EndNpcDialogue();
+        else
+        {
+            m_iNpcVisible = 0;
+            m_iNpcNextWord = GetTickCount64() + 250;
+        }
+        return;
+    }
+    bool revealed = false;
+    const auto now = GetTickCount64();
+    while (m_iNpcVisible < text.size() && now >= m_iNpcNextWord)
+    {
+        auto isSpace = [](wchar_t c) { return c == L' ' || c == L'\n' || c == L'\r' || c == L'\t'; };
+        while (m_iNpcVisible < text.size() && isSpace(text[m_iNpcVisible])) ++m_iNpcVisible;
+        while (m_iNpcVisible < text.size() && !isSpace(text[m_iNpcVisible])) ++m_iNpcVisible;
+        m_iNpcNextWord += 250;
+        revealed = true;
+    }
+    if (revealed) CSoundMgr::GetInstance()->PlaySFX(L"sfxEnergy.wav");
+}
+
+void CStage::Render_Scene()
+{
+    if (!m_bNpcDialogue) return;
+    LPDIRECT3DSTATEBLOCK9 state = nullptr;
+
+    if (FAILED(m_pGraphicDev->CreateStateBlock(D3DSBT_ALL, &state))) return;
+    _matrix view, projection;
+
+    D3DXMatrixIdentity(&view);
+    D3DXMatrixOrthoLH(&projection, float(WINCX), float(WINCY), 0.f, 1.f);
+
+    m_pGraphicDev->SetTransform(D3DTS_VIEW, &view);
+    m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &projection);
+    m_pGraphicDev->SetVertexShader(nullptr);
+    m_pGraphicDev->SetPixelShader(nullptr);
+
+    m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
+    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+    m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+    m_pGraphicDev->SetRenderState(D3DRS_FOGENABLE, FALSE);
+    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+    m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+    m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+    m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+    m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
+    m_pGraphicDev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+    m_pGraphicDev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+
+    m_pDialogueWindow->Render_GameObject();
+    const bool bPlayer = m_npcLines[m_iNpcLine].eSpeaker == NPC_SPEAKER::PLAYER;
+    if (bPlayer) m_pPlayerDialoguePortrait->Render_GameObject();
+    else m_pDialoguePortrait->Render_GameObject();
+
+    const float s = min(WINCX / 1280.f, WINCY / 720.f);
+    const float left = WINCX * 0.5f - 480.f * s;
+    const _vec2 pos{left + (bPlayer ? 45.f : 210.f) * s, 142.f * s};
+    const _vec2 guide{left, 325.f * s};
+
+    const auto text = m_npcLines[m_iNpcLine].strText.substr(0, m_iNpcVisible);
+    CFontMgr::GetInstance()->Render_Font(L"Font_Dialogue", text.c_str(), &pos, D3DXCOLOR(1,1,1,1));
+    state->Apply();
+    state->Release();
 }

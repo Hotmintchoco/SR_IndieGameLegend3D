@@ -54,7 +54,8 @@ _int CGenerator_YellowDust::Update_GameObject(_float fTimeDelta)
         _vec3 vDir = m_vDir[m_iIndex];
         vDir.y = 0.f;
         //vDir *= 2.f;
-        m_vEffectSpawnLocation = m_vRoomCenterLocation - vDir * 0.5f;
+        m_vEffectSpawnLocation = m_vRoomCenterLocation - vDir * 0.25f;
+        //m_vEffectSpawnLocation = m_vRoomCenterLocation;
         if (++m_iIndex == sizeof(m_vDir) / sizeof(m_vDir[0]))m_iIndex = 0;
     }
 

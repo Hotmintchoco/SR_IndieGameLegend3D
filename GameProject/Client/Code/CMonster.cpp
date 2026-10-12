@@ -127,20 +127,20 @@ void CMonster::Render_GameObject()
 
 void CMonster::OnCollisionEnter(COLLINFO eCollInfo)
 {
-	// CCollider* pCollider = eCollInfo.pOtherCollider;
-    // 
-    // if (pCollider && pCollider->Get_CollisionID() == COLL_PROJECTILE)
-    // {
-    //     m_bHitState = true;
-    //     m_fHitEffectElapsedTime = 0.f;
-    //     m_iHp -= 1; /* 성철 : Collider ID, 데미지 받는 방식 임시로 바꿔둠 */
-    // }
-    // if (pCollider && pCollider->Get_CollisionID() == COLL_EXPLODE)
-    // {
-    //     m_bHitState = true;
-    //     m_fHitEffectElapsedTime = 0.f;
-    //     m_iHp -= 100; /* 성철 : Collider ID, 데미지 받는 방식 임시로 바꿔둠 */
-    // }
+	 CCollider* pCollider = eCollInfo.pOtherCollider;
+     
+     if (pCollider && pCollider->Get_CollisionID() == COLL_PROJECTILE)
+     {
+         m_bHitState = true;
+         m_fHitEffectElapsedTime = 0.f;
+         //m_iHp -= 1; /* 성철 : Collider ID, 데미지 받는 방식 임시로 바꿔둠 */
+     }
+     if (pCollider && pCollider->Get_CollisionID() == COLL_EXPLODE)
+     {
+         m_bHitState = true;
+         m_fHitEffectElapsedTime = 0.f;
+         //m_iHp -= 100; /* 성철 : Collider ID, 데미지 받는 방식 임시로 바꿔둠 */
+     }
 }
 
 void CMonster::OnCollisionStay(COLLINFO eCollInfo)
@@ -267,12 +267,57 @@ void CMonster::LookAtPlayer2()
     m_pTransformCom->Set_Angle(vAngle);
 }
 
+void CMonster::LookAtCamera()
+{
+    _matrix matView;
+    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+
+    _matrix matCameraWorld;
+    D3DXMatrixInverse(&matCameraWorld, nullptr, &matView);
+
+    _vec3 vCameraPos = { matCameraWorld._41, matCameraWorld._42, matCameraWorld._43 };
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vDir = vCameraPos - vPos;
+    //vDir.y = 0.f;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    _vec3 vAngle;
+    vAngle.x = D3DXToDegree(-asinf(vDir.y));
+    vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+    vAngle.z = 0.f;
+    m_pTransformCom->Set_Angle(vAngle);
+}
+
+void CMonster::LookAtCamera2()
+{
+    _matrix matView;
+    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+
+    _matrix matCameraWorld;
+    D3DXMatrixInverse(&matCameraWorld, nullptr, &matView);
+
+    _vec3 vCameraPos = { matCameraWorld._41, matCameraWorld._42, matCameraWorld._43 };
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vDir = vCameraPos - vPos;
+    vDir.y = 0.f;
+    D3DXVec3Normalize(&vDir, &vDir);
+
+    _vec3 vAngle;
+    vAngle.x = D3DXToDegree(-asinf(vDir.y));
+    vAngle.y = D3DXToDegree(atan2f(vDir.x, vDir.z));
+    vAngle.z = 0.f;
+    m_pTransformCom->Set_Angle(vAngle);
+}
+
 void CMonster::Effect_SmallExplode()
 {
     CGameObject* pGameObject = nullptr;
     CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
 
-    pGameObject = CSmallExplode::Create(m_pGraphicDev, m_pTransformCom->m_vInfo[INFO_POS], m_pTransformCom->m_vScale);
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+
+    pGameObject = CSmallExplode::Create(m_pGraphicDev, vPos, vScale);
     if (nullptr == pGameObject) return;
 
     if (FAILED(pLayer->Add_GameObject(L"SmallExplode", pGameObject))) return;
@@ -417,7 +462,9 @@ void CMonster::Set_OnTerrain()
 
     _float  fY = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
 
-    m_pTransformCom->Set_Pos(vPos.x, fY + m_pTransformCom->m_vScale.y, vPos.z);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+
+    m_pTransformCom->Set_Pos(vPos.x, fY + vScale.y, vPos.z);
 }
 
 void CMonster::Set_RoomCenterLocation()
@@ -427,6 +474,21 @@ void CMonster::Set_RoomCenterLocation()
         m_bRoomCenterLocation = true;
         _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
         m_vRoomCenterLocation = { GetCenterX(vPos.x), 0.f, GetCenterZ(vPos.z) };
+    }
+}
+
+void CMonster::Check_InRoom()
+{
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    if (fabsf(vPos.x - GetCenterX(vPos.x)) > 6.5f)
+    {
+        Set_Damage(Get_Hp());
+        return;
+    }
+    if (fabsf(vPos.z - GetCenterZ(vPos.z)) > 5.5f)
+    {
+        Set_Damage(Get_Hp());
+        return;
     }
 }
 

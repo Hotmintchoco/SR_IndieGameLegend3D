@@ -400,6 +400,27 @@
     <Filter Include="02. GameObject\02. Monster\Worm\WormBullet">
       <UniqueIdentifier>{ce9c4643-760b-4ae1-bd0a-2b4319bacad7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\MiniGame_1\GameObject">
+      <UniqueIdentifier>{22e61cc0-8bce-43e1-bb72-9724b31be7da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_1\GameObject\Test">
+      <UniqueIdentifier>{86191db4-6547-4b9e-b287-5a381320701e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_1\GameObject\Player_MG1">
+      <UniqueIdentifier>{00184854-144a-4568-befd-939aad09dac5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_1\GameObject\Camera_MG1">
+      <UniqueIdentifier>{34c68a12-2025-4782-8337-947fe2d32cdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_1\GameObject\Box_MG1">
+      <UniqueIdentifier>{6f0d2a13-8903-4ded-b365-58040e9b5a1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Walkerboss">
+      <UniqueIdentifier>{36e61ccd-5bc8-4493-853d-e28264b96eb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Walkerboss\WalkerBullet">
+      <UniqueIdentifier>{533960a4-a72d-40a4-8c95-cf05073716c9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\12. Logic\02. CameraHelper">
       <UniqueIdentifier>{0b4c689d-2ae5-49fc-ad89-0174ef660c29}</UniqueIdentifier>
     </Filter>
@@ -450,6 +471,9 @@
     </Filter>
     <Filter Include="01. Scene\Stage\Layer\Liminal\Object\ColorArea">
       <UniqueIdentifier>{93d6d706-54e6-4bde-88d4-f93fccb9872c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Intro">
+      <UniqueIdentifier>{c80e9381-b779-43fb-a4fe-73fc75d28c59}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -891,6 +915,27 @@
     <ClInclude Include="..\Header\CWormBullet.h">
       <Filter>02. GameObject\02. Monster\Worm\WormBullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTest1.h">
+      <Filter>01. Scene\MiniGame_1\GameObject\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayer_MG1.h">
+      <Filter>01. Scene\MiniGame_1\GameObject\Player_MG1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCamera_MG1.h">
+      <Filter>01. Scene\MiniGame_1\GameObject\Camera_MG1</Filter>
+    </ClInclude>
+    <ClInclude Include="CCamera2_MG1.h">
+      <Filter>01. Scene\MiniGame_1\GameObject\Camera_MG1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBox_MG1.h">
+      <Filter>01. Scene\MiniGame_1\GameObject\Box_MG1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWalkerboss.h">
+      <Filter>02. GameObject\02. Monster\Walkerboss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWalkerBullet.h">
+      <Filter>02. GameObject\02. Monster\Walkerboss\WalkerBullet</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CCameraHelper.h">
       <Filter>02. GameObject\12. Logic\02. CameraHelper</Filter>
     </ClInclude>
@@ -938,6 +983,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CColorArea.h">
       <Filter>01. Scene\Stage\Layer\Liminal\Object\ColorArea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CIntroScene.h">
+      <Filter>01. Scene\Intro</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1352,6 +1400,27 @@
     <ClCompile Include="..\Code\CParticle_Rectangle.cpp">
       <Filter>02. GameObject\06. Effect\Particle_Rectangle</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CTest1.cpp">
+      <Filter>01. Scene\MiniGame_1\GameObject\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayer_MG1.cpp">
+      <Filter>01. Scene\MiniGame_1\GameObject\Player_MG1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCamera_MG1.cpp">
+      <Filter>01. Scene\MiniGame_1\GameObject\Camera_MG1</Filter>
+    </ClCompile>
+    <ClCompile Include="CCamera2_MG1.cpp">
+      <Filter>01. Scene\MiniGame_1\GameObject\Camera_MG1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBox_MG1.cpp">
+      <Filter>01. Scene\MiniGame_1\GameObject\Box_MG1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWalkerboss.cpp">
+      <Filter>02. GameObject\02. Monster\Walkerboss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWalkerBullet.cpp">
+      <Filter>02. GameObject\02. Monster\Walkerboss\WalkerBullet</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CCameraHelper.cpp">
       <Filter>02. GameObject\12. Logic\02. CameraHelper</Filter>
     </ClCompile>
@@ -1399,6 +1468,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CColorArea.cpp">
       <Filter>01. Scene\Stage\Layer\Liminal\Object\ColorArea</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CIntroScene.cpp">
+      <Filter>01. Scene\Intro</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1464,5 +1536,16 @@
     </None>
     <None Include="..\Bin\Resource\Shader\Invert.hlsl" />
     <None Include="..\Bin\Resource\Shader\Grayscale.hlsl" />
+    <None Include="..\Bin\Resource\Shader\Grayscale.hlsl" />
+    <None Include="..\Bin\Resource\Shader\Invert.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Npc" />
+    <ClInclude Include="..\Header\CNpc.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Npc</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CNpc.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Npc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

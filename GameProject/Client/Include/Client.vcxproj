@@ -148,6 +148,8 @@
     <ClInclude Include="..\Header\CAbstractFactory.h" />
     <ClInclude Include="..\Header\CAnamorphicObject.h" />
     <ClInclude Include="..\Header\CButton.h" />
+    <ClInclude Include="..\Header\CBox_MG1.h" />
+    <ClInclude Include="..\Header\CCamera_MG1.h" />
     <ClInclude Include="..\Header\CCameraHelper.h" />
     <ClInclude Include="..\Header\CColorArea.h" />
     <ClInclude Include="..\Header\CCube.h" />
@@ -237,6 +239,7 @@
     <ClInclude Include="..\Header\CRibbonBuffer.h" />
     <ClInclude Include="..\Header\CSandburst.h" />
     <ClInclude Include="..\Header\CSeaweed.h" />
+    <ClInclude Include="..\Header\CNpc.h" />
     <ClInclude Include="..\Header\CSGBullet.h" />
     <ClInclude Include="..\Header\CShockwave.h" />
     <ClInclude Include="..\Header\CShotGun.h" />
@@ -244,9 +247,12 @@
     <ClInclude Include="..\Header\CSocket.h" />
     <ClInclude Include="..\Header\CSprnub2.h" />
     <ClInclude Include="..\Header\CSprnub3.h" />
+    <ClInclude Include="..\Header\CTest1.h" />
     <ClInclude Include="..\Header\CUIMgr.h" />
     <ClInclude Include="..\Header\CVeilSphere.h" />
     <ClInclude Include="..\Header\CVoxelBuffer.h" />
+    <ClInclude Include="..\Header\CWalkerboss.h" />
+    <ClInclude Include="..\Header\CWalkerBullet.h" />
     <ClInclude Include="..\Header\CWeapon.h" />
     <ClInclude Include="..\Header\CMagmamouth.h" />
     <ClInclude Include="..\Header\CGem.h" />
@@ -300,7 +306,9 @@
     <ClInclude Include="..\Header\json_fwd.hpp" />
     <ClInclude Include="..\Header\CUnbreakableFrustum.h" />
     <ClInclude Include="..\Header\CSprnub1.h" />
+    <ClInclude Include="CCamera2_MG1.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="CPlayer_MG1.h" />
     <ClInclude Include="CSeaweed2.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -312,6 +320,8 @@
     <ClCompile Include="..\Code\CAbstractFactory.cpp" />
     <ClCompile Include="..\Code\CAnamorphicObject.cpp" />
     <ClCompile Include="..\Code\CButton.cpp" />
+    <ClCompile Include="..\Code\CBox_MG1.cpp" />
+    <ClCompile Include="..\Code\CCamera_MG1.cpp" />
     <ClCompile Include="..\Code\CCameraHelper.cpp" />
     <ClCompile Include="..\Code\CColorArea.cpp" />
     <ClCompile Include="..\Code\CCube.cpp" />
@@ -400,6 +410,7 @@
     <ClCompile Include="..\Code\CRibbonBuffer.cpp" />
     <ClCompile Include="..\Code\CSandburst.cpp" />
     <ClCompile Include="..\Code\CSeaweed.cpp" />
+    <ClCompile Include="..\Code\CNpc.cpp" />
     <ClCompile Include="..\Code\CSGBullet.cpp" />
     <ClCompile Include="..\Code\CShockwave.cpp" />
     <ClCompile Include="..\Code\CShotGun.cpp" />
@@ -407,9 +418,12 @@
     <ClCompile Include="..\Code\CSocket.cpp" />
     <ClCompile Include="..\Code\CSprnub2.cpp" />
     <ClCompile Include="..\Code\CSprnub3.cpp" />
+    <ClCompile Include="..\Code\CTest1.cpp" />
     <ClCompile Include="..\Code\CUIMgr.cpp" />
     <ClCompile Include="..\Code\CVeilSphere.cpp" />
     <ClCompile Include="..\Code\CVoxelBuffer.cpp" />
+    <ClCompile Include="..\Code\CWalkerboss.cpp" />
+    <ClCompile Include="..\Code\CWalkerBullet.cpp" />
     <ClCompile Include="..\Code\CWeapon.cpp" />
     <ClCompile Include="..\Code\CGaugeUI.cpp" />
     <ClCompile Include="..\Code\CMagmamouth.cpp" />
@@ -472,7 +486,9 @@
     <ClCompile Include="..\Code\IRayTestable.cpp" />
     <ClCompile Include="..\Code\CSprnub1.cpp" />
     <ClCompile Include="..\Code\ITerrain.cpp" />
+    <ClCompile Include="CCamera2_MG1.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="CPlayer_MG1.cpp" />
     <ClCompile Include="CSeaweed2.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

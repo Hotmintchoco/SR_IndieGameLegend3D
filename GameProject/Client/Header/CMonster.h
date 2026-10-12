@@ -31,6 +31,9 @@ public:
 	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
 	virtual 		void		OnCollisionStay(COLLINFO eCollInfo) override;
 
+	virtual void Check_Hp(_float& fTimeDelta) {}
+	virtual void Animation_Monster(const _float& fTimeDelta) {}
+
 	_bool Get_Collision_WithMonster() { return m_bCollision_WithMonster; }
 
 	void Set_Damage(_float fDamage) { m_iHp -= (_int)fDamage; }
@@ -47,6 +50,8 @@ protected:
 	void Chase_Player(const _float& fTimeDelta, _float fSpeed);
 	void LookAtPlayer();
 	void LookAtPlayer2();
+	void LookAtCamera();
+	void LookAtCamera2();
 
 	void Effect_SmallExplode();
 	void DropItem();
@@ -55,7 +60,7 @@ protected:
 	// 정민 : OnCollisionStay에서 호출 (몬스터끼리 뭉침 방지 용)
 	void CollisionWithMonster(COLLINFO eCollInfo);
 
-	enum GENERAL_MONSTER_STATE { MOVE, JUMP, IDLE };
+	enum GENERAL_MONSTER_STATE { MOVE, JUMP, ATTACK, IDLE };
 protected:
 	Engine::CRcTex* m_pBufferCom = nullptr;
 	Engine::CTransform* m_pTransformCom = nullptr;
@@ -102,7 +107,8 @@ public:
 	{
 		return 60.f + 13.f * floorf((z - 60.f + 6.5f) / 13.f);
 	}
-	void Set_RoomCenterLocation();
+	virtual void Set_RoomCenterLocation();
+	void Check_InRoom();
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

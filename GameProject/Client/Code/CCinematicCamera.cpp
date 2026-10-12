@@ -101,13 +101,27 @@ void CCinematicCamera::Evaluate(_float fRatio)
     // Smoothstep: 부드럽게 출발하고 멈춤
     const _float u = t * t * (3.f - 2.f * t);
 
-    D3DXVec3Lerp(
-        &m_vEye,
-        &m_tCurrentDesc.vEyeFrom,
-        &m_tCurrentDesc.vEyeTo,
-        u);
-
     m_vAt = m_tCurrentDesc.vLookAt;
+
+    if (m_tCurrentDesc.bOrbit)
+    {
+        const _vec3 vOffset = m_tCurrentDesc.vEyeFrom - m_vAt;
+
+        D3DXMATRIX matRotation;
+        D3DXMatrixRotationY(&matRotation, m_tCurrentDesc.fOrbitAngle * u);
+
+        _vec3 vRotatedOffset;
+        D3DXVec3TransformNormal(&vRotatedOffset, &vOffset, &matRotation);
+        m_vEye = m_vAt + vRotatedOffset;
+    }
+    else
+    {
+        D3DXVec3Lerp(
+            &m_vEye,
+            &m_tCurrentDesc.vEyeFrom,
+            &m_tCurrentDesc.vEyeTo,
+            u);
+    }
 
     m_fFov = m_tCurrentDesc.fFovFrom
         + (m_tCurrentDesc.fFovTo - m_tCurrentDesc.fFovFrom) * u;

@@ -18,6 +18,9 @@ public:
 
 	virtual			void		OnCollisionEnter(COLLINFO eCollInfo) override;
 
+	void Check_Hp(_float& fTimeDelta) override;
+	void Animation_Monster(const _float& fTimeDelta) override;
+
 private:
 	HRESULT			Add_Component();
 
@@ -49,6 +52,7 @@ private:
 	void MagmaMouth_Dead(const _float& fTimeDelta);
 	void MagmaMouth_Dead_Effect();
 
+	void Set_RoomCenterLocation() override;
 protected:
 	virtual void		Free();
 
@@ -95,11 +99,11 @@ private:
 	_bool m_bOpeningMoveFlag = false;
 	_float m_bElapsedOpeningTime = 0.f;
 
-	_vec3 m_vOpeningMoveDirection[5] =
+	_vec3 m_vOpeningMoveDirection[6] =
 	{
-		{-3,0,-3}, {+6,0,0},
-		{0,0,+6}, {-3,0,-3},
-		{+4.5f,0,0}
+		{+3,0,+3}, {-6,0,0}, {0,0,-6},
+		{+6,0,0}, {-3,0,+3},
+		{-4.5f,0,0}
 	};
 	_int m_iOpeningMoveIndex = 0;
 
