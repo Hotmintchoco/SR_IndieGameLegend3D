@@ -126,10 +126,8 @@ _int CStage::Update_Scene(_float fTimeDelta)
 		CScene* pMiniGame = CMiniGame::Create(m_pGraphicDev);
 		if (nullptr == pMiniGame)
 			return E_FAIL;
-		m_bMiniGame = true;
 		if (FAILED(CManagement::GetInstance()->Change_Scene(1, pMiniGame)))
 		{
-			m_bMiniGame = false;
 			Safe_Release(pMiniGame);
 			MSG_BOX("MiniGame Create Failed");
 			return -1;
@@ -251,22 +249,12 @@ void CStage::OnEnter()
     }
 	if (SUCCEEDED(CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::PLAYER)))
 		CClientCameraMgr::GetInstance()->LateUpdate_Camera(0.f);
-
-	if (m_bMiniGame)
-	{
-		CSoundMgr::GetInstance()->SetBGMVolume(0.2f);
-		m_bMiniGame = false;
-	}
 }
 
 void CStage::OnExit()
 {
     CShaderEffectMgr::GetInstance()->Set_PostEffect(POST_EFFECT::NONE);
-
-	if (m_bMiniGame)
-		CSoundMgr::GetInstance()->SetBGMVolume(0.f);
-	else
-		CSoundMgr::GetInstance()->StopBGM();
+	CSoundMgr::GetInstance()->StopBGM();
 
 }
 

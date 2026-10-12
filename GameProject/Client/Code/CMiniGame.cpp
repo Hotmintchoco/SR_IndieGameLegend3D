@@ -3,10 +3,10 @@
 #include "CLayer.h"
 #include "CDInputMgr.h"
 #include "CManagement.h"
-#include "CTimerMgr.h"
 #include "CSkyBox.h"
 #include "CMiniGameBG.h"
 #include "CMG0_Player.h"
+#include "CMG0_Enemy_Skull.h"
 #include "CMG0_Bullet.h"
 #include "CMG0_Deck.h"
 #include "CMG0_Dancer.h"
@@ -48,14 +48,21 @@ HRESULT CMiniGame::Ready_Scene()
 
 _int CMiniGame::Update_Scene(_float fTimeDelta)
 {
-    m_fSceneTime += m_bBGMStarted ? CTimerMgr::GetInstance()->Get_FrameDelta() : fTimeDelta;
+    m_fSceneTime += fTimeDelta;
 
     Update_BGM();
 
     if (m_pPlayer->Is_GameOver())
         m_fGameOverTimer -= fTimeDelta;
     else
+    {
+        m_fPlayTime += fTimeDelta;
+
+        if (m_bEnemySpawn)
+            Spawn_Enemy(fTimeDelta);
+
         Spawn_Train(fTimeDelta);
+    }
 
     if (m_pDancer->Is_Boarded() && m_fSceneTime < MG_TRAIN_END_TIME)
         m_fCamRate = min(1.f, m_fCamRate + fTimeDelta / MG_TRAIN_CAM_TIME);
@@ -74,12 +81,8 @@ _int CMiniGame::Update_Scene(_float fTimeDelta)
         return iExit;
     }
 
-    if (!m_bTimeOver && m_fSceneTime >= MG_BOSS_LIMIT_TIME && !m_pBoss->Is_Dying() && m_pBoss->Get_Hp() > 0)
-    {
+    if (!m_bTimeOver && m_fSceneTime >= MG_BOSS_LIMIT_TIME && !m_pBoss->Is_Dying())
         m_bTimeOver = true;
-
-        Clear_Enemy();
-    }
 
     if (m_bTimeOver)
     {
@@ -94,7 +97,7 @@ _int CMiniGame::Update_Scene(_float fTimeDelta)
         }
     }
 
-    if (!m_bTimeOver && (m_pBoss->Is_Dead() || m_fSceneTime >= MG_BGM_START_TIME + MG_BGM_LENGTH + MG_CLEAR_DELAY))
+    if (m_pBoss->Is_Dead() || m_fSceneTime >= MG_BGM_START_TIME + MG_BGM_LENGTH + MG_CLEAR_DELAY)
     {
         m_pPlayer->Set_Invincible(1.f);
         m_fClearTimer -= fTimeDelta;
@@ -157,6 +160,20 @@ void CMiniGame::Update_BGM()
 
     m_hBGM = CSoundMgr::GetInstance()->PlaySFX(L"MiniGame_0.wav");
     m_bBGMStarted = true;
+}
+
+void CMiniGame::Spawn_Enemy(_float fTimeDelta)
+{
+    m_fSpawnTimer -= fTimeDelta;
+    if (m_fSpawnTimer > 0.f)
+        return;
+
+    _vec3 vPos(MINIGAME0::Random(MG_FIELD_MIN_X, MG_FIELD_MAX_X), MINIGAME0::Random(-1.f, MG_FIELD_MAX_Y), MG_SPAWN_Z);
+    _int iHp = MG_BASE_ATTACK * (3 + (_int)(m_fPlayTime * 0.25f));
+
+    Add_GameObject(L"Enemy", CMG0_Enemy_Skull::Create(m_pGraphicDev, vPos, iHp));
+
+    m_fSpawnTimer = max(0.4f, 1.2f - m_fPlayTime * 0.01f) * MINIGAME0::Random(0.7f, 1.3f);
 }
 
 void CMiniGame::Spawn_Train(_float fTimeDelta)

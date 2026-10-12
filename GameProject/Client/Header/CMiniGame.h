@@ -51,6 +51,7 @@ private:
 	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
 
 	void			Update_BGM();
+	void			Spawn_Enemy(_float fTimeDelta);
 	void			Spawn_Train(_float fTimeDelta);
 	void			Update_Camera();
 
@@ -69,6 +70,8 @@ private:
 	Engine::CTexture*	m_pTrainTex[MINIGAME0::TRAIN_END]{};
 
 	_float			m_fSceneTime = 0.f;
+	_float			m_fPlayTime = 0.f;
+	_float			m_fSpawnTimer = 1.5f;
 	_float			m_fGameOverTimer = 0.f;
 	_float			m_fClearTimer = MG_CLEAR_SHOW_TIME;
 	_float			m_fTrainTime = 0.f;
@@ -77,6 +80,7 @@ private:
 	_float			m_fWhiteTime = 0.f;
 	_int			m_iSafeLane = MG_LANE_COUNT / 2;
 
+	_bool			m_bEnemySpawn = false;
 	_bool			m_bBGMStarted = false;
 	_bool			m_bTimeOver = false;
 	CSoundMgr::SOUND_HANDLE	m_hBGM = CSoundMgr::INVALID_SOUND;
