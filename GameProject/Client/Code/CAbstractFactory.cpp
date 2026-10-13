@@ -41,6 +41,7 @@
 #include "CRoomLayer.h"
 #include "CIceRoomLayer.h"
 #include "CLiminalRoomLayer.h"
+#include "CDesertSpecialRoomLayer.h"
 #include "CMiniGame.h"
 #include "CMiniGame1.h"
 #include "CAnamorphicObject.h"
@@ -101,6 +102,7 @@ CAbstractFactory::CAbstractFactory()
         {ERoomType::ROOM_DEFAULT,           [](const int iIndex) -> CRoomLayer* { return CRoomLayer::Create(iIndex); } },
         {ERoomType::ROOM_ICE,               [](const int iIndex) -> CRoomLayer* { return CIceRoomLayer::Create(iIndex); } },
         {ERoomType::ROOM_LIMINAL,           [](const int iIndex) -> CRoomLayer* { return CLiminalRoomLayer::Create(iIndex); } },
+        {ERoomType::ROOM_TEMPLERUN,    [](const int iIndex) -> CRoomLayer* { return CDesertSpecialRoomLayer::Create(iIndex); } },
     };
 
     m_mapSceneCreator = {

@@ -115,6 +115,7 @@ enum class ERoomType
 	ROOM_DEFAULT,
 	ROOM_ICE,
 	ROOM_LIMINAL,
+	ROOM_TEMPLERUN = 4,
 
 	ROOM_MAX
 };

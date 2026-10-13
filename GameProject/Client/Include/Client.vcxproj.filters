@@ -538,6 +538,9 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\GemBox">
       <UniqueIdentifier>{a38e5298-5484-4841-a668-a4e2ddd51c21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Temple">
+      <UniqueIdentifier>{251d853b-6318-4ed7-be27-513c5e7398fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1134,6 +1137,9 @@
     <ClInclude Include="..\Header\CGemBox.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\GemBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CDesertSpecialRoomLayer.h">
+      <Filter>01. Scene\Stage\Layer\Temple</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1699,6 +1705,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGemBox.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\GemBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDesertSpecialRoomLayer.cpp">
+      <Filter>01. Scene\Stage\Layer\Temple</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
