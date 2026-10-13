@@ -28,16 +28,16 @@ HRESULT CWeaponSystem::Ready_GameObject()
     if (FAILED(AddWeapon(EObjectType::WEAPON_DEFAULT, L"RapidGun")))
         return E_FAIL;
 
-    // if (FAILED(AddWeapon(EObjectType::WEAPON_SHOTGUN, L"ShotGun")))
-    //     return E_FAIL;
-    // 
-    // if (FAILED(AddWeapon(EObjectType::WEAPON_LASERGUN, L"LaserGun")))
-    //     return E_FAIL;
-    // 
     // if (FAILED(AddWeapon(EObjectType::WEAPON_BOW, L"Bow")))
     //     return E_FAIL;
     // 
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_SHOTGUN, L"ShotGun")))
+    //     return E_FAIL;
+    // 
     // if (FAILED(AddWeapon(EObjectType::WEAPON_LIMINAL, L"LiminalGun")))
+    //     return E_FAIL;
+    // 
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_LASERGUN, L"LaserGun")))
     //     return E_FAIL;
 
     SwitchWeaponTo(0);
@@ -172,6 +172,7 @@ void CWeaponSystem::ApplyCameraView(CAMERA_MODE eMode)
     for (auto p : m_vecWeapon)
     {
         p->UpdateLocalTransform(p->GetLocalInfo(eMode));
+        p->SetRenderOverlay((eMode == CAMERA_MODE::FIRST_PERSON) ? true : false);
     }
 }
 

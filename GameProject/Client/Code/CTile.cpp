@@ -51,6 +51,11 @@ void CTile::Render_GameObject()
 {
 }
 
+CTransform* CTile::GetTransform()
+{
+    return m_pTransformCom;
+}
+
 HRESULT CTile::Add_Component()
 {
     CComponent* pComponent = nullptr;

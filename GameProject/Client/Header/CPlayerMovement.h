@@ -22,6 +22,10 @@ public:
 	void Walk(const _vec2& vCommand);
 	void Stop();
 	void Jump();
+	void Slip(float fTime);
+
+	inline _vec3 GetVelocity() { return m_vVelocity; }
+	inline void SetVelocity(const _vec3& vVel) { m_vVelocity = vVel; }
 
 private:
 	virtual float GetCurMaxGroundSpeed() const override;
@@ -39,6 +43,10 @@ private:
 	float m_fJumpSpeedRaw = 3.5f;
 	float m_fGravityRaw = 9.8f;
 	float m_fSkinRaw = 0.03f;
+
+	/* 얼음판 미끄러짐 */
+	float m_fLeftSlipTime = 0.f;
+	bool m_bOnSlipping = false;
 
 public:
 	static CPlayerMovement* Create(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -28,6 +28,9 @@ private:
 	HRESULT	Add_Component();
 	void OpenDoor();
 
+	// 정민 : 감옥 해제 여부
+	_bool Check_EnoughGem();
+
 	CPlyTex* m_pDoorBufferCom = nullptr;
 	CPlyTex* m_pPlateBufferCom = nullptr;
 	CPlyTex* m_pBarBufferCom = nullptr;

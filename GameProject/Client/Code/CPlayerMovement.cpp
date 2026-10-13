@@ -18,6 +18,19 @@ _int CPlayerMovement::Update_Component(_float fTimeDelta)
 {
     _int iExit = CMovement::Update_Component(fTimeDelta);
 
+    if (m_bOnSlipping)
+    {
+        m_fLeftSlipTime -= fTimeDelta;
+        
+        if (m_fLeftSlipTime <= 0.f)
+        {
+            m_bOnSlipping = false;
+            /* 	float m_fGroundFriction = 30.f; */
+            m_fGroundFriction = 30.f;
+            m_fInputAcc = 100.f;
+        }
+    }
+
     return iExit;
 }
 
@@ -86,6 +99,14 @@ void CPlayerMovement::Jump()
 
     m_bOnGround = false;
     AddImpulse(_vec3{0.f, 1.f, 0.f}, m_fJumpSpeed);
+}
+
+void CPlayerMovement::Slip(float fTime)
+{
+    m_bOnSlipping = true;
+    m_fLeftSlipTime = max(m_fLeftSlipTime, fTime);
+    m_fGroundFriction = 2.f;
+    m_fInputAcc = 8.f;
 }
 
 float CPlayerMovement::GetCurMaxGroundSpeed() const

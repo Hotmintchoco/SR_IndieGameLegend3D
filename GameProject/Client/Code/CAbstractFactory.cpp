@@ -31,6 +31,7 @@
 #include "CMine.h"
 #include "CSeaweed.h"
 #include "CNpc.h"
+#include "CGemBox.h"
 #include "CSeaweed2.h"
 #include "CWalkerboss.h"
 #include "CGenerator_Airbubble.h"
@@ -38,10 +39,12 @@
 #include "CGenerator_YellowDust.h"
 #include "CGenerator_Snow.h"
 #include "CRoomLayer.h"
-#include "CLaserPuzzleRoomLayer.h"
+#include "CIceRoomLayer.h"
 #include "CLiminalRoomLayer.h"
 #include "CMiniGame.h"
 #include "CMiniGame1.h"
+#include "CAnamorphicObject.h"
+#include "CPushableFrustum.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -57,6 +60,8 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::LIMINAL_CUBE,             [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalCube::Create(t.pDevice); } },
         {EObjectType::LIMINAL_SLOPE,            [](const TCreateDesc& t) -> Engine::CGameObject* { return CLiminalSlope::Create(t.pDevice); } },
         {EObjectType::JAIL,                     [](const TCreateDesc& t) -> Engine::CGameObject* { return CJail::Create(t.pDevice); } },
+        {EObjectType::ANAMORPHIC_CUBE,          [](const TCreateDesc& t) -> Engine::CGameObject* { return CAnamorphicObject::Create(t.pDevice); } },
+        {EObjectType::PUSHABLE_FRUSTUM,         [](const TCreateDesc& t) -> Engine::CGameObject* { return CPushableFrustum::Create(t.pDevice); } },
 
         {EObjectType::Skull,                    [](const TCreateDesc& t) -> Engine::CGameObject* { return CSkull::Create(t.pDevice); } },
         {EObjectType::Boss1,                    [](const TCreateDesc& t) -> Engine::CGameObject* { return CBoss1::Create(t.pDevice); } },
@@ -74,6 +79,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::Seaweed2,                 [](const TCreateDesc& t) -> Engine::CGameObject* { return CSeaweed2::Create(t.pDevice); } },
         {EObjectType::Walker,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CWalkerboss::Create(t.pDevice); } },
         {EObjectType::Npc,                      [](const TCreateDesc& t) -> Engine::CGameObject* { return CNpc::Create(t.pDevice); } },
+        {EObjectType::GemBox,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CGemBox::Create(t.pDevice); } },
         
         {EObjectType::EFFECT_GENERATOR_AIRBUBBLE,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_Airbubble::Create(t.pDevice); } },
         {EObjectType::EFFECT_GENERATOR_YELLOWDUST,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_YellowDust::Create(t.pDevice); } },
@@ -93,7 +99,7 @@ CAbstractFactory::CAbstractFactory()
 
     m_mapRoomCreator = {
         {ERoomType::ROOM_DEFAULT,           [](const int iIndex) -> CRoomLayer* { return CRoomLayer::Create(iIndex); } },
-        {ERoomType::ROOM_LASER_PUZZLE,      [](const int iIndex) -> CRoomLayer* { return CLaserPuzzleRoomLayer::Create(iIndex); } },
+        {ERoomType::ROOM_ICE,               [](const int iIndex) -> CRoomLayer* { return CIceRoomLayer::Create(iIndex); } },
         {ERoomType::ROOM_LIMINAL,           [](const int iIndex) -> CRoomLayer* { return CLiminalRoomLayer::Create(iIndex); } },
     };
 

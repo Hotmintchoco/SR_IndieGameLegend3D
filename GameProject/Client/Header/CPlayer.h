@@ -48,11 +48,17 @@ public:
 
 	/* 가짜 스케일 */
 	void SetPseudoScale(float fScale);
+	void SetPseudoScale(float fScale, float fLerpTime);
+	inline float GetPseudoScale() { return m_fPseudoScale; }
 
 	inline CTransform* GetTransform() { return m_pTransformCom; }
 	void SetWeaponSystem(CWeaponSystem* pSystem);
 	CSocket* GetSocket(const wstring& wstrName);
 	inline void SetCamera(CPlayerCamera* pCamera) { m_pCamera = pCamera; }
+	inline CPlayerMovement* GetMovement() { return m_pMovement; }
+
+	/* 카메라 뷰 */
+	void SyncCameraYaw();
 
 private:
 	HRESULT	Add_Component();
@@ -63,7 +69,6 @@ private:
 	CPlayerCamera* m_pCamera = nullptr;
 	void OnCameraViewChanged(const CAMERA_MODE& Ctx);
 	CAMERA_MODE m_ePlayerCamMode; /* 결국 매 프레임 동작해야 하는 것들이 많아 캐싱... */
-	void SyncCameraYaw();
 	float m_fInputYaw = 0.f;
 
 	/* 기본 컴포넌트 */
@@ -88,6 +93,11 @@ private:
 	/* 캐릭터 작아짐 연출용 */
 	float m_fPseudoScale = 1.f;
 	float m_fColliderScale = 0.5f;
+	bool m_bLerpPseudoScale = false;
+	float m_fLerpTime = 1.f;
+	float m_fTimeAfterLerp = 0.f;
+	float m_fInitLerpScale = 1.f;
+	float m_fTargetLerpScale = 1.f;
 
 	/* 캐릭터 기본 스탯 */
 	int m_iMaxHP = 12;

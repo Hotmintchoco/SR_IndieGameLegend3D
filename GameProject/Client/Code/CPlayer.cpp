@@ -94,6 +94,19 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
         }
     }
 
+    if (m_bLerpPseudoScale)
+    {
+        m_fTimeAfterLerp += fTimeDelta;
+        float fRatio = clamp(m_fTimeAfterLerp / m_fLerpTime, 0.f, 1.f);
+        float s = fRatio * m_fTargetLerpScale + (1 - fRatio) * m_fInitLerpScale;
+        SetPseudoScale(s);
+
+        if (m_fTimeAfterLerp >= m_fLerpTime)
+        {
+            m_bLerpPseudoScale = false;
+        }
+    }
+
     /* 업데이트 순서 : 애니메이션으로 캐릭터 위치 확정 후 소켓에 전달 */
     if (m_ePlayerCamMode == CAMERA_MODE::THIRD_PERSON)
     {
@@ -521,7 +534,22 @@ bool CPlayer::IsInputAllowed(EPlayerInputChannel e)
 
 void CPlayer::SetPseudoScale(float fScale)
 {
+    m_fPseudoScale = fScale;
+
+    m_pCamera->SetPseudoScale(fScale);
     m_pMovement->SetSpeedScale(fScale);
+
+    m_pColliderCom->Set_Radius(m_fColliderScale * fScale);
+    m_pColliderCom->Set_DiffPos(_vec3{ 0.f, 0.5f * fScale, 0.f });
+}
+
+void CPlayer::SetPseudoScale(float fScale, float fLerpTime)
+{
+    m_bLerpPseudoScale = true;
+    m_fLerpTime = fLerpTime;
+    m_fTimeAfterLerp = 0.f;
+    m_fInitLerpScale = m_fPseudoScale;
+    m_fTargetLerpScale = fScale;
 }
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
