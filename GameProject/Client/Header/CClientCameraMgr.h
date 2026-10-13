@@ -12,7 +12,8 @@ enum class CLIENT_CAMERA_TYPE
 {
     FREE,
     PLAYER,
-    CINEMATIC
+    CINEMATIC,
+    ORTHO,
 };
 
 enum class CAMERA_MODE;
@@ -32,6 +33,7 @@ public:
 
     CCamera*        Find_Camera(CLIENT_CAMERA_TYPE eType) const;
     CCamera*        Get_ActiveCamera() const;
+    CLIENT_CAMERA_TYPE Get_ActiveCameraType() const { return m_eCurrentType; }
 
     // 플레이어 카메라에서 적용 / 매개변수에 적용할 시간
     void            Camera_Shake(_float fOnTime, _float fMagnitude) { m_fShakeTime = fOnTime; m_fMagnitude = fMagnitude; }

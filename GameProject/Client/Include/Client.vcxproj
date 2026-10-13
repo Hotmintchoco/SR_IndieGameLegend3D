@@ -153,6 +153,12 @@
     <ClInclude Include="..\Header\CCameraHelper.h" />
     <ClInclude Include="..\Header\CColorArea.h" />
     <ClInclude Include="..\Header\CCube.h" />
+    <ClInclude Include="..\Header\CCubeNet.h" />
+    <ClInclude Include="..\Header\CCubeNetGrass.h" />
+    <ClInclude Include="..\Header\CCubeNetLava.h" />
+    <ClInclude Include="..\Header\CCubeNetPlank.h" />
+    <ClInclude Include="..\Header\CFlatPlayer.h" />
+    <ClInclude Include="..\Header\CFlatPlayerMovement.h" />
     <ClInclude Include="..\Header\CGenerator_Airbubble.h" />
     <ClInclude Include="..\Header\CArrow.h" />
     <ClInclude Include="..\Header\CArrow_Effect.h" />
@@ -224,6 +230,8 @@
     <ClInclude Include="..\Header\COctoBullet.h" />
     <ClInclude Include="..\Header\COpenCubeTex.h" />
     <ClInclude Include="..\Header\COpenCube.h" />
+    <ClInclude Include="..\Header\COrthoCamera.h" />
+    <ClInclude Include="..\Header\COrthoRoomLayer.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
     <ClInclude Include="..\Header\CPlayerAnimator.h" />
     <ClInclude Include="..\Header\CPlayerMovement.h" />
@@ -326,6 +334,7 @@
     <ClInclude Include="..\Header\imstb_truetype.h" />
     <ClInclude Include="..\Header\IRayTestable.h" />
     <ClInclude Include="..\Header\ITerrain.h" />
+    <ClInclude Include="..\Header\IVerticalTerrain.h" />
     <ClInclude Include="..\Header\json.hpp" />
     <ClInclude Include="..\Header\JsonAdapter.h" />
     <ClInclude Include="..\Header\json_fwd.hpp" />
@@ -351,6 +360,12 @@
     <ClCompile Include="..\Code\CCameraHelper.cpp" />
     <ClCompile Include="..\Code\CColorArea.cpp" />
     <ClCompile Include="..\Code\CCube.cpp" />
+    <ClCompile Include="..\Code\CCubeNet.cpp" />
+    <ClCompile Include="..\Code\CCubeNetGrass.cpp" />
+    <ClCompile Include="..\Code\CCubeNetLava.cpp" />
+    <ClCompile Include="..\Code\CCubeNetPlank.cpp" />
+    <ClCompile Include="..\Code\CFlatPlayer.cpp" />
+    <ClCompile Include="..\Code\CFlatPlayerMovement.cpp" />
     <ClCompile Include="..\Code\CGenerator_Airbubble.cpp" />
     <ClCompile Include="..\Code\CArrow.cpp" />
     <ClCompile Include="..\Code\CArrow_Effect.cpp" />
@@ -422,6 +437,8 @@
     <ClCompile Include="..\Code\COctoBullet.cpp" />
     <ClCompile Include="..\Code\COpenCubeTex.cpp" />
     <ClCompile Include="..\Code\COpenCube.cpp" />
+    <ClCompile Include="..\Code\COrthoCamera.cpp" />
+    <ClCompile Include="..\Code\COrthoRoomLayer.cpp" />
     <ClCompile Include="..\Code\CParticle_Rectangle.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />
     <ClCompile Include="..\Code\CPlayerAnimator.cpp" />
@@ -537,6 +554,7 @@
     <ClCompile Include="..\Code\IRayTestable.cpp" />
     <ClCompile Include="..\Code\CSprnub1.cpp" />
     <ClCompile Include="..\Code\ITerrain.cpp" />
+    <ClCompile Include="..\Code\IVerticalTerrain.cpp" />
     <ClCompile Include="CCamera2_MG1.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="CPlayer_MG1.cpp" />

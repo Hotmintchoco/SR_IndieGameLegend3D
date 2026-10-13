@@ -31,6 +31,7 @@ public:
 	inline CWeapon* GetCurrentWeapon() { return m_vecWeapon.at(m_iCurrentIndex); }
 	void ApplyCameraView(CAMERA_MODE eMode);
 	void SetUltimateAttackOnGoing(bool bFlag) { m_bUltimateOnGoing = bFlag; }
+	void SetWeaponVisibility(bool bFlag);
 
 private:	
 	void SwitchWeaponTo(int iIndex);

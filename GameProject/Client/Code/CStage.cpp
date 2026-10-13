@@ -42,6 +42,7 @@
 #include "CPlayerCamera.h"
 #include "CDynamicCamera.h"
 #include "CCinematicCamera.h"
+#include "COrthoCamera.h"
 
 /* 씬 전환 */
 #include "CMiniGame.h"
@@ -232,6 +233,17 @@ HRESULT CStage::Ready_Camera()
 		return E_FAIL;
 
 	if (FAILED(pCameraMgr->Add_Camera(CLIENT_CAMERA_TYPE::CINEMATIC, pCamera)))
+	{
+		pCamera->Release();
+		return E_FAIL;
+	}
+
+	pCamera = COrthoCamera::Create(m_pGraphicDev);
+
+	if (!pCamera)
+		return E_FAIL;
+
+	if (FAILED(pCameraMgr->Add_Camera(CLIENT_CAMERA_TYPE::ORTHO, pCamera)))
 	{
 		pCamera->Release();
 		return E_FAIL;

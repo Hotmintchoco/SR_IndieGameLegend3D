@@ -329,6 +329,8 @@ _uint CLoading::Loading_Stage()
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_OpenCubeTex", COpenCubeTex::Create(m_pGraphicDev))))
         return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeNet_Buffer", Engine::CPlyTex::Create(m_pGraphicDev, L"../Bin/Resource/Mesh/CubeNet.ply"))))
+        return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrayFrustum_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Mesh/GrayFrustum_Diffuse.png", 1))))
         return E_FAIL;
@@ -381,6 +383,12 @@ _uint CLoading::Loading_Stage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LiminalPortal_Frame_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/obsidian.png", 1))))
         return E_FAIL;
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LiminalPortal_Anim_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/nether_portal/_%d.png", 32))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeNet_Grass_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/CubeNet/grass.png", 1))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeNet_Lava_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/CubeNet/lava_%d.png", 38))))
+        return E_FAIL;
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeNet_Plank_Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/RoomProp/CubeNet/plank.png", 1))))
         return E_FAIL;
     
     /* 벽 */

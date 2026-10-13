@@ -114,6 +114,7 @@ enum class ERoomType
 	ROOM_DEFAULT,
 	ROOM_ICE,
 	ROOM_LIMINAL,
+	ROOM_ORTHO,
 
 	ROOM_MAX
 };

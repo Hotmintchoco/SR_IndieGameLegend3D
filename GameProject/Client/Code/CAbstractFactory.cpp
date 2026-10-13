@@ -44,6 +44,7 @@
 #include "CMiniGame1.h"
 #include "CAnamorphicObject.h"
 #include "CPushableFrustum.h"
+#include "COrthoRoomLayer.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -99,6 +100,7 @@ CAbstractFactory::CAbstractFactory()
         {ERoomType::ROOM_DEFAULT,           [](const int iIndex) -> CRoomLayer* { return CRoomLayer::Create(iIndex); } },
         {ERoomType::ROOM_ICE,               [](const int iIndex) -> CRoomLayer* { return CIceRoomLayer::Create(iIndex); } },
         {ERoomType::ROOM_LIMINAL,           [](const int iIndex) -> CRoomLayer* { return CLiminalRoomLayer::Create(iIndex); } },
+        {ERoomType::ROOM_ORTHO,             [](const int iIndex) -> CRoomLayer* { return COrthoRoomLayer::Create(iIndex); } },
     };
 
     m_mapSceneCreator = {

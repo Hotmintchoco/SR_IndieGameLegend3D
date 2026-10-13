@@ -87,8 +87,8 @@ private:
 	bool m_bDebugTriangle = false;
 
 	/* 사운드 */
-	float m_fBGMVolume = 0.5f;
-	float m_fSFXVolume = 1.f;
+	float m_fBGMVolume = 0.2f;
+	float m_fSFXVolume = 0.5f;
 	bool m_bBGMMute = true;
 	bool m_bSFXMute = true;
 

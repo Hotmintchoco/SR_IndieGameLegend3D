@@ -16,6 +16,7 @@ class CPlayerMovement;
 class CWeaponSystem;
 class CSocket;
 class CPlayerCamera;
+class CCubeNet;
 
 enum class CAMERA_MODE;
 
@@ -59,6 +60,12 @@ public:
 
 	/* 카메라 뷰 */
 	void SyncCameraYaw();
+
+	/* 직교 미니게임 관련 */
+	void UpdateOrthoObjectCandidate(CCubeNet* pObj);
+	bool IsGrabbingOrthoObject() { return m_bIsGrabbingOrthoObject; }
+	void UpdateOrthoMiniGameInput();
+	void UpdateOrthoMiniGameStatus(float fTimeDelta);
 
 private:
 	HRESULT	Add_Component();
@@ -117,6 +124,11 @@ private:
 
 	/* 무기 */
 	CWeaponSystem* m_pWeaponSystem = nullptr;
+
+	/* 직교 미니게임 관련 */
+	CCubeNet* m_pInteractingOrthoObject = nullptr;
+	CSocket* m_pOrthoSocket = nullptr;
+	bool m_bIsGrabbingOrthoObject = false;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

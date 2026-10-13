@@ -535,6 +535,36 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Frustum\Pushable">
       <UniqueIdentifier>{d2d4f74e-77a1-430c-aea5-374a7669cfb9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\04. ClientCamera\Ortho">
+      <UniqueIdentifier>{0ba4162f-6dce-46da-ae63-c3000976eb3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho">
+      <UniqueIdentifier>{8ebb6900-f18e-4ab1-b73f-1596cede5436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object">
+      <UniqueIdentifier>{ace8d20a-81c0-4564-8e97-c218920ce245}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\CubeNet">
+      <UniqueIdentifier>{5a1d170c-d216-4fb9-8356-0816133aae63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\CubeNet\Grass">
+      <UniqueIdentifier>{54641524-0237-4f16-9445-d83e6ecbb8ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\CubeNet\Lava">
+      <UniqueIdentifier>{0fcbc194-016a-4a92-ac24-498dcd31b3f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\CubeNet\Plank">
+      <UniqueIdentifier>{a0536d3d-5c7d-4f9d-b1a7-e3d1b3ebe857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\FlatPlayer">
+      <UniqueIdentifier>{c8e79d6d-6779-47cd-bf4f-00d4b9d4a8ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\FlatPlayer\Movement">
+      <UniqueIdentifier>{5d7a892a-ccfe-4947-8af0-20c414e635a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Interface">
+      <UniqueIdentifier>{0eca2582-ac78-4987-a1ed-4d8bd57961fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1128,6 +1158,33 @@
     <ClInclude Include="..\Header\CPushableFrustum.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Pushable</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\COrthoCamera.h">
+      <Filter>02. GameObject\04. ClientCamera\Ortho</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COrthoRoomLayer.h">
+      <Filter>01. Scene\Stage\Layer\Ortho</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCubeNet.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCubeNetGrass.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Grass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCubeNetPlank.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Plank</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCubeNetLava.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Lava</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFlatPlayer.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\FlatPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFlatPlayerMovement.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\FlatPlayer\Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\IVerticalTerrain.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1690,6 +1747,33 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPushableFrustum.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Pushable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoCamera.cpp">
+      <Filter>02. GameObject\04. ClientCamera\Ortho</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoRoomLayer.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCubeNet.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCubeNetGrass.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Grass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCubeNetPlank.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Plank</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCubeNetLava.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Lava</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFlatPlayer.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\FlatPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFlatPlayerMovement.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\FlatPlayer\Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\IVerticalTerrain.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

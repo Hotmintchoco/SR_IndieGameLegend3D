@@ -51,6 +51,7 @@ public:
 	void UpdateLocalTransform(const TWeaponLocalInfo& tInfo);
 	inline void SetSystem(CWeaponSystem* pSystem) { m_pSystem = pSystem; }
 	void SetRenderOverlay(bool bFlag) { m_bOverlay = bFlag; }
+	inline void SetVisibility(bool bFlag) { m_bVisible = bFlag; }
 
 protected:
 	HRESULT	Add_Component();
@@ -104,6 +105,9 @@ protected:
 
 	/* 깊이 테스트 */
 	bool m_bOverlay = true;
+
+	/* 렌더 여부 */
+	bool m_bVisible = true;
 
 protected:
 	virtual void Free() override;
