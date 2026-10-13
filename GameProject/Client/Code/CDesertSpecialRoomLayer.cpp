@@ -5,6 +5,7 @@
 #include "CPlayer.h"
 #include "CClientCameraMgr.h"
 #include "CPlayerCamera.h"
+#include "CPlayerMovement.h"
 
 CDesertSpecialRoomLayer::CDesertSpecialRoomLayer(int iRoomIndex)
     : CRoomLayer(iRoomIndex)
@@ -28,6 +29,7 @@ HRESULT CDesertSpecialRoomLayer::Ready_Layer()
             {
                 pStage->GetPlayer()->SetPseudoScale(1.f, 1.f);
                 pStage->GetPlayer()->SetForcedSprint(false);
+                pStage->GetPlayer()->GetMovement()->SetJumpSpeed(3.5f);
                 CClientCameraMgr::GetInstance()->SetPlayerCameraMode(CAMERA_MODE::FIRST_PERSON);
 
                 auto pPlayerCam = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Get_ActiveCamera());
@@ -46,10 +48,12 @@ void CDesertSpecialRoomLayer::OnRoomTriggerBlockCollided()
     auto* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
     if (pStage && pStage->GetPlayer() && !m_bStart)
     {
+        // 처음 들어왔을 때만 실행
         m_bStart = true;
 
         pStage->GetPlayer()->SetPseudoScale(0.3f, 1.f);
         pStage->GetPlayer()->SetForcedSprint(true);
+		pStage->GetPlayer()->GetMovement()->SetJumpSpeed(5.5f);
 		CClientCameraMgr::GetInstance()->SetPlayerCameraMode(CAMERA_MODE::THIRD_PERSON);
 
         auto pPlayerCam = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Get_ActiveCamera());
