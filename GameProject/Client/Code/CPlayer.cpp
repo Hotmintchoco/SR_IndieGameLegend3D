@@ -21,6 +21,7 @@
 #include "CGameMachine.h"
 #include "CPlayer_MG1.h"
 #include "CCubeNetPlank.h"
+#include "COrthoRoomLayer.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
     :CGameObject(pGraphicDev)
@@ -426,19 +427,28 @@ void CPlayer::UpdateOrthoObjectCandidate(CCubeNet* pObj)
 
 void CPlayer::UpdateOrthoMiniGameInput()
 {
-    if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
+    if (m_pInteractingOrthoObject)
     {
-        if (m_pInteractingOrthoObject)
+        if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
         {
             if (m_bIsGrabbingOrthoObject)
             {
                 /* 내려놓기 */
-                m_bIsGrabbingOrthoObject = false;
-                m_pOrthoSocket->SetTarget(nullptr);
-                /* TODO : 레이어에서 계산된 위치로 내려놓기 */
-                m_pInteractingOrthoObject->GetTransform()->SetUseLocal(false);
-                // m_pInteractingOrthoObject->GetTransform()->Set_Pos(_vec3{ 0.f, 0.f, 0.f });
-                m_pInteractingOrthoObject->SetGrabbed(false);
+                CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+                if (pStage)
+                {
+                    CTransform* pTransform = m_pOrthoSocket->GetTargetTransform();
+                    _vec3 vTargetPos = pStage->GetCurrentRoomLayer()->RequestNearestTileCenterPos(pTransform->Get_Info_Value(INFO_POS));
+                    m_pInteractingOrthoObject->GetTransform()->SetUseLocal(false);
+                    m_pInteractingOrthoObject->GetTransform()->Set_Pos(vTargetPos);
+                    m_pInteractingOrthoObject->SetGrabbed(false);
+                    if (COrthoRoomLayer* pLayer = dynamic_cast<COrthoRoomLayer*>(pStage->GetCurrentRoomLayer()))
+                    {
+                        
+                    }
+                    m_bIsGrabbingOrthoObject = false;
+                    m_pOrthoSocket->SetTarget(nullptr);
+                }
             }
             else
             {

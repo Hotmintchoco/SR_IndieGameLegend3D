@@ -22,6 +22,7 @@ public:
 	
 	inline void SetTarget(CTransform* pTransform) { m_pTargetTransform = pTransform; }
 	inline void SetOffset(const _matrix& mat) { m_matOffset = mat; }
+	inline CTransform* GetTargetTransform() { return m_pTargetTransform; }
 
 protected:
 	CTransform* m_pParentTransform = nullptr; /* 참조만 */

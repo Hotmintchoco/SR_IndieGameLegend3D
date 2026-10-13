@@ -159,6 +159,7 @@
     <ClInclude Include="..\Header\CCubeNetPlank.h" />
     <ClInclude Include="..\Header\CFlatPlayer.h" />
     <ClInclude Include="..\Header\CFlatPlayerMovement.h" />
+    <ClInclude Include="..\Header\CFlatPlayerTex.h" />
     <ClInclude Include="..\Header\CGenerator_Airbubble.h" />
     <ClInclude Include="..\Header\CArrow.h" />
     <ClInclude Include="..\Header\CArrow_Effect.h" />
@@ -230,7 +231,14 @@
     <ClInclude Include="..\Header\COctoBullet.h" />
     <ClInclude Include="..\Header\COpenCubeTex.h" />
     <ClInclude Include="..\Header\COpenCube.h" />
+    <ClInclude Include="..\Header\CCubeNetBreakable.h" />
     <ClInclude Include="..\Header\COrthoCamera.h" />
+    <ClInclude Include="..\Header\COrthoEmptyBlocker.h" />
+    <ClInclude Include="..\Header\COrthoKey.h" />
+    <ClInclude Include="..\Header\CCubeNetKeyBlock.h" />
+    <ClInclude Include="..\Header\COrthoMarker.h" />
+    <ClInclude Include="..\Header\COrthoPhaseGate.h" />
+    <ClInclude Include="..\Header\COrthoPortal.h" />
     <ClInclude Include="..\Header\COrthoRoomLayer.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
     <ClInclude Include="..\Header\CPlayerAnimator.h" />
@@ -366,6 +374,7 @@
     <ClCompile Include="..\Code\CCubeNetPlank.cpp" />
     <ClCompile Include="..\Code\CFlatPlayer.cpp" />
     <ClCompile Include="..\Code\CFlatPlayerMovement.cpp" />
+    <ClCompile Include="..\Code\CFlatPlayerTex.cpp" />
     <ClCompile Include="..\Code\CGenerator_Airbubble.cpp" />
     <ClCompile Include="..\Code\CArrow.cpp" />
     <ClCompile Include="..\Code\CArrow_Effect.cpp" />
@@ -437,7 +446,14 @@
     <ClCompile Include="..\Code\COctoBullet.cpp" />
     <ClCompile Include="..\Code\COpenCubeTex.cpp" />
     <ClCompile Include="..\Code\COpenCube.cpp" />
+    <ClCompile Include="..\Code\CCubeNetBreakable.cpp" />
     <ClCompile Include="..\Code\COrthoCamera.cpp" />
+    <ClCompile Include="..\Code\COrthoEmptyBlocker.cpp" />
+    <ClCompile Include="..\Code\COrthoKey.cpp" />
+    <ClCompile Include="..\Code\CCubeNetKeyBlock.cpp" />
+    <ClCompile Include="..\Code\COrthoMarker.cpp" />
+    <ClCompile Include="..\Code\COrthoPhaseGate.cpp" />
+    <ClCompile Include="..\Code\COrthoPortal.cpp" />
     <ClCompile Include="..\Code\COrthoRoomLayer.cpp" />
     <ClCompile Include="..\Code\CParticle_Rectangle.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />

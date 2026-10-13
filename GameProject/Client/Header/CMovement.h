@@ -32,11 +32,11 @@ public:
 	void SetRefYaw(float fYaw) { m_fRefYaw = fYaw; }
 
 protected:
-	void PerformMovement(float fTimeDelta);
-	void TryExertGravity(float fTimeDelta);
-	void ExertFriction(float fTimeDelta);
+	virtual void PerformMovement(float fTimeDelta);
+	virtual void TryExertGravity(float fTimeDelta);
+	virtual void ExertFriction(float fTimeDelta);
 	void AddImpulse(const _vec3& vDir, float fMagnitude);
-	void ClampVelocity();
+	virtual void ClampVelocity();
 	void ClearFrameVariables();
 	void Launch(const TLaunchRequest& tReq);
 	virtual float GetCurMaxGroundSpeed() const { return m_fMaxGroundSpeed; }

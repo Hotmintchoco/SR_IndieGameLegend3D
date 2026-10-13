@@ -565,6 +565,30 @@
     <Filter Include="01. Scene\Stage\Layer\Ortho\Interface">
       <UniqueIdentifier>{0eca2582-ac78-4987-a1ed-4d8bd57961fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\FlatPlayer\Buffer">
+      <UniqueIdentifier>{f795b7e8-888c-4266-a1ba-1245e759af1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\Portal">
+      <UniqueIdentifier>{aa752a32-f918-4b80-8ad0-08b89913f0f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\PhaseGate">
+      <UniqueIdentifier>{515eda0f-a027-4ed6-af5d-b5ff986201b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\EmptyBlocker">
+      <UniqueIdentifier>{9921e18f-f515-4046-8f58-24152539d7f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\Key">
+      <UniqueIdentifier>{4b2c34ba-b20e-40ad-aa2a-d525b0426eab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\CubeNet\KeyBlock">
+      <UniqueIdentifier>{99512b3e-2ed1-45b5-a64c-d7cc03a9ba11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\Marker">
+      <UniqueIdentifier>{299d2f86-4a5c-44ea-88c0-abd0379ffc4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\CubeNet\Breakable">
+      <UniqueIdentifier>{64260db0-0edd-4283-b7e6-9117a2f7eac9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1185,6 +1209,30 @@
     <ClInclude Include="..\Header\IVerticalTerrain.h">
       <Filter>01. Scene\Stage\Layer\Ortho\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CFlatPlayerTex.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\FlatPlayer\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COrthoPortal.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\Portal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COrthoPhaseGate.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\PhaseGate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COrthoEmptyBlocker.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\EmptyBlocker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COrthoKey.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\Key</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCubeNetKeyBlock.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\KeyBlock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COrthoMarker.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCubeNetBreakable.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Breakable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1774,6 +1822,30 @@
     </ClCompile>
     <ClCompile Include="..\Code\IVerticalTerrain.cpp">
       <Filter>01. Scene\Stage\Layer\Ortho\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFlatPlayerTex.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\FlatPlayer\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoPortal.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\Portal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoPhaseGate.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\PhaseGate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoEmptyBlocker.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\EmptyBlocker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoKey.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\Key</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCubeNetKeyBlock.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\KeyBlock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoMarker.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\Marker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCubeNetBreakable.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Breakable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

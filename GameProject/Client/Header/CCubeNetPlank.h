@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CCubeNet.h"
+#include "IVerticalTerrain.h"
 
 namespace Engine
 {
@@ -8,7 +9,7 @@ namespace Engine
 	class CTransform;
 }
 
-class CCubeNetPlank : public CCubeNet
+class CCubeNetPlank : public CCubeNet, public IVerticalTerrain
 {
 protected:
 	explicit CCubeNetPlank(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -23,6 +24,9 @@ public:
 	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
 	virtual void OnCollisionStay(COLLINFO eCollInfo) override;
 	virtual void OnCollisionExit(COLLINFO eCollInfo) override;
+
+	/* IVerticalTerrain */
+	virtual float SampleTerrainHeight(const _vec3& vRayStart) override;
 
 private:
 	HRESULT Add_Component();

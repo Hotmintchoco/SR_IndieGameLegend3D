@@ -1,8 +1,9 @@
 ﻿#pragma once
 
 #include "CCubeNet.h"
+#include "IVerticalTerrain.h"
 
-class CCubeNetGrass : public CCubeNet
+class CCubeNetGrass : public CCubeNet, public IVerticalTerrain
 {
 protected:
 	explicit CCubeNetGrass(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -15,6 +16,9 @@ public:
 	virtual	void Render_GameObject() override;
 
 	virtual void OnCollisionStay(COLLINFO eCollInfo) override;
+
+	/* IVerticalTerrain */
+	virtual float SampleTerrainHeight(const _vec3& vRayStart) override;
 
 private:
 	HRESULT Add_Component();

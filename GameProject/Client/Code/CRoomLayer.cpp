@@ -562,6 +562,34 @@ vector<CMonster*> CRoomLayer::GetMonsterList()
 	return vecMonster;
 }
 
+_vec3 CRoomLayer::RequestNearestTileCenterPos(const _vec3& vPos)
+{
+	const _vec3 vInnerRoomSize = CRoomLoadingMgr::GetInstance()->GetInnerRoomSize();
+	const int iSizeX = (int)vInnerRoomSize.x;
+	const int iSizeZ = (int)vInnerRoomSize.z;
+
+	if (0 >= iSizeX || 0 >= iSizeZ) return m_vRoomCenterPos;
+
+	_vec3 vLocalPos = vPos - m_vRoomCenterPos;
+
+	/* GetTileFromWorldPosition과 동일한 인덱스 계산 (타일 사이즈 1) */
+	int iTileX = (int)floorf(vLocalPos.x + (float)iSizeX * 0.5f);
+	int iTileZ = (int)floorf((float)iSizeZ * 0.5f - vLocalPos.z);
+
+	/* 방 밖이면 가장자리 타일로 */
+	iTileX = max(0, min(iTileX, iSizeX - 1));
+	iTileZ = max(0, min(iTileZ, iSizeZ - 1));
+
+	/* SpawnRoom의 타일 오프셋 계산과 동일 */
+	const _vec3 vTileOffset{
+		-(float)(iSizeX - 1) / 2.f + (float)iTileX,
+		0.f,
+		(float)(iSizeZ - 1) / 2.f - (float)iTileZ
+	};
+
+	return _vec3{ m_vRoomCenterPos.x + vTileOffset.x, 0.f, m_vRoomCenterPos.z + vTileOffset.z };
+}
+
 void CRoomLayer::SetPseudoDark(bool bFlag)
 {
 	CAtmosphereVeil* pDark = static_cast<CAtmosphereVeil*>(Get_GameObject(L"Veil_Dark"));

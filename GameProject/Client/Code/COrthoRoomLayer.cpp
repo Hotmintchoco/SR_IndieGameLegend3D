@@ -9,6 +9,12 @@
 #include "CCubeNetPlank.h"
 #include "CProtoMgr.h"
 #include "CGraphicDev.h"
+#include "CPlayer.h"
+#include "CFlatPlayer.h"
+#include "CManagement.h"
+#include "CStage.h"
+#include "CFlatPlayerMovement.h"
+#include "CTimerMgr.h"
 
 COrthoRoomLayer::COrthoRoomLayer(int iRoomIndex)
 	: CRoomLayer(iRoomIndex)
@@ -24,6 +30,11 @@ HRESULT COrthoRoomLayer::Ready_Layer()
 	if (FAILED(CRoomLayer::Ready_Layer()))
 		return E_FAIL;
 
+	LPDIRECT3DDEVICE9 pDevice = CGraphicDev::GetInstance()->GetInstance()->Get_GraphicDev();
+	m_pFlatPlayer = CFlatPlayer::Create(pDevice);
+	if (!m_pFlatPlayer) return E_FAIL;
+	Add_GameObject(L"Flat_Player", m_pFlatPlayer);
+
 	return S_OK;
 }
 
@@ -33,9 +44,13 @@ _int COrthoRoomLayer::Update_Layer(_float fTimeDelta)
 
 	if (!m_bRegistered)
 	{
+		m_pFlatPlayer->GetTransform()->Set_Pos(GetCenterPos() + _vec3{ 0.f, 0.03f, 3.f }); /* z fighting 방지 위해 표면에서 조금 띄워둠 */
 		m_pOrthoCamera = dynamic_cast<COrthoCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::ORTHO));
 		CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::ORTHO);
 		m_pOrthoCamera->UpdateView(GetCenterPos() + _vec3{ 0.f, 14.f, -6.f }, GetCenterPos());
+		m_pPlayer = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene())->GetPlayer();
+
+		m_bRegistered = true;
 	}
 
 
@@ -52,6 +67,11 @@ _int COrthoRoomLayer::Update_Layer(_float fTimeDelta)
 				0.5f
 			);
 			m_eMode = ORTHO;
+			m_pPlayer->LockInput(EPlayerInputChannel::PIC_MOVE);
+			m_pPlayer->LockInput(EPlayerInputChannel::PIC_WEAPON);
+			m_pFlatPlayer->SetInputEnabled(true);
+			CTimerMgr::GetInstance()->ClearGroupTimeScale(CTG_FLATPLAYER);
+			CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_PLAYER, 0.f);
 		}
 		else
 		{
@@ -64,6 +84,11 @@ _int COrthoRoomLayer::Update_Layer(_float fTimeDelta)
 				0.5f
 			);
 			m_eMode = PERSP;
+			m_pPlayer->UnlockInput(EPlayerInputChannel::PIC_MOVE);
+			m_pPlayer->UnlockInput(EPlayerInputChannel::PIC_WEAPON);
+			m_pFlatPlayer->SetInputEnabled(false);
+			CTimerMgr::GetInstance()->ClearGroupTimeScale(CTG_PLAYER);
+			CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_FLATPLAYER, 0.f);
 		}
 		//m_pOrthoCamera->Orbit(
 		//	GetCenterPos() + _vec3{ 0.f, 0.f, -10.f },
@@ -126,7 +151,7 @@ HRESULT COrthoRoomLayer::SpawnRoom()
 				pTransformCom->Set_Pos(vCenter.x + vTileOffset.x, fBlockY, vCenter.z + vTileOffset.z);
 
 			// if (IRayTestable* p = dynamic_cast<IRayTestable*>(pObj)) m_vecRayTestable.push_back(p);
-			// if (ITerrain* p = dynamic_cast<ITerrain*>(pObj))         m_vecTerrain.push_back(p);
+			if (IVerticalTerrain* p = dynamic_cast<IVerticalTerrain*>(pObj))         m_vecVerticalTerrain.push_back(p);
 
 			return S_OK;
 		};

@@ -48,7 +48,7 @@ private:
     _vec3 m_vOrbitAt{ 0.f, 0.f, 0.f };
 
     /* 직교 투영 파라미터 */
-    float m_fWidth = 17.f;
+    float m_fWidth = 20.f;
     float m_fHeight = 15.f;
     _matrix m_matProjOrtho;
     _matrix m_matProjPersp;

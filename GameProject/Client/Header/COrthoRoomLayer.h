@@ -5,6 +5,9 @@
 enum GAMEMODE { PERSP, ORTHO };
 
 class COrthoCamera;
+class CPlayer;
+class CFlatPlayer;
+class IVerticalTerrain;
 
 class COrthoRoomLayer : public CRoomLayer
 {
@@ -17,13 +20,19 @@ public:
 	virtual _int Update_Layer(_float fTimeDelta) override;
 	virtual void LateUpdate_Layer(_float fTimeDelta) override;
 
+	const vector<IVerticalTerrain*>& GetVerticalTerrainList() { return m_vecVerticalTerrain; }
+
 protected:
 	virtual HRESULT SpawnRoom() override;
 
+	GAMEMODE m_eMode = PERSP;
+
 	bool m_bRegistered = false;
 	COrthoCamera* m_pOrthoCamera = nullptr;
+	CPlayer* m_pPlayer = nullptr;
+	CFlatPlayer* m_pFlatPlayer = nullptr;
 
-	GAMEMODE m_eMode = PERSP;
+	vector<IVerticalTerrain*> m_vecVerticalTerrain;
 
 public:
 	static COrthoRoomLayer* Create(int iRoomIndex);
