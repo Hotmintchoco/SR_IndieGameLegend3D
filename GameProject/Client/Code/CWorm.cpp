@@ -627,7 +627,7 @@ void CWorm::Spawn_Monster(const _float& fTimeDelta)
         vVelocity = vPlayerPos - vPos;
         vVelocity.y = 0.f;
         D3DXVec3Normalize(&vVelocity, &vVelocity);
-        //vVelocity *= 0.5f;
+        vVelocity *= 1.5f;
 
         _int iRand = rand()%20 + 20;
         _int iAngle[4] = { -60, -60 + iRand, -60 + iRand * 2, 60 };

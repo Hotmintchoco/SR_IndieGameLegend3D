@@ -698,6 +698,7 @@ void CStage::CheckRoomChanged()
 
 			int iBiome = CRoomLoadingMgr::GetInstance()->GetRoomData(m_iCurrentRoomIndex)->iBiome;
 			TBGMTrack tTrack = CRoomLoadingMgr::GetInstance()->GetBiomeInfo(iBiome).tBGMTrack;
+			if (m_iRoomIndex == 20)	tTrack = { L"LAVA", L"Sector5_intro.wav", L"Sector5_loop.wav" };
 			CSoundMgr::GetInstance()->PlayBGM(tTrack);
 		}
 	}

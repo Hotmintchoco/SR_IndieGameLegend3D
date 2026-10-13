@@ -142,7 +142,7 @@ void CGlubba::Land(const _float& fTimeDelta)
 {
     _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
     _vec3 vScale = m_pTransformCom->Get_Scale();
-    m_vLandingDirection.y -= 9.8f * fTimeDelta;
+    m_vLandingDirection.y -= 9.8f * fTimeDelta*1.5f;
 
     if (vPos.y < vScale.y)
     {
