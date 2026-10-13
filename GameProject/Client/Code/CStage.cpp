@@ -778,6 +778,9 @@ HRESULT CStage::Ready_NpcDialogue()
     m_pDialoguePortrait->Set_Pos(left + 85.f * s, 197.f * s, 0.8f);
     m_pPlayerDialoguePortrait->Set_Size({74.f * s, 74.f * s});
     m_pPlayerDialoguePortrait->Set_Pos(left + 875.f * s, 197.f * s, 0.8f);
+
+	m_pPlayerDialoguePortrait->Set_Texture(1);
+
     m_npcLines = {
         { NPC_SPEAKER::NPC, L"역시 형이야!\n구하러 왔구나." },
         { NPC_SPEAKER::PLAYER, L"아니 나도 잡혔어." },
@@ -874,8 +877,15 @@ void CStage::Render_Scene()
 
     m_pDialogueWindow->Render_GameObject();
     const bool bPlayer = m_npcLines[m_iNpcLine].eSpeaker == NPC_SPEAKER::PLAYER;
-    if (bPlayer) m_pPlayerDialoguePortrait->Render_GameObject();
-    else m_pDialoguePortrait->Render_GameObject();
+	if (bPlayer)
+	{
+		// 두 번째 대사에서만 1번, 나머지는 0번
+		m_pPlayerDialoguePortrait->Set_Texture(m_iNpcLine == 1 ? 1 : 0);
+
+		m_pPlayerDialoguePortrait->Render_GameObject();
+	}
+	else
+		m_pDialoguePortrait->Render_GameObject();
 
     const float s = min(WINCX / 1280.f, WINCY / 720.f);
     const float left = WINCX * 0.5f - 480.f * s;

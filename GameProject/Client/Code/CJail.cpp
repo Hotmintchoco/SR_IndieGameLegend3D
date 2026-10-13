@@ -4,6 +4,8 @@
 #include "CRenderer.h"
 #include "CCollisionMgr.h"
 #include "Client_Enum.h"
+#include "CManagement.h"
+#include "CGemBox.h"
 
 CJail::CJail(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -57,6 +59,10 @@ _int CJail::Update_GameObject(_float fTimeDelta)
 void CJail::LateUpdate_GameObject(_float fTimeDelta)
 {
     CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+    // 정민 : 젬 체크
+    if (Check_EnoughGem())
+        OpenDoor();
 }
 
 void CJail::Render_GameObject()
@@ -84,13 +90,13 @@ void CJail::Render_GameObject()
 
 void CJail::OnCollisionEnter(COLLINFO eCollInfo)
 {
-    if (nullptr == eCollInfo.pOtherCollider)
-        return;
-
-    if (eCollInfo.iOtherID == COLL_PLAYER)
-    {
-        OpenDoor();
-    }
+    // if (nullptr == eCollInfo.pOtherCollider)
+    //     return;
+    // 
+    // if (eCollInfo.iOtherID == COLL_PLAYER)
+    // {
+    //     OpenDoor();
+    // }
 }
 
 HRESULT CJail::Add_Component()
@@ -153,6 +159,17 @@ void CJail::OpenDoor()
     m_fSingleFrameAccTime = 0.f;
 
     m_pColliderCom->Set_IsActive(false);
+}
+
+_bool CJail::Check_EnoughGem()
+{
+    CGemBox* pBox = dynamic_cast<CGemBox*>
+                (CManagement::GetInstance()->Get_GameObject(L"Room_21_Layer", L"Room_21_ObjectTiling_136"));
+
+    if (pBox && pBox->Get_RemainingGems() <= 0)
+        return true;
+
+    return false;
 }
 
 CJail* CJail::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -31,6 +31,7 @@
 #include "CMine.h"
 #include "CSeaweed.h"
 #include "CNpc.h"
+#include "CGemBox.h"
 #include "CSeaweed2.h"
 #include "CWalkerboss.h"
 #include "CGenerator_Airbubble.h"
@@ -78,6 +79,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::Seaweed2,                 [](const TCreateDesc& t) -> Engine::CGameObject* { return CSeaweed2::Create(t.pDevice); } },
         {EObjectType::Walker,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CWalkerboss::Create(t.pDevice); } },
         {EObjectType::Npc,                      [](const TCreateDesc& t) -> Engine::CGameObject* { return CNpc::Create(t.pDevice); } },
+        {EObjectType::GemBox,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CGemBox::Create(t.pDevice); } },
         
         {EObjectType::EFFECT_GENERATOR_AIRBUBBLE,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_Airbubble::Create(t.pDevice); } },
         {EObjectType::EFFECT_GENERATOR_YELLOWDUST,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_YellowDust::Create(t.pDevice); } },

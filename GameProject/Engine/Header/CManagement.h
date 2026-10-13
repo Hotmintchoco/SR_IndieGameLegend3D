@@ -25,6 +25,7 @@ public:
 	CLayer* Get_Layer(const _tchar* pLayerTag);
 
 	inline CScene* GetCurrentScene() { return m_pScene; }
+	inline CScene* Get_Scene(_int iSceneIdx);
 
 public:
 	// 씬 전환 (이전 씬을 삭제하거나 유지할 수 있음)
