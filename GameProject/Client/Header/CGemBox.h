@@ -24,6 +24,8 @@ public:
     void                OnCollisionStay(COLLINFO info) override;
     void                OnCollisionExit(COLLINFO info) override;
 
+    _int                Get_RemainingGems() { return m_iRemainingGems; }
+
     static CGemBox*     Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
