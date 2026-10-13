@@ -99,6 +99,7 @@ enum class EObjectType
 	WEAPON_MAX,
 
 	Npc = 50,
+	GemBox = 51,
 
 	EFFECT_GENERATOR_AIRBUBBLE = 60,
 	EFFECT_GENERATOR_YELLOWDUST = 61,
