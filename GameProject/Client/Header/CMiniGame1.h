@@ -35,5 +35,7 @@ private:
 private:
 	CPlayer_MG1* m_pPlayer = nullptr;
 	inline static _bool s_bClear = false;
+	_bool m_bBGMStart = false;
+	_float m_fElapsedTime = 0.f;
 };
 

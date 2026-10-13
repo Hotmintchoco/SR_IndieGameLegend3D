@@ -15,6 +15,8 @@
 #include "CPlayer_MG1.h"
 #include "CTimerMgr.h"
 #include "CBox_MG1.h"
+#include "CSoundMgr.h"
+#include "CIntro_MG1.h"
 
 CMiniGame1::CMiniGame1(LPDIRECT3DDEVICE9 pGraphicDev)
     : CScene(pGraphicDev)
@@ -36,8 +38,6 @@ HRESULT CMiniGame1::Ready_Scene()
     if (FAILED(Ready_UI_Layer(L"UI_Layer")))
         return E_FAIL;
 
-    //if (FAILED(Ready_Camera()))
-    //    return E_FAIL;
     s_bClear = false;
     return S_OK;
 }
@@ -45,7 +45,16 @@ HRESULT CMiniGame1::Ready_Scene()
 _int CMiniGame1::Update_Scene(_float fTimeDelta)
 {
     _int iExit = CScene::Update_Scene(fTimeDelta);
-
+    m_fElapsedTime += fTimeDelta;
+    if (m_bBGMStart == false && m_fElapsedTime>2.0f)
+    {
+        m_bBGMStart = true;
+        //TBGMTrack tTrack = { L"LAVA", L"Sector5_intro.wav", L"Sector5_loop.wav" };
+        TBGMTrack tTrack = { L"MG1", L"", L"SectorB.wav" };
+        CSoundMgr::GetInstance()->PlayBGM(tTrack);
+        CSoundMgr::GetInstance()->SetBGMVolume(0.8f);
+        CSoundMgr::GetInstance()->SetSFXVolume(0.5f);
+    }
     // Scene Change
     if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
     {
@@ -302,7 +311,9 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
     m_pPlayer->Set_Camera2(static_cast<CCamera*>(pGameObject));
     pGameObject->Set_IsActive(false);
 
-    //m_mapLayer.insert({ pLayerTag ,pLayer });
+    pGameObject = CIntro_MG1::Create(m_pGraphicDev);
+    if (nullptr == pGameObject) return E_FAIL;
+    if (FAILED(pLayer->Add_GameObject(L"Intro", pGameObject))) return E_FAIL;
     return S_OK;
 }
 

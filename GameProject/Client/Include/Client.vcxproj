@@ -175,6 +175,7 @@
     <ClInclude Include="..\Header\CCursorPolicyMgr.h" />
     <ClInclude Include="..\Header\CHitScan.h" />
     <ClInclude Include="..\Header\CIceRoomLayer.h" />
+    <ClInclude Include="..\Header\CIntro_MG1.h" />
     <ClInclude Include="..\Header\CItemContainer.h" />
     <ClInclude Include="..\Header\CHitCreenUI.h" />
     <ClInclude Include="..\Header\CJail.h" />
@@ -375,6 +376,7 @@
     <ClCompile Include="..\Code\CCursorPolicyMgr.cpp" />
     <ClCompile Include="..\Code\CHitScan.cpp" />
     <ClCompile Include="..\Code\CIceRoomLayer.cpp" />
+    <ClCompile Include="..\Code\CIntro_MG1.cpp" />
     <ClCompile Include="..\Code\CItemContainer.cpp" />
     <ClCompile Include="..\Code\CJail.cpp" />
     <ClCompile Include="..\Code\CLaser.cpp" />

@@ -538,6 +538,9 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\GemBox">
       <UniqueIdentifier>{a38e5298-5484-4841-a668-a4e2ddd51c21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\MiniGame_1\GameObject\Intro">
+      <UniqueIdentifier>{6ecbc762-7ca6-4444-aeea-5a52737551c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1134,6 +1137,9 @@
     <ClInclude Include="..\Header\CGemBox.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\GemBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CIntro_MG1.h">
+      <Filter>01. Scene\MiniGame_1\GameObject\Intro</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1699,6 +1705,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGemBox.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\GemBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CIntro_MG1.cpp">
+      <Filter>01. Scene\MiniGame_1\GameObject\Intro</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

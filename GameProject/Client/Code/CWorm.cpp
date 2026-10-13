@@ -49,7 +49,7 @@ HRESULT CWorm::Ready_GameObject()
     _vec3 vAngle;
     vAngle.x = D3DXToDegree(-asinf(vLook.y));
     vAngle.y = D3DXToDegree(atan2f(vLook.x, vLook.z));
-    //vAngle.z = 0.f;
+    vAngle.z = 0.f;
     //vAngle.z = 90.f;
     m_pTransformCom->Set_Angle(vAngle);
 
