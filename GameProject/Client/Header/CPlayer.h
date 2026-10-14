@@ -45,6 +45,7 @@ public:
 	void LockInputFor(EPlayerInputChannel e, float fDuration);
 	void UnlockInput(EPlayerInputChannel e);
 	bool IsInputAllowed(EPlayerInputChannel e);
+	void SetForcedSprint(bool bEnabled) { m_bForcedSprint = bEnabled; }
 
 	/* 가짜 스케일 */
 	void SetPseudoScale(float fScale);
@@ -105,6 +106,7 @@ private:
 
 	/* 캐릭터 움직임 관련 */
 	CPlayerMovement* m_pMovement = nullptr;
+	bool m_bForcedSprint = false;
 	
 	/* 피격 관련 */
 	bool m_bInvincible = false;

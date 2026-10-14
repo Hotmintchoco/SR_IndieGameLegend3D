@@ -18,6 +18,9 @@ public:
 
 	void SetSpeedScale(float fScale);
 
+	// 정민 : 템플런 용
+	void SetJumpSpeed(float fSpeed) { m_fJumpSpeed = fSpeed; m_fJumpSpeedRaw = fSpeed; }
+
 	void Knockback(const _vec3& vDir, float fIntensity);
 	void Walk(const _vec2& vCommand);
 	void Stop();

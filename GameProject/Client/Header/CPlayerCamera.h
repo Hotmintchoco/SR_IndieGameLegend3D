@@ -28,7 +28,7 @@ public:
 public:
     void            Set_Target(CTransform* pTarget) { m_pTarget = pTarget; }
     void            Set_EyeOffset(const _vec3& vOffset) { m_vEyeOffset = vOffset; }
-	void			Set_CameraMode(CAMERA_MODE eMode) { m_eCameraMode = eMode; }
+    void			Set_CameraMode(CAMERA_MODE eMode);
     CAMERA_MODE     Get_CameraMode() { return m_eCameraMode; }
 
 	void            Set_Distance(_float fDistance) { m_fDistance = fDistance; }

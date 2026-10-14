@@ -41,10 +41,12 @@
 #include "CRoomLayer.h"
 #include "CIceRoomLayer.h"
 #include "CLiminalRoomLayer.h"
+#include "CDesertSpecialRoomLayer.h"
 #include "CMiniGame.h"
 #include "CMiniGame1.h"
 #include "CAnamorphicObject.h"
 #include "CPushableFrustum.h"
+#include "CChasm.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -80,6 +82,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::Walker,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CWalkerboss::Create(t.pDevice); } },
         {EObjectType::Npc,                      [](const TCreateDesc& t) -> Engine::CGameObject* { return CNpc::Create(t.pDevice); } },
         {EObjectType::GemBox,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CGemBox::Create(t.pDevice); } },
+        {EObjectType::Chasm,                    [](const TCreateDesc& t) -> Engine::CGameObject* { return CChasm::Create(t.pDevice); } },
         
         {EObjectType::EFFECT_GENERATOR_AIRBUBBLE,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_Airbubble::Create(t.pDevice); } },
         {EObjectType::EFFECT_GENERATOR_YELLOWDUST,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_YellowDust::Create(t.pDevice); } },
@@ -101,6 +104,7 @@ CAbstractFactory::CAbstractFactory()
         {ERoomType::ROOM_DEFAULT,           [](const int iIndex) -> CRoomLayer* { return CRoomLayer::Create(iIndex); } },
         {ERoomType::ROOM_ICE,               [](const int iIndex) -> CRoomLayer* { return CIceRoomLayer::Create(iIndex); } },
         {ERoomType::ROOM_LIMINAL,           [](const int iIndex) -> CRoomLayer* { return CLiminalRoomLayer::Create(iIndex); } },
+        {ERoomType::ROOM_TEMPLERUN,    [](const int iIndex) -> CRoomLayer* { return CDesertSpecialRoomLayer::Create(iIndex); } },
     };
 
     m_mapSceneCreator = {
