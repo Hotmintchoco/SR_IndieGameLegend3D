@@ -565,10 +565,16 @@ vector<CMonster*> CRoomLayer::GetMonsterList()
 _vec3 CRoomLayer::GetNearestTileCenterPos(const _vec3& vPos)
 {
 	const _vec3 vInnerRoomSize = CRoomLoadingMgr::GetInstance()->GetInnerRoomSize();
+	if (0 >= (int)vInnerRoomSize.x || 0 >= (int)vInnerRoomSize.z) return m_vRoomCenterPos;
+
+	return GetTileCenterPos(GetNearestTileIndex(vPos));
+}
+
+TTileIdx CRoomLayer::GetNearestTileIndex(const _vec3& vPos)
+{
+	const _vec3 vInnerRoomSize = CRoomLoadingMgr::GetInstance()->GetInnerRoomSize();
 	const int iSizeX = (int)vInnerRoomSize.x;
 	const int iSizeZ = (int)vInnerRoomSize.z;
-
-	if (0 >= iSizeX || 0 >= iSizeZ) return m_vRoomCenterPos;
 
 	_vec3 vLocalPos = vPos - m_vRoomCenterPos;
 
@@ -580,11 +586,20 @@ _vec3 CRoomLayer::GetNearestTileCenterPos(const _vec3& vPos)
 	iTileX = max(0, min(iTileX, iSizeX - 1));
 	iTileZ = max(0, min(iTileZ, iSizeZ - 1));
 
+	return TTileIdx{ iTileZ, iTileX };
+}
+
+_vec3 CRoomLayer::GetTileCenterPos(const TTileIdx& tIdx)
+{
+	const _vec3 vInnerRoomSize = CRoomLoadingMgr::GetInstance()->GetInnerRoomSize();
+	const int iSizeX = (int)vInnerRoomSize.x;
+	const int iSizeZ = (int)vInnerRoomSize.z;
+
 	/* SpawnRoom의 타일 오프셋 계산과 동일 */
 	const _vec3 vTileOffset{
-		-(float)(iSizeX - 1) / 2.f + (float)iTileX,
+		-(float)(iSizeX - 1) / 2.f + (float)tIdx.iCol,
 		0.f,
-		(float)(iSizeZ - 1) / 2.f - (float)iTileZ
+		(float)(iSizeZ - 1) / 2.f - (float)tIdx.iRow
 	};
 
 	return _vec3{ m_vRoomCenterPos.x + vTileOffset.x, 0.f, m_vRoomCenterPos.z + vTileOffset.z };

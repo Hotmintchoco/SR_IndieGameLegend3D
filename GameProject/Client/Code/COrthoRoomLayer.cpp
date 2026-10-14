@@ -20,6 +20,8 @@
 #include "COrthoKey.h"
 #include "CCubeNetKeyBlock.h"
 #include "COrthoMarker.h"
+#include "COrthoEmptyBlocker.h"
+#include "CTile.h"
 
 COrthoRoomLayer::COrthoRoomLayer(int iRoomIndex)
 	: CRoomLayer(iRoomIndex)
@@ -54,6 +56,7 @@ _int COrthoRoomLayer::Update_Layer(_float fTimeDelta)
 		CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::ORTHO);
 		m_pOrthoCamera->UpdateView(GetCenterPos() + _vec3{ 0.f, 14.f, -6.f }, GetCenterPos());
 		m_pPlayer = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene())->GetPlayer();
+		m_pPlayer->LockInput(EPlayerInputChannel::PIC_WEAPON);
 
 		m_bRegistered = true;
 	}
@@ -75,7 +78,6 @@ _int COrthoRoomLayer::Update_Layer(_float fTimeDelta)
 			/* 직교에서는 마커를 보여주지 않음 */
 			if (m_pMarker) m_pMarker->SetVisible(false);
 			m_pPlayer->LockInput(EPlayerInputChannel::PIC_MOVE);
-			m_pPlayer->LockInput(EPlayerInputChannel::PIC_WEAPON);
 			m_pFlatPlayer->SetInputEnabled(true);
 			CTimerMgr::GetInstance()->ClearGroupTimeScale(CTG_FLATPLAYER);
 			CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_PLAYER, 0.f);
@@ -94,7 +96,6 @@ _int COrthoRoomLayer::Update_Layer(_float fTimeDelta)
 			/* 원근으로 돌아오면 들고 있는 중일 때만 마커 표시 */
 			if (m_pMarker) m_pMarker->SetVisible(m_bIsGrabbing);
 			m_pPlayer->UnlockInput(EPlayerInputChannel::PIC_MOVE);
-			m_pPlayer->UnlockInput(EPlayerInputChannel::PIC_WEAPON);
 			m_pFlatPlayer->SetInputEnabled(false);
 			CTimerMgr::GetInstance()->ClearGroupTimeScale(CTG_PLAYER);
 			CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_FLATPLAYER, 0.f);
@@ -138,6 +139,11 @@ HRESULT COrthoRoomLayer::SpawnRoom()
 	const int iSizeX = (int)vInnerRoomSize.x;
 	const int iSizeZ = (int)vInnerRoomSize.z;
 	const _vec3 vCenter = GetCenterPos();
+
+	/* 뚫린 바닥 상태 컨테이너 : 처음엔 전부 막힌 바닥 */
+	m_iTileCountX = iSizeX;
+	m_vecEmptyTile.assign(iSizeX * iSizeZ, false);
+	m_vecEmptyBlocker.assign(iSizeX * iSizeZ, nullptr);
 
 	/* 큐브 피벗이 중심이면 0.5f, 바닥이면 0.f */
 	const float fBlockY = 0.5f;
@@ -274,6 +280,10 @@ HRESULT COrthoRoomLayer::SpawnRoom()
 	if (FAILED(Add_GameObject(L"Room_" + to_wstring(m_iRoomIndex) + L"_Marker", m_pMarker)))
 		return E_FAIL;
 
+	/* 뚫린 바닥 (테스트) */
+	if (FAILED(SpawnEmptyTile(1, 2)))
+		return E_FAIL;
+
 	/* 페이즈 게이트 */
 	if (FAILED(SpawnBlock(COrthoPhaseGate::Create(pDevice), L"PhaseGate", 0, iSizeZ / 2)))
 		return E_FAIL;
@@ -314,6 +324,70 @@ void COrthoRoomLayer::UpdateMarkerPos(const _vec3& vHeldPos)
 	_vec3 vMarkerPos = GetNearestTileCenterPos(vHeldPos);
 	vMarkerPos.y = 0.02f; /* z fighting 방지 위해 바닥에서 조금 띄움 */
 	m_pMarker->GetTransform()->Set_Pos(vMarkerPos);
+}
+
+void COrthoRoomLayer::RequestPlaceOrthoObject(CCubeNet* pObj, const _vec3& vHeldPos)
+{
+	if (nullptr == pObj) return;
+
+	const TTileIdx tIdx = GetNearestTileIndex(vHeldPos);
+	const int iIndex = ToFlatIndex(tIdx);
+	_vec3 vPos = GetTileCenterPos(tIdx);
+
+	if (0 <= iIndex && iIndex < (int)m_vecEmptyTile.size() && m_vecEmptyTile[iIndex])
+	{
+		/* 뚫린 바닥 : 블럭이 구멍을 메운다 */
+		vPos.y -= 0.5f;
+		m_vecEmptyTile[iIndex] = false;
+
+		/* 메운 플랭크는 다시 들 수 없게 */
+		if (CCubeNetPlank* pPlank = dynamic_cast<CCubeNetPlank*>(pObj))
+			pPlank->LockInHole();
+
+		if (m_vecEmptyBlocker[iIndex])
+		{
+			m_vecEmptyBlocker[iIndex]->Set_Dead(true);
+			m_vecEmptyBlocker[iIndex] = nullptr;
+		}
+	}
+	else
+	{
+		/* 일반 바닥 */
+		vPos.y += 0.5f;
+	}
+
+	pObj->GetTransform()->Set_Pos(vPos);
+}
+
+HRESULT COrthoRoomLayer::SpawnEmptyTile(int iTileX, int iTileZ)
+{
+	const TTileIdx tIdx{ iTileZ, iTileX };
+	const int iIndex = ToFlatIndex(tIdx);
+	if (iIndex < 0 || iIndex >= (int)m_vecEmptyTile.size()) return S_OK;
+
+	LPDIRECT3DDEVICE9 pDevice = CGraphicDev::GetInstance()->Get_GraphicDev();
+
+	COrthoEmptyBlocker* pBlocker = COrthoEmptyBlocker::Create(pDevice);
+	if (nullptr == pBlocker) return E_FAIL;
+
+	wstring wstrName = L"Room_" + to_wstring(m_iRoomIndex) + L"_EmptyBlocker_"
+		+ to_wstring(iTileZ) + L"_" + to_wstring(iTileX);
+	if (FAILED(Add_GameObject(wstrName, pBlocker)))
+		return E_FAIL;
+
+	/* 큐브넷 블럭과 같은 높이 기준 (SpawnBlock의 fBlockY) */
+	_vec3 vPos = GetTileCenterPos(tIdx);
+	vPos.y = 0.5f;
+	pBlocker->GetTransform()->Set_Pos(vPos);
+
+	/* 같은 칸 타일은 꺼서 빈 공간처럼 보이게 */
+	if (CTile* pTile = GetTileFromIndex2D(tIdx))
+		pTile->Set_IsActive(false);
+
+	m_vecEmptyTile[iIndex] = true;
+	m_vecEmptyBlocker[iIndex] = pBlocker;
+
+	return S_OK;
 }
 
 void COrthoRoomLayer::DestroyKeyBlocks()

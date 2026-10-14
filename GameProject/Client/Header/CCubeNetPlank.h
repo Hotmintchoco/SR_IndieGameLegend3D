@@ -28,8 +28,14 @@ public:
 	/* IVerticalTerrain */
 	virtual float SampleTerrainHeight(const _vec3& vRayStart) override;
 
+	/* 뚫린 바닥을 메웠을 때 방 레이어가 호출 : 두 콜라이더를 꺼서 다시 들 수 없게 한다 */
+	void LockInHole();
+
 private:
 	HRESULT Add_Component();
+
+	/* m_pColliderCom(넓은 범위)은 상호작용용 COLL_ROOMLOGIC, 이건 블럭 크기 장애물용 COLL_OBSTACLE */
+	CBoxCollider* m_pObstacleColliderCom = nullptr;
 
 public:
 	static CCubeNetPlank* Create(LPDIRECT3DDEVICE9 pGraphicDev);

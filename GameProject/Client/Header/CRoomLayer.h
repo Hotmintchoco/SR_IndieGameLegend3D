@@ -68,6 +68,10 @@ public:
 
 	/* 직교 미니게임 물체 파지 해제 시 가까운 타일 찾기용 */
 	_vec3 GetNearestTileCenterPos(const _vec3& vPos);
+	/* 위치에서 가장 가까운 타일 인덱스 (방 밖이면 가장자리 타일) */
+	TTileIdx GetNearestTileIndex(const _vec3& vPos);
+	/* 타일 인덱스의 센터 위치 (y = 0) */
+	_vec3 GetTileCenterPos(const TTileIdx& tIdx);
 
 protected:
 	/* 어둠 스위치 */

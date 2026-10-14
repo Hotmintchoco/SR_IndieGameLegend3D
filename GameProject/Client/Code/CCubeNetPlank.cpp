@@ -31,6 +31,10 @@ HRESULT CCubeNetPlank::Ready_GameObject()
     m_pColliderCom->Set_Extents(_vec3{ 1.0f, 1.0f, 1.0f });
     m_pColliderCom->Set_DiffPos(_vec3{ 0.0f, 0.5f, 0.0f });
 
+    /* 장애물 콜라이더는 블럭 크기에 딱 맞춤 */
+    m_pObstacleColliderCom->Set_Extents(_vec3{ 0.5f, 0.5f, 0.5f });
+    m_pObstacleColliderCom->Set_DiffPos(_vec3{ 0.0f, 0.5f, 0.0f });
+
     return S_OK;
 }
 
@@ -39,6 +43,10 @@ _int CCubeNetPlank::Update_GameObject(_float fTimeDelta)
     _int iExit = CCubeNet::Update_GameObject(fTimeDelta);
 
     CCollisionMgr::GetInstance()->Add_Collider(COLL_ROOMLOGIC, m_pColliderCom);
+
+    /* 들고 있는 동안에는 장애물 판정을 하지 않음 (들고 있는 플레이어를 밀어내지 않도록) */
+    if (!m_bIsGrabbed)
+        CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pObstacleColliderCom);
 
     _matrix matWorld = *m_pTransformCom->Get_World();
     m_pOutlineTransform->WorldMatrixPropagation(matWorld);
@@ -73,13 +81,17 @@ void CCubeNetPlank::OnCollisionEnter(COLLINFO eCollInfo)
 {
     auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
 
+    /* 상호작용(넓은) 콜라이더만 처리 */
+    if (iMyID != COLLISIONID::COLL_ROOMLOGIC) return;
+
     switch (iOtherID)
     {
     case COLLISIONID::COLL_PLAYER:
     {
         CPlayer* pPlayer = dynamic_cast<CPlayer*>(pOtherCol->Get_Owner());
+        if (nullptr == pPlayer) break;
         if (pPlayer->IsGrabbingOrthoObject()) break;
-        if (pPlayer) pPlayer->UpdateOrthoObjectCandidate(this);
+        pPlayer->UpdateOrthoObjectCandidate(this);
         m_bIsPlayerOnGrabRange = true;
         break;
     }
@@ -90,29 +102,40 @@ void CCubeNetPlank::OnCollisionEnter(COLLINFO eCollInfo)
 
 void CCubeNetPlank::OnCollisionStay(COLLINFO eCollInfo)
 {
-    // auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
-    // 
-    // switch (iOtherID)
-    // {
-    // case COLLISIONID::COLL_PLAYER:
-    // {
-    //     Obstacle_Collision(eCollInfo.pOtherCollider, m_pColliderCom);
-    //     break;
-    // }
-    // default:
-    //     break;
-    // }
+    auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
+
+    /* 장애물(블럭 크기) 콜라이더만 처리 */
+    if (iMyID != COLLISIONID::COLL_OBSTACLE) return;
+
+    switch (iOtherID)
+    {
+    case COLLISIONID::COLL_PLAYER:
+    {
+        Obstacle_Collision(pOtherCol, m_pObstacleColliderCom);
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 void CCubeNetPlank::OnCollisionExit(COLLINFO eCollInfo)
 {
     auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
 
+    /* 상호작용(넓은) 콜라이더만 처리 */
+    if (iMyID != COLLISIONID::COLL_ROOMLOGIC) return;
+
     switch (iOtherID)
     {
     case COLLISIONID::COLL_PLAYER:
     {
         m_bIsPlayerOnGrabRange = false;
+
+        /* 범위를 벗어나면 플레이어의 후보에서도 빠진다 (들고 있는 중이면 유지) */
+        CPlayer* pPlayer = dynamic_cast<CPlayer*>(pOtherCol->Get_Owner());
+        if (pPlayer && !pPlayer->IsGrabbingOrthoObject() && pPlayer->GetOrthoObjectCandidate() == this)
+            pPlayer->UpdateOrthoObjectCandidate(nullptr);
         break;
     }
     default:
@@ -168,7 +191,23 @@ HRESULT CCubeNetPlank::Add_Component()
 
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_OutlineTexture", pComponent });
 
+    // Obstacle Collider (블럭 크기)
+    pComponent = m_pObstacleColliderCom = dynamic_cast<CBoxCollider*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BoxCollider"));
+
+    if (nullptr == pComponent)
+        return E_FAIL;
+
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_ObstacleCollider", pComponent });
+
     return S_OK;
+}
+
+void CCubeNetPlank::LockInHole()
+{
+    /* 콜라이더를 끄면 다음 프레임 Exit가 불려서 플레이어 후보에서도 빠진다 */
+    m_pColliderCom->Set_IsActive(false);
+    m_pObstacleColliderCom->Set_IsActive(false);
+    m_bIsPlayerOnGrabRange = false;
 }
 
 CCubeNetPlank* CCubeNetPlank::Create(LPDIRECT3DDEVICE9 pGraphicDev)

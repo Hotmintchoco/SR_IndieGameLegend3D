@@ -10,6 +10,8 @@ class CFlatPlayer;
 class IVerticalTerrain;
 class CCubeNetKeyBlock;
 class COrthoMarker;
+class COrthoEmptyBlocker;
+class CCubeNet;
 
 class COrthoRoomLayer : public CRoomLayer
 {
@@ -36,11 +38,19 @@ public:
 	/* 플레이어가 들고 있는 동안 매 프레임 호출 : 들고 있는 물체 위치 기준으로 마커를 가장 가까운 타일 센터로 */
 	void UpdateMarkerPos(const _vec3& vHeldPos);
 
+	/* 플레이어가 내려놓기 시점에 요청 : 들고 있던 위치의 가장 가까운 칸에 물체를 놓는다
+	   - 일반 바닥 : 타일 센터에서 y +0.5
+	   - 뚫린 바닥 : 구멍을 메움 (y -0.5, 공백 상태 해제, 블로커 제거) */
+	void RequestPlaceOrthoObject(CCubeNet* pObj, const _vec3& vHeldPos);
+
 protected:
 	virtual HRESULT SpawnRoom() override;
 	void RemoveDeadTerrain(IVerticalTerrain* pTerrain);
 	void ClearCurrentPhase();
 	void DestroyKeyBlocks();
+	/* 뚫린 바닥 배치 : 블로커 생성 + 같은 칸 타일 비활성화 + 공백 상태 기록 */
+	HRESULT SpawnEmptyTile(int iTileX, int iTileZ);
+	inline int ToFlatIndex(const TTileIdx& tIdx) const { return tIdx.iRow * m_iTileCountX + tIdx.iCol; }
 
 	GAMEMODE m_eMode = PERSP;
 
@@ -64,6 +74,11 @@ protected:
 	/* 내려놓기 위치 마커 */
 	COrthoMarker* m_pMarker = nullptr;
 	bool m_bIsGrabbing = false;
+
+	/* 뚫린 바닥 : 타일 전체 크기만큼, 인덱스는 iRow * m_iTileCountX + iCol */
+	int m_iTileCountX = 0;
+	vector<bool> m_vecEmptyTile;
+	vector<COrthoEmptyBlocker*> m_vecEmptyBlocker;
 
 public:
 	static COrthoRoomLayer* Create(int iRoomIndex);

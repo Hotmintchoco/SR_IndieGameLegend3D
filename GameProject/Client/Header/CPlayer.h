@@ -64,6 +64,7 @@ public:
 	/* 직교 미니게임 관련 */
 	void UpdateOrthoObjectCandidate(CCubeNet* pObj);
 	bool IsGrabbingOrthoObject() { return m_bIsGrabbingOrthoObject; }
+	CCubeNet* GetOrthoObjectCandidate() { return m_pInteractingOrthoObject; }
 	void UpdateOrthoMiniGameInput();
 	void UpdateOrthoMiniGameStatus(float fTimeDelta);
 

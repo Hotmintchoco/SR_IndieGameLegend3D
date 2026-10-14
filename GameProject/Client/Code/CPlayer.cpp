@@ -437,15 +437,18 @@ void CPlayer::UpdateOrthoMiniGameInput()
                 CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
                 if (pStage)
                 {
+                    /* 로컬 해제 전에 들고 있던 위치를 먼저 구해둔다 */
                     CTransform* pTransform = m_pOrthoSocket->GetTargetTransform();
-                    _vec3 vTargetPos = pStage->GetCurrentRoomLayer()->GetNearestTileCenterPos(pTransform->Get_Info_Value(INFO_POS));
+                    const _vec3 vHeldPos = pTransform->Get_Info_Value(INFO_POS);
                     m_pInteractingOrthoObject->GetTransform()->SetUseLocal(false);
-                    m_pInteractingOrthoObject->GetTransform()->Set_Pos(vTargetPos);
-                    m_pInteractingOrthoObject->SetGrabbed(false);
+
+                    /* 놓을 위치는 방 레이어가 결정 (일반 바닥 / 뚫린 바닥 분기) */
                     if (COrthoRoomLayer* pLayer = dynamic_cast<COrthoRoomLayer*>(pStage->GetCurrentRoomLayer()))
                     {
+                        pLayer->RequestPlaceOrthoObject(m_pInteractingOrthoObject, vHeldPos);
                         pLayer->SetGrabbing(false);
                     }
+                    m_pInteractingOrthoObject->SetGrabbed(false);
                     m_bIsGrabbingOrthoObject = false;
                     m_pOrthoSocket->SetTarget(nullptr);
                 }
