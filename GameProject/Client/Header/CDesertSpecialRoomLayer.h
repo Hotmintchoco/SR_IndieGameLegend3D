@@ -11,6 +11,7 @@ private:
     HRESULT Ready_Layer() override;
 
 public:
+    HRESULT SpawnRoom() override;
     void OnRoomTriggerBlockCollided() override;
     static CDesertSpecialRoomLayer* Create(int iRoomIndex);
 

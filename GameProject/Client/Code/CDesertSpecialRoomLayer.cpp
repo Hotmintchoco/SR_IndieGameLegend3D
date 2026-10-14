@@ -6,6 +6,8 @@
 #include "CClientCameraMgr.h"
 #include "CPlayerCamera.h"
 #include "CPlayerMovement.h"
+#include "CChasm.h"
+#include "CGraphicDev.h"
 
 CDesertSpecialRoomLayer::CDesertSpecialRoomLayer(int iRoomIndex)
     : CRoomLayer(iRoomIndex)
@@ -34,10 +36,18 @@ HRESULT CDesertSpecialRoomLayer::Ready_Layer()
 
                 auto pPlayerCam = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Get_ActiveCamera());
                 if (pPlayerCam)
-                    pPlayerCam->Set_Distance(pPlayerCam->Get_Distance() * 3.3f);
+                    pPlayerCam->Set_Distance(3.5f);
             }
         });
 
+    return S_OK;
+}
+
+HRESULT CDesertSpecialRoomLayer::SpawnRoom()
+{
+    if (FAILED(CRoomLayer::SpawnRoom()))
+        return E_FAIL;
+    
     return S_OK;
 }
 
@@ -51,14 +61,14 @@ void CDesertSpecialRoomLayer::OnRoomTriggerBlockCollided()
         // 처음 들어왔을 때만 실행
         m_bStart = true;
 
-        pStage->GetPlayer()->SetPseudoScale(0.3f, 1.f);
+        pStage->GetPlayer()->SetPseudoScale(0.25f, 1.f);
         pStage->GetPlayer()->SetForcedSprint(true);
 		pStage->GetPlayer()->GetMovement()->SetJumpSpeed(5.5f);
 		CClientCameraMgr::GetInstance()->SetPlayerCameraMode(CAMERA_MODE::THIRD_PERSON);
 
         auto pPlayerCam = dynamic_cast<CPlayerCamera*>(CClientCameraMgr::GetInstance()->Get_ActiveCamera());
         if (pPlayerCam)
-            pPlayerCam->Set_Distance(pPlayerCam->Get_Distance() * 0.3f);
+            pPlayerCam->Set_Distance(0.85f);
     }
 }
 

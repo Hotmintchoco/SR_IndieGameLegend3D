@@ -46,6 +46,7 @@
 #include "CMiniGame1.h"
 #include "CAnamorphicObject.h"
 #include "CPushableFrustum.h"
+#include "CChasm.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
 
@@ -81,6 +82,7 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::Walker,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CWalkerboss::Create(t.pDevice); } },
         {EObjectType::Npc,                      [](const TCreateDesc& t) -> Engine::CGameObject* { return CNpc::Create(t.pDevice); } },
         {EObjectType::GemBox,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CGemBox::Create(t.pDevice); } },
+        {EObjectType::Chasm,                    [](const TCreateDesc& t) -> Engine::CGameObject* { return CChasm::Create(t.pDevice); } },
         
         {EObjectType::EFFECT_GENERATOR_AIRBUBBLE,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_Airbubble::Create(t.pDevice); } },
         {EObjectType::EFFECT_GENERATOR_YELLOWDUST,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_YellowDust::Create(t.pDevice); } },

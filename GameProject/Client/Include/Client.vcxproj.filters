@@ -1795,4 +1795,13 @@
       <Filter>02. GameObject\07. Room\PlaceableProp\Npc</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Chasm" />
+    <ClInclude Include="..\Header\CChasm.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Chasm</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CChasm.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Chasm</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>

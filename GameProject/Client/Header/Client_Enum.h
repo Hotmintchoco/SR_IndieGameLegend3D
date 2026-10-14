@@ -100,6 +100,7 @@ enum class EObjectType
 
 	Npc = 50,
 	GemBox = 51,
+	Chasm,
 
 	EFFECT_GENERATOR_AIRBUBBLE = 60,
 	EFFECT_GENERATOR_YELLOWDUST = 61,

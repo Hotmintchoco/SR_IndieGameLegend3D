@@ -317,6 +317,7 @@
     <ClInclude Include="..\Header\Client_Struct.h" />
     <ClInclude Include="..\Header\CWormBullet.h" />
     <ClInclude Include="..\Header\CGemBox.h" />
+    <ClInclude Include="..\Header\CChasm.h" />
     <ClInclude Include="..\Header\IAnamorphicTarget.h" />
     <ClInclude Include="..\Header\imconfig.h" />
     <ClInclude Include="..\Header\imgui.h" />
@@ -514,6 +515,7 @@
     <ClCompile Include="..\Code\CWeaponSystem.cpp" />
     <ClCompile Include="..\Code\CWormBullet.cpp" />
     <ClCompile Include="..\Code\CGemBox.cpp" />
+    <ClCompile Include="..\Code\CChasm.cpp" />
     <ClCompile Include="..\Code\IAnamorphicTarget.cpp" />
     <ClCompile Include="..\Code\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
