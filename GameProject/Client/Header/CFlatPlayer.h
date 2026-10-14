@@ -31,6 +31,9 @@ public:
 
 	inline void SetInputEnabled(bool bFlag) { m_bInputEnabled = bFlag; }
 
+	/* 2D 플레이어 크기 : x = 가로 폭, y = 세로 높이(월드 z 방향). 피벗은 발밑 가운데 */
+	inline const _vec2& GetFlatSize() const { return m_vFlatSize; }
+
 private:
 	HRESULT Add_Component();
 	void UpdateInput();
@@ -52,6 +55,9 @@ private:
 
 	/* 입력 */
 	bool m_bInputEnabled = false;
+
+	/* 크기 : 텍스처가 바뀌면 여기만 고치면 콜라이더와 방 경계 제한이 같이 따라감 */
+	_vec2 m_vFlatSize = { 1.f, 1.f };
 
 public:
 	static CFlatPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

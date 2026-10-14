@@ -24,8 +24,8 @@ HRESULT CCubeNetKeyBlock::Ready_GameObject()
     if (FAILED(CCubeNet::Ready_GameObject()))
         return E_FAIL;
 
-    m_pColliderCom->Set_Extents(_vec3{ 0.5f, 0.5f, 0.5f });
-    m_pColliderCom->Set_DiffPos(_vec3{ 0.0f, 0.5f, 0.0f });
+    m_pColliderCom->Set_Extents(_vec3{ 0.25f, 0.25f, 0.25f });
+    m_pColliderCom->Set_DiffPos(_vec3{ 0.0f, 0.25f, 0.0f });
 
     return S_OK;
 }

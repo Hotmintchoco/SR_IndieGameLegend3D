@@ -54,6 +54,7 @@ public:
 
 	inline CTransform* GetTransform() { return m_pTransformCom; }
 	void SetWeaponSystem(CWeaponSystem* pSystem);
+	inline CWeaponSystem* GetWeaponSystem() { return m_pWeaponSystem; }
 	CSocket* GetSocket(const wstring& wstrName);
 	inline void SetCamera(CPlayerCamera* pCamera) { m_pCamera = pCamera; }
 	inline CPlayerMovement* GetMovement() { return m_pMovement; }
@@ -65,6 +66,8 @@ public:
 	void UpdateOrthoObjectCandidate(CCubeNet* pObj);
 	bool IsGrabbingOrthoObject() { return m_bIsGrabbingOrthoObject; }
 	CCubeNet* GetOrthoObjectCandidate() { return m_pInteractingOrthoObject; }
+	/* 페이즈 정리 시 호출 : 들고 있던 물체를 놓고 후보 포인터도 비움 */
+	void ResetOrthoInteraction();
 	void UpdateOrthoMiniGameInput();
 	void UpdateOrthoMiniGameStatus(float fTimeDelta);
 

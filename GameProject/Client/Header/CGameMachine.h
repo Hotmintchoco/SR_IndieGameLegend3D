@@ -24,6 +24,8 @@ public:
 
 	void Interact();
 
+	void RegisterFunction(const function<void()>& F);
+
 private:
 	HRESULT			Add_Component();
 
@@ -36,6 +38,8 @@ private:
 	Engine::CPlyTex* m_pBufferCom = nullptr;
 
 	ESceneType m_eSceneType = ESceneType::SCENE_NONE;
+
+	function<void()> m_F = nullptr;
 
 public:
 	static CGameMachine* Create(LPDIRECT3DDEVICE9 pGraphicDev, ESceneType eType);

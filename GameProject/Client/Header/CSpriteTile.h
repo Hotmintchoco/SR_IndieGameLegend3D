@@ -29,6 +29,7 @@ public:
 	inline void SetResistContamination(bool bFlag) { m_bResistContamination = bFlag; }
 	inline bool GetResistContamination() { return m_bResistContamination; }
 	inline EContaminateType GetContaminationType() { return m_eContaminationType; }
+	inline int GetTextureIdx() const { return m_iTextureIdx; }
 
 	/* IAnamorphicTarget */
 	virtual CVIBuffer* GetBuffer() override;	

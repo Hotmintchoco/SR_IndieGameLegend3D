@@ -336,14 +336,14 @@ void CPlayer::UpdateInput()
         {
             m_pMovement->Jump();
         }
+
+        UpdateOrthoMiniGameInput();
     }
 
     if (IsInputAllowed(PIC_WEAPON))
     {
         UpdateWeaponInput();
     }
-
-    UpdateOrthoMiniGameInput();
 }
 
 void CPlayer::UpdateWeaponInput()
@@ -423,6 +423,14 @@ void CPlayer::SyncCameraYaw()
 void CPlayer::UpdateOrthoObjectCandidate(CCubeNet* pObj)
 {
     m_pInteractingOrthoObject = pObj;
+}
+
+void CPlayer::ResetOrthoInteraction()
+{
+    /* 물체 쪽 상태는 건드리지 않음 : 곧 Set_Dead 되는 대상 */
+    m_bIsGrabbingOrthoObject = false;
+    m_pOrthoSocket->SetTarget(nullptr);
+    m_pInteractingOrthoObject = nullptr;
 }
 
 void CPlayer::UpdateOrthoMiniGameInput()

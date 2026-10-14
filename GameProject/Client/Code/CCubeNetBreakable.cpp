@@ -42,8 +42,8 @@ HRESULT CCubeNetBreakable::Ready_GameObject()
     if (FAILED(CCubeNet::Ready_GameObject()))
         return E_FAIL;
 
-    m_pColliderCom->Set_Extents(_vec3{ 0.5f, 0.5f, 0.5f });
-    m_pColliderCom->Set_DiffPos(_vec3{ 0.0f, 0.5f, 0.0f });
+    m_pColliderCom->Set_Extents(_vec3{ 0.25f, 0.25f, 0.25f });
+    m_pColliderCom->Set_DiffPos(_vec3{ 0.0f, 0.25f, 0.0f });
 
     m_iSeedA = CRandomMgr::GetInstance()->GetRandomValue<int>(0, 10000);
     m_iSeedB = CRandomMgr::GetInstance()->GetRandomValue<int>(0, 10000);
@@ -88,7 +88,7 @@ void CCubeNetBreakable::Render_GameObject()
         matWorld.m[3][2] += vNoise.z;
     }
     m_pGraphicDev->SetTransform(D3DTS_WORLD, &matWorld);
-    m_pTextureCom->Set_Texture(100);
+    m_pTextureCom->Set_Texture(0);
     m_pBufferCom->Render_Buffer();
 }
 
@@ -97,7 +97,7 @@ HRESULT CCubeNetBreakable::Add_Component()
     CComponent* pComponent = nullptr;
 
     // Texture
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Red_Texture"));
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CubeNet_Breakable_Texture"));
 
     if (nullptr == pComponent)
         return E_FAIL;

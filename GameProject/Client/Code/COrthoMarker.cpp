@@ -22,8 +22,8 @@ HRESULT COrthoMarker::Ready_GameObject()
     if (FAILED(CGameObject::Ready_GameObject()))
         return E_FAIL;
 
-    /* RcTex는 -1~1 이라 0.5배 하면 타일 한 칸 크기, 바닥에 눕힘 */
-    m_pTransform->Set_Scale(0.5f, 0.5f, 0.5f);
+    /* RcTex는 -1~1 이라 0.25배 하면 미니 타일 한 칸(0.5) 크기, 바닥에 눕힘 */
+    m_pTransform->Set_Scale(0.25f, 0.25f, 0.25f);
     m_pTransform->Set_Rotation_Raw(_vec3{ 90.f, 0.f, 0.f });
 
     return S_OK;

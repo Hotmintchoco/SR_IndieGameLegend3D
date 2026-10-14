@@ -3,6 +3,7 @@
 #include "CMovement.h"
 
 class IVerticalTerrain;
+class COrthoRoomLayer;
 
 class CFlatPlayerMovement : public CMovement
 {
@@ -26,6 +27,8 @@ protected:
 	virtual void ExertFriction(float fTimeDelta) override;
 	virtual void ClampVelocity() override;
 	void TerrainResolver(const vector<IVerticalTerrain*>& vecTerrain, _vec3& vDesired);
+	/* 방 안쪽 영역 밖으로 못 나가게 제한 (아래 끝은 바닥처럼 착지) */
+	void RoomBoundsResolver(COrthoRoomLayer* pLayer, _vec3& vDesired);
 
 	float m_fJumpSpeed = 5.f;
 

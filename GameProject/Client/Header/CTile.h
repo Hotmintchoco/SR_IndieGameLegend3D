@@ -25,6 +25,8 @@ public:
 	
 	inline int GetPositionIndex() { return m_iPositionIdx; }
 	inline TTileIdx GetPositionIndex2D() { return m_tPositionIdx2D; }
+	/* 기본 격자와 다른 격자에 까는 타일(직교 미니 타일)용 */
+	inline void SetPositionIndex2D(const TTileIdx& tIdx) { m_tPositionIdx2D = tIdx; }
 	inline ETileType GetType() { return m_eType; }
 	inline void SetType(ETileType eType) { m_eType = eType; }
 

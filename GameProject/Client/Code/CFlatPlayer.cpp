@@ -34,8 +34,8 @@ HRESULT CFlatPlayer::Ready_GameObject()
 		m_iTextureFrameCount[i] = m_pTexture[i]->GetCount();
 	}
 
-	m_pBoxCollider->Set_Extents(_vec3{ 0.5f, 0.5f, 0.5f });
-	m_pBoxCollider->Set_DiffPos(_vec3{ 0.f, 0.f, 0.5f });
+	m_pBoxCollider->Set_Extents(_vec3{ m_vFlatSize.x * 0.5f, 0.5f, m_vFlatSize.y * 0.5f });
+	m_pBoxCollider->Set_DiffPos(_vec3{ 0.f, 0.f, m_vFlatSize.y * 0.5f });
 
 	return S_OK;
 }

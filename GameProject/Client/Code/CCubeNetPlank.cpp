@@ -28,12 +28,12 @@ HRESULT CCubeNetPlank::Ready_GameObject()
     m_pOutlineTransform->SetUseLocal(true);
     m_pOutlineTransform->Set_Scale(1.2f, 1.2f, 1.2f);
 
-    m_pColliderCom->Set_Extents(_vec3{ 1.0f, 1.0f, 1.0f });
-    m_pColliderCom->Set_DiffPos(_vec3{ 0.0f, 0.5f, 0.0f });
+    m_pColliderCom->Set_Extents(_vec3{ 0.5f, 0.5f, 0.5f });
+    m_pColliderCom->Set_DiffPos(_vec3{ 0.0f, 0.25f, 0.0f });
 
     /* 장애물 콜라이더는 블럭 크기에 딱 맞춤 */
-    m_pObstacleColliderCom->Set_Extents(_vec3{ 0.5f, 0.5f, 0.5f });
-    m_pObstacleColliderCom->Set_DiffPos(_vec3{ 0.0f, 0.5f, 0.0f });
+    m_pObstacleColliderCom->Set_Extents(_vec3{ 0.25f, 0.25f, 0.25f });
+    m_pObstacleColliderCom->Set_DiffPos(_vec3{ 0.0f, 0.25f, 0.0f });
 
     return S_OK;
 }

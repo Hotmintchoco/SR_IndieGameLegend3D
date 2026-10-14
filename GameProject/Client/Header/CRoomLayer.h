@@ -66,6 +66,9 @@ public:
 	void AddMonster(CMonster* pMonster);
 	vector<CMonster*> GetMonsterList();
 
+	/* 타일 한 칸의 월드 크기 : 기본 방은 1, 다른 격자를 쓰는 방(직교 미니게임 등)은 재정의 */
+	virtual float GetTileUnit() const { return 1.f; }
+
 	/* 직교 미니게임 물체 파지 해제 시 가까운 타일 찾기용 */
 	_vec3 GetNearestTileCenterPos(const _vec3& vPos);
 	/* 위치에서 가장 가까운 타일 인덱스 (방 밖이면 가장자리 타일) */
@@ -82,7 +85,8 @@ protected:
 	void FlickerHandling(const Engine::_float& fTimeDelta);
 
 	void CheckClearCondition();
-	CTile* GetTileFromIndex2D(const TTileIdx& tIdx);
+	/* 다른 격자를 쓰는 방(직교 미니게임 등)은 재정의해서 자기 타일을 돌려줌 */
+	virtual CTile* GetTileFromIndex2D(const TTileIdx& tIdx);
 
 	/* 오염 타일과 플레이어 */
 	void PlayerTileInteraction();

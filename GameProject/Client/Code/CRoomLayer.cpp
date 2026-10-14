@@ -573,14 +573,15 @@ _vec3 CRoomLayer::GetNearestTileCenterPos(const _vec3& vPos)
 TTileIdx CRoomLayer::GetNearestTileIndex(const _vec3& vPos)
 {
 	const _vec3 vInnerRoomSize = CRoomLoadingMgr::GetInstance()->GetInnerRoomSize();
-	const int iSizeX = (int)vInnerRoomSize.x;
-	const int iSizeZ = (int)vInnerRoomSize.z;
+	const float fUnit = GetTileUnit();
+	const int iSizeX = (int)roundf(vInnerRoomSize.x / fUnit);
+	const int iSizeZ = (int)roundf(vInnerRoomSize.z / fUnit);
 
 	_vec3 vLocalPos = vPos - m_vRoomCenterPos;
 
-	/* GetTileFromWorldPosition과 동일한 인덱스 계산 (타일 사이즈 1) */
-	int iTileX = (int)floorf(vLocalPos.x + (float)iSizeX * 0.5f);
-	int iTileZ = (int)floorf((float)iSizeZ * 0.5f - vLocalPos.z);
+	/* GetTileFromWorldPosition과 동일한 인덱스 계산 (타일 크기 fUnit 기준) */
+	int iTileX = (int)floorf(vLocalPos.x / fUnit + (float)iSizeX * 0.5f);
+	int iTileZ = (int)floorf((float)iSizeZ * 0.5f - vLocalPos.z / fUnit);
 
 	/* 방 밖이면 가장자리 타일로 */
 	iTileX = max(0, min(iTileX, iSizeX - 1));
@@ -592,14 +593,15 @@ TTileIdx CRoomLayer::GetNearestTileIndex(const _vec3& vPos)
 _vec3 CRoomLayer::GetTileCenterPos(const TTileIdx& tIdx)
 {
 	const _vec3 vInnerRoomSize = CRoomLoadingMgr::GetInstance()->GetInnerRoomSize();
-	const int iSizeX = (int)vInnerRoomSize.x;
-	const int iSizeZ = (int)vInnerRoomSize.z;
+	const float fUnit = GetTileUnit();
+	const int iSizeX = (int)roundf(vInnerRoomSize.x / fUnit);
+	const int iSizeZ = (int)roundf(vInnerRoomSize.z / fUnit);
 
-	/* SpawnRoom의 타일 오프셋 계산과 동일 */
+	/* SpawnRoom의 타일 오프셋 계산과 동일 (타일 크기 fUnit 기준) */
 	const _vec3 vTileOffset{
-		-(float)(iSizeX - 1) / 2.f + (float)tIdx.iCol,
+		(-(float)(iSizeX - 1) / 2.f + (float)tIdx.iCol) * fUnit,
 		0.f,
-		(float)(iSizeZ - 1) / 2.f - (float)tIdx.iRow
+		((float)(iSizeZ - 1) / 2.f - (float)tIdx.iRow) * fUnit
 	};
 
 	return _vec3{ m_vRoomCenterPos.x + vTileOffset.x, 0.f, m_vRoomCenterPos.z + vTileOffset.z };
@@ -645,25 +647,22 @@ CTile* CRoomLayer::GetTileFromWorldPosition(const _vec3& vWorldPos)
 {
 	_vec3 vInnerRoomSize = CRoomLoadingMgr::GetInstance()->GetInnerRoomSize();
 
-	const int iSizeX = (int)vInnerRoomSize.x;
-	const int iSizeZ = (int)vInnerRoomSize.z;
+	const float fUnit = GetTileUnit();
+	const int iSizeX = (int)roundf(vInnerRoomSize.x / fUnit);
+	const int iSizeZ = (int)roundf(vInnerRoomSize.z / fUnit);
 
 	if (0 >= iSizeX || 0 >= iSizeZ) return nullptr;
 
 	const float fLocalX = vWorldPos.x - m_vRoomCenterPos.x;
 	const float fLocalZ = vWorldPos.z - m_vRoomCenterPos.z;
 
-	const int iTileX = (int)floorf(fLocalX + (float)iSizeX * 0.5f);
-	const int iTileZ = (int)floorf((float)iSizeZ * 0.5f - fLocalZ);
+	const int iTileX = (int)floorf(fLocalX / fUnit + (float)iSizeX * 0.5f);
+	const int iTileZ = (int)floorf((float)iSizeZ * 0.5f - fLocalZ / fUnit);
 
 	if (0 > iTileX || iTileX >= iSizeX || 0 > iTileZ || iTileZ >= iSizeZ) return nullptr;
 
-	const size_t iIndex = (size_t)iTileZ * (size_t)iSizeX + (size_t)iTileX;
-	if (iIndex >= iSizeX * iSizeZ) return nullptr;
-
-	wstring wstrTileName = L"Room_" + to_wstring(m_iRoomIndex) + L"_Tile_" + to_wstring(iIndex);
-
-	return static_cast<CTile*>(Get_GameObject(wstrTileName));
+	/* 실제 조회는 GetTileFromIndex2D에 맡김 (직교 미니게임 중에는 미니 타일을 돌려줌) */
+	return GetTileFromIndex2D(TTileIdx{ iTileZ, iTileX });
 }
 
 void CRoomLayer::ApplyDarkness()
@@ -750,8 +749,9 @@ void CRoomLayer::ResetState()
 CTile* CRoomLayer::GetTileFromIndex2D(const TTileIdx& tIdx)
 {
 	const _vec3 vSize = CRoomLoadingMgr::GetInstance()->GetInnerRoomSize();
-	const int iSizeX = (int)vSize.x;
-	const int iSizeZ = (int)vSize.z;
+	const float fUnit = GetTileUnit();
+	const int iSizeX = (int)roundf(vSize.x / fUnit);
+	const int iSizeZ = (int)roundf(vSize.z / fUnit);
 
 	if (0 > tIdx.iCol || tIdx.iCol >= iSizeX || 0 > tIdx.iRow || tIdx.iRow >= iSizeZ) return nullptr;
 

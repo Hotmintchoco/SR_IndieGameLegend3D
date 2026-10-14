@@ -25,6 +25,9 @@ HRESULT CCubeNet::Ready_GameObject()
     if (FAILED(CGameObject::Ready_GameObject()))
         return E_FAIL;
 
+    /* 직교 미니게임 0.5 격자에 맞춰 블럭 크기 절반 (콜라이더는 각 블럭에서 절반 크기로 설정) */
+    m_pTransformCom->Set_Scale(0.5f, 0.5f, 0.5f);
+
     return S_OK;
 }
 

@@ -6,6 +6,7 @@
 #include "CStage.h"
 #include "IVerticalTerrain.h"
 #include "COrthoRoomLayer.h"
+#include "CFlatPlayer.h"
 
 CFlatPlayerMovement::CFlatPlayerMovement(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMovement(pGraphicDev)
@@ -71,10 +72,12 @@ void CFlatPlayerMovement::PerformMovement(float fTimeDelta)
     _vec3 vDesiredPos = vPrevPos + m_vVelocity * fTimeDelta;
 
     CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-    if (pStage)
+    COrthoRoomLayer* pLayer = pStage ? dynamic_cast<COrthoRoomLayer*>(pStage->GetCurrentRoomLayer()) : nullptr;
+    if (pLayer)
     {
-        const vector<IVerticalTerrain*> vecTerrain = dynamic_cast<COrthoRoomLayer*>(pStage->GetCurrentRoomLayer())->GetVerticalTerrainList();
+        const vector<IVerticalTerrain*>& vecTerrain = pLayer->GetVerticalTerrainList();
         TerrainResolver(vecTerrain, vDesiredPos);
+        RoomBoundsResolver(pLayer, vDesiredPos);
     }
     else
     {
@@ -155,6 +158,46 @@ void CFlatPlayerMovement::TerrainResolver(const vector<IVerticalTerrain*>& vecTe
     else
     {
         m_bOnGround = false;
+    }
+}
+
+void CFlatPlayerMovement::RoomBoundsResolver(COrthoRoomLayer* pLayer, _vec3& vDesired)
+{
+    /* 크기는 2D 플레이어가 알려줌 (피벗 : 발밑 가운데) */
+    _vec2 vSize{ 1.f, 1.f };
+    if (CFlatPlayer* pFlatPlayer = dynamic_cast<CFlatPlayer*>(Get_Owner()))
+        vSize = pFlatPlayer->GetFlatSize();
+
+    _vec2 vMin, vMax;
+    pLayer->GetFlatBounds(vMin, vMax);
+
+    const float fHalfW = vSize.x * 0.5f;
+
+    /* 좌우 벽 */
+    if (vDesired.x < vMin.x + fHalfW)
+    {
+        vDesired.x = vMin.x + fHalfW;
+        m_vVelocity.x = max(m_vVelocity.x, 0.f);
+    }
+    else if (vDesired.x > vMax.x - fHalfW)
+    {
+        vDesired.x = vMax.x - fHalfW;
+        m_vVelocity.x = min(m_vVelocity.x, 0.f);
+    }
+
+    /* 천장 */
+    if (vDesired.z > vMax.y - vSize.y)
+    {
+        vDesired.z = vMax.y - vSize.y;
+        m_vVelocity.z = min(m_vVelocity.z, 0.f);
+    }
+
+    /* 바닥 : 방 아래 끝은 땅처럼 착지 */
+    if (vDesired.z < vMin.y)
+    {
+        vDesired.z = vMin.y;
+        m_vVelocity.z = 0.f;
+        m_bOnGround = true;
     }
 }
 

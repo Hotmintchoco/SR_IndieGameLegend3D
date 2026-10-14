@@ -23,8 +23,8 @@ HRESULT COrthoEmptyBlocker::Ready_GameObject()
         return E_FAIL;
 
     /* 큐브넷 블럭과 같은 크기 */
-    m_pCollider->Set_Extents(_vec3{ 0.5f, 0.5f, 0.5f });
-    m_pCollider->Set_DiffPos(_vec3{ 0.0f, 0.5f, 0.0f });
+    m_pCollider->Set_Extents(_vec3{ 0.25f, 0.25f, 0.25f });
+    m_pCollider->Set_DiffPos(_vec3{ 0.0f, 0.25f, 0.0f });
 
     return S_OK;
 }
