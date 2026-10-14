@@ -562,7 +562,7 @@ vector<CMonster*> CRoomLayer::GetMonsterList()
 	return vecMonster;
 }
 
-_vec3 CRoomLayer::RequestNearestTileCenterPos(const _vec3& vPos)
+_vec3 CRoomLayer::GetNearestTileCenterPos(const _vec3& vPos)
 {
 	const _vec3 vInnerRoomSize = CRoomLoadingMgr::GetInstance()->GetInnerRoomSize();
 	const int iSizeX = (int)vInnerRoomSize.x;

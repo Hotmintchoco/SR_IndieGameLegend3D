@@ -438,13 +438,13 @@ void CPlayer::UpdateOrthoMiniGameInput()
                 if (pStage)
                 {
                     CTransform* pTransform = m_pOrthoSocket->GetTargetTransform();
-                    _vec3 vTargetPos = pStage->GetCurrentRoomLayer()->RequestNearestTileCenterPos(pTransform->Get_Info_Value(INFO_POS));
+                    _vec3 vTargetPos = pStage->GetCurrentRoomLayer()->GetNearestTileCenterPos(pTransform->Get_Info_Value(INFO_POS));
                     m_pInteractingOrthoObject->GetTransform()->SetUseLocal(false);
                     m_pInteractingOrthoObject->GetTransform()->Set_Pos(vTargetPos);
                     m_pInteractingOrthoObject->SetGrabbed(false);
                     if (COrthoRoomLayer* pLayer = dynamic_cast<COrthoRoomLayer*>(pStage->GetCurrentRoomLayer()))
                     {
-                        
+                        pLayer->SetGrabbing(false);
                     }
                     m_bIsGrabbingOrthoObject = false;
                     m_pOrthoSocket->SetTarget(nullptr);
@@ -458,6 +458,15 @@ void CPlayer::UpdateOrthoMiniGameInput()
                 m_pInteractingOrthoObject->GetTransform()->SetUseLocal(true);
                 m_pOrthoSocket->SetTarget(m_pInteractingOrthoObject->GetTransform());
                 m_pInteractingOrthoObject->SetGrabbed(true);
+
+                CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+                if (pStage)
+                {
+                    if (COrthoRoomLayer* pLayer = dynamic_cast<COrthoRoomLayer*>(pStage->GetCurrentRoomLayer()))
+                    {
+                        pLayer->SetGrabbing(true);
+                    }
+                }
             }
         }
     }
@@ -468,6 +477,19 @@ void CPlayer::UpdateOrthoMiniGameStatus(float fTimeDelta)
     if (m_ePlayerCamMode == CAMERA_MODE::THIRD_PERSON || CClientCameraMgr::GetInstance()->Get_ActiveCameraType() == CLIENT_CAMERA_TYPE::ORTHO)
     {
         m_pOrthoSocket->UpdateSocket();
+
+        /* 소켓 갱신 직후, 들고 있는 물체 위치를 방 레이어에 전달해서 마커 동기화 */
+        if (m_bIsGrabbingOrthoObject)
+        {
+            CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+            if (pStage)
+            {
+                if (COrthoRoomLayer* pLayer = dynamic_cast<COrthoRoomLayer*>(pStage->GetCurrentRoomLayer()))
+                {
+                    pLayer->UpdateMarkerPos(m_pOrthoSocket->GetTargetTransform()->Get_Info_Value(INFO_POS));
+                }
+            }
+        }
     }
 }
 

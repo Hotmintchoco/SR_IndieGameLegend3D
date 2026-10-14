@@ -15,6 +15,11 @@
 #include "CStage.h"
 #include "CFlatPlayerMovement.h"
 #include "CTimerMgr.h"
+#include "CCubeNetBreakable.h"
+#include "COrthoPhaseGate.h"
+#include "COrthoKey.h"
+#include "CCubeNetKeyBlock.h"
+#include "COrthoMarker.h"
 
 COrthoRoomLayer::COrthoRoomLayer(int iRoomIndex)
 	: CRoomLayer(iRoomIndex)
@@ -44,7 +49,7 @@ _int COrthoRoomLayer::Update_Layer(_float fTimeDelta)
 
 	if (!m_bRegistered)
 	{
-		m_pFlatPlayer->GetTransform()->Set_Pos(GetCenterPos() + _vec3{ 0.f, 0.03f, 3.f }); /* z fighting 방지 위해 표면에서 조금 띄워둠 */
+		m_pFlatPlayer->GetTransform()->Set_Pos(GetCenterPos() + _vec3{ 5.f, 0.03f, 3.f }); /* z fighting 방지 위해 표면에서 조금 띄워둠 */
 		m_pOrthoCamera = dynamic_cast<COrthoCamera*>(CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::ORTHO));
 		CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::ORTHO);
 		m_pOrthoCamera->UpdateView(GetCenterPos() + _vec3{ 0.f, 14.f, -6.f }, GetCenterPos());
@@ -67,6 +72,8 @@ _int COrthoRoomLayer::Update_Layer(_float fTimeDelta)
 				0.5f
 			);
 			m_eMode = ORTHO;
+			/* 직교에서는 마커를 보여주지 않음 */
+			if (m_pMarker) m_pMarker->SetVisible(false);
 			m_pPlayer->LockInput(EPlayerInputChannel::PIC_MOVE);
 			m_pPlayer->LockInput(EPlayerInputChannel::PIC_WEAPON);
 			m_pFlatPlayer->SetInputEnabled(true);
@@ -84,6 +91,8 @@ _int COrthoRoomLayer::Update_Layer(_float fTimeDelta)
 				0.5f
 			);
 			m_eMode = PERSP;
+			/* 원근으로 돌아오면 들고 있는 중일 때만 마커 표시 */
+			if (m_pMarker) m_pMarker->SetVisible(m_bIsGrabbing);
 			m_pPlayer->UnlockInput(EPlayerInputChannel::PIC_MOVE);
 			m_pPlayer->UnlockInput(EPlayerInputChannel::PIC_WEAPON);
 			m_pFlatPlayer->SetInputEnabled(false);
@@ -97,6 +106,14 @@ _int COrthoRoomLayer::Update_Layer(_float fTimeDelta)
 		//	2.f
 		//);
 	}
+
+	/* 두 플레이어가 동시에 게이트에 닿은 순간 한 번만 클리어 */
+	const bool bBothOnGate = m_bPlayerOnGate && m_bFlatPlayerOnGate;
+	if (bBothOnGate && !m_bWasBothOnGate)
+	{
+		ClearCurrentPhase();
+	}
+	m_bWasBothOnGate = bBothOnGate;
 
 	_int iExit = CRoomLayer::Update_Layer(fTimeDelta);
 
@@ -170,8 +187,8 @@ HRESULT COrthoRoomLayer::SpawnRoom()
 
 		/* {시작 x, 길이} */
 		const pair<int, int> GrassGroups[] = {
-			{ 1,          2 },   // 왼쪽 2칸
-			{ iMidX - 1,  3 },   // 가운데 3칸
+			//{ 1,          2 },   // 왼쪽 2칸
+			//{ iMidX - 1,  3 },   // 가운데 3칸
 			{ iSizeX - 3, 2 },   // 오른쪽 2칸
 		};
 
@@ -196,7 +213,126 @@ HRESULT COrthoRoomLayer::SpawnRoom()
 		}
 	}
 
+	const int iBreakZ = iSizeZ / 2 + 1;
+	const int iStartX = iSizeX / 2 - 2;
+	const int iLen = 4;
+
+	CCubeNetBreakable* pHead = nullptr;
+
+	for (int x = iStartX; x < iStartX + iLen; ++x)
+	{
+		/* SpawnBlock은 범위 밖이면 Release 후 S_OK를 반환하므로,
+		   댕글링 포인터가 head 목록에 들어가지 않게 미리 거른다 */
+		if (x < 0 || x >= iSizeX || iBreakZ >= iSizeZ - 1)
+			continue;
+
+		CCubeNetBreakable* pBreak = CCubeNetBreakable::Create(pDevice);
+		if (FAILED(SpawnBlock(pBreak, L"TestBreakable", x, iBreakZ)))
+			return E_FAIL;
+
+		if (!pHead) pHead = pBreak;
+		else        pBreak->SetHead(pHead);
+
+		pBreak->m_OnDead.AddBinding(GetToken(), [this](IVerticalTerrain* const pTerrain) { RemoveDeadTerrain(pTerrain); });
+	}
+
+	/* 열쇠 블럭 : 가운데 줄 비어 있는 3칸 */
+	{
+		const int iMidZ = iSizeZ / 2;
+		const int iMidX = iSizeX / 2;
+
+		for (int x = iMidX - 1; x < iMidX + 2; ++x)
+		{
+			/* 범위 밖이면 SpawnBlock이 Release하므로 미리 거른다 */
+			if (x < 0 || x >= iSizeX)
+				continue;
+
+			CCubeNetKeyBlock* pKeyBlock = CCubeNetKeyBlock::Create(pDevice);
+			if (FAILED(SpawnBlock(pKeyBlock, L"KeyBlock", x, iMidZ)))
+				return E_FAIL;
+
+			m_vecKeyBlock.push_back(pKeyBlock);
+		}
+	}
+
+	/* 열쇠 : 왼쪽 위 구석, 바닥에 붙여서 배치 */
+	{
+		COrthoKey* pKey = COrthoKey::Create(pDevice);
+		if (FAILED(SpawnBlock(pKey, L"Key", 0, 0)))
+			return E_FAIL;
+
+		_vec3 vKeyPos;
+		pKey->GetTransform()->Get_Info(INFO_POS, &vKeyPos);
+		vKeyPos.y = 0.03f;
+		pKey->GetTransform()->Set_Pos(vKeyPos);
+
+		++m_iKeyCount;
+	}
+
+	/* 내려놓기 위치 마커 : 방마다 하나 */
+	m_pMarker = COrthoMarker::Create(pDevice);
+	if (FAILED(Add_GameObject(L"Room_" + to_wstring(m_iRoomIndex) + L"_Marker", m_pMarker)))
+		return E_FAIL;
+
+	/* 페이즈 게이트 */
+	if (FAILED(SpawnBlock(COrthoPhaseGate::Create(pDevice), L"PhaseGate", 0, iSizeZ / 2)))
+		return E_FAIL;
+
 	return S_OK;
+}
+
+void COrthoRoomLayer::RemoveDeadTerrain(IVerticalTerrain* pTerrain)
+{
+	auto iter = remove(m_vecVerticalTerrain.begin(), m_vecVerticalTerrain.end(), pTerrain);
+	m_vecVerticalTerrain.erase(iter, m_vecVerticalTerrain.end());
+}
+
+void COrthoRoomLayer::OnKeyAcquired()
+{
+	--m_iKeyCount;
+
+	/* 사후 체크 : 페이즈 안의 키를 모두 모았으면 열쇠 블럭 파괴 */
+	if (m_iKeyCount <= 0)
+	{
+		m_iKeyCount = 0;
+		DestroyKeyBlocks();
+	}
+}
+
+void COrthoRoomLayer::SetGrabbing(bool bFlag)
+{
+	m_bIsGrabbing = bFlag;
+
+	if (m_pMarker)
+		m_pMarker->SetVisible(m_bIsGrabbing && m_eMode == PERSP);
+}
+
+void COrthoRoomLayer::UpdateMarkerPos(const _vec3& vHeldPos)
+{
+	if (nullptr == m_pMarker) return;
+
+	_vec3 vMarkerPos = GetNearestTileCenterPos(vHeldPos);
+	vMarkerPos.y = 0.02f; /* z fighting 방지 위해 바닥에서 조금 띄움 */
+	m_pMarker->GetTransform()->Set_Pos(vMarkerPos);
+}
+
+void COrthoRoomLayer::DestroyKeyBlocks()
+{
+	for (CCubeNetKeyBlock* pKeyBlock : m_vecKeyBlock)
+	{
+		RemoveDeadTerrain(pKeyBlock);
+		pKeyBlock->Set_Dead(true);
+	}
+	m_vecKeyBlock.clear();
+}
+
+void COrthoRoomLayer::ClearCurrentPhase()
+{
+	cout << "clear " << m_iCurrentPhase << endl;
+	++m_iCurrentPhase;
+	/* 방의 클리어 조건에 ManualClear가 있으면 이 요청으로 방이 클리어된다 */
+	//TRoomEventCtx t{ ERoomEventType::ROOM_MANUALCLEAR_REQUEST };
+	//m_OnRoomEvent.Broadcast(t);
 }
 
 COrthoRoomLayer* COrthoRoomLayer::Create(int iRoomIndex)

@@ -67,7 +67,7 @@ public:
 	vector<CMonster*> GetMonsterList();
 
 	/* 직교 미니게임 물체 파지 해제 시 가까운 타일 찾기용 */
-	_vec3 RequestNearestTileCenterPos(const _vec3& vPos);
+	_vec3 GetNearestTileCenterPos(const _vec3& vPos);
 
 protected:
 	/* 어둠 스위치 */
