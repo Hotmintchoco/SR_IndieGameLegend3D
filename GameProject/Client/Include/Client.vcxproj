@@ -335,11 +335,11 @@
     <ClInclude Include="..\Header\json_fwd.hpp" />
     <ClInclude Include="..\Header\CUnbreakableFrustum.h" />
     <ClInclude Include="..\Header\CSprnub1.h" />
-    <ClInclude Include="CCamera2_MG1.h" />
+    <ClInclude Include="..\Header\CCamera2_MG1.h" />
+    <ClInclude Include="..\Header\CPlayer_MG1.h" />
+    <ClInclude Include="..\Header\CSeaweed2.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="CMiniGame_Header.h" />
-    <ClInclude Include="CPlayer_MG1.h" />
-    <ClInclude Include="CSeaweed2.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -545,10 +545,10 @@
     <ClCompile Include="..\Code\IRayTestable.cpp" />
     <ClCompile Include="..\Code\CSprnub1.cpp" />
     <ClCompile Include="..\Code\ITerrain.cpp" />
-    <ClCompile Include="CCamera2_MG1.cpp" />
+    <ClCompile Include="..\Code\CCamera2_MG1.cpp" />
+    <ClCompile Include="..\Code\CPlayer_MG1.cpp" />
+    <ClCompile Include="..\Code\CSeaweed2.cpp" />
     <ClCompile Include="Client.cpp" />
-    <ClCompile Include="CPlayer_MG1.cpp" />
-    <ClCompile Include="CSeaweed2.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

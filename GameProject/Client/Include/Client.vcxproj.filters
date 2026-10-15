@@ -1714,8 +1714,8 @@
     </ClCompile>
     <ClCompile Include="..\Code\CIntro_MG1.cpp">
       <Filter>01. Scene\MiniGame_1\GameObject\Intro</Filter>
+	</ClCompile>
     <ClCompile Include="..\Code\CDesertSpecialRoomLayer.cpp">
-  </ClCompile>
       <Filter>01. Scene\Stage\Layer\Temple</Filter>
     </ClCompile>
   </ItemGroup>

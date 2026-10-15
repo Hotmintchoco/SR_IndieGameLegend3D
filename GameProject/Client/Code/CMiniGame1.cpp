@@ -74,7 +74,7 @@ _int CMiniGame1::Update_Scene(_float fTimeDelta)
         }
         if (m_fElapsedTime2 > 1.4f)
         {
-            CManagement::GetInstance()->Get_Scene()
+            //CManagement::GetInstance()->Get_Scene()
             if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
                 return -1;
         }

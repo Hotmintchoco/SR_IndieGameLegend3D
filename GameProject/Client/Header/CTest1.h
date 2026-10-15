@@ -29,9 +29,8 @@ private:
 
 public:
 	static CTest1* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	static CTest1* Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iIdx);
 	static CTest1* Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iIdx, _vec3 vScale, _vec3 vPos);
-	void Set_Idx(_int iIdx) { m_iIdx = iIdx; m_fFrame = m_iIdx; }
+	void Set_Idx(_int iIdx) { m_iIdx = iIdx; m_fFrame = (_float)m_iIdx; }
 	void Set_Pos(_vec3 vPos);
 	void Set_Scale(_vec3 vScale);
 protected:
