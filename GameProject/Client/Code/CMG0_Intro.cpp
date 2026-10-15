@@ -5,8 +5,8 @@
 #include "CRenderer.h"
 #include "CMiniGame.h"
 
-CMG0_Intro::CMG0_Intro(LPDIRECT3DDEVICE9 pGraphicDev)
-    : CGameObject(pGraphicDev)
+CMG0_Intro::CMG0_Intro(LPDIRECT3DDEVICE9 pGraphicDev, _bool bOutro)
+    : CGameObject(pGraphicDev), m_bOutro(bOutro)
 {
 }
 
@@ -25,6 +25,16 @@ HRESULT CMG0_Intro::Ready_GameObject()
 _int CMG0_Intro::Update_GameObject(_float fTimeDelta)
 {
     _int iExit = CGameObject::Update_GameObject(fTimeDelta);
+
+    if (m_bOutro)
+    {
+        m_fOutroTime += fTimeDelta;
+        m_fTime = max(0.f, MG_INTRO_TOTAL_TIME - m_fOutroTime);
+
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+
+        return iExit;
+    }
 
     CMiniGame* pScene = dynamic_cast<CMiniGame*>(CManagement::GetInstance()->GetCurrentScene());
     if (pScene)
@@ -146,9 +156,9 @@ HRESULT CMG0_Intro::Add_Component()
     return S_OK;
 }
 
-CMG0_Intro* CMG0_Intro::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CMG0_Intro* CMG0_Intro::Create(LPDIRECT3DDEVICE9 pGraphicDev, _bool bOutro)
 {
-    CMG0_Intro* pIntro = new CMG0_Intro(pGraphicDev);
+    CMG0_Intro* pIntro = new CMG0_Intro(pGraphicDev, bOutro);
 
     if (FAILED(pIntro->Ready_GameObject()))
     {
