@@ -37,5 +37,7 @@ private:
 	inline static _bool s_bClear = false;
 	_bool m_bBGMStart = false;
 	_float m_fElapsedTime = 0.f;
+	_float m_fElapsedTime2 = 0.f;
+	_bool m_bClosing = false;
 };
 

@@ -29,7 +29,8 @@ private:
 	void BillBoard();
 	void Drop(_float fTimeDelta);
 	void Attract_To_Player(const _float& fTimeDelta);
-
+	void Is_Scattering(_bool bScattering) { m_bScattering = bScattering; }
+	void Scattering(_float fTimeDelta);
 public:
 	void Set_SpawnPos(_vec3 vPos) { m_vSpawnPos = vPos; }
 
@@ -60,6 +61,9 @@ protected:
 	_float m_fBlinkTime = 0.f;
 	_float m_fBlinkDuration = 0.25f;
 	_float m_fBlinkDuration2 = 3.f;
+
+	_bool m_bScattering = false;
+	_vec3 m_vDir = { 0.f,0.f,0.f };
 public:
 
 protected:

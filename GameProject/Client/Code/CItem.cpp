@@ -39,27 +39,35 @@ _int CItem::Update_GameObject(_float fTimeDelta)
 
     CCollisionMgr::GetInstance()->Add_Collider(COLL_ITEM, m_pColliderCom);
 
-    Drop(fTimeDelta);
-    m_fLifeTime += fTimeDelta;
-    if (m_fLifeTime > m_fLifeDuration - m_fBlinkDuration2)
-        m_bBlinkStart = true;
-
-    if (m_fLifeTime > m_fLifeDuration)
-        Set_Dead(true);
-
-    if (m_bBlinkStart == true)
+    if (m_bScattering == true)
     {
-        m_fBlinkTime += fTimeDelta;
-        if (m_fBlinkTime > m_fBlinkDuration)
-        {
-            m_bVisible = !m_bVisible;
-            m_fBlinkDuration -= m_fBlinkDuration/16.f;
-            m_fBlinkTime = 0.f;
-        }
+        Scattering(fTimeDelta);
     }
-    if (m_bAttractStart == true)
+    else
     {
-        Attract_To_Player(fTimeDelta);
+        Drop(fTimeDelta);
+
+        m_fLifeTime += fTimeDelta;
+        if (m_fLifeTime > m_fLifeDuration - m_fBlinkDuration2)
+            m_bBlinkStart = true;
+
+        if (m_fLifeTime > m_fLifeDuration)
+            Set_Dead(true);
+
+        if (m_bBlinkStart == true)
+        {
+            m_fBlinkTime += fTimeDelta;
+            if (m_fBlinkTime > m_fBlinkDuration)
+            {
+                m_bVisible = !m_bVisible;
+                m_fBlinkDuration -= m_fBlinkDuration / 16.f;
+                m_fBlinkTime = 0.f;
+            }
+        }
+        if (m_bAttractStart == true)
+        {
+            Attract_To_Player(fTimeDelta);
+        }
     }
     return iExit;
 }
@@ -165,6 +173,20 @@ void CItem::Attract_To_Player(const _float& fTimeDelta)
     _vec3 vPos = vItemPos + (vPlayerPos - vItemPos) / 128.f;
     //vPos.y = vItemPos.y;
     m_pTransformCom->Set_Pos(vPos);
+}
+
+void CItem::Scattering(_float fTimeDelta)
+{
+    m_vDir.y -= 9.8f * fTimeDelta;
+    m_pTransformCom->Move_Pos(&m_vDir, 1.f, fTimeDelta);
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vScale = m_pTransformCom->Get_Scale();
+    if (vPos.y < vScale.y)
+    {
+        vPos.y = vScale.y;
+        m_pTransformCom->Set_Pos(vPos);
+        m_bScattering = false;
+    }
 }
 
 void CItem::Consume()

@@ -63,8 +63,21 @@ _int CMiniGame1::Update_Scene(_float fTimeDelta)
     }
     if (s_bClear == true)
     {
-        if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
-            return -1;
+        m_fElapsedTime2 += fTimeDelta;
+        if (m_bClosing == false)
+        {   
+            m_bClosing = true;
+            CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+            CGameObject* pGameObject = CIntro_MG1::Create(m_pGraphicDev);
+            if (nullptr == pGameObject) return E_FAIL;
+            if (FAILED(pLayer->Add_GameObject(L"Intro", pGameObject))) return E_FAIL;
+        }
+        if (m_fElapsedTime2 > 1.4f)
+        {
+            CManagement::GetInstance()->Get_Scene()
+            if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
+                return -1;
+        }
     }
     return iExit;
 }
