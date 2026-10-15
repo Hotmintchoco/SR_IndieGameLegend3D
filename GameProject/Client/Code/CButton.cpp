@@ -5,6 +5,7 @@
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CCollisionMgr.h"
+#include "CSoundMgr.h"
 
 CButton::CButton(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -80,6 +81,7 @@ void CButton::OnCollisionEnter(COLLINFO eCollInfo)
     if (!bValid) return;
 
     m_bPressed = true;
+    CSoundMgr::GetInstance()->PlaySFX(L"sfxType.wav");
     m_OnButtonPressed.Broadcast();
 }
 

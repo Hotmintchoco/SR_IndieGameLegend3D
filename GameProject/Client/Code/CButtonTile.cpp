@@ -5,6 +5,7 @@
 #include "CRoomLoadingMgr.h"
 #include "CCollisionMgr.h"
 #include "CRoomLayer.h"
+#include "CSoundMgr.h"
 
 CButtonTile::CButtonTile(LPDIRECT3DDEVICE9 pGraphicDev)
     : CTile(pGraphicDev)
@@ -85,6 +86,7 @@ void CButtonTile::OnCollisionEnter(COLLINFO eCollInfo)
 
             static_cast<CRoomLayer*>(m_pOwner)->OnButtonInteracted(true);
             m_bPressed = true;
+            CSoundMgr::GetInstance()->PlaySFX(L"sfxType.wav");
         }
 
         ++m_iCollisionCount;
