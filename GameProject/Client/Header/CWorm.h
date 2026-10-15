@@ -31,7 +31,7 @@ public:
 	void Animation_Monster(const _float& fTimeDelta) override;
 
 private:
-	HRESULT			Add_Component();
+	HRESULT	Add_Component();
 
 	void Update_Motion(const _float& fTimeDelta);
 	_int Get_MotionState();
@@ -54,6 +54,8 @@ private:
 	void Set_Speed_Worm(_float fSpeed);
 	void Set_HeadWorm_Null();
 	void Push_Back_MoveDest(const _vec3& vDest);
+	void Change_End2_MoveDest(const _vec3& vDest);
+	void Change_End3_MoveDest(const _vec3& vDest);
 	void Clear_MoveDest();
 
 	void Worm_Dead(const _float& fTimeDelta);
@@ -150,4 +152,9 @@ private:
 	_bool m_bMotionEnd = false;
 
 	list<_int> m_listState;
+
+	_bool m_bOpeningFlag = false;
+	
+	_float m_fChaseTime = 0.f;
+	_bool m_bChaseFlag = false;
 };

@@ -101,7 +101,7 @@ void CCamera2_MG1::Key_Input(const _float fTimeDelta)
 	{
 		fSpeed *= 2.f;
 	}
-	if (vPlayerPos.y < 1.f)
+	if (vPlayerPos.y < 3.f)
 	{
 		if (CDInputMgr::GetInstance()->Key_Press(DIK_RIGHT))
 		{

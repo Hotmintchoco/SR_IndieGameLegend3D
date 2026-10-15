@@ -94,10 +94,26 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
         }
     }
 
+    if (m_bLerpPseudoScale)
+    {
+        m_fTimeAfterLerp += fTimeDelta;
+        float fRatio = clamp(m_fTimeAfterLerp / m_fLerpTime, 0.f, 1.f);
+        float s = fRatio * m_fTargetLerpScale + (1 - fRatio) * m_fInitLerpScale;
+        SetPseudoScale(s);
+
+        if (m_fTimeAfterLerp >= m_fLerpTime)
+        {
+            m_bLerpPseudoScale = false;
+        }
+    }
+
     /* 업데이트 순서 : 애니메이션으로 캐릭터 위치 확정 후 소켓에 전달 */
     if (m_ePlayerCamMode == CAMERA_MODE::THIRD_PERSON)
     {
-        _matrix matVisualWorld = (*m_pVisualRootTransform->Get_World()) * (*m_pTransformCom->Get_World());
+        // 파츠에도 크기 비율 반영
+        _matrix matScale;
+        D3DXMatrixScaling(&matScale, m_fPseudoScale, m_fPseudoScale, m_fPseudoScale);
+        _matrix matVisualWorld = (*m_pVisualRootTransform->Get_World()) * matScale * (*m_pTransformCom->Get_World());
         m_pAnimator->TransformPropagation(matVisualWorld);
         m_pLHandSocket->UpdateSocket();
         m_pRHandSocket->UpdateSocket();
@@ -128,7 +144,11 @@ void CPlayer::Render_GameObject()
         /* 카메라를 추적하는 1인칭 좌표계 업데이트 */
         _matrix matCamWorld;
         m_pCamera->GetWorld(&matCamWorld);
-        m_pAnimator->TransformFPPropagation(matCamWorld);
+
+        // 파츠에도 크기 비율 반영
+        _matrix matScale;
+        D3DXMatrixScaling(&matScale, m_fPseudoScale, m_fPseudoScale, m_fPseudoScale);
+        m_pAnimator->TransformFPPropagation(matScale * matCamWorld);
 
         m_pTextureCom->Set_Texture(0);
 
@@ -286,7 +306,7 @@ void CPlayer::UpdateInput()
 {
     if (IsInputAllowed(PIC_MOVE))
     {
-        m_pMovement->SetSprint(CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT));
+        m_pMovement->SetSprint(m_bForcedSprint || CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT));
 
         _vec2 vCommand{ 0.f, 0.f }; // (x, z)
         if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
@@ -360,7 +380,7 @@ void CPlayer::UpdateWeaponInput()
         || pInput->Key_Press(DIK_S)
         || pInput->Key_Press(DIK_D);
     tSysInput.bSpecialSwitchPressed = pInput->Key_Down(DIK_F);
-    tSysInput.bSprint = pInput->Key_Press(DIK_LSHIFT);
+    tSysInput.bSprint = m_bForcedSprint || pInput->Key_Press(DIK_LSHIFT);
     tSysInput.bSwitchWeapon = pInput->Key_Down(DIK_Q);
 
     TWeaponSystemOutput tOutput = m_pWeaponSystem->UpdateInput(tSysInput);
@@ -521,7 +541,22 @@ bool CPlayer::IsInputAllowed(EPlayerInputChannel e)
 
 void CPlayer::SetPseudoScale(float fScale)
 {
+    m_fPseudoScale = fScale;
+
+    m_pCamera->SetPseudoScale(fScale);
     m_pMovement->SetSpeedScale(fScale);
+
+    m_pColliderCom->Set_Radius(m_fColliderScale * fScale);
+    m_pColliderCom->Set_DiffPos(_vec3{ 0.f, 0.5f * fScale, 0.f });
+}
+
+void CPlayer::SetPseudoScale(float fScale, float fLerpTime)
+{
+    m_bLerpPseudoScale = true;
+    m_fLerpTime = fLerpTime;
+    m_fTimeAfterLerp = 0.f;
+    m_fInitLerpScale = m_fPseudoScale;
+    m_fTargetLerpScale = fScale;
 }
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)

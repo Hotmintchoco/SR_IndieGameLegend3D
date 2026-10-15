@@ -146,9 +146,13 @@
   <ItemGroup>
     <ClInclude Include="..\Header\CAirbubble.h" />
     <ClInclude Include="..\Header\CAbstractFactory.h" />
+    <ClInclude Include="..\Header\CAnamorphicObject.h" />
+    <ClInclude Include="..\Header\CButton.h" />
     <ClInclude Include="..\Header\CBox_MG1.h" />
     <ClInclude Include="..\Header\CCamera_MG1.h" />
     <ClInclude Include="..\Header\CCameraHelper.h" />
+    <ClInclude Include="..\Header\CColorArea.h" />
+    <ClInclude Include="..\Header\CCube.h" />
     <ClInclude Include="..\Header\CGenerator_Airbubble.h" />
     <ClInclude Include="..\Header\CArrow.h" />
     <ClInclude Include="..\Header\CArrow_Effect.h" />
@@ -170,17 +174,23 @@
     <ClInclude Include="..\Header\CDdokddak.h" />
     <ClInclude Include="..\Header\CCursorPolicyMgr.h" />
     <ClInclude Include="..\Header\CHitScan.h" />
+    <ClInclude Include="..\Header\CIceRoomLayer.h" />
+    <ClInclude Include="..\Header\CDesertSpecialRoomLayer.h" />
     <ClInclude Include="..\Header\CItemContainer.h" />
     <ClInclude Include="..\Header\CHitCreenUI.h" />
     <ClInclude Include="..\Header\CJail.h" />
     <ClInclude Include="..\Header\CLaser.h" />
     <ClInclude Include="..\Header\CLaserBuffer.h" />
+    <ClInclude Include="..\Header\CBombDispenser.h" />
     <ClInclude Include="..\Header\CLaserGun.h" />
     <ClInclude Include="..\Header\CLaserPuzzleRoomLayer.h" />
+    <ClInclude Include="..\Header\CLiminalBomb.h" />
     <ClInclude Include="..\Header\CLiminalCube.h" />
+    <ClInclude Include="..\Header\CLiminalFrame.h" />
     <ClInclude Include="..\Header\CLiminalGun.h" />
     <ClInclude Include="..\Header\CLiminalGunUltimateEffect.h" />
     <ClInclude Include="..\Header\CLiminalObject.h" />
+    <ClInclude Include="..\Header\CLiminalPortal.h" />
     <ClInclude Include="..\Header\CLiminalRoomLayer.h" />
     <ClInclude Include="..\Header\CLiminalSlope.h" />
     <ClInclude Include="..\Header\CMG0_Bullet.h" />
@@ -214,11 +224,14 @@
     <ClInclude Include="..\Header\CMovement.h" />
     <ClInclude Include="..\Header\COcto.h" />
     <ClInclude Include="..\Header\COctoBullet.h" />
+    <ClInclude Include="..\Header\COpenCubeTex.h" />
+    <ClInclude Include="..\Header\COpenCube.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
     <ClInclude Include="..\Header\CPlayerAnimator.h" />
     <ClInclude Include="..\Header\CPlayerMovement.h" />
     <ClInclude Include="..\Header\CPlayerPartTex.h" />
     <ClInclude Include="..\Header\CPlayerCamera.h" />
+    <ClInclude Include="..\Header\CPushableFrustum.h" />
     <ClInclude Include="..\Header\CRapidGun.h" />
     <ClInclude Include="..\Header\CProjectile.h" />
     <ClInclude Include="..\Header\CButtonTile.h" />
@@ -304,6 +317,9 @@
     <ClInclude Include="..\Header\CWorm.h" />
     <ClInclude Include="..\Header\Client_Struct.h" />
     <ClInclude Include="..\Header\CWormBullet.h" />
+    <ClInclude Include="..\Header\CGemBox.h" />
+    <ClInclude Include="..\Header\CChasm.h" />
+    <ClInclude Include="..\Header\IAnamorphicTarget.h" />
     <ClInclude Include="..\Header\imconfig.h" />
     <ClInclude Include="..\Header\imgui.h" />
     <ClInclude Include="..\Header\imgui_impl_dx9.h" />
@@ -332,9 +348,13 @@
   <ItemGroup>
     <ClCompile Include="..\Code\CAirbubble.cpp" />
     <ClCompile Include="..\Code\CAbstractFactory.cpp" />
+    <ClCompile Include="..\Code\CAnamorphicObject.cpp" />
+    <ClCompile Include="..\Code\CButton.cpp" />
     <ClCompile Include="..\Code\CBox_MG1.cpp" />
     <ClCompile Include="..\Code\CCamera_MG1.cpp" />
     <ClCompile Include="..\Code\CCameraHelper.cpp" />
+    <ClCompile Include="..\Code\CColorArea.cpp" />
+    <ClCompile Include="..\Code\CCube.cpp" />
     <ClCompile Include="..\Code\CGenerator_Airbubble.cpp" />
     <ClCompile Include="..\Code\CArrow.cpp" />
     <ClCompile Include="..\Code\CArrow_Effect.cpp" />
@@ -357,16 +377,22 @@
     <ClCompile Include="..\Code\CHitCreenUI.cpp" />
     <ClCompile Include="..\Code\CCursorPolicyMgr.cpp" />
     <ClCompile Include="..\Code\CHitScan.cpp" />
+    <ClCompile Include="..\Code\CIceRoomLayer.cpp" />
+    <ClCompile Include="..\Code\CDesertSpecialRoomLayer.cpp" />
     <ClCompile Include="..\Code\CItemContainer.cpp" />
     <ClCompile Include="..\Code\CJail.cpp" />
     <ClCompile Include="..\Code\CLaser.cpp" />
     <ClCompile Include="..\Code\CLaserBuffer.cpp" />
+    <ClCompile Include="..\Code\CBombDispenser.cpp" />
     <ClCompile Include="..\Code\CLaserGun.cpp" />
     <ClCompile Include="..\Code\CLaserPuzzleRoomLayer.cpp" />
+    <ClCompile Include="..\Code\CLiminalBomb.cpp" />
     <ClCompile Include="..\Code\CLiminalCube.cpp" />
+    <ClCompile Include="..\Code\CLiminalFrame.cpp" />
     <ClCompile Include="..\Code\CLiminalGun.cpp" />
     <ClCompile Include="..\Code\CLiminalGunUltimateEffect.cpp" />
     <ClCompile Include="..\Code\CLiminalObject.cpp" />
+    <ClCompile Include="..\Code\CLiminalPortal.cpp" />
     <ClCompile Include="..\Code\CLiminalRoomLayer.cpp" />
     <ClCompile Include="..\Code\CLiminalSlope.cpp" />
     <ClCompile Include="..\Code\CMG0_Bullet.cpp" />
@@ -400,12 +426,15 @@
     <ClCompile Include="..\Code\CMovement.cpp" />
     <ClCompile Include="..\Code\COcto.cpp" />
     <ClCompile Include="..\Code\COctoBullet.cpp" />
+    <ClCompile Include="..\Code\COpenCubeTex.cpp" />
+    <ClCompile Include="..\Code\COpenCube.cpp" />
     <ClCompile Include="..\Code\CParticle_Rectangle.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />
     <ClCompile Include="..\Code\CPlayerAnimator.cpp" />
     <ClCompile Include="..\Code\CPlayerMovement.cpp" />
     <ClCompile Include="..\Code\CPlayerPartTex.cpp" />
     <ClCompile Include="..\Code\CPlayerCamera.cpp" />
+    <ClCompile Include="..\Code\CPushableFrustum.cpp" />
     <ClCompile Include="..\Code\CRapidGun.cpp" />
     <ClCompile Include="..\Code\CProjectile.cpp" />
     <ClCompile Include="..\Code\CButtonTile.cpp" />
@@ -487,6 +516,9 @@
     <ClCompile Include="..\Code\CWeaponPickup.cpp" />
     <ClCompile Include="..\Code\CWeaponSystem.cpp" />
     <ClCompile Include="..\Code\CWormBullet.cpp" />
+    <ClCompile Include="..\Code\CGemBox.cpp" />
+    <ClCompile Include="..\Code\CChasm.cpp" />
+    <ClCompile Include="..\Code\IAnamorphicTarget.cpp" />
     <ClCompile Include="..\Code\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>

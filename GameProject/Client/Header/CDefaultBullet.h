@@ -23,6 +23,11 @@ public:
 
 	virtual void OnCollisionEnter(COLLINFO eCollInfo) override;
 
+	float GetScale() { return m_fScale; }
+	void SetScale(float fScale) { m_fScale = fScale; }
+	_vec3 GetDir() { return m_vDir; }
+	void SetDir(const _vec3& vDir) { m_vDir = vDir; }
+
 private:
 	HRESULT	Add_Component();
 	void Animation(const _float& fTimeDelta);
@@ -30,6 +35,9 @@ private:
 	Engine::CRcTex* m_pBufferCom = nullptr;
 	Engine::CTexture* m_pTextureCom = nullptr;
 	Engine::CSphereCollider* m_pColliderCom = nullptr;
+
+	/* 특수 방 로직을 위해 따로 뻄 */
+	float m_fScale = 1.f;
 
 	/* 초기값 */
 	//_vec3 m_vStart{ 0.f, 0.f, 0.f };

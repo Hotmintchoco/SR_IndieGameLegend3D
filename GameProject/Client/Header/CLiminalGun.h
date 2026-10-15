@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CWeapon.h"
+#include "CPostEffect.h"
 
 namespace Engine
 {
@@ -11,6 +12,7 @@ namespace Engine
 class CLiminalObject;
 class CLiminalGunUltimateEffect;
 class CMonster;
+class CGrayscaleEffect;
 
 struct TLiminalGunHitScanInfo
 {
@@ -72,7 +74,14 @@ private:
 	bool m_bOnHitScan = false;
 	priority_queue<TLiminalGunHitScanInfo, vector<TLiminalGunHitScanInfo>, TYawLesser> m_pqCapture;
 	CLiminalGunUltimateEffect* m_pEffect = nullptr;
-
+	/* 궁극기 셰이더 애니메이션 */
+	float m_fTimeAfterEffect = 0.f;
+	float m_fTotalEffectTransitionTime = 1.f;
+	float m_fStartStrength = 0.f;
+	float m_fEndStrength = 1.f;
+	bool m_bOnEffectTransition = false;
+	CGrayscaleEffect* m_pShaderEffect = nullptr;
+	POST_EFFECT m_eOldEffectType = POST_EFFECT::NONE;
 
 public:
 	static CLiminalGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);

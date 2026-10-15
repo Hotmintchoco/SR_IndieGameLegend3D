@@ -54,7 +54,7 @@ _int CBox_MG1::Update_GameObject(_float fTimeDelta)
     Compute_ViewZ(&vPos);
     if (m_iTextureIdx == 0 || m_iTextureIdx == 2)
     {
-        m_fViewZ += 10.0f;
+        m_fViewZ += 50;
     }
     return iExit;
 }
@@ -88,6 +88,11 @@ void CBox_MG1::Render_GameObject()
 
 void CBox_MG1::OnCollisionEnter(COLLINFO eCollInfo)
 {
+}
+
+CVIBuffer* CBox_MG1::GetBuffer()
+{
+    return m_pBufferCom;
 }
 
 HRESULT CBox_MG1::Add_Component()

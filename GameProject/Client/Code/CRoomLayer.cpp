@@ -14,6 +14,7 @@
 #include "CDoor.h"
 #include "CKillAllEntityCondition.h"
 #include "CPressAllButtonCondition.h"
+#include "CManualClearCondition.h"
 #include "CManagement.h"
 #include "CButtonTile.h"
 #include "CSoundMgr.h"
@@ -24,6 +25,7 @@
 #include "CRandomMgr.h"
 #include "CAtmosphereVeil.h"
 #include "CMonster.h"
+#include "CPlayerMovement.h"
 
 CRoomLayer::CRoomLayer(int iRoomIndex) : m_iRoomIndex(iRoomIndex)
 {
@@ -92,6 +94,9 @@ void CRoomLayer::PlayerTileInteraction()
 	case EContaminateType::LAVA:
 		pPlayer->OnHit(nullptr);
 		break;
+	case EContaminateType::ICE:
+		pPlayer->GetMovement()->Slip(0.1f);
+		break;
 	default:
 		break;
 	}
@@ -152,6 +157,10 @@ HRESULT CRoomLayer::SpawnRoom()
 		{
 			pCondition = CPressAllButtonCondition::Create(this);
 		}
+		else if (wstrClearCondtiion == L"ManualClear")
+		{
+			pCondition = CManualClearCondition::Create(this);
+		}
 		else
 		{
 			assert(0);
@@ -195,9 +204,9 @@ HRESULT CRoomLayer::SpawnRoom()
 	CGameObject* pGameObject = nullptr;
 
 	/* 사막 기후에서 모래 안개 효과 */
-	if (m_tBiomeInfo.eType == EBiomeType::DESERT)
+	if (m_bEnableDesertVeil && m_tBiomeInfo.eType == EBiomeType::DESERT)
 	{
-		CAtmosphereVeil* pVeil = CAtmosphereVeil::Create(pDevice, TVeilDesc{ EColorTexture::SAND, {2.5f, 3.25f, 4.f, 4.75f}, {40, 40, 40, 40} });
+		CAtmosphereVeil* pVeil = CAtmosphereVeil::Create(pDevice, TVeilDesc{ EColorTexture::SAND, {2.5f, 3.25f, 4.f, 4.75f}, {25, 25, 25, 25} });
 		if (FAILED(Add_GameObject(L"Veil_Dust", pVeil)))
 			return E_FAIL;
 	}

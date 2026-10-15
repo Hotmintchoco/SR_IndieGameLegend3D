@@ -45,7 +45,7 @@ HRESULT CMagmamouth::Ready_GameObject()
 
     m_fTrailDuration = 0.125f;
 
-    m_iMaxHp = 10;
+    m_iMaxHp = 30;
     m_iHp = m_iMaxHp;
 
     m_fFrame = 3.f;

@@ -24,6 +24,8 @@ HRESULT CUnbreakableFrustum::Ready_GameObject()
     if (FAILED(CFrustum::Ready_GameObject()))
         return E_FAIL;
 
+    m_pColliderCom->Set_CollisionID(COLL_OBSTACLE);
+
     return S_OK;
 }
 
@@ -32,6 +34,7 @@ _int CUnbreakableFrustum::Update_GameObject(_float fTimeDelta)
     _int    iExit = CFrustum::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom);
 
     return iExit;
 }

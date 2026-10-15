@@ -74,7 +74,7 @@ void CLogo::Render_Scene()
     if (m_pLoading->Get_Failed() || m_bStageFailed)
     {
         _vec2 vPos{ WINCX * 0.5f - 180.f, WINCY * 0.8f - 50.f };
-        CFontMgr::GetInstance()->Render_Font(L"Font_Jinji",
+        CFontMgr::GetInstance()->Render_Font(L"Font_Dialogue",
             L"Loading failed. Please restart the game.", &vPos,
             D3DXCOLOR(1.f, 0.3f, 0.3f, 1.f));
     }

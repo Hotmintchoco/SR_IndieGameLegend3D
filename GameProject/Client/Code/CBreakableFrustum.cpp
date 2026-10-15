@@ -6,6 +6,7 @@
 #include "CRoomLayer.h"
 #include "CManagement.h"
 #include "CSoundMgr.h"
+#include "CCollisionMgr.h"
 
 CBreakableFrustum::CBreakableFrustum(LPDIRECT3DDEVICE9 pGraphicDev)
     : CFrustum(pGraphicDev)
@@ -25,6 +26,8 @@ HRESULT CBreakableFrustum::Ready_GameObject()
     if (FAILED(CFrustum::Ready_GameObject()))
         return E_FAIL;
 
+    m_pColliderCom->Set_CollisionID(COLL_OBSTACLE);
+
     return S_OK;
 }
 
@@ -33,6 +36,7 @@ _int CBreakableFrustum::Update_GameObject(_float fTimeDelta)
     _int    iExit = CFrustum::Update_GameObject(fTimeDelta);
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom);
 
     return iExit;
 }

@@ -30,6 +30,9 @@ public:
 	inline bool GetResistContamination() { return m_bResistContamination; }
 	inline EContaminateType GetContaminationType() { return m_eContaminationType; }
 
+	/* IAnamorphicTarget */
+	virtual CVIBuffer* GetBuffer() override;	
+
 protected:
 	HRESULT			Add_Component();
 	void UpdateAnimationTile(const Engine::_float& fTimeDelta);

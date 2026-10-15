@@ -17,6 +17,9 @@
 #include "CSoundMgr.h"
 #include "CLiminalGunUltimateEffect.h"
 #include "CLayerContext.h"
+#include "CLiminalPortal.h"
+#include "CShaderEffectMgr.h"
+#include "CGrayscaleEffect.h"
 
 CLiminalGun::CLiminalGun(LPDIRECT3DDEVICE9 pGraphicDev)
     : CWeapon(pGraphicDev)
@@ -55,6 +58,10 @@ HRESULT CLiminalGun::Ready_GameObject()
         m_pEffect->Set_IsActive(false);
     }
 
+    m_pShaderEffect = dynamic_cast<CGrayscaleEffect*>(CShaderEffectMgr::GetInstance()->Get_PostEffect(POST_EFFECT::GRAYSCALE));
+    if (!m_pShaderEffect)
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -73,14 +80,30 @@ _int CLiminalGun::Update_GameObject(_float fTimeDelta)
         CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
     }
 
-    if (m_pHolingObject)
-    {
-        CalculateView(m_pHolingObject);
-    }
-
     UpdateUltimateAttackState(fTimeDelta);
 
     UpdateHitScanState(fTimeDelta);
+
+    if (m_bOnEffectTransition)
+    {
+        m_fTimeAfterEffect += fTimeDelta;
+        float fRatio = clamp(m_fTimeAfterEffect / m_fTotalEffectTransitionTime, 0.f, 1.f);
+        float s = fRatio * m_fEndStrength + (1.f - fRatio) * m_fStartStrength;
+        m_pShaderEffect->Set_Strength(s);
+
+        if (m_fTimeAfterEffect >= m_fTotalEffectTransitionTime)
+        {
+            m_bOnEffectTransition = false;
+            if (m_bOnUltimateAttack) /* 궁극기 진입 시*/
+            {
+                CShaderEffectMgr::GetInstance()->Set_PostEffect(POST_EFFECT::GRAYSCALE);
+            }
+            else /* 끝나고 되돌아갈때 */
+            {
+                CShaderEffectMgr::GetInstance()->Set_PostEffect(m_eOldEffectType);
+            }
+        }
+    }
 
     return iExit;
 }
@@ -90,6 +113,12 @@ void CLiminalGun::LateUpdate_GameObject(_float fTimeDelta)
     fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(CTG_PLAYER);
 
     CWeapon::LateUpdate_GameObject(fTimeDelta);
+
+
+    if (m_pHolingObject)
+    {
+        CalculateView(m_pHolingObject);
+    }
 }
 
 void CLiminalGun::Render_GameObject()
@@ -155,13 +184,22 @@ TWeaponOutput CLiminalGun::SpecialAttack(EInputState ePri, EInputState eSec)
 TWeaponOutput CLiminalGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
 {
     CTimerMgr::GetInstance()->SetGlobalTimeScale(0.1f);
-    CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_PLAYER, 0.5f);
+    CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_PLAYER, 0.3f);
     m_bOnUltimateAttack = true;
     m_fTimeAfterUltimate = 0.f;
     m_pSystem->SetUltimateAttackOnGoing(true);
     CSoundMgr::GetInstance()->PlaySFX(L"Ult_Liminal.wav");
 
     m_pEffect->Set_IsActive(true);
+
+    m_bOnEffectTransition = true;
+    m_fTotalEffectTransitionTime = 1.f;
+    m_fTimeAfterEffect = 0.f;
+    m_fStartStrength = 0.f;
+    m_fEndStrength = 1.f;
+    m_eOldEffectType = CShaderEffectMgr::GetInstance()->Get_PostEffectType();
+    CShaderEffectMgr::GetInstance()->Set_PostEffect(POST_EFFECT::GRAYSCALE);
+
 
     return { true, EWeaponAnimEvent::ULT_LIMINALGUN_START };
 }
@@ -201,7 +239,11 @@ TWeaponOutput CLiminalGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
     m_pSystem->SetUltimateAttackOnGoing(false);
     m_bOnHitScan = false;
 
-    m_pEffect->Set_IsActive(false);
+    m_bOnEffectTransition = true;
+    m_fTotalEffectTransitionTime = 0.3f;
+    m_fTimeAfterEffect = 0.f;
+    m_fStartStrength = 1.f;
+    m_fEndStrength = 0.f;
 
     return { false, EWeaponAnimEvent::NONE };
 }
@@ -258,8 +300,9 @@ void CLiminalGun::CaptureTransform(CLiminalObject* pObject)
     CTransform* pTransform = pObject->GetTransform();
     _matrix matCamInv;
     D3DXMatrixInverse(&matCamInv, nullptr, &matCamWorld);
+    /* From : 물체의 로컬 공간 좌표 , To : 물체의 카메라 로컬 공간 좌표 이니까 */
+    /* 물체의 로컬 공간 좌표 * 물체 월드 행렬 * 카메라 월드 역행렬 -> 물체의 카메라 로컬 공간 좌표 */
     m_matCapture = (*pTransform->Get_World()) * matCamInv;
-    memcpy(&m_vCaptureDisplacement, &m_matCapture.m[3][0], sizeof(_vec3));
     m_fCaptureDist = D3DXVec3Length(&m_vCaptureDisplacement);
     _vec3 vLook = pTransform->Get_Info_Value(INFO_LOOK);
     m_fCaptureScale = D3DXVec3Length(&vLook); /* 균등 스케일 가정 */
@@ -267,6 +310,8 @@ void CLiminalGun::CaptureTransform(CLiminalObject* pObject)
 
 void CLiminalGun::CalculateView(CLiminalObject* pObject)
 {
+    /* 계산 순서 : 바뀐 View에 대해 회전을 다시 계산 후 스케일(위치) 계산 */
+
     CCamera* pCamera = CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER);
     if (!pCamera) return;
     _vec3 vCamLook, vCamPos;
@@ -274,20 +319,17 @@ void CLiminalGun::CalculateView(CLiminalObject* pObject)
     pCamera->GetWorld(&matCamWorld);
     memcpy(&vCamPos, &matCamWorld.m[3][0], sizeof(_vec3));
 
-    /* 현재 카메라 행렬에 대한 물체 위치 재계산 */
-    _vec3 vDisplacement;
-    D3DXVec3TransformNormal(&vDisplacement, &m_vCaptureDisplacement, &matCamWorld);
-    _vec3 vDisplacementNorm;
-    D3DXVec3Normalize(&vDisplacementNorm, &vDisplacement);
-
     /* 현재 카메라 행렬에 대한 물체 회전 재계산 (회전만 씀) */
     _matrix matCurRot = m_matCapture * matCamWorld;
     pObject->GetTransform()->Set_World(&matCurRot);    
     pObject->GetTransform()->WorldMatrixDecompose();
 
     /* 꼭짓점에 대해 ray를 쏘아서 적절한 스케일 값 구하기 */
-    THitInfo tHit{};
+    CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+    const vector<IRayTestable*>& vecRayTargets = pStage->GetCurrentRoomLayer()->GetRayTestableList();
     CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
+
+    float fMinRatio = FLT_MAX; /* 매 프레임마다 현재 스케일에 얼마만큼 곱해줄지 비율을 계산함 */
 
     const vector<pair<CVIBuffer*, CTransform*>>& vecInfoSrc = m_pHolingObject->GetRayTestTargetInfo();
     for (auto& [pBufferSrc, pTransformSrc] : vecInfoSrc)
@@ -299,14 +341,14 @@ void CLiminalGun::CalculateView(CLiminalObject* pObject)
             {
                 _vec3 vVtxWorld;
                 D3DXVec3TransformCoord(&vVtxWorld, &v.vTriPos[i], pTransformSrc->Get_World());
-                _vec3 vDir = vVtxWorld - vCamPos;
-                D3DXVec3Normalize(&vDir, &vDir);
+                _vec3 vDir = vVtxWorld - vCamPos; /* 들고 있는 물체의 한점을 향하는 카메라에서 출발하는 레이 */
+                float fDist = D3DXVec3Length(&vDir); /* 그 점까지의 거리 */
+                if (fDist < 1e-4f) continue; /* 너무 가까운 경우에는 통과 */
+                vDir /= fDist; 
 
-                CStage* pStage = static_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
-                const vector<IRayTestable*> mapObject = pStage->GetCurrentRoomLayer()->GetRayTestableList();
-                CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
+                THitInfo tHit{};
 
-                for (auto& pObj : mapObject)
+                for (auto& pObj : vecRayTargets)
                 {
                     if (pObj == m_pHolingObject) continue; /* 본인은 통과 */
                          
@@ -316,26 +358,32 @@ void CLiminalGun::CalculateView(CLiminalObject* pObject)
                         pRayCaster->RayTest(tHit, vCamPos, vDir, pBufferDst, pTransformDst->Get_World());
                     }
                 }
+
+                if (tHit.fDist != FLT_MAX)
+                {
+                    /* tHit.fDist / fDist : 점을 연장해서 배경 메쉬에 맞은 순간의 선분 길이와,
+                    *  카메라 - 파지 대상의 버텍스 길이의 비율. 이 중 가장 작은 값이 실제 늘려도 벽에 파묻히지 않는 최댓값이 된다
+                    */
+                    fMinRatio = min(fMinRatio, tHit.fDist / fDist);
+                }
             }
         }
     }
 
-    if (tHit.bHit)
+    _vec3 vPos = pObject->GetTransform()->Get_Info_Value(INFO_POS);
+    if (fMinRatio < FLT_MAX)
     {
-        float fDist = tHit.fDist;
+        float fMargin = 0.98f;
+        float s = fMinRatio * fMargin;
 
-        float fCurScale = pObject->GetTransform()->Get_Scale().x; /* 균등이니깐 그냥 x만 */
-        float fMargin = fCurScale * sqrtf(3.f) / 2.f / 5.f; /* 명확한 기준을 잡기 어려워서 휴리스틱하게 */
-        // float fMargin = 0;
-
-        pObject->GetTransform()->Set_Pos(vCamPos + vDisplacementNorm * (fDist - fMargin));
-        float fNewScale = m_fCaptureScale * (fDist - fMargin) / m_fCaptureDist;
-        pObject->GetTransform()->Set_Scale(fNewScale, fNewScale, fNewScale);
+        float fScale = pObject->GetTransform()->Get_Scale().x; /* 균등이니깐 그냥 x만 */
+        pObject->GetTransform()->Set_Scale(fScale * s, fScale * s, fScale * s);
+        pObject->GetTransform()->Set_Pos(vCamPos + (vPos - vCamPos) * s);
     }
     else
     {
         /* 충돌이 없다면 (아마 하늘을 바라보면) 캡쳐 시점으로 유지 */
-        pObject->GetTransform()->Set_Pos(vCamPos + vDisplacement);
+        pObject->GetTransform()->Set_Pos(vCamPos + (vPos - vCamPos));
     }
 }
 

@@ -157,6 +157,7 @@ void CMiniGame::Update_BGM()
         return;
 
     m_hBGM = CSoundMgr::GetInstance()->PlaySFX(L"MiniGame_0.wav");
+    CSoundMgr::GetInstance()->SetSFXVolume(0.1f);
     m_bBGMStarted = true;
 }
 

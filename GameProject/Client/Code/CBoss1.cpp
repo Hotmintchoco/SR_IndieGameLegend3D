@@ -38,7 +38,7 @@ HRESULT CBoss1::Ready_GameObject()
     _vec3 vScale = m_pTransformCom->Get_Scale();
     m_pColliderCom->Set_Radius(vScale.x);
 
-    m_iMaxHp = 10;
+    m_iMaxHp = 30;
     m_iHp = m_iMaxHp;
     m_bCollision_WithMonster = false;
 
@@ -717,11 +717,19 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
             desc.vEyeTo = { vPlayerPos.x, vPlayerPos.y, vPlayerPos.z };
             desc.vLookAt = { vBossPos.x, 1.f, vBossPos.z };
 
+
+
             desc.fDuration = 1.5f;
             desc.fFovTo = D3DXToRadian(60.f);
             pCinematic->Add_Shot(desc);
 
             pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
+
+            // 1인칭 카메라 시점 보스로 시점
+            auto* pPlayerCamera = dynamic_cast<CPlayerCamera*>(
+                pCameraMgr->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
+
+            pPlayerCamera->Set_LookPos(desc.vLookAt);
         }
     }
 

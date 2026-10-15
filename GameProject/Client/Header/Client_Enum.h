@@ -66,6 +66,7 @@ enum class EObjectType
 	LIMINAL_SLOPE,
 	JAIL,
 	GAME_MACHINE_B,
+	ANAMORPHIC_CUBE,
 
 	Skull = 11,
 	Boss1 = 12,
@@ -98,18 +99,24 @@ enum class EObjectType
 	WEAPON_MAX,
 
 	Npc = 50,
+	GemBox = 51,
+	Chasm,
 
 	EFFECT_GENERATOR_AIRBUBBLE = 60,
 	EFFECT_GENERATOR_YELLOWDUST = 61,
 	EFFECT_GENERATOR_SNOW = 62,
+
+	PUSHABLE_FRUSTUM = 91,
+
 	MAX,
 };
 
 enum class ERoomType
 {
 	ROOM_DEFAULT,
-	ROOM_LASER_PUZZLE,
+	ROOM_ICE,
 	ROOM_LIMINAL,
+	ROOM_TEMPLERUN = 4,
 
 	ROOM_MAX
 };
@@ -130,6 +137,7 @@ enum class ERoomEventType
 
 	ROOM_CHANGED,
 	ROOM_BEGIN,
+	ROOM_MANUALCLEAR_REQUEST,
 	ROOM_CLEAR,
 	
 	RESET_ROOM,
@@ -146,6 +154,7 @@ enum class EContaminateType
 	NONE,
 
 	LAVA,
+	ICE,
 
 	MAX,
 };
@@ -281,4 +290,17 @@ enum class CAMERA_MODE
 {
 	FIRST_PERSON,
 	THIRD_PERSON
+};
+
+enum class EColorType
+{
+	NONE,
+
+	RED,
+	GREEN,
+	BLUE,
+	YELLOW,
+	WHITE,
+
+	MAX,
 };

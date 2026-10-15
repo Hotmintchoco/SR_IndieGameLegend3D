@@ -66,14 +66,14 @@ _int CBow::Update_GameObject(_float fTimeDelta)
         m_iRenderIdx = 0;
     }
 
-    if (!m_bCameraShakeActivated)
+    if (m_fTimeAfterUlt >= 0.f)
     {
         m_fTimeAfterUlt += fTimeDelta;
 
         if (m_fTimeAfterUlt >= m_fUltReachTime)
         {
             CClientCameraMgr::GetInstance()->Camera_Shake(2.f, 2.f);
-            m_bCameraShakeActivated = true;
+            m_fTimeAfterUlt = -1.f;
         }
     }
 
@@ -158,7 +158,6 @@ TWeaponOutput CBow::StartUltimateAttack(EInputState ePri, EInputState eSec)
     CBombardArrowSpawner* pSpawner = CBombardArrowSpawner::Create(m_pGraphicDev);
     if (!pSpawner) return { false, EWeaponAnimEvent::NONE };
 
-    m_bCameraShakeActivated = false;
     m_fTimeAfterUlt = 0.f;
 
     CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"BombardArrowSpawner", pSpawner);

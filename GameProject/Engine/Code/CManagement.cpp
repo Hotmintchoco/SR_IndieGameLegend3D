@@ -37,6 +37,16 @@ CLayer* CManagement::Get_Layer(const _tchar* pLayerTag)
     return m_pScene->Get_Layer(pLayerTag);
 }
 
+inline CScene* CManagement::Get_Scene(_int iSceneIdx)
+{
+    auto iter = m_mapScene.find(m_iSceneIdx);
+
+    if (iter != m_mapScene.end())
+		return iter->second;
+
+    return nullptr;
+}
+
 HRESULT CManagement::Change_Scene(_int iSceneIdx, CScene* pNewScene, bool bDestoryOld)
 {
     // 1. 기존 씬이 있다면 퇴장(Exit) 처리
