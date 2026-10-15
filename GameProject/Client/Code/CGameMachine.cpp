@@ -99,16 +99,28 @@ void CGameMachine::Render_GameObject()
 
 void CGameMachine::Interact()
 {
-    CScene* pMiniGame = CAbstractFactory::GetInstance()->CreateScene(m_eSceneType);
-    if (nullptr == pMiniGame)
-        return;
-
-    if (FAILED(CManagement::GetInstance()->Change_Scene(1, pMiniGame)))
+    if (m_F)
     {
-        Safe_Release(pMiniGame);
-        return;
+        m_F();
     }
-    pMiniGame->Update_Scene(CTimerMgr::GetInstance()->Get_FrameDelta());
+    else
+    {
+        CScene* pMiniGame = CAbstractFactory::GetInstance()->CreateScene(m_eSceneType);
+        if (nullptr == pMiniGame)
+            return;
+
+        if (FAILED(CManagement::GetInstance()->Change_Scene(1, pMiniGame)))
+        {
+            Safe_Release(pMiniGame);
+            return;
+        }
+        pMiniGame->Update_Scene(CTimerMgr::GetInstance()->Get_FrameDelta());
+    }
+}
+
+void CGameMachine::RegisterFunction(const function<void()>& F)
+{
+    m_F = F;
 }
 
 HRESULT CGameMachine::Add_Component()

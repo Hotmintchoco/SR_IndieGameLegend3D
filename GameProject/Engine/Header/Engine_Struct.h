@@ -80,6 +80,15 @@ namespace Engine
 		std::wstring wstrIntro;
 		std::wstring wstrLoop;
 	};
+
+	/* BGM 이어 재생용 : 어떤 트랙의 어느 파일(인트로/루프) 몇 ms 지점이었는지 */
+	struct TBGMSnapshot
+	{
+		bool bValid = false;			/* 캡처 시점에 재생 중인 BGM이 있었는지 */
+		TBGMTrack tTrack;
+		bool bIntro = false;			/* 인트로 파일 재생 중이었는지 (아니면 루프 파일) */
+		unsigned int iPositionMs = 0;	/* 해당 파일 처음부터의 위치 */
+	};
 }
 
 

@@ -28,17 +28,17 @@ HRESULT CWeaponSystem::Ready_GameObject()
     if (FAILED(AddWeapon(EObjectType::WEAPON_DEFAULT, L"RapidGun")))
         return E_FAIL;
 
-    if (FAILED(AddWeapon(EObjectType::WEAPON_BOW, L"Bow")))
-        return E_FAIL;
-    
-    if (FAILED(AddWeapon(EObjectType::WEAPON_SHOTGUN, L"ShotGun")))
-        return E_FAIL;
-    
-    if (FAILED(AddWeapon(EObjectType::WEAPON_LIMINAL, L"LiminalGun")))
-        return E_FAIL;
-    
-    if (FAILED(AddWeapon(EObjectType::WEAPON_LASERGUN, L"LaserGun")))
-        return E_FAIL;
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_BOW, L"Bow")))
+    //     return E_FAIL;
+    // 
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_SHOTGUN, L"ShotGun")))
+    //     return E_FAIL;
+    // 
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_LIMINAL, L"LiminalGun")))
+    //     return E_FAIL;
+    // 
+    // if (FAILED(AddWeapon(EObjectType::WEAPON_LASERGUN, L"LaserGun")))
+    //     return E_FAIL;
 
     SwitchWeaponTo(0);
 
@@ -173,6 +173,29 @@ void CWeaponSystem::ApplyCameraView(CAMERA_MODE eMode)
     {
         p->UpdateLocalTransform(p->GetLocalInfo(eMode));
         p->SetRenderOverlay((eMode == CAMERA_MODE::FIRST_PERSON) ? true : false);
+    }
+}
+
+void CWeaponSystem::SetWeaponVisibility(bool bFlag)
+{
+    for (auto p : m_vecWeapon)
+    {
+        p->SetVisibility(bFlag);
+    }
+}
+
+void CWeaponSystem::StopMoveAnimation()
+{
+    /* 들고 있지 않은 무기도 마지막 상태가 남아 있을 수 있으므로 전부 */
+    TWeaponAnimArgs tArgs;
+    tArgs.bSpecialAtk = m_bSpecialAttackSwitchOn;
+    tArgs.bSprint = false;
+    tArgs.bMove = false;
+
+    for (CWeapon* pWeapon : m_vecWeapon)
+    {
+        if (pWeapon)
+            pWeapon->UpdateAnimationArgs(tArgs);
     }
 }
 

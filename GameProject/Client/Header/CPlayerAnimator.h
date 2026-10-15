@@ -77,6 +77,8 @@ public:
 	virtual CComponent* Clone() { assert(0); return nullptr; };
 
 	void PlayAction(EPlayerActionState eAction);
+	/* 유지형 액션 종료 : 현재 액션이 eAction일 때만 끔 (포즈는 남겨 페이드아웃) */
+	void StopAction(EPlayerActionState eAction);
 	void PlayLocomotion(EPlayerLocomotionState eLoco = EPlayerLocomotionState::NONE);
 
 	void TransformPropagation(const _matrix& matRootWorld);
@@ -136,6 +138,9 @@ private:
 
 	/* 액션 : 사격 */
 	void SampleFire(float fTime);
+
+	/* 액션 : 직교 미니게임 들기 (양팔 정면) */
+	void SampleOrthoGrab();
 	static constexpr TShootParam s_tShootParam{};
 
 	/* 액션 : 팔 들기 */

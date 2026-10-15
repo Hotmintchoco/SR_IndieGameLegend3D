@@ -37,6 +37,10 @@ public:
 	/* for short wall */
 	HRESULT ReplaceBuffer(const wstring& wstrBufferProtoTag);
 
+	/* 벽지 임시 교체 (미니게임 등) : 원본 텍스처/인덱스는 그대로 두고 그릴 때만 대체 텍스처의 iIndex 장을 씀 */
+	HRESULT SetTextureOverride(const wstring& wstrTextureProtoTag, int iIndex = 0);
+	void ClearTextureOverride();
+
 	/* IRayTestable */
 	virtual vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> GetRayTestTargetInfo() override;
 
@@ -54,6 +58,9 @@ private:
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
 	Engine::CCollider* m_pColliderCom[2];
+	/* 벽지 임시 교체용 : 컴포넌트 맵에 넣지 않고 직접 해제 */
+	Engine::CTexture* m_pOverrideTextureCom = nullptr;
+	int m_iOverrideTextureIdx = 0;
 
 	EWallDir m_eDir = EWallDir::NONE;
 	bool m_bHasDoor = false;

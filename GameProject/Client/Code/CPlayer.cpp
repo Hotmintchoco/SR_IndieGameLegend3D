@@ -20,6 +20,8 @@
 #include "CWeapon.h"
 #include "CGameMachine.h"
 #include "CPlayer_MG1.h"
+#include "CCubeNetPlank.h"
+#include "COrthoRoomLayer.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
     :CGameObject(pGraphicDev)
@@ -60,13 +62,14 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
 
     CCollisionMgr::GetInstance()->Add_Collider(COLL_PLAYER, m_pColliderCom);
 
-    if (m_ePlayerCamMode == CAMERA_MODE::FIRST_PERSON)
-    {
-        CRenderer::GetInstance()->Add_RenderGroup(RENDER_OVERLAY, this);
-    }
-    else
+    if(CClientCameraMgr::GetInstance()->Get_ActiveCameraType() == CLIENT_CAMERA_TYPE::ORTHO
+        || m_ePlayerCamMode == CAMERA_MODE::THIRD_PERSON)
     {
         CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+    }
+    else if (m_ePlayerCamMode == CAMERA_MODE::FIRST_PERSON)
+    {
+        CRenderer::GetInstance()->Add_RenderGroup(RENDER_OVERLAY, this);
     }
 
     UpdateInput();
@@ -108,7 +111,7 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
     }
 
     /* 업데이트 순서 : 애니메이션으로 캐릭터 위치 확정 후 소켓에 전달 */
-    if (m_ePlayerCamMode == CAMERA_MODE::THIRD_PERSON)
+    if (m_ePlayerCamMode == CAMERA_MODE::THIRD_PERSON || CClientCameraMgr::GetInstance()->Get_ActiveCameraType() == CLIENT_CAMERA_TYPE::ORTHO)
     {
         // 파츠에도 크기 비율 반영
         _matrix matScale;
@@ -121,6 +124,8 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
     /* ----------- */
 
     CUIMgr::GetInstance()->Update_HPUI(m_iHP, m_bInvincible);
+
+    UpdateOrthoMiniGameStatus(fTimeDelta);
  
 	return iExit;
 }
@@ -134,12 +139,22 @@ void CPlayer::LateUpdate_GameObject(_float fTimeDelta)
 
 void CPlayer::Render_GameObject()
 {
-    switch (m_ePlayerCamMode)
+    //m_pAnimator->RenderDebugTransform();
+
+    if (CClientCameraMgr::GetInstance()->Get_ActiveCameraType() == CLIENT_CAMERA_TYPE::ORTHO
+        || m_ePlayerCamMode == CAMERA_MODE::THIRD_PERSON)
     {
-    /* 1인칭 시점일 때 */
-    case CAMERA_MODE::FIRST_PERSON:
+        m_pTextureCom->Set_Texture(0);
+
+        for (int i = 0; i < TP_END; ++i)
+        {
+            m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTPBufferTransformCom[i]->Get_World());
+            m_pBufferCom[i]->Render_Buffer();
+        }
+    }
+    else if (m_ePlayerCamMode == CAMERA_MODE::FIRST_PERSON)
     {
-        if (!m_pAnimator->IsFPPartVisible()) break;
+        if (!m_pAnimator->IsFPPartVisible()) return;
 
         /* 카메라를 추적하는 1인칭 좌표계 업데이트 */
         _matrix matCamWorld;
@@ -157,26 +172,7 @@ void CPlayer::Render_GameObject()
 
         m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pFPBufferTransformCom[FP_RARM]->Get_World());
         m_pBufferCom[TP_RARM]->Render_Buffer();
-
-        break;
     }
-    /* 3인칭 시점일 때 */
-    case CAMERA_MODE::THIRD_PERSON:
-    {
-        m_pTextureCom->Set_Texture(0);
-
-        for (int i = 0; i < TP_END; ++i)
-        {
-            m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTPBufferTransformCom[i]->Get_World());
-            m_pBufferCom[i]->Render_Buffer();
-        }
-        break;
-    }
-    default:
-        break;
-    }
-
-    //m_pAnimator->RenderDebugTransform();
 }
 
 void CPlayer::SetWeaponSystem(CWeaponSystem* pSystem)
@@ -298,6 +294,13 @@ HRESULT CPlayer::Add_Component()
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Socket_RHand", m_pRHandSocket });
     m_pRHandSocket->SetOffset(matOffset);
 
+    pos = _vec3(0.f, 0.f, 0.55f);
+    D3DXQuaternionRotationYawPitchRoll(&q, 0.f, 0.f, 0.f);
+    D3DXMatrixAffineTransformation(&matOffset, 1.f, nullptr, &q, &pos);
+
+    m_pOrthoSocket = CSocket::Create(m_pGraphicDev, m_pTPBufferTransformCom[TP_BODY]);
+    m_mapComponent[ID_DYNAMIC].insert({ L"Com_Socket_Ortho", m_pOrthoSocket });
+    m_pOrthoSocket->SetOffset(matOffset);
 
     return S_OK;
 }
@@ -340,6 +343,8 @@ void CPlayer::UpdateInput()
         {
             m_pMovement->Jump();
         }
+
+        UpdateOrthoMiniGameInput();
     }
 
     if (IsInputAllowed(PIC_WEAPON))
@@ -415,11 +420,119 @@ void CPlayer::OnCameraViewChanged(const CAMERA_MODE& Ctx)
 
 void CPlayer::SyncCameraYaw()
 {
-    float fYaw = m_pCamera->Get_Yaw();
+    /* 직교 미니게임 중에는 플레이어 카메라 방향과 상관없이 0도 기준 */
+    float fYaw = m_bYawFixedToZero ? 0.f : m_pCamera->Get_Yaw();
     m_pMovement->SetRefYaw(fYaw);
 
     float fVisualYaw = fYaw + (m_bInputYawIgnored ? 0.f : m_fInputYaw);
     m_pVisualRootTransform->Set_Rotation_Raw({ 0.f, D3DXToDegree(fVisualYaw), 0.f });
+}
+
+void CPlayer::SetYawFixedToZero(bool bFlag)
+{
+    m_bYawFixedToZero = bFlag;
+
+    if (bFlag)
+        m_fInputYaw = 0.f;
+
+    /* 다음 업데이트를 기다리지 않고 바로 반영 */
+    SyncCameraYaw();
+}
+
+void CPlayer::UpdateOrthoObjectCandidate(CCubeNet* pObj)
+{
+    m_pInteractingOrthoObject = pObj;
+}
+
+void CPlayer::ResetOrthoInteraction()
+{
+    /* 물체 쪽 상태는 건드리지 않음 : 곧 Set_Dead 되는 대상 */
+    m_bIsGrabbingOrthoObject = false;
+    m_pOrthoSocket->SetTarget(nullptr);
+    m_pInteractingOrthoObject = nullptr;
+    m_pAnimator->StopAction(EPlayerActionState::ORTHO_GRAB);
+}
+
+void CPlayer::UpdateOrthoMiniGameInput()
+{
+    if (m_pInteractingOrthoObject)
+    {
+        if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
+        {
+            if (m_bIsGrabbingOrthoObject)
+            {
+                /* 내려놓기 */
+                CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+                if (pStage)
+                {
+                    /* 로컬 해제 전에 들고 있던 위치를 먼저 구해둔다 */
+                    CTransform* pTransform = m_pOrthoSocket->GetTargetTransform();
+                    const _vec3 vHeldPos = pTransform->Get_Info_Value(INFO_POS);
+
+                    /* 놓을 위치는 방 레이어가 결정 (일반 바닥 / 뚫린 바닥 / 막힌 칸 분기)
+                       로컬(소켓) 모드 해제도 레이어가 놓을 수 있을 때만 처리 */
+                    COrthoRoomLayer* pLayer = dynamic_cast<COrthoRoomLayer*>(pStage->GetCurrentRoomLayer());
+                    if (nullptr == pLayer) return;
+
+                    const EPlaceResult eResult = pLayer->RequestPlaceOrthoObject(m_pInteractingOrthoObject, vHeldPos);
+
+                    /* 다른 블럭이 있는 칸 : 내려놓지 않고 계속 들고 있음 */
+                    if (eResult == EPlaceResult::BLOCKED) return;
+
+                    const bool bFilledHole = (eResult == EPlaceResult::FILLED_HOLE);
+                    pLayer->SetGrabbing(false);
+                    m_pInteractingOrthoObject->SetGrabbed(false);
+                    m_bIsGrabbingOrthoObject = false;
+                    m_pOrthoSocket->SetTarget(nullptr);
+                    m_pAnimator->StopAction(EPlayerActionState::ORTHO_GRAB);
+
+                    /* 구멍을 메운 물체는 지형이 됐으므로 후보에서 뺌 (콜라이더가 꺼져 Exit가 오지 않음) */
+                    if (bFilledHole)
+                        m_pInteractingOrthoObject = nullptr;
+                }
+            }
+            else
+            {
+                /* 들기 */
+                m_bIsGrabbingOrthoObject = true;
+                m_pInteractingOrthoObject->GetTransform()->Set_Pos(_vec3{ 0.f, 0.f, 0.f });
+                m_pInteractingOrthoObject->GetTransform()->SetUseLocal(true);
+                m_pOrthoSocket->SetTarget(m_pInteractingOrthoObject->GetTransform());
+                m_pInteractingOrthoObject->SetGrabbed(true);
+                m_pAnimator->PlayAction(EPlayerActionState::ORTHO_GRAB);
+
+                CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+                if (pStage)
+                {
+                    if (COrthoRoomLayer* pLayer = dynamic_cast<COrthoRoomLayer*>(pStage->GetCurrentRoomLayer()))
+                    {
+                        pLayer->SetGrabbing(true);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void CPlayer::UpdateOrthoMiniGameStatus(float fTimeDelta)
+{
+    if (m_ePlayerCamMode == CAMERA_MODE::THIRD_PERSON || CClientCameraMgr::GetInstance()->Get_ActiveCameraType() == CLIENT_CAMERA_TYPE::ORTHO)
+    {
+        m_pOrthoSocket->UpdateSocket();
+
+        /* 소켓 갱신 직후, 들고 있는 물체 위치를 방 레이어에 전달해서 마커 동기화 */
+        if (m_bIsGrabbingOrthoObject)
+        {
+            CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+            if (pStage)
+            {
+                if (COrthoRoomLayer* pLayer = dynamic_cast<COrthoRoomLayer*>(pStage->GetCurrentRoomLayer()))
+                {
+                    pLayer->UpdateMarkerPos(m_pOrthoSocket->GetTargetTransform()->Get_Info_Value(INFO_POS));
+                }
+            }
+        }
+    }
 }
 
 void CPlayer::OnActionAnimationFinished(const EPlayerActionState& Ctx)
@@ -534,6 +647,18 @@ void CPlayer::UnlockInput(EPlayerInputChannel e)
     if (m_iInputLockCount[e] > 0) --m_iInputLockCount[e];
 }
 
+void CPlayer::ResetToIdle()
+{
+    /* 걷기 커맨드와 달리기 해제 (속도는 이동 컴포넌트의 감속에 맡김) */
+    m_pMovement->SetSprint(false);
+    m_pMovement->Walk(_vec2{ 0.f, 0.f });
+    /* 걷기/달리기 애니메이션 -> 아이들 */
+    m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
+    /* 1인칭 무기 걷기 흔들림도 끔 */
+    if (m_pWeaponSystem)
+        m_pWeaponSystem->StopMoveAnimation();
+}
+
 bool CPlayer::IsInputAllowed(EPlayerInputChannel e)
 {
     return (m_iInputLockCount[e] == 0 && m_fInputLockTime[e] <= 0.f);
@@ -546,8 +671,17 @@ void CPlayer::SetPseudoScale(float fScale)
     m_pCamera->SetPseudoScale(fScale);
     m_pMovement->SetSpeedScale(fScale);
 
-    m_pColliderCom->Set_Radius(m_fColliderScale * fScale);
+    m_pColliderCom->Set_Radius(m_fColliderScale * fScale * m_fMiniGameBodyCoef);
     m_pColliderCom->Set_DiffPos(_vec3{ 0.f, 0.5f * fScale, 0.f });
+}
+
+void CPlayer::SetMiniGameBodyCoef(float fCoef)
+{
+    m_fMiniGameBodyCoef = fCoef;
+
+    /* 가짜 스케일과 곱해서 적용 (DiffPos는 그대로) */
+    m_pColliderCom->Set_Radius(m_fColliderScale * m_fPseudoScale * m_fMiniGameBodyCoef);
+    m_pMovement->SetHorizontalSpeedCoef(fCoef);
 }
 
 void CPlayer::SetPseudoScale(float fScale, float fLerpTime)

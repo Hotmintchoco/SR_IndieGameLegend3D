@@ -36,6 +36,9 @@ private:
 	void OnPhase1Cleared();
 	void FlattenWhiteFrame();
 	void CheckWhiteFramePickupCondition();
+	/* 흰 액자 집기 : 정답 시점 근처에서 클릭하면 지금 위치/시선을 저장하고 정답 위치/시선까지 플레이어 카메라를 보간한 뒤 캡처 해제 */
+	void StartAlignToCapture();
+	void UpdateAlignToCapture(_float fTimeDelta);
 
 	/* Anamorphic Target Collecting */
 	void CollectAnamorphicTargets();
@@ -68,7 +71,21 @@ private:
 	int m_iLeftColorCount = 5;
 	_vec3 m_vCaptureEye{ 0.f, 0.f, 0.f };
 	_vec3 m_vCaptureAt{ 0.f, 0.f, 0.f };
-	float m_fAlignedDegreeTH = 1.5f; /* degree */
+	float m_fAlignedDegreeTH = 15.f; /* degree (도착 후 보간으로 정확히 맞추므로 진입 판정은 넉넉하게) */
+
+	/* 정답 시점 보간 : 플레이어 위치(눈이 정답 eye에 오도록)와 플레이어 카메라 yaw/pitch를 함께 보간 (무기는 플레이어 카메라를 따라가므로 그대로 붙어 옴) */
+	bool m_bFramePickedUp = false;		/* 한 번만 */
+	bool m_bAligningToCapture = false;
+	/* 클릭한 프레임에는 요청만 : 같은 클릭을 리미널 건이 받아 액자를 집으므로, 버튼을 뗀 뒤(리미널 건이 놓기를 처리한 뒤) 다음 업데이트에서 시작 */
+	bool m_bAlignRequested = false;
+	float m_fAlignElapsed = 0.f;
+	float m_fAlignDuration = 2.f;
+	_vec3 m_vAlignStartPos{ 0.f, 0.f, 0.f };
+	_vec3 m_vAlignEndPos{ 0.f, 0.f, 0.f };
+	float m_fAlignStartYaw = 0.f;
+	float m_fAlignStartPitch = 0.f;
+	float m_fAlignEndYaw = 0.f;
+	float m_fAlignEndPitch = 0.f;
 
 
 public:

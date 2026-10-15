@@ -87,6 +87,8 @@ void CBow::LateUpdate_GameObject(_float fTimeDelta)
 
 void CBow::Render_GameObject()
 {
+    if (!m_bVisible) return;
+
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
     m_pTextureCom[m_iRenderIdx]->Set_Texture(0);

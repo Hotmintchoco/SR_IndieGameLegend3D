@@ -41,12 +41,22 @@ void CPlayerMovement::LateUpdate_Component()
 
 void CPlayerMovement::SetSpeedScale(float fScale)
 {
-    m_fMaxGroundSpeed = m_fMaxGroundSpeedRaw * fScale;
-    m_fMaxAirSpeedH = m_fMaxAirSpeedHRaw * fScale;
+    m_fSpeedScale = fScale;
+
+    m_fMaxGroundSpeed = m_fMaxGroundSpeedRaw * fScale * m_fHorizontalSpeedCoef;
+    m_fMaxAirSpeedH = m_fMaxAirSpeedHRaw * fScale * m_fHorizontalSpeedCoef;
     m_fMaxAirSpeedV = m_fMaxAirSpeedVRaw * fScale;
     m_fJumpSpeed = m_fJumpSpeedRaw * fScale;
     m_fGravity = m_fGravityRaw * fScale;
     m_fSkin = m_fSkinRaw * fScale;
+}
+
+void CPlayerMovement::SetHorizontalSpeedCoef(float fCoef)
+{
+    m_fHorizontalSpeedCoef = fCoef;
+
+    /* 현재 가짜 스케일 기준으로 다시 계산 */
+    SetSpeedScale(m_fSpeedScale);
 }
 
 void CPlayerMovement::Knockback(const _vec3& vDir, float fIntensity)

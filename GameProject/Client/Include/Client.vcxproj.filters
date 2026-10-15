@@ -541,6 +541,75 @@
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Frustum\Pushable">
       <UniqueIdentifier>{d2d4f74e-77a1-430c-aea5-374a7669cfb9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\04. ClientCamera\Ortho">
+      <UniqueIdentifier>{0ba4162f-6dce-46da-ae63-c3000976eb3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho">
+      <UniqueIdentifier>{8ebb6900-f18e-4ab1-b73f-1596cede5436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object">
+      <UniqueIdentifier>{ace8d20a-81c0-4564-8e97-c218920ce245}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\CubeNet">
+      <UniqueIdentifier>{5a1d170c-d216-4fb9-8356-0816133aae63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\CubeNet\Grass">
+      <UniqueIdentifier>{54641524-0237-4f16-9445-d83e6ecbb8ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\CubeNet\Lava">
+      <UniqueIdentifier>{0fcbc194-016a-4a92-ac24-498dcd31b3f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\CubeNet\Plank">
+      <UniqueIdentifier>{a0536d3d-5c7d-4f9d-b1a7-e3d1b3ebe857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\FlatPlayer">
+      <UniqueIdentifier>{c8e79d6d-6779-47cd-bf4f-00d4b9d4a8ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\FlatPlayer\Movement">
+      <UniqueIdentifier>{5d7a892a-ccfe-4947-8af0-20c414e635a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Interface">
+      <UniqueIdentifier>{0eca2582-ac78-4987-a1ed-4d8bd57961fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\FlatPlayer\Buffer">
+      <UniqueIdentifier>{f795b7e8-888c-4266-a1ba-1245e759af1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\Portal">
+      <UniqueIdentifier>{aa752a32-f918-4b80-8ad0-08b89913f0f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\PhaseGate">
+      <UniqueIdentifier>{515eda0f-a027-4ed6-af5d-b5ff986201b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\EmptyBlocker">
+      <UniqueIdentifier>{9921e18f-f515-4046-8f58-24152539d7f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\Key">
+      <UniqueIdentifier>{4b2c34ba-b20e-40ad-aa2a-d525b0426eab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\CubeNet\KeyBlock">
+      <UniqueIdentifier>{99512b3e-2ed1-45b5-a64c-d7cc03a9ba11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\Marker">
+      <UniqueIdentifier>{299d2f86-4a5c-44ea-88c0-abd0379ffc4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\CubeNet\Breakable">
+      <UniqueIdentifier>{64260db0-0edd-4283-b7e6-9117a2f7eac9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\UI">
+      <UniqueIdentifier>{9581923f-a7ac-47e4-bdd0-8ca7f234468f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\UI\PhaseClear">
+      <UniqueIdentifier>{daf9afe3-55a4-4154-8c30-cb3345fca3f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\UI\Intro">
+      <UniqueIdentifier>{fa9fd44c-6508-43ae-99d5-5e2fbc31ff0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\UI\PhaseNumber">
+      <UniqueIdentifier>{9e89dec0-923f-4d17-a573-abad3709282f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\BaseProp\Tile\Sprite\Ortho">
+      <UniqueIdentifier>{a2d7797d-ba22-4a1f-8302-337e2aa01b84}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\GemBox">
       <UniqueIdentifier>{a38e5298-5484-4841-a668-a4e2ddd51c21}</UniqueIdentifier>
     </Filter>
@@ -1134,6 +1203,69 @@
     <ClInclude Include="..\Header\CPushableFrustum.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Pushable</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\COrthoCamera.h">
+      <Filter>02. GameObject\04. ClientCamera\Ortho</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COrthoRoomLayer.h">
+      <Filter>01. Scene\Stage\Layer\Ortho</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCubeNet.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCubeNetGrass.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Grass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCubeNetPlank.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Plank</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCubeNetLava.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Lava</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFlatPlayer.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\FlatPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFlatPlayerMovement.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\FlatPlayer\Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\IVerticalTerrain.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFlatPlayerTex.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\FlatPlayer\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COrthoPortal.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\Portal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COrthoPhaseGate.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\PhaseGate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COrthoEmptyBlocker.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\EmptyBlocker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COrthoKey.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\Key</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCubeNetKeyBlock.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\KeyBlock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COrthoMarker.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCubeNetBreakable.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Breakable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CUI_PhaseClear.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\UI\PhaseClear</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CUI_OrthoIntro.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\UI\Intro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CUI_PhaseNumber.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\UI\PhaseNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COrthoSpriteTile.h">
+      <Filter>02. GameObject\07. Room\BaseProp\Tile\Sprite\Ortho</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CGemBox.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\GemBox</Filter>
     </ClInclude>
@@ -1708,6 +1840,69 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPushableFrustum.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Frustum\Pushable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoCamera.cpp">
+      <Filter>02. GameObject\04. ClientCamera\Ortho</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoRoomLayer.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCubeNet.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCubeNetGrass.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Grass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCubeNetPlank.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Plank</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCubeNetLava.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Lava</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFlatPlayer.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\FlatPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFlatPlayerMovement.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\FlatPlayer\Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\IVerticalTerrain.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFlatPlayerTex.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\FlatPlayer\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoPortal.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\Portal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoPhaseGate.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\PhaseGate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoEmptyBlocker.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\EmptyBlocker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoKey.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\Key</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCubeNetKeyBlock.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\KeyBlock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoMarker.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\Marker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCubeNetBreakable.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Breakable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUI_PhaseClear.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\UI\PhaseClear</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUI_OrthoIntro.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\UI\Intro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUI_PhaseNumber.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\UI\PhaseNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoSpriteTile.cpp">
+      <Filter>02. GameObject\07. Room\BaseProp\Tile\Sprite\Ortho</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CGemBox.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\GemBox</Filter>

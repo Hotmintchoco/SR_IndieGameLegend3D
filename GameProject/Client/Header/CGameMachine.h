@@ -23,6 +23,9 @@ public:
 	virtual			void		Render_GameObject();
 
 	void Interact();
+
+	void RegisterFunction(const function<void()>& F);
+
 	
 	void Set_Clear() { m_bClear = true; }
 private:
@@ -37,6 +40,8 @@ private:
 	Engine::CPlyTex* m_pBufferCom = nullptr;
 
 	ESceneType m_eSceneType = ESceneType::SCENE_NONE;
+
+	function<void()> m_F = nullptr;
 
 	_bool m_bClear = false;
 

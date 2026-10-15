@@ -123,6 +123,8 @@ void CLiminalGun::LateUpdate_GameObject(_float fTimeDelta)
 
 void CLiminalGun::Render_GameObject()
 {
+    if (!m_bVisible) return;
+
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
     if (m_bSpecialAttackSwitchOn)

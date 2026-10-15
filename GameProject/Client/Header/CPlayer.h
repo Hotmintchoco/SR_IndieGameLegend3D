@@ -16,6 +16,7 @@ class CPlayerMovement;
 class CWeaponSystem;
 class CSocket;
 class CPlayerCamera;
+class CCubeNet;
 
 enum class CAMERA_MODE;
 
@@ -46,20 +47,37 @@ public:
 	void UnlockInput(EPlayerInputChannel e);
 	bool IsInputAllowed(EPlayerInputChannel e);
 	void SetForcedSprint(bool bEnabled) { m_bForcedSprint = bEnabled; }
+	/* 이동 입력이 잠기면 마지막 걷기 커맨드/애니메이션이 그대로 남으므로, 잠그는 쪽에서 불러 제자리 아이들로 되돌림 */
+	void ResetToIdle();
 
 	/* 가짜 스케일 */
 	void SetPseudoScale(float fScale);
 	void SetPseudoScale(float fScale, float fLerpTime);
 	inline float GetPseudoScale() { return m_fPseudoScale; }
 
+	/* 직교 미니게임 : 충돌체 크기 / 수평 최대 속도 계수 (1이면 원상태) */
+	void SetMiniGameBodyCoef(float fCoef);
+
 	inline CTransform* GetTransform() { return m_pTransformCom; }
 	void SetWeaponSystem(CWeaponSystem* pSystem);
+	inline CWeaponSystem* GetWeaponSystem() { return m_pWeaponSystem; }
 	CSocket* GetSocket(const wstring& wstrName);
 	inline void SetCamera(CPlayerCamera* pCamera) { m_pCamera = pCamera; }
 	inline CPlayerMovement* GetMovement() { return m_pMovement; }
 
 	/* 카메라 뷰 */
 	void SyncCameraYaw();
+	/* 기준 yaw를 0도로 고정 (직교 미니게임용) : 고정하는 순간 입력 방향도 0도로 초기화 */
+	void SetYawFixedToZero(bool bFlag);
+
+	/* 직교 미니게임 관련 */
+	void UpdateOrthoObjectCandidate(CCubeNet* pObj);
+	bool IsGrabbingOrthoObject() { return m_bIsGrabbingOrthoObject; }
+	CCubeNet* GetOrthoObjectCandidate() { return m_pInteractingOrthoObject; }
+	/* 페이즈 정리 시 호출 : 들고 있던 물체를 놓고 후보 포인터도 비움 */
+	void ResetOrthoInteraction();
+	void UpdateOrthoMiniGameInput();
+	void UpdateOrthoMiniGameStatus(float fTimeDelta);
 
 private:
 	HRESULT	Add_Component();
@@ -71,6 +89,7 @@ private:
 	void OnCameraViewChanged(const CAMERA_MODE& Ctx);
 	CAMERA_MODE m_ePlayerCamMode; /* 결국 매 프레임 동작해야 하는 것들이 많아 캐싱... */
 	float m_fInputYaw = 0.f;
+	bool m_bYawFixedToZero = false;
 
 	/* 기본 컴포넌트 */
 	Engine::CTransform* m_pTransformCom = nullptr;
@@ -94,6 +113,7 @@ private:
 	/* 캐릭터 작아짐 연출용 */
 	float m_fPseudoScale = 1.f;
 	float m_fColliderScale = 0.5f;
+	float m_fMiniGameBodyCoef = 1.f;
 	bool m_bLerpPseudoScale = false;
 	float m_fLerpTime = 1.f;
 	float m_fTimeAfterLerp = 0.f;
@@ -119,6 +139,11 @@ private:
 
 	/* 무기 */
 	CWeaponSystem* m_pWeaponSystem = nullptr;
+
+	/* 직교 미니게임 관련 */
+	CCubeNet* m_pInteractingOrthoObject = nullptr;
+	CSocket* m_pOrthoSocket = nullptr;
+	bool m_bIsGrabbingOrthoObject = false;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

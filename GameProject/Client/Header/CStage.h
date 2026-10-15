@@ -88,6 +88,10 @@ private:
 	/* 디버그 */
 	int m_iWarpRequest = -1;
 
+	/* 씬을 나갈 때 BGM 상태를 저장해 두고 돌아오면 그 위치부터 이어 재생 (복원 후 비움) */
+	TBGMSnapshot m_tSavedBGM{};
+	static constexpr float s_fBGMRestoreFadeIn = 0.5f;
+
 	/* Npc 대화 */
 	CUI* m_pDialogueWindow = nullptr;
 	CUI* m_pDialoguePortrait = nullptr;

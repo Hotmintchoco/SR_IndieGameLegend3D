@@ -31,6 +31,9 @@ public:
 	inline CWeapon* GetCurrentWeapon() { return m_vecWeapon.at(m_iCurrentIndex); }
 	void ApplyCameraView(CAMERA_MODE eMode);
 	void SetUltimateAttackOnGoing(bool bFlag) { m_bUltimateOnGoing = bFlag; }
+	void SetWeaponVisibility(bool bFlag);
+	/* 걷기 흔들림 끄기 : 무기 입력이 잠기면 UpdateInput이 돌지 않아 마지막 이동 상태가 남으므로 잠그는 쪽에서 호출 */
+	void StopMoveAnimation();
 
 private:	
 	void SwitchWeaponTo(int iIndex);
@@ -39,12 +42,12 @@ private:
 	int m_iCurrentIndex = 0;
 
 	/* 특수 공격 */
-	bool m_bSpecialAttackSwitchOn = true;
-	float m_fSpecialAtkGauge = 1.f;
+	bool m_bSpecialAttackSwitchOn = false;
+	float m_fSpecialAtkGauge = 0.f;
 
 	/* 궁극기 */
-	float m_fUltimateAtkGauge = 1.f;
-	float m_bIsUltimateAttackReady = true;
+	float m_fUltimateAtkGauge = 0.f;
+	float m_bIsUltimateAttackReady = false;
 	float m_bUltimateOnGoing = false;
 
 	/* 애니메이션 */

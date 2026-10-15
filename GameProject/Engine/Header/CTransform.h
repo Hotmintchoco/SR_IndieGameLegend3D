@@ -106,7 +106,7 @@ public:
 	
 	void UpdateLocalMatrix(); // 부모 객체 트랜스폼이 있는 경우 자신의 로컬 위치 캐싱용
 	void WorldMatrixPropagation(const _matrix& matParentWorld); // 부모 월드 행렬을 자식에게 전파
-	inline void SetUseLocal(bool bFlag) { m_bUseLocal = bFlag; }
+	inline void SetUseLocal(bool bFlag) { m_bUseLocal = bFlag; UpdateMatrix(); }
 
 	/* 부모 오브젝트 없는 오브젝트에 대해서, Set World 이후에 영구적으로 transform을 저장하고 싶을 때 사용하시오 */
 	void WorldMatrixDecompose();

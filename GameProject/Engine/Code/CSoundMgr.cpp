@@ -104,7 +104,7 @@ CSoundMgr::SOUND_HANDLE CSoundMgr::PlaySFX(const wstring& pSoundKey, bool bLoop)
 	return PlayOnChannel(pSound, GetNextEffectChannel(), bLoop);
 }
 
-void CSoundMgr::PlayBGM(const TBGMTrack& tTrack)
+void CSoundMgr::PlayBGM(const TBGMTrack& tTrack, float fFadeInSec)
 {
 	if (m_tBGMTrack.wstrID == tTrack.wstrID && IsPlaying(m_hBGM)) return;
 
@@ -118,7 +118,7 @@ void CSoundMgr::PlayBGM(const TBGMTrack& tTrack)
 		if (!pSound)
 			return;
 
-		m_hBGM = PlayOnChannel(pSound, BGM_SLOT, false);
+		m_hBGM = PlayOnChannel(pSound, BGM_SLOT, false, 0, fFadeInSec);
 		m_eBGMState = EBGMState::Intro;
 	}
 	else
@@ -127,7 +127,7 @@ void CSoundMgr::PlayBGM(const TBGMTrack& tTrack)
 		if (!pSound)
 			return;
 
-		m_hBGM = PlayOnChannel(pSound, BGM_SLOT, true);
+		m_hBGM = PlayOnChannel(pSound, BGM_SLOT, true, 0, fFadeInSec);
 		m_eBGMState = EBGMState::Loop;
 	}
 }
@@ -139,6 +139,61 @@ void CSoundMgr::StopSFX(SOUND_HANDLE hSound)
 		return;
 
 	StopChannel(iIdx);
+}
+
+TBGMSnapshot CSoundMgr::CaptureBGM()
+{
+	TBGMSnapshot tSnapshot{};
+
+	if (!IsPlaying(m_hBGM))
+		return tSnapshot;
+
+	tSnapshot.bValid = true;
+	tSnapshot.tTrack = m_tBGMTrack;
+	tSnapshot.bIntro = (m_eBGMState == EBGMState::Intro);
+	FMOD_Channel_GetPosition(m_pChannelArr[BGM_SLOT], &tSnapshot.iPositionMs, FMOD_TIMEUNIT_MS);
+
+	return tSnapshot;
+}
+
+void CSoundMgr::RestoreBGM(const TBGMSnapshot& tSnapshot, float fFadeInSec)
+{
+	if (!tSnapshot.bValid)
+	{
+		StopBGM();
+		return;
+	}
+
+	/* PlayBGM과 달리 같은 트랙이 재생 중이어도 스냅샷 위치로 다시 맞춤 */
+	const wstring& wstrFile = tSnapshot.bIntro ? tSnapshot.tTrack.wstrIntro : tSnapshot.tTrack.wstrLoop;
+	FMOD_SOUND* pSound = FindSound(wstrFile);
+	if (!pSound)
+		return;
+
+	StopBGM();
+	m_tBGMTrack = tSnapshot.tTrack;
+
+	/* 인트로였다면 인트로가 끝난 뒤 CheckBGMLoopCondition이 루프로 넘겨줌 */
+	m_hBGM = PlayOnChannel(pSound, BGM_SLOT, !tSnapshot.bIntro, tSnapshot.iPositionMs, fFadeInSec);
+	m_eBGMState = tSnapshot.bIntro ? EBGMState::Intro : EBGMState::Loop;
+}
+
+void CSoundMgr::FadeOutBGM(float fSec)
+{
+	if (!IsPlaying(m_hBGM))
+		return;
+
+	if (fSec <= 0.f)
+	{
+		StopBGM();
+		return;
+	}
+
+	/* 채널은 페이드가 끝날 때 FMOD가 스스로 멈춤.
+	   핸들/상태는 지금 비워서 (1) 인트로가 끝난 걸로 보고 루프를 틀지 않게, (2) 같은 트랙 PlayBGM이 무시되지 않게 함 */
+	ApplyFade(m_pChannelArr[BGM_SLOT], 1.f, 0.f, fSec, true);
+	m_hBGM = INVALID_SOUND;
+	m_eBGMState = EBGMState::None;
 }
 
 void CSoundMgr::StopBGM()
@@ -292,7 +347,7 @@ FMOD_SOUND* CSoundMgr::FindSound(const wstring& pSoundKey)
 	return iter->second;
 }
 
-CSoundMgr::SOUND_HANDLE CSoundMgr::PlayOnChannel(FMOD_SOUND* pSound, int iIdx, bool bLoop)
+CSoundMgr::SOUND_HANDLE CSoundMgr::PlayOnChannel(FMOD_SOUND* pSound, int iIdx, bool bLoop, unsigned int iStartPositionMs, float fFadeInSec)
 {
 	// 해당 슬롯에서 재생 중이던 소리는 정리
 	StopChannel(iIdx);
@@ -319,11 +374,45 @@ CSoundMgr::SOUND_HANDLE CSoundMgr::PlayOnChannel(FMOD_SOUND* pSound, int iIdx, b
 	if (bBGM)
 		FMOD_Channel_SetPriority(pChannel, 0);
 
+	// 이어 재생 : 일시정지 상태에서 위치를 옮긴 뒤 재생
+	if (iStartPositionMs > 0)
+		FMOD_Channel_SetPosition(pChannel, iStartPositionMs, FMOD_TIMEUNIT_MS);
+
+	// 페이드 인 : 일시정지 상태에서 걸어야 첫 순간 최대 볼륨으로 튀지 않음
+	if (fFadeInSec > 0.f)
+		ApplyFade(pChannel, 0.f, 1.f, fFadeInSec, false);
+
 	FMOD_Channel_SetPaused(pChannel, FALSE);
 
 	m_pChannelArr[iIdx] = pChannel;
 
 	return (iGen << HANDLE_INDEX_BITS) | (unsigned int)iIdx;
+}
+
+void CSoundMgr::ApplyFade(FMOD_CHANNEL* pChannel, float fFrom, float fTo, float fSec, bool bStopAtEnd)
+{
+	if (!pChannel || fSec <= 0.f)
+		return;
+
+	/* 초 -> DSP 클럭(샘플 수) */
+	int iSampleRate = 0;
+	if (FMOD_OK != FMOD_System_GetSoftwareFormat(m_pSystem, &iSampleRate, nullptr, nullptr) || iSampleRate <= 0)
+		return;
+
+	/* 페이드/딜레이 시각은 부모 클럭 기준 */
+	unsigned long long iNow = 0;
+	if (FMOD_OK != FMOD_Channel_GetDSPClock(pChannel, nullptr, &iNow))
+		return;
+
+	const unsigned long long iLength = (unsigned long long)((double)fSec * (double)iSampleRate);
+
+	/* 이전 페이드가 남아 있으면 지우고 새로 찍음 */
+	FMOD_Channel_RemoveFadePoints(pChannel, 0, ~0ULL);
+	FMOD_Channel_AddFadePoint(pChannel, iNow, fFrom);
+	FMOD_Channel_AddFadePoint(pChannel, iNow + iLength, fTo);
+
+	if (bStopAtEnd)
+		FMOD_Channel_SetDelay(pChannel, 0, iNow + iLength, TRUE);
 }
 
 int CSoundMgr::ResolveHandle(SOUND_HANDLE hSound)
