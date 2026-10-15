@@ -47,6 +47,7 @@
 /* 씬 전환 */
 #include "CMiniGame.h"
 #include "CMiniGame1.h"
+#include "CEnding.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -173,7 +174,19 @@ _int CStage::Update_Scene(_float fTimeDelta)
 			m_pPlayer->Revive();
 		}
 	}
-
+	if (m_bEnding == true)
+	{
+		CScene* pEnding = CEnding::Create(m_pGraphicDev);
+		if (nullptr == pEnding)
+			return E_FAIL;
+		if (FAILED(CManagement::GetInstance()->Change_Ending_Scene(1, pEnding)))
+		{
+			Safe_Release(pEnding);
+			MSG_BOX("Ending Create Failed");
+			return -1;
+		}
+		pEnding->Update_Scene(fTimeDelta);
+	}
 	return iExit;
 }
 

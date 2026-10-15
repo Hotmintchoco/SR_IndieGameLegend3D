@@ -66,7 +66,8 @@ private:
 	void		UpdateNpcDialogue();
 	void		EndNpcDialogue();
 
-
+public:
+	void		Enter_Ending() { m_bEnding = true; }
 private:
 	/* 방 관련 */
 	CRoomLayer* m_pCurrentRoomLayer = nullptr;
@@ -108,6 +109,7 @@ private:
 	ULONGLONG m_iNpcNextWord = 0;
 	std::vector<NPC_DIALOGUE_LINE> m_npcLines;
 
+	bool m_bEnding = false;
 public:
 	static CStage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

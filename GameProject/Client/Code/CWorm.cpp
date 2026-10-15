@@ -37,7 +37,7 @@ HRESULT CWorm::Ready_GameObject()
     
     if (m_iWormIndex == 1)
     {
-		m_iMaxHp = 30;
+		m_iMaxHp = 3;
     }
     else
         m_iMaxHp = 100;

@@ -52,7 +52,7 @@ _int CMiniGame1::Update_Scene(_float fTimeDelta)
         m_bBGMStart = true;
         TBGMTrack tTrack = { L"MG1", L"", L"SectorB.wav" };
         CSoundMgr::GetInstance()->PlayBGM(tTrack);
-        CSoundMgr::GetInstance()->SetBGMVolume(0.8f);
+        CSoundMgr::GetInstance()->SetBGMVolume(0.6f);
         CSoundMgr::GetInstance()->SetSFXVolume(0.5f);
     }
     // Scene Change
@@ -76,12 +76,14 @@ _int CMiniGame1::Update_Scene(_float fTimeDelta)
             if (nullptr == pGameObject) return E_FAIL;
             if (FAILED(pLayer->Add_GameObject(L"Intro", pGameObject))) return E_FAIL;
         }
-        if (m_fElapsedTime2 > 1.4f)
+        if (m_fElapsedTime2 > 1.0f)
         {
             if (CGameMachine* pGameMachine = dynamic_cast<CGameMachine*>(CManagement::GetInstance()->Get_Scene(0)->Get_GameObject(L"Room_2_Layer", L"Room_2_ObjectTiling_71")))
             {
                 pGameMachine->Set_Clear();
             }
+            CSoundMgr::GetInstance()->SetBGMVolume(0.2f);
+            CSoundMgr::GetInstance()->SetSFXVolume(0.5f);
             if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
                 return -1;
         }

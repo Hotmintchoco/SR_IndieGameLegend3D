@@ -34,6 +34,8 @@ public:
 	void			LateUpdate_Scene(_float fTimeDelta);
 	void			Render_Scene(LPDIRECT3DDEVICE9 pGraphicDev);
 
+	HRESULT			Change_Ending_Scene(_int iSceneIdx, CScene* pScene);
+
 private:
 	unordered_map<int, CScene*>	m_mapScene;
 	CScene*						m_pScene;

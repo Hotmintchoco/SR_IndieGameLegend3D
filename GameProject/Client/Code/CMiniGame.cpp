@@ -81,7 +81,8 @@ _int CMiniGame::Update_Scene(_float fTimeDelta)
             {
                 pGameMachine->Set_Clear();
             }
-
+            CSoundMgr::GetInstance()->SetBGMVolume(0.2f);
+            CSoundMgr::GetInstance()->SetSFXVolume(0.5f);
             if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
                 return -1;
         }

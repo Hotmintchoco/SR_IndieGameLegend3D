@@ -89,6 +89,43 @@ HRESULT CManagement::Change_Scene(_int iSceneIdx, CScene* pNewScene, bool bDesto
     return S_OK;
 }
 
+HRESULT CManagement::Change_Ending_Scene(_int iSceneIdx, CScene* pNewScene)
+{
+    // 1. 기존 씬이 있다면 퇴장(Exit) 처리
+    if (nullptr != m_pScene)
+    {
+		auto iter = m_mapScene.find(iSceneIdx);
+		if (iter != m_mapScene.end())
+		{
+			Safe_Release(iter->second); // CLogo 메모리 해제
+			m_mapScene.erase(iter);    // 맵에서 CLogo 삭제
+		}
+		m_pScene = nullptr;
+    }
+
+    // 2. 맵에서 씬 검색
+    auto iter = m_mapScene.find(iSceneIdx);
+    if (iter != m_mapScene.end())
+    {
+        // 3-A. 씬이 이미 존재하면 재사용 및 입장(Enter) 처리
+        m_pScene = iter->second;
+        m_pScene->OnEnter();
+    }
+    else
+    {
+        // 3-B. 씬이 없으면 맵에 추가하고 최초 입장(Enter) 처리
+        if (nullptr == pNewScene)
+            return E_FAIL;
+
+        m_mapScene.emplace(iSceneIdx, pNewScene);
+        m_pScene = pNewScene;
+        m_pScene->OnEnter();
+    }
+
+    m_iSceneIdx = iSceneIdx;
+    return S_OK;
+}
+
 _int CManagement::Update_Scene(_float fTimeDelta)
 {
     if (nullptr == m_pScene)

@@ -11,6 +11,8 @@
 #include "CSoundMgr.h"
 #include "CManagement.h"
 #include "CStage.h"
+#include "CEnding.h"
+#include "CIntro_MG1.h"
 
 CNpc::CNpc(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -53,6 +55,21 @@ _int CNpc::Update_GameObject(_float fTimeDelta)
 
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHATEST, this);
 
+
+    //Ending
+    CTransform* pPlayerTransformCom = static_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC,
+        L"GameLogic_Layer", L"Player", L"Com_Transform"));
+    _vec3 vPlayerPos;  pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
+    _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _vec3 vDist = vPlayerPos - vPos;
+    if (D3DXVec3Length(&vDist) < 1.5f)
+    {
+        if (CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->Get_Scene(0)))
+        {
+            pStage->Enter_Ending();
+        }
+    }
+    
     return iExit;
 }
 

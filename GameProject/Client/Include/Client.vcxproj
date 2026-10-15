@@ -157,6 +157,8 @@
     <ClInclude Include="..\Header\CCubeNetGrass.h" />
     <ClInclude Include="..\Header\CCubeNetLava.h" />
     <ClInclude Include="..\Header\CCubeNetPlank.h" />
+    <ClInclude Include="..\Header\CEnding.h" />
+    <ClInclude Include="..\Header\CEnding_Object.h" />
     <ClInclude Include="..\Header\CFlatPlayer.h" />
     <ClInclude Include="..\Header\CFlatPlayerMovement.h" />
     <ClInclude Include="..\Header\CFlatPlayerTex.h" />
@@ -381,6 +383,8 @@
     <ClCompile Include="..\Code\CCubeNetGrass.cpp" />
     <ClCompile Include="..\Code\CCubeNetLava.cpp" />
     <ClCompile Include="..\Code\CCubeNetPlank.cpp" />
+    <ClCompile Include="..\Code\CEnding.cpp" />
+    <ClCompile Include="..\Code\CEnding_Object.cpp" />
     <ClCompile Include="..\Code\CFlatPlayer.cpp" />
     <ClCompile Include="..\Code\CFlatPlayerMovement.cpp" />
     <ClCompile Include="..\Code\CFlatPlayerTex.cpp" />

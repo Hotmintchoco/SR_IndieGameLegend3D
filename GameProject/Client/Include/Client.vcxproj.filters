@@ -619,6 +619,9 @@
     <Filter Include="01. Scene\Stage\Layer\Temple">
       <UniqueIdentifier>{251d853b-6318-4ed7-be27-513c5e7398fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\Endling">
+      <UniqueIdentifier>{13380514-1066-46f2-a503-e4f36d25dbef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1287,6 +1290,12 @@
     <ClInclude Include="..\Header\CIntroScene.h">
       <Filter>01. Scene\Intro</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CEnding.h">
+      <Filter>01. Scene\Endling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEnding_Object.h">
+      <Filter>01. Scene\Endling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1924,6 +1933,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CIntroScene.cpp">
       <Filter>01. Scene\Intro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEnding.cpp">
+      <Filter>01. Scene\Endling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEnding_Object.cpp">
+      <Filter>01. Scene\Endling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
