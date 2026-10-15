@@ -526,6 +526,12 @@
     <Filter Include="01. Scene\Intro">
       <UniqueIdentifier>{c80e9381-b779-43fb-a4fe-73fc75d28c59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\11. MiniGame_Herobrine">
+      <UniqueIdentifier>{635a964c-20b7-490f-a2db-c8d651fbbe5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\MiniGame_0\00.MiniGame_Obj\12. MiniGame_Laser">
+      <UniqueIdentifier>{5f1b11ca-6c9c-4ffd-9c01-b86120ec5198}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01. Scene\MiniGame_1\GameObject\Box_MG1">
       <UniqueIdentifier>{6f0d2a13-8903-4ded-b365-58040e9b5a1b}</UniqueIdentifier>
     </Filter>
@@ -1110,14 +1116,17 @@
     <ClInclude Include="..\Header\CMG0_Train13.h">
       <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\10. MiniGame_Train</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CMG0_Herobrine.h">
-      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CMG0_Laser.h">
-      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj</Filter>
+    <ClInclude Include="..\Header\CMG0_Train14.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\10. MiniGame_Train</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CIntroScene.h">
       <Filter>01. Scene\Intro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Herobrine.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\11. MiniGame_Herobrine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMG0_Laser.h">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\12. MiniGame_Laser</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CIceRoomLayer.h">
       <Filter>01. Scene\Stage\Layer\Ice</Filter>
@@ -1682,14 +1691,17 @@
     <ClCompile Include="..\Code\CMG0_Train13.cpp">
       <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\10. MiniGame_Train</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CMG0_Herobrine.cpp">
-      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CMG0_Laser.cpp">
-      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj</Filter>
+    <ClCompile Include="..\Code\CMG0_Train14.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\10. MiniGame_Train</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CIntroScene.cpp">
       <Filter>01. Scene\Intro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Herobrine.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\11. MiniGame_Herobrine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMG0_Laser.cpp">
+      <Filter>01. Scene\MiniGame_0\00.MiniGame_Obj\12. MiniGame_Laser</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CIceRoomLayer.cpp">
       <Filter>01. Scene\Stage\Layer\Ice</Filter>

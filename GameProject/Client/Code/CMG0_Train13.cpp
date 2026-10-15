@@ -5,8 +5,10 @@
 #include "CRenderer.h"
 #include "CTransform.h"
 #include "CTexture.h"
+#include "CPlyTex.h"
 #include "CMiniGame.h"
 #include "CMG0_Player.h"
+#include "CMG0_Explosion.h"
 
 CMG0_Train13::CMG0_Train13(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -17,16 +19,15 @@ CMG0_Train13::~CMG0_Train13()
 {
 }
 
-HRESULT CMG0_Train13::Ready_GameObject(_int iLane, _float fSpeed, Engine::CTexture** ppTexture)
+HRESULT CMG0_Train13::Ready_GameObject(_int iLane, _float fSpeed)
 {
-    if (FAILED(Add_Component(ppTexture)))
+    if (FAILED(Add_Component()))
         return E_FAIL;
 
-    Ready_Face();
-
-    m_vPos = _vec3(MINIGAME0::Get_LaneX(iLane), MG_TRAIN_GROUND_Y + MG_TRAIN_HALF_Y, MG_SPAWN_Z);
+    m_vPos = _vec3(MINIGAME0::Get_LaneX(iLane), MG_TRAIN_GROUND_Y, MG_SPAWN_Z);
     m_fSpeed = fSpeed;
 
+    m_pTransformCom->Set_Scale(MG_TRAIN_SCALE, MG_TRAIN_SCALE, MG_TRAIN_SCALE);
     m_pTransformCom->Set_Pos(m_vPos);
 
     return CGameObject::Ready_GameObject();
@@ -84,16 +85,9 @@ void CMG0_Train13::Render_GameObject()
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 
-    const _matrix& matWorld = *m_pTransformCom->Get_World();
-
-    for (_int i = 0; i < MINIGAME0::TRAIN_END; ++i)
-    {
-        _matrix matFace = m_matFace[i] * matWorld;
-
-        m_pGraphicDev->SetTransform(D3DTS_WORLD, &matFace);
-        m_pTextureCom[i]->Set_Texture(0);
-        m_pBufferCom->Render_Buffer();
-    }
+    m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+    m_pTextureCom->Set_Texture(0);
+    m_pBufferCom->Render_Buffer();
 
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, dwAlphaArg1);
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, dwAlphaOp);
@@ -104,33 +98,23 @@ void CMG0_Train13::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, dwCull);
 }
 
-void CMG0_Train13::Ready_Face()
+void CMG0_Train13::Explode()
 {
-    const _vec3 vX(1.f, 0.f, 0.f);
-    const _vec3 vY(0.f, 1.f, 0.f);
-    const _vec3 vZ(0.f, 0.f, 1.f);
+    if (Is_Dead())
+        return;
 
-    Set_Face(MINIGAME0::TRAIN_FRONT, vX * MG_TRAIN_HALF_X, vY * MG_TRAIN_HALF_Y, -vZ * MG_TRAIN_HALF_Z);
-    Set_Face(MINIGAME0::TRAIN_BACK, -vX * MG_TRAIN_HALF_X, vY * MG_TRAIN_HALF_Y, vZ * MG_TRAIN_HALF_Z);
-    Set_Face(MINIGAME0::TRAIN_LEFT, vZ * MG_TRAIN_HALF_Z, vY * MG_TRAIN_HALF_Y, vX * MG_TRAIN_HALF_X);
-    Set_Face(MINIGAME0::TRAIN_RIGHT, -vZ * MG_TRAIN_HALF_Z, vY * MG_TRAIN_HALF_Y, -vX * MG_TRAIN_HALF_X);
-    Set_Face(MINIGAME0::TRAIN_TOP, vZ * MG_TRAIN_HALF_Z, -vX * MG_TRAIN_HALF_X, vY * MG_TRAIN_HALF_Y);
-    Set_Face(MINIGAME0::TRAIN_BOTTOM, vZ * MG_TRAIN_HALF_Z, vX * MG_TRAIN_HALF_X, -vY * MG_TRAIN_HALF_Y);
-}
+    Set_Dead(true);
 
-void CMG0_Train13::Set_Face(MINIGAME0::MGTRAINFACE eFace, const _vec3& vRight, const _vec3& vUp, const _vec3& vCenter)
-{
-    _vec3 vLook;
-    D3DXVec3Cross(&vLook, &vRight, &vUp);
-    D3DXVec3Normalize(&vLook, &vLook);
+    CMiniGame* pScene = dynamic_cast<CMiniGame*>(CManagement::GetInstance()->GetCurrentScene());
+    if (nullptr == pScene)
+        return;
 
-    _matrix& matFace = m_matFace[eFace];
-    D3DXMatrixIdentity(&matFace);
+    for (_int i = 0; i < 3; ++i)
+    {
+        _vec3 vPos = m_vPos + _vec3(MINIGAME0::Random(-1.f, 1.f), 1.5f + MINIGAME0::Random(-1.f, 1.f), MINIGAME0::Random(-1.5f, 1.5f));
 
-    memcpy(&matFace.m[0][0], &vRight, sizeof(_vec3));
-    memcpy(&matFace.m[1][0], &vUp, sizeof(_vec3));
-    memcpy(&matFace.m[2][0], &vLook, sizeof(_vec3));
-    memcpy(&matFace.m[3][0], &vCenter, sizeof(_vec3));
+        pScene->Add_GameObject(L"Explosion", CMG0_Explosion::Create(m_pGraphicDev, vPos, MINIGAME0::Random(3.f, 5.f)));
+    }
 }
 
 void CMG0_Train13::Collision_Player()
@@ -146,11 +130,11 @@ void CMG0_Train13::Collision_Player()
         pPlayer->OnHit();
 }
 
-HRESULT CMG0_Train13::Add_Component(Engine::CTexture** ppTexture)
+HRESULT CMG0_Train13::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
-    pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
+    pComponent = m_pBufferCom = dynamic_cast<CPlyTex*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Thomas_Vertex"));
 
     if (nullptr == pComponent)
         return E_FAIL;
@@ -164,25 +148,21 @@ HRESULT CMG0_Train13::Add_Component(Engine::CTexture** ppTexture)
 
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
-    for (_int i = 0; i < MINIGAME0::TRAIN_END; ++i)
-    {
-        pComponent = m_pTextureCom[i] = ppTexture[i];
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Thomas_Texture"));
 
-        if (nullptr == pComponent)
-            return E_FAIL;
+    if (nullptr == pComponent)
+        return E_FAIL;
 
-        pComponent->AddRef();
-        m_mapComponent[ID_STATIC].insert({ L"Com_Texture_" + to_wstring(i), pComponent });
-    }
+    m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
     return S_OK;
 }
 
-CMG0_Train13* CMG0_Train13::Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iLane, _float fSpeed, Engine::CTexture** ppTexture)
+CMG0_Train13* CMG0_Train13::Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iLane, _float fSpeed)
 {
     CMG0_Train13* pTrain = new CMG0_Train13(pGraphicDev);
 
-    if (FAILED(pTrain->Ready_GameObject(iLane, fSpeed, ppTexture)))
+    if (FAILED(pTrain->Ready_GameObject(iLane, fSpeed)))
     {
         Safe_Release(pTrain);
         MSG_BOX("CMG0_Train13 Create Failed");

@@ -9,9 +9,13 @@ namespace Engine
 	class CTexture;
 }
 
+class CMiniGame;
+
 class CMG0_HUD : public CGameObject
 {
 private:
+	enum GUIDESTEP { GUIDE_WAIT, GUIDE_ICON, GUIDE_TUTORIAL, GUIDE_DONE };
+
 	struct HANDSLOT
 	{
 		MINIGAME0::MGCARD		eCard = MINIGAME0::CARD_END;
@@ -64,6 +68,7 @@ private:
 
 	void			Update_View(STATVIEW& tView, _int iActual, _int iTarget, _float fTimeDelta);
 	_int			Get_Shown(const STATVIEW& tView);
+	void			Update_Guide(CMiniGame* pScene, _float fTimeDelta);
 
 	void			Render_Quad(Engine::CTexture* pTexture, _uint iFrame, _float fX, _float fY, _float fSizeX, _float fSizeY, DWORD dwTint);
 	void			Render_Rect(_float fX, _float fY, _float fHalfX, _float fHalfY, DWORD dwColor);
@@ -71,7 +76,7 @@ private:
 	void			Render_Icon(MINIGAME0::MGICON eIcon, _float fX, _float fY, _float fSizeX, _float fSizeY, DWORD dwTint = 0xFFFFFFFF);
 	void			Render_Text(const wstring& strText, _vec2 vPos, D3DXCOLOR Color, _bool bCenter = false, _bool bOutline = true, _float fScale = 1.f);
 	void			Render_Cost(const MINIGAME0::MGCARDCOST& tCost, _float fX, _float fY, D3DXCOLOR Color, _bool bOutline = true);
-	void			Render_Value(const STATVIEW& tView, _float fX, _float fY, D3DXCOLOR Color);
+	void			Render_Value(const STATVIEW& tView, _float fX, _float fY, D3DXCOLOR Color, const wstring& strSuffix = L"");
 	void			Flush_Text();
 	void			Draw_Run(const vector<TEXTRUN>& vecRun, _vec2 vPos, D3DXCOLOR Color);
 
@@ -87,6 +92,10 @@ private:
 	void			Render_Notice();
 	void			Render_BossHp();
 	void			Render_Warning();
+	void			Render_Guide();
+	void			Render_HandPreview();
+	void			Render_Tutorial();
+	void			Render_Spotlight(_float fX, _float fY, _float fHalfX, _float fHalfY);
 	void			Render_WarningText();
 	void			Render_GameOverText();
 	void			Render_ClearText();
@@ -130,10 +139,16 @@ private:
 	wstring		m_strNotice;
 
 	_bool		m_bWarning = false;
+	_int		m_iWarningAlpha = 0;
 	_bool		m_bBossHp = false;
 	_bool		m_bTimeOver = false;
 	_int		m_iWhiteAlpha = 0;
 	_float		m_fBossHpRate = 0.f;
+
+	GUIDESTEP	m_eGuide = GUIDE_WAIT;
+	_float		m_fGuideDelay = 0.f;
+	_float		m_fTutorialStart = 0.f;
+	_int		m_iTutorialPage = 0;
 
 public:
 	static CMG0_HUD* Create(LPDIRECT3DDEVICE9 pGraphicDev);

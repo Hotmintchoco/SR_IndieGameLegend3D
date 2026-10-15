@@ -204,6 +204,7 @@
     <ClInclude Include="..\Header\CMG0_DancerPart.h" />
     <ClInclude Include="..\Header\CMG0_Sunglass.h" />
     <ClInclude Include="..\Header\CMG0_Train13.h" />
+    <ClInclude Include="..\Header\CMG0_Train14.h" />
     <ClInclude Include="..\Header\CMG0_Herobrine.h" />
     <ClInclude Include="..\Header\CMG0_Laser.h" />
     <ClInclude Include="..\Header\CMG0_DancerRArm.h" />
@@ -406,6 +407,7 @@
     <ClCompile Include="..\Code\CMG0_DancerPart.cpp" />
     <ClCompile Include="..\Code\CMG0_Sunglass.cpp" />
     <ClCompile Include="..\Code\CMG0_Train13.cpp" />
+    <ClCompile Include="..\Code\CMG0_Train14.cpp" />
     <ClCompile Include="..\Code\CMG0_Herobrine.cpp" />
     <ClCompile Include="..\Code\CMG0_Laser.cpp" />
     <ClCompile Include="..\Code\CMG0_DancerRArm.cpp" />
