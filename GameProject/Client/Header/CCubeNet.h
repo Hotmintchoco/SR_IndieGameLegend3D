@@ -28,6 +28,8 @@ public:
 
 protected:
 	HRESULT Add_Component();
+	/* 트랜스폼 위치/스케일 기준 x/z 평면 박스 (메쉬는 한 변 1짜리 큐브) */
+	void ComputeFlatBounds(_vec2& vMin, _vec2& vMax);
 
 	CTransform* m_pTransformCom = nullptr;
 	CPlyTex* m_pBufferCom = nullptr;

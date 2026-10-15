@@ -114,6 +114,13 @@ void CPlayerAnimator::PlayAction(EPlayerActionState eAction)
     m_fActionTime = 0.f;
 }
 
+void CPlayerAnimator::StopAction(EPlayerActionState eAction)
+{
+    if (m_eAction != eAction) return;
+
+    m_eAction = EPlayerActionState::NONE;   // m_tActionPose는 남겨서 페이드아웃에 사용
+}
+
 void CPlayerAnimator::PlayLocomotion(EPlayerLocomotionState eLoco)
 {
     if (m_eLoco == eLoco) return;
@@ -200,6 +207,9 @@ void CPlayerAnimator::UpdateAction(float fTimeDelta)
             if (m_fActionTime >= 1.0f)
                 m_eAction = EPlayerActionState::NONE;
             break;
+        case EPlayerActionState::ORTHO_GRAB:
+            SampleOrthoGrab();                      // StopAction 전까지 유지
+            break;
         default:
             m_eAction = EPlayerActionState::NONE;
             break;
@@ -233,6 +243,15 @@ void CPlayerAnimator::SampleFire(float fTime)
     m_tActionPose.Reset();
     m_tActionPose.bMask[TP_RARM] = true;
     m_tActionPose.vRot[TP_RARM].x = s_fForward * (90.f + s_tShootParam.fKick * fRecoil);   // 정면 90도 + 위로 반동
+}
+
+void CPlayerAnimator::SampleOrthoGrab()
+{
+    m_tActionPose.Reset();
+    m_tActionPose.bMask[TP_LARM] = true;
+    m_tActionPose.bMask[TP_RARM] = true;
+    m_tActionPose.vRot[TP_LARM].x = s_fForward * 90.f;
+    m_tActionPose.vRot[TP_RARM].x = s_fForward * 90.f;
 }
 
 void CPlayerAnimator::SampleShotGunUltimate(float fTime)

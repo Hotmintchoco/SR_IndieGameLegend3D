@@ -26,7 +26,7 @@ public:
 	virtual void OnCollisionExit(COLLINFO eCollInfo) override;
 
 	/* IVerticalTerrain */
-	virtual float SampleTerrainHeight(const _vec3& vRayStart) override;
+	virtual bool GetFlatSolidBounds(_vec2& vMin, _vec2& vMax) override;
 
 	/* 뚫린 바닥을 메웠을 때 방 레이어가 호출 : 두 콜라이더를 꺼서 다시 들 수 없게 한다 */
 	void LockInHole();

@@ -93,6 +93,20 @@ void COrthoCamera::LateUpdate_GameObject(_float fTimeDelta)
 		{
 			D3DXMatrixLookAtLH(&m_matView, &vEye, &m_vOrbitAt, &m_vUp);
 		}
+
+		/* 끝까지 왔으면 애니메이션 종료 (뷰 행렬은 마지막 값 유지) + 일회용 콜백 */
+		if (r >= 1.f)
+		{
+			m_bOnViewAnimation = false;
+
+			if (m_OrbitFinished)
+			{
+				/* 콜백 안에서 다시 Orbit을 불러도 되도록 꺼내서 비운 뒤 호출 */
+				std::function<void()> F = std::move(m_OrbitFinished);
+				m_OrbitFinished = nullptr;
+				F();
+			}
+		}
 	}
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
 
@@ -167,8 +181,9 @@ void COrthoCamera::UpdateView(const _matrix& matView)
 	m_matView = matView;
 }
 
-void COrthoCamera::Orbit(const _vec3& vStart, const _vec3& vEnd, const _vec3& vAt, const float fDuration)
+void COrthoCamera::Orbit(const _vec3& vStart, const _vec3& vEnd, const _vec3& vAt, const float fDuration, std::function<void()> onFinished)
 {
+	m_OrbitFinished = std::move(onFinished);
 	m_bOnViewAnimation = true;
 	m_fTimeAfterViewAnimation = 0.f;
 	m_fViewAnimationTime = fDuration;

@@ -55,8 +55,8 @@ HRESULT CCubeNetKeyBlock::Add_Component()
 {
     CComponent* pComponent = nullptr;
 
-    // Texture (임시 : 회색)
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Gray_Texture"));
+    // Texture
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CubeNet_Lock_Texture"));
 
     if (nullptr == pComponent)
         return E_FAIL;
@@ -82,23 +82,10 @@ void CCubeNetKeyBlock::OnCollisionStay(COLLINFO eCollInfo)
     }
 }
 
-float CCubeNetKeyBlock::SampleTerrainHeight(const _vec3& vRayStart)
+bool CCubeNetKeyBlock::GetFlatSolidBounds(_vec2& vMin, _vec2& vMax)
 {
-    CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
-
-    THitInfo tHit{};
-    _vec3 vDir{ 0.f, 0.f, -1.f };
-
-    pRayCaster->RayTest(tHit, vRayStart, vDir, m_pBufferCom, m_pTransformCom->Get_World());
-
-    if (tHit.bHit)
-    {
-        return tHit.fHitPoint.z;
-    }
-    else
-    {
-        return -FLT_MAX;
-    }
+    ComputeFlatBounds(vMin, vMax);
+    return true;
 }
 
 CCubeNetKeyBlock* CCubeNetKeyBlock::Create(LPDIRECT3DDEVICE9 pGraphicDev)

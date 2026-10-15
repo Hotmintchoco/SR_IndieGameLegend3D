@@ -34,6 +34,7 @@ HRESULT CFlatPlayer::Ready_GameObject()
 		m_iTextureFrameCount[i] = m_pTexture[i]->GetCount();
 	}
 
+	m_pTransform->Set_Scale(_vec3{ 0.7f, 0.7f, 0.7f });
 	m_pBoxCollider->Set_Extents(_vec3{ m_vFlatSize.x * 0.5f, 0.5f, m_vFlatSize.y * 0.5f });
 	m_pBoxCollider->Set_DiffPos(_vec3{ 0.f, 0.f, m_vFlatSize.y * 0.5f });
 
@@ -51,6 +52,7 @@ _int CFlatPlayer::Update_GameObject(_float fTimeDelta)
 
 	UpdateInput();
 	UpdateAnimationStatus(fTimeDelta);
+	UpdateFlicker(fTimeDelta);
 
 	return iExit;
 }
@@ -64,11 +66,53 @@ void CFlatPlayer::LateUpdate_GameObject(_float fTimeDelta)
 
 void CFlatPlayer::Render_GameObject()
 {
-	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransform->Get_World());
+	if (!m_bVisible) return;
+
+	/* 왼쪽을 볼 때는 로컬 x 스케일에 -1을 곱해 좌우 반전 (피벗이 가로 가운데라 위치는 그대로) */
+	_matrix matWorld = *m_pTransform->Get_World();
+	if (!m_bFacingRight)
+	{
+		_matrix matFlip;
+		D3DXMatrixScaling(&matFlip, -1.f, 1.f, 1.f);
+		matWorld = matFlip * matWorld;
+	}
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, &matWorld);
 
 	m_pTexture[m_eFSM]->Set_Texture(m_iCurrentTextureIndex);
 
+	/* 반전하면 면의 감기 순서가 뒤집히므로 그릴 때만 컬링을 끔 */
+	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pBuffer->Render_Buffer();
+	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+}
+
+void CFlatPlayer::SetInputEnabled(bool bFlag)
+{
+	m_bInputEnabled = bFlag;
+
+	if (!bFlag && m_pMovement)
+		m_pMovement->Walk(0.f);
+}
+
+void CFlatPlayer::StartFlicker()
+{
+	m_fTimeAfterFlicker = 0.f;
+	m_bVisible = false;
+}
+
+void CFlatPlayer::UpdateFlicker(float fTimeDelta)
+{
+	if (m_fTimeAfterFlicker >= s_fFlickerDuration)
+	{
+		m_bVisible = true;
+		return;
+	}
+
+	m_fTimeAfterFlicker += fTimeDelta;
+
+	/* 구간마다 번갈아 켜고 끔 (짝수 구간 : 꺼짐) */
+	const int iStep = (int)(m_fTimeAfterFlicker / s_fFlickerInterval);
+	m_bVisible = (m_fTimeAfterFlicker >= s_fFlickerDuration) || (iStep % 2 == 1);
 }
 
 HRESULT CFlatPlayer::Add_Component()
@@ -142,6 +186,10 @@ void CFlatPlayer::UpdateInput()
 	}
 	m_pMovement->Walk(fCommand);
 
+	/* 방향 기록 : 입력이 있을 때만 갱신 */
+	if (fCommand > 0.f)      m_bFacingRight = true;
+	else if (fCommand < 0.f) m_bFacingRight = false;
+
 	bool bJumpFlag = false;
 	if (CDInputMgr::GetInstance()->Key_Press(DIK_SPACE))
 	{
@@ -169,10 +217,13 @@ void CFlatPlayer::SetFSM(FLAT_FSM e)
 
 	m_eFSM = e;
 	m_fTimeAfterPlay = 0.f;
+	m_iCurrentTextureIndex = 0;
 }
 
 void CFlatPlayer::UpdateAnimationStatus(float fTimeDelta)
 {
+	if (m_iTextureFrameCount[m_eFSM] <= 0) return;
+
 	m_fTimeAfterPlay += fTimeDelta;
 
 	if (m_fTimeAfterPlay >= m_fFrameInterval[m_eFSM])

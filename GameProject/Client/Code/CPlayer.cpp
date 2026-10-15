@@ -287,7 +287,7 @@ HRESULT CPlayer::Add_Component()
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Socket_RHand", m_pRHandSocket });
     m_pRHandSocket->SetOffset(matOffset);
 
-    pos = _vec3(0.f, 0.f, 1.f);
+    pos = _vec3(0.f, 0.f, 0.55f);
     D3DXQuaternionRotationYawPitchRoll(&q, 0.f, 0.f, 0.f);
     D3DXMatrixAffineTransformation(&matOffset, 1.f, nullptr, &q, &pos);
 
@@ -413,11 +413,23 @@ void CPlayer::OnCameraViewChanged(const CAMERA_MODE& Ctx)
 
 void CPlayer::SyncCameraYaw()
 {
-    float fYaw = m_pCamera->Get_Yaw();
+    /* 직교 미니게임 중에는 플레이어 카메라 방향과 상관없이 0도 기준 */
+    float fYaw = m_bYawFixedToZero ? 0.f : m_pCamera->Get_Yaw();
     m_pMovement->SetRefYaw(fYaw);
 
     float fVisualYaw = fYaw + (m_bInputYawIgnored ? 0.f : m_fInputYaw);
     m_pVisualRootTransform->Set_Rotation_Raw({ 0.f, D3DXToDegree(fVisualYaw), 0.f });
+}
+
+void CPlayer::SetYawFixedToZero(bool bFlag)
+{
+    m_bYawFixedToZero = bFlag;
+
+    if (bFlag)
+        m_fInputYaw = 0.f;
+
+    /* 다음 업데이트를 기다리지 않고 바로 반영 */
+    SyncCameraYaw();
 }
 
 void CPlayer::UpdateOrthoObjectCandidate(CCubeNet* pObj)
@@ -431,6 +443,7 @@ void CPlayer::ResetOrthoInteraction()
     m_bIsGrabbingOrthoObject = false;
     m_pOrthoSocket->SetTarget(nullptr);
     m_pInteractingOrthoObject = nullptr;
+    m_pAnimator->StopAction(EPlayerActionState::ORTHO_GRAB);
 }
 
 void CPlayer::UpdateOrthoMiniGameInput()
@@ -448,17 +461,27 @@ void CPlayer::UpdateOrthoMiniGameInput()
                     /* 로컬 해제 전에 들고 있던 위치를 먼저 구해둔다 */
                     CTransform* pTransform = m_pOrthoSocket->GetTargetTransform();
                     const _vec3 vHeldPos = pTransform->Get_Info_Value(INFO_POS);
-                    m_pInteractingOrthoObject->GetTransform()->SetUseLocal(false);
 
-                    /* 놓을 위치는 방 레이어가 결정 (일반 바닥 / 뚫린 바닥 분기) */
-                    if (COrthoRoomLayer* pLayer = dynamic_cast<COrthoRoomLayer*>(pStage->GetCurrentRoomLayer()))
-                    {
-                        pLayer->RequestPlaceOrthoObject(m_pInteractingOrthoObject, vHeldPos);
-                        pLayer->SetGrabbing(false);
-                    }
+                    /* 놓을 위치는 방 레이어가 결정 (일반 바닥 / 뚫린 바닥 / 막힌 칸 분기)
+                       로컬(소켓) 모드 해제도 레이어가 놓을 수 있을 때만 처리 */
+                    COrthoRoomLayer* pLayer = dynamic_cast<COrthoRoomLayer*>(pStage->GetCurrentRoomLayer());
+                    if (nullptr == pLayer) return;
+
+                    const EPlaceResult eResult = pLayer->RequestPlaceOrthoObject(m_pInteractingOrthoObject, vHeldPos);
+
+                    /* 다른 블럭이 있는 칸 : 내려놓지 않고 계속 들고 있음 */
+                    if (eResult == EPlaceResult::BLOCKED) return;
+
+                    const bool bFilledHole = (eResult == EPlaceResult::FILLED_HOLE);
+                    pLayer->SetGrabbing(false);
                     m_pInteractingOrthoObject->SetGrabbed(false);
                     m_bIsGrabbingOrthoObject = false;
                     m_pOrthoSocket->SetTarget(nullptr);
+                    m_pAnimator->StopAction(EPlayerActionState::ORTHO_GRAB);
+
+                    /* 구멍을 메운 물체는 지형이 됐으므로 후보에서 뺌 (콜라이더가 꺼져 Exit가 오지 않음) */
+                    if (bFilledHole)
+                        m_pInteractingOrthoObject = nullptr;
                 }
             }
             else
@@ -469,6 +492,7 @@ void CPlayer::UpdateOrthoMiniGameInput()
                 m_pInteractingOrthoObject->GetTransform()->SetUseLocal(true);
                 m_pOrthoSocket->SetTarget(m_pInteractingOrthoObject->GetTransform());
                 m_pInteractingOrthoObject->SetGrabbed(true);
+                m_pAnimator->PlayAction(EPlayerActionState::ORTHO_GRAB);
 
                 CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
                 if (pStage)
@@ -616,6 +640,15 @@ void CPlayer::UnlockInput(EPlayerInputChannel e)
     if (m_iInputLockCount[e] > 0) --m_iInputLockCount[e];
 }
 
+void CPlayer::ResetToIdle()
+{
+    /* 걷기 커맨드와 달리기 해제 (속도는 이동 컴포넌트의 감속에 맡김) */
+    m_pMovement->SetSprint(false);
+    m_pMovement->Walk(_vec2{ 0.f, 0.f });
+    /* 걷기/달리기 애니메이션 -> 아이들 */
+    m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
+}
+
 bool CPlayer::IsInputAllowed(EPlayerInputChannel e)
 {
     return (m_iInputLockCount[e] == 0 && m_fInputLockTime[e] <= 0.f);
@@ -628,8 +661,17 @@ void CPlayer::SetPseudoScale(float fScale)
     m_pCamera->SetPseudoScale(fScale);
     m_pMovement->SetSpeedScale(fScale);
 
-    m_pColliderCom->Set_Radius(m_fColliderScale * fScale);
+    m_pColliderCom->Set_Radius(m_fColliderScale * fScale * m_fMiniGameBodyCoef);
     m_pColliderCom->Set_DiffPos(_vec3{ 0.f, 0.5f * fScale, 0.f });
+}
+
+void CPlayer::SetMiniGameBodyCoef(float fCoef)
+{
+    m_fMiniGameBodyCoef = fCoef;
+
+    /* 가짜 스케일과 곱해서 적용 (DiffPos는 그대로) */
+    m_pColliderCom->Set_Radius(m_fColliderScale * m_fPseudoScale * m_fMiniGameBodyCoef);
+    m_pMovement->SetHorizontalSpeedCoef(fCoef);
 }
 
 void CPlayer::SetPseudoScale(float fScale, float fLerpTime)

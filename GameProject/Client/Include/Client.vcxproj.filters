@@ -589,6 +589,21 @@
     <Filter Include="01. Scene\Stage\Layer\Ortho\Object\CubeNet\Breakable">
       <UniqueIdentifier>{64260db0-0edd-4283-b7e6-9117a2f7eac9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\UI">
+      <UniqueIdentifier>{9581923f-a7ac-47e4-bdd0-8ca7f234468f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\UI\PhaseClear">
+      <UniqueIdentifier>{daf9afe3-55a4-4154-8c30-cb3345fca3f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\UI\Intro">
+      <UniqueIdentifier>{fa9fd44c-6508-43ae-99d5-5e2fbc31ff0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Ortho\Object\UI\PhaseNumber">
+      <UniqueIdentifier>{9e89dec0-923f-4d17-a573-abad3709282f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\BaseProp\Tile\Sprite\Ortho">
+      <UniqueIdentifier>{a2d7797d-ba22-4a1f-8302-337e2aa01b84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1233,6 +1248,18 @@
     <ClInclude Include="..\Header\CCubeNetBreakable.h">
       <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Breakable</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CUI_PhaseClear.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\UI\PhaseClear</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CUI_OrthoIntro.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\UI\Intro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CUI_PhaseNumber.h">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\UI\PhaseNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\COrthoSpriteTile.h">
+      <Filter>02. GameObject\07. Room\BaseProp\Tile\Sprite\Ortho</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1846,6 +1873,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCubeNetBreakable.cpp">
       <Filter>01. Scene\Stage\Layer\Ortho\Object\CubeNet\Breakable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUI_PhaseClear.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\UI\PhaseClear</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUI_OrthoIntro.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\UI\Intro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CUI_PhaseNumber.cpp">
+      <Filter>01. Scene\Stage\Layer\Ortho\Object\UI\PhaseNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\COrthoSpriteTile.cpp">
+      <Filter>02. GameObject\07. Room\BaseProp\Tile\Sprite\Ortho</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

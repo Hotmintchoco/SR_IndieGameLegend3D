@@ -7,6 +7,7 @@
 #include "CPlayer.h"
 #include "CManagement.h"
 #include "CRayCaster.h"
+#include "CStage.h"
 
 CCubeNetPlank::CCubeNetPlank(LPDIRECT3DDEVICE9 pGraphicDev)
     : CCubeNet(pGraphicDev)
@@ -61,7 +62,18 @@ void CCubeNetPlank::LateUpdate_GameObject(_float fTimeDelta)
 
 void CCubeNetPlank::Render_GameObject()
 {
-    if (m_bIsPlayerOnGrabRange && !m_bIsGrabbed)
+    /* 플레이어가 지금 집을 수 있는 후보가 이 플랭크일 때만 외곽선 */
+    bool bOutline = false;
+    if (!m_bIsGrabbed)
+    {
+        if (CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene()))
+        {
+            CPlayer* pPlayer = pStage->GetPlayer();
+            bOutline = (pPlayer && pPlayer->GetOrthoObjectCandidate() == this);
+        }
+    }
+
+    if (bOutline)
     {
         m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pOutlineTransform->Get_World());
         m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
@@ -143,23 +155,10 @@ void CCubeNetPlank::OnCollisionExit(COLLINFO eCollInfo)
     }
 }
 
-float CCubeNetPlank::SampleTerrainHeight(const _vec3& vRayStart)
+bool CCubeNetPlank::GetFlatSolidBounds(_vec2& vMin, _vec2& vMax)
 {
-    CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
-
-    THitInfo tHit{};
-    _vec3 vDir{ 0.f, 0.f, -1.f };
-
-    pRayCaster->RayTest(tHit, vRayStart, vDir, m_pBufferCom, m_pTransformCom->Get_World());
-
-    if (tHit.bHit)
-    {
-        return tHit.fHitPoint.z;
-    }
-    else
-    {
-        return -FLT_MAX;
-    }
+    ComputeFlatBounds(vMin, vMax);
+    return true;
 }
 
 
@@ -184,7 +183,7 @@ HRESULT CCubeNetPlank::Add_Component()
     m_mapComponent[ID_DYNAMIC].insert({ L"Com_Texture", pComponent });
 
     // Outline Texture
-    pComponent = m_pOutlineTexture = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Red_Texture"));
+    pComponent = m_pOutlineTexture = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_White_Texture"));
 
     if (nullptr == pComponent)
         return E_FAIL;

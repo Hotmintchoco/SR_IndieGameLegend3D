@@ -49,6 +49,11 @@ private:
 	int m_iCurrentTextureIndex = 0;
 	int m_iTotalFrameCount = 0;
 
+	/* 직교(2D) 시점에서는 2D 플레이어(y 0.1)를 가리지 않도록 그 아래로 내리고, 원근으로 돌아오면 원래 높이로 */
+	bool m_bLoweredForFlat = false;
+	float m_fOriginY = 0.f;							/* 내리기 전 높이 */
+	static constexpr float s_fFlatModeY = 0.05f;	/* 직교 시점 높이 (2D 플레이어보다 아래, 바닥보다 위) */
+
 public:
 	static COrthoPhaseGate* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

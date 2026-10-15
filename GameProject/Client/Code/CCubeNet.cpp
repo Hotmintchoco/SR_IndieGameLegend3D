@@ -80,6 +80,16 @@ HRESULT CCubeNet::Add_Component()
     return S_OK;
 }
 
+void CCubeNet::ComputeFlatBounds(_vec2& vMin, _vec2& vMax)
+{
+    const _vec3 vPos = m_pTransformCom->Get_Info_Value(INFO_POS);
+    const _vec3 vScale = m_pTransformCom->Get_Scale();
+    const _vec2 vHalf{ vScale.x * 0.5f, vScale.z * 0.5f };
+
+    vMin = { vPos.x - vHalf.x, vPos.z - vHalf.y };
+    vMax = { vPos.x + vHalf.x, vPos.z + vHalf.y };
+}
+
 CCubeNet* CCubeNet::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
     CCubeNet* pObject = new CCubeNet(pGraphicDev);

@@ -19,7 +19,7 @@ public:
 	virtual void OnCollisionStay(COLLINFO eCollInfo) override;
 
 	/* IVerticalTerrain */
-	virtual float SampleTerrainHeight(const _vec3& vRayStart) override;
+	virtual bool GetFlatSolidBounds(_vec2& vMin, _vec2& vMax) override;
 
 private:
 	HRESULT Add_Component();

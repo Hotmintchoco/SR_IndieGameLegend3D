@@ -8,6 +8,7 @@
 #include "CTexture.h"
 #include "COrthoRoomLayer.h"
 #include "COrthoCamera.h"
+#include "CSoundMgr.h"
 
 COrthoKey::COrthoKey(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -112,9 +113,9 @@ void COrthoKey::BillBoard(CCamera* pCamera)
 
     _matrix* pMatWorld = m_pTransform->Get_World();
 
-    //memcpy(&pMatWorld->m[0][0], &vRightS, sizeof(_vec3));
+    memcpy(&pMatWorld->m[0][0], &vRightS, sizeof(_vec3));
     memcpy(&pMatWorld->m[1][0], &vUpS, sizeof(_vec3));
-    //memcpy(&pMatWorld->m[2][0], &vLookS, sizeof(_vec3));
+    memcpy(&pMatWorld->m[2][0], &vLookS, sizeof(_vec3));
 }
 
 void COrthoKey::Render_GameObject()
@@ -141,6 +142,7 @@ void COrthoKey::OnCollisionEnter(COLLINFO eCollInfo)
 
         m_bAcquired = true;
         pRoom->OnKeyAcquired();
+        CSoundMgr::GetInstance()->PlaySFX(L"PickUpItem.mp3");
         Set_Dead(true);
         break;
     }

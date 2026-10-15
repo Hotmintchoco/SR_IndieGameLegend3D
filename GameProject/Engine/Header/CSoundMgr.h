@@ -37,25 +37,39 @@ public:
 	void Update();
 
 public:
+	/* fFadeInSec > 0 이면 0에서 시작해 그 시간 동안 페이드 인 */
+	void PlayBGM(const TBGMTrack& tTrack, float fFadeInSec = 0.f);
+	/* 스냅샷 시점부터 이어서 재생 (bValid = false면 BGM 정지) */
+	void RestoreBGM(const TBGMSnapshot& tSnapshot, float fFadeInSec = 0.f);
+	void StopBGM();
+	/* 현재 BGM을 fSec 동안 페이드 아웃한 뒤 자동 정지 */
+	void FadeOutBGM(float fSec);
+
 	// 빈 이펙트 채널 자동 할당. 나중에 제어할 필요가 없으면 반환값은 무시해도 된다.
 	SOUND_HANDLE PlaySFX(const wstring& pSoundKey, bool bLoop = false);
-	void PlayBGM(const TBGMTrack& tTrack);
-
 	void StopSFX(SOUND_HANDLE hSound);   // 무효 핸들이면 아무 일도 안 함
-	void StopBGM();
+	
 	void StopAll();
 
 	bool IsPlaying(SOUND_HANDLE hSound);
+	
 	void SetSFXChannelVolume(SOUND_HANDLE hSound, float fVolume); // 개별 소리 (그룹 볼륨과 곱해짐)
 	void SetBGMVolume(float fVolume);                               // BGM 그룹 전체
 	void SetSFXVolume(float fVolume);                               // SFX 그룹 전체
+	
+	/* 현재 BGM의 트랙/파일/위치를 저장 (재생 중이 아니면 bValid = false) */
+	TBGMSnapshot CaptureBGM();
+	/* 현재(마지막으로 재생 요청된) BGM 트랙 : 다른 BGM으로 바꿨다가 되돌릴 때 백업용 */
+	inline const TBGMTrack& GetCurrentBGMTrack() const { return m_tBGMTrack; }
 
 private:
 	HRESULT RecursiveLoadSound(const wstring& szFolderPath);
 	int  GetNextEffectChannel();
 
 	FMOD_SOUND* FindSound(const wstring& pSoundKey);
-	SOUND_HANDLE PlayOnChannel(FMOD_SOUND* pSound, int iIdx, bool bLoop);
+	SOUND_HANDLE PlayOnChannel(FMOD_SOUND* pSound, int iIdx, bool bLoop, unsigned int iStartPositionMs = 0, float fFadeInSec = 0.f);
+	/* 채널 페이드 : 지금부터 fSec 동안 fFrom -> fTo (채널/그룹 볼륨과 곱해지는 별도 배율), bStopAtEnd면 끝에서 채널 정지 */
+	void ApplyFade(FMOD_CHANNEL* pChannel, float fFrom, float fTo, float fSec, bool bStopAtEnd);
 	int  ResolveHandle(SOUND_HANDLE hSound);   // 유효하면 채널 인덱스, 아니면 -1
 	void StopChannel(int iIdx);
 

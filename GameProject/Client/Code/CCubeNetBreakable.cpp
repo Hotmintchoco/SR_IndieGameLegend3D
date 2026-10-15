@@ -7,6 +7,7 @@
 #include "CManagement.h"
 #include "Client_Enum.h"
 #include "CRandomMgr.h"
+#include "CTimerMgr.h"
 
 namespace
 {
@@ -54,6 +55,8 @@ HRESULT CCubeNetBreakable::Ready_GameObject()
 
 _int CCubeNetBreakable::Update_GameObject(_float fTimeDelta)
 {
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(CTG_FLATPLAYER);
+
     _int iExit = CCubeNet::Update_GameObject(fTimeDelta);
 
     CCollisionMgr::GetInstance()->Add_Collider(COLL_OBSTACLE, m_pColliderCom);
@@ -75,6 +78,8 @@ _int CCubeNetBreakable::Update_GameObject(_float fTimeDelta)
 
 void CCubeNetBreakable::LateUpdate_GameObject(_float fTimeDelta)
 {
+    fTimeDelta = CTimerMgr::GetInstance()->GetGroupTimeDelta(CTG_FLATPLAYER);
+
     CCubeNet::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -160,23 +165,10 @@ void CCubeNetBreakable::OnCollisionStay(COLLINFO eCollInfo)
     }
 }
 
-float CCubeNetBreakable::SampleTerrainHeight(const _vec3& vRayStart)
+bool CCubeNetBreakable::GetFlatSolidBounds(_vec2& vMin, _vec2& vMax)
 {
-    CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
-
-    THitInfo tHit{};
-    _vec3 vDir{ 0.f, 0.f, -1.f };
-
-    pRayCaster->RayTest(tHit, vRayStart, vDir, m_pBufferCom, m_pTransformCom->Get_World());
-
-    if (tHit.bHit)
-    {
-        return tHit.fHitPoint.z;
-    }
-    else
-    {
-        return -FLT_MAX;
-    }
+    ComputeFlatBounds(vMin, vMax);
+    return true;
 }
 
 void CCubeNetBreakable::SetHead(CCubeNetBreakable* pHead)

@@ -222,6 +222,9 @@ enum class EPlayerActionState
 	ULT_LIMINALGUN_LOOP,
 	ULT_LIMINALGUN_END,
 
+	/* 직교 미니게임 : 물체를 들고 있는 동안 양팔을 앞으로 (StopAction 전까지 유지) */
+	ORTHO_GRAB,
+
 	MAX,
 };
 

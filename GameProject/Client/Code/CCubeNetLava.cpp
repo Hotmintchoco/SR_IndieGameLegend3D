@@ -5,6 +5,9 @@
 #include "CCollisionMgr.h"
 #include "CLiminalFrame.h"
 #include "CPlayer.h"
+#include "CManagement.h"
+#include "CStage.h"
+#include "COrthoRoomLayer.h"
 
 CCubeNetLava::CCubeNetLava(LPDIRECT3DDEVICE9 pGraphicDev)
     : CCubeNet(pGraphicDev)
@@ -71,6 +74,16 @@ void CCubeNetLava::OnCollisionStay(COLLINFO eCollInfo)
     {
         CPlayer* pPlayer = dynamic_cast<CPlayer*>(pOtherCol->Get_Owner());
         if (pPlayer) pPlayer->OnHit(this);
+        break;
+    }
+    case COLLISIONID::COLL_FLATPLAYER:
+    {
+        /* 2D 플레이어가 닿으면 현재 페이즈 리셋 요청 */
+        CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+        if (nullptr == pStage) break;
+
+        if (COrthoRoomLayer* pLayer = dynamic_cast<COrthoRoomLayer*>(pStage->GetCurrentRoomLayer()))
+            pLayer->RequestResetPhase();
         break;
     }
     default:

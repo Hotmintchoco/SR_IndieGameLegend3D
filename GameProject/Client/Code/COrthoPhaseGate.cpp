@@ -72,6 +72,27 @@ void COrthoPhaseGate::LateUpdate_GameObject(_float fTimeDelta)
     COrthoRoomLayer* pRoom = dynamic_cast<COrthoRoomLayer*>(m_pOwner);
     if (nullptr == pRoom) return;
 
+    /* 시점이 바뀌는 순간 높이 전환 : 직교면 2D 플레이어 아래로, 원근이면 원래 높이로 */
+    const bool bOrtho = (pRoom->GetGameMode() == ORTHO);
+    if (bOrtho != m_bLoweredForFlat)
+    {
+        _vec3 vPos;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+        if (bOrtho)
+        {
+            m_fOriginY = vPos.y;
+            vPos.y = s_fFlatModeY;
+        }
+        else
+        {
+            vPos.y = m_fOriginY;
+        }
+
+        m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+        m_bLoweredForFlat = bOrtho;
+    }
+
     if (pRoom->GetGameMode() == PERSP)
     {
         /* 원근 : 직교 카메라 기준 빌보드 */

@@ -225,7 +225,10 @@ void CWall::Render_GameObject()
 {
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-    m_pTextureCom->Set_Texture(m_iTextureIdx);
+    if (m_pOverrideTextureCom)
+        m_pOverrideTextureCom->Set_Texture(m_iOverrideTextureIdx);
+    else
+        m_pTextureCom->Set_Texture(m_iTextureIdx);
     m_pBufferCom->Render_Buffer();
 }
 
@@ -276,6 +279,26 @@ HRESULT CWall::ReplaceBuffer(const wstring& pBufferProtoTag)
 
     Safe_Release(pNewBuffer);
     return E_FAIL;
+}
+
+HRESULT CWall::SetTextureOverride(const wstring& wstrTextureProtoTag, int iIndex)
+{
+    ClearTextureOverride();
+
+    m_pOverrideTextureCom = dynamic_cast<CTexture*>(CProtoMgr::GetInstance()->Clone_Prototype(wstrTextureProtoTag.c_str()));
+    if (nullptr == m_pOverrideTextureCom)
+        return E_FAIL;
+
+    /* 장 수를 넘지 않도록 */
+    m_iOverrideTextureIdx = min(max(0, iIndex), max(0, m_pOverrideTextureCom->GetCount() - 1));
+
+    return S_OK;
+}
+
+void CWall::ClearTextureOverride()
+{
+    Safe_Release(m_pOverrideTextureCom);
+    m_iOverrideTextureIdx = 0;
 }
 
 vector<pair<Engine::CVIBuffer*, Engine::CTransform*>> CWall::GetRayTestTargetInfo()
@@ -378,5 +401,6 @@ CWall* CWall::Create(LPDIRECT3DDEVICE9 pGraphicDev, EWallDir eDir, bool bHasDoor
 
 void CWall::Free()
 {
+    ClearTextureOverride();
     CGameObject::Free();
 }

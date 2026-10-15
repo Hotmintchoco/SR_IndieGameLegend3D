@@ -82,23 +82,10 @@ void CCubeNetGrass::OnCollisionStay(COLLINFO eCollInfo)
     }
 }
 
-float CCubeNetGrass::SampleTerrainHeight(const _vec3& vRayStart)
+bool CCubeNetGrass::GetFlatSolidBounds(_vec2& vMin, _vec2& vMax)
 {
-    CRayCaster* pRayCaster = static_cast<CRayCaster*>(CManagement::GetInstance()->Get_GameObject(L"GameLogic_Layer", L"RayCaster"));
-
-    THitInfo tHit{};
-    _vec3 vDir{ 0.f, 0.f, -1.f };
-
-    pRayCaster->RayTest(tHit, vRayStart, vDir, m_pBufferCom, m_pTransformCom->Get_World());
-
-    if (tHit.bHit)
-    {
-        return tHit.fHitPoint.z;
-    }
-    else
-    {
-        return -FLT_MAX;
-    }
+    ComputeFlatBounds(vMin, vMax);
+    return true;
 }
 
 CCubeNetGrass* CCubeNetGrass::Create(LPDIRECT3DDEVICE9 pGraphicDev)

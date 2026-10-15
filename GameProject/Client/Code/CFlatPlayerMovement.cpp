@@ -7,12 +7,14 @@
 #include "IVerticalTerrain.h"
 #include "COrthoRoomLayer.h"
 #include "CFlatPlayer.h"
+#include "CSoundMgr.h"
 
 CFlatPlayerMovement::CFlatPlayerMovement(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMovement(pGraphicDev)
 {
     m_fMaxGroundSpeed = 2.5f;
     m_fMaxAirSpeedH = 2.5f;
+    m_fAirFriction = 0.3f;
 }
 
 CFlatPlayerMovement::~CFlatPlayerMovement()
@@ -53,6 +55,7 @@ void CFlatPlayerMovement::Jump()
 
     m_bOnGround = false;
     AddImpulse(_vec3{ 0.f, 0.f, 1.f }, m_fJumpSpeed);
+    CSoundMgr::GetInstance()->PlaySFX(L"Ortho_Jump.mp3");
 }
 
 void CFlatPlayerMovement::PerformMovement(float fTimeDelta)
@@ -76,7 +79,7 @@ void CFlatPlayerMovement::PerformMovement(float fTimeDelta)
     if (pLayer)
     {
         const vector<IVerticalTerrain*>& vecTerrain = pLayer->GetVerticalTerrainList();
-        TerrainResolver(vecTerrain, vDesiredPos);
+        TerrainResolver(vecTerrain, vPrevPos, vDesiredPos);
         RoomBoundsResolver(pLayer, vDesiredPos);
     }
     else
@@ -140,18 +143,75 @@ void CFlatPlayerMovement::ClampVelocity()
 }
 
 
-void CFlatPlayerMovement::TerrainResolver(const vector<IVerticalTerrain*>& vecTerrain, _vec3& vDesired)
+void CFlatPlayerMovement::TerrainResolver(const vector<IVerticalTerrain*>& vecTerrain, const _vec3& vPrev, _vec3& vDesired)
 {
-    float fHeight = -FLT_MAX;
-    _vec3 vRayStart = vDesired + _vec3{ 0.f, 0.f, m_fSkin };
+    /* 피벗 : 발밑 가운데 → 플레이어 영역 x : [x - fHalfW, x + fHalfW], z : [z, z + fHeight] */
+    const _vec2 vSize = GetFlatSize();
+    const float fHalfW = vSize.x * 0.5f;
+    const float fHeight = vSize.y;
+    const float fEps = 1e-4f;
+
+    struct TBox { _vec2 vMin; _vec2 vMax; };
+    vector<TBox> vecBox;
+    vecBox.reserve(vecTerrain.size());
     for (auto pTerrain : vecTerrain)
     {
-        fHeight = max(fHeight, pTerrain->SampleTerrainHeight(vRayStart));
+        TBox tBox;
+        if (pTerrain->GetFlatSolidBounds(tBox.vMin, tBox.vMax))
+            vecBox.push_back(tBox);
     }
 
-    if (fHeight + m_fSkin >= vDesired.z && m_vVelocity.z <= 0.f)
+    auto OverlapX = [&](const TBox& t, float x) { return x + fHalfW > t.vMin.x + fEps && x - fHalfW < t.vMax.x - fEps; };
+    auto OverlapZ = [&](const TBox& t, float z) { return z + fHeight > t.vMin.y + fEps && z < t.vMax.y - fEps; };
+
+    /* 1. 옆면 : 이전 높이에서 x만 이동해보고 겹치면 이동 방향 반대편 면에 붙임 */
+    const float fDX = vDesired.x - vPrev.x;
+    if (fDX != 0.f)
     {
-        vDesired.z = fHeight;
+        for (const TBox& t : vecBox)
+        {
+            if (!OverlapZ(t, vPrev.z) || !OverlapX(t, vDesired.x))
+                continue;
+
+            if (fDX > 0.f) vDesired.x = min(vDesired.x, t.vMin.x - fHalfW);
+            else           vDesired.x = max(vDesired.x, t.vMax.x + fHalfW);
+            m_vVelocity.x = 0.f;
+        }
+    }
+
+    /* 2. 위아래 : 확정된 x에서 z 이동 */
+    const float fDZ = vDesired.z - vPrev.z;
+    bool bLanded = false;
+    float fLandZ = -FLT_MAX;
+
+    for (const TBox& t : vecBox)
+    {
+        if (!OverlapX(t, vDesired.x))
+            continue;
+
+        if (fDZ <= 0.f)
+        {
+            /* 착지 : 이전엔 윗면 위에 있었고 이번에 윗면(+스킨) 아래로 내려옴 */
+            if (vPrev.z >= t.vMax.y - fEps && vDesired.z <= t.vMax.y + m_fSkin)
+            {
+                bLanded = true;
+                fLandZ = max(fLandZ, t.vMax.y);
+            }
+        }
+        else
+        {
+            /* 머리 : 이전엔 밑면 아래였고 이번에 밑면을 넘음 */
+            if (vPrev.z + fHeight <= t.vMin.y + fEps && vDesired.z + fHeight > t.vMin.y)
+            {
+                vDesired.z = t.vMin.y - fHeight;
+                m_vVelocity.z = 0.f;
+            }
+        }
+    }
+
+    if (bLanded)
+    {
+        vDesired.z = fLandZ;
         m_vVelocity.z = 0.f;
         m_bOnGround = true;
     }
@@ -161,12 +221,18 @@ void CFlatPlayerMovement::TerrainResolver(const vector<IVerticalTerrain*>& vecTe
     }
 }
 
+_vec2 CFlatPlayerMovement::GetFlatSize()
+{
+    if (CFlatPlayer* pFlatPlayer = dynamic_cast<CFlatPlayer*>(Get_Owner()))
+        return pFlatPlayer->GetFlatSize();
+
+    return _vec2{ 1.f, 1.f };
+}
+
 void CFlatPlayerMovement::RoomBoundsResolver(COrthoRoomLayer* pLayer, _vec3& vDesired)
 {
     /* 크기는 2D 플레이어가 알려줌 (피벗 : 발밑 가운데) */
-    _vec2 vSize{ 1.f, 1.f };
-    if (CFlatPlayer* pFlatPlayer = dynamic_cast<CFlatPlayer*>(Get_Owner()))
-        vSize = pFlatPlayer->GetFlatSize();
+    const _vec2 vSize = GetFlatSize();
 
     _vec2 vMin, vMax;
     pLayer->GetFlatBounds(vMin, vMax);

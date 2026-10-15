@@ -17,6 +17,8 @@ public:
 	inline bool GetSprint() { return m_bSprinting; }
 
 	void SetSpeedScale(float fScale);
+	/* 수평 최대 속도에만 곱하는 계수 (직교 미니게임 등). 가짜 스케일과 독립적으로 곱해짐 */
+	void SetHorizontalSpeedCoef(float fCoef);
 
 	void Knockback(const _vec3& vDir, float fIntensity);
 	void Walk(const _vec2& vCommand);
@@ -37,6 +39,7 @@ private:
 
 	/* 가짜 스케일 관련 */
 	float m_fSpeedScale = 1.f;
+	float m_fHorizontalSpeedCoef = 1.f;
 	float m_fMaxGroundSpeedRaw = 5.f;
 	float m_fMaxAirSpeedHRaw = 5.f;
 	float m_fMaxAirSpeedVRaw = 10.f;

@@ -20,7 +20,7 @@ public:
 	virtual void OnCollisionStay(COLLINFO eCollInfo) override;
 
 	/* IVerticalTerrain */
-	virtual float SampleTerrainHeight(const _vec3& vRayStart) override;
+	virtual bool GetFlatSolidBounds(_vec2& vMin, _vec2& vMax) override;
 
 	void SetHead(CCubeNetBreakable* pHead);
 
@@ -37,9 +37,9 @@ private:
 	/* 흔들림 - 사망 애니메이션 */
 	bool m_bPendingDead = false;
 	float m_fTimeAfterAnimation = 0.f;
-	float m_fAnimationTime = 2.f;
-	float m_fWiggleMagnitude = 0.3f;
-	float m_fWiggleFrequency = 40.0f;
+	float m_fAnimationTime = 1.f;
+	float m_fWiggleMagnitude = 0.2f;
+	float m_fWiggleFrequency = 60.0f;
 	int m_iSeedA = 0;
 	int m_iSeedB = 0;
 	int m_iSeedC = 0;
