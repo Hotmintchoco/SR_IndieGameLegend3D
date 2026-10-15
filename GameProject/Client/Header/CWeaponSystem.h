@@ -32,6 +32,8 @@ public:
 	void ApplyCameraView(CAMERA_MODE eMode);
 	void SetUltimateAttackOnGoing(bool bFlag) { m_bUltimateOnGoing = bFlag; }
 	void SetWeaponVisibility(bool bFlag);
+	/* 걷기 흔들림 끄기 : 무기 입력이 잠기면 UpdateInput이 돌지 않아 마지막 이동 상태가 남으므로 잠그는 쪽에서 호출 */
+	void StopMoveAnimation();
 
 private:	
 	void SwitchWeaponTo(int iIndex);

@@ -184,6 +184,21 @@ void CWeaponSystem::SetWeaponVisibility(bool bFlag)
     }
 }
 
+void CWeaponSystem::StopMoveAnimation()
+{
+    /* 들고 있지 않은 무기도 마지막 상태가 남아 있을 수 있으므로 전부 */
+    TWeaponAnimArgs tArgs;
+    tArgs.bSpecialAtk = m_bSpecialAttackSwitchOn;
+    tArgs.bSprint = false;
+    tArgs.bMove = false;
+
+    for (CWeapon* pWeapon : m_vecWeapon)
+    {
+        if (pWeapon)
+            pWeapon->UpdateAnimationArgs(tArgs);
+    }
+}
+
 void CWeaponSystem::SwitchWeaponTo(int iIndex)
 {
     if (iIndex < 0 || iIndex >= (int)m_vecWeapon.size()) return;

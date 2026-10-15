@@ -654,6 +654,9 @@ void CPlayer::ResetToIdle()
     m_pMovement->Walk(_vec2{ 0.f, 0.f });
     /* 걷기/달리기 애니메이션 -> 아이들 */
     m_pAnimator->PlayLocomotion(EPlayerLocomotionState::IDLE);
+    /* 1인칭 무기 걷기 흔들림도 끔 */
+    if (m_pWeaponSystem)
+        m_pWeaponSystem->StopMoveAnimation();
 }
 
 bool CPlayer::IsInputAllowed(EPlayerInputChannel e)

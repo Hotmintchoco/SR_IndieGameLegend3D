@@ -823,6 +823,8 @@ void CStage::StartNpcDialogue()
     m_iNpcNextWord = GetTickCount64() + 250;
     m_pPlayer->LockInput(PIC_MOVE);
     m_pPlayer->LockInput(PIC_WEAPON);
+    /* 잠그기 직전 걷던 상태(걷기 커맨드/애니메이션, 무기 흔들림)가 남지 않도록 아이들로 */
+    m_pPlayer->ResetToIdle();
 }
 
 void CStage::EndNpcDialogue()
