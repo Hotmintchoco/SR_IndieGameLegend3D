@@ -109,7 +109,7 @@ void CCamera_MG1::Follow_Target()
 
 	_vec3 vPlayerPos;
 	m_pTarget->Get_Info(INFO_POS, &vPlayerPos);
-
+	
 	_vec3 vPivot = vPlayerPos + m_vEyeOffset;
 
 	// Eye가 바뀌었으므로 At도 새 Eye 기준으로 다시 계산

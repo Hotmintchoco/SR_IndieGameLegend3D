@@ -58,10 +58,13 @@ public:
 	void Set_Box1(CBox_MG1* pBox) { m_pBox1 = pBox; }
 	void Set_Box2(CBox_MG1* pBox) { m_pBox2 = pBox; }
 
-	_bool Is_Connection() { return m_bConnection; }
+	void Set_Box3(CBox_MG1* pBox) { m_pBox3 = pBox; }
+	void Set_Box4(CBox_MG1* pBox) { m_pBox4 = pBox; }
 
 	void Check_Connection();
+	void Check_Connection2();
 
+	_vec3 Get_OriginScale() { return m_vOriginScale; }
 private:
 	_float m_fYaw = 0.f;
 	_float m_fPitch = 0.f;
@@ -79,6 +82,17 @@ private:
 	_vec3 m_vBoxOriginPos = { 0.f,0.f,0.f };
 	_vec3 m_vBoxOriginRight = { 0.f,0.f,0.f };
 	_vec3 m_vBoxOriginScale = { 0.f,0.f,0.f };
+
+	_bool m_bConnection2 = false;
+	_bool m_bConnectionStart2 = false;
+
+	CBox_MG1* m_pBox3 = nullptr;
+	CBox_MG1* m_pBox4 = nullptr;
+
+	_vec3 m_vBoxOriginPos2 = { 0.f,0.f,0.f };
+	_vec3 m_vBoxOriginRight2 = { 0.f,0.f,0.f };
+	_vec3 m_vBoxOriginScale2 = { 0.f,0.f,0.f };
+
 
 	_vec3 m_vOriginScale = { 0.f,0.f,0.f };
 

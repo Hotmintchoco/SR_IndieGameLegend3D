@@ -204,9 +204,9 @@ HRESULT CRoomLayer::SpawnRoom()
 	CGameObject* pGameObject = nullptr;
 
 	/* 사막 기후에서 모래 안개 효과 */
-	if (m_tBiomeInfo.eType == EBiomeType::DESERT)
+	if (m_bEnableDesertVeil && m_tBiomeInfo.eType == EBiomeType::DESERT)
 	{
-		CAtmosphereVeil* pVeil = CAtmosphereVeil::Create(pDevice, TVeilDesc{ EColorTexture::SAND, {2.5f, 3.25f, 4.f, 4.75f}, {40, 40, 40, 40} });
+		CAtmosphereVeil* pVeil = CAtmosphereVeil::Create(pDevice, TVeilDesc{ EColorTexture::SAND, {2.5f, 3.25f, 4.f, 4.75f}, {25, 25, 25, 25} });
 		if (FAILED(Add_GameObject(L"Veil_Dust", pVeil)))
 			return E_FAIL;
 	}

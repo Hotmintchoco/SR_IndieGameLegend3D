@@ -544,7 +544,7 @@ void CEffect::Update_Effect(const _float fTimeDelta)
             //D3DXVec3Normalize(&vDir, &vDir);
             vDir *= 0.5f;
             vPos += vDir;
-            vDir = { 0.f,-2.5f,0.f };
+            vDir = { 0.f,-3.5f,0.f };
 
             _int iRandScale = rand() % 5;
             _float fScale = 0.05f + (_float)iRandScale * 0.01f;
@@ -554,6 +554,20 @@ void CEffect::Update_Effect(const _float fTimeDelta)
             if (iRand == 0) eColor = { 217.f / 256.f, 199.f / 256.f, 141.f / 256.f,1.f };
             else if (iRand == 1) eColor = { 232.f / 256.f, 216.f / 256.f, 179.f / 256.f,1.f };
             else eColor = { 179.f / 256.f, 148.f / 256.f, 54.f / 256.f ,1.f };
+
+            //if (iRand == 0)
+            //    eColor = { 205.f / 255.f, 164.f / 255.f, 75.f / 255.f, 1.f };
+            //else if (iRand == 1)
+            //    eColor = { 235.f / 255.f, 190.f / 255.f, 105.f / 255.f, 1.f };
+            //else
+            //    eColor = { 165.f / 255.f, 115.f / 255.f, 25.f / 255.f, 1.f };
+
+            //if (iRand == 0)
+            //    eColor = { 160.f / 255.f, 105.f / 255.f, 20.f / 255.f, 1.f };
+            //else if (iRand == 1)
+            //    eColor = { 195.f / 255.f, 135.f / 255.f, 30.f / 255.f, 1.f };
+            //else
+            //    eColor = { 115.f / 255.f, 70.f / 255.f, 10.f / 255.f, 1.f };
 
             pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vDir, vScale, eColor, 2.f, CParticle_Rectangle::SAND);
             if (nullptr == pGameObject) return;

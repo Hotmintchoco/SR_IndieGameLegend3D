@@ -71,7 +71,7 @@ private:
 	float m_bSpecialAtkSwitch = false;
 	
 	/* Item */
-	int m_iGem = 0;
+	int m_iGem = 92;
 	
 	/* Camera */
 	_vec3 m_vCamPos{ 60.f, 0.f, 60.f };

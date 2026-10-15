@@ -31,6 +31,7 @@
 #include "CMine.h"
 #include "CSeaweed.h"
 #include "CNpc.h"
+#include "CGemBox.h"
 #include "CSeaweed2.h"
 #include "CWalkerboss.h"
 #include "CGenerator_Airbubble.h"
@@ -40,10 +41,12 @@
 #include "CRoomLayer.h"
 #include "CIceRoomLayer.h"
 #include "CLiminalRoomLayer.h"
+#include "CDesertSpecialRoomLayer.h"
 #include "CMiniGame.h"
 #include "CMiniGame1.h"
 #include "CAnamorphicObject.h"
 #include "CPushableFrustum.h"
+#include "CChasm.h"
 #include "COrthoRoomLayer.h"
 
 IMPLEMENT_SINGLETON(CAbstractFactory);
@@ -79,6 +82,8 @@ CAbstractFactory::CAbstractFactory()
         {EObjectType::Seaweed2,                 [](const TCreateDesc& t) -> Engine::CGameObject* { return CSeaweed2::Create(t.pDevice); } },
         {EObjectType::Walker,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CWalkerboss::Create(t.pDevice); } },
         {EObjectType::Npc,                      [](const TCreateDesc& t) -> Engine::CGameObject* { return CNpc::Create(t.pDevice); } },
+        {EObjectType::GemBox,                   [](const TCreateDesc& t) -> Engine::CGameObject* { return CGemBox::Create(t.pDevice); } },
+        {EObjectType::Chasm,                    [](const TCreateDesc& t) -> Engine::CGameObject* { return CChasm::Create(t.pDevice); } },
         
         {EObjectType::EFFECT_GENERATOR_AIRBUBBLE,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_Airbubble::Create(t.pDevice); } },
         {EObjectType::EFFECT_GENERATOR_YELLOWDUST,                [](const TCreateDesc& t) -> Engine::CGameObject* { return CGenerator_YellowDust::Create(t.pDevice); } },
@@ -101,6 +106,7 @@ CAbstractFactory::CAbstractFactory()
         {ERoomType::ROOM_ICE,               [](const int iIndex) -> CRoomLayer* { return CIceRoomLayer::Create(iIndex); } },
         {ERoomType::ROOM_LIMINAL,           [](const int iIndex) -> CRoomLayer* { return CLiminalRoomLayer::Create(iIndex); } },
         {ERoomType::ROOM_ORTHO,             [](const int iIndex) -> CRoomLayer* { return COrthoRoomLayer::Create(iIndex); } },
+        {ERoomType::ROOM_TEMPLERUN,         [](const int iIndex) -> CRoomLayer* { return CDesertSpecialRoomLayer::Create(iIndex); } },
     };
 
     m_mapSceneCreator = {

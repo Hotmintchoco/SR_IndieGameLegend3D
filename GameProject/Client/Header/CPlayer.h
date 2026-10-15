@@ -46,6 +46,7 @@ public:
 	void LockInputFor(EPlayerInputChannel e, float fDuration);
 	void UnlockInput(EPlayerInputChannel e);
 	bool IsInputAllowed(EPlayerInputChannel e);
+	void SetForcedSprint(bool bEnabled) { m_bForcedSprint = bEnabled; }
 	/* 이동 입력이 잠기면 마지막 걷기 커맨드/애니메이션이 그대로 남으므로, 잠그는 쪽에서 불러 제자리 아이들로 되돌림 */
 	void ResetToIdle();
 
@@ -125,6 +126,7 @@ private:
 
 	/* 캐릭터 움직임 관련 */
 	CPlayerMovement* m_pMovement = nullptr;
+	bool m_bForcedSprint = false;
 	
 	/* 피격 관련 */
 	bool m_bInvincible = false;

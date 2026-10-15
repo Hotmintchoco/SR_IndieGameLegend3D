@@ -25,6 +25,7 @@ public:
 	HRESULT			Set_PitchLimits(_float fMinPitch, _float fMaxPitch);
 	void			Set_ViewOffset(const _vec3& vOffset){ m_vViewOffset = vOffset; }
 	const _vec3&	Get_ViewOffset() const { return m_vViewOffset; }
+	void			Set_LookPos(_vec3& vAt) { m_vAt = vAt; Sync_AnglesFromLook(); }
 	void			Rotate(_float fDeltaYaw, _float fDeltaPitch);
 
 protected:

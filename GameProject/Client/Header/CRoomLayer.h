@@ -106,6 +106,7 @@ protected:
 
 	/* 바이옴 */
 	TBiomeInfo m_tBiomeInfo = {};
+	bool m_bEnableDesertVeil = true;
 
 	/* 클리어 시 중앙에 리워드 생성 */
 	EObjectType m_eClearRewardType = EObjectType::NONE;

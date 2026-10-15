@@ -412,9 +412,6 @@
     <Filter Include="01. Scene\MiniGame_1\GameObject\Camera_MG1">
       <UniqueIdentifier>{34c68a12-2025-4782-8337-947fe2d32cdd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\MiniGame_1\GameObject\Box_MG1">
-      <UniqueIdentifier>{6f0d2a13-8903-4ded-b365-58040e9b5a1b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Monster\Walkerboss">
       <UniqueIdentifier>{36e61ccd-5bc8-4493-853d-e28264b96eb9}</UniqueIdentifier>
     </Filter>
@@ -529,6 +526,9 @@
     <Filter Include="01. Scene\Intro">
       <UniqueIdentifier>{c80e9381-b779-43fb-a4fe-73fc75d28c59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\MiniGame_1\GameObject\Box_MG1">
+      <UniqueIdentifier>{6f0d2a13-8903-4ded-b365-58040e9b5a1b}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01. Scene\Stage\Layer\Ice">
       <UniqueIdentifier>{a16ae8e4-a76a-4c90-8d52-9960b5eec7a0}</UniqueIdentifier>
     </Filter>
@@ -603,6 +603,12 @@
     </Filter>
     <Filter Include="02. GameObject\07. Room\BaseProp\Tile\Sprite\Ortho">
       <UniqueIdentifier>{a2d7797d-ba22-4a1f-8302-337e2aa01b84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\GemBox">
+      <UniqueIdentifier>{a38e5298-5484-4841-a668-a4e2ddd51c21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Temple">
+      <UniqueIdentifier>{251d853b-6318-4ed7-be27-513c5e7398fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1260,6 +1266,12 @@
     <ClInclude Include="..\Header\COrthoSpriteTile.h">
       <Filter>02. GameObject\07. Room\BaseProp\Tile\Sprite\Ortho</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGemBox.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\GemBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CDesertSpecialRoomLayer.h">
+      <Filter>01. Scene\Stage\Layer\Temple</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1886,6 +1898,12 @@
     <ClCompile Include="..\Code\COrthoSpriteTile.cpp">
       <Filter>02. GameObject\07. Room\BaseProp\Tile\Sprite\Ortho</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CGemBox.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\GemBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDesertSpecialRoomLayer.cpp">
+      <Filter>01. Scene\Stage\Layer\Temple</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -1946,12 +1964,6 @@
     <None Include="..\Bin\Resource\Shader\CameraFilterPack_RainDrop.png">
       <Filter>리소스 파일</Filter>
     </None>
-    <None Include="..\Bin\Resource\Shader\Grayscale.hlsl">
-      <Filter>리소스 파일</Filter>
-    </None>
-    <None Include="..\Bin\Resource\Shader\Invert.hlsl">
-      <Filter>리소스 파일</Filter>
-    </None>
     <None Include="..\Bin\Resource\Shader\Lava.hlsl">
       <Filter>리소스 파일</Filter>
     </None>
@@ -1962,6 +1974,12 @@
     <None Include="..\Bin\Resource\Shader\Grayscale.hlsl" />
     <None Include="..\Bin\Resource\Shader\Grayscale.hlsl" />
     <None Include="..\Bin\Resource\Shader\Invert.hlsl" />
+    <None Include="..\Bin\Resource\Shader\Grayscale.hlsl">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="..\Bin\Resource\Shader\Invert.hlsl">
+      <Filter>리소스 파일</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="02. GameObject\07. Room\PlaceableProp\Npc" />
@@ -1970,6 +1988,15 @@
     </ClInclude>
     <ClCompile Include="..\Code\CNpc.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Npc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Chasm" />
+    <ClInclude Include="..\Header\CChasm.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Chasm</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CChasm.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Chasm</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

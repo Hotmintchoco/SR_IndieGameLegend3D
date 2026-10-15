@@ -115,7 +115,7 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
     if (nullptr == pGameObject) return E_FAIL;
     if (FAILED(pLayer->Add_GameObject(L"Test1", pGameObject))) return E_FAIL;
 
-    vPos = {-5.f,1.5f,4.f};
+    vPos = {-14.f,3.5f,4.f};
     vScale = { 0.75f,0.75f,0.75f };
     pGameObject = CTest1::Create(m_pGraphicDev, 3, vScale, vPos);
     if (nullptr == pGameObject) return E_FAIL;
@@ -144,8 +144,15 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
     if (FAILED(pLayer->Add_GameObject(L"Box1", pGameObject))) return E_FAIL;
     m_pPlayer->Set_Box1(static_cast<CBox_MG1*>(pGameObject));
 
+    vPos = { -5.f, 1.f, 4.f }; //Box3
+    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 4, vDir);
+    if (nullptr == pGameObject) return E_FAIL;
+    if (FAILED(pLayer->Add_GameObject(L"Box1", pGameObject))) return E_FAIL;
+    m_pPlayer->Set_Box3(static_cast<CBox_MG1*>(pGameObject));
+
+    //2층
     vPos = { -1.f, 1.f, 4.f };
-    for (int i = 1; i < 6; ++i)
+    for (int i = 1; i < 15; ++i)
     {
         for (int j = 3; j < 6; ++j)
         {
@@ -170,7 +177,7 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
         }
     }
 
-    for (int i = 1; i < 6; ++i)
+    for (int i = 1; i < 15; ++i)
     {
         for (int j = 0; j < 2; ++j)
         {
@@ -192,7 +199,66 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
         {
             for (int k = 0; k < 1; ++k)
             {
-                vPos = { -0.5f - 5.f*(_float)i, (_float)0.5f, (_float)j };
+                vPos = { -0.5f - 14.f*(_float)i, (_float)0.5f, (_float)j };
+                _vec3 vDir{ 1.f,0.f,0.f };
+
+                pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 0, vDir);
+                if (nullptr == pGameObject) return E_FAIL;
+                if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
+            }
+        }
+    }
+
+    //3층
+    vPos = { -1.f, 1.f, 4.f };
+    for (int i = 10; i < 15; ++i)
+    {
+        for (int j = 3; j < 6; ++j)
+        {
+            for (int k = 2; k < 4; ++k)
+            {
+                vPos = { (_float)-i, (_float)k, (_float)j };
+                _vec3 vDir{ 0.f,-1.f,0.f };
+                if (i == 10 && j == 4 && k == 3)
+                {
+                    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 6, vDir);
+                    if (nullptr == pGameObject) return E_FAIL;
+                    if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
+                    m_pPlayer->Set_Box4(static_cast<CBox_MG1*>(pGameObject));
+                }
+                else
+                {
+                    pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 0, vDir);
+                    if (nullptr == pGameObject) return E_FAIL;
+                    if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
+                }
+            }
+        }
+    }
+
+    for (int i = 10; i < 15; ++i)
+    {
+        for (int j = 0; j < 2; ++j)
+        {
+            for (int k = 0; k < 1; ++k)
+            {
+                vPos = { (_float)-i, (_float)2.5f, (_float)5.5f - (_float)j * 3.f };
+                _vec3 vDir{ 0.f,0.f,0.f };
+
+                pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 0, vDir);
+                if (nullptr == pGameObject) return E_FAIL;
+                if (FAILED(pLayer->Add_GameObject(L"Box", pGameObject))) return E_FAIL;
+            }
+        }
+    }
+
+    for (int i = 0; i < 2; ++i)
+    {
+        for (int j = 3; j < 6; ++j)
+        {
+            for (int k = 0; k < 1; ++k)
+            {
+                vPos = { -9.5f - 5.f * (_float)i, (_float)2.5f, (_float)j };
                 _vec3 vDir{ 1.f,0.f,0.f };
 
                 pGameObject = CBox_MG1::Create(m_pGraphicDev, vPos, 0, vDir);
@@ -204,7 +270,7 @@ HRESULT CMiniGame1::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
     //맨밑
     vPos = { 4.f, -1.f, 4.f };
-    for (int i = -11; i < 8; ++i)
+    for (int i = -20; i < 8; ++i)
     {
         for (int j = -3; j < 4; ++j)
         {
@@ -262,11 +328,6 @@ void CMiniGame1::RenderImGui()
         _vec3 vAngle = pPlayerTransformCom->Get_Angle();
         ImGui::Text("Pos : %.2f, %.2f, %.2f", vPos.x, vPos.y, vPos.z);
         ImGui::Text("Pitch : %.2f, Raw %.2f", vAngle.x, vAngle.y);
-        //ImGui::Text("Connection : %d, Dist : %.4f", pPlayer->Is_Connection(), pPlayer->Dist());
-        //ImGui::Text("POINT1 : %.2f %.2f, %.2f", pPlayer->Get_f1().x, pPlayer->Get_f1().y, pPlayer->Get_f1().z);
-        //ImGui::Text("POINT2 : %.2f %.2f, %.2f", pPlayer->Get_f2().x, pPlayer->Get_f2().y, pPlayer->Get_f2().z);
-
-
     }        
 
     ImGui::End();

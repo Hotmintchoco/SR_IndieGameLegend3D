@@ -27,7 +27,7 @@ HRESULT CSprnub3::Ready_GameObject()
     _vec3 vScale = m_pTransformCom->Get_Scale();
     m_pColliderCom->Set_Radius(vScale.x);
 
-    m_iMaxHp = 2;
+    m_iMaxHp = 4;
     m_iHp = m_iMaxHp;
     m_eMonsterState = MOVE;
     return S_OK;

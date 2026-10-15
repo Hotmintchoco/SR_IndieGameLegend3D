@@ -25,9 +25,11 @@ HRESULT CGlubba::Ready_GameObject()
 
     m_pTransformCom->Set_Scale(0.25f, 0.25f, 0.25f);
     m_pColliderCom->Set_Radius(0.5f);
-    m_iMaxHp = 2;
+    m_iMaxHp = 4;
     m_iHp = m_iMaxHp;
     m_eMonsterState = JUMP;
+
+    m_bCollision_WithMonster = false;
     return S_OK;
 }
 
@@ -46,7 +48,7 @@ _int CGlubba::Update_GameObject(_float fTimeDelta)
         break;
     case MOVE:
         Set_OnTerrain();
-        Chase_Player(fTimeDelta, 0.75f);
+        Chase_Player(fTimeDelta, 1.25f);
         break;
     }
 
@@ -140,7 +142,7 @@ void CGlubba::Land(const _float& fTimeDelta)
 {
     _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
     _vec3 vScale = m_pTransformCom->Get_Scale();
-    m_vLandingDirection.y -= 9.8f * fTimeDelta;
+    m_vLandingDirection.y -= 9.8f * fTimeDelta*1.5f;
 
     if (vPos.y < vScale.y)
     {
@@ -148,7 +150,7 @@ void CGlubba::Land(const _float& fTimeDelta)
         m_pTransformCom->Set_Pos(vPos);
         m_bLandingState = true;
         m_eMonsterState = MOVE;
-
+        m_bCollision_WithMonster = true;
     }
     else
     {
