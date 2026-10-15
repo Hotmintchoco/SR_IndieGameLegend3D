@@ -77,6 +77,11 @@ _int CMiniGame::Update_Scene(_float fTimeDelta)
         m_pPlayer->Set_Invincible(1.f);
         if (m_pOutro->Is_Finished())
         {
+            if (CGameMachine* pGameMachine = dynamic_cast<CGameMachine*>(CManagement::GetInstance()->Get_Scene(0)->Get_GameObject(L"Room_15_Layer", L"Room_15_ObjectTiling_71")))
+            {
+                pGameMachine->Set_Clear();
+            }
+
             if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
                 return -1;
         }

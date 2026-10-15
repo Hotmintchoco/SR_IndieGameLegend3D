@@ -160,6 +160,10 @@ TWeaponOutput CLaserGun::StartUltimateAttack(EInputState ePri, EInputState eSec)
     CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_CINEMATIC, 1.f);
     CTimerMgr::GetInstance()->SetGroupTimeScale(CTG_PLAYER, 1.f);
 
+    m_tSavedBGM = CSoundMgr::GetInstance()->CaptureBGM();
+    CSoundMgr::GetInstance()->StopBGM();
+    CSoundMgr::GetInstance()->PlaySFX(L"TimeStop.wav");
+
     m_bOnEffectTransition = true;
     m_fTotalEffectTransitionTime = 1.f;
     m_fTimeAfterEffect = 0.f;
@@ -202,6 +206,9 @@ TWeaponOutput CLaserGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
 {
     CTimerMgr::GetInstance()->SetGlobalTimeScale(1.f);
     CTimerMgr::GetInstance()->ClearAllGroupTimeScale();
+
+    CSoundMgr::GetInstance()->PlaySFX(L"TimeStopRev.wav");
+    CSoundMgr::GetInstance()->RestoreBGM(m_tSavedBGM, 3.0f);
 
     m_bOnEffectTransition = true;
     m_fTotalEffectTransitionTime = 2.0f;

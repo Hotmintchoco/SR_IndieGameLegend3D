@@ -198,11 +198,9 @@ void CShotGun::ShotSGBullet()
         CProjectile* pProjectile = CSGBullet::Create(m_pGraphicDev, vPos, vDir, fNoiseScale);
         CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
         pScene->Add_GameObject(L"Projectile_" + to_wstring(pProjectile->GetProjectileID()), pProjectile);
-
+        
     }
 
-    CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
-    CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
     CSoundMgr::GetInstance()->PlaySFX(L"sfxBullet.wav");
 
     StartShotAnimation();

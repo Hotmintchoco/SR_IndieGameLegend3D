@@ -190,6 +190,9 @@ TWeaponOutput CLiminalGun::StartUltimateAttack(EInputState ePri, EInputState eSe
     m_bOnUltimateAttack = true;
     m_fTimeAfterUltimate = 0.f;
     m_pSystem->SetUltimateAttackOnGoing(true);
+
+    m_tSavedBGM = CSoundMgr::GetInstance()->CaptureBGM();
+    CSoundMgr::GetInstance()->FadeOutBGM(0.5f);
     CSoundMgr::GetInstance()->PlaySFX(L"Ult_Liminal.wav");
 
     m_pEffect->Set_IsActive(true);
@@ -240,6 +243,8 @@ TWeaponOutput CLiminalGun::EndUltimateAttack(EInputState ePri, EInputState eSec)
     m_fTimeAfterUltimate = 0.f;
     m_pSystem->SetUltimateAttackOnGoing(false);
     m_bOnHitScan = false;
+
+    CSoundMgr::GetInstance()->RestoreBGM(m_tSavedBGM, 1.0f);
 
     m_bOnEffectTransition = true;
     m_fTotalEffectTransitionTime = 0.3f;
@@ -428,7 +433,7 @@ void CLiminalGun::UpdateHitScanState(float fTimeDelta)
 {
     if (!m_bOnHitScan) return;
 
-    m_fTimeAfterHitScan += fTimeDelta;
+    m_fTimeAfterHitScan += CTimerMgr::GetInstance()->Get_FrameDelta();
 
     if (m_fTimeAfterHitScan < m_fSingleHitScanInverval) return;
     
