@@ -17,6 +17,8 @@
 #include "CExplodeSphere.h"
 #include "CRandomMgr.h"
 #include "CSoundMgr.h"
+#include "CMonster.h"
+#include "CSmallExplode.h"
 
 CRibbon::CRibbon(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vStart, const _vec3& vDir)
     : CProjectile(pGraphicDev)
@@ -129,14 +131,29 @@ void CRibbon::OnCollisionEnter(COLLINFO eCollInfo)
 {
     CProjectile::OnCollisionEnter(eCollInfo);
 
-    // auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
-    // auto pObject = eCollInfo.pOtherCollider->Get_Owner();
-    // 
-    // switch (iOtherID)
-    // {
-    // default:
-    //     break;
-    // }
+    auto& [pMyCol, pOtherCol, iMyID, iOtherID] = eCollInfo;
+    auto pObject = eCollInfo.pOtherCollider->Get_Owner();
+    
+    switch (iOtherID)
+    {
+    case COLL_MONSTER:
+    {
+        _vec3 vPos;
+        static_cast<CMonster*>(eCollInfo.pOtherCollider->Get_Owner())->Get_Pos(&vPos);
+        CSoundMgr::GetInstance()->PlaySFX(L"Monster_Spore_Damage.mp3");
+        
+        CGameObject* pGameObject = nullptr;
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+
+        pGameObject = CSmallExplode::Create(m_pGraphicDev, vPos + _vec3{0.01f, 0.f, 0.f}, _vec3{ 0.3f, 0.3f, 0.3f });
+        if (nullptr == pGameObject) return;
+
+        if (FAILED(CManagement::GetInstance()->GetCurrentScene()->Add_GameObject(L"SmallExplode", pGameObject))) return;
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 void CRibbon::StartExplosionPhase()
