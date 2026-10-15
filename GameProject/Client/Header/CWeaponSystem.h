@@ -42,12 +42,12 @@ private:
 	int m_iCurrentIndex = 0;
 
 	/* 특수 공격 */
-	bool m_bSpecialAttackSwitchOn = true;
-	float m_fSpecialAtkGauge = 1.f;
+	bool m_bSpecialAttackSwitchOn = false;
+	float m_fSpecialAtkGauge = 0.f;
 
 	/* 궁극기 */
-	float m_fUltimateAtkGauge = 1.f;
-	float m_bIsUltimateAttackReady = true;
+	float m_fUltimateAtkGauge = 0.f;
+	float m_bIsUltimateAttackReady = false;
 	float m_bUltimateOnGoing = false;
 
 	/* 애니메이션 */
