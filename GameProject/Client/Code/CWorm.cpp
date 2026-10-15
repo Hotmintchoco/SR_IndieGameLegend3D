@@ -262,6 +262,7 @@ void CWorm::Check_Sandburst(_float fTimeDelta)
         _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
         if (0.f < vPos.y && vPos.y < 0.125f)
         {
+            CClientCameraMgr::GetInstance()->Camera_Shake(0.5f, 1.f);
             if (m_fElapsedTime2 > 0.5f)
             {
                 _float fTime = 0.f;
@@ -939,7 +940,7 @@ void CWorm::Opening_Worm(const _float& fTimeDelta)
             CUIMgr::GetInstance()->Active_Boss(true);
         }
     }
-    // 5초뒤 움직임
+    // 3초뒤 움직임
     else if (m_bElapsedOpeningTime > 3.f)
     {
         if (!m_vMoveDest.empty())

@@ -11,6 +11,7 @@
 #include "CEffect.h"
 #include "CPlayerCamera.h"
 #include "CSoundMgr.h"
+#include "CClientCameraMgr.h"
 
 CFireball::CFireball(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -189,7 +190,7 @@ void CFireball::Throw(const _float& fTimeDelta)
 
         if (m_bSound == true)
             CSoundMgr::GetInstance()->PlaySFX(L"sfxKill.wav");
-
+        CClientCameraMgr::GetInstance()->Camera_Shake(0.25f, 0.75f);
         return;
     }
     m_pTransformCom->Move_Pos(&vVelocity, 1.f, fTimeDelta);

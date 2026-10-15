@@ -324,6 +324,9 @@ void CBoss1::Move_Boss1(const _float& fTimeDelta)
 
             if (vPos.y <= vScale.y && m_fLandingTime > 0.5f)
             {
+                //CClientCameraMgr::GetInstance()->Camera_Shake(0.25f, 1.f);
+                CClientCameraMgr::GetInstance()->Camera_Shake(0.25f, 2.f);
+
                 m_fLandingTime = 0.f;
                 ++m_iLandingCount;
 
@@ -419,6 +422,7 @@ void CBoss1::Spawn_Spn(const _float& fTimeDelta)
 
             if (vPos.y <= vScale.y && m_fLandingTime > 0.5f)
             {
+                CClientCameraMgr::GetInstance()->Camera_Shake(0.25f, 2.f);
                 m_fLandingTime = 0.f;
                 ++m_iLandingCount;
                 if (m_iLandingCount == 2)
@@ -747,6 +751,8 @@ void CBoss1::Opening_Boss1(const _float& fTimeDelta)
         //착지했을때, 다음 착지위치 설정
         if (vPos.y <= vScale.y && m_fLandingTime > 0.5f)
         {
+            CClientCameraMgr::GetInstance()->Camera_Shake(0.25f, 2.f);
+
             m_fLandingTime = 0.f;
 
             ++m_iOpeningMoveIndex;
