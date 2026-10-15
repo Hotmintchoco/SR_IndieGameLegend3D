@@ -4,7 +4,9 @@
 #include "CManagement.h"
 #include "CRenderer.h"
 #include "CFontMgr.h"
+#include "CDInputMgr.h"
 #include "CMiniGame.h"
+#include "CMG0_Dialogue.h"
 #include "CMG0_Player.h"
 #include "CMG0_Deck.h"
 #include "CMG0_Card.h"
@@ -28,6 +30,7 @@ static const DWORD Rect_Warning = D3DCOLOR_ARGB(255, 255, 50, 50);
 static const DWORD Rect_WarningBack = D3DCOLOR_ARGB(235, 30, 0, 0);
 static const DWORD Rect_BossBack = D3DCOLOR_ARGB(255, 40, 10, 10);
 static const DWORD Rect_BossHp = D3DCOLOR_ARGB(255, 220, 40, 40);
+static const DWORD Rect_Dim = D3DCOLOR_ARGB(170, 0, 0, 0);
 
 CMG0_HUD::CMG0_HUD(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)
@@ -119,6 +122,16 @@ void CMG0_HUD::LateUpdate_GameObject(_float fTimeDelta)
     _float fWarningTime = fSceneTime - MG_BOSS_WARNING_START;
 
     m_bWarning = fWarningTime >= 0.f && fWarningTime < MG_BOSS_WARNING_TIME && 0 == (_int)(fWarningTime / MG_BOSS_WARNING_BLINK) % 2;
+    m_iWarningAlpha = 0;
+
+    if (fWarningTime >= 0.f && fWarningTime < MG_BOSS_WARNING_TIME)
+    {
+        // 점점 진해지면서 WARNING 글자 깜빡임과 같은 박자로 맥동
+        _float fRamp = fWarningTime / MG_BOSS_WARNING_TIME;
+        _float fPulse = 0.5f + 0.5f * cosf(D3DX_PI * (fWarningTime - MG_BOSS_WARNING_BLINK * 0.5f) / MG_BOSS_WARNING_BLINK);
+
+        m_iWarningAlpha = (_int)((MG_WARNING_ALPHA_MIN + (MG_WARNING_ALPHA_MAX - MG_WARNING_ALPHA_MIN) * fRamp) * (0.4f + 0.6f * fPulse));
+    }
     m_bBossHp = fSceneTime >= MG_BOSS_HPBAR_START && !pScene->Get_Boss()->Is_Dead();
     m_bTimeOver = pScene->Is_TimeOver();
     m_iWhiteAlpha = (_int)(255.f * pScene->Get_WhiteRate());
@@ -129,6 +142,50 @@ void CMG0_HUD::LateUpdate_GameObject(_float fTimeDelta)
         _float fRate = (_float)pBoss->Get_Hp() / pBoss->Get_MaxHp();
 
         m_fBossHpRate += (fRate - m_fBossHpRate) * min(1.f, 3.f * fTimeDelta);
+    }
+
+    Update_Guide(pScene, fTimeDelta);
+}
+
+void CMG0_HUD::Update_Guide(CMiniGame* pScene, _float fTimeDelta)
+{
+    const _float fSceneTime = pScene->Get_SceneTime();
+    const _bool bEnter = CDInputMgr::GetInstance()->Key_Down(DIK_RETURN);
+
+    switch (m_eGuide)
+    {
+    case GUIDE_WAIT:
+        if (!pScene->Get_Dialogue()->Is_Finished())
+            break;
+
+        m_fGuideDelay += fTimeDelta;
+        if (m_fGuideDelay >= MG_GUIDE_DELAY)
+            m_eGuide = GUIDE_ICON;
+        break;
+    case GUIDE_ICON:
+        if (bEnter || fSceneTime >= MG_GUIDE_END_TIME)
+        {
+            m_eGuide = GUIDE_TUTORIAL;
+            m_fTutorialStart = fSceneTime;
+            m_iTutorialPage = 0;
+        }
+        break;
+    case GUIDE_TUTORIAL:
+    {
+        const _int iPageCount = _countof(MINIGAME0::MG_TUTORIAL);
+        const _float fPageTime = (MG_CARD_START_TIME - m_fTutorialStart) / iPageCount;
+
+        if (bEnter)
+            ++m_iTutorialPage;
+
+        m_iTutorialPage = max(m_iTutorialPage, (_int)((fSceneTime - m_fTutorialStart) / fPageTime));
+
+        if (m_iTutorialPage >= iPageCount || fSceneTime >= MG_CARD_START_TIME)
+            m_eGuide = GUIDE_DONE;
+        break;
+    }
+    default:
+        break;
     }
 }
 
@@ -162,10 +219,12 @@ void CMG0_HUD::Render_GameObject()
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
     m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
 
+    const _bool bTutorial = (GUIDE_TUTORIAL == m_eGuide);
+
     Render_Life();
     Render_Attack();
 
-    if (m_bCardTime)
+    if (m_bCardTime || bTutorial)
     {
         Render_Vital();
         Render_Buff();
@@ -178,6 +237,12 @@ void CMG0_HUD::Render_GameObject()
         Render_Rest();
         Render_Popup();
     }
+    else if (bTutorial)
+    {
+        Render_Turn();
+        Render_HandPreview();
+        Render_Rest();
+    }
 
     if (m_bComplete)
         Render_Complete();
@@ -187,8 +252,20 @@ void CMG0_HUD::Render_GameObject()
     if (m_bBossHp)
         Render_BossHp();
 
+    if (m_iWarningAlpha > 0)
+        Render_Rect(WINCX * 0.5f, WINCY * 0.5f, WINCX * 0.5f, WINCY * 0.5f, D3DCOLOR_ARGB(m_iWarningAlpha, 255, 0, 0));
+
     if (m_bWarning)
         Render_Warning();
+
+    if (GUIDE_ICON == m_eGuide)
+        Render_Guide();
+
+    if (bTutorial)
+    {
+        Flush_Text();
+        Render_Tutorial();
+    }
 
     if (m_iWhiteAlpha > 0)
         Render_Rect(WINCX * 0.5f, WINCY * 0.5f, WINCX * 0.5f, WINCY * 0.5f, D3DCOLOR_ARGB(m_iWhiteAlpha, 255, 255, 255));
@@ -232,7 +309,7 @@ void CMG0_HUD::Render_Life()
 
 void CMG0_HUD::Render_Attack()
 {
-    const wstring strLabel = L"공격력 ";
+    const wstring strLabel = L"공격력 : ";
     const _vec2 vPos(WINCX - 192.f, 18.f);
 
     Render_Text(strLabel, vPos, Color_Yellow);
@@ -292,33 +369,40 @@ void CMG0_HUD::Render_Vital()
 
 void CMG0_HUD::Render_Buff()
 {
-    const pair<MINIGAME0::MGICON, const STATVIEW*> tBuff[] =
+    struct BUFFVIEW
     {
-        { MINIGAME0::ICON_MOOD_GOOD, &m_tStatus[MINIGAME0::MOOD_GOOD] },
-        { MINIGAME0::ICON_MOOD_PERFECT, &m_tStatus[MINIGAME0::MOOD_PERFECT] },
-        { MINIGAME0::ICON_ATTENTION, &m_tStatus[MINIGAME0::ATTENTION] },
-        { MINIGAME0::ICON_SKILL_DOUBLE, &m_tExtraActivate },
-        { MINIGAME0::ICON_EXTRA_ACTION, &m_tExtraAction },
-        { MINIGAME0::ICON_COST_HALF, &m_tStatus[MINIGAME0::COST_HALF] },
+        MINIGAME0::MGICON   eIcon;
+        const STATVIEW*     pView;
+        _bool               bTurn;
+    };
+
+    const BUFFVIEW tBuff[] =
+    {
+        { MINIGAME0::ICON_MOOD_GOOD, &m_tStatus[MINIGAME0::MOOD_GOOD], true },
+        { MINIGAME0::ICON_MOOD_PERFECT, &m_tStatus[MINIGAME0::MOOD_PERFECT], true },
+        { MINIGAME0::ICON_ATTENTION, &m_tStatus[MINIGAME0::ATTENTION], false },
+        { MINIGAME0::ICON_SKILL_DOUBLE, &m_tExtraActivate, false },
+        { MINIGAME0::ICON_EXTRA_ACTION, &m_tExtraAction, false },
+        { MINIGAME0::ICON_COST_HALF, &m_tStatus[MINIGAME0::COST_HALF], true },
     };
 
     _float fY = 84.f;
 
-    for (const auto& Pair : tBuff)
+    for (const BUFFVIEW& tBuffView : tBuff)
     {
-        const STATVIEW& tView = *Pair.second;
+        const STATVIEW& tView = *tBuffView.pView;
         if (tView.iActual <= 0 && tView.iTarget <= 0 && Get_Shown(tView) <= 0)
             continue;
 
-        Render_Icon(Pair.first, 34.f, fY, MG_UI_ICON_SIZE);
-        Render_Value(tView, 56.f, fY - 11.f, Color_White);
+        Render_Icon(tBuffView.eIcon, 34.f, fY, MG_UI_ICON_SIZE);
+        Render_Value(tView, 56.f, fY - 11.f, Color_White, tBuffView.bTurn ? L"턴" : L"");
 
         fY += MG_UI_ICON_SIZE + 6.f;
     }
 
     if (m_tActiveParameter.iActual > 0 || m_tActiveParameter.iTarget > 0)
     {
-        const wstring strLabel = L"액티브 +";
+        const wstring strLabel = L"액티브 카드 사용 시 +";
 
         Render_Text(strLabel, _vec2(20.f, fY - 11.f), Color_White);
         Render_Value(m_tActiveParameter, 20.f + Measure_Text(strLabel), fY - 11.f, Color_White);
@@ -354,9 +438,9 @@ _int CMG0_HUD::Get_Shown(const STATVIEW& tView)
     return (_int)floorf(tView.fShown);
 }
 
-void CMG0_HUD::Render_Value(const STATVIEW& tView, _float fX, _float fY, D3DXCOLOR Color)
+void CMG0_HUD::Render_Value(const STATVIEW& tView, _float fX, _float fY, D3DXCOLOR Color, const wstring& strSuffix)
 {
-    const wstring strValue = to_wstring(Get_Shown(tView));
+    const wstring strValue = to_wstring(Get_Shown(tView)) + strSuffix;
 
     Render_Text(strValue, _vec2(fX, fY), Color);
 
@@ -385,7 +469,7 @@ void CMG0_HUD::Render_Turn()
     const _float fBarHalfX = 100.f;
     const _float fBarHalfY = 4.f;
 
-    Render_Text(L"턴 " + to_wstring(m_iTurn) + L" / " + to_wstring(MG_CARD_MAX_TURN), _vec2(fCenterX, 18.f), Color_White, true);
+    Render_Text(L"턴 " + to_wstring(max(1, m_iTurn)) + L" / " + to_wstring(MG_CARD_MAX_TURN), _vec2(fCenterX, 18.f), Color_White, true);
 
     Render_Rect(fCenterX, fBarY, fBarHalfX + 2.f, fBarHalfY + 2.f, Rect_Dark);
     Render_Rect(fCenterX - fBarHalfX * (1.f - m_fTurnRate), fBarY, fBarHalfX * m_fTurnRate, fBarHalfY,
@@ -489,7 +573,7 @@ void CMG0_HUD::Render_Popup()
     }
 
     if (MINIGAME0::ONCE_PER_LESSON == tData.eType)
-        Render_Text(L"레슨 중 1회", _vec2(fLineX + 20.f, fTextY), Color_Purple, false, false);
+        Render_Text(L"미니게임 중 1회", _vec2(fLineX + 20.f, fTextY), Color_Purple, false, false);
 }
 
 void CMG0_HUD::Render_Notice()
@@ -724,6 +808,101 @@ void CMG0_HUD::Render_Warning()
 
     Render_Rect(fX, fY, 150.f, 34.f, Rect_Warning);
     Render_Rect(fX, fY, 146.f, 30.f, Rect_WarningBack);
+}
+
+void CMG0_HUD::Render_Guide()
+{
+    const _float fX = WINCX * 0.5f;
+    const _float fY = WINCY * 0.5f;
+    const _float fHalfX = 340.f;
+    const _float fHalfY = 200.f;
+    const _float fLeft = fX - fHalfX;
+    const _float fTop = fY - fHalfY;
+    const _float fIconX = fLeft + 40.f;
+    const _float fNameX = fLeft + 64.f;
+    const _float fRowStep = 36.f;
+
+    Render_Rect(fX, fY, WINCX * 0.5f, WINCY * 0.5f, Rect_Dark);
+    Render_Rect(fX, fY, fHalfX + 2.f, fHalfY + 2.f, Rect_PopupBorder);
+    Render_Rect(fX, fY, fHalfX, fHalfY, Rect_Popup);
+    Render_Rect(fX, fTop + 48.f, fHalfX - 16.f, 1.f, Rect_PopupBorder);
+
+    Render_Text(L"스킬 아이콘 설명", _vec2(fX, fTop + 14.f), Color_Dark, true, false);
+
+    _float fNameWidth = 0.f;
+    for (const MINIGAME0::MGICONGUIDE& tGuide : MINIGAME0::MG_ICON_GUIDE)
+        fNameWidth = max(fNameWidth, Measure_Text(tGuide.pName));
+
+    const _float fDescX = fNameX + fNameWidth + 24.f;
+    _float fRowY = fTop + 64.f;
+
+    for (const MINIGAME0::MGICONGUIDE& tGuide : MINIGAME0::MG_ICON_GUIDE)
+    {
+        Render_Icon(tGuide.eIcon, fIconX, fRowY + 11.f, 28.f);
+        Render_Text(tGuide.pName, _vec2(fNameX, fRowY), Color_Purple, false, false);
+        Render_Text(tGuide.pDesc, _vec2(fDescX, fRowY), Color_Dark, false, false);
+
+        fRowY += fRowStep;
+    }
+
+    Render_Text(L"ENTER 키로 닫기", _vec2(fX, fTop + fHalfY * 2.f - 36.f), Color_Gray, true, false);
+}
+
+void CMG0_HUD::Render_HandPreview()
+{
+    const _tchar* pKeyName[MG_CARD_HAND_COUNT] = { L"Z", L"X", L"C" };
+
+    for (_int i = 0; i < MG_CARD_HAND_COUNT; ++i)
+    {
+        _float fX = WINCX * 0.5f + (i - (MG_CARD_HAND_COUNT - 1) * 0.5f) * MG_CARD_UI_GAP_X;
+        _float fTop = MG_CARD_UI_CENTER_Y - MG_CARD_UI_HALF_Y;
+
+        Render_Rect(fX, MG_CARD_UI_CENTER_Y, MG_CARD_UI_HALF_X + 2.f, MG_CARD_UI_HALF_Y + 2.f, Rect_Border);
+        Render_Rect(fX, MG_CARD_UI_CENTER_Y, MG_CARD_UI_HALF_X, MG_CARD_UI_HALF_Y, Rect_Panel);
+
+        Render_Text(L"?", _vec2(fX, MG_CARD_UI_CENTER_Y - 11.f), Color_Gray, true);
+        Render_Text(pKeyName[i], _vec2(fX, fTop - MG_UI_LINE_HEIGHT - 2.f), Color_White, true);
+    }
+}
+
+void CMG0_HUD::Render_Tutorial()
+{
+    const _int iPageCount = _countof(MINIGAME0::MG_TUTORIAL);
+    const _int iPage = min(m_iTutorialPage, iPageCount - 1);
+    const MINIGAME0::MGTUTORIAL& tPage = MINIGAME0::MG_TUTORIAL[iPage];
+
+    Render_Spotlight(tPage.fX, tPage.fY, tPage.fHalfX, tPage.fHalfY);
+
+    const _float fX = tPage.fBoxX;
+    const _float fTop = tPage.fBoxY - MG_TUTORIAL_BOX_HALF_Y;
+    const _float fLineX = fX - MG_TUTORIAL_BOX_HALF_X + 20.f;
+
+    Render_Rect(fX, tPage.fBoxY, MG_TUTORIAL_BOX_HALF_X + 2.f, MG_TUTORIAL_BOX_HALF_Y + 2.f, Rect_PopupBorder);
+    Render_Rect(fX, tPage.fBoxY, MG_TUTORIAL_BOX_HALF_X, MG_TUTORIAL_BOX_HALF_Y, Rect_Popup);
+    Render_Rect(fX, fTop + 38.f, MG_TUTORIAL_BOX_HALF_X - 16.f, 1.f, Rect_PopupBorder);
+
+    Render_Text(tPage.pTitle, _vec2(fX, fTop + 8.f), Color_Purple, true, false);
+    Render_Text(tPage.pLine[0], _vec2(fLineX, fTop + 46.f), Color_Dark, false, false);
+    Render_Text(tPage.pLine[1], _vec2(fLineX, fTop + 46.f + MG_UI_LINE_HEIGHT), Color_Dark, false, false);
+    Render_Text(to_wstring(iPage + 1) + L" / " + to_wstring(iPageCount) + L"   ENTER 다음", _vec2(fX, fTop + 98.f), Color_Gray, true, false);
+}
+
+void CMG0_HUD::Render_Spotlight(_float fX, _float fY, _float fHalfX, _float fHalfY)
+{
+    const _float fLeft = fX - fHalfX;
+    const _float fRight = fX + fHalfX;
+    const _float fTop = fY - fHalfY;
+    const _float fBottom = fY + fHalfY;
+
+    Render_Rect(WINCX * 0.5f, fTop * 0.5f, WINCX * 0.5f, fTop * 0.5f, Rect_Dim);
+    Render_Rect(WINCX * 0.5f, (fBottom + WINCY) * 0.5f, WINCX * 0.5f, (WINCY - fBottom) * 0.5f, Rect_Dim);
+    Render_Rect(fLeft * 0.5f, fY, fLeft * 0.5f, fHalfY, Rect_Dim);
+    Render_Rect((fRight + WINCX) * 0.5f, fY, (WINCX - fRight) * 0.5f, fHalfY, Rect_Dim);
+
+    Render_Rect(fX, fTop, fHalfX + 1.f, 1.f, Rect_Select);
+    Render_Rect(fX, fBottom, fHalfX + 1.f, 1.f, Rect_Select);
+    Render_Rect(fLeft, fY, 1.f, fHalfY + 1.f, Rect_Select);
+    Render_Rect(fRight, fY, 1.f, fHalfY + 1.f, Rect_Select);
 }
 
 void CMG0_HUD::Render_WarningText()

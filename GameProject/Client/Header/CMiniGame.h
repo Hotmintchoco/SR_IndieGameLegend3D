@@ -47,12 +47,12 @@ public:
 private:
 	HRESULT			Ready_Environment_Layer(const _tchar* pLayerTag);
 	HRESULT			Ready_GameLogic_Layer(const _tchar* pLayerTag);
-	HRESULT			Ready_Texture();
 	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
 
 	void			Update_BGM();
 	void			Spawn_Enemy(_float fTimeDelta);
 	void			Spawn_Train(_float fTimeDelta);
+	void			Spawn_Train14(_float fRate, _float fSpeed);
 	void			Update_Camera();
 
 public:
@@ -67,7 +67,6 @@ private:
 	CMG0_Dancer*	m_pDancer = nullptr;
 	CMG0_Dialogue*	m_pDialogue = nullptr;
 	CMG0_Herobrine*	m_pBoss = nullptr;
-	Engine::CTexture*	m_pTrainTex[MINIGAME0::TRAIN_END]{};
 
 	_float			m_fSceneTime = 0.f;
 	_float			m_fPlayTime = 0.f;
@@ -79,6 +78,9 @@ private:
 	_float			m_fCamRate = 0.f;
 	_float			m_fWhiteTime = 0.f;
 	_int			m_iSafeLane = MG_LANE_COUNT / 2;
+	_float			m_fTrain14Timer = MG_TRAIN14_INTERVAL_MIN;
+	_float			m_fTrain14Arrive = 0.f;
+	_int			m_iTrain14Lane = -1;
 
 	_bool			m_bEnemySpawn = false;
 	_bool			m_bBGMStarted = false;

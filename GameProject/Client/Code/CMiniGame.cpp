@@ -14,6 +14,7 @@
 #include "CMG0_Intro.h"
 #include "CMG0_Dialogue.h"
 #include "CMG0_Train13.h"
+#include "CMG0_Train14.h"
 #include "CMG0_Herobrine.h"
 #include "CMG0_Laser.h"
 #include "CTexture.h"
@@ -29,9 +30,6 @@ CMiniGame::~CMiniGame()
 
 HRESULT CMiniGame::Ready_Scene()
 {
-    if (FAILED(Ready_Texture()))
-        return E_FAIL;
-
     if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
         return E_FAIL;
 
@@ -182,13 +180,25 @@ void CMiniGame::Spawn_Train(_float fTimeDelta)
         return;
 
     m_fTrainTime += fTimeDelta;
-    m_fTrainTimer -= fTimeDelta;
-    if (m_fTrainTimer > 0.f)
-        return;
 
     _float fRate = min(1.f, m_fTrainTime / MG_TRAIN_RAMP_TIME);
     _float fSpeed = MG_TRAIN_SPEED_MIN + (MG_TRAIN_SPEED_MAX - MG_TRAIN_SPEED_MIN) * fRate;
 
+    if (m_iTrain14Lane >= 0 && m_fTrainTime > m_fTrain14Arrive + MG_TRAIN14_SAFE_WINDOW)
+        m_iTrain14Lane = -1;
+
+    if (fRate >= MG_TRAIN14_START_RATE)
+    {
+        m_fTrain14Timer -= fTimeDelta;
+        if (m_fTrain14Timer <= 0.f && m_iTrain14Lane < 0)
+            Spawn_Train14(fRate, fSpeed);
+    }
+
+    m_fTrainTimer -= fTimeDelta;
+    if (m_fTrainTimer > 0.f)
+        return;
+
+    _int iPrevSafe = m_iSafeLane;
     _int iStep = (fRate >= 0.5f && 0 == rand() % 4) ? 2 : 1;
     _int iSafeLane = m_iSafeLane + (rand() % 2 ? iStep : -iStep);
 
@@ -196,6 +206,27 @@ void CMiniGame::Spawn_Train(_float fTimeDelta)
         iSafeLane = 2 * m_iSafeLane - iSafeLane;
 
     m_iSafeLane = max(0, min(MG_LANE_COUNT - 1, iSafeLane));
+
+    _float fArrive = m_fTrainTime + MG_SPAWN_Z / fSpeed;
+    _bool bInTrain14 = (m_iSafeLane == m_iTrain14Lane || m_iSafeLane == m_iTrain14Lane + 1);
+
+    if (m_iTrain14Lane >= 0 && bInTrain14 && fabsf(fArrive - m_fTrain14Arrive) < MG_TRAIN14_SAFE_WINDOW)
+    {
+        _int iBest = -1;
+
+        for (_int i = 0; i < MG_LANE_COUNT; ++i)
+        {
+            if (i == m_iTrain14Lane || i == m_iTrain14Lane + 1)
+                continue;
+
+            if (iBest < 0 || abs(i - iPrevSafe) < abs(iBest - iPrevSafe) || (abs(i - iPrevSafe) == abs(iBest - iPrevSafe) && rand() % 2))
+                iBest = i;
+        }
+
+        m_iSafeLane = iBest;
+    }
+
+    m_fTrainTimer = (MG_TRAIN_SPAWN_MAX - (MG_TRAIN_SPAWN_MAX - MG_TRAIN_SPAWN_MIN) * fRate) * MINIGAME0::Random(0.85f, 1.15f);
 
     _int iLane[MG_LANE_COUNT - 1];
     _int iLaneCount = 0;
@@ -212,9 +243,19 @@ void CMiniGame::Spawn_Train(_float fTimeDelta)
     _int iTrainCount = min(iLaneCount, 2 + (fRate >= 0.5f ? 1 : 0) + rand() % 2);
 
     for (_int i = 0; i < iTrainCount; ++i)
-        Add_GameObject(L"Train", CMG0_Train13::Create(m_pGraphicDev, iLane[i], fSpeed, m_pTrainTex));
+        Add_GameObject(L"Train", CMG0_Train13::Create(m_pGraphicDev, iLane[i], fSpeed));
+}
 
-    m_fTrainTimer = (MG_TRAIN_SPAWN_MAX - (MG_TRAIN_SPAWN_MAX - MG_TRAIN_SPAWN_MIN) * fRate) * MINIGAME0::Random(0.85f, 1.15f);
+void CMiniGame::Spawn_Train14(_float fRate, _float fSpeed)
+{
+    _float fSpeed14 = fSpeed * MG_TRAIN14_SPEED_RATE;
+    _int iLeft = rand() % (MG_LANE_COUNT - 1);
+
+    Add_GameObject(L"Train", CMG0_Train14::Create(m_pGraphicDev, iLeft, fSpeed14));
+
+    m_iTrain14Lane = iLeft;
+    m_fTrain14Arrive = m_fTrainTime + MG_TRAIN14_WARN_TIME + MG_SPAWN_Z / fSpeed14;
+    m_fTrain14Timer = (MG_TRAIN14_INTERVAL_MAX - (MG_TRAIN14_INTERVAL_MAX - MG_TRAIN14_INTERVAL_MIN) * fRate) * MINIGAME0::Random(0.85f, 1.15f);
 }
 
 void CMiniGame::Clear_Enemy()
@@ -251,13 +292,16 @@ void CMiniGame::Update_Camera()
     _float fEyeZ = -9.5f + (MG_TRAIN_CAM_EYE_Z + 9.5f) * fCamRate;
     _float fAtY = 0.6f + (MG_TRAIN_CAM_AT_Y - 0.6f) * fCamRate;
 
+    _float fAtZ = MG_CAM_AT_Z + (MG_TRAIN_CAM_AT_Z - MG_CAM_AT_Z) * fCamRate;
+    _float fFov = MG_CAM_FOV + (MG_TRAIN_CAM_FOV - MG_CAM_FOV) * fCamRate;
+
     _vec3 vEye(vPlayerPos.x * 0.55f, vPlayerPos.y + fEyeY, fEyeZ);
-    _vec3 vAt(vPlayerPos.x * 0.75f, vPlayerPos.y + fAtY, 14.f);
+    _vec3 vAt(vPlayerPos.x * 0.75f, vPlayerPos.y + fAtY, fAtZ);
     _vec3 vUp(0.f, 1.f, 0.f);
 
     _matrix matView, matProj;
     D3DXMatrixLookAtLH(&matView, &vEye, &vAt, &vUp);
-    D3DXMatrixPerspectiveFovLH(&matProj, D3DXToRadian(60.f), (_float)WINCX / WINCY, 0.1f, 300.f);
+    D3DXMatrixPerspectiveFovLH(&matProj, D3DXToRadian(fFov), (_float)WINCX / WINCY, 0.1f, 300.f);
 
     m_pGraphicDev->SetTransform(D3DTS_VIEW, &matView);
     m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &matProj);
@@ -380,23 +424,7 @@ CMiniGame* CMiniGame::Create(LPDIRECT3DDEVICE9 pGraphicDev)
     return pMiniGame;
 }
 
-HRESULT CMiniGame::Ready_Texture()
-{
-    for (_int i = 0; i < MINIGAME0::TRAIN_END; ++i)
-    {
-        m_pTrainTex[i] = CTexture::Create(m_pGraphicDev, TEX_NORMAL, MINIGAME0::MG_TRAIN_TEX_PATH[i]);
-
-        if (nullptr == m_pTrainTex[i])
-            return E_FAIL;
-    }
-
-    return S_OK;
-}
-
 void CMiniGame::Free()
 {
-    for (Engine::CTexture*& pTexture : m_pTrainTex)
-        Safe_Release(pTexture);
-
     CScene::Free();
 }

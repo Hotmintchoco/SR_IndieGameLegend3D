@@ -12,7 +12,7 @@
 #define MG_GAMEOVER_DELAY		3.f
 #define MG_FVF					(D3DFVF_XYZ | D3DFVF_DIFFUSE)
 #define MG_BGM_START_TIME		3.f			
-#define MG_BGM_LENGTH			132.08f		
+#define MG_BGM_LENGTH			146.57f		
 #define MG_CLEAR_DELAY			3.f			
 #define MG_CLEAR_SHOW_TIME		3.f
 
@@ -34,9 +34,9 @@
 #define MG_CARD_HAND_COUNT		3
 #define MG_CARD_DESC_LINE		3
 #define MG_CARD_MAX_TURN		10
-#define MG_CARD_START_TIME		(MG_BGM_START_TIME + 13.f)
-#define MG_CARD_END_TIME		(MG_BGM_START_TIME + 49.f)
-#define MG_CARD_READY_TIME		1.f
+#define MG_CARD_START_TIME		(MG_BGM_START_TIME + 23.2f)
+#define MG_CARD_END_TIME		(MG_BGM_START_TIME + 77.f)
+#define MG_CARD_READY_TIME		2.7f
 #define MG_CARD_COMPLETE_TIME	3.f
 #define MG_CARD_NOTICE_TIME		1.5f
 #define MG_CARD_SELECT_NONE		(-1)
@@ -64,7 +64,11 @@
 #define MG_UI_WEAPON_SIZE		48.f
 #define MG_WEAPON_STONE			200
 #define MG_WEAPON_IRON			500
-#define MG_WEAPON_DIAMOND		1000
+#define MG_WEAPON_DIAMOND		800
+#define MG_GUIDE_DELAY			0.4f
+#define MG_GUIDE_END_TIME		(MG_BGM_START_TIME + 16.5f)
+#define MG_TUTORIAL_BOX_HALF_X	240.f
+#define MG_TUTORIAL_BOX_HALF_Y	62.f
 
 /* CMG0_Intro */
 #define MG_INTRO_WHITE_TIME		0.4f
@@ -76,7 +80,7 @@
 
 /* CMG0_Dialogue */
 #define MG_DIALOGUE_START_TIME		(MG_INTRO_TOTAL_TIME - MG_INTRO_FADE_TIME)
-#define MG_DIALOGUE_END_TIME		(MG_CARD_START_TIME - 5.f)
+#define MG_DIALOGUE_END_TIME		(MG_BGM_START_TIME + 12.3f)
 #define MG_DIALOGUE_WORD_TIME		0.25f
 #define MG_DIALOGUE_PORTRAIT_TIME	0.36f
 #define MG_DIALOGUE_FONT_SIZE		32.f
@@ -127,24 +131,39 @@
 #define MG_LANE_REPEAT_DELAY	0.12f
 #define MG_LANE_REPEAT_TIME		0.07f
 #define MG_TRAIN_GROUND_Y		(-4.f)
-#define MG_TRAIN_HALF_X			1.3f
-#define MG_TRAIN_HALF_Y			1.3f
-#define MG_TRAIN_HALF_Z			2.6f
+#define MG_TRAIN_SCALE			2.52f
 #define MG_TRAIN_HIT_X			1.9f
-#define MG_TRAIN_HIT_Z			3.8f
+#define MG_TRAIN_HIT_Z			4.1f
 #define MG_TRAIN_SPEED_MIN		60.f
-#define MG_TRAIN_SPEED_MAX		95.f
+#define MG_TRAIN_SPEED_MAX		100.f
 #define MG_TRAIN_SPAWN_MAX		0.75f
-#define MG_TRAIN_SPAWN_MIN		0.38f
+#define MG_TRAIN_SPAWN_MIN		0.35f
 #define MG_TRAIN_RAMP_TIME		25.f
 #define MG_TRAIN_START_DELAY	1.f
-#define MG_TRAIN_END_TIME		(MG_BGM_START_TIME + 91.f)
-#define MG_TRAIN_CLEAR_TIME		2.f
+#define MG_TRAIN_END_TIME		(MG_BOSS_WARNING_START - 1.5f)
+#define MG_TRAIN_CLEAR_TIME		3.5f
 #define MG_TRAIN_PLAYER_Y		(-3.2f)
 #define MG_TRAIN_CAM_TIME		1.f
 #define MG_TRAIN_CAM_EYE_Y		7.f
-#define MG_TRAIN_CAM_EYE_Z		(-10.5f)
-#define MG_TRAIN_CAM_AT_Y		0.f
+#define MG_TRAIN_CAM_EYE_Z		(-7.5f)
+#define MG_TRAIN_CAM_AT_Y		(-1.5f)
+#define MG_TRAIN_CAM_AT_Z		9.f
+#define MG_TRAIN_CAM_FOV		50.f
+#define MG_CAM_AT_Z				14.f
+#define MG_CAM_FOV				60.f
+
+/* CMG0_Train14 (레인 2칸) */
+#define MG_TRAIN14_SCALE		4.7f
+#define MG_TRAIN14_HIT_X		(MG_LANE_GAP * 0.5f + MG_TRAIN_HIT_X)
+#define MG_TRAIN14_HIT_Z		7.1f
+#define MG_TRAIN14_CRASH_X		2.f
+#define MG_TRAIN14_CRASH_Z		9.4f
+#define MG_TRAIN14_WARN_TIME	1.f
+#define MG_TRAIN14_START_RATE	0.2f
+#define MG_TRAIN14_SPEED_RATE	1.5f
+#define MG_TRAIN14_INTERVAL_MAX	6.f
+#define MG_TRAIN14_INTERVAL_MIN	3.f
+#define MG_TRAIN14_SAFE_WINDOW	0.3f
 
 /* CMG0_Herobrine */
 #define MG_BOSS_HP				50000
@@ -154,12 +173,14 @@
 #define MG_BOSS_ENTER_TIME		3.f
 #define MG_BOSS_FLOAT_HEIGHT	0.4f
 #define MG_BOSS_FLOAT_SPEED		1.5f
-#define MG_BOSS_WARNING_START	MG_TRAIN_END_TIME
+#define MG_BOSS_WARNING_START	(MG_BOSS_ENTER_START - MG_BOSS_WARNING_TIME)
 #define MG_BOSS_WARNING_TIME	3.f
 #define MG_BOSS_WARNING_BLINK	0.3f
-#define MG_BOSS_ENTER_START		(MG_BOSS_WARNING_START + MG_BOSS_WARNING_TIME)
-#define MG_BOSS_HPBAR_START		(MG_BGM_START_TIME + 98.f)
-#define MG_BOSS_LIMIT_TIME		(MG_BGM_START_TIME + 115.f)
+#define MG_WARNING_ALPHA_MIN	40.f
+#define MG_WARNING_ALPHA_MAX	150.f
+#define MG_BOSS_ENTER_START		(MG_BGM_START_TIME + 110.f)
+#define MG_BOSS_HPBAR_START		MG_BOSS_ENTER_START
+#define MG_BOSS_LIMIT_TIME		(MG_BGM_START_TIME + 136.f)
 #define MG_BOSS_HIT_X			3.2f
 #define MG_BOSS_HIT_Y			10.8f
 #define MG_BOSS_HIT_Z			1.5f
@@ -241,8 +262,6 @@ namespace MINIGAME0
 
 	enum MGSTATUS { MOOD_GOOD, MOOD_PERFECT, ATTENTION, STAMINA, CARD_HP, COST_HALF, STATUS_END };
 
-	enum MGTRAINFACE { TRAIN_FRONT, TRAIN_BACK, TRAIN_LEFT, TRAIN_RIGHT, TRAIN_TOP, TRAIN_BOTTOM, TRAIN_END };
-
 	struct MGCARDSTATE
 	{
 		_int	iStatus[STATUS_END]{};
@@ -272,6 +291,21 @@ namespace MINIGAME0
 		MGCARDTYPE		eType;
 	};
 
+	struct MGICONGUIDE
+	{
+		MGICON			eIcon;
+		const _tchar*	pName;
+		const _tchar*	pDesc;
+	};
+
+	struct MGTUTORIAL
+	{
+		_float			fX, fY, fHalfX, fHalfY;
+		_float			fBoxX, fBoxY;
+		const _tchar*	pTitle;
+		const _tchar*	pLine[2];
+	};
+
 	struct MGDANCEBEAT
 	{
 		_bool	bDance = false;
@@ -290,19 +324,40 @@ namespace MINIGAME0
 
 	static const MGCARDDATA MG_CARD_DATA[CARD_END] =
 	{
-		{ L"어필의 기본",		{ { ICON_END, L"파라미터 +14" },				{ ICON_END, L"" }, { ICON_END, L"" } },						REUSABLE },
-		{ L"표현의 기본",		{ { ICON_STAMINA, L"원기 +7" },				{ ICON_END, L"" }, { ICON_END, L"" } },						ONCE_PER_LESSON },
-		{ L"TV 출연",			{ { ICON_STAMINA, L"원기 +5" },				{ ICON_COST_HALF, L"5턴간 체력 소모 절반" }, { ICON_END, L"" } },	ONCE_PER_LESSON },
-		{ L"하이터치",			{ { ICON_END, L"파라미터 +23 (집중 2배 적용)" },	{ ICON_END, L"" }, { ICON_END, L"" } },						ONCE_PER_LESSON },
-		{ L"한숨",				{ { ICON_MOOD_GOOD, L"호조 4턴" },			{ ICON_ATTENTION, L"집중 +5" }, { ICON_END, L"" } },			ONCE_PER_LESSON },
-		{ L"익사이팅",			{ { ICON_END, L"파라미터 +10" },				{ ICON_MOOD_PERFECT, L"절호조 4턴" }, { ICON_END, L"" } },		ONCE_PER_LESSON },
-		{ L"시작의 신호",		{ { ICON_MOOD_GOOD, L"호조 7턴" },			{ ICON_END, L"" }, { ICON_END, L"" } },						ONCE_PER_LESSON },
-		{ L"콜&리스폰스",		{ { ICON_END, L"파라미터 +15" },				{ ICON_ATTENTION, L"집중 3 이상 +34" }, { ICON_END, L"" } },	ONCE_PER_LESSON },
-		{ L"국민적 아이돌",		{ { ICON_STAMINA, L"원기 +8" },				{ ICON_SKILL_DOUBLE, L"다음 카드 2회 발동" }, { ICON_EXTRA_ACTION, L"스킬카드 사용 수 +1" } },	ONCE_PER_LESSON },
-		{ L"성취",				{ { ICON_MOOD_GOOD, L"호조 7턴" },			{ ICON_END, L"파라미터 +40" }, { ICON_END, L"" } },			ONCE_PER_LESSON },
-		{ L"최고의 엔터테인먼트",	{ { ICON_END, L"액티브 카드 사용 시 파라미터 +5" },	{ ICON_END, L"" }, { ICON_END, L"" } },						ONCE_PER_LESSON },
-		{ L"존재감",			{ { ICON_ATTENTION, L"집중 +6" },			{ ICON_EXTRA_ACTION, L"스킬카드 사용 수 +1" }, { ICON_END, L"" } },	REUSABLE },
-		{ L"슈프레히콜",		{ { ICON_END, L"파라미터 +6" },				{ ICON_MOOD_GOOD, L"호조 3턴" }, { ICON_EXTRA_ACTION, L"스킬카드 사용 수 +1" } },	REUSABLE },
+		{ L"국힙의 기본",			{ { ICON_END, L"공격력 +14" },					{ ICON_END, L"" },									{ ICON_END, L"" } },							REUSABLE },
+		{ L"영감의 기본",			{ { ICON_STAMINA, L"방어도 +7" },				{ ICON_END, L"" },									{ ICON_END, L"" } },							ONCE_PER_LESSON },
+		{ L"쇼미 출연",				{ { ICON_STAMINA, L"방어도 +5" },				{ ICON_COST_HALF, L"5턴간 체력 소모 절반" },			{ ICON_END, L"" } },							ONCE_PER_LESSON },
+		{ L"하이터치",				{ { ICON_END, L"공격력 +23 (날카로움 2배 적용)" },{ ICON_END, L"" },									{ ICON_END, L"" } },							ONCE_PER_LESSON },
+		{ L"한숨",					{ { ICON_MOOD_GOOD, L"장인정신 4턴" },			{ ICON_ATTENTION, L"날카로움 +5" },					{ ICON_END, L"" } },							ONCE_PER_LESSON },
+		{ L"샤우팅",					{ { ICON_END, L"공격력 +10" },					{ ICON_MOOD_PERFECT, L"헤파이스토스 정신 4턴"},		{ ICON_END, L"" } },							ONCE_PER_LESSON },
+		{ L"하울링",					{ { ICON_MOOD_GOOD, L"장인정신 7턴" },			{ ICON_END, L"" },									{ ICON_END, L"" } },							ONCE_PER_LESSON },
+		{ L"콜&리스폰스",			{ { ICON_END, L"공격력 +15" },					{ ICON_ATTENTION, L"날카로움 3 이상일때 공격력 +34" },{ ICON_END, L"" } },							ONCE_PER_LESSON },
+		{ L"국힙 원탑",				{ { ICON_STAMINA, L"방어도 +8" },				{ ICON_SKILL_DOUBLE, L"다음 카드 2회 발동" },			{ ICON_EXTRA_ACTION, L"스킬카드 사용 수 +1" } },	ONCE_PER_LESSON },
+		{ L"성취",					{ { ICON_MOOD_GOOD, L"장인정신 7턴" },			{ ICON_END, L"공격력 +40" },							{ ICON_END, L"" } },							ONCE_PER_LESSON },
+		{ L"기획사 입사",			{ { ICON_END, L"액티브 카드 사용 시 공격력 +5" },	{ ICON_END, L"" },									{ ICON_END, L"" } },							ONCE_PER_LESSON },
+		{ L"존재감",					{ { ICON_ATTENTION, L"날카로움 +6" },			{ ICON_EXTRA_ACTION, L"스킬카드 사용 수 +1" },		{ ICON_END, L"" } },							REUSABLE },
+		{ L"떼창",					{ { ICON_END, L"공격력 +6" },					{ ICON_MOOD_GOOD, L"장인정신 3턴" },					{ ICON_EXTRA_ACTION, L"스킬카드 사용 수 +1" } },	REUSABLE },
+	};
+
+	static const MGICONGUIDE MG_ICON_GUIDE[] =
+	{
+		{ ICON_HP,				L"체력",				L"스킬카드 사용 시 소모, 휴식(V)으로 2 회복" },
+		{ ICON_STAMINA,			L"방어도",				L"체력보다 먼저 소모됨" },
+		{ ICON_MOOD_GOOD,		L"장인정신",			L"남은 턴 동안 공격력 상승량 1.5배" },
+		{ ICON_MOOD_PERFECT,	L"헤파이스토스 정신",	L"장인정신 1턴당 상승 배율 +0.1" },
+		{ ICON_ATTENTION,		L"날카로움",			L"공격력 상승 시 수치만큼 추가 상승" },
+		{ ICON_SKILL_DOUBLE,	L"2회 발동",			L"다음에 사용하는 카드 효과 2회 발동" },
+		{ ICON_COST_HALF,		L"체력 소모 절반",		L"남은 턴 동안 체력 소모 절반" },
+		{ ICON_EXTRA_ACTION,	L"추가 행동",			L"이번 턴에 스킬카드 1장 더 사용 가능" },
+	};
+
+	static const MGTUTORIAL MG_TUTORIAL[] =
+	{
+		{ 400.f, 38.f, 120.f, 28.f,		400.f, 150.f,	L"턴",				{ L"카드게임은 최대 10턴까지 진행",		L"하단바가 끝나면 카드게임 종료" } },
+		{ 400.f, 487.f, 220.f, 83.f,	400.f, 320.f,	L"카드 사용",		{ L"Z · X · C 로 카드 선택",				L"ENTER로 카드 사용" } },
+		{ 700.f, 505.f, 72.f, 44.f,		490.f, 380.f,	L"휴식",				{ L"V를 누르고 ENTER로 휴식",					L"체력을 2 회복하고 턴 종료" } },
+		{ 696.f, 141.f, 100.f, 47.f,	350.f, 141.f,	L"체력 · 방어도",	{ L"카드를 쓰면 정해진 수치만큼 체력 감소",				L"방어도가 있으면 방어도가 먼저 소모" } },
+		{ 696.f, 56.f, 100.f, 44.f,		350.f, 80.f,	L"공격력",			{ L"카드로 올린 공격력만큼 플레이어 공격력 증가",	L"200 · 500 · 800 이상이면 무기 강화" } },
 	};
 
 	static const _tchar* MG_CARD_IMG_PATH[CARD_END] =
@@ -352,16 +407,6 @@ namespace MINIGAME0
 		CARD_BULB, CARD_TVAPPEAR, CARD_HIGHTOUCH, CARD_BREATH, CARD_EXCITE, CARD_SPEAKER,
 		CARD_CALLRESPONSE, CARD_NATIONALIDOL, CARD_ACHIEVE, CARD_ENTERTAINMENT,
 		CARD_PRESENCE, CARD_SPRECHCHOR,
-	};
-
-	static const _tchar* MG_TRAIN_TEX_PATH[TRAIN_END] =
-	{
-		L"../Bin/Resource/Texture/MiniGame_0/Texture_Train13/train13_front_thomas.png",
-		L"../Bin/Resource/Texture/MiniGame_0/Texture_Train13/train13_back.png",
-		L"../Bin/Resource/Texture/MiniGame_0/Texture_Train13/train13_left.png",
-		L"../Bin/Resource/Texture/MiniGame_0/Texture_Train13/train13_right.png",
-		L"../Bin/Resource/Texture/MiniGame_0/Texture_Train13/train13_top.png",
-		L"../Bin/Resource/Texture/MiniGame_0/Texture_Train13/train13_bottom.png",
 	};
 
 	static const POINT MG_BOSS_EYE_PIXEL[] = { { 9, 12 }, { 10, 12 }, { 13, 12 }, { 14, 12 } };
