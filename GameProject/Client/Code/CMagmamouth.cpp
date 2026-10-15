@@ -309,6 +309,13 @@ void CMagmamouth::Opening_MagmaMouth(const _float& fTimeDelta)
             pCinematic->Add_Shot(desc);
 
             pCameraMgr->Select_Camera(CLIENT_CAMERA_TYPE::CINEMATIC);
+
+            // 1인칭 카메라 시점 보스로 시점
+            //auto* pPlayerCamera = dynamic_cast<CPlayerCamera*>(
+            //    pCameraMgr->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
+
+            //desc.vLookAt = vBossPos - vPlayerPos;
+            //pPlayerCamera->Set_LookPos(desc.vLookAt);
         }
     }
 
@@ -318,6 +325,17 @@ void CMagmamouth::Opening_MagmaMouth(const _float& fTimeDelta)
     if (m_bElapsedOpeningTime > 15.f || (m_bOpeningMoveFlag == true && m_fFrame<=0.f))
     {
         m_bOpening = false;
+
+  //      auto* pCameraMgr = CClientCameraMgr::GetInstance();
+		//_vec3 vBossPos; m_pTransformCom->Get_Info(INFO_POS, &vBossPos);
+		//const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+		//_vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
+		////1인칭 카메라 시점 보스로 시점
+		//auto* pPlayerCamera = dynamic_cast<CPlayerCamera*>(
+		//	pCameraMgr->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER));
+
+		//_vec3 vDir = vBossPos - vPlayerPos;
+		//pPlayerCamera->Set_LookPos(vDir);
     }
     //2.5초까지 입벌렸다 닫기
     if (m_bElapsedOpeningTime < 2.5f)
@@ -800,7 +818,7 @@ void CMagmamouth::Find_BackPoint()
 
 void CMagmamouth::Set_Motion()
 {
-    if (m_bOpening == true)
+    if (m_bOpening == true || m_eMagmaMouthState == OPENING)
     {
         LookAtCamera();
         return;
@@ -996,6 +1014,8 @@ void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
             fVelocityY = 2.f + 4.f * j;
 
             m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            const TBillBoardInfo& tInfo = m_pBillBoardCamera->GetBillBoardInfo();
+            _vec3 vPlayerPos; vPlayerPos = tInfo.vPosition;
 
             for (int i = 0; i < 360.f / fDegreeInterval; ++i)
             {
@@ -1003,7 +1023,12 @@ void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
                 if (nullptr == pGameObject) return;
                 pGameObject->Set_IsActive(true);
 
-                _vec3 vVelocity = { 0.f,0.f,1.f };
+                //_vec3 vVelocity = { 0.f,0.f,1.f };
+                _vec3 vVelocity = vPlayerPos-vPos;
+                vVelocity.y = 0.f;
+                D3DXVec3Normalize(&vVelocity, &vVelocity);
+                vVelocity.y = 1.f;
+
                 D3DXMatrixRotationY(&matRot, D3DXToRadian(fDegreeInterval) * i);
                 D3DXVec3TransformNormal(&vVelocity, &vVelocity, &matRot);
                 vVelocity *= 4.f - 0.5f * j;
@@ -1011,7 +1036,10 @@ void CMagmamouth::MagmaMouth_Dead(const _float& fTimeDelta)
 
                 static_cast<CMonster*>(pGameObject)->Set_Pos(vPos);
                 static_cast<CFireball*>(pGameObject)->Set_Velocity(vVelocity);
-
+                if (i == 0 || i == 1)
+                    static_cast<CFireball*>(pGameObject)->Is_Sound(true);
+                else
+                    static_cast<CFireball*>(pGameObject)->Is_Sound(false);
                 CScene* pScene = CManagement::GetInstance()->GetCurrentScene();
                 if (FAILED(pScene->Add_GameObject(L"Fireball", pGameObject))) return;
             }

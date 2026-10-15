@@ -83,6 +83,7 @@ protected:
 	_bool m_bRoomCenterLocation = false;
 	_vec3 m_vRoomCenterLocation = { 0.f,0.f,0.f };
 
+	_bool m_bDeadSound = true;
 	/* 성철 */
 	CPlayerCamera* m_pBillBoardCamera = nullptr;
 	/* --- */

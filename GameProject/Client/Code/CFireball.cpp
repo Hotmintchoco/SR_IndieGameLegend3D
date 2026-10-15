@@ -10,6 +10,7 @@
 #include "CSpriteTile.h"
 #include "CEffect.h"
 #include "CPlayerCamera.h"
+#include "CSoundMgr.h"
 
 CFireball::CFireball(LPDIRECT3DDEVICE9 pGraphicDev)
     : CMonster(pGraphicDev)
@@ -33,6 +34,7 @@ HRESULT CFireball::Ready_GameObject()
 
     m_iHp = 100;
     m_bCollision_WithMonster = false;
+    m_bDeadSound = false;
     return S_OK;
 }
 
@@ -184,6 +186,9 @@ void CFireball::Throw(const _float& fTimeDelta)
 		pGameObject = CEffect::Create(m_pGraphicDev, CEffect::MAGMA_FIREBALL, vPos3);
 		if (nullptr == pGameObject) return;
 		if (FAILED(pLayer->Add_GameObject(L"Effect_Fireball", pGameObject))) return;
+
+        if (m_bSound == true)
+            CSoundMgr::GetInstance()->PlaySFX(L"sfxKill.wav");
 
         return;
     }

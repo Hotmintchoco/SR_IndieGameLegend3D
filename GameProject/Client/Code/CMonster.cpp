@@ -102,9 +102,12 @@ _int CMonster::Update_GameObject(_float fTimeDelta)
         /* ---- */
         Set_Dead(true);
 
-        /* 성철 : 임시 몬스터 사망 소리 */
-        CSoundMgr::GetInstance()->PlaySFX(L"sfxKill.wav");
-        /* ------------------------- */
+        if (m_bDeadSound == true)
+        {
+            /* 성철 : 임시 몬스터 사망 소리 */
+            CSoundMgr::GetInstance()->PlaySFX(L"sfxKill.wav");
+            /* ------------------------- */
+        }
     }
 
     return iExit;

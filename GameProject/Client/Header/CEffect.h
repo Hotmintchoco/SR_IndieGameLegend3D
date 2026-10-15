@@ -68,4 +68,4 @@ protected:
 };
 
 #define MAGMA_DEAD_TIME 5.f
-#define BOSS1_DEAD_TIME 5.f
+#define BOSS1_DEAD_TIME 3.f

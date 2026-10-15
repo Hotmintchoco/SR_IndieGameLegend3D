@@ -852,7 +852,7 @@ void CBoss1::Boss1_Dead_Effect()
         CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
         CGameObject* pGameObject = nullptr;
 
-        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::MAGMA_EXPLOSION1, vPos);
+        pGameObject = CEffect::Create(m_pGraphicDev, CEffect::BOSS1_EXPLOSION1, vPos);
         if (nullptr == pGameObject) return;
         if (FAILED(pLayer->Add_GameObject(L"Effect_Boss1_Explosion1", pGameObject))) return;
     }

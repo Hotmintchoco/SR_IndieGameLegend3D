@@ -88,7 +88,7 @@ private:
 	_bool m_bDead_Effect2 = false;
 	_float m_fElapsedDeadTime = 0.f;
 	_float m_fElapsedDeadTime2 = 0.f;
-	_float m_fDeadTime = 5.f;
+	_float m_fDeadTime = 3.f;
 	_bool m_bDeadStart = false;
 	_bool m_DeadExplosion = false;
 

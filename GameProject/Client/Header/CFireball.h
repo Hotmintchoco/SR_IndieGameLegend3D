@@ -27,6 +27,7 @@ public:
 public:
 	void Set_Velocity(const _vec3& vLocation) { m_vVelocity = vLocation; }
 	void Throw(const _float& fTimeDelta);
+	void Is_Sound(_bool bSound) { m_bSound = bSound; }
 private:
 	/* 성철 */
 	void CheckDeadCondition();
@@ -36,6 +37,8 @@ private:
 	_float m_fLandingTime = 0.f;
 	_float m_fLandingVelocity = 0.f;
 	_uint m_iLandingCount = 0;
+
+	_bool m_bSound = true;
 
 protected:
 	virtual void		Free();

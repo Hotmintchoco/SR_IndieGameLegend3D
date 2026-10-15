@@ -346,7 +346,7 @@ void CEffect::Update_Effect(const _float fTimeDelta)
             vRand.y = (_float)(rand() % 128 - 64) / 64.f;
             vRand.z = (_float)(rand() % 128 - 64) / 64.f;
 
-            vPos += vRand;
+            vPos += vRand*0.5f;
 
             for (int i = 0; i < 16; ++i)
             {
@@ -361,14 +361,13 @@ void CEffect::Update_Effect(const _float fTimeDelta)
                 if (iRand == 0) eColor.g = 245.f / 256.f;
                 else if (iRand == 1) eColor.g = 235.f / 256.f;
 
-                pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, eColor, 0.5f);
+                pGameObject = CParticle_Rectangle::Create(m_pGraphicDev, vPos, vVelocity, eColor, 0.25f);
                 if (nullptr == pGameObject) return;
                 if (FAILED(pLayer->Add_GameObject(L"Effect_Rectangle", pGameObject))) return;
             }
         }
         if (m_fElapsedTime > m_fLifeTime)
             Set_Dead(true);
-
         break;
     }
     case MAGMA_EXPLOSION1:
@@ -414,6 +413,43 @@ void CEffect::Update_Effect(const _float fTimeDelta)
         if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
 
         Set_Dead(true);
+        break;
+    }
+    case BOSS1_EXPLOSION1:
+    {
+        m_fElapsedTime3 += fTimeDelta;
+        if (m_fElapsedTime3 > 0.125f && m_fElapsedTime < m_fLifeTime - 0.5f)
+        {
+            m_fElapsedTime3 = 0.f;
+
+            _vec3 vVelocity;
+
+            _int iRand1 = rand() % 128 - 64;
+            _int iRand2 = rand() % 128 - 64;
+            _int iRand3 = rand() % 128 - 64;
+
+            vVelocity = { _float(iRand1) / 64.f,_float(iRand2) / 64.f,_float(iRand3) / 64.f };
+
+            vPos += vVelocity / 3.f * 2.f;
+
+            CParticle_Sphere::EFFECT_SPHERE_COLOR eEffect_Color;
+            int iRand = rand() % 3;
+            if (iRand % 3 == 0) eEffect_Color = CParticle_Sphere::RED;
+            else if (iRand % 3 == 1) eEffect_Color = CParticle_Sphere::ORANGE;
+            else eEffect_Color = CParticle_Sphere::YELLOW;
+
+            pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, eEffect_Color, 25, 1.5f, 0.5f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
+            if (nullptr == pGameObject) return;
+            if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
+
+            pGameObject = CParticle_Sphere::Create(m_pGraphicDev, vPos, eEffect_Color, 15, 1.0f, 0.5f, { 0.f,0.f,0.f }, CParticle_Sphere::UP);
+            if (nullptr == pGameObject) return;
+            if (FAILED(pLayer->Add_GameObject(L"Effect_Sphere", pGameObject))) return;
+        }
+
+        if (m_fElapsedTime > m_fLifeTime)
+            Set_Dead(true);
+        break;
         break;
     }
     case BOSS1_EXPLOSION2:
