@@ -27,6 +27,39 @@
 #include "CClientCameraMgr.h"
 #include "CCamera.h"
 
+namespace
+{
+	/* 각도 차이를 -π ~ π로 (최단 방향으로 돌도록) */
+	float WrapAngle(float fRad)
+	{
+		while (fRad > D3DX_PI)	fRad -= 2.f * D3DX_PI;
+		while (fRad < -D3DX_PI)	fRad += 2.f * D3DX_PI;
+		return fRad;
+	}
+
+	/* 0~1 비율을 시작/끝이 부드럽게 */
+	float SmoothStep(float fT)
+	{
+		fT = max(0.f, min(fT, 1.f));
+		return fT * fT * (3.f - 2.f * fT);
+	}
+
+	/* 시선 방향 -> yaw/pitch (CCamera::Update_LookFromAngles 규약 : look = (sin(yaw)cos(pitch), -sin(pitch), cos(yaw)cos(pitch))) */
+	void LookToYawPitch(const _vec3& vLook, float& fYaw, float& fPitch)
+	{
+		_vec3 vDir;
+		D3DXVec3Normalize(&vDir, &vLook);
+		fYaw = atan2f(vDir.x, vDir.z);
+		fPitch = asinf(max(-1.f, min(-vDir.y, 1.f)));
+	}
+
+	CPlayer* GetStagePlayer()
+	{
+		CStage* pStage = dynamic_cast<CStage*>(CManagement::GetInstance()->GetCurrentScene());
+		return pStage ? pStage->GetPlayer() : nullptr;
+	}
+}
+
 CLiminalRoomLayer::CLiminalRoomLayer(int iRoomIndex)
 	: CRoomLayer(iRoomIndex)
 {
@@ -74,12 +107,22 @@ _int CLiminalRoomLayer::Update_Layer(_float fTimeDelta)
 				{
 					m_pBlockingCube->Set_Dead(true);
 					/* TODO 블럭 깨지는 소리 */
+					CSoundMgr::GetInstance()->PlaySFX(L"sfxBreak.wav");
 				}
 				});
 		}
 	}
 
+	/* 정답 시점 보간 요청 처리 : 클릭 프레임이 지나고 버튼이 떼어진 뒤 시작
+	   (버튼을 누른 채로 입력을 잠그면 리미널 건의 놓기(Released)가 빠져 액자가 잡힌 채로 남음) */
+	if (m_bAlignRequested && !CDInputMgr::GetInstance()->Mouse_Press(DIM_LB))
+	{
+		m_bAlignRequested = false;
+		StartAlignToCapture();
+	}
+
 	CheckWhiteFramePickupCondition();
+	UpdateAlignToCapture(fTimeDelta);
 
 	_int iExit = CRoomLayer::Update_Layer(fTimeDelta);
 
@@ -129,6 +172,7 @@ void CLiminalRoomLayer::FlattenWhiteFrame()
 void CLiminalRoomLayer::CheckWhiteFramePickupCondition()
 {
 	if (m_iLeftColorCount > 1) return;
+	if (m_bFramePickedUp) return;
 
 	/* 시각 오차(°) ≈ 위치 오차 / 물체까지 거리 × 57.3 를 참고함 */
 	CCamera* pCamera = CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER);
@@ -150,9 +194,82 @@ void CLiminalRoomLayer::CheckWhiteFramePickupCondition()
 	bool bCondition = bAligned && CDInputMgr::GetInstance()->Mouse_Down(DIM_LB);
 	if (bCondition)
 	{
-		/* TODO 카메라 보간 후 캡쳐 */
-		m_pFrame_4->ReverseCapture();
+		/* 요청만 걸고 다음 업데이트부터 처리 (정답 시점까지 보간한 뒤 UpdateAlignToCapture 끝에서 ReverseCapture) */
+		if (!m_bAligningToCapture)
+			m_bAlignRequested = true;
 	}
+}
+
+void CLiminalRoomLayer::StartAlignToCapture()
+{
+	m_bFramePickedUp = true;
+
+	CPlayer* pPlayer = GetStagePlayer();
+	CCamera* pCamera = CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER);
+	if (nullptr == pPlayer || nullptr == pCamera)
+	{
+		/* 보간할 수 없으면 바로 해제 */
+		m_pFrame_4->ReverseCapture();
+		return;
+	}
+
+	/* 보간 동안 이동/무기 입력 잠금, 걷던 상태 정리 */
+	pPlayer->LockInput(PIC_MOVE);
+	pPlayer->LockInput(PIC_WEAPON);
+	pPlayer->ResetToIdle();
+
+	/* 위치 : 카메라 눈 = 플레이어 위치 + 눈 높이 오프셋(가짜 스케일 반영)이므로, 지금의 오프셋을 빼서 눈이 정답 eye에 오는 플레이어 위치를 구함 */
+	_matrix matCamWorld;
+	pCamera->GetWorld(&matCamWorld);
+	_vec3 vCamPos;
+	memcpy(&vCamPos, &matCamWorld.m[3][0], sizeof(_vec3));
+
+	m_vAlignStartPos = pPlayer->GetTransform()->Get_Info_Value(INFO_POS);
+	m_vAlignEndPos = m_vCaptureEye - (vCamPos - m_vAlignStartPos);
+
+	/* 시선 : 지금 yaw/pitch -> 정답 eye에서 at을 보는 yaw/pitch */
+	m_fAlignStartYaw = pCamera->Get_Yaw();
+	m_fAlignStartPitch = pCamera->Get_Pitch();
+	LookToYawPitch(m_vCaptureAt - m_vCaptureEye, m_fAlignEndYaw, m_fAlignEndPitch);
+
+	m_fAlignElapsed = 0.f;
+	m_bAligningToCapture = true;
+}
+
+void CLiminalRoomLayer::UpdateAlignToCapture(_float fTimeDelta)
+{
+	if (!m_bAligningToCapture) return;
+
+	CPlayer* pPlayer = GetStagePlayer();
+	CCamera* pCamera = CClientCameraMgr::GetInstance()->Find_Camera(CLIENT_CAMERA_TYPE::PLAYER);
+	if (nullptr == pPlayer || nullptr == pCamera)
+	{
+		m_bAligningToCapture = false;
+		m_pFrame_4->ReverseCapture();
+		return;
+	}
+
+	m_fAlignElapsed += fTimeDelta;
+	const float fRatio = min(1.f, m_fAlignElapsed / m_fAlignDuration);
+	const float fT = SmoothStep(fRatio);
+
+	/* 위치 */
+	_vec3 vPos;
+	D3DXVec3Lerp(&vPos, &m_vAlignStartPos, &m_vAlignEndPos, fT);
+	pPlayer->GetTransform()->Set_Pos(vPos);
+
+	/* 시선 : Rotate는 누적이므로 지금 각도와 목표 각도의 차이만큼 (그 사이 마우스로 돌린 만큼도 상쇄됨) */
+	//const float fYaw = m_fAlignStartYaw + WrapAngle(m_fAlignEndYaw - m_fAlignStartYaw) * fT;
+	//const float fPitch = m_fAlignStartPitch + (m_fAlignEndPitch - m_fAlignStartPitch) * fT;
+	//pCamera->Rotate(WrapAngle(fYaw - pCamera->Get_Yaw()), fPitch - pCamera->Get_Pitch());
+
+	if (fRatio < 1.f) return;
+
+	/* 도착 : 캡처 해제 후 입력 복구 */
+	m_bAligningToCapture = false;
+	m_pFrame_4->ReverseCapture();
+	pPlayer->UnlockInput(PIC_MOVE);
+	pPlayer->UnlockInput(PIC_WEAPON);
 }
 
 void CLiminalRoomLayer::OnRoomTriggerBlockCollided()
