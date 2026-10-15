@@ -930,9 +930,6 @@
     <ClInclude Include="..\Header\COctoBullet.h">
       <Filter>02. GameObject\02. Monster\Octo\OctoBullet</Filter>
     </ClInclude>
-    <ClInclude Include="CSeaweed2.h">
-      <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CSeaweed.h">
       <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
     </ClInclude>
@@ -987,13 +984,7 @@
     <ClInclude Include="..\Header\CTest1.h">
       <Filter>01. Scene\MiniGame_1\GameObject\Test</Filter>
     </ClInclude>
-    <ClInclude Include="CPlayer_MG1.h">
-      <Filter>01. Scene\MiniGame_1\GameObject\Player_MG1</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CCamera_MG1.h">
-      <Filter>01. Scene\MiniGame_1\GameObject\Camera_MG1</Filter>
-    </ClInclude>
-    <ClInclude Include="CCamera2_MG1.h">
       <Filter>01. Scene\MiniGame_1\GameObject\Camera_MG1</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CBox_MG1.h">
@@ -1016,9 +1007,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CLaserPuzzleRoomLayer.h">
       <Filter>01. Scene\Stage\Layer\LaserPuzzle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CIntroScene.h">
-      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CBombDispenser.h">
       <Filter>01. Scene\Stage\Layer\Liminal\Object\BombDispenser</Filter>
@@ -1145,6 +1133,18 @@
     </ClInclude>
     <ClInclude Include="..\Header\CDesertSpecialRoomLayer.h">
       <Filter>01. Scene\Stage\Layer\Temple</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayer_MG1.h">
+      <Filter>01. Scene\MiniGame_1\GameObject\Player_MG1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCamera2_MG1.h">
+      <Filter>01. Scene\MiniGame_1\GameObject\Camera_MG1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSeaweed2.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CIntroScene.h">
+      <Filter>01. Scene\Intro</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1502,9 +1502,6 @@
     <ClCompile Include="..\Code\COctoBullet.cpp">
       <Filter>02. GameObject\02. Monster\Octo\OctoBullet</Filter>
     </ClCompile>
-    <ClCompile Include="CSeaweed2.cpp">
-      <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CSeaweed.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
     </ClCompile>
@@ -1562,13 +1559,7 @@
     <ClCompile Include="..\Code\CTest1.cpp">
       <Filter>01. Scene\MiniGame_1\GameObject\Test</Filter>
     </ClCompile>
-    <ClCompile Include="CPlayer_MG1.cpp">
-      <Filter>01. Scene\MiniGame_1\GameObject\Player_MG1</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CCamera_MG1.cpp">
-      <Filter>01. Scene\MiniGame_1\GameObject\Camera_MG1</Filter>
-    </ClCompile>
-    <ClCompile Include="CCamera2_MG1.cpp">
       <Filter>01. Scene\MiniGame_1\GameObject\Camera_MG1</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBox_MG1.cpp">
@@ -1591,9 +1582,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLaserPuzzleRoomLayer.cpp">
       <Filter>01. Scene\Stage\Layer\LaserPuzzle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CIntroScene.cpp">
-      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBombDispenser.cpp">
       <Filter>01. Scene\Stage\Layer\Liminal\Object\BombDispenser</Filter>
@@ -1714,9 +1702,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\CIntro_MG1.cpp">
       <Filter>01. Scene\MiniGame_1\GameObject\Intro</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Code\CDesertSpecialRoomLayer.cpp">
       <Filter>01. Scene\Stage\Layer\Temple</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayer_MG1.cpp">
+      <Filter>01. Scene\MiniGame_1\GameObject\Player_MG1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCamera2_MG1.cpp">
+      <Filter>01. Scene\MiniGame_1\GameObject\Camera_MG1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSeaweed2.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Seaweed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CIntroScene.cpp">
+      <Filter>01. Scene\Intro</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -122,7 +122,8 @@ void CItem::OnCollisionEnter(COLLINFO eCollInfo)
     if (eCollInfo.iOtherID == COLL_PLAYER)
     {
         //Consume();
-        m_bAttractStart = true;
+        if (m_bScattering == false)
+            m_bAttractStart = true;
     }
 }
 
@@ -177,7 +178,7 @@ void CItem::Attract_To_Player(const _float& fTimeDelta)
 
 void CItem::Scattering(_float fTimeDelta)
 {
-    m_vDir.y -= 9.8f * fTimeDelta;
+    m_vDir.y -= 9.8f * fTimeDelta * 1.5f;
     m_pTransformCom->Move_Pos(&m_vDir, 1.f, fTimeDelta);
     _vec3 vPos; m_pTransformCom->Get_Info(INFO_POS, &vPos);
     _vec3 vScale = m_pTransformCom->Get_Scale();
@@ -186,6 +187,7 @@ void CItem::Scattering(_float fTimeDelta)
         vPos.y = vScale.y;
         m_pTransformCom->Set_Pos(vPos);
         m_bScattering = false;
+        m_bDropFinish = true;
     }
 }
 

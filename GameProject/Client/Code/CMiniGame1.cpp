@@ -17,6 +17,7 @@
 #include "CBox_MG1.h"
 #include "CSoundMgr.h"
 #include "CIntro_MG1.h"
+#include "CGameMachine.h"
 
 CMiniGame1::CMiniGame1(LPDIRECT3DDEVICE9 pGraphicDev)
     : CScene(pGraphicDev)
@@ -49,7 +50,6 @@ _int CMiniGame1::Update_Scene(_float fTimeDelta)
     if (m_bBGMStart == false && m_fElapsedTime>2.0f)
     {
         m_bBGMStart = true;
-        //TBGMTrack tTrack = { L"LAVA", L"Sector5_intro.wav", L"Sector5_loop.wav" };
         TBGMTrack tTrack = { L"MG1", L"", L"SectorB.wav" };
         CSoundMgr::GetInstance()->PlayBGM(tTrack);
         CSoundMgr::GetInstance()->SetBGMVolume(0.8f);
@@ -58,6 +58,10 @@ _int CMiniGame1::Update_Scene(_float fTimeDelta)
     // Scene Change
     if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
     {
+        if (CGameMachine* pGameMachine = dynamic_cast<CGameMachine*>(CManagement::GetInstance()->Get_Scene(0)->Get_GameObject(L"Room_2_Layer", L"Room_2_ObjectTiling_71")))
+        {
+            pGameMachine->Set_Clear();
+        }
         if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
             return -1;
     }
@@ -74,7 +78,10 @@ _int CMiniGame1::Update_Scene(_float fTimeDelta)
         }
         if (m_fElapsedTime2 > 1.4f)
         {
-            //CManagement::GetInstance()->Get_Scene()
+            if (CGameMachine* pGameMachine = dynamic_cast<CGameMachine*>(CManagement::GetInstance()->Get_Scene(0)->Get_GameObject(L"Room_2_Layer", L"Room_2_ObjectTiling_71")))
+            {
+                pGameMachine->Set_Clear();
+            }
             if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
                 return -1;
         }

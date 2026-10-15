@@ -23,7 +23,8 @@ public:
 	virtual			void		Render_GameObject();
 
 	void Interact();
-
+	
+	void Set_Clear() { m_bClear = true; }
 private:
 	HRESULT			Add_Component();
 
@@ -36,6 +37,8 @@ private:
 	Engine::CPlyTex* m_pBufferCom = nullptr;
 
 	ESceneType m_eSceneType = ESceneType::SCENE_NONE;
+
+	_bool m_bClear = false;
 
 public:
 	static CGameMachine* Create(LPDIRECT3DDEVICE9 pGraphicDev, ESceneType eType);

@@ -39,7 +39,7 @@ CLayer* CManagement::Get_Layer(const _tchar* pLayerTag)
 
 inline CScene* CManagement::Get_Scene(_int iSceneIdx)
 {
-    auto iter = m_mapScene.find(m_iSceneIdx);
+    auto iter = m_mapScene.find(iSceneIdx);
 
     if (iter != m_mapScene.end())
 		return iter->second;

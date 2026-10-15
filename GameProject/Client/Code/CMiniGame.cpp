@@ -17,6 +17,7 @@
 #include "CMG0_Herobrine.h"
 #include "CMG0_Laser.h"
 #include "CTexture.h"
+#include "CGameMachine.h"
 
 CMiniGame::CMiniGame(LPDIRECT3DDEVICE9 pGraphicDev)
     : CScene(pGraphicDev)
@@ -103,6 +104,10 @@ _int CMiniGame::Update_Scene(_float fTimeDelta)
         m_fClearTimer -= fTimeDelta;
         if (m_fClearTimer <= 0.f)
         {
+            if (CGameMachine* pGameMachine = dynamic_cast<CGameMachine*>(CManagement::GetInstance()->Get_Scene(0)->Get_GameObject(L"Room_15_Layer", L"Room_15_ObjectTiling_71")))
+            {
+                pGameMachine->Set_Clear();
+            }
             if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
                 return -1;
 
@@ -112,6 +117,10 @@ _int CMiniGame::Update_Scene(_float fTimeDelta)
 
     if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
     {
+        if (CGameMachine* pGameMachine = dynamic_cast<CGameMachine*>(CManagement::GetInstance()->Get_Scene(0)->Get_GameObject(L"Room_15_Layer", L"Room_15_ObjectTiling_71")))
+        {
+            pGameMachine->Set_Clear();
+        }
         if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
             return -1;
     }

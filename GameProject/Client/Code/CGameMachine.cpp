@@ -9,6 +9,9 @@
 #include "CAbstractFactory.h"
 #include "CManagement.h"
 #include "CTimerMgr.h"
+#include "CHeart.h"
+#include "CGem.h"
+#include "CEnergy.h"
 
 CGameMachine::CGameMachine(LPDIRECT3DDEVICE9 pGraphicDev, ESceneType eType)
     : CGameObject(pGraphicDev), m_eSceneType(eType)
@@ -38,6 +41,46 @@ _int CGameMachine::Update_GameObject(_float fTimeDelta)
     CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
     CCollisionMgr::GetInstance()->Add_Collider(COLL_ROOMLOGIC, m_pColliderCom);
+
+    if (m_bClear == true)
+    {
+        m_bClear = false;
+        CItem* pGameObject = nullptr;
+        CLayer* pLayer = CManagement::GetInstance()->Get_Layer(L"GameLogic_Layer");
+
+        for (int i = 0; i < 20; ++i)
+        {
+            int iRand = rand() % 100;
+            if (iRand < 33)
+            {
+                pGameObject = CHeart::Create(m_pGraphicDev, this);
+                if (nullptr == pGameObject) return E_FAIL;
+                if (FAILED(pLayer->Add_GameObject(L"Heart", pGameObject))) return E_FAIL;
+            }
+            else if (iRand < 66)
+            {
+                pGameObject = CEnergy::Create(m_pGraphicDev, this);
+                if (nullptr == pGameObject) return E_FAIL;
+                if (FAILED(pLayer->Add_GameObject(L"Energy", pGameObject))) return E_FAIL;
+            }
+            else
+            {
+                pGameObject = CGem::Create(m_pGraphicDev, this);
+                if (nullptr == pGameObject) return E_FAIL;
+                if (FAILED(pLayer->Add_GameObject(L"Energy", pGameObject))) return E_FAIL;
+            }
+
+            _vec3 vDir;
+            vDir.x = (_float)(rand() % 128 - 64) / 64.f;
+            vDir.y = (_float)(rand() % 128) / 128.f;
+            vDir.z = (_float)(rand() % 128 - 64) / 64.f;
+
+            vDir *= 3.f;
+            vDir.y += 5.f;
+            pGameObject->Is_Scattering(true);
+            pGameObject->Set_ScatteringDir(vDir);
+        }
+    }
 
     return iExit;
 }
