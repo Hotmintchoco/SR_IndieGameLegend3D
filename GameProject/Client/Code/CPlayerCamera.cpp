@@ -8,6 +8,7 @@
 #include "IRayTestable.h"
 #include "CRoomLayer.h"
 #include "CCursorPolicyMgr.h"
+#include "CCrosshair.h"
 
 CPlayerCamera::CPlayerCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCamera(pGraphicDev), m_pTarget(nullptr),
@@ -79,6 +80,21 @@ void CPlayerCamera::SetPseudoScale(float fScale)
 	m_vEyeOffset = m_vEyeOffsetRaw * fScale;
 	m_fNear = m_fNearRaw * fScale;
 	m_fFar = m_fFarRaw * fScale;
+}
+
+void CPlayerCamera::Set_CameraMode(CAMERA_MODE eMode)
+{
+	m_eCameraMode = eMode;
+
+	CCrosshair* pCrosshair = static_cast<CCrosshair*>(CManagement::GetInstance()->Get_GameObject(L"UI_Layer", L"Crosshair"));
+	
+	if (pCrosshair)
+	{
+		if (eMode == CAMERA_MODE::THIRD_PERSON)
+			pCrosshair->Set_IsActive(false);
+		else
+			pCrosshair->Set_IsActive(true);
+	}
 }
 
 void CPlayerCamera::Mouse_Move()

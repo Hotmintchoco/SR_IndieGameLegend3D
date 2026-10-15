@@ -176,6 +176,7 @@
     <ClInclude Include="..\Header\CHitScan.h" />
     <ClInclude Include="..\Header\CIceRoomLayer.h" />
     <ClInclude Include="..\Header\CIntro_MG1.h" />
+    <ClInclude Include="..\Header\CDesertSpecialRoomLayer.h" />
     <ClInclude Include="..\Header\CItemContainer.h" />
     <ClInclude Include="..\Header\CHitCreenUI.h" />
     <ClInclude Include="..\Header\CJail.h" />
@@ -317,6 +318,7 @@
     <ClInclude Include="..\Header\Client_Struct.h" />
     <ClInclude Include="..\Header\CWormBullet.h" />
     <ClInclude Include="..\Header\CGemBox.h" />
+    <ClInclude Include="..\Header\CChasm.h" />
     <ClInclude Include="..\Header\IAnamorphicTarget.h" />
     <ClInclude Include="..\Header\imconfig.h" />
     <ClInclude Include="..\Header\imgui.h" />
@@ -377,6 +379,7 @@
     <ClCompile Include="..\Code\CHitScan.cpp" />
     <ClCompile Include="..\Code\CIceRoomLayer.cpp" />
     <ClCompile Include="..\Code\CIntro_MG1.cpp" />
+    <ClCompile Include="..\Code\CDesertSpecialRoomLayer.cpp" />
     <ClCompile Include="..\Code\CItemContainer.cpp" />
     <ClCompile Include="..\Code\CJail.cpp" />
     <ClCompile Include="..\Code\CLaser.cpp" />
@@ -514,6 +517,7 @@
     <ClCompile Include="..\Code\CWeaponSystem.cpp" />
     <ClCompile Include="..\Code\CWormBullet.cpp" />
     <ClCompile Include="..\Code\CGemBox.cpp" />
+    <ClCompile Include="..\Code\CChasm.cpp" />
     <ClCompile Include="..\Code\IAnamorphicTarget.cpp" />
     <ClCompile Include="..\Code\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

@@ -541,6 +541,9 @@
     <Filter Include="01. Scene\MiniGame_1\GameObject\Intro">
       <UniqueIdentifier>{6ecbc762-7ca6-4444-aeea-5a52737551c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\Stage\Layer\Temple">
+      <UniqueIdentifier>{251d853b-6318-4ed7-be27-513c5e7398fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1140,6 +1143,9 @@
     <ClInclude Include="..\Header\CIntro_MG1.h">
       <Filter>01. Scene\MiniGame_1\GameObject\Intro</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CDesertSpecialRoomLayer.h">
+      <Filter>01. Scene\Stage\Layer\Temple</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1708,6 +1714,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CIntro_MG1.cpp">
       <Filter>01. Scene\MiniGame_1\GameObject\Intro</Filter>
+    <ClCompile Include="..\Code\CDesertSpecialRoomLayer.cpp">
+  </ClCompile>
+      <Filter>01. Scene\Stage\Layer\Temple</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1793,6 +1802,15 @@
     </ClInclude>
     <ClCompile Include="..\Code\CNpc.cpp">
       <Filter>02. GameObject\07. Room\PlaceableProp\Npc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="02. GameObject\07. Room\PlaceableProp\Chasm" />
+    <ClInclude Include="..\Header\CChasm.h">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Chasm</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Code\CChasm.cpp">
+      <Filter>02. GameObject\07. Room\PlaceableProp\Chasm</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

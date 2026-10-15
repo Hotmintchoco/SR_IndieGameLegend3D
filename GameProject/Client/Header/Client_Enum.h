@@ -100,6 +100,7 @@ enum class EObjectType
 
 	Npc = 50,
 	GemBox = 51,
+	Chasm,
 
 	EFFECT_GENERATOR_AIRBUBBLE = 60,
 	EFFECT_GENERATOR_YELLOWDUST = 61,
@@ -115,6 +116,7 @@ enum class ERoomType
 	ROOM_DEFAULT,
 	ROOM_ICE,
 	ROOM_LIMINAL,
+	ROOM_TEMPLERUN = 4,
 
 	ROOM_MAX
 };

@@ -110,7 +110,10 @@ _int CPlayer::Update_GameObject(_float fTimeDelta)
     /* 업데이트 순서 : 애니메이션으로 캐릭터 위치 확정 후 소켓에 전달 */
     if (m_ePlayerCamMode == CAMERA_MODE::THIRD_PERSON)
     {
-        _matrix matVisualWorld = (*m_pVisualRootTransform->Get_World()) * (*m_pTransformCom->Get_World());
+        // 파츠에도 크기 비율 반영
+        _matrix matScale;
+        D3DXMatrixScaling(&matScale, m_fPseudoScale, m_fPseudoScale, m_fPseudoScale);
+        _matrix matVisualWorld = (*m_pVisualRootTransform->Get_World()) * matScale * (*m_pTransformCom->Get_World());
         m_pAnimator->TransformPropagation(matVisualWorld);
         m_pLHandSocket->UpdateSocket();
         m_pRHandSocket->UpdateSocket();
@@ -141,7 +144,11 @@ void CPlayer::Render_GameObject()
         /* 카메라를 추적하는 1인칭 좌표계 업데이트 */
         _matrix matCamWorld;
         m_pCamera->GetWorld(&matCamWorld);
-        m_pAnimator->TransformFPPropagation(matCamWorld);
+
+        // 파츠에도 크기 비율 반영
+        _matrix matScale;
+        D3DXMatrixScaling(&matScale, m_fPseudoScale, m_fPseudoScale, m_fPseudoScale);
+        m_pAnimator->TransformFPPropagation(matScale * matCamWorld);
 
         m_pTextureCom->Set_Texture(0);
 
@@ -299,7 +306,7 @@ void CPlayer::UpdateInput()
 {
     if (IsInputAllowed(PIC_MOVE))
     {
-        m_pMovement->SetSprint(CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT));
+        m_pMovement->SetSprint(m_bForcedSprint || CDInputMgr::GetInstance()->Key_Press(DIK_LSHIFT));
 
         _vec2 vCommand{ 0.f, 0.f }; // (x, z)
         if (CDInputMgr::GetInstance()->Key_Press(DIK_W))
@@ -373,7 +380,7 @@ void CPlayer::UpdateWeaponInput()
         || pInput->Key_Press(DIK_S)
         || pInput->Key_Press(DIK_D);
     tSysInput.bSpecialSwitchPressed = pInput->Key_Down(DIK_F);
-    tSysInput.bSprint = pInput->Key_Press(DIK_LSHIFT);
+    tSysInput.bSprint = m_bForcedSprint || pInput->Key_Press(DIK_LSHIFT);
     tSysInput.bSwitchWeapon = pInput->Key_Down(DIK_Q);
 
     TWeaponSystemOutput tOutput = m_pWeaponSystem->UpdateInput(tSysInput);
