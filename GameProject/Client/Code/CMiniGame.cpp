@@ -71,11 +71,21 @@ _int CMiniGame::Update_Scene(_float fTimeDelta)
 
     Update_Camera();
 
+    if (m_pOutro)
+    {
+        m_pPlayer->Set_Invincible(1.f);
+        if (m_pOutro->Is_Finished())
+        {
+            if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
+                return -1;
+        }
+
+        return iExit;
+    }
+
     if (m_pPlayer->Is_GameOver() && m_fGameOverTimer <= 0.f)
     {
-        if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
-            return -1;
-
+        Start_Outro();
         return iExit;
     }
 
@@ -88,9 +98,7 @@ _int CMiniGame::Update_Scene(_float fTimeDelta)
         m_fWhiteTime += fTimeDelta;
         if (m_fWhiteTime >= MG_WHITE_EXIT_TIME)
         {
-            if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
-                return -1;
-
+            Start_Outro();
             return iExit;
         }
     }
@@ -101,18 +109,13 @@ _int CMiniGame::Update_Scene(_float fTimeDelta)
         m_fClearTimer -= fTimeDelta;
         if (m_fClearTimer <= 0.f)
         {
-            if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
-                return -1;
-
+            Start_Outro();
             return iExit;
         }
     }
 
     if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
-    {
-        if (FAILED(CManagement::GetInstance()->Change_Scene(0, nullptr, true)))
-            return -1;
-    }
+        Start_Outro();
 
     return iExit;
 }
@@ -266,6 +269,24 @@ void CMiniGame::Clear_Enemy()
         if (dynamic_cast<CMG0_Sprite*>(Pair.second) || dynamic_cast<CMG0_Laser*>(Pair.second))
             Pair.second->Set_Dead(true);
     }
+}
+
+void CMiniGame::Start_Outro()
+{
+    if (m_pOutro)
+        return;
+
+    m_pOutro = CMG0_Intro::Create(m_pGraphicDev, true);
+    if (nullptr == m_pOutro)
+        return;
+
+    if (FAILED(Get_Layer(L"UI_Layer")->Add_GameObject(L"Outro", m_pOutro)))
+    {
+        Safe_Release(m_pOutro);
+        return;
+    }
+
+    m_pPlayer->Set_Invincible(1.f);
 }
 
 _float CMiniGame::Get_WhiteRate()

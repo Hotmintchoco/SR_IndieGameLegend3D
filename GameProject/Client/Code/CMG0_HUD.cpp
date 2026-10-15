@@ -923,11 +923,12 @@ void CMG0_HUD::Render_GameOverText()
 
 void CMG0_HUD::Render_ClearText()
 {
-    _vec2 vPos(150.f, 100.f);
-    _vec2 vShadow = vPos + _vec2(2.f, 2.f);
+    const wstring strText = L"CLEARED!";
+    const _vec2 vPos(WINCX * 0.5f - strText.size() * 8.f, WINCY * 0.5f - 16.f);
+    const _vec2 vShadow = vPos + _vec2(2.f, 2.f);
 
-    CFontMgr::GetInstance()->Render_Font(L"Font_Dialogue", L"CLEARED!", &vShadow, D3DXCOLOR(0.f, 0.f, 0.f, 1.f));
-    CFontMgr::GetInstance()->Render_Font(L"Font_Dialogue", L"CLEARED!", &vPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+    CFontMgr::GetInstance()->Render_Font(L"Font_Dialogue", strText.c_str(), &vShadow, D3DXCOLOR(0.f, 0.f, 0.f, 1.f));
+    CFontMgr::GetInstance()->Render_Font(L"Font_Dialogue", strText.c_str(), &vPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 }
 
 HRESULT CMG0_HUD::Add_Component()

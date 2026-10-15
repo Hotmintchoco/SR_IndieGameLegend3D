@@ -9,6 +9,7 @@ class CMG0_Deck;
 class CMG0_Dancer;
 class CMG0_Dialogue;
 class CMG0_Herobrine;
+class CMG0_Intro;
 
 namespace Engine
 {
@@ -54,6 +55,7 @@ private:
 	void			Spawn_Train(_float fTimeDelta);
 	void			Spawn_Train14(_float fRate, _float fSpeed);
 	void			Update_Camera();
+	void			Start_Outro();
 
 public:
 	static CMiniGame* Create(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -67,6 +69,7 @@ private:
 	CMG0_Dancer*	m_pDancer = nullptr;
 	CMG0_Dialogue*	m_pDialogue = nullptr;
 	CMG0_Herobrine*	m_pBoss = nullptr;
+	CMG0_Intro*		m_pOutro = nullptr;
 
 	_float			m_fSceneTime = 0.f;
 	_float			m_fPlayTime = 0.f;
