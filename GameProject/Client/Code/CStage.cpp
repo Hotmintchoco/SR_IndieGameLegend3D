@@ -266,8 +266,16 @@ void CStage::OnEnter()
         const auto* pRoom = pRoomMgr->GetRoomData(m_iCurrentRoomIndex);
         const auto biome = pRoomMgr->GetBiomeInfo(pRoom->iBiome);
         ApplyRoomShader(biome.eType);
-        CSoundMgr::GetInstance()->PlayBGM(biome.tBGMTrack);
+
+        /* 나갈 때 저장해 둔 BGM이 있으면 그 위치부터 이어서, 없으면(최초 입장 등) 바이옴 BGM을 처음부터
+           (RestoreBGM은 무효 스냅샷이면 BGM을 끄기만 하므로 유효할 때만 호출) */
+        if (m_tSavedBGM.bValid)
+            CSoundMgr::GetInstance()->RestoreBGM(m_tSavedBGM, s_fBGMRestoreFadeIn);
+        else
+            CSoundMgr::GetInstance()->PlayBGM(biome.tBGMTrack);
     }
+    /* 한 번 쓴 스냅샷은 비워서 다음 입장 때 옛 위치로 되감기지 않게 함 */
+    m_tSavedBGM = TBGMSnapshot{};
 	if (SUCCEEDED(CClientCameraMgr::GetInstance()->Select_Camera(CLIENT_CAMERA_TYPE::PLAYER)))
 		CClientCameraMgr::GetInstance()->LateUpdate_Camera(0.f);
 }
@@ -276,6 +284,8 @@ void CStage::OnExit()
 {
     EndNpcDialogue();
     CShaderEffectMgr::GetInstance()->Set_PostEffect(POST_EFFECT::NONE);
+	/* 돌아왔을 때 이어 틀기 위해 저장 : StopBGM이 핸들을 비우므로 반드시 그 전에 */
+	m_tSavedBGM = CSoundMgr::GetInstance()->CaptureBGM();
 	CSoundMgr::GetInstance()->StopBGM();
 
 }
