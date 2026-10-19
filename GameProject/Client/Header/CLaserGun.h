@@ -48,6 +48,8 @@ private:
 	CInvertEffect* m_pShaderEffect = nullptr;
 	POST_EFFECT m_eOldEffectType = POST_EFFECT::NONE;
 
+	TBGMSnapshot m_tSavedBGM{};
+
 public:
 	static CLaserGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

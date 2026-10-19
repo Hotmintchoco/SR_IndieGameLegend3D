@@ -69,7 +69,7 @@ private:
 	float m_fDmgAccumulated = 0.f;
 	float m_fMaxRadius = 30.f;
 	float m_fMinRadius = 10.f;
-	float m_fSingleHitScanInverval = 0.05f;
+	float m_fSingleHitScanInverval = 0.1f;
 	float m_fTimeAfterHitScan = 0.f;
 	bool m_bOnHitScan = false;
 	priority_queue<TLiminalGunHitScanInfo, vector<TLiminalGunHitScanInfo>, TYawLesser> m_pqCapture;
@@ -82,6 +82,8 @@ private:
 	bool m_bOnEffectTransition = false;
 	CGrayscaleEffect* m_pShaderEffect = nullptr;
 	POST_EFFECT m_eOldEffectType = POST_EFFECT::NONE;
+
+	TBGMSnapshot m_tSavedBGM{};
 
 public:
 	static CLiminalGun* Create(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -863,6 +863,7 @@ void COrthoRoomLayer::UpdateDirecting(float fTimeDelta)
 			m_tPrevBGM = CSoundMgr::GetInstance()->CaptureBGM();
 			TBGMTrack tTrack = { TBGMTrack{L"Mini_Ortho", L"", L"The_Fantastic_Thinking_Newtro.wav"} };
 			CSoundMgr::GetInstance()->PlayBGM(tTrack);
+			CSoundMgr::GetInstance()->SetBGMVolume(0.3f);
 		}
 
 		/* 인트로가 아무 키로 끝나면 게임 시작 */
